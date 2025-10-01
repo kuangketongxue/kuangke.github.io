@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的朋友圈</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">✨ 我的朋友圈</h1>
+            <div class="controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="搜索朋友圈...">
+                </div>
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 分类导航 -->
+    <nav class="category-nav">
+        <div class="container">
+            <div class="category-scroll">
+                <button class="category-btn active" data-category="all">全部</button>
+                <button class="category-btn" data-category="生活日常">生活日常</button>
+                <button class="category-btn" data-category="美食分享">美食分享</button>
+                <button class="category-btn" data-category="旅行见闻">旅行见闻</button>
+                <button class="category-btn" data-category="工作相关">工作相关</button>
+                <button class="category-btn" data-category="学习成长">学习成长</button>
+                <button class="category-btn" data-category="健身运动">健身运动</button>
+                <button class="category-btn" data-category="时尚穿搭">时尚穿搭</button>
+                <button class="category-btn" data-category="艺术文化">艺术文化</button>
+                <button class="category-btn" data-category="情感表达">情感表达</button>
+                <button class="category-btn" data-category="节日纪念">节日纪念</button>
+                <button class="category-btn" data-category="公益环保">公益环保</button>
+                <button class="category-btn" data-category="科技数码">科技数码</button>
+                <button class="category-btn" data-category="财经理财">财经理财</button>
+                <button class="category-btn" data-category="幽默段子">幽默段子</button>
+                <button class="category-btn" data-category="问答互动">问答互动</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <div class="container">
+            <div id="momentsContainer" class="moments-grid">
+                <!-- 动态内容将通过 JavaScript 加载 -->
+            </div>
+        </div>
+    </main>
+
+    <!-- 评论弹窗 -->
+    <div id="commentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>评论</h2>
+            <div id="commentsList" class="comments-list"></div>
+            <div class="comment-input-area">
+                <input type="text" id="commentInput" placeholder="写下你的评论...">
+                <button id="submitComment">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
