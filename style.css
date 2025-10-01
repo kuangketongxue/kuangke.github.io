@@ -39,7 +39,23 @@ body {
     position: relative;
 }
 
-/* 🌌 增强版星空背景容器 */
+/* 🌌 星空画布容器 */
+#starCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -3;
+    background: linear-gradient(to bottom, #0a0e27 0%, #1a1f3a 50%, #0f172a 100%);
+}
+
+body.light-mode #starCanvas {
+    background: linear-gradient(to bottom, #f0f4f8 0%, #ffffff 50%, #e2e8f0 100%);
+    opacity: 0.3;
+}
+
+/* 🌌 增强版星空背景渐变 */
 body::before {
     content: '';
     position: fixed;
@@ -47,169 +63,39 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
+    background:
         radial-gradient(ellipse at 20% 30%, rgba(99, 102, 241, 0.3) 0%, transparent 50%),
         radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.2) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 70%),
-        linear-gradient(to bottom, #0a0e27 0%, #1a1f3a 50%, #0f172a 100%);
-    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%;
-    z-index: -3;
+        radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 70%);
+    background-size: 100% 100%;
+    z-index: -2;
     animation: galaxyMove 30s ease-in-out infinite;
+    pointer-events: none;
 }
 
 body.light-mode::before {
-    background: 
+    background:
         radial-gradient(ellipse at 20% 30%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.03) 0%, transparent 50%),
-        linear-gradient(to bottom, #f0f4f8 0%, #ffffff 50%, #e2e8f0 100%);
+        radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.03) 0%, transparent 50%);
     animation: none;
 }
 
 @keyframes galaxyMove {
-    0%, 100% { 
-        transform: scale(1) rotate(0deg); 
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
         filter: hue-rotate(0deg);
     }
-    25% { 
-        transform: scale(1.05) rotate(1deg); 
+    25% {
+        transform: scale(1.05) rotate(1deg);
         filter: hue-rotate(10deg);
-    }
-    50% { 
-        transform: scale(1.1) rotate(2deg); 
-        filter: hue-rotate(20deg);
-    }
-    75% { 
-        transform: scale(1.05) rotate(1deg); 
-        filter: hue-rotate(10deg);
-    }
-}
-
-/* ⭐ 多层星星效果 */
-body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-    opacity: 0.8;
-}
-
-/* 小星星层 */
-.stars-layer-1 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(1px 1px at 25% 15%, white, transparent),
-        radial-gradient(1px 1px at 75% 25%, white, transparent),
-        radial-gradient(1px 1px at 35% 45%, white, transparent),
-        radial-gradient(1px 1px at 85% 35%, white, transparent),
-        radial-gradient(1px 1px at 15% 65%, white, transparent),
-        radial-gradient(1px 1px at 65% 75%, white, transparent),
-        radial-gradient(1px 1px at 45% 85%, white, transparent),
-        radial-gradient(1px 1px at 95% 55%, white, transparent);
-    background-size: 250px 250px;
-    background-position: 0% 0%;
-    animation: stars1 80s linear infinite;
-    z-index: -2;
-}
-
-/* 中等星星层 */
-.stars-layer-2 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.9), transparent),
-        radial-gradient(2px 2px at 60% 70%, rgba(255, 255, 255, 0.8), transparent),
-        radial-gradient(1.5px 1.5px at 50% 50%, rgba(255, 255, 255, 0.7), transparent),
-        radial-gradient(1.5px 1.5px at 80% 10%, rgba(255, 255, 255, 0.8), transparent),
-        radial-gradient(2px 2px at 90% 60%, rgba(255, 255, 255, 0.9), transparent),
-        radial-gradient(1px 1px at 33% 95%, rgba(255, 255, 255, 0.6), transparent),
-        radial-gradient(1px 1px at 10% 80%, rgba(255, 255, 255, 0.7), transparent),
-        radial-gradient(2px 2px at 15% 60%, rgba(255, 255, 255, 0.8), transparent),
-        radial-gradient(1px 1px at 70% 85%, rgba(255, 255, 255, 0.6), transparent),
-        radial-gradient(1.5px 1.5px at 95% 45%, rgba(255, 255, 255, 0.7), transparent);
-    background-size: 400px 400px;
-    background-position: 0% 0%;
-    animation: stars2 120s linear infinite;
-    z-index: -2;
-}
-
-/* 大星星层 */
-.stars-layer-3 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(3px 3px at 50% 20%, rgba(255, 255, 255, 1), transparent),
-        radial-gradient(2.5px 2.5px at 30% 60%, rgba(255, 255, 255, 0.9), transparent),
-        radial-gradient(3px 3px at 70% 40%, rgba(255, 255, 255, 0.8), transparent);
-    background-size: 600px 600px;
-    background-position: 0% 0%;
-    animation: stars3 180s linear infinite reverse;
-    z-index: -2;
-}
-
-body.light-mode .stars-layer-1,
-body.light-mode .stars-layer-2,
-body.light-mode .stars-layer-3 {
-    opacity: 0.2;
-}
-
-@keyframes stars1 {
-    0% { 
-        background-position: 0% 0%; 
-        opacity: 0.3;
     }
     50% {
-        opacity: 0.6;
-    }
-    100% { 
-        background-position: 100% 100%; 
-        opacity: 0.3;
-    }
-}
-
-@keyframes stars2 {
-    0% { 
-        background-position: 0% 0%; 
-        opacity: 0.5;
-    }
-    25% {
-        opacity: 0.8;
+        transform: scale(1.1) rotate(2deg);
+        filter: hue-rotate(20deg);
     }
     75% {
-        opacity: 0.4;
-    }
-    100% { 
-        background-position: 100% 100%; 
-        opacity: 0.5;
-    }
-}
-
-@keyframes stars3 {
-    0% { 
-        background-position: 0% 0%; 
-        opacity: 0.4;
-    }
-    33% {
-        opacity: 0.7;
-    }
-    66% {
-        opacity: 0.3;
-    }
-    100% { 
-        background-position: 100% 100%; 
-        opacity: 0.4;
+        transform: scale(1.05) rotate(1deg);
+        filter: hue-rotate(10deg);
     }
 }
 
@@ -217,36 +103,46 @@ body.light-mode .stars-layer-3 {
 .shooting-star {
     position: fixed;
     top: -100px;
-    width: 2px;
-    height: 2px;
+    width: 3px;
+    height: 3px;
     background: white;
-    box-shadow: 
+    border-radius: 50%;
+    box-shadow:
         0 0 10px 2px rgba(255, 255, 255, 0.8),
-        0 0 20px 4px rgba(255, 255, 255, 0.4);
-    animation: shooting 3s linear infinite;
+        0 0 20px 4px rgba(255, 255, 255, 0.4),
+        0 0 30px 6px rgba(99, 102, 241, 0.3);
     z-index: -1;
+    opacity: 0;
 }
 
 .shooting-star::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 150px;
     height: 2px;
     background: linear-gradient(to left, transparent, rgba(255, 255, 255, 0.8), white);
-    transform: translateX(-150px);
+    transform-origin: right center;
+    animation: shootingTail 2s ease-out forwards;
 }
 
-.shooting-star::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50px;
-    height: 2px;
-    background: linear-gradient(to left, transparent, rgba(255, 255, 255, 0.6));
-    transform: translateX(-50px);
+@keyframes shootingTail {
+    0% {
+        transform: scaleX(0) translate(-50%, -50%);
+    }
+    50% {
+        transform: scaleX(1) translate(-50%, -50%);
+    }
+    100% {
+        transform: scaleX(0) translate(-50%, -50%);
+        opacity: 0;
+    }
+}
+
+.shooting-star.active {
+    animation: shooting 2s ease-out forwards;
 }
 
 body.light-mode .shooting-star {
@@ -255,14 +151,14 @@ body.light-mode .shooting-star {
 
 @keyframes shooting {
     0% {
-        transform: rotate(315deg) translateX(0) translateY(0);
+        transform: rotate(315deg) translate(0, 0);
         opacity: 1;
     }
     70% {
         opacity: 1;
     }
     100% {
-        transform: rotate(315deg) translateX(-2000px) translateY(2000px);
+        transform: rotate(315deg) translate(-1500px, 1500px);
         opacity: 0;
     }
 }
@@ -270,23 +166,109 @@ body.light-mode .shooting-star {
 /* ✨ 闪烁星星效果 */
 .twinkling-star {
     position: fixed;
-    width: 2px;
-    height: 2px;
     background: white;
     border-radius: 50%;
-    animation: twinkle 2s ease-in-out infinite;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
     z-index: -1;
+    pointer-events: none;
 }
 
 @keyframes twinkle {
     0%, 100% {
-        opacity: 0.2;
+        opacity: 0.3;
         transform: scale(1);
     }
     50% {
         opacity: 1;
-        transform: scale(1.5);
+        transform: scale(1.3);
     }
+}
+
+body.light-mode .twinkling-star {
+    opacity: 0.2;
+}
+
+/* 🌙 月亮装饰（仅黑夜模式） */
+.moon-decoration {
+    position: fixed;
+    top: 80px;
+    right: 80px;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.3));
+    border-radius: 50%;
+    box-shadow:
+        0 0 40px rgba(255, 255, 255, 0.6),
+        0 0 80px rgba(255, 255, 255, 0.3),
+        inset -15px -15px 30px rgba(0, 0, 0, 0.2);
+    z-index: -1;
+    animation: moonGlow 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+body.light-mode .moon-decoration {
+    display: none;
+}
+
+/* 月球表面纹理 */
+.moon-decoration::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    width: 15px;
+    height: 15px;
+    background: rgba(200, 200, 200, 0.3);
+    border-radius: 50%;
+    box-shadow: 
+        10px 15px 0 -2px rgba(200, 200, 200, 0.2),
+        -5px 20px 0 -3px rgba(200, 200, 200, 0.15);
+}
+
+@keyframes moonGlow {
+    0%, 100% {
+        box-shadow:
+            0 0 40px rgba(255, 255, 255, 0.6),
+            0 0 80px rgba(255, 255, 255, 0.3),
+            inset -15px -15px 30px rgba(0, 0, 0, 0.2);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow:
+            0 0 50px rgba(255, 255, 255, 0.8),
+            0 0 100px rgba(255, 255, 255, 0.4),
+            inset -15px -15px 30px rgba(0, 0, 0, 0.15);
+        transform: scale(1.05);
+    }
+}
+
+/* 🌟 光晕效果 */
+.glow-effect {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.15), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1;
+    animation: float 15s ease-in-out infinite;
+    filter: blur(40px);
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(50px, -50px) scale(1.1);
+    }
+    66% {
+        transform: translate(-40px, 40px) scale(0.9);
+    }
+}
+
+body.light-mode .glow-effect {
+    display: none;
 }
 
 /* 确保内容在星空之上 */
@@ -347,6 +329,16 @@ body.light-mode .shooting-star {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+    animation: logoGlow 3s ease-in-out infinite;
+}
+
+@keyframes logoGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.3));
+    }
+    50% {
+        filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.5));
+    }
 }
 
 .controls {
@@ -396,6 +388,26 @@ body.light-mode .shooting-star {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-toggle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.theme-toggle:hover::before {
+    width: 100px;
+    height: 100px;
 }
 
 .theme-toggle:hover {
@@ -434,6 +446,10 @@ body.light-mode .shooting-star {
     border-radius: 3px;
 }
 
+.category-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 .category-btn {
     padding: 0.6rem 1.2rem;
     background: var(--bg-card);
@@ -444,6 +460,26 @@ body.light-mode .shooting-star {
     white-space: nowrap;
     transition: var(--transition);
     font-size: 0.9rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.category-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+}
+
+.category-btn:hover::before {
+    width: 200px;
+    height: 200px;
 }
 
 .category-btn:hover {
@@ -458,6 +494,7 @@ body.light-mode .shooting-star {
     background: var(--accent-color);
     color: white;
     border-color: var(--accent-color);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
 /* 主内容区 */
@@ -492,7 +529,7 @@ body.light-mode .shooting-star {
     border: 1px solid var(--border-color);
     border-radius: 20px;
     padding: 1.5rem;
-    transition: var(--transition);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     animation: scaleIn 0.4s ease-out;
     animation-fill-mode: both;
     position: relative;
@@ -506,13 +543,41 @@ body.light-mode .shooting-star {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--accent-color), #a855f7);
+    background: linear-gradient(90deg, var(--accent-color), #a855f7, #ec4899);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
 
+.moment-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
 .moment-card:hover::before {
     opacity: 1;
+}
+
+.moment-card:hover::after {
+    opacity: 1;
+    animation: ripple 1.5s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
 }
 
 @keyframes scaleIn {
@@ -527,8 +592,10 @@ body.light-mode .shooting-star {
 }
 
 .moment-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.3);
+    transform: translateY(-8px) rotateX(2deg);
+    box-shadow:
+        0 20px 40px rgba(99, 102, 241, 0.3),
+        0 0 60px rgba(99, 102, 241, 0.1);
     border-color: var(--accent-color);
 }
 
@@ -537,6 +604,8 @@ body.light-mode .shooting-star {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
 }
 
 .category-tag {
@@ -564,6 +633,8 @@ body.light-mode .shooting-star {
     color: var(--text-primary);
     line-height: 1.8;
     font-size: 1rem;
+    position: relative;
+    z-index: 1;
 }
 
 .moment-image {
@@ -572,6 +643,8 @@ body.light-mode .shooting-star {
     margin: 1rem 0;
     cursor: pointer;
     transition: var(--transition);
+    position: relative;
+    z-index: 1;
 }
 
 .moment-image:hover {
@@ -585,6 +658,8 @@ body.light-mode .shooting-star {
     align-items: center;
     padding-top: 1rem;
     border-top: 1px solid var(--border-color);
+    position: relative;
+    z-index: 1;
 }
 
 .moment-time {
@@ -594,7 +669,7 @@ body.light-mode .shooting-star {
 
 .moment-actions {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .action-btn {
@@ -605,28 +680,67 @@ body.light-mode .shooting-star {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: var(--transition);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 1rem;
     padding: 0.5rem;
     border-radius: 50%;
+    position: relative;
+}
+
+.action-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.action-btn:hover::before {
+    width: 40px;
+    height: 40px;
 }
 
 .action-btn:hover {
     color: var(--accent-color);
-    transform: scale(1.1);
-    background: rgba(99, 102, 241, 0.1);
+    transform: scale(1.15) rotate(5deg);
 }
 
 .action-btn.liked {
     color: #ef4444;
 }
 
+.action-btn.liked::before {
+    background: rgba(239, 68, 68, 0.2);
+}
+
 .action-btn.liked:hover {
-    background: rgba(239, 68, 68, 0.1);
+    animation: heartBeat 0.5s ease;
+}
+
+@keyframes heartBeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.3);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    75% {
+        transform: scale(1.25);
+    }
 }
 
 .action-btn i {
     font-size: 1.2rem;
+    position: relative;
+    z-index: 1;
 }
 
 /* 评论弹窗 */
@@ -638,9 +752,9 @@ body.light-mode .shooting-star {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     animation: fadeIn 0.3s ease-out;
 }
 
@@ -658,6 +772,7 @@ body.light-mode .shooting-star {
     overflow-y: auto;
     animation: slideUp 0.3s ease-out;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    position: relative;
 }
 
 @keyframes slideUp {
@@ -678,17 +793,33 @@ body.light-mode .shooting-star {
     font-weight: bold;
     cursor: pointer;
     transition: var(--transition);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
 
 .close:hover {
     color: var(--accent-color);
     transform: rotate(90deg);
+    background: rgba(99, 102, 241, 0.1);
 }
 
 .comments-list {
     margin: 1.5rem 0;
     max-height: 400px;
     overflow-y: auto;
+}
+
+.comments-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 3px;
 }
 
 .comment-item {
@@ -698,6 +829,12 @@ body.light-mode .shooting-star {
     margin-bottom: 1rem;
     animation: slideInLeft 0.3s ease-out;
     border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.comment-item:hover {
+    border-color: var(--accent-color);
+    transform: translateX(5px);
 }
 
 @keyframes slideInLeft {
@@ -735,19 +872,38 @@ body.light-mode .shooting-star {
 
 .comment-input-area button {
     padding: 0.8rem 2rem;
-    background: var(--accent-color);
+    background: linear-gradient(135deg, var(--accent-color), #a855f7);
     color: white;
     border: none;
     border-radius: 25px;
     cursor: pointer;
     transition: var(--transition);
     font-weight: 600;
+    position: relative;
+    overflow: hidden;
+}
+
+.comment-input-area button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.comment-input-area button:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .comment-input-area button:hover {
-    background: var(--accent-hover);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
 }
 
 /* 响应式设计 */
@@ -774,6 +930,18 @@ body.light-mode .shooting-star {
         margin: 10% auto;
         padding: 1.5rem;
     }
+    
+    .moon-decoration {
+        top: 60px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+    }
+    
+    .glow-effect {
+        width: 200px;
+        height: 200px;
+    }
 }
 
 /* 加载动画 */
@@ -788,84 +956,69 @@ body.light-mode .shooting-star {
     padding: 3rem;
     color: var(--text-secondary);
     font-size: 1.2rem;
+    animation: fadeIn 0.6s ease-out;
 }
 
-/* 🌟 额外的视觉效果 */
-.glow-effect {
+/* 🎨 页面加载动画 */
+@keyframes pageLoad {
+    0% {
+        opacity: 0;
+        filter: blur(10px);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+body {
+    animation: pageLoad 0.6s ease-out;
+}
+
+/* 🌈 彩虹光效（可选） */
+.rainbow-glow {
     position: fixed;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.3), transparent);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: -1;
-    animation: float 10s ease-in-out infinite;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, 
+        #ff0080, #ff8c00, #40e0d0, 
+        #9370db, #ff0080);
+    background-size: 300% 100%;
+    animation: rainbow 10s linear infinite;
+    z-index: 1001;
+    opacity: 0.6;
 }
 
-@keyframes float {
-    0%, 100% {
-        transform: translate(0, 0) scale(1);
-    }
-    33% {
-        transform: translate(30px, -30px) scale(1.1);
-    }
-    66% {
-        transform: translate(-20px, 20px) scale(0.9);
-    }
-}
-
-/* 🎨 特殊效果增强 */
-.moment-card {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.moment-card:hover {
-    transform: translateY(-8px) rotateX(2deg);
-    box-shadow: 
-        0 20px 40px rgba(99, 102, 241, 0.3),
-        0 0 60px rgba(99, 102, 241, 0.1);
-}
-
-.action-btn {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.action-btn:hover {
-    transform: scale(1.15) rotate(5deg);
-}
-
-/* 🌙 月亮装饰（仅黑夜模式） */
-.moon-decoration {
-    position: fixed;
-    top: 50px;
-    right: 50px;
-    width: 60px;
-    height: 60px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
-    border-radius: 50%;
-    box-shadow: 
-        0 0 30px rgba(255, 255, 255, 0.5),
-        0 0 60px rgba(255, 255, 255, 0.3),
-        inset -10px -10px 20px rgba(255, 255, 255, 0.3);
-    z-index: -1;
-    animation: moonGlow 4s ease-in-out infinite;
-}
-
-body.light-mode .moon-decoration {
+body.light-mode .rainbow-glow {
     display: none;
 }
 
-@keyframes moonGlow {
-    0%, 100% {
-        box-shadow: 
-            0 0 30px rgba(255, 255, 255, 0.5),
-            0 0 60px rgba(255, 255, 255, 0.3),
-            inset -10px -10px 20px rgba(255, 255, 255, 0.3);
+@keyframes rainbow {
+    0% {
+        background-position: 0% 50%;
     }
-    50% {
-        box-shadow: 
-            0 0 40px rgba(255, 255, 255, 0.7),
-            0 0 80px rgba(255, 255, 255, 0.4),
-            inset -10px -10px 20px rgba(255, 255, 255, 0.4);
+    100% {
+        background-position: 300% 50%;
+    }
+}
+
+/* 🎭 额外的视觉效果优化 */
+.moment-card,
+.modal-content,
+.category-btn,
+.action-btn {
+    will-change: transform;
+}
+
+/* 性能优化 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
