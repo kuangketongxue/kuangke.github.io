@@ -10,7 +10,7 @@ let momentsData = [
         value: 3,
         category: "科技数码",
         time: "2025-09-30 12:08",
-        image: "",
+        image: "images/d59aff54b056c66e94bc15b5cd3ad78c.png",
         likes: 0,
         comments: []
     },
