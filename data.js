@@ -6,7 +6,7 @@ const momentsData = [
         value: 4,
         category: "科技数码",
         time: "2024-09-30 12:08",
-        image: "images/4fb719adacb282987954bd1e5e5dcecf.png", // 使用相对路径
+        image: "images/d59aff54b056c66e94bc15b5cd3ad78c.png", // 使用相对路径
         likes: 0,
         comments: []
     },
@@ -43,11 +43,11 @@ const momentsData = [
     // 你可以继续添加更多朋友圈
     {
         id: 5,
-        content: "今天尝试了一家新开的川菜馆，麻辣火锅太正宗了！🌶️",
-        value: 3,
-        category: "美食分享",
-        time: "2024-10-02 19:30",
-        image: "images/hotpot.jpg",
+        content: "",
+        value: ,
+        category: "",
+        time: "",
+        image: "",
         likes: 0,
         comments: []
     }
