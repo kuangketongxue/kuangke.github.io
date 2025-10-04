@@ -1,4 +1,3 @@
-/* 基础样式和变量 */
 :root {
     --bg-primary: #0a0e27;
     --bg-secondary: #1a1f3a;
@@ -37,249 +36,7 @@ body {
     overflow-x: hidden;
     min-height: 100vh;
     position: relative;
-}
-
-/* 🌌 星空画布容器 */
-#starCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -3;
-    background: linear-gradient(to bottom, #0a0e27 0%, #1a1f3a 50%, #0f172a 100%);
-}
-
-body.light-mode #starCanvas {
-    background: linear-gradient(to bottom, #f0f4f8 0%, #ffffff 50%, #e2e8f0 100%);
-    opacity: 0.3;
-}
-
-/* 🌌 增强版星空背景渐变 */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background:
-        radial-gradient(ellipse at 20% 30%, rgba(99, 102, 241, 0.3) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.2) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 70%);
-    background-size: 100% 100%;
-    z-index: -2;
-    animation: galaxyMove 30s ease-in-out infinite;
-    pointer-events: none;
-}
-
-body.light-mode::before {
-    background:
-        radial-gradient(ellipse at 20% 30%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.03) 0%, transparent 50%);
-    animation: none;
-}
-
-@keyframes galaxyMove {
-    0%, 100% {
-        transform: scale(1) rotate(0deg);
-        filter: hue-rotate(0deg);
-    }
-    25% {
-        transform: scale(1.05) rotate(1deg);
-        filter: hue-rotate(10deg);
-    }
-    50% {
-        transform: scale(1.1) rotate(2deg);
-        filter: hue-rotate(20deg);
-    }
-    75% {
-        transform: scale(1.05) rotate(1deg);
-        filter: hue-rotate(10deg);
-    }
-}
-
-/* 🌠 流星效果 */
-.shooting-star {
-    position: fixed;
-    top: -100px;
-    width: 3px;
-    height: 3px;
-    background: white;
-    border-radius: 50%;
-    box-shadow:
-        0 0 10px 2px rgba(255, 255, 255, 0.8),
-        0 0 20px 4px rgba(255, 255, 255, 0.4),
-        0 0 30px 6px rgba(99, 102, 241, 0.3);
-    z-index: -1;
-    opacity: 0;
-}
-
-.shooting-star::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 150px;
-    height: 2px;
-    background: linear-gradient(to left, transparent, rgba(255, 255, 255, 0.8), white);
-    transform-origin: right center;
-    animation: shootingTail 2s ease-out forwards;
-}
-
-@keyframes shootingTail {
-    0% {
-        transform: scaleX(0) translate(-50%, -50%);
-    }
-    50% {
-        transform: scaleX(1) translate(-50%, -50%);
-    }
-    100% {
-        transform: scaleX(0) translate(-50%, -50%);
-        opacity: 0;
-    }
-}
-
-.shooting-star.active {
-    animation: shooting 2s ease-out forwards;
-}
-
-body.light-mode .shooting-star {
-    display: none;
-}
-
-@keyframes shooting {
-    0% {
-        transform: rotate(315deg) translate(0, 0);
-        opacity: 1;
-    }
-    70% {
-        opacity: 1;
-    }
-    100% {
-        transform: rotate(315deg) translate(-1500px, 1500px);
-        opacity: 0;
-    }
-}
-
-/* ✨ 闪烁星星效果 */
-.twinkling-star {
-    position: fixed;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
-    z-index: -1;
-    pointer-events: none;
-}
-
-@keyframes twinkle {
-    0%, 100% {
-        opacity: 0.3;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1.3);
-    }
-}
-
-body.light-mode .twinkling-star {
-    opacity: 0.2;
-}
-
-/* 🌙 月亮装饰（仅黑夜模式） */
-.moon-decoration {
-    position: fixed;
-    top: 80px;
-    right: 80px;
-    width: 80px;
-    height: 80px;
-    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.3));
-    border-radius: 50%;
-    box-shadow:
-        0 0 40px rgba(255, 255, 255, 0.6),
-        0 0 80px rgba(255, 255, 255, 0.3),
-        inset -15px -15px 30px rgba(0, 0, 0, 0.2);
-    z-index: -1;
-    animation: moonGlow 6s ease-in-out infinite;
-    pointer-events: none;
-}
-
-body.light-mode .moon-decoration {
-    display: none;
-}
-
-/* 月球表面纹理 */
-.moon-decoration::before {
-    content: '';
-    position: absolute;
-    top: 20%;
-    left: 30%;
-    width: 15px;
-    height: 15px;
-    background: rgba(200, 200, 200, 0.3);
-    border-radius: 50%;
-    box-shadow: 
-        10px 15px 0 -2px rgba(200, 200, 200, 0.2),
-        -5px 20px 0 -3px rgba(200, 200, 200, 0.15);
-}
-
-@keyframes moonGlow {
-    0%, 100% {
-        box-shadow:
-            0 0 40px rgba(255, 255, 255, 0.6),
-            0 0 80px rgba(255, 255, 255, 0.3),
-            inset -15px -15px 30px rgba(0, 0, 0, 0.2);
-        transform: scale(1);
-    }
-    50% {
-        box-shadow:
-            0 0 50px rgba(255, 255, 255, 0.8),
-            0 0 100px rgba(255, 255, 255, 0.4),
-            inset -15px -15px 30px rgba(0, 0, 0, 0.15);
-        transform: scale(1.05);
-    }
-}
-
-/* 🌟 光晕效果 */
-.glow-effect {
-    position: fixed;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.15), transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: -1;
-    animation: float 15s ease-in-out infinite;
-    filter: blur(40px);
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translate(0, 0) scale(1);
-    }
-    33% {
-        transform: translate(50px, -50px) scale(1.1);
-    }
-    66% {
-        transform: translate(-40px, 40px) scale(0.9);
-    }
-}
-
-body.light-mode .glow-effect {
-    display: none;
-}
-
-/* 确保内容在星空之上 */
-.container,
-.header,
-.category-nav,
-.main-content,
-.modal,
-.footer {
-    position: relative;
-    z-index: 10;
+    animation: pageLoad 0.6s ease-out;
 }
 
 .container {
@@ -288,7 +45,7 @@ body.light-mode .glow-effect {
     padding: 0 20px;
 }
 
-/* 头部样式 */
+/* Header */
 .header {
     background: var(--bg-card);
     backdrop-filter: blur(20px);
@@ -302,22 +59,17 @@ body.light-mode .glow-effect {
     animation: slideDown 0.5s ease-out;
 }
 
-@keyframes slideDown {
-    from {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
 .header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
     gap: 1rem;
 }
 
@@ -332,15 +84,39 @@ body.light-mode .glow-effect {
     animation: logoGlow 3s ease-in-out infinite;
 }
 
-@keyframes logoGlow {
-    0%, 100% {
-        filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.3));
-    }
-    50% {
-        filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.5));
-    }
+.success-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    color: #c7d2fe;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: var(--transition);
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
 }
 
+.success-link:hover {
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.success-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Controls */
 .controls {
     display: flex;
     align-items: center;
@@ -375,24 +151,33 @@ body.light-mode .glow-effect {
     width: 200px;
 }
 
-.theme-toggle {
+.theme-toggle,
+.language-toggle {
     background: var(--accent-color);
     color: white;
     border: none;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
+    border-radius: 50px;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1rem;
     transition: var(--transition);
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
     position: relative;
     overflow: hidden;
 }
 
-.theme-toggle::before {
+.theme-toggle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    justify-content: center;
+    padding: 0;
+}
+
+.theme-toggle::before,
+.language-toggle::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -405,9 +190,10 @@ body.light-mode .glow-effect {
     transition: width 0.6s, height 0.6s;
 }
 
-.theme-toggle:hover::before {
-    width: 100px;
-    height: 100px;
+.theme-toggle:hover::before,
+.language-toggle:hover::before {
+    width: 120px;
+    height: 120px;
 }
 
 .theme-toggle:hover {
@@ -416,7 +202,18 @@ body.light-mode .glow-effect {
     box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
 }
 
-/* 分类导航 */
+.language-toggle {
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    color: #c7d2fe;
+}
+
+.language-toggle:hover {
+    background: rgba(129, 140, 248, 0.25);
+    transform: translateY(-2px);
+}
+
+/* Category nav */
 .category-nav {
     background: var(--bg-card);
     backdrop-filter: blur(20px);
@@ -444,10 +241,6 @@ body.light-mode .glow-effect {
 .category-scroll::-webkit-scrollbar-thumb {
     background: var(--accent-color);
     border-radius: 3px;
-}
-
-.category-scroll::-webkit-scrollbar-track {
-    background: transparent;
 }
 
 .category-btn {
@@ -497,7 +290,7 @@ body.light-mode .glow-effect {
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
-/* 主内容区 */
+/* Moments */
 .main-content {
     padding: 2rem 0 4rem;
     min-height: calc(100vh - 200px);
@@ -510,18 +303,6 @@ body.light-mode .glow-effect {
     animation: fadeIn 0.6s ease-out;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 朋友圈卡片 */
 .moment-card {
     background: var(--bg-card);
     backdrop-filter: blur(20px);
@@ -569,33 +350,9 @@ body.light-mode .glow-effect {
     animation: ripple 1.5s ease-out;
 }
 
-@keyframes ripple {
-    0% {
-        transform: scale(0);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 0;
-    }
-}
-
-@keyframes scaleIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
 .moment-card:hover {
     transform: translateY(-8px) rotateX(2deg);
-    box-shadow:
-        0 20px 40px rgba(99, 102, 241, 0.3),
-        0 0 60px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3), 0 0 60px rgba(99, 102, 241, 0.1);
     border-color: var(--accent-color);
 }
 
@@ -722,28 +479,7 @@ body.light-mode .glow-effect {
     animation: heartBeat 0.5s ease;
 }
 
-@keyframes heartBeat {
-    0%, 100% {
-        transform: scale(1);
-    }
-    25% {
-        transform: scale(1.3);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    75% {
-        transform: scale(1.25);
-    }
-}
-
-.action-btn i {
-    font-size: 1.2rem;
-    position: relative;
-    z-index: 1;
-}
-
-/* 评论弹窗 */
+/* Comment modal */
 .modal {
     display: none;
     position: fixed;
@@ -773,17 +509,6 @@ body.light-mode .glow-effect {
     animation: slideUp 0.3s ease-out;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     position: relative;
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
 }
 
 .close {
@@ -835,17 +560,6 @@ body.light-mode .glow-effect {
 .comment-item:hover {
     border-color: var(--accent-color);
     transform: translateX(5px);
-}
-
-@keyframes slideInLeft {
-    from {
-        transform: translateX(-20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
 }
 
 .comment-input-area {
@@ -906,119 +620,68 @@ body.light-mode .glow-effect {
     box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
 }
 
-/* 响应式设计 */
-@media (max-width: 768px) {
-    .moments-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
-    .header .container {
-        flex-direction: column;
-    }
-    
-    .search-box input {
-        width: 150px;
-    }
-    
-    .category-nav {
-        top: 129px;
-    }
-    
-    .modal-content {
-        width: 95%;
-        margin: 10% auto;
-        padding: 1.5rem;
-    }
-    
-    .moon-decoration {
-        top: 60px;
-        right: 20px;
-        width: 60px;
-        height: 60px;
-    }
-    
-    .glow-effect {
-        width: 200px;
-        height: 200px;
-    }
+/* 成功日记页面 */
+.success-header {
+    align-items: flex-start;
 }
 
-/* 加载动画 */
-.loading {
-    text-align: center;
-    padding: 3rem;
+.success-controls {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.diary-search input {
+    width: 220px;
+}
+
+.back-link {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(99, 102, 241, 0.2);
+    border-radius: 50%;
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    color: #c7d2fe;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.back-link:hover {
+    background: rgba(99, 102, 241, 0.35);
+    transform: translateY(-2px);
+}
+
+.success-subtitle {
+    font-size: 0.95rem;
     color: var(--text-secondary);
+    margin-top: 0.2rem;
 }
 
-.no-results {
-    text-align: center;
-    padding: 3rem;
+.diary-toolbar {
+    margin-top: 1rem;
+}
+
+.diary-toolbar-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.filter-title {
+    font-weight: 600;
     color: var(--text-secondary);
-    font-size: 1.2rem;
-    animation: fadeIn 0.6s ease-out;
-}
-
-/* 🎨 页面加载动画 */
-@keyframes pageLoad {
-    0% {
-        opacity: 0;
-        filter: blur(10px);
-    }
-    100% {
-        opacity: 1;
-        filter: blur(0);
-    }
-}
-
-body {
-    animation: pageLoad 0.6s ease-out;
-}
-
-/* 🌈 彩虹光效（可选） */
-.rainbow-glow {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, 
-        #ff0080, #ff8c00, #40e0d0, 
-        #9370db, #ff0080);
-    background-size: 300% 100%;
-    animation: rainbow 10s linear infinite;
-    z-index: 1001;
-    opacity: 0.6;
-}
-
-body.light-mode .rainbow-glow {
-    display: none;
-}
-
-@keyframes rainbow {
-    0% {
-        background-position: 0% 50%;
-    }
-    100% {
-        background-position: 300% 50%;
-    }
-}
-
-/* 🎭 额外的视觉效果优化 */
-.moment-card,
-.modal-content,
-.category-btn,
-.action-btn {
-    will-change: transform;
-}
-
-/* 性能优化 */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+    font-size: 0.95rem;
 }
