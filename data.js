@@ -46,8 +46,8 @@ let successDiaryData = [
             en: 'Library deep work and site refresh'
         },
         content: {
-            zh: '去图书馆学习。\n网站整体翻新迭代。',
-            en: 'Studied at the city library.\nRefreshed the entire website experience.'
+            zh: '去图书馆学习。\n网站整体翻新迭代。\n学习12个小时+。',
+            en: 'Studied at the city library.\nRefreshed the entire website experience.Studying for more than 12 hours.'
         },
         highlight: {
             zh: '影视飓风 1300 万粉丝评论区的 BGM 切画面经验值得学习。',
