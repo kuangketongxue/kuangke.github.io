@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成功日记 | 狂客的个人博客</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-page="success">
+    <header class="header">
+        <div class="container success-header">
+            <div class="header-left">
+                <a class="back-link" href="index.html">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h1 class="logo" data-i18n="successTitle">成功日记时间轴</h1>
+                    <p class="success-subtitle" data-i18n="successSubtitle">聚焦长期价值，记录每天的高光瞬间。</p>
+                </div>
+            </div>
+            <div class="controls success-controls">
+                <div class="search-box diary-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="diarySearchInput" placeholder="搜索标题、标签、心情...">
+                </div>
+                <button id="languageToggle" class="language-toggle">
+                    <i class="fas fa-language"></i>
+                    <span>中 → EN</span>
+                </button>
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="diary-toolbar">
+        <div class="container diary-toolbar-inner">
+            <div class="filter-group">
+                <span class="filter-title" data-i18n="tagLabel">分类标签</span>
+                <div id="diaryTagFilter" class="filter-chips"></div>
+            </div>
+            <div class="filter-row">
+                <label class="filter-label" data-i18n="moodLabel" for="diaryMoodSelect">心情</label>
+                <select id="diaryMoodSelect" class="filter-select">
+                    <option value="all">全部心情</option>
+                </select>
+
+                <label class="filter-label" data-i18n="sortLabel" for="diarySortSelect">排序</label>
+                <select id="diarySortSelect" class="filter-select">
+                    <option value="dateDesc">日期：最新优先</option>
+                    <option value="dateAsc">日期：最旧优先</option>
+                    <option value="achievementDesc">成就值：最高优先</option>
+                    <option value="achievementAsc">成就值：最低优先</option>
+                </select>
+
+                <button id="diaryResetFilters" class="ghost-btn" data-i18n="resetFilters">
+                    重置筛选
+                </button>
+            </div>
+            <div class="diary-actions">
+                <button id="diaryAddBtn" class="primary-btn" data-i18n="addEntry">
+                    新增成功日记
+                </button>
+                <button id="diaryExportBtn" class="ghost-btn" data-i18n="exportData">
+                    导出 JSON
+                </button>
+                <button id="diaryImportBtn" class="ghost-btn" data-i18n="importData">
+                    导入 JSON
+                </button>
+                <button id="diaryResetBtn" class="ghost-btn danger" data-i18n="resetData">
+                    恢复默认数据
+                </button>
+                <input type="file" id="diaryImportInput" accept="application/json" hidden>
+            </div>
+        </div>
+    </section>
+
+    <main class="main-content success-main">
+        <div class="container">
+            <div class="diary-counter" id="diaryCounter">共 0 条记录</div>
+            <div id="diaryTimeline" class="timeline"></div>
+        </div>
+    </main>
+
+    <div id="diaryModal" class="modal diary-modal">
+        <div class="modal-content diary-modal-content">
+            <span class="close diary-modal-close">&times;</span>
+            <h2 id="diaryModalTitle" data-i18n="modalAddTitle">新增成功日记</h2>
+            <form id="diaryForm" class="diary-form">
+                <input type="hidden" id="diaryId">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="diaryDate" data-i18n="formDate">日期</label>
+                        <input type="date" id="diaryDate" required>
+                    </div>
+                    <div class="form-field">
+                        <label data-i18n="formCategories">分类标签</label>
+                        <div id="diaryCategoryCheckboxes" class="checkbox-grid"></div>
+                    </div>
+                    <div class="form-field">
+                        <label for="diaryHeadlineZh" data-i18n="formHeadlineZh">标题（中文）</label>
+                        <input type="text" id="diaryHeadlineZh" placeholder="例如：完成当日阅读计划" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="diaryHeadlineEn" data-i18n="formHeadlineEn">标题（英文）</label>
+                        <input type="text" id="diaryHeadlineEn" placeholder="e.g. Finished the reading plan" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="diaryContentZh" data-i18n="formContentZh">内容（中文）</label>
+                        <textarea id="diaryContentZh" rows="3" placeholder="详细描述今天的成果"></textarea>
+                    </div>
+                    <div class="form-field">
+                        <label for="diaryContentEn" data-i18n="formContentEn">内容（英文）</label>
+                        <textarea id="diaryContentEn" rows="3" placeholder="Describe today’s wins in English"></textarea>
+                    </div>
+                    <div class="form-field">
+                        <label for="diaryHighlightZh" data-i18n="formHighlightZh">心情记录（中文）</label>
+                        <textarea id="diaryHighlightZh" rows="3" placeholder="记录当下感受或灵感"></textarea>
+                    </div>
+                    <div class="form-field">
+                        <label for="diaryHighlightEn" data-i18n="formHighlightEn">心情记录（英文）</label>
+                        <textarea id="diaryHighlightEn" rows="3" placeholder="Share your reflections in English"></textarea>
+                    </div>
+                    <div class="form-field">
+                        <label for="diaryMoodSelectForm" data-i18n="formMood">心情标签</label>
+                        <select id="diaryMoodSelectForm" required></select>
+                    </div>
+                    <div class="form-field">
+                        <label for="diaryAchievement" data-i18n="formAchievement">成就值（1-5）</label>
+                        <div class="range-wrapper">
+                            <input type="range" id="diaryAchievement" min="1" max="5" step="1" value="3">
+                            <span id="diaryAchievementLabel">当前成就值：3</span>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="diaryCoverImage" data-i18n="formCoverImage">封面图片（相对路径或链接）</label>
+                        <input type="text" id="diaryCoverImage" placeholder="例如：images/cover.png">
+                    </div>
+                    <div class="form-field">
+                        <label for="diaryAttachments" data-i18n="formAttachments">附件图片（多条用换行或逗号分隔）</label>
+                        <textarea id="diaryAttachments" rows="2" placeholder="images/a.png&#10;images/b.png"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" id="diaryFormSubmit" class="primary-btn" data-i18n="saveEntry">保存</button>
+                    <button type="button" id="diaryFormCancel" class="ghost-btn" data-i18n="cancel">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
