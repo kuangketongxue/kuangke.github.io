@@ -1,6 +1,3 @@
-
-- `data.js`：
-```javascript
 // 数据字典 & 默认示例
 const diaryTagLibrary = [
     { code: 'reading', zh: '阅读 📖', en: 'Reading 📖' },
