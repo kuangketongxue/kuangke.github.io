@@ -285,7 +285,6 @@
             </div>
         </div>
     </header>
-
     <main class="reading-main">
         <div class="container reading-container">
             <section class="reading-card">
@@ -299,34 +298,29 @@
                         </h2>
                         <p class="reading-card-caption">记录你在银河旅途中捕捉到的灵感与感动</p>
                     </header>
-
                     <form class="reading-form" autocomplete="off">
                         <div class="form-grid">
                             <div class="form-field">
                                 <label for="readingDate">日期</label>
-                                <input type="date" id="readingDate" name="readingDate">
+                                <input type="date" id="readingDate" name="readingDate" disabled aria-disabled="true">
                             </div>
                             <div class="form-field">
                                 <label for="readingValue">启发值（1-10）</label>
-                                <input type="number" id="readingValue" name="readingValue" min="1" max="10" placeholder="例如：8">
+                                <input type="number" id="readingValue" name="readingValue" min="1" max="10" placeholder="例如：8" disabled aria-disabled="true">
                             </div>
                         </div>
-
                         <div class="form-field">
                             <label for="readingInsight">今日启发性观点</label>
-                            <textarea id="readingInsight" name="readingInsight" placeholder="写下让你怦然心动、改变视角或值得珍藏的段落。"></textarea>
+                            <textarea id="readingInsight" name="readingInsight" placeholder="写下让你怦然心动、改变视角或值得珍藏的段落。" readonly aria-readonly="true"></textarea>
                         </div>
-
                         <div class="form-field">
                             <label for="readingApplication">想要尝试的应用</label>
-                            <textarea id="readingApplication" name="readingApplication" class="long" placeholder="把阅读中的灵感带入现实：你准备怎么做？写下可执行的行动步骤。"></textarea>
+                            <textarea id="readingApplication" name="readingApplication" class="long" placeholder="把阅读中的灵感带入现实：你准备怎么做？写下可执行的行动步骤。" readonly aria-readonly="true"></textarea>
                         </div>
-
                         <div class="form-field">
                             <label for="readingMood">星空心情/自由笔记</label>
-                            <textarea id="readingMood" name="readingMood" class="long" placeholder="随意记录感受、联想、创意或下次想看的书单。"></textarea>
+                            <textarea id="readingMood" name="readingMood" class="long" placeholder="随意记录感受、联想、创意或下次想看的书单。" readonly aria-readonly="true"></textarea>
                         </div>
-
                         <div class="reading-actions">
                             <button type="reset" class="ghost-btn">
                                 <i class="fas fa-undo-alt"></i>
@@ -338,9 +332,17 @@
                             </a>
                         </div>
                     </form>
+                    <div class="reading-lock-banner">
+                        <div class="reading-lock-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="reading-lock-content">
+                            <h3>GitHub 维护模式</h3>
+                            <p>星空阅读日志当前为只读展示。如需更新内容，请前往 GitHub 仓库的 <a href="https://github.com/kuangketongxue/kuangke.github.io/blob/main/data.js" target="_blank" rel="noopener">data.js</a> 提交修改。</p>
+                        </div>
+                    </div>
                 </div>
             </section>
-
             <section class="reading-guides">
                 <h2><i class="fas fa-star"></i><span>使用提示</span></h2>
                 <ul>
@@ -364,26 +366,21 @@
             </section>
         </div>
     </main>
-
     <script>
         (function () {
             const body = document.body;
             const toggle = document.getElementById('themeToggle');
             const storedTheme = localStorage.getItem('theme');
-
             if (storedTheme === 'light') {
                 body.classList.add('light-mode');
             }
-
             function updateIcon() {
                 if (!toggle) return;
                 toggle.innerHTML = body.classList.contains('light-mode')
                     ? '<i class="fas fa-sun"></i>'
                     : '<i class="fas fa-moon"></i>';
             }
-
             updateIcon();
-
             if (toggle) {
                 toggle.addEventListener('click', () => {
                     body.classList.toggle('light-mode');
