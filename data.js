@@ -611,7 +611,7 @@ let successDiaryData = [
         achievementLevel: 4,
         coverImage: '',
         attachments: []
-    }，
+    },
     {
         id: 24,
         date: '2025-10-5',
