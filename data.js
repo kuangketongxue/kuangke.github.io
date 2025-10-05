@@ -611,6 +611,31 @@ let successDiaryData = [
         achievementLevel: 4,
         coverImage: '',
         attachments: []
+    }，
+    {
+        id: 24,
+        date: '2025-10-5',
+        categories: ['study', 'film', 'creative'],
+        headline: {
+            zh: '阅读+前哨战已项目为导向',
+            en: 'Reading + Frontline Battle: Projects-Oriented Approach'
+        },
+        content: {
+            zh: '阅读10本书+。\n写产品商业书。\n持续搭建个人网站。\n睡眠充足。',
+            en: 'Read 10 books or more.\nWriting a commercial book about the product.\nKept building the personal website.\nadequate sleep.'
+        },
+        highlight: {
+            zh: '',
+            en: ''
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 4,
+        coverImage: '',
+        attachments: []
     }
 ];
 
