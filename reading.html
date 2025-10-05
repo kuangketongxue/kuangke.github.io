@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>狂客的星空</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body[data-page="reading"] {
+            background: radial-gradient(circle at 12% 16%, rgba(244, 114, 182, 0.18), transparent 52%),
+                        radial-gradient(circle at 82% 8%, rgba(56, 189, 248, 0.22), transparent 45%),
+                        radial-gradient(circle at 30% 78%, rgba(139, 92, 246, 0.18), transparent 58%),
+                        var(--bg-primary);
+            position: relative;
+        }
+        body[data-page="reading"]::before,
+        body[data-page="reading"]::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-repeat: repeat;
+            opacity: 0.85;
+            z-index: -1;
+        }
+        body[data-page="reading"]::before {
+            background-image:
+                radial-gradient(2px 2px at 15% 20%, rgba(255,255,255,0.55), transparent),
+                radial-gradient(1.5px 1.5px at 35% 65%, rgba(139, 92, 246, 0.6), transparent),
+                radial-gradient(2.5px 2.5px at 72% 30%, rgba(236, 72, 153, 0.55), transparent),
+                radial-gradient(1.8px 1.8px at 55% 80%, rgba(56, 189, 248, 0.55), transparent);
+            animation: twinkle 12s infinite alternate;
+        }
+        body[data-page="reading"]::after {
+            background-image:
+                radial-gradient(1px 1px at 10% 70%, rgba(255,255,255,0.5), transparent),
+                radial-gradient(1px 1px at 80% 60%, rgba(255,255,255,0.4), transparent),
+                radial-gradient(1.4px 1.4px at 50% 35%, rgba(129, 140, 248, 0.45), transparent),
+                radial-gradient(1.8px 1.8px at 25% 45%, rgba(236, 72, 153, 0.4), transparent);
+            animation: twinkle 18s infinite alternate-reverse;
+        }
+        .reading-header .container {
+            align-items: center;
+            justify-content: space-between;
+        }
+        .reading-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .reading-return {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.7rem 1.4rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.45);
+            color: #f4f7ff;
+            text-decoration: none;
+            font-size: 0.98rem;
+            letter-spacing: 0.02em;
+            transition: var(--transition);
+            box-shadow: 0 10px 22px rgba(99, 102, 241, 0.28);
+        }
+        body.light-mode .reading-return {
+            background: rgba(99, 102, 241, 0.08);
+            color: var(--accent-hover);
+            box-shadow: none;
+        }
+        .reading-return:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 16px 32px rgba(99, 102, 241, 0.35);
+        }
+        .reading-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .reading-title-group .logo {
+            font-size: 2.1rem;
+            margin: 0;
+        }
+        .reading-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+        }
+        .reading-main {
+            padding: 2.8rem 0 5rem;
+        }
+        .reading-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 26px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-out;
+        }
+        .reading-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), transparent 55%);
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .reading-card::after {
+            content: "";
+            position: absolute;
+            top: -120px;
+            right: -90px;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.22), transparent 70%);
+            filter: blur(0.5px);
+            animation: float 16s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .reading-card-body {
+            position: relative;
+            padding: 2.4rem 2.2rem;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .reading-card-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .reading-card-title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+        }
+        .reading-card-caption {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+        .reading-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+        }
+        .reading-form .form-grid {
+            gap: 1.1rem 1.4rem;
+        }
+        .reading-form textarea {
+            min-height: 140px;
+        }
+        .reading-form textarea.long {
+            min-height: 220px;
+        }
+        .reading-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            justify-content: flex-end;
+        }
+        .reading-actions .ghost-btn,
+        .reading-actions .primary-btn {
+            text-decoration: none;
+        }
+        .reading-guides {
+            margin-top: 2.6rem;
+            background: var(--bg-card-soft);
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            padding: 1.8rem 2rem;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+        }
+        .reading-guides h2 {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.25rem;
+            color: var(--accent-hover);
+            letter-spacing: 0.05em;
+        }
+        .reading-guides ul {
+            list-style: none;
+            display: grid;
+            gap: 0.75rem;
+        }
+        .reading-guides li {
+            display: flex;
+            gap: 0.65rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+        }
+        .reading-guides li i {
+            color: var(--accent-color);
+            margin-top: 0.25rem;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.45; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.02); }
+            100% { opacity: 0.55; transform: scale(1.04); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(18px) rotate(6deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        @media (max-width: 768px) {
+            .reading-header-left {
+                justify-content: center;
+            }
+            .reading-card-body {
+                padding: 2rem 1.4rem;
+            }
+            .reading-card-title {
+                font-size: 1.75rem;
+            }
+            .reading-guides {
+                padding: 1.6rem 1.4rem;
+            }
+        }
+        @media (max-width: 520px) {
+            .reading-return {
+                width: 100%;
+                justify-content: center;
+            }
+            .reading-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .reading-actions .ghost-btn,
+            .reading-actions .primary-btn {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body data-page="reading">
+    <header class="header reading-header">
+        <div class="container">
+            <div class="reading-header-left">
+                <a class="reading-return" href="index.html">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>退回到“狂客的银河”</span>
+                </a>
+                <div class="reading-title-group">
+                    <h1 class="logo">狂客的星空</h1>
+                    <p class="reading-subtitle">“背景是星空”</p>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="themeToggle" class="theme-toggle" aria-label="切换主题">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="reading-main">
+        <div class="container reading-container">
+            <section class="reading-card">
+                <div class="reading-card-body">
+                    <header class="reading-card-header">
+                        <h2 class="reading-card-title">
+                            <i class="fas fa-meteor"></i>
+                            星空阅读日志
+                        </h2>
+                        <p class="reading-card-caption">记录你在银河旅途中捕捉到的灵感与感动</p>
+                    </header>
+
+                    <form class="reading-form" autocomplete="off">
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label for="readingDate">日期</label>
+                                <input type="date" id="readingDate" name="readingDate">
+                            </div>
+                            <div class="form-field">
+                                <label for="readingValue">启发值（1-10）</label>
+                                <input type="number" id="readingValue" name="readingValue" min="1" max="10" placeholder="例如：8">
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="readingInsight">今日启发性观点</label>
+                            <textarea id="readingInsight" name="readingInsight" placeholder="写下让你怦然心动、改变视角或值得珍藏的段落。"></textarea>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="readingApplication">想要尝试的应用</label>
+                            <textarea id="readingApplication" name="readingApplication" class="long" placeholder="把阅读中的灵感带入现实：你准备怎么做？写下可执行的行动步骤。"></textarea>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="readingMood">星空心情/自由笔记</label>
+                            <textarea id="readingMood" name="readingMood" class="long" placeholder="随意记录感受、联想、创意或下次想看的书单。"></textarea>
+                        </div>
+
+                        <div class="reading-actions">
+                            <button type="reset" class="ghost-btn">
+                                <i class="fas fa-undo-alt"></i>
+                                <span>清空当前记录</span>
+                            </button>
+                            <a href="index.html" class="primary-btn">
+                                <i class="fas fa-rocket"></i>
+                                <span>返回狂客的银河</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section class="reading-guides">
+                <h2><i class="fas fa-star"></i><span>使用提示</span></h2>
+                <ul>
+                    <li>
+                        <i class="fas fa-pen-fancy"></i>
+                        <span>使用浏览器自带的保存功能（如 `Ctrl + S`）或复制内容到个人文档，便于长期沉淀。</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-lightbulb"></i>
+                        <span>建议每天固定时间回访此页，把阅读笔记与生活行动计划连接起来。</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-cloud-moon"></i>
+                        <span>夜间模式、日间模式会自动沿用主站选择，点击右上角图标随时切换。</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-share-alt"></i>
+                        <span>若要与朋友分享，可导出为 PDF 或截图，让灵感照亮更多星空旅人。</span>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        (function () {
+            const body = document.body;
+            const toggle = document.getElementById('themeToggle');
+            const storedTheme = localStorage.getItem('theme');
+
+            if (storedTheme === 'light') {
+                body.classList.add('light-mode');
+            }
+
+            function updateIcon() {
+                if (!toggle) return;
+                toggle.innerHTML = body.classList.contains('light-mode')
+                    ? '<i class="fas fa-sun"></i>'
+                    : '<i class="fas fa-moon"></i>';
+            }
+
+            updateIcon();
+
+            if (toggle) {
+                toggle.addEventListener('click', () => {
+                    body.classList.toggle('light-mode');
+                    localStorage.setItem('theme', body.classList.contains('light-mode') ? 'light' : 'dark');
+                    updateIcon();
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
