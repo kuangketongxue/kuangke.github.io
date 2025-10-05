@@ -625,8 +625,8 @@ let successDiaryData = [
             en: 'Read 10 books or more.\nWriting a commercial book about the product.\nKept building the personal website.\nadequate sleep.'
         },
         highlight: {
-            zh: '',
-            en: ''
+            zh: 'Linksphotograph的视频"在世界上最孤独的房子里过一夜！"好看',
+            en: 'The video "Spending a Night in the Most Isolated House in the World!" by Linksphotograph is quite captivating.'
         },
         notes: {
             zh: '',
