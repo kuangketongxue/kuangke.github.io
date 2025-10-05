@@ -142,6 +142,25 @@
             font-size: 2rem;
             font-weight: 700;
             letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.9rem;
+        }
+        .reading-card-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
+            box-shadow: 0 12px 28px rgba(79, 70, 229, 0.35);
+            color: #fff;
+            font-size: 1.4rem;
+        }
+        body.light-mode .reading-card-icon {
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.25);
         }
         .reading-card-caption {
             color: var(--text-secondary);
@@ -273,7 +292,9 @@
                 <div class="reading-card-body">
                     <header class="reading-card-header">
                         <h2 class="reading-card-title">
-                            <i class="fas fa-meteor"></i>
+                            <span class="reading-card-icon">
+                                <i class="fas fa-meteor"></i>
+                            </span>
                             星空阅读日志
                         </h2>
                         <p class="reading-card-caption">记录你在银河旅途中捕捉到的灵感与感动</p>
