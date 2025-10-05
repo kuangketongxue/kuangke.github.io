@@ -522,7 +522,7 @@ body.light-mode .success-link {
 }
 .comment-input-area button {
     padding: 0.85rem 2.1rem;
-    background: linear-gradient(135deg, var(--accent-color), #f472b6);
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
     color: white;
     border: none;
     border-radius: 26px;
@@ -979,6 +979,66 @@ body.light-mode .form-field select {
 .notification {
     border-radius: 16px;
 }
+/* 阅读页面只读锁定 */
+body[data-page="reading"] .form-field input[disabled],
+body[data-page="reading"] .form-field textarea[readonly] {
+    cursor: not-allowed;
+    background: rgba(148, 163, 184, 0.12);
+    border: 1px dashed rgba(139, 92, 246, 0.45);
+    color: var(--text-secondary);
+    box-shadow: none;
+}
+body.light-mode[data-page="reading"] .form-field input[disabled],
+body.light-mode[data-page="reading"] .form-field textarea[readonly] {
+    background: rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.38);
+    color: rgba(79, 70, 229, 0.75);
+}
+.reading-lock-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.4rem;
+    border-radius: 22px;
+    background: rgba(139, 92, 246, 0.14);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    box-shadow: inset 0 0 25px rgba(139, 92, 246, 0.12);
+    animation: fadeIn 0.4s ease-out;
+}
+body.light-mode .reading-lock-banner {
+    background: rgba(99, 102, 241, 0.12);
+    border-color: rgba(99, 102, 241, 0.32);
+    box-shadow: inset 0 0 18px rgba(99, 102, 241, 0.1);
+}
+.reading-lock-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #fff;
+    box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
+}
+.reading-lock-content h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.35rem;
+    color: var(--text-primary);
+    letter-spacing: 0.04em;
+}
+.reading-lock-content p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+.reading-lock-content a {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+.reading-lock-content a:hover {
+    color: #f472b6;
+}
 /* 响应式 */
 @media (max-width: 1024px) {
     .moments-grid {
@@ -1019,6 +1079,9 @@ body.light-mode .form-field select {
     }
     .form-grid {
         grid-template-columns: 1fr;
+    }
+    .reading-lock-banner {
+        align-items: flex-start;
     }
 }
 @media (max-width: 480px) {
