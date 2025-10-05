@@ -617,7 +617,7 @@ let successDiaryData = [
         date: '2025-10-05',
         categories: ['study', 'film', 'creative'],
         headline: {
-            zh: '阅读+前哨战已项目为导向',
+            zh: '阅读+前哨战"以项目为导向"',
             en: 'Reading + Frontline Battle: Projects-Oriented Approach'
         },
         content: {
@@ -709,6 +709,16 @@ let momentsData = [
         value: 1,
         category: '生活日常',
         time: '2025-10-04 21:49',
+        image: '',
+        likes: 0,
+        comments: []
+    },
+     {
+        id: 8,
+        content: '每天要工作平均14小时，没有假期，没有节假日，就不会有工作的感觉',
+        value: 5,
+        category: '工作相关',
+        time: '2025-10-06 00:39',
         image: '',
         likes: 0,
         comments: []
