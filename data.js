@@ -614,7 +614,7 @@ let successDiaryData = [
     },
     {
         id: 24,
-        date: '2025-10-5',
+        date: '2025-10-05',
         categories: ['study', 'film', 'creative'],
         headline: {
             zh: '阅读+前哨战已项目为导向',
