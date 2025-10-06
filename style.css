@@ -55,27 +55,29 @@ body::before {
     inset: 0;
     z-index: -2;
     pointer-events: none;
-    background: url("images/moon-background.jpg") center top / cover no-repeat;
+    background:
+        linear-gradient(180deg, rgba(8, 14, 40, 0.0) 0%, rgba(6, 11, 32, 0.45) 55%, rgba(4, 8, 26, 0.85) 100%),
+        url("images/moon-background.jpg") center top / cover no-repeat;
     background-attachment: fixed;
     opacity: 0.98;
-    filter: saturate(1.08) brightness(1.05);
+    filter: saturate(1.05);
 }
 body::after {
     content: "";
     position: fixed;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(180deg, rgba(6, 11, 32, 0.18) 0%, rgba(6, 11, 32, 0.55) 58%, rgba(4, 7, 24, 0.88) 100%);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background: rgba(5, 9, 28, 0.42);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: -1;
 }
 body.light-mode::before {
-    opacity: 0.68;
-    filter: saturate(0.92) brightness(1.12);
+    opacity: 0.6;
+    filter: saturate(0.9) brightness(1.1);
 }
 body.light-mode::after {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.78) 65%, rgba(232, 240, 255, 0.92) 100%);
+    background: rgba(255, 255, 255, 0.55);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 }
@@ -202,7 +204,7 @@ body.light-mode .sky-icon {
 }
 .search-box {
     display: flex;
-    align.items: center;
+    align-items: center;
     background: var(--bg-card-soft);
     border: 1px solid var(--border-color);
     border-radius: 28px;
@@ -528,7 +530,7 @@ body.light-mode .sky-icon {
     box-shadow: 0 30px 70px rgba(7, 9, 25, 0.55);
     position: relative;
 }
-close {
+.close {
     color: var(--text-secondary);
     float: right;
     font-size: 28px;
@@ -591,7 +593,7 @@ close {
     border-color: rgba(139, 92, 246, 0.55);
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
 }
-comment-input-area button {
+.comment-input-area button {
     padding: 0.85rem 2.1rem;
     background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
     color: white;
@@ -603,7 +605,7 @@ comment-input-area button {
     position: relative;
     overflow: hidden;
 }
-comment-input-area button::before {
+.comment-input-area button::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -615,11 +617,11 @@ comment-input-area button::before {
     transform: translate(-50%, -50%);
     transition: width 0.6s, height 0.6s;
 }
-comment-input-area button:hover::before {
+.comment-input-area button:hover::before {
     width: 320px;
     height: 320px;
 }
-comment-input-area button:hover {
+.comment-input-area button:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
 }
@@ -627,14 +629,14 @@ comment-input-area button:hover {
 .success-header {
     align-items: flex-start;
 }
-success-controls {
+.success-controls {
     flex-wrap: wrap;
     justify-content: flex-end;
 }
-diary-search input {
+.diary-search input {
     width: 240px;
 }
-back-link {
+.back-link {
     display: inline-flex;
     width: 44px;
     height: 44px;
@@ -659,7 +661,7 @@ body.light-mode .back-link {
     color: var(--text-secondary);
     margin-top: 0.2rem;
 }
-diary-toolbar {
+.diary-toolbar {
     margin-top: 1.4rem;
 }
 .diary-toolbar-inner {
@@ -672,7 +674,7 @@ diary-toolbar {
     padding: 1.6rem;
     box-shadow: var(--shadow);
 }
-filter-group {
+.filter-group {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -684,12 +686,12 @@ filter-group {
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
-filter-chips {
+.filter-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 0.55rem;
 }
-filter-chip {
+.filter-chip {
     border: 1px solid rgba(139, 92, 246, 0.28);
     background: rgba(139, 92, 246, 0.12);
     color: var(--text-primary);
@@ -699,27 +701,27 @@ filter-chip {
     transition: var(--transition);
     font-size: 0.9rem;
 }
-filter-chip:hover {
+.filter-chip:hover {
     transform: translateY(-2px);
     background: rgba(139, 92, 246, 0.25);
 }
-filter-chip.active {
+.filter-chip.active {
     background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
     border-color: transparent;
     color: #fff;
     box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
 }
-filter-row {
+.filter-row {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     align-items: center;
 }
-filter-label {
+.filter-label {
     color: var(--text-secondary);
     font-size: 0.9rem;
 }
-filter-select {
+.filter-select {
     background: var(--bg-secondary);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
@@ -732,19 +734,19 @@ filter-select {
 body.light-mode .filter-select {
     background: rgba(255, 255, 255, 0.95);
 }
-filter-select:hover,
-filter-select:focus {
+.filter-select:hover,
+.filter-select:focus {
     border-color: rgba(139, 92, 246, 0.55);
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
     outline: none;
 }
-diary-actions {
+.diary-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
 }
-primary-btn,
-ghost-btn {
+.primary-btn,
+.ghost-btn {
     border-radius: 14px;
     padding: 0.65rem 1.4rem;
     font-size: 0.95rem;
@@ -756,43 +758,43 @@ ghost-btn {
     align-items: center;
     gap: 0.45rem;
 }
-primary-btn {
+.primary-btn {
     background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
     color: #fff;
     box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
 }
-primary-btn:hover {
+.primary-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 16px 32px rgba(99, 102, 241, 0.38);
 }
-ghost-btn {
+.ghost-btn {
     background: rgba(139, 92, 246, 0.1);
     border-color: rgba(139, 92, 246, 0.25);
     color: var(--text-primary);
 }
-ghost-btn:hover {
+.ghost-btn:hover {
     background: rgba(139, 92, 246, 0.2);
     transform: translateY(-2px);
 }
-ghost-btn.danger {
+.ghost-btn.danger {
     color: #f87171;
     border-color: rgba(248, 113, 113, 0.35);
     background: rgba(248, 113, 113, 0.12);
 }
-ghost-btn.danger:hover {
+.ghost-btn.danger:hover {
     background: rgba(248, 113, 113, 0.18);
 }
-success-main {
+.success-main {
     padding: 2.5rem 0 5rem;
 }
-diary-counter {
+.diary-counter {
     color: var(--text-secondary);
     margin-bottom: 1.2rem;
     font-size: 0.92rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
-timeline {
+.timeline {
     position: relative;
     padding-left: 2.5rem;
     border-left: 2px solid var(--timeline-line);
@@ -800,12 +802,12 @@ timeline {
     flex-direction: column;
     gap: 2.2rem;
 }
-timeline-item {
+.timeline-item {
     position: relative;
     display: flex;
     gap: 1.2rem;
 }
-timeline-marker {
+.timeline-marker {
     position: absolute;
     left: -32px;
     top: 12px;
@@ -815,7 +817,7 @@ timeline-marker {
     background: linear.gradient(135deg, var(--accent-color), var(--accent-hover));
     box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.18);
 }
-timeline-card {
+.timeline-card {
     flex: 1;
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -824,70 +826,70 @@ timeline-card {
     overflow: hidden;
     animation: slideInLeft 0.45s ease-out;
 }
-diary-card-body {
+.diary-card-body {
     padding: 1.6rem;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 1.1rem;
 }
-diary-cover {
+.diary-cover {
     width: 100%;
     border-radius: 16px;
     object-fit: cover;
     max-height: 220px;
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
 }
-diary-card-content {
+.diary-card-content {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
-diary-card-header {
+.diary-card-header {
     display: flex;
     flex-direction: column;
     gap: 0.45rem;
 }
-diary-title {
+.diary-title {
     font-size: 1.35rem;
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1.45;
 }
-diary-alt {
+.diary-alt {
     color: var(--text-secondary);
     font-size: 0.92rem;
     line-height: 1.55;
     white-space: pre-wrap;
 }
-diary-text p,
-diary-highlight span {
+.diary-text p,
+.diary-highlight span {
     white-space: pre-wrap;
 }
-diary-highlight {
+.diary-highlight {
     background: rgba(139, 92, 246, 0.12);
     border-radius: 16px;
     padding: 1rem;
     border: 1px solid rgba(139, 92, 246, 0.3);
     box-shadow: inset 0 0 15px rgba(139, 92, 246, 0.08);
 }
-diary-meta {
+.diary-meta {
     display: grid;
     gap: 0.55rem;
     font-size: 0.9rem;
     color: var(--text-secondary);
 }
-meta-title {
+.meta-title {
     font-weight: 600;
     color: var(--text-primary);
     margin-right: 0.4rem;
 }
-meta-content {
+.meta-content {
     display: inline-flex;
     flex-wrap: wrap;
     gap: 0.4rem;
     align.items: center;
 }
-tag-pill {
+.tag-pill {
     display: inline-flex;
     align-items: center;
     padding: 0.35rem 0.75rem;
@@ -896,17 +898,17 @@ tag-pill {
     color: var(--text-primary);
     font-size: 0.85rem;
 }
-mood-badge {
+.mood-badge {
     display: inline-flex;
-    align.items: center;
+    align-items: center;
     padding: 0.35rem 0.75rem;
     border-radius: 999px;
     border: 1px solid currentColor;
     font-size: 0.88rem;
 }
-achievement-badge {
+.achievement-badge {
     display: inline-flex;
-    align.items: center;
+    align-items: center;
     gap: 0.3rem;
     padding: 0.35rem 0.75rem;
     border-radius: 12px;
@@ -914,7 +916,7 @@ achievement-badge {
     color: #facc15;
     font-weight: 600;
 }
-diary-attachments {
+.diary-attachments {
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem;
@@ -922,7 +924,7 @@ diary-attachments {
     font-size: 0.9rem;
     color: var(--text-secondary);
 }
-diary-attachment {
+.diary-attachment {
     width: 90px;
     height: 90px;
     object-fit: cover;
@@ -931,7 +933,7 @@ diary-attachment {
     background: rgba(255, 255, 255, 0.05);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
-diary-attachment-link {
+.diary-attachment-link {
     padding: 0.45rem 0.8rem;
     border-radius: 12px;
     background: rgba(139, 92, 246, 0.1);
@@ -939,10 +941,10 @@ diary-attachment-link {
     text-decoration: none;
     border: 1px solid rgba(139, 92, 246, 0.25);
 }
-diary-attachment-link:hover {
+.diary-attachment-link:hover {
     background: rgba(139, 92, 246, 0.2);
 }
-diary-actions-inline {
+.diary-actions-inline {
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem;
@@ -952,30 +954,30 @@ diary-actions-inline {
 .diary-modal .modal-content {
     max-width: 720px;
 }
-diary-form {
+.diary-form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
-form-grid {
+.form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1.1rem 1.4rem;
 }
-form-field {
+.form-field {
     display: flex;
     flex-direction: column;
     gap: 0.55rem;
 }
-form-field label {
+.form-field label {
     color: var(--text-secondary);
     font-size: 0.9rem;
     font-weight: 600;
     letter-spacing: 0.02em;
 }
-form-field input,
-form-field textarea,
-form-field select {
+.form-field input,
+.form-field textarea,
+.form-field select {
     background: var(--bg-secondary);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
@@ -988,22 +990,22 @@ form-field select {
 }
 body.light-mode .form-field input,
 body.light-mode .form-field textarea,
-body-light-mode .form-field select {
+body.light-mode .form-field select {
     background: rgba(255, 255, 255, 0.94);
 }
-form-field input:focus,
-form-field textarea:focus,
-form-field select:focus {
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
     border-color: rgba(139, 92, 246, 0.55);
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
     outline: none;
 }
-checkbox-grid {
+.checkbox-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
 }
-checkbox-pill {
+.checkbox-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
@@ -1015,19 +1017,19 @@ checkbox-pill {
     transition: var(--transition);
     color: var(--text-primary);
 }
-checkbox-pill input {
+.checkbox-pill input {
     accent-color: var(--accent-color);
 }
-checkbox-pill:hover {
+.checkbox-pill:hover {
     transform: translateY(-2px);
     background: rgba(139, 92, 246, 0.2);
 }
-range-wrapper {
+.range-wrapper {
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
-range-wrapper input[type="range"] {
+.range-wrapper input[type="range"] {
     flex: 1;
     accent-color: var(--accent-color);
 }
@@ -1035,13 +1037,13 @@ range-wrapper input[type="range"] {
     color: var(--accent-hover);
     font-weight: 600;
 }
-form-actions {
+.form-actions {
     display: flex;
     gap: 0.8rem;
     justify-content: flex-end;
 }
-diary-empty,
-no-results {
+.diary-empty,
+.no-results {
     text-align: center;
     padding: 3rem 1rem;
     color: var(--text-secondary);
@@ -1065,7 +1067,7 @@ body.light-mode[data-page="reading"] .form-field textarea[readonly] {
     border-color: rgba(99, 102, 241, 0.38);
     color: rgba(79, 70, 229, 0.75);
 }
-reading-lock-banner {
+.reading-lock-banner {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -1078,10 +1080,10 @@ reading-lock-banner {
 }
 body.light-mode .reading-lock-banner {
     background: rgba(99, 102, 241, 0.12);
-    border.color: rgba(99, 102, 241, 0.32);
+    border-color: rgba(99, 102, 241, 0.32);
     box-shadow: inset 0 0 18px rgba(99, 102, 241, 0.1);
 }
-reading-lock-icon {
+.reading-lock-icon {
     width: 56px;
     height: 56px;
     border-radius: 16px;
@@ -1093,25 +1095,25 @@ reading-lock-icon {
     color: #fff;
     box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
 }
-reading-lock-content h3 {
+.reading-lock-content h3 {
     font-size: 1.1rem;
     margin-bottom: 0.35rem;
     color: var(--text-primary);
     letter-spacing: 0.04em;
 }
-reading-lock-content p {
+.reading-lock-content p {
     color: var(--text-secondary);
     line-height: 1.7;
 }
-reading-lock-content a {
+.reading-lock-content a {
     color: var(--accent-hover);
     text-decoration: underline;
 }
-reading-lock-content a:hover {
+.reading-lock-content a:hover {
     color: #f472b6;
 }
 /* 阅读页面书摘表格 */
-reading-digest {
+.reading-digest {
     margin-top: 2.8rem;
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -1122,36 +1124,36 @@ reading-digest {
     flex-direction: column;
     gap: 1.8rem;
 }
-reading-digest-header {
+.reading-digest-header {
     display: flex;
     align.items: center;
     gap: 1rem;
 }
-digest-icon {
+.digest-icon {
     width: 56px;
     height: 56px;
     border-radius: 16px;
     background: linear-gradient(135deg, rgba(56, 189, 248, 0.85), rgba(139, 92, 246, 0.9));
     display: flex;
     align-items: center;
-    justify内容: center;
+    justify-content: center;
     color: #fff;
     font-size: 1.4rem;
     box-shadow: 0 14px 30px rgba(56, 189, 248, 0.28);
 }
-reading-digest-header h2 {
+.reading-digest-header h2 {
     font-size: 1.4rem;
     letter-spacing: 0.05em;
     color: var(--text-primary);
 }
-reading-digest-header p {
+.reading-digest-header p {
     color: var(--text-secondary);
 }
-reading-digest-table {
+.reading-digest-table {
     display: grid;
     gap: 1rem;
 }
-digest-row {
+.digest-row {
     display: grid;
     grid-template-columns: 200px minmax(0, 1fr) 120px 100px;
     gap: 1rem;
@@ -1162,42 +1164,42 @@ digest-row {
     box-shadow: inset 0 0 15px rgba(139, 92, 246, 0.08);
     transition: var(--transition);
 }
-digest-row:hover {
+.digest-row:hover {
     transform: translateY(-4px);
     border-color: rgba(139, 92, 246, 0.45);
     box-shadow: 0 18px 30px rgba(15, 23, 42, 0.35);
 }
-digest-row--head {
+.digest-row--head {
     background: rgba(79, 70, 229, 0.22);
     border: 1px solid rgba(129, 140, 248, 0.4);
     font-weight: 600;
     color: #c7d2fe;
     box-shadow: inset 0 0 22px rgba(129, 140, 248, 0.16);
 }
-digest-row--head:hover {
+.digest-row--head:hover {
     transform: none;
     box-shadow: inset 0 0 22px rgba(129, 140, 248, 0.16);
 }
-digest-col {
+.digest-col {
     font-size: 0.95рем;
     color: var(--text-primary);
     line-height: 1.7;
 }
-digest-col--book {
+.digest-col--book {
     font-weight: 600;
     color: #c7d2fe;
 }
-digest-col--content {
+.digest-col--content {
     color: var(--text-secondary);
     white-space: pre-wrap;
 }
-digest-col--date,
-digest-col--rating {
+.digest-col--date,
+.digest-col--rating {
     color: #e0e7ff;
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
     font-size: 0.88rem;
 }
-digest-col--rating {
+.digest-col--rating {
     text-align: center;
 }
 body.light-mode .reading-digest {
@@ -1220,8 +1222,8 @@ body.light-mode .digest-col--book {
 body.light-mode .digest-col--content {
     color: #475569;
 }
-body-light-mode .digest-col--date,
-body-light-mode .digest-col--rating {
+body.light-mode .digest-col--date,
+body.light-mode .digest-col--rating {
     color: #4338ca;
 }
 @media (max-width: 1024px) {
@@ -1268,7 +1270,7 @@ body-light-mode .digest-col--rating {
         grid-template-columns: 1fr;
     }
     .reading-lock-banner {
-        align.items: flex-start;
+        align-items: flex-start;
     }
     .reading-digest {
         padding: 1.8rem 1.4rem;
