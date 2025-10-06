@@ -58,7 +58,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: ,
+        achievementLevel:null ,
         coverImage: '',
         attachments: []
     },
@@ -83,7 +83,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: ,
+        achievementLevel: null,
         coverImage: '',
         attachments: []
     },
@@ -108,7 +108,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: ,
+        achievementLevel: null,
         coverImage: 'images/4dd4a92b00f40efe894d41519c6e675c.jpg',
         attachments: []
     },
@@ -133,7 +133,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: ,
+        achievementLevel:null ,
         coverImage: 'images/9884f4b986c88ee9963c735ba193939c.jpg',
         attachments: []
     },
@@ -158,7 +158,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'satisfied',
-        achievementLevel: ,
+        achievementLevel: null,
         coverImage: 'images/a02a02195090841106b5305e8fb14860.jpg',
         attachments: []
     },
@@ -183,7 +183,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'satisfied',
-        achievementLevel: ,
+        achievementLevel: null,
         coverImage: 'images/5544bbf9199ddc240c7d14bd98e6cdfd.png',
         attachments: []
     },
@@ -208,7 +208,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: ,
+        achievementLevel: null,
         coverImage: '',
         attachments: []
     },
@@ -233,7 +233,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: ,
+        achievementLevel: null,
         coverImage: '',
         attachments: []
     },
@@ -258,7 +258,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: ,
+        achievementLevel: null,
         coverImage: '',
         attachments: []
     },
@@ -283,7 +283,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'satisfied',
-        achievementLevel: ,
+        achievementLevel: null,
         coverImage: '',
         attachments: []
     },
@@ -308,7 +308,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: ,
+        achievementLevel: null,
         coverImage: 'images/1c2cde0fb8c866662a89a21de464caf7.png',
         attachments: []
     },
@@ -333,7 +333,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'calm',
-        achievementLevel: ,
+        achievementLevel:null ,
         coverImage: '',
         attachments: []
     },
@@ -358,7 +358,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: ,
+        achievementLevel:null ,
         coverImage: '',
         attachments: []
     },
@@ -383,7 +383,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: ,
+        achievementLevel:null ,
         coverImage: '',
         attachments: []
     },
@@ -408,7 +408,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'satisfied',
-        achievementLevel: ,
+        achievementLevel:null ,
         coverImage: '',
         attachments: []
     },
@@ -433,7 +433,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'happy',
-        achievementLevel: ,
+        achievementLevel: null,
         coverImage: '',
         attachments: []
     },
@@ -458,7 +458,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'satisfied',
-        achievementLevel: ,
+        achievementLevel:null ,
         coverImage: '',
         attachments: []
     },
@@ -483,7 +483,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'calm',
-        achievementLevel: ,
+        achievementLevel:null ,
         coverImage: 'images/1aa6b078b1577770e866e1afcc4b9074.png',
         attachments: []
     },
@@ -508,7 +508,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'calm',
-        achievementLevel: ,
+        achievementLevel:null ,
         coverImage: '',
         attachments: []
     },
@@ -533,7 +533,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'satisfied',
-        achievementLevel: ,
+        achievementLevel: null,
         coverImage: '',
         attachments: []
     },
@@ -558,7 +558,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'calm',
-        achievementLevel: ,
+        achievementLevel:null ,
         coverImage: '',
         attachments: []
     },
@@ -583,7 +583,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'satisfied',
-        achievementLevel: ,
+        achievementLevel:null ,
         coverImage: '',
         attachments: []
     },
@@ -608,7 +608,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'calm',
-        achievementLevel: ,
+        achievementLevel:null ,
         coverImage: '',
         attachments: []
     },
