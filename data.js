@@ -650,8 +650,8 @@ let successDiaryData = [
             en: 'Read 10 books or more.\nThe product is being tested on Taobao Xianyu platform..\nKept building the personal website，added background.\nadequate sleep.'
         },
         highlight: {
-            zh: '椰子树不错😌',
-            en: 'The coconut tree looks nice😌.'
+            zh: '椰子水不错😌',
+            en: 'The coconut water looks nice😌.'
         },
         notes: {
             zh: '',
