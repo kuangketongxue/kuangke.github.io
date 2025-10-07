@@ -665,7 +665,7 @@ let successDiaryData = [
      {
         id: 26,
         date: '2025-10-07',
-        categories: ['study', 'flim','creative'],
+        categories: ['study', 'film','creative'],
         headline: {
             zh: '阅读+产品测试',
             en: 'Reading + Product Testing'
