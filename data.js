@@ -661,6 +661,31 @@ let successDiaryData = [
         achievementLevel: 1,
         coverImage: '',
         attachments: []
+    },
+     {
+        id: 26,
+        date: '2025-10-07',
+        categories: ['study', 'flim','creative'],
+        headline: {
+            zh: '阅读+产品测试',
+            en: 'Reading + Product Testing'
+        },
+        content: {
+            zh: '阅读10本书+。\n产品在淘宝闲鱼测试。\n持续搭建个人网站，加了背景。\n睡眠充足。\n学习7小时+',
+            en: 'Read 10 books or more.\nThe product is being tested on Taobao Xianyu platform..\nKept building the personal website，added background.\nadequate sleep.\nStudying for more than 7 hours'
+        },
+        highlight: {
+            zh: '寿司不错😌；凡人修仙传不错',
+            en: 'The sushi looks nice😌.The Legend of Immortals is quite good.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
     }
 ];
 
@@ -754,6 +779,16 @@ let momentsData = [
         value: 5,
         category: '工作相关',
         time: '2025-10-06 23:32',
+        image: '',
+        likes: 0,
+        comments: []
+    },
+    {
+        id: 10,
+        content: '你可能没有那么潮，但是没有人可以讲你错，如果你没错，那你就可以按照自己的想法，让自己在自己的世界观里面足够的对，且对很久很久——等我几年后，无压力拿下它；成为有能力严肃面对严肃问题的人，成为不依托于群体娱乐化共识的独立精彩有趣的人（eg.Kanye）',
+        value: 5,
+        category: '工作相关',
+        time: '2025-10-07 23:57',
         image: '',
         likes: 0,
         comments: []
