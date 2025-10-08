@@ -688,27 +688,27 @@ let successDiaryData = [
         attachments: []
     },
      {
-        id: 27,
+        id: 26,
         date: '2025-10-08',
-        categories: ['film'],
+        categories: ['study', 'film','creative'],
         headline: {
-            zh: '1',
-            en: '1'
+            zh: '阅读+产品测试',
+            en: 'Reading + Product Testing'
         },
         content: {
-            zh: '。1\n。1\n1。\n1,
-            en: '1.\n1.\n1.\n1.\n1
+            zh: '阅读10本书+。\n产品在淘宝闲鱼测试。\n持续搭建个人网站，加了背景。\n睡眠充足。\n学习7小时+',
+            en: 'Read 10 books or more.\nThe product is being tested on Taobao Xianyu platform..\nKept building the personal website，added background.\nadequate sleep.\nStudying for more than 7 hours'
         },
         highlight: {
-            zh: '榴莲不错😌；',
+            zh: '榴莲不错不错；',
             en: 'Durian is quite good😌.'
         },
         notes: {
             zh: '',
             en: ''
         },
-        moodCode: 'hungey',
-        achievementLevel:1 ,
+        moodCode: 'hungry',
+        achievementLevel: 1,
         coverImage: '',
         attachments: []
     }
