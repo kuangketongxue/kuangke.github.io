@@ -720,6 +720,7 @@
                         <div class="digest-col digest-col--date">日期</div>
                         <div class="digest-col digest-col--rating">启发值</div>
                     </div>
+                    
                     <div class="digest-row">
                         <div class="digest-col digest-col--book">《专注的真相》</div>
                         <div class="digest-col digest-col--content">选择意味着放弃</div>
@@ -1569,4 +1570,168 @@
                         </div>
                     </div>
                     <div class="digest-row">
-                        <div
+                         <div class="digest-col digest-col--book">《七年就是一辈子》</div>
+                        <div class="digest-col digest-col--content">不休法定节假日：每年可以多工作成长115天，10年就是多成长3年，80年就是多成长24年</div>
+                        <div class="digest-col digest-col--date">2025/08/11</div>
+                        <div class="digest-col digest-col--rating">
+                            <span class="rating-badge rating-value-4">4</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // 回到顶部功能
+        const backToTopButton = document.getElementById('backToTop');
+        
+        // 监听滚动事件
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+        
+        // 点击回到顶部
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // 检查本地存储的主题设置
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            body.classList.add('light-mode');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            const isLightMode = body.classList.contains('light-mode');
+            
+            if (isLightMode) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+        
+        // 搜索功能
+        const digestSearchInput = document.getElementById('digestSearchInput');
+        const digestSearchButton = document.getElementById('digestSearchButton');
+        const digestSearchReset = document.getElementById('digestSearchReset');
+        const digestSortToggle = document.getElementById('digestSortToggle');
+        const digestRows = document.querySelectorAll('.digest-row:not(.digest-row--head)');
+        
+        let currentSortOrder = 'desc'; // 默认降序排列
+        
+        // 搜索功能
+        function performSearch() {
+            const searchTerm = digestSearchInput.value.toLowerCase().trim();
+            
+            digestRows.forEach(row => {
+                const bookName = row.querySelector('.digest-col--book').textContent.toLowerCase();
+                const content = row.querySelector('.digest-col--content').textContent.toLowerCase();
+                
+                if (bookName.includes(searchTerm) || content.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        
+        // 重置搜索
+        function resetSearch() {
+            digestSearchInput.value = '';
+            digestRows.forEach(row => {
+                row.style.display = '';
+            });
+        }
+        
+        // 排序功能
+        function sortByRating() {
+            const rowsArray = Array.from(digestRows);
+            
+            rowsArray.sort((a, b) => {
+                const ratingA = getRatingValue(a);
+                const ratingB = getRatingValue(b);
+                
+                if (currentSortOrder === 'desc') {
+                    return ratingB - ratingA;
+                } else {
+                    return ratingA - ratingB;
+                }
+            });
+            
+            // 重新排列DOM元素
+            const table = document.querySelector('.reading-digest-table');
+            const headerRow = table.querySelector('.digest-row--head');
+            
+            // 清空表格（保留表头）
+            table.innerHTML = '';
+            table.appendChild(headerRow);
+            
+            // 添加排序后的行
+            rowsArray.forEach(row => {
+                table.appendChild(row);
+            });
+            
+            // 切换排序顺序
+            currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
+            
+            // 更新按钮图标和文本
+            if (currentSortOrder === 'desc') {
+                digestSortToggle.innerHTML = '<i class="fas fa-sort-numeric-down"></i><span>启发值排序</span>';
+            } else {
+                digestSortToggle.innerHTML = '<i class="fas fa-sort-numeric-up"></i><span>启发值排序</span>';
+            }
+        }
+        
+        // 获取启发值
+        function getRatingValue(row) {
+            const ratingBadge = row.querySelector('.rating-badge');
+            if (!ratingBadge || ratingBadge.classList.contains('rating-empty')) {
+                return -1; // 空值排在最后
+            }
+            
+            const ratingText = ratingBadge.textContent.trim();
+            const ratingMatch = ratingText.match(/\d+/);
+            return ratingMatch ? parseInt(ratingMatch[0]) : -1;
+        }
+        
+        // 事件监听器
+        digestSearchButton.addEventListener('click', performSearch);
+        digestSearchReset.addEventListener('click', resetSearch);
+        digestSortToggle.addEventListener('click', sortByRating);
+        
+        // 支持回车键搜索
+        digestSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        // 设置当前日期
+        const readingDate = document.getElementById('readingDate');
+        const today = new Date().toISOString().split('T')[0];
+        readingDate.value = today;
+    </script>
+</body>
+</html>
