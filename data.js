@@ -707,7 +707,7 @@ let successDiaryData = [
             zh: '',
             en: ''
         },
-        moodCode: '',
+        moodCode: 'hungey',
         achievementLevel:1 ,
         coverImage: '',
         attachments: []
