@@ -696,19 +696,19 @@ let successDiaryData = [
             en: 'Reading + Product Testing'
         },
         content: {
-            zh: '阅读10本书+。\n产品在淘宝闲鱼测试。\n持续搭建个人网站，加了背景。\n睡眠充足。\n学习7小时+',
-            en: 'Read 10 books or more.\nThe product is being tested on Taobao Xianyu platform..\nKept building the personal website，added background.\nadequate sleep.\nStudying for more than 7 hours'
+            zh: '阅读10本书+且读完《区块链革命》。\n产品在淘宝闲鱼测试。\n持续搭建个人网站，加了一键回到顶部的功能。\n睡眠充足。\n学习14小时+',
+            en: 'Read 10 books and finish "The Blockchain Revolution".\nThe product is being tested on Taobao Xianyu platform..\nKept building the personal website，added a one-click feature to return to the top. .\nadequate sleep.\nStudying for more than 14 hours'
         },
         highlight: {
-            zh: '榴莲不错；',
-            en: 'Durian is quite good😌.'
+            zh: '榴莲不错；罗永浩*TIM双厨狂喜',
+            en: 'Durian is quite good😌.Luo Honghao and TIM are over the moon with excitement.'
         },
         notes: {
             zh: '',
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: 1,
+        achievementLevel: 4,
         coverImage: '',
         attachments: []
     }
@@ -814,6 +814,16 @@ let momentsData = [
         value: 5,
         category: '工作相关',
         time: '2025-10-07 23:57',
+        image: '',
+        likes: 0,
+        comments: []
+    },
+     {
+        id: 11,
+        content: '用来替代自己的另一个“我”所产生的稳定现金流对应的数值，就是衡量自己配得上什么的标准',
+        value: 5,
+        category: '财经理财',
+        time: '2025-10-09 00:58',
         image: '',
         likes: 0,
         comments: []
