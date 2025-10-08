@@ -690,14 +690,14 @@ let successDiaryData = [
      {
         id: 27,
         date: '2025-10-08',
-        categories: ['', '',''],
+        categories: ['film'],
         headline: {
-            zh: '',
-            en: ''
+            zh: '1',
+            en: '1'
         },
         content: {
-            zh: '。\n。\n。\n,
-            en: '.\n.\n.\n.\n
+            zh: '。1\n。1\n1。\n1,
+            en: '1.\n1.\n1.\n1.\n1
         },
         highlight: {
             zh: '榴莲不错😌；',
@@ -708,7 +708,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: '',
-        achievementLevel: ,
+        achievementLevel:1 ,
         coverImage: '',
         attachments: []
     }
