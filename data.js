@@ -686,6 +686,31 @@ let successDiaryData = [
         achievementLevel: 1,
         coverImage: '',
         attachments: []
+    },
+     {
+        id: 27,
+        date: '2025-10-08',
+        categories: ['', '',''],
+        headline: {
+            zh: '',
+            en: ''
+        },
+        content: {
+            zh: '。\n。\n。\n,
+            en: '.\n.\n.\n.\n
+        },
+        highlight: {
+            zh: '榴莲不错😌；',
+            en: 'Durian is quite good😌.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: '',
+        achievementLevel: ,
+        coverImage: '',
+        attachments: []
     }
 ];
 
