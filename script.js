@@ -38,7 +38,7 @@ const translations = {
     },
     en: {
         successTitle: 'Success Diary Timeline',
-        successSubtitle: 'Capture long-term wins and daily highlights.',
+        successSubtitle: 'When you write a success journal, you will reflect more deeply on yourself, the world, and the principles of success. You will gain a better understanding of yourself and your desires, which will enable you to comprehend others. Completely understanding oneself and all the secrets of the world is an ideal that may not be fully achievable, but we can gradually work towards it step by step.The amount of money one earns is closely linked to their level of self-confidence. Additionally, it is crucial to determine whether one's energy is focused on endeavors within their capabilities or on tasks that are beyond their reach. Without my success journal, I would not have considered which areas might be suitable for me to make money in.',
         searchPlaceholder: 'Search title, tags, moods...',
         moodAll: 'All moods',
         sortLabel: 'Sort',
