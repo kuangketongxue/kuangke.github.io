@@ -2,45 +2,49 @@
 
 /**
  * 日记标签库
- * @type {Array<{code: string, zh: string, en: string}>}
+ * @type {Array<{code: string, zh: string, en: string, icon: string}>}
  */
 const diaryTagLibrary = [
-    { code: 'reading', zh: '阅读 📖', en: 'Reading 📖' },
-    { code: 'fitness', zh: '运动 🏃‍♀️', en: 'Fitness 🏃‍♀️' },
-    { code: 'work', zh: '工作 💼', en: 'Work 💼' },
-    { code: 'study', zh: '学习 📚', en: 'Study 📚' },
-    { code: 'nature', zh: '自然 🌳', en: 'Nature 🌳' },
-    { code: 'creative', zh: '创作 ✍️', en: 'Creative ✍️' },
-    { code: 'film', zh: '追剧/电影 🎬', en: 'Films 🎬' },
-    { code: 'music', zh: '音乐 🎶', en: 'Music 🎶' },
-    { code: 'finance', zh: '理财 💰', en: 'Finance 💰' },
-    { code: 'travel', zh: '旅行 ✈️', en: 'Travel ✈️' }
+    { code: 'reading', zh: '阅读', en: 'Reading', icon: '📖' },
+    { code: 'fitness', zh: '运动', en: 'Fitness', icon: '🏃‍♀️' },
+    { code: 'work', zh: '工作', en: 'Work', icon: '💼' },
+    { code: 'study', zh: '学习', en: 'Study', icon: '📚' },
+    { code: 'nature', zh: '自然', en: 'Nature', icon: '🌳' },
+    { code: 'creative', zh: '创作', en: 'Creative', icon: '✍️' },
+    { code: 'film', zh: '追剧/电影', en: 'Films', icon: '🎬' },
+    { code: 'music', zh: '音乐', en: 'Music', icon: '🎶' },
+    { code: 'finance', zh: '理财', en: 'Finance', icon: '💰' },
+    { code: 'travel', zh: '旅行', en: 'Travel', icon: '✈️' }
 ];
 
 /**
  * 心情库
- * @type {Object<string, {zh: string, en: string, color: string}>}
+ * @type {Object<string, {zh: string, en: string, color: string, emoji: string}>}
  */
 const moodLibrary = {
     satisfied: {
-        zh: '✨ 满足',
-        en: '✨ Satisfied',
-        color: '#10b981'
+        zh: '满足',
+        en: 'Satisfied',
+        color: '#10b981',
+        emoji: '✨'
     },
     calm: {
-        zh: '😌 平静',
-        en: '😌 Calm',
-        color: '#38bdf8'
+        zh: '平静',
+        en: 'Calm',
+        color: '#38bdf8',
+        emoji: '😌'
     },
     hungry: {
-        zh: '(｡´•﹃•)っ🍜 保持饥渴感',
-        en: '(｡´•﹃•)っ🍜 Stay hungry',
-        color: '#f97316'
+        zh: '保持饥渴感',
+        en: 'Stay hungry',
+        color: '#f97316',
+        emoji: '🍜'
     },
     happy: {
-        zh: '😊 开心',
-        en: '😊 Happy',
-        color: '#facc15'
+        zh: '开心',
+        en: 'Happy',
+        color: '#facc15',
+        emoji: '😊'
     }
 };
 
@@ -75,11 +79,11 @@ let successDiaryData = [
         },
         content: {
             zh: '阅读10本书+。\n产品在淘宝闲鱼测试。\n持续搭建个人网站,补充了启发值。\n睡眠充足。\n学习14小时+',
-            en: 'Read 10 books.\nThe product is being tested on Taobao Xianyu platform.\nKept building the personal website, Enhanced the enlightening value.\nAdequate sleep.\nStudying for more than 14 hours'
+            en: 'Read 10+ books.\nProduct testing on Taobao Xianyu.\nContinued building personal website, enhanced enlightenment value.\nAdequate sleep.\nStudied for 14+ hours'
         },
         highlight: {
             zh: '前哨战关于时间负债的实操👍',
-            en: 'Practical Implementation of Time Debt in a Pre-Battle Scenario👍'
+            en: 'Practical implementation of time debt strategy👍'
         },
         notes: {
             zh: '',
@@ -100,11 +104,11 @@ let successDiaryData = [
         },
         content: {
             zh: '阅读10本书+且读完《区块链革命》。\n产品在淘宝闲鱼测试。\n持续搭建个人网站,加了一键回到顶部的功能。\n睡眠充足。\n学习14小时+',
-            en: 'Read 10 books and finish "The Blockchain Revolution".\nThe product is being tested on Taobao Xianyu platform.\nKept building the personal website, added a one-click feature to return to the top.\nAdequate sleep.\nStudying for more than 14 hours'
+            en: 'Read 10+ books and finished "Blockchain Revolution".\nProduct testing on Taobao Xianyu.\nAdded "back to top" button to website.\nAdequate sleep.\nStudied for 14+ hours'
         },
         highlight: {
-            zh: '榴莲不错;罗永浩*TIM双厨狂喜',
-            en: 'Durian is quite good😌. Luo Yonghao and TIM are over the moon with excitement.'
+            zh: '榴莲不错;罗永浩×TIM双厨狂喜',
+            en: 'Great durian😌. Luo Yonghao×TIM double joy'
         },
         notes: {
             zh: '',
@@ -125,11 +129,11 @@ let successDiaryData = [
         },
         content: {
             zh: '阅读10本书+。\n产品在淘宝闲鱼测试。\n持续搭建个人网站,加了背景。\n睡眠充足。\n学习7小时+',
-            en: 'Read 10 books or more.\nThe product is being tested on Taobao Xianyu platform.\nKept building the personal website, added background.\nAdequate sleep.\nStudying for more than 7 hours'
+            en: 'Read 10+ books.\nProduct testing on Taobao Xianyu.\nAdded background to website.\nAdequate sleep.\nStudied for 7+ hours'
         },
         highlight: {
             zh: '寿司不错😌;凡人修仙传不错',
-            en: 'The sushi looks nice😌. The Legend of Immortals is quite good.'
+            en: 'Nice sushi😌. Enjoyed "A Record of Mortal\'s Journey to Immortality"'
         },
         notes: {
             zh: '',
@@ -150,11 +154,11 @@ let successDiaryData = [
         },
         content: {
             zh: '阅读10本书+。\n产品在淘宝闲鱼测试。\n持续搭建个人网站,加了背景。\n睡眠充足。\n学习10小时+',
-            en: 'Read 10 books or more.\nThe product is being tested on Taobao Xianyu platform.\nKept building the personal website, added background.\nAdequate sleep.\nStudying for more than 10 hours'
+            en: 'Read 10+ books.\nProduct testing on Taobao Xianyu.\nAdded background to website.\nAdequate sleep.\nStudied for 10+ hours'
         },
         highlight: {
             zh: '椰子水不错😌',
-            en: 'The coconut water looks nice😌'
+            en: 'Nice coconut water😌'
         },
         notes: {
             zh: '',
@@ -171,15 +175,15 @@ let successDiaryData = [
         categories: ['study', 'film', 'creative'],
         headline: {
             zh: '阅读+前哨战"以项目为导向"',
-            en: 'Reading + Frontline Battle: Projects-Oriented Approach'
+            en: 'Reading + Project-Oriented Strategy'
         },
         content: {
             zh: '阅读10本书+。\n写产品商业书。\n持续搭建个人网站。\n睡眠充足。',
-            en: 'Read 10 books or more.\nWriting a commercial book about the product.\nKept building the personal website.\nAdequate sleep.'
+            en: 'Read 10+ books.\nWrote product business book.\nContinued building personal website.\nAdequate sleep.'
         },
         highlight: {
             zh: 'Linksphotograph的视频"在世界上最孤独的房子里过一夜!"好看',
-            en: 'The video "Spending a Night in the Most Isolated House in the World!" by Linksphotograph is quite captivating.'
+            en: 'Great video by Linksphotograph: "Spending a Night in the World\'s Loneliest House!"'
         },
         notes: {
             zh: '',
@@ -196,15 +200,15 @@ let successDiaryData = [
         categories: ['work', 'study', 'creative'],
         headline: {
             zh: '打造朋友圈数字花园',
-            en: 'Launch a bespoke digital haven'
+            en: 'Building Digital Garden'
         },
         content: {
             zh: '坚持 7 小时深度学习并上线个人朋友圈站点。',
-            en: 'Studied over seven hours and published the personal timeline site.'
+            en: 'Deep study for 7 hours and launched personal timeline site.'
         },
         highlight: {
             zh: '《回家的路》真的很好听 🌌',
-            en: '"The Road Home" is such a beautiful track 🌌'
+            en: '"The Road Home" is truly beautiful 🌌'
         },
         notes: {
             zh: '',
@@ -221,15 +225,15 @@ let successDiaryData = [
         categories: ['study', 'creative'],
         headline: {
             zh: '图书馆深耕与网站焕新',
-            en: 'Library deep work and site refresh'
+            en: 'Library Deep Work & Site Refresh'
         },
         content: {
             zh: '去图书馆学习。\n网站整体翻新迭代。\n学习12个小时+。',
-            en: 'Studied at the city library.\nRefreshed the entire website experience.\nStudying for more than 12 hours.'
+            en: 'Studied at library.\nRefreshed entire website.\nStudied for 12+ hours.'
         },
         highlight: {
             zh: '影视飓风 1300 万粉丝评论区的 BGM 切画面经验值得学习。',
-            en: 'Learned useful BGM and cut tips from Cinematic Hurricane\'s 13M-subscriber comments.'
+            en: 'Learned valuable BGM editing tips from Cinematic Hurricane\'s 13M-subscriber comments.'
         },
         notes: {
             zh: '',
@@ -246,15 +250,15 @@ let successDiaryData = [
         categories: ['reading', 'study'],
         headline: {
             zh: '提前完成阅读记录并整理电脑',
-            en: 'Finished the reading log ahead of time'
+            en: 'Completed Reading Log Early'
         },
         content: {
             zh: '提前完成今日阅读记录。\n梳理并整理电脑内容。',
-            en: 'Completed the daily reading log early.\nTidied and organized files on the computer.'
+            en: 'Finished daily reading log ahead of schedule.\nOrganized computer files.'
         },
         highlight: {
             zh: '双影奇境依旧很好玩 😄',
-            en: 'Double Mirage still feels amazing 😄'
+            en: 'Double Mirage still amazing 😄'
         },
         notes: {
             zh: '',
@@ -271,15 +275,15 @@ let successDiaryData = [
         categories: ['work', 'study', 'nature'],
         headline: {
             zh: '读完《小狗钱钱》',
-            en: 'Finished "Little Dog Money"'
+            en: 'Finished "Rich Dog, Poor Dog"'
         },
         content: {
             zh: '完成阅读笔记并沉浸于双影奇境的奇妙体验。',
-            en: 'Wrapped up reading notes and enjoyed the immersive Double Mirage journey.'
+            en: 'Completed reading notes and enjoyed immersive Double Mirage experience.'
         },
         highlight: {
             zh: '双影奇境不错 😄',
-            en: 'Double Mirage feels great 😄'
+            en: 'Double Mirage is great 😄'
         },
         notes: {
             zh: '',
@@ -296,15 +300,15 @@ let successDiaryData = [
         categories: ['work', 'study', 'fitness', 'nature'],
         headline: {
             zh: '超额完成 10 小时专注学习',
-            en: 'Studied over ten hours ahead of schedule'
+            en: 'Exceeded 10-Hour Study Goal'
         },
         content: {
             zh: '图书馆学习氛围满分,提前完成阅读任务。',
-            en: 'Great focus at the library; finished the reading list ahead of schedule.'
+            en: 'Perfect study atmosphere at library, finished reading ahead of schedule.'
         },
         highlight: {
             zh: '图书馆学习真不错 ٩(•̤̀ᵕ•̤́๑)ᵒᵏᵎᵎᵎᵎ',
-            en: 'Loved the study vibe at the library ٩(•̤̀ᵕ•̤́๑)ᵒᵏᵎᵎᵎᵎ'
+            en: 'Library study is awesome ٩(•̤̀ᵕ•̤́๑)ᵒᵏᵎᵎᵎᵎ'
         },
         notes: {
             zh: '',
@@ -321,15 +325,15 @@ let successDiaryData = [
         categories: ['reading', 'fitness'],
         headline: {
             zh: '拥抱清晨,完成每日收官',
-            en: 'Embrace the dawn, close the day strong'
+            en: 'Embrace Dawn, Strong Close'
         },
         content: {
             zh: '七小时高效心流,计划全部按时完成。',
-            en: 'Seven hours of productive flow with every goal checked off.'
+            en: 'Seven hours of productive flow, all goals achieved on time.'
         },
         highlight: {
             zh: '收录了两条人生启示录。',
-            en: 'Captured two inspiring life insights today.'
+            en: 'Captured two inspiring life insights.'
         },
         notes: {
             zh: '',
@@ -346,11 +350,11 @@ let successDiaryData = [
         categories: ['study', 'film', 'creative'],
         headline: {
             zh: '内容创作与英文日记起步',
-            en: 'Content creation and English journaling'
+            en: 'Content Creation & English Journaling'
         },
         content: {
             zh: '观看罗永浩广播和直播。\n写公众号文章。\n持续搭建个人网站。\n用英语记录每日成功日记的开端。',
-            en: 'Watched Luo Yonghao\'s radio show and live stream.\nWrote a WeChat article.\nKept building the personal website.\nStarted writing daily success notes in English.'
+            en: 'Watched Luo Yonghao\'s show.\nWrote WeChat article.\nBuilt personal website.\nStarted daily English journaling.'
         },
         highlight: {
             zh: '',
@@ -367,7 +371,7 @@ let successDiaryData = [
     }
 ];
 
-// 保存默认数据副本
+// 深拷贝默认数据
 const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
 
 // ==================== 朋友圈数据 ====================
@@ -521,47 +525,69 @@ function validateDiaryEntry(entry) {
     const missingFields = requiredFields.filter(field => !(field in entry));
     
     if (missingFields.length > 0) {
-        console.error(`日记条目 ${entry.id} 缺少字段:`, missingFields);
+        console.error(`❌ 日记条目 ${entry.id} 缺少必需字段:`, missingFields);
         return false;
     }
     
-    // 验证分类是否存在
+    // 验证分类
     const validCategories = diaryTagLibrary.map(tag => tag.code);
     const invalidCategories = entry.categories.filter(cat => !validCategories.includes(cat));
     
     if (invalidCategories.length > 0) {
-        console.warn(`日记条目 ${entry.id} 包含无效分类:`, invalidCategories);
+        console.warn(`⚠️ 日记条目 ${entry.id} 包含无效分类:`, invalidCategories);
     }
     
     // 验证心情代码
     if (!moodLibrary[entry.moodCode]) {
-        console.warn(`日记条目 ${entry.id} 包含无效心情代码: ${entry.moodCode}`);
+        console.warn(`⚠️ 日记条目 ${entry.id} 包含无效心情代码: ${entry.moodCode}`);
     }
     
     return true;
 }
 
 /**
- * 获取标签名称
+ * 获取标签信息
+ * @param {string} code - 标签代码
+ * @param {string} lang - 语言('zh' | 'en')
+ * @returns {Object|null} 标签信息对象
+ */
+function getTagInfo(code, lang = 'zh') {
+    const tag = diaryTagLibrary.find(t => t.code === code);
+    return tag || null;
+}
+
+/**
+ * 获取标签名称(含图标)
  * @param {string} code - 标签代码
  * @param {string} lang - 语言('zh' | 'en')
  * @returns {string} 标签名称
  */
 function getTagName(code, lang = 'zh') {
     const tag = diaryTagLibrary.find(t => t.code === code);
-    return tag ? tag[lang] : code;
+    if (!tag) return code;
+    return `${tag[lang]} ${tag.icon}`;
 }
 
 /**
  * 获取心情信息
  * @param {string} code - 心情代码
+ * @param {string} lang - 语言('zh' | 'en')
  * @returns {Object} 心情信息对象
  */
-function getMoodInfo(code) {
-    return moodLibrary[code] || {
-        zh: '未知',
-        en: 'Unknown',
-        color: '#6b7280'
+function getMoodInfo(code, lang = 'zh') {
+    const mood = moodLibrary[code];
+    if (!mood) {
+        return {
+            text: '未知',
+            color: '#6b7280',
+            emoji: '❓'
+        };
+    }
+    
+    return {
+        text: mood[lang],
+        color: mood.color,
+        emoji: mood.emoji
     };
 }
 
@@ -569,52 +595,156 @@ function getMoodInfo(code) {
  * 格式化日期
  * @param {string} dateString - 日期字符串
  * @param {string} lang - 语言('zh' | 'en')
+ * @param {Object} options - 日期格式化选项
  * @returns {string} 格式化后的日期
  */
-function formatDate(dateString, lang = 'zh') {
+function formatDate(dateString, lang = 'zh', options = {}) {
     const date = new Date(dateString);
     
-    if (lang === 'en') {
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
+    if (isNaN(date.getTime())) {
+        console.error('❌ 无效的日期格式:', dateString);
+        return dateString;
     }
     
-    return date.toLocaleDateString('zh-CN', {
+    const defaultOptions = {
         year: 'numeric',
-        month: 'long',
+        month: lang === 'en' ? 'short' : 'long',
         day: 'numeric'
+    };
+    
+    const mergedOptions = { ...defaultOptions, ...options };
+    const locale = lang === 'en' ? 'en-US' : 'zh-CN';
+    
+    return date.toLocaleDateString(locale, mergedOptions);
+}
+
+/**
+ * 按日期排序日记
+ * @param {Array} diaries - 日记数组
+ * @param {boolean} descending - 是否降序排列(默认 true)
+ * @returns {Array} 排序后的日记数组
+ */
+function sortDiariesByDate(diaries, descending = true) {
+    return [...diaries].sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return descending ? dateB - dateA : dateA - dateB;
     });
 }
 
-// ==================== 全局暴露(浏览器环境) ====================
+/**
+ * 按分类筛选日记
+ * @param {Array} diaries - 日记数组
+ * @param {string} category - 分类代码
+ * @returns {Array} 筛选后的日记数组
+ */
+function filterDiariesByCategory(diaries, category) {
+    if (!category || category === 'all') return diaries;
+    return diaries.filter(diary => diary.categories.includes(category));
+}
+
+/**
+ * 按心情筛选日记
+ * @param {Array} diaries - 日记数组
+ * @param {string} moodCode - 心情代码
+ * @returns {Array} 筛选后的日记数组
+ */
+function filterDiariesByMood(diaries, moodCode) {
+    if (!moodCode) return diaries;
+    return diaries.filter(diary => diary.moodCode === moodCode);
+}
+
+/**
+ * 获取日记统计信息
+ * @param {Array} diaries - 日记数组
+ * @returns {Object} 统计信息
+ */
+function getDiaryStats(diaries) {
+    const stats = {
+        total: diaries.length,
+        categories: {},
+        moods: {},
+        achievementLevels: {
+            0: 0,
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0
+        }
+    };
+    
+    diaries.forEach(diary => {
+        // 统计分类
+        diary.categories.forEach(cat => {
+            stats.categories[cat] = (stats.categories[cat] || 0) + 1;
+        });
+        
+        // 统计心情
+        stats.moods[diary.moodCode] = (stats.moods[diary.moodCode] || 0) + 1;
+        
+        // 统计成就等级
+        stats.achievementLevels[diary.achievementLevel]++;
+    });
+    
+    return stats;
+}
+
+// ==================== 初始化与验证 ====================
+
+console.log('🚀 开始加载数据模块...');
+
+// 验证所有日记数据
+console.log('🔍 验证成功日记数据...');
+const validationResults = successDiaryData.map(entry => ({
+    id: entry.id,
+    valid: validateDiaryEntry(entry)
+}));
+
+const invalidCount = validationResults.filter(r => !r.valid).length;
+if (invalidCount > 0) {
+    console.error(`❌ 发现 ${invalidCount} 条无效日记数据`);
+} else {
+    console.log('✅ 所有日记数据验证通过');
+}
+
+// 数据统计
+const stats = getDiaryStats(successDiaryData);
+console.log('📊 数据统计:', {
+    日记总数: stats.total,
+    朋友圈数量: momentsData.length,
+    分类分布: stats.categories,
+    心情分布: stats.moods
+});
+
+// ==================== 浏览器环境全局暴露 ====================
 
 if (typeof window !== 'undefined') {
+    // 数据字典
     window.diaryTagLibrary = diaryTagLibrary;
     window.moodLibrary = moodLibrary;
     window.momentCategories = momentCategories;
+    
+    // 数据集
     window.successDiaryData = successDiaryData;
     window.successDiaries = successDiaryData;
     window.successDiaryDefaults = successDiaryDefaults;
     window.momentsData = momentsData;
+    
+    // 工具函数
+    window.getTagInfo = getTagInfo;
     window.getTagName = getTagName;
     window.getMoodInfo = getMoodInfo;
     window.formatDate = formatDate;
+    window.validateDiaryEntry = validateDiaryEntry;
+    window.sortDiariesByDate = sortDiariesByDate;
+    window.filterDiariesByCategory = filterDiariesByCategory;
+    window.filterDiariesByMood = filterDiariesByMood;
+    window.getDiaryStats = getDiaryStats;
     
-    console.log('✅ 数据已暴露到全局作用域');
-    console.log('📊 日记数量:', successDiaryData.length);
-    console.log('📝 朋友圈数量:', momentsData.length);
+    console.log('✅ 数据模块已成功加载到全局作用域');
 }
 
-// ==================== 初始化验证 ====================
-
-console.log('🔍 验证成功日记数据...');
-successDiaryData.forEach(entry => validateDiaryEntry(entry));
-console.log('✅ 数据验证完成');
-
-// ==================== 模块导出(Node.js环境) ====================
+// ==================== Node.js 环境模块导出 ====================
 
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -630,9 +760,14 @@ if (typeof module !== 'undefined' && module.exports) {
         momentsData,
         
         // 工具函数
+        getTagInfo,
         getTagName,
         getMoodInfo,
         formatDate,
-        validateDiaryEntry
+        validateDiaryEntry,
+        sortDiariesByDate,
+        filterDiariesByCategory,
+        filterDiariesByMood,
+        getDiaryStats
     };
 }
