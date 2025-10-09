@@ -472,6 +472,9 @@ console.log('🔍 验证成功日记数据...');
 successDiaryData.forEach(entry => validateDiaryEntry(entry));
 console.log('✅ 数据验证完成');
 
+// 在文件最后添加
+const successDiaries = successDiaryData;
+
 // 导出(如果使用模块化)
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -479,6 +482,7 @@ if (typeof module !== 'undefined' && module.exports) {
         moodLibrary,
         momentCategories,
         successDiaryData,
+         successDiaries,
         successDiaryDefaults,
         momentsData,
         getTagName,
