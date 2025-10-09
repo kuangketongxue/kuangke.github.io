@@ -52,6 +52,31 @@ const momentCategories = [
 // ==================== 成功日记数据 ====================
 
 let successDiaryData = [
+   {
+        id: 28,
+        date: '2025-10-09',
+        categories: ['study', 'film', 'creative'],
+        headline: {
+            zh: '阅读+产品测试',
+            en: 'Reading + Product Testing'
+        },
+        content: {
+            zh: '阅读10本书+。\n产品在淘宝闲鱼测试。\n持续搭建个人网站,补充了启发值。\n睡眠充足。\n学习14小时+',
+            en: 'Read 10 books .\nThe product is being tested on Taobao Xianyu platform.\nKept building the personal website, Enhanced the enlightening value.\nAdequate sleep.\nStudying for more than 14 hours'
+        },
+        highlight: {
+            zh: '前哨战关于时间负债的实操👍',
+            en: ' Practical Implementation of Time Debt in a Pre-Battle Scenario👍.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 4,
+        coverImage: '',
+        attachments: []
+    },
     {
         id: 27,
         date: '2025-10-08',
