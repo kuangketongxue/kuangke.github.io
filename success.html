@@ -9,62 +9,117 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body data-page="success">
+    <!-- 背景装饰 -->
+    <div class="bg-decoration">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+    </div>
+
     <header class="header">
         <div class="container success-header">
             <div class="header-left">
-                <a class="back-link" href="index.html">
+                <a class="back-link" href="index.html" aria-label="返回首页">
                     <i class="fas fa-arrow-left"></i>
                 </a>
-                <div>
-                    <h1 class="logo" data-i18n="successTitle">成功日记时间轴</h1>
-                    <p class="success-subtitle" data-i18n="successSubtitle">当你写成功日记的时候，你会对自己，对世界，还有对成功的规律作更深入的思考，会越来越多地了解自己和自己的愿望，这样你才会有能力去理解别人。彻底了解自己和世界上的所有秘密，是我们无法完全实现的一种理想，但我们可以一步一步地慢慢接近这种理想。一个人挣钱的多少是和他的自信心联系在一起的。另外,他的精力究竟是集中在自己的能力范围之内,还是放到了他力所不能及的事情上,这也是很重要的一点。没有成功日记本,就不会去思考自己适合在哪些方面赚钱。</p>
+                <div class="header-text">
+                    <div class="title-wrapper">
+                        <i class="fas fa-book-open title-icon"></i>
+                        <h1 class="logo" data-i18n="successTitle">成功日记时间轴</h1>
+                    </div>
+                    <p class="success-subtitle" data-i18n="successSubtitle">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        当你写成功日记的时候，你会对自己、对世界、还有对成功的规律作更深入的思考，会越来越多地了解自己和自己的愿望，这样你才会有能力去理解别人。
+                        <i class="fas fa-quote-right quote-icon"></i>
+                    </p>
                 </div>
             </div>
             <div class="controls success-controls">
                 <div class="search-box diary-search">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="diarySearchInput" placeholder="搜索标题、标签、心情...">
+                    <input type="text" id="diarySearchInput" placeholder="搜索标题、标签、心情..." aria-label="搜索日记">
+                    <button class="search-clear" id="searchClear" style="display: none;">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                <button id="languageToggle" class="language-toggle">
+                <button id="languageToggle" class="language-toggle" aria-label="切换语言">
                     <i class="fas fa-language"></i>
                     <span>中 → EN</span>
                 </button>
-                <button id="themeToggle" class="theme-toggle">
+                <button id="themeToggle" class="theme-toggle" aria-label="切换主题">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
         </div>
     </header>
+
     <section class="diary-toolbar">
         <div class="container diary-toolbar-inner">
             <div class="filter-group">
-                <span class="filter-title" data-i18n="tagLabel">分类标签</span>
+                <div class="filter-header">
+                    <i class="fas fa-tags"></i>
+                    <span class="filter-title" data-i18n="tagLabel">分类标签</span>
+                </div>
                 <div id="diaryTagFilter" class="filter-chips"></div>
             </div>
             <div class="filter-row">
-                <label class="filter-label" data-i18n="moodLabel" for="diaryMoodSelect">心情</label>
-                <select id="diaryMoodSelect" class="filter-select">
-                    <option value="all">全部心情</option>
-                </select>
-                <label class="filter-label" data-i18n="sortLabel" for="diarySortSelect">排序</label>
-                <select id="diarySortSelect" class="filter-select">
-                    <option value="dateDesc">日期：最新优先</option>
-                    <option value="dateAsc">日期：最旧优先</option>
-                    <option value="achievementDesc">成就值：最高优先</option>
-                    <option value="achievementAsc">成就值：最低优先</option>
-                </select>
-                <button id="diaryResetFilters" class="ghost-btn" data-i18n="resetFilters">
-                    重置筛选
+                <div class="filter-item">
+                    <i class="fas fa-smile"></i>
+                    <label class="filter-label" data-i18n="moodLabel" for="diaryMoodSelect">心情</label>
+                    <select id="diaryMoodSelect" class="filter-select">
+                        <option value="all">全部心情</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <i class="fas fa-sort"></i>
+                    <label class="filter-label" data-i18n="sortLabel" for="diarySortSelect">排序</label>
+                    <select id="diarySortSelect" class="filter-select">
+                        <option value="dateDesc">📅 日期：最新优先</option>
+                        <option value="dateAsc">📅 日期：最旧优先</option>
+                        <option value="achievementDesc">🏆 成就值：最高优先</option>
+                        <option value="achievementAsc">🏆 成就值：最低优先</option>
+                    </select>
+                </div>
+                <button id="diaryResetFilters" class="ghost-btn reset-btn" data-i18n="resetFilters">
+                    <i class="fas fa-redo"></i>
+                    <span>重置筛选</span>
                 </button>
             </div>
         </div>
     </section>
+
     <main class="main-content success-main">
         <div class="container">
-            <div class="diary-counter" id="diaryCounter">共 0 条记录</div>
+            <div class="stats-bar">
+                <div class="diary-counter" id="diaryCounter">
+                    <i class="fas fa-chart-line"></i>
+                    <span>共 <strong>0</strong> 条记录</span>
+                </div>
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="timeline" aria-label="时间轴视图">
+                        <i class="fas fa-stream"></i>
+                    </button>
+                    <button class="view-btn" data-view="grid" aria-label="网格视图">
+                        <i class="fas fa-th"></i>
+                    </button>
+                </div>
+            </div>
             <div id="diaryTimeline" class="timeline"></div>
+            
+            <!-- 空状态 -->
+            <div class="empty-state" style="display: none;">
+                <i class="fas fa-search empty-icon"></i>
+                <h3>未找到匹配的记录</h3>
+                <p>试试调整筛选条件或搜索关键词</p>
+            </div>
         </div>
     </main>
+
+    <!-- 返回顶部按钮 -->
+    <button id="backToTop" class="back-to-top" aria-label="返回顶部">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
