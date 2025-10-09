@@ -712,7 +712,7 @@ let successDiaryData = [
         coverImage: '',
         attachments: []
     }
-];
+]
 
 const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
 
