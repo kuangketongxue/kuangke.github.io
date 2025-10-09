@@ -636,6 +636,74 @@ class MomentsPageManager {
 
 // ==================== 成功日记页面管理器 ====================
 class SuccessPageManager {
+    static bindEvents() {
+    // 搜索
+    const searchInput = document.getElementById('diarySearchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', Utils.debounce((e) => {
+            appState.diarySearchKeyword = Utils.normalize(e.target.value);
+            this.render();
+        }));
+    }
+
+    // 心情筛选
+    const moodSelect = document.getElementById('diaryMoodSelect');
+    if (moodSelect) {
+        moodSelect.addEventListener('change', (e) => {
+            appState.diaryMoodFilter = e.target.value;
+            this.render();
+        });
+    }
+
+    // 排序
+    const sortSelect = document.getElementById('diarySortSelect');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', (e) => {
+            appState.diarySortBy = e.target.value;
+            this.render();
+        });
+        this.updateSortOptions();
+    }
+
+    // 重置筛选
+    const resetBtn = document.getElementById('diaryResetFilters');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => this.resetFilters());
+    }
+
+    // ⭐ 添加视图切换功能
+    const viewBtns = document.querySelectorAll('.view-btn');
+    viewBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // 移除所有按钮的 active 类
+            viewBtns.forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-pressed', 'false');
+            });
+            
+            // 添加当前按钮的 active 类
+            btn.classList.add('active');
+            btn.setAttribute('aria-pressed', 'true');
+            
+            // 获取视图类型
+            const viewType = btn.dataset.view;
+            const timeline = document.getElementById('diaryTimeline');
+            
+            if (timeline) {
+                // 切换视图类
+                if (viewType === 'grid') {
+                    timeline.classList.add('grid-view');
+                    timeline.classList.remove('timeline-view');
+                } else {
+                    timeline.classList.add('timeline-view');
+                    timeline.classList.remove('grid-view');
+                }
+            }
+            
+            console.log('切换到视图:', viewType);
+        });
+    });
+}
     static init() {
         this.updatePageTexts();
         this.populateMoodFilter();
