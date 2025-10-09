@@ -1998,3 +1998,34 @@ body.light-mode .circle {
     opacity: 0.15;
     filter: blur(100px);
 }
+/* 网格视图样式 */
+.timeline.grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    padding: 0;
+}
+
+.timeline.grid-view .timeline-item {
+    display: block;
+    padding: 0;
+    margin: 0;
+}
+
+.timeline.grid-view .timeline-item::before {
+    display: none; /* 隐藏时间线 */
+}
+
+.timeline.grid-view .timeline-marker {
+    display: none; /* 隐藏标记点 */
+}
+
+.timeline.grid-view .timeline-card {
+    margin-left: 0;
+    transform: none;
+}
+
+/* 默认时间轴视图 */
+.timeline.timeline-view {
+    /* 保持原有的时间轴样式 */
+}
