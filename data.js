@@ -467,6 +467,22 @@ function formatDate(dateString, lang = 'zh') {
     });
 }
 
+if (typeof window !== 'undefined') {
+    window.diaryTagLibrary = diaryTagLibrary;
+    window.moodLibrary = moodLibrary;
+    window.momentCategories = momentCategories;
+    window.successDiaryData = successDiaryData;
+    window.successDiaries = successDiaryData;
+    window.successDiaryDefaults = successDiaryDefaults;
+    window.momentsData = momentsData;
+    window.getTagName = getTagName;
+    window.getMoodInfo = getMoodInfo;
+    window.formatDate = formatDate;
+    
+    console.log('✅ 数据已暴露到全局作用域');
+    console.log('📊 日记数量:', successDiaryData.length);
+}
+
 // 初始化验证
 console.log('🔍 验证成功日记数据...');
 successDiaryData.forEach(entry => validateDiaryEntry(entry));
