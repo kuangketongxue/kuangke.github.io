@@ -22,25 +22,25 @@ const diaryTagLibrary = [
  */
 const moodLibrary = {
     satisfied: {
-        zh: '满足',
+        zh: '✨满足',
         en: 'Satisfied',
         color: '#10b981',
         emoji: '✨'
     },
     calm: {
-        zh: '平静',
+        zh: '😌平静',
         en: 'Calm',
         color: '#38bdf8',
         emoji: '😌'
     },
     hungry: {
-        zh: '保持饥渴感',
+        zh: '🍜保持饥渴感',
         en: 'Stay hungry',
         color: '#f97316',
         emoji: '🍜'
     },
     happy: {
-        zh: '开心',
+        zh: '😊开心',
         en: 'Happy',
         color: '#facc15',
         emoji: '😊'
