@@ -81,7 +81,7 @@ let successDiaryData = [
         },
         highlight: {
             zh: '罗永浩*Tim播客不错',
-            en: 'Tim's podcast with Luo Yonghao is quite good.'
+            en: 'Tim\'s podcast with Luo Yonghao is quite good.'
         },
         notes: {
             zh: '',
