@@ -2024,3 +2024,101 @@ body.light-mode .circle {
     opacity: 0.15;
     filter: blur(100px);
 }
+/* ==================== 强制英文左对齐样式 ==================== */
+
+/* 日记标题 - 英文左对齐 */
+.diary-card-header[data-lang="en"] .diary-title,
+.diary-title[data-lang="en"] {
+    text-align: left !important;
+    padding-left: 0.5rem;
+}
+
+/* 日记标题 - 中文居中 */
+.diary-card-header[data-lang="zh"] .diary-title,
+.diary-title[data-lang="zh"] {
+    text-align: center !important;
+    padding-left: 0;
+}
+
+/* 日记副标题 - 英文左对齐 */
+.diary-card-header[data-lang="en"] .diary-alt,
+.diary-alt[data-lang="en"] {
+    text-align: left !important;
+    padding-left: 0.5rem;
+}
+
+/* 日记副标题 - 中文居中 */
+.diary-card-header[data-lang="zh"] .diary-alt,
+.diary-alt[data-lang="zh"] {
+    text-align: center !important;
+    padding-left: 0;
+}
+
+/* 日记正文内容 - 英文左对齐 */
+.diary-card-content[data-lang="en"] .diary-text,
+.diary-text[data-lang="en"],
+.diary-card-content[data-lang="en"] .diary-text p,
+.diary-text[data-lang="en"] p {
+    text-align: left !important;
+    padding-left: 1rem;
+}
+
+/* 日记正文内容 - 中文居中 */
+.diary-card-content[data-lang="zh"] .diary-text,
+.diary-text[data-lang="zh"],
+.diary-card-content[data-lang="zh"] .diary-text p,
+.diary-text[data-lang="zh"] p {
+    text-align: center !important;
+    padding-left: 0;
+}
+
+/* 亮点区域 - 英文左对齐 */
+.diary-highlight[data-lang="en"],
+.diary-highlight[data-lang="en"] span,
+.diary-highlight[data-lang="en"] .highlight-content {
+    text-align: left !important;
+    border-left: 4px solid var(--accent-color);
+    border-top: none;
+    padding-left: 1rem;
+}
+
+/* 亮点区域 - 中文居中 */
+.diary-highlight[data-lang="zh"],
+.diary-highlight[data-lang="zh"] span,
+.diary-highlight[data-lang="zh"] .highlight-content {
+    text-align: center !important;
+    border-top: 3px solid var(--accent-color);
+    border-left: none;
+    padding-left: 0;
+}
+
+/* 朋友圈内容 - 英文左对齐 */
+.moment-content[data-lang="en"] {
+    text-align: left !important;
+    padding-left: 0.5rem;
+}
+
+/* 朋友圈内容 - 中文居中 */
+.moment-content[data-lang="zh"] {
+    text-align: center !important;
+    padding-left: 0;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+    .diary-card-header[data-lang="en"] .diary-title,
+    .diary-card-header[data-lang="en"] .diary-alt,
+    .diary-card-content[data-lang="en"] .diary-text p,
+    .diary-highlight[data-lang="en"] span {
+        padding-left: 0.25rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .diary-card-header[data-lang="en"] .diary-title,
+    .diary-card-header[data-lang="en"] .diary-alt,
+    .diary-card-content[data-lang="en"] .diary-text p,
+    .diary-highlight[data-lang="en"] span {
+        padding-left: 0 !important;
+    }
+}
