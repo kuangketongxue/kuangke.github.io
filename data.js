@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
     {
+        id: 29,
+        date: '2025-10-10',
+        categories: ['study', 'film', 'creative'],
+        headline: {
+            zh: '阅读+早睡',
+            en: 'Reading + Go to bed early'
+        },
+        content: {
+            zh: '阅读10本书+。\n持续搭建个人网站,修改阅读室错别字+修复了没有显示的bug+补充成功日记的成就值+成功日记Emoji优化。\n睡眠充足。\n学习10小时+',
+            en: 'Read 10+ books.\nContinuously building a personal website, correcting typos in the Reading Room section, fixing a bug that was not displaying properly, adding achievement points to the Success Diary, and optimizing the emojis in the Success Diary.\nAdequate sleep.\nStudied for 10+ hours'
+        },
+        highlight: {
+            zh: '罗永浩*Tim播客不错',
+            en: 'Tim's podcast with Luo Yonghao is quite good.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 3,
+        coverImage: '',
+        attachments: []
+    },
+    {
         id: 28,
         date: '2025-10-09',
         categories: ['study', 'film', 'creative'],
