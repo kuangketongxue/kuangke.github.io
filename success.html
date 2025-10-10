@@ -127,3 +127,183 @@
     <script src="script.js" ></script>
 </body>
 </html>
+// 渲染单个日记卡片
+function renderDiaryCard(diary, lang) {
+    const currentLang = lang || getCurrentLanguage();
+    const moodInfo = getMoodInfo(diary.moodCode, currentLang);
+    
+    return `
+        <div class="timeline-item" data-id="${diary.id}">
+            <div class="timeline-marker"></div>
+            <div class="timeline-card">
+                <div class="diary-card-body">
+                    ${diary.coverImage ? `
+                        <img src="${diary.coverImage}" 
+                             alt="${diary.headline[currentLang]}" 
+                             class="diary-cover">
+                    ` : ''}
+                    
+                    <div class="diary-card-content" data-lang="${currentLang}">
+                        <div class="diary-card-header" data-lang="${currentLang}">
+                            <h2 class="diary-title" data-lang="${currentLang}">
+                                ${diary.headline[currentLang]}
+                            </h2>
+                            <div class="diary-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                ${formatDate(diary.date, currentLang)}
+                            </div>
+                        </div>
+                        
+                        <div class="diary-text" data-lang="${currentLang}">
+                            ${formatContent(diary.content[currentLang])}
+                        </div>
+                        
+                        ${diary.highlight && diary.highlight[currentLang] ? `
+                            <div class="diary-highlight" data-lang="${currentLang}">
+                                <strong class="meta-title">
+                                    ${currentLang === 'zh' ? '小结:' : 'Highlight:'}
+                                </strong>
+                                <span class="highlight-content">${diary.highlight[currentLang]}</span>
+                            </div>
+                        ` : ''}
+                        
+                        ${diary.notes && diary.notes[currentLang] ? `
+                            <div class="diary-notes" data-lang="${currentLang}">
+                                <strong class="meta-title">
+                                    ${currentLang === 'zh' ? '备注:' : 'Notes:'}
+                                </strong>
+                                <p>${diary.notes[currentLang]}</p>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="diary-meta">
+                            <div>
+                                <span class="meta-title">
+                                    ${currentLang === 'zh' ? '标签:' : 'Tags:'}
+                                </span>
+                                <span class="meta-content">
+                                    ${diary.categories.map(cat => 
+                                        `<span class="tag-pill">${getTagName(cat, currentLang)}</span>`
+                                    ).join('')}
+                                </span>
+                            </div>
+                            
+                            <div>
+                                <span class="meta-title">
+                                    ${currentLang === 'zh' ? '心情:' : 'Mood:'}
+                                </span>
+                                <span class="meta-content">
+                                    <span class="mood-badge" style="color: ${moodInfo.color}; border-color: ${moodInfo.color};">
+                                        ${moodInfo.emoji} ${moodInfo.text}
+                                    </span>
+                                </span>
+                            </div>
+                            
+                            <div>
+                                <span class="meta-title">
+                                    ${currentLang === 'zh' ? '成就:' : 'Achievement:'}
+                                </span>
+                                <span class="meta-content">
+                                    <span class="achievement-badge">
+                                        ${'★'.repeat(diary.achievementLevel)}${'☆'.repeat(5 - diary.achievementLevel)}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        ${diary.attachments && diary.attachments.length > 0 ? `
+                            <div class="diary-attachments">
+                                <span class="meta-title">
+                                    ${currentLang === 'zh' ? '附件:' : 'Attachments:'}
+                                </span>
+                                ${diary.attachments.map(att => 
+                                    att.type === 'image' 
+                                        ? `<img src="${att.url}" alt="${att.name}" class="diary-attachment">`
+                                        : `<a href="${att.url}" class="diary-attachment-link" target="_blank">
+                                            <i class="fas fa-paperclip"></i> ${att.name}
+                                           </a>`
+                                ).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// 格式化内容(保持换行)
+function formatContent(content) {
+    if (!content) return '';
+    return content.split('\n').map(line => 
+        line.trim() ? `<p>${line}</p>` : ''
+    ).join('');
+}
+
+// 切换语言时重新渲染
+function switchLanguage() {
+    const newLang = getCurrentLanguage() === 'zh' ? 'en' : 'zh';
+    setCurrentLanguage(newLang);
+    
+    // 更新按钮文本
+    const langBtn = document.querySelector('.language-toggle');
+    if (langBtn) {
+        langBtn.innerHTML = `
+            <i class="fas fa-language"></i>
+            <span>${newLang === 'zh' ? '中 → EN' : 'EN → 中'}</span>
+        `;
+    }
+    
+    // 重新渲染所有内容
+    renderAllDiaries();
+}
+
+// 获取当前语言
+function getCurrentLanguage() {
+    return localStorage.getItem('language') || 'zh';
+}
+
+// 设置当前语言
+function setCurrentLanguage(lang) {
+    localStorage.setItem('language', lang);
+}
+
+// 渲染所有日记
+function renderAllDiaries() {
+    const currentLang = getCurrentLanguage();
+    const timeline = document.querySelector('.timeline');
+    
+    if (!timeline) return;
+    
+    const filteredDiaries = getFilteredDiaries();
+    
+    if (filteredDiaries.length === 0) {
+        timeline.innerHTML = `
+            <div class="diary-empty">
+                <div class="empty-icon">📝</div>
+                <h3>${currentLang === 'zh' ? '暂无日记' : 'No Diaries Yet'}</h3>
+                <p>${currentLang === 'zh' ? '开始记录你的成功时刻吧!' : 'Start recording your success moments!'}</p>
+            </div>
+        `;
+        return;
+    }
+    
+    timeline.innerHTML = filteredDiaries
+        .map(diary => renderDiaryCard(diary, currentLang))
+        .join('');
+}
+
+// 页面加载时初始化
+document.addEventListener('DOMContentLoaded', function() {
+    // 设置初始语言
+    const currentLang = getCurrentLanguage();
+    
+    // 渲染日记
+    renderAllDiaries();
+    
+    // 绑定语言切换按钮
+    const langBtn = document.querySelector('.language-toggle');
+    if (langBtn) {
+        langBtn.addEventListener('click', switchLanguage);
+    }
+});
