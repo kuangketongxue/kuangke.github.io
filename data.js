@@ -165,7 +165,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: 1,
+        achievementLevel: 4,
         coverImage: '',
         attachments: []
     },
@@ -190,7 +190,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: 1,
+        achievementLevel: 2,
         coverImage: '',
         attachments: []
     },
@@ -215,7 +215,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: 0,
+        achievementLevel: 3,
         coverImage: 'images/9884f4b986c88ee9963c735ba193939c.jpg',
         attachments: []
     },
@@ -240,7 +240,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: 0,
+        achievementLevel: 3,
         coverImage: '',
         attachments: []
     },
@@ -265,7 +265,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: 0,
+        achievementLevel: 1,
         coverImage: '',
         attachments: []
     },
@@ -290,7 +290,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: 0,
+        achievementLevel: 1,
         coverImage: 'images/4dd4a92b00f40efe894d41519c6e675c.jpg',
         attachments: []
     },
@@ -315,7 +315,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'satisfied',
-        achievementLevel: 0,
+        achievementLevel: 3,
         coverImage: 'images/a02a02195090841106b5305e8fb14860.jpg',
         attachments: []
     },
@@ -340,7 +340,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'satisfied',
-        achievementLevel: 0,
+        achievementLevel: 3,
         coverImage: 'images/5544bbf9199ddc240c7d14bd98e6cdfd.png',
         attachments: []
     },
@@ -365,7 +365,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'calm',
-        achievementLevel: 0,
+        achievementLevel: 1,
         coverImage: '',
         attachments: []
     }
