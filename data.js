@@ -1005,7 +1005,6 @@ function formatDate(dateString, lang = 'zh', options = {}) {
         month: lang === 'en' ? 'short' : 'long',
         day: 'numeric'
     };
-    
     const mergedOptions = { ...defaultOptions, ...options };
     const locale = lang === 'en' ? 'en-US' : 'zh-CN';
     
