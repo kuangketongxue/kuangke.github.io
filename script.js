@@ -1155,7 +1155,35 @@ style.textContent = `
         transform-origin: top right;
     }
 `;
+// 添加动画样式
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    .notification {
+        transform-origin: top right;
+    }
+`;
 document.head.appendChild(style);
+
 // ==================== 返回顶部功能 ====================
 (function() {
     const backToTopBtn = document.getElementById('backToTop');
