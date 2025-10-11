@@ -174,7 +174,7 @@ class LanguageManager {
             searchPlaceholder: '搜索标题、标签、心情...',
             moodAll: '全部心情',
             sortLabel: '排序',
-            sortDateDesc: '日期:最新优先',
+            sortDateDesc: '日期：最新优先',
             sortDateAsc: '日期：最旧优先',
             sortAchievementDesc: '成就值：最高优先',
             sortAchievementAsc: '成就值：最低优先',
@@ -332,10 +332,8 @@ class MomentsPageManager {
     }
     
     static bindEvents() {
-        // 清除旧的事件监听器
         this.clearEventListeners();
         
-        // 搜索
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
             const debouncedSearch = Utils.debounce((e) => {
@@ -345,7 +343,6 @@ class MomentsPageManager {
             this.eventListeners.set('searchInput', { element: searchInput, handler: debouncedSearch });
         }
         
-        // 分类筛选
         const categoryBtns = document.querySelectorAll('.category-btn');
         categoryBtns.forEach(btn => {
             const handler = () => {
@@ -358,7 +355,6 @@ class MomentsPageManager {
             this.eventListeners.set(`category-${btn.dataset.category}`, { element: btn, handler });
         });
         
-        // 评论模态框
         this.initCommentModal();
     }
     
@@ -620,7 +616,6 @@ class SuccessPageManager {
     }
     
     static bindEvents() {
-        // 搜索
         const searchInput = document.getElementById('diarySearchInput');
         if (searchInput) {
             searchInput.addEventListener('input', Utils.debounce((e) => {
@@ -629,7 +624,6 @@ class SuccessPageManager {
             }));
         }
         
-        // 心情筛选
         const moodSelect = document.getElementById('diaryMoodSelect');
         if (moodSelect) {
             moodSelect.addEventListener('change', (e) => {
@@ -638,7 +632,6 @@ class SuccessPageManager {
             });
         }
         
-        // 排序
         const sortSelect = document.getElementById('diarySortSelect');
         if (sortSelect) {
             sortSelect.addEventListener('change', (e) => {
@@ -648,30 +641,24 @@ class SuccessPageManager {
             this.updateSortOptions();
         }
         
-        // 重置筛选
         const resetBtn = document.getElementById('diaryResetFilters');
         if (resetBtn) {
             resetBtn.addEventListener('click', () => this.resetFilters());
         }
         
-        // 视图切换功能
         const viewBtns = document.querySelectorAll('.view-btn');
         viewBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // 移除所有按钮的 active 类
                 viewBtns.forEach(b => {
                     b.classList.remove('active');
                     b.setAttribute('aria-pressed', 'false');
                 });
-                // 添加当前按钮的 active 类
                 btn.classList.add('active');
                 btn.setAttribute('aria-pressed', 'true');
                 
-                // 获取视图类型
                 const viewType = btn.dataset.view;
                 const timeline = document.getElementById('diaryTimeline');
                 if (timeline) {
-                    // 切换视图类
                     if (viewType === 'grid') {
                         timeline.classList.add('grid-view');
                         timeline.classList.remove('timeline-view');
@@ -752,7 +739,6 @@ class SuccessPageManager {
             `;
         }).join('');
         
-        // 绑定标签点击事件
         container.querySelectorAll('.filter-chip').forEach(btn => {
             btn.addEventListener('click', () => {
                 const code = btn.dataset.tag;
@@ -789,7 +775,6 @@ class SuccessPageManager {
         const diaryData = window.successDiaryData || [];
         let data = [...diaryData];
         
-        // 标签筛选
         if (appState.selectedDiaryTags.size > 0) {
             data = data.filter(entry => {
                 return Array.from(appState.selectedDiaryTags).every(tag =>
@@ -798,17 +783,14 @@ class SuccessPageManager {
             });
         }
         
-        // 心情筛选
         if (appState.diaryMoodFilter !== 'all') {
             data = data.filter(entry => entry.moodCode === appState.diaryMoodFilter);
         }
         
-        // 关键词搜索
         if (appState.diarySearchKeyword) {
             data = data.filter(entry => this.matchSearch(entry, appState.diarySearchKeyword));
         }
         
-        // 排序
         data.sort((a, b) => this.compareEntries(a, b));
         
         return data;
@@ -855,8 +837,6 @@ class SuccessPageManager {
         const contentAlt = entry.content?.[altLang] || '';
         const highlight = entry.highlight?.[lang] || entry.highlight?.[altLang] || '';
         const highlightAlt = entry.highlight?.[altLang] || '';
-        const notes = entry.notes?.[lang] || entry.notes?.[altLang] || '';
-        const notesAlt = entry.notes?.[altLang] || '';
         
         const mood = this.getMood(entry.moodCode);
         const tagsHtml = this.renderTags(entry.categories);
@@ -1000,29 +980,22 @@ class SuccessPageManager {
 // ==================== 全局控制器 ====================
 class AppController {
     static init() {
-        // 检测当前页面
         const pageElement = document.querySelector('[data-page]');
         appState.currentPage = pageElement ? pageElement.dataset.page : PAGE_TYPES.MOMENTS;
         
-        // 应用保存的主题
         ThemeManager.applySavedTheme();
         ThemeManager.updateThemeToggleButton();
         
-        // 初始化全局控件
         this.initializeGlobalControls();
-        
-        // 根据页面类型初始化
         this.initializePage();
     }
     
     static initializeGlobalControls() {
-        // 主题切换
         const themeToggle = document.getElementById('themeToggle');
         if (themeToggle) {
             themeToggle.addEventListener('click', () => ThemeManager.toggle());
         }
         
-        // 语言切换
         const languageToggle = document.getElementById('languageToggle');
         if (languageToggle) {
             languageToggle.addEventListener('click', () => LanguageManager.toggle());
@@ -1044,11 +1017,9 @@ class AppController {
     }
 }
 
-// ==================== 全局函数暴露 ====================
 window.MomentsPageManager = MomentsPageManager;
 window.SuccessPageManager = SuccessPageManager;
 
-// ==================== 页面加载完成后初始化 ====================
 document.addEventListener('DOMContentLoaded', () => {
     try {
         AppController.init();
@@ -1058,7 +1029,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// 添加动画样式
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
@@ -1087,12 +1057,10 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// ==================== 返回顶部功能 ====================
 (function() {
     const backToTopBtn = document.getElementById('backToTop');
     
     if (backToTopBtn) {
-        // 监听滚动事件
         window.addEventListener('scroll', function() {
             if (window.pageYOffset > 300) {
                 backToTopBtn.classList.add('show');
@@ -1101,7 +1069,6 @@ document.head.appendChild(style);
             }
         });
         
-        // 点击返回顶部
         backToTopBtn.addEventListener('click', function() {
             window.scrollTo({
                 top: 0,
