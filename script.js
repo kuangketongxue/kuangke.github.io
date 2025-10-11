@@ -5,12 +5,10 @@ const STORAGE_KEYS = Object.freeze({
     theme: 'theme',
     language: 'language'
 });
-
 const PAGE_TYPES = Object.freeze({
     MOMENTS: 'moments',
     SUCCESS: 'success'
 });
-
 const DEBOUNCE_DELAY = 300;
 const ANIMATION_DELAY = 0.1;
 const NOTIFICATION_DURATION = 3000;
@@ -28,7 +26,6 @@ class AppState {
         this.currentLanguage = this.loadFromStorage(STORAGE_KEYS.language) || 'zh';
         this.currentPage = PAGE_TYPES.MOMENTS;
     }
-
     loadFromStorage(key) {
         try {
             return localStorage.getItem(key);
@@ -37,7 +34,6 @@ class AppState {
             return null;
         }
     }
-
     saveToStorage(key, value) {
         try {
             localStorage.setItem(key, value);
@@ -45,7 +41,6 @@ class AppState {
             console.warn(`Failed to save to storage: ${key}`, error);
         }
     }
-
     resetDiaryFilters() {
         this.selectedDiaryTags.clear();
         this.diaryMoodFilter = 'all';
@@ -53,7 +48,6 @@ class AppState {
         this.diarySearchKeyword = '';
     }
 }
-
 const appState = new AppState();
 
 // ==================== 工具函数 ====================
@@ -64,28 +58,23 @@ const Utils = {
         div.textContent = text;
         return div.innerHTML;
     },
-
     formatMultiline(text) {
         if (!text) return '';
         return this.escapeHtml(text).replace(/\n/g, '<br>');
     },
-
     formatTime(timeStr) {
         const date = new Date(timeStr);
         if (Number.isNaN(date.getTime())) return timeStr;
-        
         const now = new Date();
         const diff = now - date;
         const oneMinute = 60 * 1000;
         const oneHour = 60 * oneMinute;
         const oneDay = 24 * oneHour;
-
         if (diff < oneMinute) return '刚刚';
         if (diff < oneHour) return `${Math.floor(diff / oneMinute)}分钟前`;
         if (diff < oneDay) return `${Math.floor(diff / oneHour)}小时前`;
         if (diff < oneDay * 2) return '昨天';
         if (diff < oneDay * 7) return `${Math.floor(diff / oneDay)}天前`;
-        
         return date.toLocaleString('zh-CN', {
             year: 'numeric',
             month: '2-digit',
@@ -94,11 +83,9 @@ const Utils = {
             minute: '2-digit'
         });
     },
-
     formatDiaryDate(dateStr, lang) {
         const date = new Date(dateStr);
         if (Number.isNaN(date.getTime())) return dateStr;
-        
         const options = {
             year: 'numeric',
             month: '2-digit',
@@ -107,11 +94,9 @@ const Utils = {
         };
         return date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', options);
     },
-
     normalize(text) {
         return (text || '').toString().toLowerCase().trim();
     },
-
     debounce(func, wait = DEBOUNCE_DELAY) {
         let timeout;
         return function executedFunction(...args) {
@@ -123,7 +108,6 @@ const Utils = {
             timeout = setTimeout(later, wait);
         };
     },
-
     throttle(func, limit) {
         let inThrottle;
         return function(...args) {
@@ -141,26 +125,22 @@ class NotificationManager {
     static show(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
-        
         const iconMap = {
             success: 'check-circle',
             warning: 'exclamation-circle',
             error: 'times-circle',
             info: 'info-circle'
         };
-
         const colorMap = {
             success: '#10b981',
             warning: '#f59e0b',
             error: '#ef4444',
             info: '#3b82f6'
         };
-
         notification.innerHTML = `
             <i class="fas fa-${iconMap[type]}"></i>
             <span>${Utils.escapeHtml(message)}</span>
         `;
-
         Object.assign(notification.style, {
             position: 'fixed',
             top: '20px',
@@ -177,9 +157,7 @@ class NotificationManager {
             animation: 'slideInRight 0.3s ease-out',
             fontSize: '0.95rem'
         });
-
         document.body.appendChild(notification);
-
         setTimeout(() => {
             notification.style.animation = 'slideOutRight 0.3s ease-out';
             setTimeout(() => notification.remove(), 300);
@@ -196,7 +174,7 @@ class LanguageManager {
             searchPlaceholder: '搜索标题、标签、心情...',
             moodAll: '全部心情',
             sortLabel: '排序',
-            sortDateDesc: '日期：最新优先',
+            sortDateDesc: '日期:最新优先',
             sortDateAsc: '日期：最旧优先',
             sortAchievementDesc: '成就值：最高优先',
             sortAchievementAsc: '成就值：最低优先',
@@ -241,35 +219,28 @@ class LanguageManager {
             noResults: 'No content available'
         }
     };
-
     static t(key) {
         const langPack = this.translations[appState.currentLanguage] || this.translations.zh;
         const fallbackPack = this.translations.zh;
         const value = langPack[key] !== undefined ? langPack[key] : fallbackPack[key];
         return value !== undefined ? value : key;
     }
-
     static toggle() {
         appState.currentLanguage = appState.currentLanguage === 'zh' ? 'en' : 'zh';
         appState.saveToStorage(STORAGE_KEYS.language, appState.currentLanguage);
         this.updateLanguageToggleButton();
-        
         if (appState.currentPage === PAGE_TYPES.SUCCESS) {
             SuccessPageManager.updatePage();
         }
     }
-
     static updateLanguageToggleButton() {
         const button = document.getElementById('languageToggle');
         if (!button) return;
-        
         const icon = button.querySelector('i');
         const span = button.querySelector('span');
-        
         if (icon) icon.className = 'fas fa-language';
         if (span) span.textContent = appState.currentLanguage === 'zh' ? '中 → EN' : 'EN → 中';
     }
-
     static updatePageTexts() {
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.dataset.i18n;
@@ -278,7 +249,6 @@ class LanguageManager {
                 element.textContent = value;
             }
         });
-
         const searchInput = document.getElementById('diarySearchInput');
         if (searchInput) {
             searchInput.placeholder = this.t('searchPlaceholder');
@@ -294,18 +264,15 @@ class ThemeManager {
             document.body.classList.add('light-mode');
         }
     }
-
     static toggle() {
         document.body.classList.toggle('light-mode');
         const theme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
         appState.saveToStorage(STORAGE_KEYS.theme, theme);
         this.updateThemeToggleButton();
     }
-
     static updateThemeToggleButton() {
         const button = document.getElementById('themeToggle');
         if (!button) return;
-        
         const icon = button.querySelector('i');
         if (icon) {
             icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
@@ -326,7 +293,6 @@ class StorageManager {
             return null;
         }
     }
-
     static saveMomentsData(data) {
         try {
             appState.saveToStorage(STORAGE_KEYS.moments, JSON.stringify(data));
@@ -343,13 +309,13 @@ class StorageManager {
 class MomentsPageManager {
     static data = [];
     static eventListeners = new Map();
-
+    
     static init() {
         this.loadData();
         this.bindEvents();
         this.render();
     }
-
+    
     static loadData() {
         const savedData = StorageManager.loadMomentsData();
         if (savedData) {
@@ -360,15 +326,15 @@ class MomentsPageManager {
             this.data = window.momentsData || [];
         }
     }
-
+    
     static saveData() {
         return StorageManager.saveMomentsData(this.data);
     }
-
+    
     static bindEvents() {
         // 清除旧的事件监听器
         this.clearEventListeners();
-
+        
         // 搜索
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
@@ -378,7 +344,7 @@ class MomentsPageManager {
             searchInput.addEventListener('input', debouncedSearch);
             this.eventListeners.set('searchInput', { element: searchInput, handler: debouncedSearch });
         }
-
+        
         // 分类筛选
         const categoryBtns = document.querySelectorAll('.category-btn');
         categoryBtns.forEach(btn => {
@@ -391,11 +357,11 @@ class MomentsPageManager {
             btn.addEventListener('click', handler);
             this.eventListeners.set(`category-${btn.dataset.category}`, { element: btn, handler });
         });
-
+        
         // 评论模态框
         this.initCommentModal();
     }
-
+    
     static clearEventListeners() {
         this.eventListeners.forEach(({ element, handler }, key) => {
             if (element && handler) {
@@ -405,29 +371,29 @@ class MomentsPageManager {
         });
         this.eventListeners.clear();
     }
-
+    
     static initCommentModal() {
         const modal = document.getElementById('commentModal');
         if (!modal) return;
-
+        
         const closeBtn = modal.querySelector('.close');
         if (closeBtn) {
             const handler = () => modal.style.display = 'none';
             closeBtn.addEventListener('click', handler);
             this.eventListeners.set('modalClose', { element: closeBtn, handler });
         }
-
+        
         window.addEventListener('click', (e) => {
             if (e.target === modal) modal.style.display = 'none';
         });
-
+        
         const submitBtn = document.getElementById('submitComment');
         if (submitBtn) {
             const handler = () => this.handleCommentSubmit();
             submitBtn.addEventListener('click', handler);
             this.eventListeners.set('submitComment', { element: submitBtn, handler });
         }
-
+        
         const commentInput = document.getElementById('commentInput');
         if (commentInput) {
             const handler = (e) => {
@@ -440,38 +406,38 @@ class MomentsPageManager {
             this.eventListeners.set('commentInput', { element: commentInput, handler });
         }
     }
-
+    
     static render(filteredData = null) {
         const container = document.getElementById('momentsContainer');
         if (!container) return;
-
+        
         const dataToRender = filteredData || this.data;
         const filtered = this.filterByCategory(dataToRender);
         const sorted = this.sortByDate(filtered);
-
+        
         if (sorted.length === 0) {
             container.innerHTML = `<div class="no-results">${LanguageManager.t('noResults')}</div>`;
             return;
         }
-
+        
         container.innerHTML = sorted.map((moment, index) =>
             this.renderMomentCard(moment, index)
         ).join('');
     }
-
+    
     static filterByCategory(data) {
         return appState.currentCategory === 'all' ? data : data.filter(m => m.category === appState.currentCategory);
     }
-
+    
     static sortByDate(data) {
         return [...data].sort((a, b) => new Date(b.time) - new Date(a.time));
     }
-
+    
     static renderMomentCard(moment, index) {
         const hasImage = moment.image && moment.image.trim();
         const hasComments = moment.comments && moment.comments.length > 0;
         const hasLikes = moment.likes > 0;
-
+        
         return `
             <div class="moment-card" style="animation-delay: ${index * ANIMATION_DELAY}s">
                 <div class="moment-header">
@@ -509,17 +475,16 @@ class MomentsPageManager {
             </div>
         `;
     }
-
+    
     static handleLike(id) {
         const moment = this.data.find(m => m.id === id);
         if (!moment) return;
-
+        
         const hasLiked = moment.likes > 0;
         moment.likes = hasLiked ? 0 : 1;
-
+        
         if (this.saveData()) {
             this.render();
-            
             if (!hasLiked) {
                 const btn = document.querySelector(`button[data-like-id="${id}"]`);
                 if (btn) {
@@ -531,31 +496,33 @@ class MomentsPageManager {
             }
         }
     }
-
+    
     static openCommentModal(id) {
         appState.currentMomentId = id;
         const moment = this.data.find(m => m.id === id);
         if (!moment) return;
-
+        
         const modal = document.getElementById('commentModal');
         if (!modal) return;
-
+        
         modal.style.display = 'block';
+        
         if (!moment.comments) {
             moment.comments = [];
         }
+        
         this.renderComments(moment.comments);
-
+        
         setTimeout(() => {
             const input = document.getElementById('commentInput');
             if (input) input.focus();
         }, 100);
     }
-
+    
     static renderComments(comments) {
         const commentsList = document.getElementById('commentsList');
         if (!commentsList) return;
-
+        
         if (!comments || comments.length === 0) {
             commentsList.innerHTML = `
                 <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">
@@ -564,7 +531,7 @@ class MomentsPageManager {
             `;
             return;
         }
-
+        
         commentsList.innerHTML = comments.map((comment, index) => `
             <div class="comment-item" style="animation-delay: ${index * 0.05}s">
                 <div style="margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.85rem;">
@@ -574,29 +541,29 @@ class MomentsPageManager {
             </div>
         `).join('');
     }
-
+    
     static handleCommentSubmit() {
         const input = document.getElementById('commentInput');
         if (!input) return;
-
+        
         const content = input.value.trim();
         if (!content) {
             NotificationManager.show('请输入评论内容', 'warning');
             return;
         }
-
+        
         if (content.length > MAX_COMMENT_LENGTH) {
             NotificationManager.show('评论内容不能超过500字', 'warning');
             return;
         }
-
+        
         const moment = this.data.find(m => m.id === appState.currentMomentId);
         if (!moment) return;
-
+        
         if (!moment.comments) {
             moment.comments = [];
         }
-
+        
         const comment = {
             content,
             time: new Date().toLocaleString('zh-CN', {
@@ -607,9 +574,9 @@ class MomentsPageManager {
                 minute: '2-digit'
             })
         };
-
+        
         moment.comments.unshift(comment);
-
+        
         if (this.saveData()) {
             this.renderComments(moment.comments);
             this.render();
@@ -617,85 +584,26 @@ class MomentsPageManager {
             NotificationManager.show('评论发表成功！', 'success');
         }
     }
-
+    
     static handleSearch(keyword) {
         const normalizedKeyword = Utils.normalize(keyword);
+        
         if (!normalizedKeyword) {
             this.render();
             return;
         }
-
+        
         const filtered = this.data.filter(moment =>
             Utils.normalize(moment.content).includes(normalizedKeyword) ||
             Utils.normalize(moment.category).includes(normalizedKeyword)
         );
-
+        
         this.render(filtered);
     }
 }
 
 // ==================== 成功日记页面管理器 ====================
 class SuccessPageManager {
-   
-
-    // 心情筛选
-    const moodSelect = document.getElementById('diaryMoodSelect');
-    if (moodSelect) {
-        moodSelect.addEventListener('change', (e) => {
-            appState.diaryMoodFilter = e.target.value;
-            this.render();
-        });
-    }
-
-    // 排序
-    const sortSelect = document.getElementById('diarySortSelect');
-    if (sortSelect) {
-        sortSelect.addEventListener('change', (e) => {
-            appState.diarySortBy = e.target.value;
-            this.render();
-        });
-        this.updateSortOptions();
-    }
-
-    // 重置筛选
-    const resetBtn = document.getElementById('diaryResetFilters');
-    if (resetBtn) {
-        resetBtn.addEventListener('click', () => this.resetFilters());
-    }
-
-    // ⭐ 添加视图切换功能
-    const viewBtns = document.querySelectorAll('.view-btn');
-    viewBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // 移除所有按钮的 active 类
-            viewBtns.forEach(b => {
-                b.classList.remove('active');
-                b.setAttribute('aria-pressed', 'false');
-            });
-            
-            // 添加当前按钮的 active 类
-            btn.classList.add('active');
-            btn.setAttribute('aria-pressed', 'true');
-            
-            // 获取视图类型
-            const viewType = btn.dataset.view;
-            const timeline = document.getElementById('diaryTimeline');
-            
-            if (timeline) {
-                // 切换视图类
-                if (viewType === 'grid') {
-                    timeline.classList.add('grid-view');
-                    timeline.classList.remove('timeline-view');
-                } else {
-                    timeline.classList.add('timeline-view');
-                    timeline.classList.remove('grid-view');
-                }
-            }
-            
-            console.log('切换到视图:', viewType);
-        });
-    });
-}
     static init() {
         this.updatePageTexts();
         this.populateMoodFilter();
@@ -703,14 +611,14 @@ class SuccessPageManager {
         this.bindEvents();
         this.render();
     }
-
+    
     static updatePage() {
         this.updatePageTexts();
         this.populateMoodFilter();
         this.renderTagFilters();
         this.render();
     }
-
+    
     static bindEvents() {
         // 搜索
         const searchInput = document.getElementById('diarySearchInput');
@@ -720,7 +628,7 @@ class SuccessPageManager {
                 this.render();
             }));
         }
-
+        
         // 心情筛选
         const moodSelect = document.getElementById('diaryMoodSelect');
         if (moodSelect) {
@@ -729,7 +637,7 @@ class SuccessPageManager {
                 this.render();
             });
         }
-
+        
         // 排序
         const sortSelect = document.getElementById('diarySortSelect');
         if (sortSelect) {
@@ -739,67 +647,97 @@ class SuccessPageManager {
             });
             this.updateSortOptions();
         }
-
+        
         // 重置筛选
         const resetBtn = document.getElementById('diaryResetFilters');
         if (resetBtn) {
             resetBtn.addEventListener('click', () => this.resetFilters());
         }
+        
+        // 视图切换功能
+        const viewBtns = document.querySelectorAll('.view-btn');
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 移除所有按钮的 active 类
+                viewBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-pressed', 'false');
+                });
+                // 添加当前按钮的 active 类
+                btn.classList.add('active');
+                btn.setAttribute('aria-pressed', 'true');
+                
+                // 获取视图类型
+                const viewType = btn.dataset.view;
+                const timeline = document.getElementById('diaryTimeline');
+                if (timeline) {
+                    // 切换视图类
+                    if (viewType === 'grid') {
+                        timeline.classList.add('grid-view');
+                        timeline.classList.remove('timeline-view');
+                    } else {
+                        timeline.classList.add('timeline-view');
+                        timeline.classList.remove('grid-view');
+                    }
+                }
+            });
+        });
     }
-
+    
     static resetFilters() {
         appState.resetDiaryFilters();
         
         const searchInput = document.getElementById('diarySearchInput');
         const moodSelect = document.getElementById('diaryMoodSelect');
         const sortSelect = document.getElementById('diarySortSelect');
-
+        
         if (searchInput) searchInput.value = '';
         if (moodSelect) moodSelect.value = 'all';
         if (sortSelect) sortSelect.value = 'dateDesc';
-
+        
         this.renderTagFilters();
         this.render();
     }
-
+    
     static updatePageTexts() {
         LanguageManager.updatePageTexts();
         this.updateSortOptions();
     }
-
+    
     static updateSortOptions() {
         const sortSelect = document.getElementById('diarySortSelect');
         if (!sortSelect || sortSelect.options.length < 4) return;
-
+        
         const options = sortSelect.options;
         options[0].textContent = LanguageManager.t('sortDateDesc');
         options[1].textContent = LanguageManager.t('sortDateAsc');
         options[2].textContent = LanguageManager.t('sortAchievementDesc');
         options[3].textContent = LanguageManager.t('sortAchievementAsc');
     }
-
+    
     static populateMoodFilter() {
         const moodSelect = document.getElementById('diaryMoodSelect');
         if (!moodSelect) return;
-
+        
         const currentValue = moodSelect.value || 'all';
         const moodLibrary = window.moodLibrary || {};
-
+        
         let optionsHtml = `<option value="all">${LanguageManager.t('moodAll')}</option>`;
+        
         Object.keys(moodLibrary).forEach(code => {
             const mood = moodLibrary[code];
             const label = mood[appState.currentLanguage] || mood.zh || code;
             optionsHtml += `<option value="${code}">${Utils.escapeHtml(label)}</option>`;
         });
-
+        
         moodSelect.innerHTML = optionsHtml;
         moodSelect.value = currentValue;
     }
-
+    
     static renderTagFilters() {
         const container = document.getElementById('diaryTagFilter');
         if (!container) return;
-
+        
         const tagLibrary = window.diaryTagLibrary || [];
         
         container.innerHTML = tagLibrary.map(tag => {
@@ -813,7 +751,7 @@ class SuccessPageManager {
                 </button>
             `;
         }).join('');
-
+        
         // 绑定标签点击事件
         container.querySelectorAll('.filter-chip').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -828,13 +766,13 @@ class SuccessPageManager {
             });
         });
     }
-
+    
     static render() {
         const container = document.getElementById('diaryTimeline');
         if (!container) return;
-
+        
         const filtered = this.getFilteredData();
-
+        
         if (filtered.length === 0) {
             container.innerHTML = `
                 <div class="diary-empty">${LanguageManager.t('timelineEmpty')}</div>
@@ -842,15 +780,15 @@ class SuccessPageManager {
             this.updateCounter(0);
             return;
         }
-
+        
         container.innerHTML = filtered.map(entry => this.renderDiaryCard(entry)).join('');
         this.updateCounter(filtered.length);
     }
-
+    
     static getFilteredData() {
         const diaryData = window.successDiaryData || [];
         let data = [...diaryData];
-
+        
         // 标签筛选
         if (appState.selectedDiaryTags.size > 0) {
             data = data.filter(entry => {
@@ -859,23 +797,23 @@ class SuccessPageManager {
                 );
             });
         }
-
+        
         // 心情筛选
         if (appState.diaryMoodFilter !== 'all') {
             data = data.filter(entry => entry.moodCode === appState.diaryMoodFilter);
         }
-
+        
         // 关键词搜索
         if (appState.diarySearchKeyword) {
             data = data.filter(entry => this.matchSearch(entry, appState.diarySearchKeyword));
         }
-
+        
         // 排序
         data.sort((a, b) => this.compareEntries(a, b));
-
+        
         return data;
     }
-
+    
     static matchSearch(entry, keyword) {
         const fields = [
             entry.headline?.zh,
@@ -889,10 +827,10 @@ class SuccessPageManager {
             ...entry.categories.map(code => this.getTagLabel(code)),
             this.getMoodLabel(entry.moodCode)
         ];
-
+        
         return fields.some(field => field && Utils.normalize(field).includes(keyword));
     }
-
+    
     static compareEntries(a, b) {
         switch (appState.diarySortBy) {
             case 'dateAsc':
@@ -906,11 +844,11 @@ class SuccessPageManager {
                 return new Date(b.date) - new Date(a.date);
         }
     }
-
+    
     static renderDiaryCard(entry) {
         const lang = appState.currentLanguage;
         const altLang = lang === 'zh' ? 'en' : 'zh';
-
+        
         const headline = entry.headline?.[lang] || entry.headline?.[altLang] || '';
         const headlineAlt = entry.headline?.[altLang] || '';
         const content = entry.content?.[lang] || entry.content?.[altLang] || '';
@@ -919,12 +857,12 @@ class SuccessPageManager {
         const highlightAlt = entry.highlight?.[altLang] || '';
         const notes = entry.notes?.[lang] || entry.notes?.[altLang] || '';
         const notesAlt = entry.notes?.[altLang] || '';
-
+        
         const mood = this.getMood(entry.moodCode);
         const tagsHtml = this.renderTags(entry.categories);
         const attachmentsHtml = this.renderAttachments(entry.attachments);
         const coverHtml = this.renderCover(entry.coverImage);
-
+        
         return `
             <div class="timeline-item">
                 <div class="timeline-marker"></div>
@@ -987,7 +925,7 @@ class SuccessPageManager {
             </div>
         `;
     }
-
+    
     static renderTags(categories) {
         if (!categories || !categories.length) return '';
         
@@ -996,21 +934,22 @@ class SuccessPageManager {
             return `<span class="tag-pill">${Utils.escapeHtml(label)}</span>`;
         }).join('');
     }
-
+    
     static renderAttachments(attachments) {
         if (!Array.isArray(attachments) || attachments.length === 0) return '';
-
+        
         const items = attachments.map(path => {
             const trimmed = path.trim();
             if (!trimmed) return '';
-
+            
             const isImage = /\.(png|jpe?g|gif|webp|svg)$/i.test(trimmed);
             if (isImage) {
                 return `<img src="${Utils.escapeHtml(trimmed)}" alt="附件" class="diary-attachment" onerror="this.style.display='none'">`;
             }
+            
             return `<a href="${Utils.escapeHtml(trimmed)}" target="_blank" rel="noopener" class="diary-attachment-link">${Utils.escapeHtml(trimmed)}</a>`;
         }).filter(Boolean).join('');
-
+        
         return items ? `
             <div class="diary-attachments">
                 <span class="meta-title">${LanguageManager.t('attachments')}：</span>
@@ -1018,36 +957,37 @@ class SuccessPageManager {
             </div>
         ` : '';
     }
-
+    
     static renderCover(coverImage) {
         if (!coverImage) return '';
+        
         return `
-            <img src="${Utils.escapeHtml(coverImage)}" 
-                 alt="封面图片" 
-                 class="diary-cover" 
+            <img src="${Utils.escapeHtml(coverImage)}"
+                 alt="封面图片"
+                 class="diary-cover"
                  onerror="this.style.display='none'"
                  loading="lazy">
         `;
     }
-
+    
     static getMood(code) {
         const moodLibrary = window.moodLibrary || {};
         return moodLibrary[code] || null;
     }
-
+    
     static getMoodLabel(code) {
         const mood = this.getMood(code);
         if (!mood) return code || '';
         return mood[appState.currentLanguage] || mood.zh || code;
     }
-
+    
     static getTagLabel(code) {
         const tagLibrary = window.diaryTagLibrary || [];
         const tag = tagLibrary.find(item => item.code === code);
         if (!tag) return code || '';
         return tag[appState.currentLanguage] || tag.zh || code;
     }
-
+    
     static updateCounter(count) {
         const counter = document.getElementById('diaryCounter');
         if (!counter) return;
@@ -1063,33 +1003,33 @@ class AppController {
         // 检测当前页面
         const pageElement = document.querySelector('[data-page]');
         appState.currentPage = pageElement ? pageElement.dataset.page : PAGE_TYPES.MOMENTS;
-
+        
         // 应用保存的主题
         ThemeManager.applySavedTheme();
         ThemeManager.updateThemeToggleButton();
-
+        
         // 初始化全局控件
         this.initializeGlobalControls();
-
+        
         // 根据页面类型初始化
         this.initializePage();
     }
-
+    
     static initializeGlobalControls() {
         // 主题切换
         const themeToggle = document.getElementById('themeToggle');
         if (themeToggle) {
-            themeToggle.addEventListener('click', ThemeManager.toggle);
+            themeToggle.addEventListener('click', () => ThemeManager.toggle());
         }
-
+        
         // 语言切换
         const languageToggle = document.getElementById('languageToggle');
         if (languageToggle) {
-            languageToggle.addEventListener('click', LanguageManager.toggle);
+            languageToggle.addEventListener('click', () => LanguageManager.toggle());
             LanguageManager.updateLanguageToggleButton();
         }
     }
-
+    
     static initializePage() {
         switch (appState.currentPage) {
             case PAGE_TYPES.MOMENTS:
@@ -1131,7 +1071,6 @@ style.textContent = `
             opacity: 1;
         }
     }
-
     @keyframes slideOutRight {
         from {
             transform: translateX(0);
@@ -1142,12 +1081,10 @@ style.textContent = `
             opacity: 0;
         }
     }
-
     .notification {
         transform-origin: top right;
     }
 `;
-
 document.head.appendChild(style);
 
 // ==================== 返回顶部功能 ====================
@@ -1173,3 +1110,4 @@ document.head.appendChild(style);
         });
     }
 })();
+
