@@ -1156,3 +1156,26 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+// ==================== 返回顶部功能 ====================
+(function() {
+    const backToTopBtn = document.getElementById('backToTop');
+    
+    if (backToTopBtn) {
+        // 监听滚动事件
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+        
+        // 点击返回顶部
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+})();
