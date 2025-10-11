@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
     {
+        id: 30,
+        date: '2025-10-11',
+        categories: ['study', 'film', 'creative'],
+        headline: {
+            zh: '早起+去图书馆',
+            en: 'Getting up early and going to the library.'
+        },
+        content: {
+            zh: '阅读10本书+。\n持续搭建个人网站,加了“成功日记一键回到顶部的功能”。\n专注比80%。\n学习14小时+',
+            en: 'Read 10+ books.\nContinuously building a personal website, Added the feature of "Success Diary: One-click return to top".\nFocus level is around 80%.\nStudied for 14+ hours'
+        },
+        highlight: {
+            zh: '遇到两只小狗可爱😊；图书馆天气好',
+            en: 'Two cute little puppies were encountered.😊; Lovely weather at the library.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 5,
+        coverImage: '',
+        attachments: []
+    },
+    {
         id: 29,
         date: '2025-10-10',
         categories: ['study', 'film', 'creative'],
