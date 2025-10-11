@@ -636,15 +636,7 @@ class MomentsPageManager {
 
 // ==================== 成功日记页面管理器 ====================
 class SuccessPageManager {
-    static bindEvents() {
-    // 搜索
-    const searchInput = document.getElementById('diarySearchInput');
-    if (searchInput) {
-        searchInput.addEventListener('input', Utils.debounce((e) => {
-            appState.diarySearchKeyword = Utils.normalize(e.target.value);
-            this.render();
-        }));
-    }
+   
 
     // 心情筛选
     const moodSelect = document.getElementById('diaryMoodSelect');
@@ -1155,33 +1147,7 @@ style.textContent = `
         transform-origin: top right;
     }
 `;
-// 添加动画样式
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-    .notification {
-        transform-origin: top right;
-    }
-`;
+
 document.head.appendChild(style);
 
 // ==================== 返回顶部功能 ====================
