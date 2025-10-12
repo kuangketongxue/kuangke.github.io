@@ -829,6 +829,26 @@ const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
  */
 let momentsData = [
      {
+        id: 19,
+        content: 'The journey is the reward.',
+        value: 5,
+        category: '工作相关',
+        time: '2025-10-12 15:04',
+        image: '',
+        likes: 0,
+        comments: []
+    },
+     {
+        id: 18,
+        content: '当海盗，不要当自海军 ，像侠盗一样行事：既为自己的工作感到自豪，又愿意去窃取别人的灵感，快速行动，做成事情',
+        value: 5,
+        category: '工作相关',
+        time: '2025-10-12 15:04',
+        image: '',
+        likes: 0,
+        comments: []
+    },
+     {
         id: 17,
         content: '本来已经看着一辆公交车走了（要再等15分钟）结果没一会就来了，哇~哇~哇~，当时感受💗',
         value: 0,
