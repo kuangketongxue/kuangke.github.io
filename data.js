@@ -834,7 +834,7 @@ let momentsData = [
         value: 5,
         category: '工作相关',
         time: '2025-10-12 15:04',
-        image: '',
+        image: 'images/The process itself is the reward.',
         likes: 0,
         comments: []
     },
