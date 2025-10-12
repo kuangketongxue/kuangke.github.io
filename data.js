@@ -831,7 +831,7 @@ let momentsData = [
      {
         id: 17,
         content: '本来已经看着一辆公交车走了（要再等15分钟）结果没一会就来了，哇~哇~哇~，当时感受💗',
-        value: 5,
+        value: 0,
         category: '生活日常',
         time: '2025-10-12 9:50',
         image: '',
