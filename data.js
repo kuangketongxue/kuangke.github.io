@@ -829,6 +829,16 @@ const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
  */
 let momentsData = [
      {
+        id: 17,
+        content: '本来已经看着一辆公交车走了（要再等15分钟）结果没一会就来了，哇~哇~哇~，当时感受💗',
+        value: 5,
+        category: '生活日常',
+        time: '2025-10-12 9:50',
+        image: '',
+        likes: 0,
+        comments: []
+    },
+     {
         id: 16,
         content: '值得关注的外部，事实上很少，因为外部的绝大多数事情与提高自身生产效率毫无关系，毕竟我的所有财富,不管是物质财富还是精神财富,全来自我的时间,或者准确地讲,来自我的时间的体积。我哪有什么时间可以浪费呢?又有什么道理浪费在它们身上呢?时时刻刻专注提高效率才是正事',
         value: 5,
