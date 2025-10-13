@@ -880,7 +880,7 @@ const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
 let momentsData = [
       {
         id: 20,
-        content: '生活标准这个东西，最好就是以年为单位去考量，且很长时间都不要发生改变，这个标准是他妈的我的被动收入，我的另一个我不用我操操心的，能够过的生活。',
+        content: '生活标准这个东西，最好就是以年为单位去考量，且很长时间都不要发生改变，这个标准是我的被动收入——我的另一个我不用我操心的，能够过的生活。',
         value: 5,
         category: '财务理财',
         time: '2025-10-13 22:40',
