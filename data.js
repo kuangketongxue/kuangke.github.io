@@ -88,7 +88,7 @@ let successDiaryData = [
             en: ''
         },
         moodCode: 'hungry',
-        achievementLevel: 5,
+        achievementLevel: 3,
         coverImage: '',
         attachments: []
     },
