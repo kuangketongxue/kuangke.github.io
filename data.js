@@ -76,8 +76,8 @@ let successDiaryData = [
             en: 'Optimization of the financial system + energy replenishment'
         },
         content: {
-            zh: '阅读10本书+。\n持续搭建个人网站,“成功日记”中英互换功能优化+英文Emoji优化+英文左对齐。\n优化原始财务系统表。\n学习8小时+。\n反刍了近500个收集的“今日有价值的互动”,
-            en: 'Read 10+ books.\nContinuously building a personal website, "Success Diary" features enhanced Chinese-to-English translation functionality, optimized English emojis, and left-aligned text in English.\nOptimizing the original financial system tables.\nStudied for 8+ hours.\nAfter going over nearly 500 "interactions that were valuable today" that had been collected,
+            zh: '阅读10本书+。\n持续搭建个人网站,“成功日记”中英互换功能优化+英文Emoji优化+英文左对齐。\n优化原始财务系统表。\n学习8小时+。\n反刍了近500个收集的“今日有价值的互动',
+            en: 'Read 10+ books.\nContinuously building a personal website, "Success Diary" features enhanced Chinese-to-English translation functionality, optimized English emojis, and left-aligned text in English.\nOptimizing the original financial system tables.\nStudied for 8+ hours.\nAfter going over nearly 500 "interactions that were valuable today" that had been collected.'
         },
         highlight: {
             zh: 'RSS订阅搭建',
