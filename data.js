@@ -4,16 +4,16 @@
  * @type {Array<{code: string, zh: string, en: string, icon: string}>}
  */
 const diaryTagLibrary = [
-    { code: 'reading',  zh: '📖阅读',       en: 'Reading',   icon: '📖' },
-    { code: 'fitness',  zh: '🏃‍♀️运动',       en: 'Fitness',   icon: '🏃‍♀️' },
-    { code: 'work',     zh: '💼工作',       en: 'Work',      icon: '💼' },
-    { code: 'study',    zh: '📚学习',       en: 'Study',     icon: '📚' },
-    { code: 'nature',   zh: '🌳自然',       en: 'Nature',    icon: '🌳' },
-    { code: 'creative', zh: '✍️创作',       en: 'Creative',  icon: '✍️' },
-    { code: 'film',     zh: '🎬追剧/电影',  en: 'Films',     icon: '🎬' },
-    { code: 'music',    zh: '🎶音乐',       en: 'Music',     icon: '🎶' },
-    { code: 'finance',  zh: '💰理财',       en: 'Finance',   icon: '💰' },
-    { code: 'travel',   zh: '✈️旅行',       en: 'Travel',    icon: '✈️' }
+    { code: 'reading',  zh: '📖阅读',       en: '📖Reading',   icon: '📖' },
+    { code: 'fitness',  zh: '🏃‍♀️运动',       en: '🏃‍♀️Fitness',   icon: '🏃‍♀️' },
+    { code: 'work',     zh: '💼工作',       en: '💼Work',      icon: '💼' },
+    { code: 'study',    zh: '📚学习',       en: '📚Study',     icon: '📚' },
+    { code: 'nature',   zh: '🌳自然',       en: '🌳Nature',    icon: '🌳' },
+    { code: 'creative', zh: '✍️创作',       en: '✍️Creative',  icon: '✍️' },
+    { code: 'film',     zh: '🎬追剧/电影',  en: '🎬Films',     icon: '🎬' },
+    { code: 'music',    zh: '🎶音乐',       en: '🎶Music',     icon: '🎶' },
+    { code: 'finance',  zh: '💰理财',       en: '💰Finance',   icon: '💰' },
+    { code: 'travel',   zh: '✈️旅行',       en: '✈️Travel',    icon: '✈️' }
 ];
 
 /**
