@@ -11,7 +11,7 @@
           onerror="this.onerror=null;this.href='css/fontawesome-fallback.css';">
     
     <style>
-        /* 回到顶部按钮 - 独立样式 */
+        /* 回到顶部按钮 - 修复版 */
         #backToTop {
             position: fixed;
             bottom: 30px;
@@ -19,7 +19,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
             color: white;
             border: none;
             cursor: pointer;
@@ -29,19 +29,21 @@
             font-size: 1.2rem;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
             z-index: 10000;
+            transform: translateY(100px);
         }
 
         #backToTop.show {
             opacity: 1;
             visibility: visible;
+            transform: translateY(0);
         }
 
         #backToTop:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 28px rgba(139, 92, 246, 0.5);
+            box-shadow: 0 12px 28px rgba(99, 102, 241, 0.45);
         }
         
         /* 响应式调整 */
@@ -51,6 +53,7 @@
                 right: 20px;
                 width: 45px;
                 height: 45px;
+                font-size: 1.1rem;
             }
         }
         
@@ -174,47 +177,54 @@
     <script src="data.js" ></script>
     <script src="script.js" ></script>
     <script>
-        // 独立的回到顶部功能
+        // ==================== 回到顶部功能 - 最终修复版 ====================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('页面加载完成，初始化回到顶部功能...');
+            console.log('🚀 初始化回到顶部功能...');
             
             const backToTopBtn = document.getElementById('backToTop');
             
             if (!backToTopBtn) {
-                console.error('错误：找不到回到顶部按钮！');
+                console.error('❌ 错误：找不到回到顶部按钮！');
                 return;
             }
             
-            console.log('找到回到顶部按钮：', backToTopBtn);
+            console.log('✅ 找到回到顶部按钮');
             
-            // 监听滚动事件
-            window.addEventListener('scroll', function() {
-                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-                console.log('滚动位置：', scrollY);
+            // 显示/隐藏按钮
+            function toggleBackToTop() {
+                const scrollY = window.scrollY || document.documentElement.scrollTop;
                 
                 if (scrollY > 300) {
                     backToTopBtn.classList.add('show');
-                    console.log('显示回到顶部按钮');
                 } else {
                     backToTopBtn.classList.remove('show');
-                    console.log('隐藏回到顶部按钮');
                 }
+            }
+            
+            // 使用防抖优化性能
+            let scrollTimeout;
+            window.addEventListener('scroll', function() {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(toggleBackToTop, 10);
             });
             
             // 点击回到顶部
             backToTopBtn.addEventListener('click', function() {
-                console.log('点击回到顶部');
+                console.log('🎯 点击回到顶部');
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
                 });
             });
             
-            // 手动测试：强制显示按钮
+            // 初始检查
+            toggleBackToTop();
+            
+            // 强制测试：3秒后显示按钮
             setTimeout(function() {
-                console.log('5秒后强制显示按钮进行测试');
+                console.log('🧪 测试：强制显示按钮');
                 backToTopBtn.classList.add('show');
-            }, 5000);
+            }, 3000);
         });
     </script>
 </body>
