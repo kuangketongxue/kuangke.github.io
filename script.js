@@ -1078,6 +1078,102 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+// ====== 全局计数（仅显示点赞/评论数量）使用 CountAPI ======
+const COUNT_NS = 'kuangke_galaxy_v1'; // 改成你自己的命名空间（只要不和别人重复即可）
+
+function likeKey(id) { return `like_${id}`; }
+function commentKey(id) { return `comment_${id}`; }
+
+// 创建计数器（若不存在）
+async function ensureCounter(key) {
+  const url = `https://api.countapi.xyz/create?namespace=${encodeURIComponent(COUNT_NS)}&key=${encodeURIComponent(key)}&value=0`;
+  try { await fetch(url, { method: 'GET', cache: 'no-store' }); } catch {}
+}
+
+// 获取计数（自动创建）
+async function getCount(key) {
+  const getUrl = `https://api.countapi.xyz/get/${encodeURIComponent(COUNT_NS)}/${encodeURIComponent(key)}`;
+  const res = await fetch(getUrl, { cache: 'no-store' });
+  if (res.status === 404) {
+    await ensureCounter(key);
+    return 0;
+  }
+  const data = await res.json().catch(() => ({}));
+  return Number(data.value || 0);
+}
+
+// 计数 +1（自动创建）
+async function hit(key) {
+  const hitUrl = `https://api.countapi.xyz/hit/${encodeURIComponent(COUNT_NS)}/${encodeURIComponent(key)}`;
+  const res = await fetch(hitUrl, { cache: 'no-store' });
+  const data = await res.json().catch(() => ({}));
+  return Number(data.value || 0);
+}
+
+// 初始化：把页面上所有按钮的计数拉取并显示
+async function initCounters() {
+  const likeBtns = Array.from(document.querySelectorAll('.like-btn[data-id]'));
+  const commentBtns = Array.from(document.querySelectorAll('.comment-btn[data-id]'));
+
+  // 去重收集所有需要的 id
+  const ids = new Set([
+    ...likeBtns.map(b => b.dataset.id),
+    ...commentBtns.map(b => b.dataset.id),
+  ]);
+
+  // 确保计数器存在并更新界面
+  for (const id of ids) {
+    await Promise.all([ensureCounter(likeKey(id)), ensureCounter(commentKey(id))]);
+
+    // 更新点赞数
+    const likeVal = await getCount(likeKey(id));
+    document.querySelectorAll(`.like-btn[data-id="${CSS.escape(id)}"] .like-count`)
+      .forEach(el => el.textContent = String(likeVal));
+
+    // 更新评论数
+    const cmtVal = await getCount(commentKey(id));
+    document.querySelectorAll(`.comment-btn[data-id="${CSS.escape(id)}"] .comment-count, .comment-count[data-id="${CSS.escape(id)}"]`)
+      .forEach(el => el.textContent = String(cmtVal));
+  }
+}
+
+// 点赞：只负责数量 +1（用 localStorage 简单防止同设备重复点）
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.like-btn[data-id]');
+  if (!btn) return;
+  const id = btn.dataset.id;
+  const flag = `liked_${id}`;
+  if (localStorage.getItem(flag)) {
+    // 已点赞过，直接返回（仅本地限制，非强安全）
+    return;
+  }
+  const val = await hit(likeKey(id));
+  const countEl = btn.querySelector('.like-count');
+  if (countEl) countEl.textContent = String(val);
+  btn.classList.add('liked');
+  localStorage.setItem(flag, '1');
+});
+
+// 评论：如果你不存评论内容，仅在“发送/提交评论”按钮触发时做 +1
+// 假设你的发送按钮是 #submitComment，且当前卡片 id 可从某处拿到：currentMomentId
+// 如果你没有评论弹窗，只是想有个“评论”按钮计数，也可以在评论按钮点击时 +1。
+window.submitCommentCountOnly = async function (currentMomentId) {
+  if (!currentMomentId) return;
+  // 可选：简单节流，避免短时间连续刷
+  const lk = `cmt_ts_${currentMomentId}`;
+  const last = Number(localStorage.getItem(lk) || 0);
+  const now = Date.now();
+  if (now - last < 5000) return; // 5 秒内只算一次
+  localStorage.setItem(lk, String(now));
+
+  const val = await hit(commentKey(currentMomentId));
+  // 更新所有对应位置的评论数
+  document.querySelectorAll(`.comment-btn[data-id="${CSS.escape(currentMomentId)}"] .comment-count, .comment-count[data-id="${CSS.escape(currentMomentId)}"]`)
+    .forEach(el => el.textContent = String(val));
+};
+
+// 页面加载时初始化
+window.addEventListener('DOMContentLoaded', initCounters);
 
 
 
