@@ -1,3 +1,78 @@
+// 在文件顶部，替换原来的 aiNews 数组
+let aiNews = []; // 初始为空，从JSON加载
+
+// 页面加载时从JSON文件获取数据
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadAINewsFromJSON();
+    setupCategoryFilters();
+    setupSearch();
+    setupThemeToggle();
+});
+
+// 从JSON文件加载AI资讯
+async function loadAINewsFromJSON() {
+    try {
+        const response = await fetch('data/ai-news.json');
+        if (!response.ok) throw new Error('加载失败');
+        
+        aiNews = await response.json();
+        
+        // 更新统计数据
+        const statNumber = document.querySelector('.ai-stat-number');
+        if (statNumber) {
+            statNumber.textContent = aiNews.length;
+        }
+        
+        // 渲染资讯卡片
+        renderAICards(aiNews);
+        
+        // 更新时间显示
+        updateLastUpdateTime();
+        
+        // 显示成功提示
+        showUpdateStatus('success', `✅ 已加载 ${aiNews.length} 条最新资讯`);
+        
+    } catch (error) {
+        console.error('加载AI资讯失败:', error);
+        
+        // 使用默认数据（可选）
+        aiNews = getDefaultNews();
+        renderAICards(aiNews);
+        
+        showUpdateStatus('error', '⚠️ 使用缓存数据');
+    }
+}
+
+// 显示更新状态提示
+function showUpdateStatus(type, message) {
+    const statusDiv = document.getElementById('updateStatus');
+    if (statusDiv) {
+        statusDiv.className = `update-status update-${type}`;
+        statusDiv.textContent = message;
+        statusDiv.style.display = 'block';
+        
+        setTimeout(() => {
+            statusDiv.style.display = 'none';
+        }, 3000);
+    }
+}
+
+// 默认数据（备用）
+function getDefaultNews() {
+    return [
+        {
+            id: 1,
+            title: "AI技术持续演进中",
+            description: "人工智能领域保持快速发展态势...",
+            category: "行业动态",
+            date: new Date().toISOString().split('T')[0],
+            source: "AI Weekly",
+            image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=500"
+        }
+    ];
+}
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
