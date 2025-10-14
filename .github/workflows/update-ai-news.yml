@@ -5,35 +5,165 @@ on:
     # 每天 UTC 0:00 和 12:00 运行（北京时间 8:00 和 20:00）
     - cron: '0 0,12 * * *'
   workflow_dispatch:  # 允许手动触发
+    inputs:
+      mode:
+        description: '更新模式'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - full    # 完整更新（RSS + AI）
+          - ai-only # 仅AI生成
+          - rss-only # 仅RSS抓取
 
 jobs:
   update-news:
     runs-on: ubuntu-latest
+    timeout-minutes: 15  # 防止任务hang住
     
     steps:
-      - name: Checkout repository
+      - name: 📥 检出代码
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Setup Node.js
+          fetch-depth: 1  # 只获取最新提交，加快速度
+
+      - name: 🟢 设置Node.js环境
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      
-      - name: Install dependencies
+          cache: 'npm'
+          cache-dependency-path: scripts/package.json
+
+      - name: 📦 安装依赖
+        working-directory: ./scripts
         run: |
-          cd scripts
-          npm install
-      
-      - name: Update AI news
+          echo "📦 开始安装依赖..."
+          npm ci --prefer-offline --no-audit
+          echo "✅ 依赖安装完成"
+
+      - name: 🔍 验证环境变量
         run: |
-          cd scripts
+          echo "🔍 检查环境变量配置..."
+          if [ -z "${{ secrets.NEWAPI_KEY }}" ]; then
+            echo "⚠️ 警告: NEWAPI_KEY 未配置，AI生成功能将被禁用"
+          else
+            echo "✅ NEWAPI_KEY 已配置"
+          fi
+          
+          if [ -z "${{ secrets.NEWAPI_BASE_URL }}" ]; then
+            echo "ℹ️ NEWAPI_BASE_URL 未配置，将使用默认地址"
+          else
+            echo "✅ NEWAPI_BASE_URL 已配置"
+          fi
+
+      - name: 🤖 执行AI资讯更新
+        working-directory: ./scripts
+        env:
+          NEWAPI_KEY: ${{ secrets.NEWAPI_KEY }}
+          NEWAPI_BASE_URL: ${{ secrets.NEWAPI_BASE_URL }}
+          NEWAPI_MODEL: ${{ secrets.NEWAPI_MODEL || 'gpt-4' }}
+          UPDATE_MODE: ${{ github.event.inputs.mode || 'full' }}
+        run: |
+          echo "🚀 开始更新AI资讯..."
+          echo "📅 当前时间: $(date +'%Y-%m-%d %H:%M:%S %Z')"
+          echo "🌍 更新模式: $UPDATE_MODE"
+          echo ""
+          
           node update-news.js
-      
-      - name: Commit and push changes
+          
+          echo ""
+          echo "✅ 更新脚本执行完成"
+
+      - name: 📊 检查更新结果
+        run: |
+          if [ -f data/ai-news.json ]; then
+            NEWS_COUNT=$(cat data/ai-news.json | grep -o '"id"' | wc -l)
+            FILE_SIZE=$(du -h data/ai-news.json | cut -f1)
+            echo "📈 资讯统计:"
+            echo "  - 总数量: $NEWS_COUNT 条"
+            echo "  - 文件大小: $FILE_SIZE"
+            echo ""
+          else
+            echo "❌ 错误: ai-news.json 文件未生成"
+            exit 1
+          fi
+
+      - name: 💾 提交更新到仓库
+        id: commit
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          
+          # 添加文件
           git add data/ai-news.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Auto update AI news - $(date +'%Y-%m-%d %H:%M:%S')" && git push)
+          
+          # 检查是否有变更
+          if git diff --staged --quiet; then
+            echo "📝 没有新内容需要提交"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            # 生成提交信息
+            COMMIT_MSG="🤖 自动更新AI资讯 | $(date +'%Y-%m-%d %H:%M')"
+            NEWS_COUNT=$(cat data/ai-news.json | grep -o '"id"' | wc -l)
+            COMMIT_MSG="$COMMIT_MSG
+
+📊 当前共 $NEWS_COUNT 条资讯
+🔄 更新方式: RSS抓取 + AI生成 + AI优化
+⏰ 更新时间: $(date +'%Y-%m-%d %H:%M:%S %Z')"
+            
+            git commit -m "$COMMIT_MSG"
+            git push
+            
+            echo "✅ 更新已成功推送到仓库"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📊 生成执行摘要
+        if: always()
+        run: |
+          echo "# 🤖 AI资讯更新报告" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📋 基本信息" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| 项目 | 详情 |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|------|" >> $GITHUB_STEP_SUMMARY
+          echo "| 📅 更新时间 | $(date +'%Y-%m-%d %H:%M:%S %Z') |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🌍 触发方式 | ${{ github.event_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ✅ 执行状态 | ${{ job.status }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🔄 是否有更新 | ${{ steps.commit.outputs.has_changes || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f data/ai-news.json ]; then
+            NEWS_COUNT=$(cat data/ai-news.json | grep -o '"id"' | wc -l)
+            FILE_SIZE=$(du -h data/ai-news.json | cut -f1)
+            echo "## 📊 数据统计" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- 📰 资讯总数: **$NEWS_COUNT** 条" >> $GITHUB_STEP_SUMMARY
+            echo "- 💾 文件大小: **$FILE_SIZE**" >> $GITHUB_STEP_SUMMARY
+            echo "- 🔧 更新模式: RSS抓取 + AI生成 + AI优化" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔗 相关链接" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- [查看AI前沿页面](https://kuangke.github.io/ai.html)" >> $GITHUB_STEP_SUMMARY
+          echo "- [查看更新日志](https://github.com/${{ github.repository }}/commits/main/data/ai-news.json)" >> $GITHUB_STEP_SUMMARY
+
+      - name: 🔔 发送失败通知
+        if: failure()
+        run: |
+          echo "::error::AI资讯更新失败！"
+          echo "::error::请检查日志并修复问题"
+          echo ""
+          echo "常见问题排查："
+          echo "1. 检查 NEWAPI_KEY 是否配置正确"
+          echo "2. 检查网络连接是否正常"
+          echo "3. 检查RSS源是否可访问"
+          echo "4. 查看详细错误日志"
+
+      - name: ✅ 完成通知
+        if: success()
+        run: |
+          echo "🎉 AI资讯更新流程执行成功！"
+          echo "📊 更新详情请查看 Actions Summary"
