@@ -879,6 +879,16 @@ const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
  */
 let momentsData = [
       {
+        id: 21,
+        content: '无人扶我青云志,我自踏雪至山巅。\n若是命中无此运,孤身亦可登昆仑。\n红尘赠我三尺剑,酒看瘦马一世街。\n世人朝路乃绝润,独见众生止步前。\n海到尽头天作岸,山登绝顶我为峰。\n如若东山能再起,大鹏展翅九万里。\n一入红尘梦易真,一朝悟透心境名。\n一朝悟道见真我,昔日枷锁皆云烟。\n天门将至百运开,拂尘轻笑问仙来。',
+        value: 5,
+        category: '问答互动',
+        time: '2025-10-14 13:16',
+        image: '',
+        likes: 0,
+        comments: []
+    },
+      {
         id: 20,
         content: '生活标准这个东西，最好就是以年为单位去考量，且很长时间都不要发生改变，这个标准是我的被动收入——我的另一个我不用我操心的，能够过的生活。',
         value: 5,
