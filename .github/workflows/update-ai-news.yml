@@ -1,0 +1,39 @@
+name: Update AI News Daily
+
+on:
+  schedule:
+    # 每天 UTC 0:00 和 12:00 运行（北京时间 8:00 和 20:00）
+    - cron: '0 0,12 * * *'
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  update-news:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: |
+          cd scripts
+          npm install
+      
+      - name: Update AI news
+        run: |
+          cd scripts
+          node update-news.js
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/ai-news.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Auto update AI news - $(date +'%Y-%m-%d %H:%M:%S')" && git push)
