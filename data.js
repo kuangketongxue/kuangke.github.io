@@ -77,7 +77,7 @@ let successDiaryData = [
         },
         content: {
             zh: '阅读10本书+。\n持续搭建个人网站,加了N个功能+自我介绍网站+......\n优化原始财务系统表。\n学习11小时+。',
-            en: 'Read 10+ books.\nContinuously building a personal website,is, Added numerous features + self-introduction website +.......\noptimize the original financial system tables.\nStudied for 8+ hours.
+            en: 'Read 10+ books.\nContinuously building a personal website,is, Added numerous features + self-introduction website +.......\noptimize the original financial system tables.\nStudied for 8+ hours',
         highlight: {
             zh: 'RSS订阅搭建',
             en: 'RSS subscription setup'
