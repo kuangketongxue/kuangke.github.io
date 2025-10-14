@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI前沿 - 狂客·银河</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* AI页面特定样式 */
+        .ai-header {
+            text-align: center;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, var(--primary-color), #4a00e0);
+            color: white;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .ai-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .ai-header p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .ai-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+        
+        .ai-category-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 50px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .ai-category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ai-category-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .ai-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 0 1rem 2rem;
+        }
+        
+        .ai-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .ai-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .ai-card-image {
+            height: 200px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .ai-card-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .ai-card-content {
+            padding: 1.5rem;
+        }
+        
+        .ai-card h3 {
+            margin-top: 0;
+            margin-bottom: 0.8rem;
+            font-size: 1.3rem;
+            line-height: 1.4;
+        }
+        
+        .ai-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        .ai-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+        
+        .ai-card-source {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .ai-card-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .ai-load-more {
+            display: block;
+            margin: 2rem auto;
+            padding: 0.8rem 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .ai-load-more:hover {
+            background: #3a00cc;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .ai-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body data-page="ai">
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <h1 class="logo">狂客·银河</h1>
+                <a class="success-link" href="success.html">
+                    <span class="success-icon">
+                        <i class="fas fa-meteor"></i>
+                    </span>
+                    <span class="success-text">成功日记</span>
+                </a>
+                <a class="sky-link" href="reading.html">
+                    <span class="sky-icon">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span class="sky-text">星空</span>
+                </a>
+                <!-- AI前沿按钮 -->
+                <a class="ai-link" href="ai.html" style="color: var(--primary-color); font-weight: 600;">
+                    <span class="ai-icon">
+                        <i class="fas fa-robot"></i>
+                    </span>
+                    <span class="ai-text">AI前沿</span>
+                </a>
+                <!-- 考试相关按钮 -->
+                <a class="exam-link" href="exam.html">
+                    <span class="exam-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </span>
+                    <span class="exam-text">考试相关</span>
+                </a>
+            </div>
+            <div class="controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="搜索AI资讯...">
+                </div>
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="ai-header">
+        <div class="container">
+            <h1><i class="fas fa-robot"></i> AI前沿资讯</h1>
+            <p>探索人工智能领域的最新突破、技术趋势和行业动态</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="ai-categories">
+            <button class="ai-category-btn active" data-category="all">全部</button>
+            <button class="ai-category-btn" data-category="大语言模型">大语言模型</button>
+            <button class="ai-category-btn" data-category="计算机视觉">计算机视觉</button>
+            <button class="ai-category-btn" data-category="AI应用">AI应用</button>
+            <button class="ai-category-btn" data-category="AI伦理">AI伦理</button>
+            <button class="ai-category-btn" data-category="研究突破">研究突破</button>
+            <button class="ai-category-btn" data-category="行业动态">行业动态</button>
+        </div>
+        
+        <div class="ai-grid" id="aiGrid">
+            <!-- AI资讯卡片将通过JavaScript动态生成 -->
+        </div>
+        
+        <button class="ai-load-more" id="loadMore">加载更多</button>
+    </div>
+    
+    <!-- 底部社交媒体区域 -->
+    <footer class="social-footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" 
+   target="_blank" class="social-link wechat" title="微信公众号">
+    <i class="fab fa-weixin"></i>
+</a>
+               
+                <a href="https://github.com/kuangketongxue" target="_blank" class="social-link github" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://x.com/kuangketongxue" target="_blank" class="social-link x" title="X">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+    </svg>
+</a>
+            </div>
+            <p class="copyright">© 2025 狂客·银河 版权所有</p>
+        </div>
+    </footer>
+    
+    <script>
+        // AI资讯数据
+        const aiNews = [
+            {
+                id: 1,
+                title: "GPT-5发布：多模态能力大幅提升",
+                description: "OpenAI最新发布的GPT-5在图像理解、语音交互和复杂推理方面取得显著进步，标志着通用人工智能又向前迈进了一步。",
+                category: "大语言模型",
+                date: "2025-03-15",
+                source: "OpenAI",
+                image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 2,
+                title: "AI在医疗影像诊断准确率超过人类专家",
+                description: "最新研究表明，基于深度学习的医疗影像诊断系统在多种疾病检测中准确率已超过人类放射科医生，有望缓解医疗资源不均问题。",
+                category: "AI应用",
+                date: "2025-03-12",
+                source: "Nature Medicine",
+                image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 3,
+                title: "新型神经网络架构突破计算效率瓶颈",
+                description: "研究人员提出了一种名为'星云网络'的新型架构，在保持模型性能的同时将计算需求降低了70%，为边缘设备部署大型模型铺平道路。",
+                category: "研究突破",
+                date: "2025-03-10",
+                source: "NeurIPS",
+                image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 4,
+                title: "欧盟通过全球首部全面AI监管法案",
+                description: "欧盟议会正式通过《人工智能法案》，为高风险AI系统设立严格标准，并禁止某些被认为威胁基本权利的AI应用。",
+                category: "AI伦理",
+                date: "2025-03-08",
+                source: "European Parliament",
+                image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 5,
+                title: "实时视频生成模型实现电影级质量",
+                description: "新发布的视频生成模型能够根据文本提示生成长达一分钟的高质量视频，在细节一致性和运动流畅性方面取得重大突破。",
+                category: "计算机视觉",
+                date: "2025-03-05",
+                source: "Google Research",
+                image: "https://images.unsplash.com/photo-1536240478700-b869070f9279?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 6,
+                title: "AI芯片市场竞争加剧，多家公司发布新品",
+                description: "随着AI应用需求激增，芯片制造商纷纷推出专为AI工作负载设计的处理器，性能较传统GPU提升数倍。",
+                category: "行业动态",
+                date: "2025-03-02",
+                source: "TechCrunch",
+                image: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 7,
+                title: "AI辅助药物发现缩短研发周期",
+                description: "制药公司利用AI平台成功将新药研发周期从传统的5-7年缩短至18个月，显著降低了研发成本。",
+                category: "AI应用",
+                date: "2025-02-28",
+                source: "Science",
+                image: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 8,
+                title: "多模态AI模型实现真正意义上的跨模态理解",
+                description: "最新研究展示了能够无缝理解文本、图像、音频和视频内容的多模态模型，为更自然的人机交互奠定了基础。",
+                category: "研究突破",
+                date: "2025-02-25",
+                source: "MIT",
+                image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            }
+        ];
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderAICards(aiNews);
+            setupCategoryFilters();
+            setupSearch();
+            setupThemeToggle();
+        });
+
+        // 渲染AI资讯卡片
+        function renderAICards(news) {
+            const grid = document.getElementById('aiGrid');
+            grid.innerHTML = '';
+            
+            news.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'ai-card';
+                card.dataset.category = item.category;
+                
+                card.innerHTML = `
+                    <div class="ai-card-image" style="background-image: url('${item.image}')">
+                        <div class="ai-card-badge">${item.category}</div>
+                    </div>
+                    <div class="ai-card-content">
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                        <div class="ai-card-meta">
+                            <div class="ai-card-source">
+                                <i class="fas fa-newspaper"></i>
+                                ${item.source}
+                            </div>
+                            <div class="ai-card-date">
+                                <i class="far fa-calendar"></i>
+                                ${formatDate(item.date)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // 设置分类筛选
+        function setupCategoryFilters() {
+            const categoryBtns = document.querySelectorAll('.ai-category-btn');
+            
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    // 为当前点击的按钮添加active类
+                    this.classList.add('active');
+                    
+                    const category = this.dataset.category;
+                    filterAICards(category);
+                });
+            });
+        }
+
+        // 筛选AI卡片
+        function filterAICards(category) {
+            const allCards = document.querySelectorAll('.ai-card');
+            
+            allCards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 设置搜索功能
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const allCards = document.querySelectorAll('.ai-card');
+                
+                allCards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const description = card.querySelector('p').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // 设置主题切换
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+            
+            // 检查本地存储的主题偏好
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-theme');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-theme');
+                
+                if (document.body.classList.contains('dark-theme')) {
+                    localStorage.setItem('theme', 'dark');
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            });
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('zh-CN', options);
+        }
+
+        // 加载更多功能
+        document.getElementById('loadMore').addEventListener('click', function() {
+            // 在实际应用中，这里会从服务器加载更多数据
+            // 这里我们简单显示一个提示
+            alert('正在加载更多AI前沿资讯...');
+        });
+    </script>
+</body>
+</html>
