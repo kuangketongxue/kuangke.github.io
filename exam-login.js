@@ -1,7 +1,7 @@
 // 考试页面登录验证功能
 (function() {
     // 设置正确的密码（可以修改为你想要的密码）
-    const CORRECT_PASSWORD = 'exam2025';
+    const CORRECT_PASSWORD = 'kuangketongxue2026exam';
     
     // 会话存储键名
     const SESSION_KEY = 'examPageAuthenticated';
