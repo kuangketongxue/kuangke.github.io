@@ -1,78 +1,3 @@
-// 在文件顶部，替换原来的 aiNews 数组
-let aiNews = []; // 初始为空，从JSON加载
-
-// 页面加载时从JSON文件获取数据
-document.addEventListener('DOMContentLoaded', async function() {
-    await loadAINewsFromJSON();
-    setupCategoryFilters();
-    setupSearch();
-    setupThemeToggle();
-});
-
-// 从JSON文件加载AI资讯
-async function loadAINewsFromJSON() {
-    try {
-        const response = await fetch('data/ai-news.json');
-        if (!response.ok) throw new Error('加载失败');
-        
-        aiNews = await response.json();
-        
-        // 更新统计数据
-        const statNumber = document.querySelector('.ai-stat-number');
-        if (statNumber) {
-            statNumber.textContent = aiNews.length;
-        }
-        
-        // 渲染资讯卡片
-        renderAICards(aiNews);
-        
-        // 更新时间显示
-        updateLastUpdateTime();
-        
-        // 显示成功提示
-        showUpdateStatus('success', `✅ 已加载 ${aiNews.length} 条最新资讯`);
-        
-    } catch (error) {
-        console.error('加载AI资讯失败:', error);
-        
-        // 使用默认数据（可选）
-        aiNews = getDefaultNews();
-        renderAICards(aiNews);
-        
-        showUpdateStatus('error', '⚠️ 使用缓存数据');
-    }
-}
-
-// 显示更新状态提示
-function showUpdateStatus(type, message) {
-    const statusDiv = document.getElementById('updateStatus');
-    if (statusDiv) {
-        statusDiv.className = `update-status update-${type}`;
-        statusDiv.textContent = message;
-        statusDiv.style.display = 'block';
-        
-        setTimeout(() => {
-            statusDiv.style.display = 'none';
-        }, 3000);
-    }
-}
-
-// 默认数据（备用）
-function getDefaultNews() {
-    return [
-        {
-            id: 1,
-            title: "AI技术持续演进中",
-            description: "人工智能领域保持快速发展态势...",
-            category: "行业动态",
-            date: new Date().toISOString().split('T')[0],
-            source: "AI Weekly",
-            image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=500"
-        }
-    ];
-}
-
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -479,15 +404,15 @@ function getDefaultNews() {
                 
                 <div class="ai-stats">
                     <div class="ai-stat">
-                        <span class="ai-stat-number">128</span>
+                        <span class="ai-stat-number">-</span>
                         <span class="ai-stat-label">前沿资讯</span>
                     </div>
                     <div class="ai-stat">
-                        <span class="ai-stat-number">24</span>
+                        <span class="ai-stat-number">-</span>
                         <span class="ai-stat-label">技术领域</span>
                     </div>
                     <div class="ai-stat">
-                        <span class="ai-stat-number">56</span>
+                        <span class="ai-stat-number">-</span>
                         <span class="ai-stat-label">研究机构</span>
                     </div>
                 </div>
@@ -504,14 +429,14 @@ function getDefaultNews() {
     </div>
     
     <div class="ai-featured">
-        <h2>🚀 最新重磅发布</h2>
-        <p>GPT-5多模态模型正式上线，开启通用人工智能新纪元</p>
+        <h2>-</h2>
+        <p>-</p>
     </div>
     
     <div class="container">
         <div class="ai-categories">
             <button class="ai-category-btn active" data-category="all">
-                <i class="fas fa-layer-group"></i>
+                <i class="fas fa-layer-group">-</i>
                 全部资讯
             </button>
             <button class="ai-category-btn" data-category="大语言模型">
@@ -575,60 +500,8 @@ function getDefaultNews() {
     <script>
         // AI资讯数据
         const aiNews = [
-            {
-                id: 1,
-                title: "GPT-5发布：多模态能力实现质的飞跃",
-                description: "OpenAI最新发布的GPT-5在图像理解、语音交互和复杂推理方面取得革命性进步，标志着通用人工智能进入全新阶段。模型在创造性写作、代码生成和科学推理任务中表现卓越。",
-                category: "大语言模型",
-                date: "2025-03-15",
-                source: "OpenAI",
-                image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 2,
-                title: "AI医疗诊断准确率超越人类专家团队",
-                description: "斯坦福大学研究团队开发的深度学习系统在多种疾病影像诊断中准确率达到98.7%，超过人类专家团队表现，为医疗资源优化提供新解决方案。",
-                category: "AI应用",
-                date: "2025-03-12",
-                source: "Nature Medicine",
-                image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 3,
-                title: "星云网络：突破性的高效神经网络架构",
-                description: "新型'星云网络'架构在保持顶级性能的同时将计算需求降低70%，能耗减少65%，为边缘计算和移动设备部署大型AI模型奠定基础。",
-                category: "研究突破",
-                date: "2025-03-10",
-                source: "NeurIPS",
-                image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 4,
-                title: "欧盟通过全球首部全面AI监管法案",
-                description: "欧盟议会正式通过《人工智能法案》，建立全球最严格的AI监管框架，禁止社会评分和实时生物识别等高风险应用，推动负责任AI发展。",
-                category: "AI伦理",
-                date: "2025-03-08",
-                source: "European Parliament",
-                image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 5,
-                title: "实时视频生成达到电影级视觉效果",
-                description: "新一代视频生成模型可根据文本提示生成长达2分钟的高质量视频，在场景一致性、物理真实性和艺术表现力方面实现重大突破。",
-                category: "计算机视觉",
-                date: "2025-03-05",
-                source: "Google Research",
-                image: "https://images.unsplash.com/photo-1536240478700-b869070f9279?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 6,
-                title: "AI芯片市场竞争白热化，性能创新高",
-                description: "随着AI应用需求爆发式增长，多家芯片制造商推出新一代AI专用处理器，训练性能较上一代提升3-5倍，推理延迟降低60%。",
-                category: "行业动态",
-                date: "2025-03-02",
-                source: "TechCrunch",
-                image: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            }
+        等待......
+            
         ];
 
         // 页面加载完成后初始化
