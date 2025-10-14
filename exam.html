@@ -8,17 +8,187 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* 登录遮罩层样式 */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .login-overlay.hidden {
+            display: none;
+        }
+        
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.6s ease;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-header i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .login-header h2 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            position: relative;
+        }
+        
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 1.1rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .login-btn {
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+            animation: shake 0.5s ease;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        /* 暗色主题适配 */
+        body.dark-theme .login-box {
+            background: #2d3748;
+        }
+        
+        body.dark-theme .login-header h2 {
+            color: #e2e8f0;
+        }
+        
+        body.dark-theme .login-header p {
+            color: #a0aec0;
+        }
+        
+        body.dark-theme .form-group input {
+            background: #374151;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-theme .form-group input:focus {
+            border-color: #667eea;
+            background: #2d3748;
+        }
+
         /* 考试页面专属样式 */
         .exam-content {
             padding: 2rem 0;
         }
-
         .exam-header {
             text-align: center;
             margin-bottom: 3rem;
             animation: fadeInDown 0.8s ease;
         }
-
         .exam-header h2 {
             font-size: 2.5rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -27,12 +197,10 @@
             background-clip: text;
             margin-bottom: 1rem;
         }
-
         .exam-header p {
             color: #666;
             font-size: 1.1rem;
         }
-
         /* 考试分类网格 */
         .exam-grid {
             display: grid;
@@ -40,7 +208,6 @@
             gap: 2rem;
             margin-bottom: 3rem;
         }
-
         .exam-card {
             background: white;
             border-radius: 15px;
@@ -51,7 +218,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .exam-card::before {
             content: '';
             position: absolute;
@@ -63,16 +229,13 @@
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
-
         .exam-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
-
         .exam-card:hover::before {
             transform: scaleX(1);
         }
-
         .exam-card-icon {
             width: 60px;
             height: 60px;
@@ -85,19 +248,16 @@
             color: white;
             margin-bottom: 1.5rem;
         }
-
         .exam-card h3 {
             font-size: 1.5rem;
             margin-bottom: 1rem;
             color: #333;
         }
-
         .exam-card p {
             color: #666;
             line-height: 1.6;
             margin-bottom: 1.5rem;
         }
-
         .exam-card-footer {
             display: flex;
             justify-content: space-between;
@@ -105,12 +265,10 @@
             padding-top: 1rem;
             border-top: 1px solid #eee;
         }
-
         .exam-count {
             color: #999;
             font-size: 0.9rem;
         }
-
         .exam-btn {
             padding: 0.5rem 1.5rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -122,12 +280,10 @@
             text-decoration: none;
             display: inline-block;
         }
-
         .exam-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
-
         /* 资源列表 */
         .resource-list {
             background: white;
@@ -136,7 +292,6 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             animation: fadeInUp 0.8s ease 0.2s both;
         }
-
         .resource-list h3 {
             font-size: 1.8rem;
             margin-bottom: 1.5rem;
@@ -145,7 +300,6 @@
             align-items: center;
             gap: 0.5rem;
         }
-
         .resource-item {
             display: flex;
             align-items: center;
@@ -155,12 +309,10 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
-
         .resource-item:hover {
             background: #f8f9fa;
             transform: translateX(5px);
         }
-
         .resource-icon {
             width: 50px;
             height: 50px;
@@ -173,33 +325,27 @@
             margin-right: 1rem;
             font-size: 1.2rem;
         }
-
         .resource-info {
             flex: 1;
         }
-
         .resource-title {
             font-weight: 600;
             color: #333;
             margin-bottom: 0.3rem;
         }
-
         .resource-meta {
             color: #999;
             font-size: 0.9rem;
         }
-
         .resource-download {
             color: #667eea;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
         }
-
         .resource-download:hover {
             color: #764ba2;
         }
-
         /* 动画 */
         @keyframes fadeInDown {
             from {
@@ -211,7 +357,6 @@
                 transform: translateY(0);
             }
         }
-
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -222,59 +367,75 @@
                 transform: translateY(0);
             }
         }
-
         /* 暗色主题适配 */
         body.dark-theme .exam-card,
         body.dark-theme .resource-list {
             background: #2d3748;
             color: #e2e8f0;
         }
-
         body.dark-theme .exam-card h3,
         body.dark-theme .resource-list h3,
         body.dark-theme .resource-title {
             color: #e2e8f0;
         }
-
         body.dark-theme .exam-card p,
         body.dark-theme .resource-meta {
             color: #a0aec0;
         }
-
         body.dark-theme .exam-header p {
             color: #a0aec0;
         }
-
         body.dark-theme .exam-card-footer {
             border-top-color: #4a5568;
         }
-
         body.dark-theme .resource-item:hover {
             background: #374151;
         }
-
         /* 响应式设计 */
         @media (max-width: 768px) {
             .exam-header h2 {
                 font-size: 2rem;
             }
-
             .exam-grid {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
             }
-
             .exam-card {
                 padding: 1.5rem;
             }
-
             .resource-list {
                 padding: 1.5rem;
+            }
+            .login-box {
+                padding: 2rem;
             }
         }
     </style>
 </head>
 <body data-page="exam">
+    <!-- 登录遮罩层 -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <div class="login-header">
+                <i class="fas fa-lock"></i>
+                <h2>访问验证</h2>
+                <p>请输入密码以访问考试资料</p>
+            </div>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <i class="fas fa-key"></i>
+                    <input type="password" id="passwordInput" placeholder="请输入密码" required>
+                </div>
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> 登录
+                </button>
+                <div class="error-message" id="errorMessage">
+                    <i class="fas fa-exclamation-circle"></i> 密码错误，请重试
+                </div>
+            </form>
+        </div>
+    </div>
+
     <header class="header">
         <div class="container">
             <div class="header-left">
@@ -291,7 +452,7 @@
             </div>
         </div>
     </header>
-
+    
     <main class="main-content">
         <div class="container">
             <div class="exam-content">
@@ -300,7 +461,6 @@
                     <h2>📚 考试资料中心</h2>
                     <p>为你精心整理的学习资料，助你考试无忧</p>
                 </div>
-
                 <!-- 考试分类卡片 -->
                 <div class="exam-grid">
                     <div class="exam-card">
@@ -314,7 +474,6 @@
                             <a href="#finals" class="exam-btn">查看资料</a>
                         </div>
                     </div>
-
                     <div class="exam-card">
                         <div class="exam-card-icon">
                             <i class="fas fa-graduation-cap"></i>
@@ -326,7 +485,6 @@
                             <a href="#postgrad" class="exam-btn">查看资料</a>
                         </div>
                     </div>
-
                     <div class="exam-card">
                         <div class="exam-card-icon">
                             <i class="fas fa-certificate"></i>
@@ -338,7 +496,6 @@
                             <a href="#certificate" class="exam-btn">查看资料</a>
                         </div>
                     </div>
-
                     <div class="exam-card">
                         <div class="exam-card-icon">
                             <i class="fas fa-clipboard-list"></i>
@@ -351,11 +508,9 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- 最新资源列表 -->
                 <div class="resource-list">
                     <h3><i class="fas fa-star"></i> 最新上传</h3>
-                    
                     <div class="resource-item">
                         <div class="resource-icon">
                             <i class="fas fa-file-pdf"></i>
@@ -368,7 +523,6 @@
                             <i class="fas fa-download"></i> 下载
                         </a>
                     </div>
-
                     <div class="resource-item">
                         <div class="resource-icon">
                             <i class="fas fa-file-word"></i>
@@ -381,7 +535,6 @@
                             <i class="fas fa-download"></i> 下载
                         </a>
                     </div>
-
                     <div class="resource-item">
                         <div class="resource-icon">
                             <i class="fas fa-file-archive"></i>
@@ -394,7 +547,6 @@
                             <i class="fas fa-download"></i> 下载
                         </a>
                     </div>
-
                     <div class="resource-item">
                         <div class="resource-icon">
                             <i class="fas fa-file-powerpoint"></i>
@@ -411,7 +563,8 @@
             </div>
         </div>
     </main>
-
+    
     <script src="script.js"></script>
+    <script src="exam-login.js"></script>
 </body>
 </html>
