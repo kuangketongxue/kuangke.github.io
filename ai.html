@@ -11,27 +11,81 @@
         /* AI页面特定样式 */
         .ai-header {
             text-align: center;
-            padding: 2rem 0;
-            background: linear-gradient(135deg, var(--primary-color), #4a00e0);
+            padding: 3rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             margin-bottom: 2rem;
-            border-radius: 0 0 20px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+        
+        .ai-header-content {
+            position: relative;
+            z-index: 2;
         }
         
         .ai-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 3rem;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
+            gap: 1.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .ai-header-icon {
+            font-size: 2.8rem;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
         }
         
         .ai-header p {
-            font-size: 1.1rem;
-            max-width: 600px;
+            font-size: 1.3rem;
+            max-width: 700px;
             margin: 0 auto;
-            opacity: 0.9;
+            opacity: 0.95;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+        
+        .ai-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .ai-stat {
+            text-align: center;
+        }
+        
+        .ai-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .ai-stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .ai-categories {
@@ -39,87 +93,115 @@
             flex-wrap: wrap;
             gap: 1rem;
             justify-content: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             padding: 0 1rem;
         }
         
         .ai-category-btn {
-            padding: 0.6rem 1.2rem;
+            padding: 0.8rem 1.5rem;
             border: none;
-            border-radius: 50px;
+            border-radius: 12px;
             background: var(--card-bg);
             color: var(--text-color);
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 500;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid transparent;
         }
         
         .ai-category-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary-color);
         }
         
         .ai-category-btn.active {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), #6a11cb);
             color: white;
+            border-color: var(--primary-color);
         }
         
         .ai-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-            padding: 0 1rem 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2.5rem;
+            padding: 0 1rem 3rem;
         }
         
         .ai-card {
             background: var(--card-bg);
-            border-radius: 15px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        .ai-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            z-index: 2;
         }
         
         .ai-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
         
         .ai-card-image {
-            height: 200px;
+            height: 220px;
             width: 100%;
             background-size: cover;
             background-position: center;
             position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .ai-card:hover .ai-card-image {
+            transform: scale(1.05);
         }
         
         .ai-card-badge {
             position: absolute;
             top: 1rem;
             right: 1rem;
-            background: var(--primary-color);
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
             color: white;
-            padding: 0.3rem 0.8rem;
+            padding: 0.4rem 1rem;
             border-radius: 50px;
             font-size: 0.8rem;
-            font-weight: 600;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
         
         .ai-card-content {
-            padding: 1.5rem;
+            padding: 2rem;
         }
         
         .ai-card h3 {
             margin-top: 0;
-            margin-bottom: 0.8rem;
-            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
             line-height: 1.4;
+            font-weight: 700;
+            color: var(--text-color);
         }
         
         .ai-card p {
             color: var(--text-secondary);
-            margin-bottom: 1.2rem;
-            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+            font-size: 1rem;
         }
         
         .ai-card-meta {
@@ -129,13 +211,14 @@
             font-size: 0.9rem;
             color: var(--text-secondary);
             border-top: 1px solid var(--border-color);
-            padding-top: 1rem;
+            padding-top: 1.5rem;
         }
         
         .ai-card-source {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-weight: 600;
         }
         
         .ai-card-date {
@@ -146,20 +229,43 @@
         
         .ai-load-more {
             display: block;
-            margin: 2rem auto;
-            padding: 0.8rem 2rem;
-            background: var(--primary-color);
+            margin: 3rem auto;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--primary-color), #6a11cb);
             color: white;
             border: none;
             border-radius: 50px;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
         
         .ai-load-more:hover {
-            background: #3a00cc;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
+        }
+        
+        .ai-featured {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2rem 1rem 3rem;
+            text-align: center;
+        }
+        
+        .ai-featured h2 {
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .ai-featured p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
         @media (max-width: 768px) {
@@ -168,8 +274,46 @@
             }
             
             .ai-header h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
+            
+            .ai-header p {
+                font-size: 1.1rem;
+            }
+            
+            .ai-stats {
+                gap: 2rem;
+            }
+            
+            .ai-stat-number {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* 导航栏AI按钮高亮样式 */
+        .ai-nav-highlight {
+            position: relative;
+            color: var(--primary-color) !important;
+            font-weight: 700 !important;
+        }
+        
+        .ai-nav-highlight::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.5; transform: translateX(-50%) scale(1.5); }
+            100% { opacity: 1; transform: translateX(-50%) scale(1); }
         }
     </style>
 </head>
@@ -190,8 +334,8 @@
                     </span>
                     <span class="sky-text">星空</span>
                 </a>
-                <!-- AI前沿按钮 -->
-                <a class="ai-link" href="ai.html" style="color: var(--primary-color); font-weight: 600;">
+                <!-- AI前沿按钮 - 高亮显示 -->
+                <a class="ai-link ai-nav-highlight" href="ai.html">
                     <span class="ai-icon">
                         <i class="fas fa-robot"></i>
                     </span>
@@ -208,7 +352,7 @@
             <div class="controls">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="搜索AI资讯...">
+                    <input type="text" id="searchInput" placeholder="探索AI世界...">
                 </div>
                 <button id="themeToggle" class="theme-toggle">
                     <i class="fas fa-moon"></i>
@@ -219,27 +363,76 @@
     
     <div class="ai-header">
         <div class="container">
-            <h1><i class="fas fa-robot"></i> AI前沿资讯</h1>
-            <p>探索人工智能领域的最新突破、技术趋势和行业动态</p>
+            <div class="ai-header-content">
+                <h1>
+                    <i class="fas fa-robot ai-header-icon"></i>
+                    AI前沿探索
+                </h1>
+                <p>深入人工智能的核心领域，追踪最新技术突破、行业趋势和创新应用，与未来对话</p>
+                
+                <div class="ai-stats">
+                    <div class="ai-stat">
+                        <span class="ai-stat-number">128</span>
+                        <span class="ai-stat-label">前沿资讯</span>
+                    </div>
+                    <div class="ai-stat">
+                        <span class="ai-stat-number">24</span>
+                        <span class="ai-stat-label">技术领域</span>
+                    </div>
+                    <div class="ai-stat">
+                        <span class="ai-stat-number">56</span>
+                        <span class="ai-stat-label">研究机构</span>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    
+    <div class="ai-featured">
+        <h2>🚀 最新重磅发布</h2>
+        <p>GPT-5多模态模型正式上线，开启通用人工智能新纪元</p>
     </div>
     
     <div class="container">
         <div class="ai-categories">
-            <button class="ai-category-btn active" data-category="all">全部</button>
-            <button class="ai-category-btn" data-category="大语言模型">大语言模型</button>
-            <button class="ai-category-btn" data-category="计算机视觉">计算机视觉</button>
-            <button class="ai-category-btn" data-category="AI应用">AI应用</button>
-            <button class="ai-category-btn" data-category="AI伦理">AI伦理</button>
-            <button class="ai-category-btn" data-category="研究突破">研究突破</button>
-            <button class="ai-category-btn" data-category="行业动态">行业动态</button>
+            <button class="ai-category-btn active" data-category="all">
+                <i class="fas fa-layer-group"></i>
+                全部资讯
+            </button>
+            <button class="ai-category-btn" data-category="大语言模型">
+                <i class="fas fa-brain"></i>
+                大语言模型
+            </button>
+            <button class="ai-category-btn" data-category="计算机视觉">
+                <i class="fas fa-eye"></i>
+                计算机视觉
+            </button>
+            <button class="ai-category-btn" data-category="AI应用">
+                <i class="fas fa-mobile-alt"></i>
+                AI应用
+            </button>
+            <button class="ai-category-btn" data-category="AI伦理">
+                <i class="fas fa-balance-scale"></i>
+                AI伦理
+            </button>
+            <button class="ai-category-btn" data-category="研究突破">
+                <i class="fas fa-flask"></i>
+                研究突破
+            </button>
+            <button class="ai-category-btn" data-category="行业动态">
+                <i class="fas fa-chart-line"></i>
+                行业动态
+            </button>
         </div>
         
         <div class="ai-grid" id="aiGrid">
             <!-- AI资讯卡片将通过JavaScript动态生成 -->
         </div>
         
-        <button class="ai-load-more" id="loadMore">加载更多</button>
+        <button class="ai-load-more" id="loadMore">
+            <i class="fas fa-sync-alt"></i>
+            加载更多精彩内容
+        </button>
     </div>
     
     <!-- 底部社交媒体区域 -->
@@ -269,8 +462,8 @@
         const aiNews = [
             {
                 id: 1,
-                title: "GPT-5发布：多模态能力大幅提升",
-                description: "OpenAI最新发布的GPT-5在图像理解、语音交互和复杂推理方面取得显著进步，标志着通用人工智能又向前迈进了一步。",
+                title: "GPT-5发布：多模态能力实现质的飞跃",
+                description: "OpenAI最新发布的GPT-5在图像理解、语音交互和复杂推理方面取得革命性进步，标志着通用人工智能进入全新阶段。模型在创造性写作、代码生成和科学推理任务中表现卓越。",
                 category: "大语言模型",
                 date: "2025-03-15",
                 source: "OpenAI",
@@ -278,8 +471,8 @@
             },
             {
                 id: 2,
-                title: "AI在医疗影像诊断准确率超过人类专家",
-                description: "最新研究表明，基于深度学习的医疗影像诊断系统在多种疾病检测中准确率已超过人类放射科医生，有望缓解医疗资源不均问题。",
+                title: "AI医疗诊断准确率超越人类专家团队",
+                description: "斯坦福大学研究团队开发的深度学习系统在多种疾病影像诊断中准确率达到98.7%，超过人类专家团队表现，为医疗资源优化提供新解决方案。",
                 category: "AI应用",
                 date: "2025-03-12",
                 source: "Nature Medicine",
@@ -287,8 +480,8 @@
             },
             {
                 id: 3,
-                title: "新型神经网络架构突破计算效率瓶颈",
-                description: "研究人员提出了一种名为'星云网络'的新型架构，在保持模型性能的同时将计算需求降低了70%，为边缘设备部署大型模型铺平道路。",
+                title: "星云网络：突破性的高效神经网络架构",
+                description: "新型'星云网络'架构在保持顶级性能的同时将计算需求降低70%，能耗减少65%，为边缘计算和移动设备部署大型AI模型奠定基础。",
                 category: "研究突破",
                 date: "2025-03-10",
                 source: "NeurIPS",
@@ -297,7 +490,7 @@
             {
                 id: 4,
                 title: "欧盟通过全球首部全面AI监管法案",
-                description: "欧盟议会正式通过《人工智能法案》，为高风险AI系统设立严格标准，并禁止某些被认为威胁基本权利的AI应用。",
+                description: "欧盟议会正式通过《人工智能法案》，建立全球最严格的AI监管框架，禁止社会评分和实时生物识别等高风险应用，推动负责任AI发展。",
                 category: "AI伦理",
                 date: "2025-03-08",
                 source: "European Parliament",
@@ -305,8 +498,8 @@
             },
             {
                 id: 5,
-                title: "实时视频生成模型实现电影级质量",
-                description: "新发布的视频生成模型能够根据文本提示生成长达一分钟的高质量视频，在细节一致性和运动流畅性方面取得重大突破。",
+                title: "实时视频生成达到电影级视觉效果",
+                description: "新一代视频生成模型可根据文本提示生成长达2分钟的高质量视频，在场景一致性、物理真实性和艺术表现力方面实现重大突破。",
                 category: "计算机视觉",
                 date: "2025-03-05",
                 source: "Google Research",
@@ -314,30 +507,12 @@
             },
             {
                 id: 6,
-                title: "AI芯片市场竞争加剧，多家公司发布新品",
-                description: "随着AI应用需求激增，芯片制造商纷纷推出专为AI工作负载设计的处理器，性能较传统GPU提升数倍。",
+                title: "AI芯片市场竞争白热化，性能创新高",
+                description: "随着AI应用需求爆发式增长，多家芯片制造商推出新一代AI专用处理器，训练性能较上一代提升3-5倍，推理延迟降低60%。",
                 category: "行业动态",
                 date: "2025-03-02",
                 source: "TechCrunch",
                 image: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 7,
-                title: "AI辅助药物发现缩短研发周期",
-                description: "制药公司利用AI平台成功将新药研发周期从传统的5-7年缩短至18个月，显著降低了研发成本。",
-                category: "AI应用",
-                date: "2025-02-28",
-                source: "Science",
-                image: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 8,
-                title: "多模态AI模型实现真正意义上的跨模态理解",
-                description: "最新研究展示了能够无缝理解文本、图像、音频和视频内容的多模态模型，为更自然的人机交互奠定了基础。",
-                category: "研究突破",
-                date: "2025-02-25",
-                source: "MIT",
-                image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
             }
         ];
 
@@ -469,9 +644,20 @@
 
         // 加载更多功能
         document.getElementById('loadMore').addEventListener('click', function() {
-            // 在实际应用中，这里会从服务器加载更多数据
-            // 这里我们简单显示一个提示
-            alert('正在加载更多AI前沿资讯...');
+            const button = this;
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 加载中...';
+            button.disabled = true;
+            
+            // 模拟加载延迟
+            setTimeout(() => {
+                // 在实际应用中，这里会从服务器加载更多数据
+                alert('正在加载更多AI前沿资讯...');
+                
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 1500);
         });
     </script>
 </body>
