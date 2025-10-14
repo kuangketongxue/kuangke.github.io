@@ -4,713 +4,414 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI前沿 - 狂客·银河</title>
+    <title>考试相关 - 狂客·银河</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 简化后的导航栏样式 */
-        .simple-header {
-            background: var(--header-bg);
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+        /* 考试页面专属样式 */
+        .exam-content {
+            padding: 2rem 0;
         }
-        
-        .simple-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-        
-        .back-button {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            background: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
-        }
-        
-        .back-button:hover {
-            transform: translateX(-3px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
-            color: white;
-        }
-        
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-color);
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-        
-        .page-title i {
-            color: var(--primary-color);
-        }
-        
-        /* AI页面特定样式 */
-        .ai-header {
+
+        .exam-header {
             text-align: center;
-            padding: 3rem 0;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .exam-header h2 {
+            font-size: 2.5rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .ai-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-        }
-        
-        .ai-header-content {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .ai-header h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1.5rem;
-            font-weight: 700;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        
-        .ai-header-icon {
-            font-size: 2.8rem;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+            background-clip: text;
+            margin-bottom: 1rem;
         }
-        
-        .ai-header p {
-            font-size: 1.3rem;
-            max-width: 700px;
-            margin: 0 auto;
-            opacity: 0.95;
-            line-height: 1.6;
-            font-weight: 300;
+
+        .exam-header p {
+            color: #666;
+            font-size: 1.1rem;
         }
-        
-        .ai-stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .ai-stat {
-            text-align: center;
-        }
-        
-        .ai-stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-        
-        .ai-stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .ai-categories {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 3rem;
-            padding: 0 1rem;
-        }
-        
-        .ai-category-btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 12px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border: 2px solid transparent;
-        }
-        
-        .ai-category-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            border-color: var(--primary-color);
-        }
-        
-        .ai-category-btn.active {
-            background: linear-gradient(135deg, var(--primary-color), #6a11cb);
-            color: white;
-            border-color: var(--primary-color);
-        }
-        
-        .ai-grid {
+
+        /* 考试分类网格 */
+        .exam-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 2.5rem;
-            padding: 0 1rem 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
-        
-        .ai-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.4s ease;
-            border: 1px solid var(--border-color);
+
+        .exam-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease;
             position: relative;
+            overflow: hidden;
         }
-        
-        .ai-card::before {
+
+        .exam-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
+            width: 100%;
             height: 4px;
             background: linear-gradient(90deg, #667eea, #764ba2);
-            z-index: 2;
-        }
-        
-        .ai-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .ai-card-image {
-            height: 220px;
-            width: 100%;
-            background-size: cover;
-            background-position: center;
-            position: relative;
+            transform: scaleX(0);
             transition: transform 0.3s ease;
         }
-        
-        .ai-card:hover .ai-card-image {
-            transform: scale(1.05);
+
+        .exam-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
-        
-        .ai-card-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+
+        .exam-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .exam-card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
             color: white;
-            padding: 0.4rem 1rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-        }
-        
-        .ai-card-content {
-            padding: 2rem;
-        }
-        
-        .ai-card h3 {
-            margin-top: 0;
-            margin-bottom: 1rem;
-            font-size: 1.4rem;
-            line-height: 1.4;
-            font-weight: 700;
-            color: var(--text-color);
-        }
-        
-        .ai-card p {
-            color: var(--text-secondary);
             margin-bottom: 1.5rem;
-            line-height: 1.7;
-            font-size: 1rem;
         }
-        
-        .ai-card-meta {
+
+        .exam-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .exam-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .exam-card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .exam-count {
+            color: #999;
             font-size: 0.9rem;
-            color: var(--text-secondary);
-            border-top: 1px solid var(--border-color);
-            padding-top: 1.5rem;
         }
-        
-        .ai-card-source {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-        }
-        
-        .ai-card-date {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .ai-load-more {
-            display: block;
-            margin: 3rem auto;
-            padding: 1rem 2.5rem;
-            background: linear-gradient(135deg, var(--primary-color), #6a11cb);
+
+        .exam-btn {
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            text-decoration: none;
+            display: inline-block;
         }
-        
-        .ai-load-more:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
+
+        .exam-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
-        
-        .ai-featured {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+
+        /* 资源列表 */
+        .resource-list {
+            background: white;
+            border-radius: 15px;
             padding: 2rem;
-            border-radius: 20px;
-            margin: 2rem 1rem 3rem;
-            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.8s ease 0.2s both;
         }
-        
-        .ai-featured h2 {
-            margin-bottom: 1rem;
+
+        .resource-list h3 {
             font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        
-        .ai-featured p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        /* 更新状态样式 */
-        .update-status {
-            text-align: center;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 8px;
-            background: var(--card-bg);
-            display: none;
-        }
-        
-        .update-success {
-            border-left: 4px solid #4CAF50;
-        }
-        
-        .update-error {
-            border-left: 4px solid #f44336;
-        }
-        
-        .last-update {
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 10px;
             margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
-        
+
+        .resource-item:hover {
+            background: #f8f9fa;
+            transform: translateX(5px);
+        }
+
+        .resource-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .resource-info {
+            flex: 1;
+        }
+
+        .resource-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .resource-meta {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .resource-download {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .resource-download:hover {
+            color: #764ba2;
+        }
+
+        /* 动画 */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 暗色主题适配 */
+        body.dark-theme .exam-card,
+        body.dark-theme .resource-list {
+            background: #2d3748;
+            color: #e2e8f0;
+        }
+
+        body.dark-theme .exam-card h3,
+        body.dark-theme .resource-list h3,
+        body.dark-theme .resource-title {
+            color: #e2e8f0;
+        }
+
+        body.dark-theme .exam-card p,
+        body.dark-theme .resource-meta {
+            color: #a0aec0;
+        }
+
+        body.dark-theme .exam-header p {
+            color: #a0aec0;
+        }
+
+        body.dark-theme .exam-card-footer {
+            border-top-color: #4a5568;
+        }
+
+        body.dark-theme .resource-item:hover {
+            background: #374151;
+        }
+
+        /* 响应式设计 */
         @media (max-width: 768px) {
-            .ai-grid {
+            .exam-header h2 {
+                font-size: 2rem;
+            }
+
+            .exam-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
-            
-            .ai-header h1 {
-                font-size: 2.2rem;
+
+            .exam-card {
+                padding: 1.5rem;
             }
-            
-            .ai-header p {
-                font-size: 1.1rem;
-            }
-            
-            .ai-stats {
-                gap: 2rem;
-            }
-            
-            .ai-stat-number {
-                font-size: 1.5rem;
-            }
-            
-            .simple-nav {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .page-title {
-                font-size: 1.3rem;
+
+            .resource-list {
+                padding: 1.5rem;
             }
         }
     </style>
 </head>
-<body data-page="ai">
-    <!-- 简化后的导航栏 -->
-    <header class="simple-header">
-        <div class="simple-nav">
-            <a class="back-button" href="index.html">
-                <i class="fas fa-arrow-left"></i>
-                返回狂客·银河
-            </a>
-            <div class="page-title">
-                <i class="fas fa-robot"></i>
-                AI前沿探索
+<body data-page="exam">
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <a class="back-link" href="index.html">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>返回</span>
+                </a>
+                <h1 class="logo">考试相关</h1>
             </div>
-            <div></div> <!-- 占位元素，保持布局平衡 -->
+            <div class="controls">
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
         </div>
     </header>
-    
-    <div class="ai-header">
-        <div class="container">
-            <div class="ai-header-content">
-                <h1>
-                    <i class="fas fa-robot ai-header-icon"></i>
-                    AI前沿探索
-                </h1>
-                <p>深入人工智能的核心领域，追踪最新技术突破、行业趋势和创新应用，与未来对话</p>
-                
-                <div class="ai-stats">
-                    <div class="ai-stat">
-                        <span class="ai-stat-number">128</span>
-                        <span class="ai-stat-label">前沿资讯</span>
-                    </div>
-                    <div class="ai-stat">
-                        <span class="ai-stat-number">24</span>
-                        <span class="ai-stat-label">技术领域</span>
-                    </div>
-                    <div class="ai-stat">
-                        <span class="ai-stat-number">56</span>
-                        <span class="ai-stat-label">研究机构</span>
-                    </div>
-                </div>
-                
-                <!-- 添加最后更新时间 -->
-                <div class="last-update" id="lastUpdate">
-                    最后更新: 加载中...
-                </div>
-                
-                <!-- 更新状态指示 -->
-                <div class="update-status" id="updateStatus"></div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="ai-featured">
-        <h2>🚀 最新重磅发布</h2>
-        <p>GPT-5多模态模型正式上线，开启通用人工智能新纪元</p>
-    </div>
-    
-    <div class="container">
-        <div class="ai-categories">
-            <button class="ai-category-btn active" data-category="all">
-                <i class="fas fa-layer-group"></i>
-                全部资讯
-            </button>
-            <button class="ai-category-btn" data-category="大语言模型">
-                <i class="fas fa-brain"></i>
-                大语言模型
-            </button>
-            <button class="ai-category-btn" data-category="计算机视觉">
-                <i class="fas fa-eye"></i>
-                计算机视觉
-            </button>
-            <button class="ai-category-btn" data-category="AI应用">
-                <i class="fas fa-mobile-alt"></i>
-                AI应用
-            </button>
-            <button class="ai-category-btn" data-category="AI伦理">
-                <i class="fas fa-balance-scale"></i>
-                AI伦理
-            </button>
-            <button class="ai-category-btn" data-category="研究突破">
-                <i class="fas fa-flask"></i>
-                研究突破
-            </button>
-            <button class="ai-category-btn" data-category="行业动态">
-                <i class="fas fa-chart-line"></i>
-                行业动态
-            </button>
-        </div>
-        
-        <div class="ai-grid" id="aiGrid">
-            <!-- AI资讯卡片将通过JavaScript动态生成 -->
-        </div>
-        
-        <button class="ai-load-more" id="loadMore">
-            <i class="fas fa-sync-alt"></i>
-            加载更多精彩内容
-        </button>
-    </div>
-    
-    <!-- 底部社交媒体区域 -->
-    <footer class="social-footer">
-        <div class="container">
-            <div class="social-links">
-                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" 
-   target="_blank" class="social-link wechat" title="微信公众号">
-    <i class="fab fa-weixin"></i>
-</a>
-               
-                <a href="https://github.com/kuangketongxue" target="_blank" class="social-link github" title="GitHub">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="https://x.com/kuangketongxue" target="_blank" class="social-link x" title="X">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-    </svg>
-</a>
-            </div>
-            <p class="copyright">© 2025 狂客·银河 版权所有</p>
-        </div>
-    </footer>
-    
-    <script>
-        // AI资讯数据
-        const aiNews = [
-            {
-                id: 1,
-                title: "GPT-5发布：多模态能力实现质的飞跃",
-                description: "OpenAI最新发布的GPT-5在图像理解、语音交互和复杂推理方面取得革命性进步，标志着通用人工智能进入全新阶段。模型在创造性写作、代码生成和科学推理任务中表现卓越。",
-                category: "大语言模型",
-                date: "2025-03-15",
-                source: "OpenAI",
-                image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 2,
-                title: "AI医疗诊断准确率超越人类专家团队",
-                description: "斯坦福大学研究团队开发的深度学习系统在多种疾病影像诊断中准确率达到98.7%，超过人类专家团队表现，为医疗资源优化提供新解决方案。",
-                category: "AI应用",
-                date: "2025-03-12",
-                source: "Nature Medicine",
-                image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 3,
-                title: "星云网络：突破性的高效神经网络架构",
-                description: "新型'星云网络'架构在保持顶级性能的同时将计算需求降低70%，能耗减少65%，为边缘计算和移动设备部署大型AI模型奠定基础。",
-                category: "研究突破",
-                date: "2025-03-10",
-                source: "NeurIPS",
-                image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 4,
-                title: "欧盟通过全球首部全面AI监管法案",
-                description: "欧盟议会正式通过《人工智能法案》，建立全球最严格的AI监管框架，禁止社会评分和实时生物识别等高风险应用，推动负责任AI发展。",
-                category: "AI伦理",
-                date: "2025-03-08",
-                source: "European Parliament",
-                image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 5,
-                title: "实时视频生成达到电影级视觉效果",
-                description: "新一代视频生成模型可根据文本提示生成长达2分钟的高质量视频，在场景一致性、物理真实性和艺术表现力方面实现重大突破。",
-                category: "计算机视觉",
-                date: "2025-03-05",
-                source: "Google Research",
-                image: "https://images.unsplash.com/photo-1536240478700-b869070f9279?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 6,
-                title: "AI芯片市场竞争白热化，性能创新高",
-                description: "随着AI应用需求爆发式增长，多家芯片制造商推出新一代AI专用处理器，训练性能较上一代提升3-5倍，推理延迟降低60%。",
-                category: "行业动态",
-                date: "2025-03-02",
-                source: "TechCrunch",
-                image: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            }
-        ];
 
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            renderAICards(aiNews);
-            setupCategoryFilters();
-            setupSearch();
-            setupThemeToggle();
-            updateLastUpdateTime();
-        });
+    <main class="main-content">
+        <div class="container">
+            <div class="exam-content">
+                <!-- 页面标题 -->
+                <div class="exam-header">
+                    <h2>📚 考试资料中心</h2>
+                    <p>为你精心整理的学习资料，助你考试无忧</p>
+                </div>
 
-        // 渲染AI资讯卡片
-        function renderAICards(news) {
-            const grid = document.getElementById('aiGrid');
-            grid.innerHTML = '';
-            
-            news.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'ai-card';
-                card.dataset.category = item.category;
-                
-                card.innerHTML = `
-                    <div class="ai-card-image" style="background-image: url('${item.image}')">
-                        <div class="ai-card-badge">${item.category}</div>
-                    </div>
-                    <div class="ai-card-content">
-                        <h3>${item.title}</h3>
-                        <p>${item.description}</p>
-                        <div class="ai-card-meta">
-                            <div class="ai-card-source">
-                                <i class="fas fa-newspaper"></i>
-                                ${item.source}
-                            </div>
-                            <div class="ai-card-date">
-                                <i class="far fa-calendar"></i>
-                                ${formatDate(item.date)}
-                            </div>
+                <!-- 考试分类卡片 -->
+                <div class="exam-grid">
+                    <div class="exam-card">
+                        <div class="exam-card-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3>期末考试</h3>
+                        <p>包含历年真题、复习资料、重点总结等内容，帮助你系统复习备考。</p>
+                        <div class="exam-card-footer">
+                            <span class="exam-count"><i class="fas fa-file-alt"></i> 23 份资料</span>
+                            <a href="#finals" class="exam-btn">查看资料</a>
                         </div>
                     </div>
-                `;
-                
-                grid.appendChild(card);
-            });
-        }
 
-        // 设置分类筛选
-        function setupCategoryFilters() {
-            const categoryBtns = document.querySelectorAll('.ai-category-btn');
-            
-            categoryBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // 移除所有按钮的active类
-                    categoryBtns.forEach(b => b.classList.remove('active'));
-                    // 为当前点击的按钮添加active类
-                    this.classList.add('active');
+                    <div class="exam-card">
+                        <div class="exam-card-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>考研资料</h3>
+                        <p>考研真题、经验分享、备考指南，全方位助力你的考研之路。</p>
+                        <div class="exam-card-footer">
+                            <span class="exam-count"><i class="fas fa-file-alt"></i> 35 份资料</span>
+                            <a href="#postgrad" class="exam-btn">查看资料</a>
+                        </div>
+                    </div>
+
+                    <div class="exam-card">
+                        <div class="exam-card-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <h3>证书考试</h3>
+                        <p>四六级、计算机等级、专业证书等各类考试资料应有尽有。</p>
+                        <div class="exam-card-footer">
+                            <span class="exam-count"><i class="fas fa-file-alt"></i> 18 份资料</span>
+                            <a href="#certificate" class="exam-btn">查看资料</a>
+                        </div>
+                    </div>
+
+                    <div class="exam-card">
+                        <div class="exam-card-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h3>模拟试题</h3>
+                        <p>精选模拟题库，提供在线练习和测试功能，检验学习成果。</p>
+                        <div class="exam-card-footer">
+                            <span class="exam-count"><i class="fas fa-file-alt"></i> 42 份资料</span>
+                            <a href="#practice" class="exam-btn">开始练习</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 最新资源列表 -->
+                <div class="resource-list">
+                    <h3><i class="fas fa-star"></i> 最新上传</h3>
                     
-                    const category = this.dataset.category;
-                    filterAICards(category);
-                });
-            });
-        }
+                    <div class="resource-item">
+                        <div class="resource-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="resource-info">
+                            <div class="resource-title">高等数学期末复习重点.pdf</div>
+                            <div class="resource-meta">上传时间: 2025-01-15 | 大小: 5.2MB</div>
+                        </div>
+                        <a href="#" class="resource-download">
+                            <i class="fas fa-download"></i> 下载
+                        </a>
+                    </div>
 
-        // 筛选AI卡片
-        function filterAICards(category) {
-            const allCards = document.querySelectorAll('.ai-card');
-            
-            allCards.forEach(card => {
-                if (category === 'all' || card.dataset.category === category) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
+                    <div class="resource-item">
+                        <div class="resource-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <div class="resource-info">
+                            <div class="resource-title">计算机网络知识点整理.docx</div>
+                            <div class="resource-meta">上传时间: 2025-01-14 | 大小: 2.8MB</div>
+                        </div>
+                        <a href="#" class="resource-download">
+                            <i class="fas fa-download"></i> 下载
+                        </a>
+                    </div>
 
-        // 设置搜索功能
-        function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    const searchTerm = this.value.toLowerCase();
-                    const allCards = document.querySelectorAll('.ai-card');
-                    
-                    allCards.forEach(card => {
-                        const title = card.querySelector('h3').textContent.toLowerCase();
-                        const description = card.querySelector('p').textContent.toLowerCase();
-                        
-                        if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            }
-        }
+                    <div class="resource-item">
+                        <div class="resource-icon">
+                            <i class="fas fa-file-archive"></i>
+                        </div>
+                        <div class="resource-info">
+                            <div class="resource-title">英语四级真题合集(2018-2023).zip</div>
+                            <div class="resource-meta">上传时间: 2025-01-13 | 大小: 15.6MB</div>
+                        </div>
+                        <a href="#" class="resource-download">
+                            <i class="fas fa-download"></i> 下载
+                        </a>
+                    </div>
 
-        // 设置主题切换
-        function setupThemeToggle() {
-            const themeToggle = document.getElementById('themeToggle');
-            if (themeToggle) {
-                const icon = themeToggle.querySelector('i');
-                
-                // 检查本地存储的主题偏好
-                if (localStorage.getItem('theme') === 'dark') {
-                    document.body.classList.add('dark-theme');
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                }
-                
-                themeToggle.addEventListener('click', function() {
-                    document.body.classList.toggle('dark-theme');
-                    
-                    if (document.body.classList.contains('dark-theme')) {
-                        localStorage.setItem('theme', 'dark');
-                        icon.classList.remove('fa-moon');
-                        icon.classList.add('fa-sun');
-                    } else {
-                        localStorage.setItem('theme', 'light');
-                        icon.classList.remove('fa-sun');
-                        icon.classList.add('fa-moon');
-                    }
-                });
-            }
-        }
+                    <div class="resource-item">
+                        <div class="resource-icon">
+                            <i class="fas fa-file-powerpoint"></i>
+                        </div>
+                        <div class="resource-info">
+                            <div class="resource-title">数据结构复习课件.pptx</div>
+                            <div class="resource-meta">上传时间: 2025-01-12 | 大小: 8.4MB</div>
+                        </div>
+                        <a href="#" class="resource-download">
+                            <i class="fas fa-download"></i> 下载
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-        // 格式化日期
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('zh-CN', options);
-        }
-
-        // 更新最后更新时间显示
-        function updateLastUpdateTime() {
-            const lastUpdateElement = document.getElementById('lastUpdate');
-            const now = new Date();
-            const updateTime = now.toLocaleString('zh-CN');
-            lastUpdateElement.textContent = `最后更新: ${updateTime}`;
-        }
-
-        // 加载更多功能
-        document.getElementById('loadMore').addEventListener('click', function() {
-            const button = this;
-            const originalText = button.innerHTML;
-            
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 加载中...';
-            button.disabled = true;
-            
-            // 模拟加载延迟
-            setTimeout(() => {
-                // 在实际应用中，这里会从服务器加载更多数据
-                alert('正在加载更多AI前沿资讯...');
-                
-                button.innerHTML = originalText;
-                button.disabled = false;
-            }, 1500);
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
