@@ -123,3 +123,45 @@ class AINewsUpdater {
 // 执行
 const updater = new AINewsUpdater();
 updater.updateNews();
+import dotenv from 'dotenv';
+dotenv.config();
+
+// 在类中添加此方法
+async fetchFromNewsAPI() {
+    const apiKey = process.env.NEWS_API_KEY;
+    if (!apiKey) {
+        console.log('⚠️ 未配置News API，跳过');
+        return [];
+    }
+
+    try {
+        const response = await axios.get('https://newsapi.org/v2/everything', {
+            params: {
+                q: 'artificial intelligence OR machine learning OR ChatGPT OR GPT',
+                language: 'en',
+                sortBy: 'publishedAt',
+                pageSize: 10,
+                apiKey: apiKey
+            }
+        });
+
+        return response.data.articles.map((article, i) => ({
+            id: Date.now() + i,
+            title: this.cleanTitle(article.title),
+            description: this.cleanDescription(article.description),
+            category: '行业动态',
+            date: this.formatDate(article.publishedAt),
+            source: article.source.name,
+            link: article.url,
+            image: article.urlToImage || this.getRandomAIImage()
+        }));
+
+    } catch (error) {
+        console.error('News API 抓取失败:', error.message);
+        return [];
+    }
+}
+
+// 在 updateNews 方法中调用
+const newsApiArticles = await this.fetchFromNewsAPI();
+allArticles.push(...newsApiArticles);
