@@ -11,56 +11,56 @@
           onerror="this.onerror=null;this.href='css/fontawesome-fallback.css';">
     
     <style>
-        /* 确保回到顶部按钮样式优先级最高 */
-        .back-to-top {
-            position: fixed !important;
-            bottom: 30px !important;
-            right: 30px !important;
-            width: 50px !important;
-            height: 50px !important;
-            border-radius: 50% !important;
-            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover)) !important;
-            color: white !important;
-            border: none !important;
-            cursor: pointer !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            font-size: 1.2rem !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-            transition: all 0.3s ease !important;
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4) !important;
-            z-index: 1000 !important;
+        /* 回到顶部按钮 - 独立样式 */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+            z-index: 10000;
         }
 
-        .back-to-top.visible {
-            opacity: 1 !important;
-            visibility: visible !important;
+        #backToTop.show {
+            opacity: 1;
+            visibility: visible;
         }
 
-        .back-to-top:hover {
-            transform: translateY(-3px) !important;
-            box-shadow: 0 12px 28px rgba(139, 92, 246, 0.5) !important;
+        #backToTop:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(139, 92, 246, 0.5);
         }
         
         /* 响应式调整 */
         @media (max-width: 768px) {
-            .back-to-top {
-                bottom: 20px !important;
-                right: 20px !important;
-                width: 45px !important;
-                height: 45px !important;
+            #backToTop {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
             }
         }
         
         @media (max-width: 480px) {
-            .back-to-top {
-                bottom: 15px !important;
-                right: 15px !important;
-                width: 40px !important;
-                height: 40px !important;
-                font-size: 1rem !important;
+            #backToTop {
+                bottom: 15px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
             }
         }
     </style>
@@ -174,34 +174,48 @@
     <script src="data.js" ></script>
     <script src="script.js" ></script>
     <script>
-        // 返回顶部功能
-        (function() {
+        // 独立的回到顶部功能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成，初始化回到顶部功能...');
+            
             const backToTopBtn = document.getElementById('backToTop');
             
             if (!backToTopBtn) {
-                console.error('回到顶部按钮未找到！');
+                console.error('错误：找不到回到顶部按钮！');
                 return;
             }
             
+            console.log('找到回到顶部按钮：', backToTopBtn);
+            
             // 监听滚动事件
             window.addEventListener('scroll', function() {
-                if (window.pageYOffset > 300) {
-                    backToTopBtn.classList.add('visible');
+                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                console.log('滚动位置：', scrollY);
+                
+                if (scrollY > 300) {
+                    backToTopBtn.classList.add('show');
+                    console.log('显示回到顶部按钮');
                 } else {
-                    backToTopBtn.classList.remove('visible');
+                    backToTopBtn.classList.remove('show');
+                    console.log('隐藏回到顶部按钮');
                 }
             });
             
-            // 点击返回顶部
+            // 点击回到顶部
             backToTopBtn.addEventListener('click', function() {
+                console.log('点击回到顶部');
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
                 });
             });
             
-            console.log('回到顶部功能已初始化');
-        })();
+            // 手动测试：强制显示按钮
+            setTimeout(function() {
+                console.log('5秒后强制显示按钮进行测试');
+                backToTopBtn.classList.add('show');
+            }, 5000);
+        });
     </script>
 </body>
 </html>
