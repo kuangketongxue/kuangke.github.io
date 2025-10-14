@@ -8,70 +8,67 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 简化后的导航栏样式 */
+        /* 简化导航栏 */
         .simple-header {
-            background: var(--header-bg);
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border-color);
+            background: rgba(13, 27, 62, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 0;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         
         .simple-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0 2rem;
         }
         
         .back-button {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            background: var(--primary-color);
+            gap: 0.6rem;
+            padding: 0.7rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
         
         .back-button:hover {
-            transform: translateX(-3px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+            transform: translateX(-5px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
             color: white;
         }
         
         .page-title {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: var(--text-color);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             display: flex;
             align-items: center;
             gap: 0.8rem;
         }
         
-        .page-title i {
-            color: var(--primary-color);
-        }
-        
-        /* AI页面特定样式 */
-        .ai-header {
-            text-align: center;
-            padding: 3rem 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            margin-bottom: 2rem;
+        /* Hero区域 */
+        .ai-hero {
             position: relative;
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             overflow: hidden;
         }
         
-        .ai-header::before {
+        .ai-hero::before {
             content: '';
             position: absolute;
             top: 0;
@@ -79,65 +76,89 @@
             right: 0;
             bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
         }
         
-        .ai-header-content {
+        .ai-hero-content {
             position: relative;
             z-index: 2;
-        }
-        
-        .ai-header h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1.5rem;
-            font-weight: 700;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        
-        .ai-header-icon {
-            font-size: 2.8rem;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
-        }
-        
-        .ai-header p {
-            font-size: 1.3rem;
-            max-width: 700px;
+            text-align: center;
+            max-width: 900px;
             margin: 0 auto;
-            opacity: 0.95;
-            line-height: 1.6;
+            padding: 0 2rem;
+        }
+        
+        .ai-hero-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .ai-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-weight: 800;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+        
+        .ai-hero-subtitle {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
             font-weight: 300;
         }
         
+        /* 统计区域 */
         .ai-stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
         }
         
-        .ai-stat {
-            text-align: center;
+        .ai-stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .ai-stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
         }
         
         .ai-stat-number {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
             display: block;
             margin-bottom: 0.5rem;
         }
         
         .ai-stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+        
+        /* 分类筛选 */
+        .ai-filters {
+            padding: 3rem 0 2rem;
+            background: var(--bg-color);
         }
         
         .ai-categories {
@@ -145,24 +166,25 @@
             flex-wrap: wrap;
             gap: 1rem;
             justify-content: center;
-            margin-bottom: 3rem;
-            padding: 0 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
         
         .ai-category-btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 12px;
+            padding: 1rem 2rem;
+            border: 2px solid transparent;
+            border-radius: 50px;
             background: var(--card-bg);
             color: var(--text-color);
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            font-size: 1rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            border: 2px solid transparent;
+            gap: 0.6rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
         
         .ai-category-btn:hover {
@@ -172,23 +194,30 @@
         }
         
         .ai-category-btn.active {
-            background: linear-gradient(135deg, var(--primary-color), #6a11cb);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-color: var(--primary-color);
+            border-color: transparent;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* 内容网格 */
+        .ai-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
         }
         
         .ai-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             gap: 2.5rem;
-            padding: 0 1rem 3rem;
         }
         
         .ai-card {
             background: var(--card-bg);
-            border-radius: 20px;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             transition: all 0.4s ease;
             border: 1px solid var(--border-color);
             position: relative;
@@ -200,40 +229,45 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
+            height: 5px;
             background: linear-gradient(90deg, #667eea, #764ba2);
             z-index: 2;
         }
         
         .ai-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
         }
         
         .ai-card-image {
-            height: 220px;
-            width: 100%;
-            background-size: cover;
-            background-position: center;
+            height: 240px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             position: relative;
-            transition: transform 0.3s ease;
+            overflow: hidden;
         }
         
-        .ai-card:hover .ai-card-image {
-            transform: scale(1.05);
+        .ai-card-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%);
         }
         
         .ai-card-badge {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
-            color: white;
-            padding: 0.4rem 1rem;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            padding: 0.5rem 1.2rem;
             border-radius: 50px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 700;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 3;
         }
         
         .ai-card-content {
@@ -241,9 +275,8 @@
         }
         
         .ai-card h3 {
-            margin-top: 0;
-            margin-bottom: 1rem;
-            font-size: 1.4rem;
+            margin: 0 0 1rem 0;
+            font-size: 1.5rem;
             line-height: 1.4;
             font-weight: 700;
             color: var(--text-color);
@@ -252,7 +285,7 @@
         .ai-card p {
             color: var(--text-secondary);
             margin-bottom: 1.5rem;
-            line-height: 1.7;
+            line-height: 1.8;
             font-size: 1rem;
         }
         
@@ -262,123 +295,114 @@
             align-items: center;
             font-size: 0.9rem;
             color: var(--text-secondary);
-            border-top: 1px solid var(--border-color);
             padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
         }
         
-        .ai-card-source {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-        }
-        
+        .ai-card-source,
         .ai-card-date {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-        }
-        
-        .ai-load-more {
-            display: block;
-            margin: 3rem auto;
-            padding: 1rem 2.5rem;
-            background: linear-gradient(135deg, var(--primary-color), #6a11cb);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
         
-        .ai-load-more:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
-        }
-        
-        .ai-featured {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 2rem;
-            border-radius: 20px;
-            margin: 2rem 1rem 3rem;
+        /* 空状态 */
+        .empty-state {
             text-align: center;
+            padding: 6rem 2rem;
         }
         
-        .ai-featured h2 {
+        .empty-state-icon {
+            font-size: 5rem;
+            color: var(--text-secondary);
+            opacity: 0.3;
+            margin-bottom: 2rem;
+        }
+        
+        .empty-state h3 {
+            font-size: 2rem;
+            color: var(--text-color);
             margin-bottom: 1rem;
-            font-size: 1.8rem;
         }
         
-        .ai-featured p {
+        .empty-state p {
+            color: var(--text-secondary);
             font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
         }
         
-        /* 更新状态样式 */
-        .update-status {
-            text-align: center;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 8px;
+        /* 底部 */
+        .social-footer {
             background: var(--card-bg);
-            display: none;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
         }
         
-        .update-success {
-            border-left: 4px solid #4CAF50;
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
         
-        .update-error {
-            border-left: 4px solid #f44336;
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-color);
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
         
-        .last-update {
+        .social-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+        
+        .copyright {
             text-align: center;
             color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+            font-size: 0.95rem;
         }
         
+        /* 响应式 */
         @media (max-width: 768px) {
-            .ai-grid {
-                grid-template-columns: 1fr;
+            .ai-hero h1 {
+                font-size: 2.5rem;
             }
             
-            .ai-header h1 {
-                font-size: 2.2rem;
-            }
-            
-            .ai-header p {
+            .ai-hero-subtitle {
                 font-size: 1.1rem;
             }
             
-            .ai-stats {
-                gap: 2rem;
-            }
-            
-            .ai-stat-number {
-                font-size: 1.5rem;
+            .ai-grid {
+                grid-template-columns: 1fr;
             }
             
             .simple-nav {
                 flex-direction: column;
                 gap: 1rem;
+                padding: 0 1rem;
             }
             
             .page-title {
                 font-size: 1.3rem;
             }
+            
+            .ai-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body data-page="ai">
-    <!-- 简化后的导航栏 -->
+    <!-- 导航栏 -->
     <header class="simple-header">
         <div class="simple-nav">
             <a class="back-button" href="index.html">
@@ -389,54 +413,39 @@
                 <i class="fas fa-robot"></i>
                 AI前沿探索
             </div>
-            <div></div> <!-- 占位元素，保持布局平衡 -->
+            <div></div>
         </div>
     </header>
-    
-    <div class="ai-header">
-        <div class="container">
-            <div class="ai-header-content">
-                <h1>
-                    <i class="fas fa-robot ai-header-icon"></i>
-                    AI前沿探索
-                </h1>
-                <p>深入人工智能的核心领域，追踪最新技术突破、行业趋势和创新应用，与未来对话</p>
-                
-                <div class="ai-stats">
-                    <div class="ai-stat">
-                        <span class="ai-stat-number">-</span>
-                        <span class="ai-stat-label">前沿资讯</span>
-                    </div>
-                    <div class="ai-stat">
-                        <span class="ai-stat-number">-</span>
-                        <span class="ai-stat-label">技术领域</span>
-                    </div>
-                    <div class="ai-stat">
-                        <span class="ai-stat-number">-</span>
-                        <span class="ai-stat-label">研究机构</span>
-                    </div>
+
+    <!-- Hero区域 -->
+    <div class="ai-hero">
+        <div class="ai-hero-content">
+            <div class="ai-hero-icon">🤖</div>
+            <h1>AI前沿探索</h1>
+            <p class="ai-hero-subtitle">深入人工智能的核心领域，追踪最新技术突破、行业趋势和创新应用，与未来对话</p>
+            
+            <div class="ai-stats">
+                <div class="ai-stat-card">
+                    <span class="ai-stat-number">-</span>
+                    <span class="ai-stat-label">前沿资讯</span>
                 </div>
-                
-                <!-- 添加最后更新时间 -->
-                <div class="last-update" id="lastUpdate">
-                    最后更新: 加载中...
+                <div class="ai-stat-card">
+                    <span class="ai-stat-number">-</span>
+                    <span class="ai-stat-label">技术领域</span>
                 </div>
-                
-                <!-- 更新状态指示 -->
-                <div class="update-status" id="updateStatus"></div>
+                <div class="ai-stat-card">
+                    <span class="ai-stat-number">-</span>
+                    <span class="ai-stat-label">研究机构</span>
+                </div>
             </div>
         </div>
     </div>
-    
-    <div class="ai-featured">
-        <h2>-</h2>
-        <p>-</p>
-    </div>
-    
-    <div class="container">
+
+    <!-- 分类筛选 -->
+    <div class="ai-filters">
         <div class="ai-categories">
             <button class="ai-category-btn active" data-category="all">
-                <i class="fas fa-layer-group">-</i>
+                <i class="fas fa-layer-group"></i>
                 全部资讯
             </button>
             <button class="ai-category-btn" data-category="大语言模型">
@@ -464,200 +473,57 @@
                 行业动态
             </button>
         </div>
-        
-        <div class="ai-grid" id="aiGrid">
-            <!-- AI资讯卡片将通过JavaScript动态生成 -->
-        </div>
-        
-        <button class="ai-load-more" id="loadMore">
-            <i class="fas fa-sync-alt"></i>
-            加载更多精彩内容
-        </button>
     </div>
-    
-    <!-- 底部社交媒体区域 -->
+
+    <!-- 内容区域 -->
+    <div class="ai-content">
+        <div class="ai-grid" id="aiGrid">
+            <!-- 空状态 -->
+            <div class="empty-state" style="grid-column: 1 / -1;">
+                <div class="empty-state-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>内容即将上线</h3>
+                <p>精彩的AI前沿资讯正在整理中，敬请期待...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
     <footer class="social-footer">
         <div class="container">
             <div class="social-links">
-                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" 
-   target="_blank" class="social-link wechat" title="微信公众号">
-    <i class="fab fa-weixin"></i>
-</a>
-               
-                <a href="https://github.com/kuangketongxue" target="_blank" class="social-link github" title="GitHub">
+                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" target="_blank" class="social-link" title="微信公众号">
+                    <i class="fab fa-weixin"></i>
+                </a>
+                <a href="https://github.com/kuangketongxue" target="_blank" class="social-link" title="GitHub">
                     <i class="fab fa-github"></i>
                 </a>
-                <a href="https://x.com/kuangketongxue" target="_blank" class="social-link x" title="X">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-    </svg>
-</a>
+                <a href="https://x.com/kuangketongxue" target="_blank" class="social-link" title="X">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
             </div>
             <p class="copyright">© 2025 狂客·银河 版权所有</p>
         </div>
     </footer>
-    
+
     <script>
-        // AI资讯数据
-        const aiNews = [
-        等待......
-            
-        ];
-
-        // 页面加载完成后初始化
+        // 分类筛选功能
         document.addEventListener('DOMContentLoaded', function() {
-            renderAICards(aiNews);
-            setupCategoryFilters();
-            setupSearch();
-            setupThemeToggle();
-            updateLastUpdateTime();
-        });
-
-        // 渲染AI资讯卡片
-        function renderAICards(news) {
-            const grid = document.getElementById('aiGrid');
-            grid.innerHTML = '';
-            
-            news.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'ai-card';
-                card.dataset.category = item.category;
-                
-                card.innerHTML = `
-                    <div class="ai-card-image" style="background-image: url('${item.image}')">
-                        <div class="ai-card-badge">${item.category}</div>
-                    </div>
-                    <div class="ai-card-content">
-                        <h3>${item.title}</h3>
-                        <p>${item.description}</p>
-                        <div class="ai-card-meta">
-                            <div class="ai-card-source">
-                                <i class="fas fa-newspaper"></i>
-                                ${item.source}
-                            </div>
-                            <div class="ai-card-date">
-                                <i class="far fa-calendar"></i>
-                                ${formatDate(item.date)}
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
-            });
-        }
-
-        // 设置分类筛选
-        function setupCategoryFilters() {
             const categoryBtns = document.querySelectorAll('.ai-category-btn');
             
             categoryBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    // 移除所有按钮的active类
                     categoryBtns.forEach(b => b.classList.remove('active'));
-                    // 为当前点击的按钮添加active类
                     this.classList.add('active');
                     
                     const category = this.dataset.category;
-                    filterAICards(category);
+                    // 这里后续可以添加筛选逻辑
+                    console.log('选中分类:', category);
                 });
             });
-        }
-
-        // 筛选AI卡片
-        function filterAICards(category) {
-            const allCards = document.querySelectorAll('.ai-card');
-            
-            allCards.forEach(card => {
-                if (category === 'all' || card.dataset.category === category) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        // 设置搜索功能
-        function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    const searchTerm = this.value.toLowerCase();
-                    const allCards = document.querySelectorAll('.ai-card');
-                    
-                    allCards.forEach(card => {
-                        const title = card.querySelector('h3').textContent.toLowerCase();
-                        const description = card.querySelector('p').textContent.toLowerCase();
-                        
-                        if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            }
-        }
-
-        // 设置主题切换
-        function setupThemeToggle() {
-            const themeToggle = document.getElementById('themeToggle');
-            if (themeToggle) {
-                const icon = themeToggle.querySelector('i');
-                
-                // 检查本地存储的主题偏好
-                if (localStorage.getItem('theme') === 'dark') {
-                    document.body.classList.add('dark-theme');
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                }
-                
-                themeToggle.addEventListener('click', function() {
-                    document.body.classList.toggle('dark-theme');
-                    
-                    if (document.body.classList.contains('dark-theme')) {
-                        localStorage.setItem('theme', 'dark');
-                        icon.classList.remove('fa-moon');
-                        icon.classList.add('fa-sun');
-                    } else {
-                        localStorage.setItem('theme', 'light');
-                        icon.classList.remove('fa-sun');
-                        icon.classList.add('fa-moon');
-                    }
-                });
-            }
-        }
-
-        // 格式化日期
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('zh-CN', options);
-        }
-
-        // 更新最后更新时间显示
-        function updateLastUpdateTime() {
-            const lastUpdateElement = document.getElementById('lastUpdate');
-            const now = new Date();
-            const updateTime = now.toLocaleString('zh-CN');
-            lastUpdateElement.textContent = `最后更新: ${updateTime}`;
-        }
-
-        // 加载更多功能
-        document.getElementById('loadMore').addEventListener('click', function() {
-            const button = this;
-            const originalText = button.innerHTML;
-            
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 加载中...';
-            button.disabled = true;
-            
-            // 模拟加载延迟
-            setTimeout(() => {
-                // 在实际应用中，这里会从服务器加载更多数据
-                alert('正在加载更多AI前沿资讯...');
-                
-                button.innerHTML = originalText;
-                button.disabled = false;
-            }, 1500);
         });
     </script>
 </body>
