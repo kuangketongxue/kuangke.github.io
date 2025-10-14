@@ -21,6 +21,13 @@ class AINewsUpdater {
             }
         });
         
+        // NewAPI配置
+        this.newApiConfig = {
+            apiKey: process.env.NEWAPI_KEY,
+            baseUrl: process.env.NEWAPI_BASE_URL || 'https://api.openai.com/v1',
+            model: process.env.NEWAPI_MODEL || 'gpt-4'
+        };
+        
         // RSS源配置
         this.rssSources = [
             {
@@ -58,14 +65,162 @@ class AINewsUpdater {
                 url: 'https://huggingface.co/blog/feed.xml',
                 category: '大语言模型',
                 enabled: true
-            },
-            {
-                name: 'Towards Data Science',
-                url: 'https://towardsdatascience.com/feed',
-                category: 'AI应用',
-                enabled: true
             }
         ];
+    }
+
+    // 🆕 使用AI生成优质中文资讯
+    async generateAINews() {
+        if (!this.newApiConfig.apiKey) {
+            console.log('⚠️ 未配置NEWAPI_KEY，跳过AI生成');
+            return [];
+        }
+
+        console.log('\n🤖 ===== 开始AI生成资讯 =====');
+        const today = new Date().toISOString().split('T')[0];
+        
+        const prompt = `作为AI领域资深分析师，请生成${today}的6条高质量AI前沿资讯。
+
+要求：
+1. 内容真实可信，基于近期AI领域的实际发展
+2. 覆盖不同领域：大语言模型、计算机视觉、AI应用、AI伦理、研究突破、行业动态
+3. 标题要吸引人且准确（20-40字）
+4. 描述详细专业（120-180字），突出技术细节和影响
+5. 来源要真实（OpenAI、Google、Meta、Stanford等知名机构）
+
+严格按照以下JSON格式输出（不要任何额外说明）：
+[
+  {
+    "title": "具体标题",
+    "description": "详细描述，包含技术细节和影响分析",
+    "category": "分类（从六个中选一）",
+    "source": "来源机构"
+  }
+]`;
+
+        try {
+            const response = await axios.post(
+                `${this.newApiConfig.baseUrl}/chat/completions`,
+                {
+                    model: this.newApiConfig.model,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: '你是AI领域资深分析师，专注于提供最新、准确、深度的AI行业资讯。你的分析基于真实的技术发展和行业动态。'
+                        },
+                        {
+                            role: 'user',
+                            content: prompt
+                        }
+                    ],
+                    temperature: 0.8,
+                    max_tokens: 4000
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${this.newApiConfig.apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 30000
+                }
+            );
+
+            const content = response.data.choices[0].message.content;
+            console.log('📝 AI原始响应:\n', content.substring(0, 200) + '...');
+            
+            // 提取JSON
+            const jsonMatch = content.match(/\[\s*\{[\s\S]*\}\s*\]/);
+            if (!jsonMatch) {
+                throw new Error('无法从AI响应中提取JSON数据');
+            }
+
+            const aiNews = JSON.parse(jsonMatch[0]);
+            
+            // 为AI生成的资讯添加完整字段
+            const processedNews = aiNews.map((item, index) => ({
+                id: Date.now() + index,
+                title: item.title,
+                description: item.description,
+                category: item.category,
+                date: today,
+                source: item.source,
+                link: `#ai-news-${Date.now() + index}`,
+                image: this.getRandomAIImage(),
+                isAIGenerated: true  // 标记为AI生成
+            }));
+
+            console.log(`✅ AI成功生成 ${processedNews.length} 条资讯`);
+            return processedNews;
+
+        } catch (error) {
+            console.error('❌ AI生成失败:', error.message);
+            if (error.response) {
+                console.error('API响应错误:', error.response.data);
+            }
+            return [];
+        }
+    }
+
+    // 🆕 AI优化RSS文章（翻译+润色）
+    async enhanceArticleWithAI(article) {
+        if (!this.newApiConfig.apiKey) {
+            return article;
+        }
+
+        try {
+            const prompt = `请将以下英文AI资讯优化为中文：
+
+标题: ${article.title}
+描述: ${article.description}
+
+要求：
+1. 翻译成专业、流畅的简体中文
+2. 保持技术准确性
+3. 标题简洁有力（20-40字）
+4. 描述详细专业（120-180字）
+
+输出JSON格式：
+{
+  "title": "中文标题",
+  "description": "中文描述"
+}`;
+
+            const response = await axios.post(
+                `${this.newApiConfig.baseUrl}/chat/completions`,
+                {
+                    model: this.newApiConfig.model,
+                    messages: [
+                        { role: 'system', content: '你是专业的AI技术翻译和内容优化专家。' },
+                        { role: 'user', content: prompt }
+                    ],
+                    temperature: 0.3,
+                    max_tokens: 800
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${this.newApiConfig.apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 15000
+                }
+            );
+
+            const content = response.data.choices[0].message.content;
+            const jsonMatch = content.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+                const enhanced = JSON.parse(jsonMatch[0]);
+                return {
+                    ...article,
+                    title: enhanced.title,
+                    description: enhanced.description,
+                    isEnhanced: true
+                };
+            }
+        } catch (error) {
+            console.log(`⚠️ ${article.source} 文章优化失败，使用原文`);
+        }
+
+        return article;
     }
 
     // 获取随机AI图片
@@ -75,7 +230,9 @@ class AINewsUpdater {
             'https://images.unsplash.com/photo-1620712943543-bcc4688e7485',
             'https://images.unsplash.com/photo-1635070041078-e363dbe005cb',
             'https://images.unsplash.com/photo-1677756119517-756a188d2d94',
-            'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea'
+            'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea',
+            'https://images.unsplash.com/photo-1655393001768-d946c97d6fd1',
+            'https://images.unsplash.com/photo-1655720828018-edd2daec9349'
         ];
         const randomImage = images[Math.floor(Math.random() * images.length)];
         return `${randomImage}?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80`;
@@ -87,9 +244,9 @@ class AINewsUpdater {
         try {
             const feed = await this.parser.parseURL(source.url);
             const articles = [];
-
-            // 只取最新3篇
-            const items = feed.items.slice(0, 3);
+            
+            // 只取最新2篇（减少数量，因为有AI生成补充）
+            const items = feed.items.slice(0, 2);
             
             for (const item of items) {
                 const article = {
@@ -100,61 +257,23 @@ class AINewsUpdater {
                     date: this.formatDate(item.pubDate || item.isoDate),
                     source: source.name,
                     link: item.link,
-                    image: this.extractImage(item)
+                    image: this.extractImage(item),
+                    isRSS: true
                 };
-
-                // 只添加有效文章
+                
                 if (article.title && article.description) {
-                    articles.push(article);
+                    // 🆕 使用AI优化RSS文章
+                    const enhanced = await this.enhanceArticleWithAI(article);
+                    articles.push(enhanced);
+                    await this.sleep(500); // 避免API限流
                 }
             }
-
-            console.log(`✅ ${source.name}: 成功获取 ${articles.length} 篇文章`);
+            
+            console.log(`✅ ${source.name}: 成功获取并优化 ${articles.length} 篇文章`);
             return articles;
-
+            
         } catch (error) {
             console.error(`❌ ${source.name} 抓取失败:`, error.message);
-            return [];
-        }
-    }
-
-    // 从News API抓取（可选）
-    async fetchFromNewsAPI() {
-        const apiKey = process.env.NEWS_API_KEY;
-        if (!apiKey) {
-            console.log('⚠️ 未配置News API，跳过');
-            return [];
-        }
-
-        console.log('📡 正在从News API抓取...');
-        
-        try {
-            const response = await axios.get('https://newsapi.org/v2/everything', {
-                params: {
-                    q: 'artificial intelligence OR machine learning OR ChatGPT OR GPT',
-                    language: 'en',
-                    sortBy: 'publishedAt',
-                    pageSize: 10,
-                    apiKey: apiKey
-                }
-            });
-
-            const articles = response.data.articles.map((article, i) => ({
-                id: Date.now() + i,
-                title: this.cleanTitle(article.title),
-                description: this.cleanDescription(article.description),
-                category: '行业动态',
-                date: this.formatDate(article.publishedAt),
-                source: article.source.name,
-                link: article.url,
-                image: article.urlToImage || this.getRandomAIImage()
-            }));
-
-            console.log(`✅ News API: 成功获取 ${articles.length} 篇文章`);
-            return articles;
-
-        } catch (error) {
-            console.error('❌ News API 抓取失败:', error.message);
             return [];
         }
     }
@@ -166,7 +285,7 @@ class AINewsUpdater {
             .replace(/<[^>]*>/g, '')
             .replace(/\s+/g, ' ')
             .trim()
-            .substring(0, 100);
+            .substring(0, 150);
     }
 
     // 清理描述
@@ -176,7 +295,7 @@ class AINewsUpdater {
             .replace(/<[^>]*>/g, '')
             .replace(/\s+/g, ' ')
             .trim()
-            .substring(0, 200) + '...';
+            .substring(0, 300);
     }
 
     // 格式化日期
@@ -203,13 +322,12 @@ class AINewsUpdater {
             item['media:thumbnail']?.$?.url,
             item.image?.url
         ];
-
+        
         for (const url of imageFields) {
             if (url && this.isValidImageUrl(url)) {
                 return url;
             }
         }
-
         return this.getRandomAIImage();
     }
 
@@ -218,15 +336,16 @@ class AINewsUpdater {
         if (!url) return false;
         const validExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
         const urlLower = url.toLowerCase();
-        return validExtensions.some(ext => urlLower.includes(ext)) || 
+        return validExtensions.some(ext => urlLower.includes(ext)) ||
                urlLower.includes('image') ||
                urlLower.includes('unsplash');
     }
 
-    // 主更新函数
+    // 🆕 主更新函数（整合RSS和AI）
     async updateNews() {
-        console.log('\n🚀 ===== AI资讯自动更新开始 =====');
+        console.log('\n🚀 ===== AI资讯智能更新系统 =====');
         console.log('📅 更新时间:', new Date().toLocaleString('zh-CN'));
+        console.log('🤖 模式: RSS抓取 + AI生成 + AI优化');
         console.log('');
 
         try {
@@ -238,36 +357,44 @@ class AINewsUpdater {
                 console.log(`📂 已加载现有资讯: ${existingNews.length} 条`);
             }
 
-            // 从所有启用的源抓取
             const allArticles = [];
-            const enabledSources = this.rssSources.filter(s => s.enabled);
-            
-            console.log(`\n🌐 准备从 ${enabledSources.length} 个RSS源抓取资讯...\n`);
 
+            // 1️⃣ AI生成高质量资讯（优先）
+            console.log('\n--- 第一步：AI生成原创资讯 ---');
+            const aiGeneratedNews = await this.generateAINews();
+            allArticles.push(...aiGeneratedNews);
+
+            // 2️⃣ RSS抓取真实资讯（补充）
+            console.log('\n--- 第二步：RSS抓取并AI优化 ---');
+            const enabledSources = this.rssSources.filter(s => s.enabled);
+            console.log(`🌐 准备从 ${enabledSources.length} 个RSS源抓取...\n`);
+            
             for (const source of enabledSources) {
                 const articles = await this.fetchFromRSS(source);
                 allArticles.push(...articles);
-                
-                // 避免请求过快
                 await this.sleep(1000);
             }
 
-            // 尝试从News API抓取（如果配置了）
-            const newsApiArticles = await this.fetchFromNewsAPI();
-            allArticles.push(...newsApiArticles);
+            console.log(`\n📊 本次共获取: ${allArticles.length} 篇资讯`);
+            console.log(`   - AI生成: ${aiGeneratedNews.length} 篇`);
+            console.log(`   - RSS抓取: ${allArticles.length - aiGeneratedNews.length} 篇`);
 
-            console.log(`\n📊 本次共抓取: ${allArticles.length} 篇新文章`);
-
-            // 合并并去重
+            // 3️⃣ 合并去重
             const mergedNews = [...allArticles, ...existingNews];
             const uniqueNews = this.removeDuplicates(mergedNews);
-            
-            // 按日期排序，保留最新60条
-            const sortedNews = uniqueNews
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .slice(0, 60);
 
-            // 保存到文件
+            // 4️⃣ 智能排序（AI生成的优先）
+            const sortedNews = uniqueNews
+                .sort((a, b) => {
+                    // AI生成的优先
+                    if (a.isAIGenerated && !b.isAIGenerated) return -1;
+                    if (!a.isAIGenerated && b.isAIGenerated) return 1;
+                    // 否则按日期排序
+                    return new Date(b.date) - new Date(a.date);
+                })
+                .slice(0, 50); // 保留最新50条
+
+            // 5️⃣ 保存到文件
             fs.writeFileSync(
                 this.newsFile,
                 JSON.stringify(sortedNews, null, 2),
@@ -308,35 +435,47 @@ class AINewsUpdater {
     normalizeTitle(title) {
         return title
             .toLowerCase()
-            .replace(/[^\w\s]/g, '')
+            .replace(/[^\w\s\u4e00-\u9fa5]/g, '') // 保留中文字符
             .replace(/\s+/g, ' ')
             .trim();
     }
 
-    // 生成统计报告
+    // 🆕 增强的统计报告
     generateReport(news) {
         const categories = {};
         const sources = {};
+        let aiCount = 0;
+        let rssCount = 0;
+        let enhancedCount = 0;
 
         news.forEach(item => {
             categories[item.category] = (categories[item.category] || 0) + 1;
             sources[item.source] = (sources[item.source] || 0) + 1;
+            if (item.isAIGenerated) aiCount++;
+            if (item.isRSS) rssCount++;
+            if (item.isEnhanced) enhancedCount++;
         });
 
         console.log('📊 ===== 分类统计 =====');
         Object.entries(categories)
             .sort((a, b) => b[1] - a[1])
             .forEach(([cat, count]) => {
-                console.log(`   ${cat}: ${count} 条`);
+                const bar = '█'.repeat(Math.ceil(count / 2));
+                console.log(`  ${cat.padEnd(12)} ${bar} ${count} 条`);
             });
 
         console.log('\n📰 ===== 来源统计 =====');
         Object.entries(sources)
             .sort((a, b) => b[1] - a[1])
-            .slice(0, 5)
+            .slice(0, 6)
             .forEach(([source, count]) => {
-                console.log(`   ${source}: ${count} 条`);
+                console.log(`  ${source.padEnd(25)} ${count} 条`);
             });
+
+        console.log('\n🔍 ===== 内容来源分析 =====');
+        console.log(`  🤖 AI原创生成: ${aiCount} 条`);
+        console.log(`  📡 RSS源抓取: ${rssCount} 条`);
+        console.log(`  ✨ AI优化翻译: ${enhancedCount} 条`);
         console.log('');
     }
 
