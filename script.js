@@ -336,19 +336,18 @@ constructor() {
 }
     // ============ 点赞相关方法 ============
     async getLikes(momentId) {
-        if (this.useLocalStorage) {
-            return parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
-        }
-
-        try {
-            const snapshot = await this.likesRef.child(momentId).once('value');
-            const likes = snapshot.val();
-            return likes !== null ? likes : 0;
-        } catch (error) {
-            console.error(`获取点赞数失败 [${momentId}]:`, error);
-            return 0;
-        }
+    if (this.useLocalStorage) {
+        return parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
     }
+    try {
+        const snapshot = await this.likesRef.child(momentId).once('value');
+        const likes = snapshot.val();
+        return likes !== null ? likes : 0;
+    } catch (error) {
+        console.error(`获取点赞数失败 [${momentId}]:`, error);
+        return 0;
+    }
+}
 
     async addLike(momentId) {
         if (this.useLocalStorage) {
