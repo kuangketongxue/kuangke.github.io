@@ -403,6 +403,7 @@ class ThemeManager {
 }
 
 // ==================== Firebase Handler (修复重复声明 + 数据库URL) ====================
+if (typeof FirebaseHandler === 'undefined') {
 class FirebaseHandler {
     constructor() {
         if (typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0) {
@@ -413,15 +414,15 @@ class FirebaseHandler {
 
         try {
             // 修复：配置正确的 Firebase 数据库 URL（地区专属）
-            const firebaseConfig = {
-                apiKey: "YOUR_API_KEY", // 替换为你的实际 API Key
-                authDomain: "YOUR_AUTH_DOMAIN", // 替换为你的实际 Auth Domain
-                databaseURL: "https://kuangke-galaxy-default-rtdb.asia-southeast1.firebasedatabase.app", // 修正的数据库 URL
-                projectId: "YOUR_PROJECT_ID", // 替换为你的实际 Project ID
-                storageBucket: "YOUR_STORAGE_BUCKET", // 替换为你的实际 Storage Bucket
-                messagingSenderId: "YOUR_SENDER_ID", // 替换为你的实际 Sender ID
-                appId: "YOUR_APP_ID" // 替换为你的实际 App ID
-            };
+           const firebaseConfig = {
+  apiKey: "AIzaSyD9NwlJxYiRjFh3cPjpJGmQAhogmrFpU4M",
+  authDomain: "kuangke-galaxy.firebaseapp.com",
+  projectId: "kuangke-galaxy",
+  storageBucket: "kuangke-galaxy.firebasestorage.app",
+  messagingSenderId: "416862048915",
+  appId: "1:416862048915:web:6578fcd23d8cf882c53366",
+  measurementId: "G-VZCQM1H4BR"
+};
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
@@ -609,7 +610,7 @@ class FirebaseHandler {
         }
     }
 }
-
+}
 const firebaseHandler = new FirebaseHandler();
 
 // ==================== 本地存储管理器 ====================
