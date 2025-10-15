@@ -402,8 +402,8 @@ class ThemeManager {
     }
 }
 
-// ==================== Firebase Handler（修复重复声明问题） ====================
-// 关键修复：添加条件判断，确保只声明一次FirebaseHandler类
+// ==================== Firebase Handler（修复重复声明+实例稳定性） ====================
+// 关键修复1：确保类仅定义一次，避免覆盖
 if (typeof FirebaseHandler === 'undefined') {
     class FirebaseHandler {
         constructor() {
@@ -427,15 +427,15 @@ if (typeof FirebaseHandler === 'undefined') {
                     measurementId: "G-VZCQM1H4BR"
                 };
                 
-                // 初始化Firebase应用
+                // 初始化Firebase应用（确保仅初始化一次）
                 if (!firebase.apps.length) {
                     firebase.initializeApp(firebaseConfig);
                     console.log('[FirebaseHandler] Firebase应用初始化成功');
                 }
                 
-                // 关键修复：使用亚洲东南区数据库URL
+                // 关键修复2：明确指定数据库区域（解决区域不匹配警告）
                 this.database = firebase.database('https://kuangke-galaxy-default-rtdb.asia-southeast1.firebasedatabase.app');
-                console.log('[FirebaseHandler] 数据库连接成功');
+                console.log('[FirebaseHandler] 数据库连接成功（亚洲东南区）');
                 
                 // 初始化数据引用
                 this.likesRef = this.database.ref('likes');
@@ -450,7 +450,7 @@ if (typeof FirebaseHandler === 'undefined') {
             }
         }
 
-        // ============ 朋友圈数据同步方法 ============
+        // ============ 朋友圈数据同步方法（核心方法，确保存在） ============
         async syncMomentsData() {
             console.log('[FirebaseHandler] 调用syncMomentsData方法');
             if (this.useLocalStorage) {
@@ -631,8 +631,8 @@ if (typeof FirebaseHandler === 'undefined') {
     }
 }
 
-// 初始化FirebaseHandler实例（确保全局唯一）
-if (typeof window.firebaseHandler === 'undefined') {
+// 关键修复3：确保全局实例唯一且类型正确，避免非预期覆盖
+if (typeof window.firebaseHandler === 'undefined' || !(window.firebaseHandler instanceof FirebaseHandler)) {
     window.firebaseHandler = new FirebaseHandler();
 }
 
@@ -653,10 +653,12 @@ class StorageManager {
     static saveMomentsData(data) {
         try {
             appState.saveToStorage(STORAGE_KEYS.moments, JSON.stringify(data));
-            // 同步到Firebase
-            window.firebaseHandler.saveMomentsToFirebase(data).catch(err => {
-                console.error('同步朋友圈数据到Firebase失败:', err);
-            });
+            // 调用前校验实例，避免方法不存在
+            if (window.firebaseHandler instanceof FirebaseHandler) {
+                window.firebaseHandler.saveMomentsToFirebase(data).catch(err => {
+                    console.error('同步朋友圈数据到Firebase失败:', err);
+                });
+            }
             return true;
         } catch (error) {
             console.error('保存朋友圈数据失败:', error);
@@ -666,7 +668,7 @@ class StorageManager {
     }
 }
 
-// ==================== 朋友圈页面管理器 ====================
+// ==================== 朋友圈页面管理器（核心调用处修复） ====================
 class MomentsPageManager {
     static data = [];
     static eventListeners = new Map();
@@ -681,7 +683,11 @@ class MomentsPageManager {
 
     static async loadData() {
         console.log('MomentsPageManager.loadData调用');
-        // 验证firebaseHandler实例和方法
+        // 关键修复4：调用syncMomentsData前，强制校验实例和方法存在性
+        if (!(window.firebaseHandler instanceof FirebaseHandler) || typeof window.firebaseHandler.syncMomentsData !== 'function') {
+            console.error('firebaseHandler实例异常，重新初始化');
+            window.firebaseHandler = new FirebaseHandler();
+        }
         console.log('window.firebaseHandler:', window.firebaseHandler);
         console.log('syncMomentsData类型:', typeof window.firebaseHandler.syncMomentsData);
 
@@ -689,8 +695,8 @@ class MomentsPageManager {
         const defaultData = window.momentsData || [];
         let fbSyncedData = [];
 
-        // 从Firebase同步数据
-        if (!this.useLocalStorageOnly) {
+        // 从Firebase同步数据（确保方法存在才调用）
+        if (!this.useLocalStorageOnly && typeof window.firebaseHandler.syncMomentsData === 'function') {
             console.log('开始同步Firebase数据');
             fbSyncedData = await window.firebaseHandler.syncMomentsData();
             console.log('Firebase数据同步完成，共', fbSyncedData.length, '条');
