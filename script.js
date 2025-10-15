@@ -315,21 +315,25 @@ class ThemeManager {
 }
 
 // ==================== Firebase Handler (已集成) ====================
-class FirebaseHandler {
-    constructor() {
-        if (typeof firebase === 'undefined') {
-            console.warn('Firebase SDK 未加载，将使用本地存储模式');
-            this.useLocalStorage = true;
-            return;
-        }
-        
+constructor() {
+    // 检查 Firebase 是否已加载且已初始化
+    if (typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0) {
+        console.warn('Firebase SDK 未加载或未初始化，将使用本地存储模式');
+        this.useLocalStorage = true;
+        return;
+    }
+    
+    try {
         this.database = firebase.database();
         this.likesRef = this.database.ref('likes');
         this.commentsRef = this.database.ref('comments');
         this.useLocalStorage = false;
         console.log('FirebaseHandler 初始化完成');
+    } catch (error) {
+        console.error('Firebase 初始化失败:', error);
+        this.useLocalStorage = true;
     }
-
+}
     // ============ 点赞相关方法 ============
     async getLikes(momentId) {
         if (this.useLocalStorage) {
