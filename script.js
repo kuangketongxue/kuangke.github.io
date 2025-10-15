@@ -402,228 +402,231 @@ class ThemeManager {
     }
 }
 
-// ==================== Firebase Handler（完整定义，确保方法可见） ====================
-class FirebaseHandler {
-    constructor() {
-        console.log('[FirebaseHandler] 初始化开始');
-        if (typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0) {
-            console.warn(LanguageManager.t('firebaseWarnLocal'));
-            this.useLocalStorage = true;
-            console.log('[FirebaseHandler] 切换到本地存储模式');
-            return;
-        }
-
-        try {
-            // 完整Firebase配置
-            const firebaseConfig = {
-                apiKey: "AIzaSyD9NwlJxYiRjFh3cPjpJGmQAhogmrFpU4M",
-                authDomain: "kuangke-galaxy.firebaseapp.com",
-                projectId: "kuangke-galaxy",
-                storageBucket: "kuangke-galaxy.firebasestorage.app",
-                messagingSenderId: "416862048915",
-                appId: "1:416862048915:web:6578fcd23d8cf882c53366",
-                measurementId: "G-VZCQM1H4BR"
-            };
-            
-            // 初始化Firebase应用
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-                console.log('[FirebaseHandler] Firebase应用初始化成功');
-            }
-            
-            // 关键修复：使用亚洲东南区数据库URL
-            this.database = firebase.database('https://kuangke-galaxy-default-rtdb.asia-southeast1.firebasedatabase.app');
-            console.log('[FirebaseHandler] 数据库连接成功');
-            
-            // 初始化数据引用
-            this.likesRef = this.database.ref('likes');
-            this.commentsRef = this.database.ref('comments');
-            this.momentsRef = this.database.ref('moments');
-            this.useLocalStorage = false;
-            console.log('[FirebaseHandler] Firebase模式初始化完成');
-        } catch (error) {
-            console.error(LanguageManager.t('firebaseErrorInit'), error);
-            this.useLocalStorage = true;
-            console.log('[FirebaseHandler] 初始化失败，切换到本地存储模式');
-        }
-    }
-
-    // ============ 朋友圈数据同步方法（确保方法存在且可见） ============
-    async syncMomentsData() {
-        console.log('[FirebaseHandler] 调用syncMomentsData方法');
-        if (this.useLocalStorage) {
-            console.log('[FirebaseHandler] 使用本地存储数据');
-            return window.momentsData || [];
-        }
-        
-        try {
-            console.log('[FirebaseHandler] 从Firebase加载朋友圈数据');
-            const snapshot = await this.momentsRef.once('value');
-            const fbMoments = snapshot.val() || [];
-            const localMoments = window.momentsData || [];
-
-            // 合并去重数据（Firebase数据优先）
-            const fbIds = new Set(fbMoments.map(m => m.id));
-            const merged = [...fbMoments, ...localMoments.filter(m => !fbIds.has(m.id))];
-            console.log('[FirebaseHandler] 数据合并完成，共', merged.length, '条');
-            return merged;
-        } catch (error) {
-            console.error('同步Firebase朋友圈数据失败:', error);
-            return window.momentsData || [];
-        }
-    }
-
-    async saveMomentsToFirebase(moments) {
-        if (this.useLocalStorage) return false;
-        try {
-            await this.momentsRef.set(moments);
-            console.log('朋友圈数据已同步到Firebase');
-            return true;
-        } catch (error) {
-            console.error('保存朋友圈数据到Firebase失败:', error);
-            return false;
-        }
-    }
-
-    // ============ 点赞相关方法 ============
-    async getLikes(momentId) {
-        if (this.useLocalStorage) {
-            return parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
-        }
-        try {
-            const snapshot = await this.likesRef.child(momentId).once('value');
-            return snapshot.val() || 0;
-        } catch (error) {
-            console.error(`获取点赞数失败 [${momentId}]:`, error);
-            return 0;
-        }
-    }
-
-    async addLike(momentId) {
-        if (this.useLocalStorage) {
-            const current = await this.getLikes(momentId);
-            const newLikes = current + 1;
-            localStorage.setItem(`likes_${momentId}`, newLikes.toString());
-            return newLikes;
-        }
-        try {
-            let newLikes = 0;
-            await this.likesRef.child(momentId).transaction((currentLikes) => {
-                newLikes = (currentLikes || 0) + 1;
-                return newLikes;
-            });
-            console.log(`点赞成功 [${momentId}]: → ${newLikes}`);
-            return newLikes;
-        } catch (error) {
-            console.error(`点赞失败 [${momentId}]:`, error);
-            throw error;
-        }
-    }
-
-    async removeLike(momentId) {
-        if (this.useLocalStorage) {
-            const current = await this.getLikes(momentId);
-            const newLikes = Math.max(0, current - 1);
-            localStorage.setItem(`likes_${momentId}`, newLikes.toString());
-            return newLikes;
-        }
-        try {
-            let newLikes = 0;
-            await this.likesRef.child(momentId).transaction((currentLikes) => {
-                newLikes = Math.max(0, (currentLikes || 0) - 1);
-                return newLikes;
-            });
-            console.log(`取消点赞成功 [${momentId}]: → ${newLikes}`);
-            return newLikes;
-        } catch (error) {
-            console.error(`取消点赞失败 [${momentId}]:`, error);
-            throw error;
-        }
-    }
-
-    onLikesChange(momentId, callback) {
-        if (this.useLocalStorage) return;
-        const ref = this.likesRef.child(momentId);
-        appState.setFirebaseListener('likes', momentId, ref, 'value', (snapshot) => {
-            const likes = snapshot.val() || 0;
-            callback(likes);
-        });
-    }
-
-    // ============ 评论相关方法 ============
-    async getComments(momentId) {
-        if (this.useLocalStorage) {
-            const stored = localStorage.getItem(`comments_${momentId}`);
-            return stored ? JSON.parse(stored) : [];
-        }
-        try {
-            const snapshot = await this.commentsRef.child(momentId).once('value');
-            const commentsData = snapshot.val();
-            if (!commentsData) {
-                return [];
-            }
-            const commentsArray = Object.values(commentsData);
-            commentsArray.sort((a, b) => b.timestamp - a.timestamp);
-            return commentsArray;
-        } catch (error) {
-            console.error(`获取评论失败 [${momentId}]:`, error);
-            return [];
-        }
-    }
-
-    async addComment(momentId, commentText, author) {
-        if (this.useLocalStorage) {
-            const comments = await this.getComments(momentId);
-            const comment = {
-                id: Date.now().toString(),
-                text: commentText,
-                timestamp: Date.now(),
-                author: author
-            };
-            comments.unshift(comment);
-            localStorage.setItem(`comments_${momentId}`, JSON.stringify(comments));
-            return comment;
-        }
-        try {
-            const newCommentRef = this.commentsRef.child(momentId).push();
-            const comment = {
-                id: newCommentRef.key,
-                text: commentText,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                author: author
-            };
-            await newCommentRef.set(comment);
-            console.log(`评论添加成功 [${momentId}]:`, comment);
-            return comment;
-        } catch (error) {
-            console.error(`添加评论失败 [${momentId}]:`, error);
-            throw error;
-        }
-    }
-
-    onCommentsChange(momentId, callback) {
-        if (this.useLocalStorage) return;
-        const ref = this.commentsRef.child(momentId);
-        appState.setFirebaseListener('comments', momentId, ref, 'value', (snapshot) => {
-            const commentsData = snapshot.val();
-            if (!commentsData) {
-                callback([]);
+// ==================== Firebase Handler（修复重复声明问题） ====================
+// 关键修复：添加条件判断，确保只声明一次FirebaseHandler类
+if (typeof FirebaseHandler === 'undefined') {
+    class FirebaseHandler {
+        constructor() {
+            console.log('[FirebaseHandler] 初始化开始');
+            if (typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0) {
+                console.warn(LanguageManager.t('firebaseWarnLocal'));
+                this.useLocalStorage = true;
+                console.log('[FirebaseHandler] 切换到本地存储模式');
                 return;
             }
-            const commentsArray = Object.values(commentsData);
-            commentsArray.sort((a, b) => b.timestamp - a.timestamp);
-            callback(commentsArray);
-        });
-    }
 
-    stopListening(momentId = null) {
-        if (this.useLocalStorage) return;
+            try {
+                // 完整Firebase配置
+                const firebaseConfig = {
+                    apiKey: "AIzaSyD9NwlJxYiRjFh3cPjpJGmQAhogmrFpU4M",
+                    authDomain: "kuangke-galaxy.firebaseapp.com",
+                    projectId: "kuangke-galaxy",
+                    storageBucket: "kuangke-galaxy.firebasestorage.app",
+                    messagingSenderId: "416862048915",
+                    appId: "1:416862048915:web:6578fcd23d8cf882c53366",
+                    measurementId: "G-VZCQM1H4BR"
+                };
+                
+                // 初始化Firebase应用
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                    console.log('[FirebaseHandler] Firebase应用初始化成功');
+                }
+                
+                // 关键修复：使用亚洲东南区数据库URL
+                this.database = firebase.database('https://kuangke-galaxy-default-rtdb.asia-southeast1.firebasedatabase.app');
+                console.log('[FirebaseHandler] 数据库连接成功');
+                
+                // 初始化数据引用
+                this.likesRef = this.database.ref('likes');
+                this.commentsRef = this.database.ref('comments');
+                this.momentsRef = this.database.ref('moments');
+                this.useLocalStorage = false;
+                console.log('[FirebaseHandler] Firebase模式初始化完成');
+            } catch (error) {
+                console.error(LanguageManager.t('firebaseErrorInit'), error);
+                this.useLocalStorage = true;
+                console.log('[FirebaseHandler] 初始化失败，切换到本地存储模式');
+            }
+        }
 
-        if (momentId) {
-            appState.stopFirebaseListener('likes', momentId, 'value');
-            appState.stopFirebaseListener('comments', momentId, 'value');
-        } else {
-            appState.stopAllFirebaseListeners();
+        // ============ 朋友圈数据同步方法 ============
+        async syncMomentsData() {
+            console.log('[FirebaseHandler] 调用syncMomentsData方法');
+            if (this.useLocalStorage) {
+                console.log('[FirebaseHandler] 使用本地存储数据');
+                return window.momentsData || [];
+            }
+            
+            try {
+                console.log('[FirebaseHandler] 从Firebase加载朋友圈数据');
+                const snapshot = await this.momentsRef.once('value');
+                const fbMoments = snapshot.val() || [];
+                const localMoments = window.momentsData || [];
+
+                // 合并去重数据（Firebase数据优先）
+                const fbIds = new Set(fbMoments.map(m => m.id));
+                const merged = [...fbMoments, ...localMoments.filter(m => !fbIds.has(m.id))];
+                console.log('[FirebaseHandler] 数据合并完成，共', merged.length, '条');
+                return merged;
+            } catch (error) {
+                console.error('同步Firebase朋友圈数据失败:', error);
+                return window.momentsData || [];
+            }
+        }
+
+        async saveMomentsToFirebase(moments) {
+            if (this.useLocalStorage) return false;
+            try {
+                await this.momentsRef.set(moments);
+                console.log('朋友圈数据已同步到Firebase');
+                return true;
+            } catch (error) {
+                console.error('保存朋友圈数据到Firebase失败:', error);
+                return false;
+            }
+        }
+
+        // ============ 点赞相关方法 ============
+        async getLikes(momentId) {
+            if (this.useLocalStorage) {
+                return parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
+            }
+            try {
+                const snapshot = await this.likesRef.child(momentId).once('value');
+                return snapshot.val() || 0;
+            } catch (error) {
+                console.error(`获取点赞数失败 [${momentId}]:`, error);
+                return 0;
+            }
+        }
+
+        async addLike(momentId) {
+            if (this.useLocalStorage) {
+                const current = await this.getLikes(momentId);
+                const newLikes = current + 1;
+                localStorage.setItem(`likes_${momentId}`, newLikes.toString());
+                return newLikes;
+            }
+            try {
+                let newLikes = 0;
+                await this.likesRef.child(momentId).transaction((currentLikes) => {
+                    newLikes = (currentLikes || 0) + 1;
+                    return newLikes;
+                });
+                console.log(`点赞成功 [${momentId}]: → ${newLikes}`);
+                return newLikes;
+            } catch (error) {
+                console.error(`点赞失败 [${momentId}]:`, error);
+                throw error;
+            }
+        }
+
+        async removeLike(momentId) {
+            if (this.useLocalStorage) {
+                const current = await this.getLikes(momentId);
+                const newLikes = Math.max(0, current - 1);
+                localStorage.setItem(`likes_${momentId}`, newLikes.toString());
+                return newLikes;
+            }
+            try {
+                let newLikes = 0;
+                await this.likesRef.child(momentId).transaction((currentLikes) => {
+                    newLikes = Math.max(0, (currentLikes || 0) - 1);
+                    return newLikes;
+                });
+                console.log(`取消点赞成功 [${momentId}]: → ${newLikes}`);
+                return newLikes;
+            } catch (error) {
+                console.error(`取消点赞失败 [${momentId}]:`, error);
+                throw error;
+            }
+        }
+
+        onLikesChange(momentId, callback) {
+            if (this.useLocalStorage) return;
+            const ref = this.likesRef.child(momentId);
+            appState.setFirebaseListener('likes', momentId, ref, 'value', (snapshot) => {
+                const likes = snapshot.val() || 0;
+                callback(likes);
+            });
+        }
+
+        // ============ 评论相关方法 ============
+        async getComments(momentId) {
+            if (this.useLocalStorage) {
+                const stored = localStorage.getItem(`comments_${momentId}`);
+                return stored ? JSON.parse(stored) : [];
+            }
+            try {
+                const snapshot = await this.commentsRef.child(momentId).once('value');
+                const commentsData = snapshot.val();
+                if (!commentsData) {
+                    return [];
+                }
+                const commentsArray = Object.values(commentsData);
+                commentsArray.sort((a, b) => b.timestamp - a.timestamp);
+                return commentsArray;
+            } catch (error) {
+                console.error(`获取评论失败 [${momentId}]:`, error);
+                return [];
+            }
+        }
+
+        async addComment(momentId, commentText, author) {
+            if (this.useLocalStorage) {
+                const comments = await this.getComments(momentId);
+                const comment = {
+                    id: Date.now().toString(),
+                    text: commentText,
+                    timestamp: Date.now(),
+                    author: author
+                };
+                comments.unshift(comment);
+                localStorage.setItem(`comments_${momentId}`, JSON.stringify(comments));
+                return comment;
+            }
+            try {
+                const newCommentRef = this.commentsRef.child(momentId).push();
+                const comment = {
+                    id: newCommentRef.key,
+                    text: commentText,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP,
+                    author: author
+                };
+                await newCommentRef.set(comment);
+                console.log(`评论添加成功 [${momentId}]:`, comment);
+                return comment;
+            } catch (error) {
+                console.error(`添加评论失败 [${momentId}]:`, error);
+                throw error;
+            }
+        }
+
+        onCommentsChange(momentId, callback) {
+            if (this.useLocalStorage) return;
+            const ref = this.commentsRef.child(momentId);
+            appState.setFirebaseListener('comments', momentId, ref, 'value', (snapshot) => {
+                const commentsData = snapshot.val();
+                if (!commentsData) {
+                    callback([]);
+                    return;
+                }
+                const commentsArray = Object.values(commentsData);
+                commentsArray.sort((a, b) => b.timestamp - a.timestamp);
+                callback(commentsArray);
+            });
+        }
+
+        stopListening(momentId = null) {
+            if (this.useLocalStorage) return;
+
+            if (momentId) {
+                appState.stopFirebaseListener('likes', momentId, 'value');
+                appState.stopFirebaseListener('comments', momentId, 'value');
+            } else {
+                appState.stopAllFirebaseListeners();
+            }
         }
     }
 }
