@@ -1,10 +1,10 @@
 // ==================== 常量定义 ====================
 const STORAGE_KEYS = Object.freeze({
     moments: 'momentsData',
-    diary: 'successDiaryData', // 未在代码中直接使用，但保留
+    diary: 'successDiaryData',
     theme: 'theme',
     language: 'language',
-    username: 'username' // 新增，用于存储用户昵称
+    username: 'username'
 });
 
 const PAGE_TYPES = Object.freeze({
@@ -28,7 +28,7 @@ class AppState {
         this.diarySearchKeyword = '';
         this.currentLanguage = this.loadFromStorage(STORAGE_KEYS.language) || 'zh';
         this.currentPage = PAGE_TYPES.MOMENTS;
-        this.activeFirebaseListeners = new Map(); // 新增，用于管理 Firebase 监听器
+        this.activeFirebaseListeners = new Map();
     }
 
     loadFromStorage(key) {
@@ -55,11 +55,9 @@ class AppState {
         this.diarySearchKeyword = '';
     }
 
-    // 新增：记录并管理 Firebase 监听器
     setFirebaseListener(type, id, ref, eventType, callback) {
         const key = `${type}_${id}_${eventType}`;
         if (this.activeFirebaseListeners.has(key)) {
-            // 如果已存在，先停止旧的
             this.stopFirebaseListener(type, id, eventType);
         }
         ref.on(eventType, callback);
@@ -146,7 +144,7 @@ const Utils = {
         return function executedFunction(...args) {
             const later = () => {
                 clearTimeout(timeout);
-                func.apply(this, args); // 使用 apply 保持上下文
+                func.apply(this, args);
             };
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
@@ -164,7 +162,6 @@ const Utils = {
         };
     },
 
-    // 新增：生成随机游客昵称
     generateGuestUsername() {
         return `${LanguageManager.t('guest')}${Math.floor(Math.random() * 10000)}`;
     }
@@ -178,7 +175,7 @@ class NotificationManager {
 
         const iconMap = {
             success: 'check-circle',
-            warning: 'exclamation-triangle', // 更改警告图标
+            warning: 'exclamation-triangle',
             error: 'times-circle',
             info: 'info-circle'
         };
@@ -210,8 +207,8 @@ class NotificationManager {
             gap: '0.5rem',
             animation: 'slideInRight 0.3s ease-out',
             fontSize: '0.95rem',
-            maxWidth: '300px', // 限制最大宽度
-            wordBreak: 'break-word' // 自动换行
+            maxWidth: '300px',
+            wordBreak: 'break-word'
         });
 
         document.body.appendChild(notification);
@@ -255,21 +252,21 @@ class LanguageManager {
             timeHoursAgo: (data) => `${data.hours}小时前`,
             timeYesterday: '昨天',
             timeDaysAgo: (data) => `${data.days}天前`,
-            loadingComments: '加载评论中...', // 新增
-            loadingData: '加载中...', // 新增
-            enterCommentContent: '请输入评论内容', // 新增
-            commentTooLong: '评论内容不能超过500字', // 新增
-            commentFailed: '评论失败，请重试', // 新增
-            commentSuccess: '评论发表成功！', // 新增
-            operationFailed: '操作失败，请重试', // 新增
-            likeSuccess: '点赞成功！', // 新增
-            unlikeSuccess: '已取消点赞', // 新增
-            pageInitFailed: '页面初始化失败，请刷新重试', // 新增
-            firebaseWarnLocal: 'Firebase SDK 未加载或未初始化，将使用本地存储模式', // 新增
-            firebaseErrorInit: 'Firebase 初始化失败', // 新增
-            guest: '游客', // 新增
-            likeAriaLabel: '点赞', // 新增
-            commentAriaLabel: '评论' // 新增
+            loadingComments: '加载评论中...',
+            loadingData: '加载中...',
+            enterCommentContent: '请输入评论内容',
+            commentTooLong: '评论内容不能超过500字',
+            commentFailed: '评论失败，请重试',
+            commentSuccess: '评论发表成功！',
+            operationFailed: '操作失败，请重试',
+            likeSuccess: '点赞成功！',
+            unlikeSuccess: '已取消点赞',
+            pageInitFailed: '页面初始化失败，请刷新重试',
+            firebaseWarnLocal: 'Firebase SDK 未加载或未初始化，将使用本地存储模式',
+            firebaseErrorInit: 'Firebase 初始化失败',
+            guest: '游客',
+            likeAriaLabel: '点赞',
+            commentAriaLabel: '评论'
         },
         en: {
             successTitle: 'Success Diary Timeline',
@@ -335,7 +332,7 @@ class LanguageManager {
         this.updateLanguageToggleButton();
 
         if (appState.currentPage === PAGE_TYPES.MOMENTS) {
-            MomentsPageManager.render(); // 重新渲染朋友圈，以更新时间格式
+            MomentsPageManager.render();
         } else if (appState.currentPage === PAGE_TYPES.SUCCESS) {
             SuccessPageManager.updatePage();
         }
@@ -366,12 +363,12 @@ class LanguageManager {
             searchInput.placeholder = this.t('searchPlaceholder');
         }
 
-        const commentInput = document.getElementById('commentInput'); // 新增
+        const commentInput = document.getElementById('commentInput');
         if (commentInput) {
             commentInput.placeholder = this.t('commentPlaceholder');
         }
 
-        const submitCommentButton = document.getElementById('submitComment'); // 新增
+        const submitCommentButton = document.getElementById('submitComment');
         if (submitCommentButton) {
             submitCommentButton.textContent = this.t('commentSubmit');
         }
@@ -405,7 +402,7 @@ class ThemeManager {
     }
 }
 
-// ==================== Firebase Handler (已修复和改进) ====================
+// ==================== Firebase Handler (修复重复声明 + 数据库URL) ====================
 class FirebaseHandler {
     constructor() {
         if (typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0) {
@@ -415,14 +412,58 @@ class FirebaseHandler {
         }
 
         try {
+            // 修复：配置正确的 Firebase 数据库 URL（地区专属）
+            const firebaseConfig = {
+                apiKey: "YOUR_API_KEY", // 替换为你的实际 API Key
+                authDomain: "YOUR_AUTH_DOMAIN", // 替换为你的实际 Auth Domain
+                databaseURL: "https://kuangke-galaxy-default-rtdb.asia-southeast1.firebasedatabase.app", // 修正的数据库 URL
+                projectId: "YOUR_PROJECT_ID", // 替换为你的实际 Project ID
+                storageBucket: "YOUR_STORAGE_BUCKET", // 替换为你的实际 Storage Bucket
+                messagingSenderId: "YOUR_SENDER_ID", // 替换为你的实际 Sender ID
+                appId: "YOUR_APP_ID" // 替换为你的实际 App ID
+            };
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
             this.database = firebase.database();
             this.likesRef = this.database.ref('likes');
             this.commentsRef = this.database.ref('comments');
+            this.momentsRef = this.database.ref('moments'); // 朋友圈数据的 Firebase 引用
             this.useLocalStorage = false;
-            console.log('FirebaseHandler 初始化完成');
+            console.log('FirebaseHandler 初始化完成（已修正数据库URL）');
         } catch (error) {
             console.error(LanguageManager.t('firebaseErrorInit'), error);
             this.useLocalStorage = true;
+        }
+    }
+
+    // ============ 朋友圈数据同步 ============
+    async syncMomentsData() {
+        if (this.useLocalStorage) return window.momentsData || [];
+        try {
+            const snapshot = await this.momentsRef.once('value');
+            const fbMoments = snapshot.val() || [];
+            const localMoments = window.momentsData || [];
+
+            // 合并：Firebase 数据 + 本地默认数据（去重，优先 Firebase）
+            const fbIds = new Set(fbMoments.map(m => m.id));
+            const merged = [...fbMoments, ...localMoments.filter(m => !fbIds.has(m.id))];
+            return merged;
+        } catch (error) {
+            console.error('同步 Firebase 朋友圈数据失败:', error);
+            return window.momentsData || [];
+        }
+    }
+
+    async saveMomentsToFirebase(moments) {
+        if (this.useLocalStorage) return false;
+        try {
+            await this.momentsRef.set(moments);
+            console.log('朋友圈数据已同步到 Firebase');
+            return true;
+        } catch (error) {
+            console.error('保存朋友圈数据到 Firebase 失败:', error);
+            return false;
         }
     }
 
@@ -448,7 +489,6 @@ class FirebaseHandler {
             return newLikes;
         }
         try {
-            // 使用事务确保并发更新的正确性
             let newLikes = 0;
             await this.likesRef.child(momentId).transaction((currentLikes) => {
                 newLikes = (currentLikes || 0) + 1;
@@ -458,7 +498,7 @@ class FirebaseHandler {
             return newLikes;
         } catch (error) {
             console.error(`点赞失败 [${momentId}]:`, error);
-            throw error; // 抛出错误以便调用者处理
+            throw error;
         }
     }
 
@@ -470,7 +510,6 @@ class FirebaseHandler {
             return newLikes;
         }
         try {
-            // 使用事务确保并发更新的正确性
             let newLikes = 0;
             await this.likesRef.child(momentId).transaction((currentLikes) => {
                 newLikes = Math.max(0, (currentLikes || 0) - 1);
@@ -480,14 +519,12 @@ class FirebaseHandler {
             return newLikes;
         } catch (error) {
             console.error(`取消点赞失败 [${momentId}]:`, error);
-            throw error; // 抛出错误以便调用者处理
+            throw error;
         }
     }
 
     onLikesChange(momentId, callback) {
-        if (this.useLocalStorage) {
-            return; // 本地存储模式不支持实时监听
-        }
+        if (this.useLocalStorage) return;
         const ref = this.likesRef.child(momentId);
         appState.setFirebaseListener('likes', momentId, ref, 'value', (snapshot) => {
             const likes = snapshot.val() || 0;
@@ -525,7 +562,7 @@ class FirebaseHandler {
                 timestamp: Date.now(),
                 author: author
             };
-            comments.unshift(comment); // 新评论放在最前面
+            comments.unshift(comment);
             localStorage.setItem(`comments_${momentId}`, JSON.stringify(comments));
             return comment;
         }
@@ -534,7 +571,7 @@ class FirebaseHandler {
             const comment = {
                 id: newCommentRef.key,
                 text: commentText,
-                timestamp: firebase.database.ServerValue.TIMESTAMP, // 使用服务器时间戳
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
                 author: author
             };
             await newCommentRef.set(comment);
@@ -542,14 +579,12 @@ class FirebaseHandler {
             return comment;
         } catch (error) {
             console.error(`添加评论失败 [${momentId}]:`, error);
-            throw error; // 抛出错误以便调用者处理
+            throw error;
         }
     }
 
     onCommentsChange(momentId, callback) {
-        if (this.useLocalStorage) {
-            return; // 本地存储模式不支持实时监听
-        }
+        if (this.useLocalStorage) return;
         const ref = this.commentsRef.child(momentId);
         appState.setFirebaseListener('comments', momentId, ref, 'value', (snapshot) => {
             const commentsData = snapshot.val();
@@ -570,12 +605,11 @@ class FirebaseHandler {
             appState.stopFirebaseListener('likes', momentId, 'value');
             appState.stopFirebaseListener('comments', momentId, 'value');
         } else {
-            appState.stopAllFirebaseListeners(); // 停止所有监听
+            appState.stopAllFirebaseListeners();
         }
     }
 }
 
-// 创建全局 Firebase 处理器实例
 const firebaseHandler = new FirebaseHandler();
 
 // ==================== 本地存储管理器 ====================
@@ -595,6 +629,10 @@ class StorageManager {
     static saveMomentsData(data) {
         try {
             appState.saveToStorage(STORAGE_KEYS.moments, JSON.stringify(data));
+            // 尝试同步到 Firebase
+            firebaseHandler.saveMomentsToFirebase(data).catch(err => {
+                console.error('同步朋友圈数据到 Firebase 失败:', err);
+            });
             return true;
         } catch (error) {
             console.error('保存朋友圈数据失败:', error);
@@ -604,31 +642,46 @@ class StorageManager {
     }
 }
 
-// ==================== 朋友圈页面管理器（已集成 Firebase）====================
+// ==================== 朋友圈页面管理器（集成 Firebase 同步）====================
 class MomentsPageManager {
     static data = [];
-    static eventListeners = new Map(); // 用于管理 DOM 事件监听器
+    static eventListeners = new Map();
+    static useLocalStorageOnly = false; // 调试用：是否仅用本地存储
 
     static async init() {
-        this.loadData();
+        await this.loadData();
         this.bindEvents();
         await this.render();
     }
 
-    static loadData() {
+    static async loadData() {
         const savedData = StorageManager.loadMomentsData();
         const defaultData = window.momentsData || [];
+        let fbSyncedData = [];
+
+        // 从 Firebase 同步数据（若未禁用）
+        if (!this.useLocalStorageOnly) {
+            fbSyncedData = await firebaseHandler.syncMomentsData();
+        }
 
         if (savedData && savedData.length > 0) {
-            // 合并逻辑：以 savedData 为主，将 defaultData 中不在 savedData 的新增进来
+            // 合并：本地存储 + Firebase 同步 + 默认数据（去重）
             const savedIds = new Set(savedData.map(m => m.id));
-            const newDefaults = defaultData.filter(m => !savedIds.has(m.id));
-            this.data = [...savedData, ...newDefaults];
+            const fbIds = new Set(fbSyncedData.map(m => m.id));
+            const newDefaults = defaultData.filter(m => !savedIds.has(m.id) && !fbIds.has(m.id));
+            this.data = [...savedData, ...fbSyncedData, ...newDefaults];
         } else {
-            this.data = defaultData;
+            // 本地存储为空时，使用 Firebase 同步 + 默认数据
+            const fbIds = new Set(fbSyncedData.map(m => m.id));
+            const newDefaults = defaultData.filter(m => !fbIds.has(m.id));
+            this.data = [...fbSyncedData, ...newDefaults];
         }
-        // 确保数据中每个 moment 都有一个 ID，如果没有则生成
+
+        // 确保每条数据有 ID
         this.data = this.data.map(m => ({ ...m, id: m.id || `moment_${Date.now() + Math.random().toString().slice(2, 6)}` }));
+
+        // 保存合并后的数据
+        StorageManager.saveMomentsData(this.data);
     }
 
     static saveData() {
@@ -636,7 +689,7 @@ class MomentsPageManager {
     }
 
     static bindEvents() {
-        this.clearEventListeners(); // 清除旧的事件监听
+        this.clearEventListeners();
 
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
@@ -659,8 +712,12 @@ class MomentsPageManager {
             this.eventListeners.set(`category-${btn.dataset.category}`, { element: btn, handler, event: 'click' });
         });
 
+        // 默认选中“全部”分类
+        const allBtn = document.querySelector('.category-btn[data-category="all"]');
+        if (allBtn) allBtn.classList.add('active');
+
         this.initCommentModal();
-        LanguageManager.updatePageTexts(); // 更新全局文本，包括搜索框和评论框
+        LanguageManager.updatePageTexts();
     }
 
     static clearEventListeners() {
@@ -681,7 +738,7 @@ class MomentsPageManager {
             const handler = () => {
                 modal.style.display = 'none';
                 if (appState.currentMomentId) {
-                    firebaseHandler.stopListening(appState.currentMomentId); // 停止当前动态的监听
+                    firebaseHandler.stopListening(appState.currentMomentId);
                     appState.currentMomentId = null;
                 }
             };
@@ -700,7 +757,6 @@ class MomentsPageManager {
         };
         window.addEventListener('click', windowClickHandler);
         this.eventListeners.set('windowModalClose', { element: window, handler: windowClickHandler, event: 'click' });
-
 
         const submitBtn = document.getElementById('submitComment');
         if (submitBtn) {
@@ -726,8 +782,6 @@ class MomentsPageManager {
         const container = document.getElementById('momentsContainer');
         if (!container) return;
 
-        // 在渲染新数据前，停止所有可能存在的 Firebase 监听器
-        // 确保不会有旧的监听器干扰新的渲染或造成内存泄漏
         firebaseHandler.stopListening();
 
         const dataToRender = filteredData || this.data;
@@ -739,9 +793,8 @@ class MomentsPageManager {
             return;
         }
 
-        container.innerHTML = `<div class="loading-spinner">${LanguageManager.t('loadingData')}</div>`; // 显示加载状态
+        container.innerHTML = `<div class="loading-spinner">${LanguageManager.t('loadingData')}</div>`;
 
-        // 渲染卡片
         const cardsHtml = [];
         for (let i = 0; i < sorted.length; i++) {
             const moment = sorted[i];
@@ -752,22 +805,19 @@ class MomentsPageManager {
 
         container.innerHTML = cardsHtml.join('');
 
-        // 设置实时监听
         sorted.forEach(moment => {
             this.setupRealtimeListeners(moment.id);
         });
     }
 
     static setupRealtimeListeners(momentId) {
-        // 监听点赞变化
         firebaseHandler.onLikesChange(momentId, (newLikes) => {
             const likeBtn = document.querySelector(`button[data-like-id="${momentId}"]`);
-            if (!likeBtn) return; // 元素可能已被移除
+            if (!likeBtn) return;
 
             const userLikeKey = `user_liked_${momentId}`;
             const hasUserLiked = localStorage.getItem(userLikeKey) === 'true';
-
-            const hasActiveLike = newLikes > 0 || hasUserLiked; // 如果 Firebase 有点赞或用户本地有点赞
+            const hasActiveLike = newLikes > 0 || hasUserLiked;
 
             likeBtn.innerHTML = `
                 <i class="${hasActiveLike ? 'fas' : 'far'} fa-heart"></i>
@@ -776,10 +826,9 @@ class MomentsPageManager {
             likeBtn.classList.toggle('liked', hasActiveLike);
         });
 
-        // 监听评论变化
         firebaseHandler.onCommentsChange(momentId, (newComments) => {
             const commentBtn = document.querySelector(`button[data-comment-id="${momentId}"]`);
-            if (!commentBtn) return; // 元素可能已被移除
+            if (!commentBtn) return;
 
             const commentsCount = newComments.length;
             commentBtn.innerHTML = `
@@ -799,15 +848,10 @@ class MomentsPageManager {
 
     static renderMomentCard(moment, index, likes = 0, commentsCount = 0) {
         const hasImage = moment.image && moment.image.trim();
-
-        // 检查用户是否已点赞（本地存储）
         const userLikeKey = `user_liked_${moment.id}`;
         const hasUserLikedLocally = localStorage.getItem(userLikeKey) === 'true';
-
-        // 只要 Firebase 记录有点赞或者用户本地记录有点赞，就显示为“已点赞”状态
         const isLikedClass = (likes > 0 || hasUserLikedLocally) ? 'liked' : '';
         const likeIconClass = (likes > 0 || hasUserLikedLocally) ? 'fas' : 'far';
-
 
         return `
             <div class="moment-card" style="animation-delay: ${index * ANIMATION_DELAY}s">
@@ -849,16 +893,16 @@ class MomentsPageManager {
         `;
     }
 
-    static likeProcessingId = null; // 用于记录当前正在处理点赞的 moment ID
+    static likeProcessingId = null;
 
     static async handleLike(id) {
-        if (this.likeProcessingId === id) return; // 如果已经在处理此 ID，则忽略
+        if (this.likeProcessingId === id) return;
 
         const likeBtn = document.querySelector(`button[data-like-id="${id}"]`);
         if (!likeBtn) return;
 
-        this.likeProcessingId = id; // 标记此 ID 正在处理
-        likeBtn.disabled = true; // 立即禁用按钮
+        this.likeProcessingId = id;
+        likeBtn.disabled = true;
 
         const userLikeKey = `user_liked_${id}`;
         const hasUserLiked = localStorage.getItem(userLikeKey) === 'true';
@@ -871,7 +915,6 @@ class MomentsPageManager {
             } else {
                 await firebaseHandler.addLike(id);
                 localStorage.setItem(userLikeKey, 'true');
-                // 添加点赞动画
                 likeBtn.style.transform = 'scale(1.2)';
                 setTimeout(() => {
                     likeBtn.style.transform = 'scale(1)';
@@ -882,13 +925,12 @@ class MomentsPageManager {
             console.error('点赞操作失败:', error);
             NotificationManager.show(LanguageManager.t('operationFailed'), 'error');
         } finally {
-            this.likeProcessingId = null; // 处理完毕，清除标记
-            likeBtn.disabled = false; // 重新启用按钮
+            this.likeProcessingId = null;
+            likeBtn.disabled = false;
         }
     }
 
     static async openCommentModal(id) {
-        // 在打开新的评论模态框前，停止上一个可能的监听
         if (appState.currentMomentId && appState.currentMomentId !== id) {
             firebaseHandler.stopListening(appState.currentMomentId);
         }
@@ -906,7 +948,6 @@ class MomentsPageManager {
             commentsList.innerHTML = `<div class="loading">${LanguageManager.t('loadingComments')}</div>`;
         }
 
-        // 获取并显示评论
         try {
             const comments = await firebaseHandler.getComments(id);
             this.renderComments(comments);
@@ -915,8 +956,6 @@ class MomentsPageManager {
             commentsList.innerHTML = `<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">${LanguageManager.t('operationFailed')}</p>`;
         }
 
-
-        // 设置实时监听
         firebaseHandler.onCommentsChange(id, (newComments) => {
             this.renderComments(newComments);
         });
@@ -971,7 +1010,6 @@ class MomentsPageManager {
             return;
         }
 
-        // 临时禁用提交按钮
         const submitBtn = document.getElementById('submitComment');
         if (submitBtn) submitBtn.disabled = true;
 
@@ -989,7 +1027,7 @@ class MomentsPageManager {
             console.error('评论失败:', error);
             NotificationManager.show(LanguageManager.t('commentFailed'), 'error');
         } finally {
-            if (submitBtn) submitBtn.disabled = false; // 重新启用提交按钮
+            if (submitBtn) submitBtn.disabled = false;
         }
     }
 
@@ -1155,7 +1193,7 @@ class SuccessPageManager {
                 } else {
                     appState.selectedDiaryTags.add(code);
                 }
-                this.renderTagFilters(); // 重新渲染标签以更新样式
+                this.renderTagFilters();
                 this.render();
             });
         });
@@ -1415,7 +1453,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==================== 动画样式 ====================
-// 建议将此部分内容移动到单独的 CSS 文件中
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
@@ -1449,17 +1486,17 @@ style.textContent = `
         justify-content: center;
         align-items: center;
         padding: 2rem;
-        color: var(--text-secondary, #999); /* 使用CSS变量 */
-        font-size: 1.1rem; /* 增大字体 */
+        color: var(--text-secondary, #999);
+        font-size: 1.1rem;
     }
 
     .loading-spinner::after {
         content: '';
-        width: 24px; /* 增大 */
-        height: 24px; /* 增大 */
-        margin-left: 12px; /* 增大 */
-        border: 4px solid var(--border-color-light, #f3f3f3); /* 使用CSS变量 */
-        border-top: 4px solid var(--primary-color, #667eea); /* 使用CSS变量 */
+        width: 24px;
+        height: 24px;
+        margin-left: 12px;
+        border: 4px solid var(--border-color-light, #f3f3f3);
+        border-top: 4px solid var(--primary-color, #667eea);
         border-radius: 50%;
         animation: spin 1s linear infinite;
     }
@@ -1470,7 +1507,7 @@ style.textContent = `
     }
 
     .action-btn.liked i.fas.fa-heart {
-        color: #ef4444; /* 点赞后的心形颜色 */
+        color: #ef4444;
     }
 
     .action-btn.liked {
@@ -1497,7 +1534,7 @@ style.textContent = `
             transform: translateY(0);
         }
     }
-    /* 新增一些基本样式，确保加载Spinner和No Results的可见性 */
+
     .no-results, .diary-empty {
         text-align: center;
         padding: 3rem;
@@ -1505,7 +1542,6 @@ style.textContent = `
         font-size: 1.2rem;
     }
 
-    /* 改进了按钮禁用时的视觉反馈 */
     .action-btn:disabled, #submitComment:disabled {
         opacity: 0.6;
         cursor: not-allowed;
