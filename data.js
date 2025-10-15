@@ -1131,30 +1131,56 @@ let momentsData = [
  * @param {Object} entry - 日记条目
  * @returns {boolean} 是否验证通过
  */
-function validateDiaryEntry(entry) {
-    const requiredFields = ['id', 'date', 'categories', 'headline', 'content', 'moodCode'];
-    const missingFields = requiredFields.filter(field => !(field in entry));
-    
-    if (missingFields.length > 0) {
-        console.error(`❌ 日记条目 ${entry.id} 缺少必需字段:`, missingFields);
-        return false;
+/**
+ * 验证日记条目的有效性
+ * @param {Object} entry - 待验证的日记条目对象
+ * @param {Array} diaryTagLibrary - 有效的分类标签库（每个元素含code属性）
+ * @param {Object} moodLibrary - 有效的心情代码库（键为心情代码）
+ * @returns {boolean} 验证通过返回true，否则返回false
+ */
+function validateDiaryEntry(entry, diaryTagLibrary, moodLibrary) {
+  let isValid = true; // 整体验证结果标记
+
+  // 1. 检查必填字段
+  const requiredFields = ['id', 'date', 'categories', 'headline', 'content', 'moodCode'];
+  const missingFields = requiredFields.filter(field => !(field in entry));
+  
+  if (missingFields.length > 0) {
+    console.error(`❌ 日记条目 ${entry.id || '未知ID'} 缺少必需字段：`, missingFields);
+    isValid = false; // 缺少必填字段时直接标记为无效
+  }
+
+  // 2. 验证分类（仅在存在categories字段时检查）
+  if ('categories' in entry) {
+    // 先检查categories是否为有效数组
+    if (!Array.isArray(entry.categories)) {
+      console.warn(`⚠️ 日记条目 ${entry.id || '未知ID'} 的categories不是数组`);
+      isValid = false;
+    } else {
+      // 提取有效分类的code列表
+      const validCategoryCodes = diaryTagLibrary.map(tag => tag.code);
+      // 筛选出无效分类
+      const invalidCategories = entry.categories.filter(cat => !validCategoryCodes.includes(cat));
+      
+      if (invalidCategories.length > 0) {
+        console.warn(`⚠️ 日记条目 ${entry.id || '未知ID'} 包含无效分类：`, invalidCategories);
+        isValid = false;
+      }
     }
-    
-    // 验证分类
-    const validCategories = diaryTagLibrary.map(tag => tag.code);
-    const invalidCategories = entry.categories.filter(cat => !validCategories.includes(cat));
-    
-    if (invalidCategories.length > 0) {
-        console.warn(`⚠️ 日记条目 ${entry.id} 包含无效分类:`, invalidCategories);
+  }
+
+  // 3. 验证心情代码（仅在存在moodCode字段时检查）
+  if ('moodCode' in entry) {
+    // 检查心情代码是否存在于心情库中（不依赖值是否为真值）
+    if (!(entry.moodCode in moodLibrary)) {
+      console.warn(`⚠️ 日记条目 ${entry.id || '未知ID'} 包含无效心情代码：${entry.moodCode}`);
+      isValid = false;
     }
-    
-    // 验证心情代码
-    if (!moodLibrary[entry.moodCode]) {
-        console.warn(`⚠️ 日记条目 ${entry.id} 包含无效心情代码: ${entry.moodCode}`);
-    }
-    
-    return true;
+  }
+
+  return isValid;
 }
+
 
 /**
  * 获取标签信息
