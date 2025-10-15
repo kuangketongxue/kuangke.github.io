@@ -98,14 +98,14 @@ const Utils = {
     formatDiaryDate(dateStr, lang) {
         const date = new Date(dateStr);
         if (Number.isNaN(date.getTime())) return dateStr;
-        
+
         const options = {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
             weekday: 'short'
         };
-        
+
         return date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', options);
     },
 
@@ -142,14 +142,14 @@ class NotificationManager {
     static show(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
-        
+
         const iconMap = {
             success: 'check-circle',
             warning: 'exclamation-circle',
             error: 'times-circle',
             info: 'info-circle'
         };
-        
+
         const colorMap = {
             success: '#10b981',
             warning: '#f59e0b',
@@ -254,7 +254,7 @@ class LanguageManager {
         appState.currentLanguage = appState.currentLanguage === 'zh' ? 'en' : 'zh';
         appState.saveToStorage(STORAGE_KEYS.language, appState.currentLanguage);
         this.updateLanguageToggleButton();
-        
+
         if (appState.currentPage === PAGE_TYPES.SUCCESS) {
             SuccessPageManager.updatePage();
         }
@@ -263,10 +263,10 @@ class LanguageManager {
     static updateLanguageToggleButton() {
         const button = document.getElementById('languageToggle');
         if (!button) return;
-        
+
         const icon = button.querySelector('i');
         const span = button.querySelector('span');
-        
+
         if (icon) icon.className = 'fas fa-language';
         if (span) span.textContent = appState.currentLanguage === 'zh' ? '中 → EN' : 'EN → 中';
     }
@@ -306,13 +306,190 @@ class ThemeManager {
     static updateThemeToggleButton() {
         const button = document.getElementById('themeToggle');
         if (!button) return;
-        
+
         const icon = button.querySelector('i');
         if (icon) {
             icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
         }
     }
 }
+
+// ==================== Firebase Handler (已集成) ====================
+class FirebaseHandler {
+    constructor() {
+        if (typeof firebase === 'undefined') {
+            console.warn('Firebase SDK 未加载，将使用本地存储模式');
+            this.useLocalStorage = true;
+            return;
+        }
+        
+        this.database = firebase.database();
+        this.likesRef = this.database.ref('likes');
+        this.commentsRef = this.database.ref('comments');
+        this.useLocalStorage = false;
+        console.log('FirebaseHandler 初始化完成');
+    }
+
+    // ============ 点赞相关方法 ============
+    async getLikes(momentId) {
+        if (this.useLocalStorage) {
+            return parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
+        }
+
+        try {
+            const snapshot = await this.likesRef.child(momentId).once('value');
+            const likes = snapshot.val();
+            return likes !== null ? likes : 0;
+        } catch (error) {
+            console.error(`获取点赞数失败 [${momentId}]:`, error);
+            return 0;
+        }
+    }
+
+    async addLike(momentId) {
+        if (this.useLocalStorage) {
+            const current = await this.getLikes(momentId);
+            const newLikes = current + 1;
+            localStorage.setItem(`likes_${momentId}`, newLikes.toString());
+            return newLikes;
+        }
+
+        try {
+            const currentLikes = await this.getLikes(momentId);
+            const newLikes = currentLikes + 1;
+            await this.likesRef.child(momentId).set(newLikes);
+            console.log(`点赞成功 [${momentId}]: ${currentLikes} → ${newLikes}`);
+            return newLikes;
+        } catch (error) {
+            console.error(`点赞失败 [${momentId}]:`, error);
+            return null;
+        }
+    }
+
+    async removeLike(momentId) {
+        if (this.useLocalStorage) {
+            const current = await this.getLikes(momentId);
+            const newLikes = Math.max(0, current - 1);
+            localStorage.setItem(`likes_${momentId}`, newLikes.toString());
+            return newLikes;
+        }
+
+        try {
+            const currentLikes = await this.getLikes(momentId);
+            const newLikes = Math.max(0, currentLikes - 1);
+            await this.likesRef.child(momentId).set(newLikes);
+            console.log(`取消点赞成功 [${momentId}]: ${currentLikes} → ${newLikes}`);
+            return newLikes;
+        } catch (error) {
+            console.error(`取消点赞失败 [${momentId}]:`, error);
+            return null;
+        }
+    }
+
+    onLikesChange(momentId, callback) {
+        if (this.useLocalStorage) {
+            // 本地存储模式不支持实时监听
+            return;
+        }
+
+        this.likesRef.child(momentId).on('value', (snapshot) => {
+            const likes = snapshot.val() !== null ? snapshot.val() : 0;
+            callback(likes);
+        });
+    }
+
+    // ============ 评论相关方法 ============
+    async getComments(momentId) {
+        if (this.useLocalStorage) {
+            const stored = localStorage.getItem(`comments_${momentId}`);
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        try {
+            const snapshot = await this.commentsRef.child(momentId).once('value');
+            const commentsData = snapshot.val();
+            
+            if (!commentsData) {
+                return [];
+            }
+
+            const commentsArray = Object.values(commentsData);
+            commentsArray.sort((a, b) => b.timestamp - a.timestamp);
+            
+            return commentsArray;
+        } catch (error) {
+            console.error(`获取评论失败 [${momentId}]:`, error);
+            return [];
+        }
+    }
+
+    async addComment(momentId, commentText, author = '访客') {
+        if (this.useLocalStorage) {
+            const comments = await this.getComments(momentId);
+            const comment = {
+                id: Date.now().toString(),
+                text: commentText,
+                timestamp: Date.now(),
+                author: author
+            };
+            comments.unshift(comment);
+            localStorage.setItem(`comments_${momentId}`, JSON.stringify(comments));
+            return comment;
+        }
+
+        try {
+            const newCommentRef = this.commentsRef.child(momentId).push();
+            const comment = {
+                id: newCommentRef.key,
+                text: commentText,
+                timestamp: Date.now(),
+                author: author
+            };
+            
+            await newCommentRef.set(comment);
+            console.log(`评论添加成功 [${momentId}]:`, comment);
+            return comment;
+        } catch (error) {
+            console.error(`添加评论失败 [${momentId}]:`, error);
+            return null;
+        }
+    }
+
+    onCommentsChange(momentId, callback) {
+        if (this.useLocalStorage) {
+            // 本地存储模式不支持实时监听
+            return;
+        }
+
+        this.commentsRef.child(momentId).on('value', (snapshot) => {
+            const commentsData = snapshot.val();
+            
+            if (!commentsData) {
+                callback([]);
+                return;
+            }
+
+            const commentsArray = Object.values(commentsData);
+            commentsArray.sort((a, b) => b.timestamp - a.timestamp);
+            callback(commentsArray);
+        });
+    }
+
+    stopListening(momentId = null) {
+        if (this.useLocalStorage) return;
+
+        if (momentId) {
+            this.likesRef.child(momentId).off();
+            this.commentsRef.child(momentId).off();
+        } else {
+            this.likesRef.off();
+            this.commentsRef.off();
+        }
+    }
+}
+
+// 创建全局 Firebase 处理器实例
+const firebaseHandler = new FirebaseHandler();
 
 // ==================== 本地存储管理器 ====================
 class StorageManager {
@@ -340,15 +517,15 @@ class StorageManager {
     }
 }
 
-// ==================== 朋友圈页面管理器 ====================
+// ==================== 朋友圈页面管理器（已集成 Firebase）====================
 class MomentsPageManager {
     static data = [];
     static eventListeners = new Map();
 
-    static init() {
+    static async init() {
         this.loadData();
         this.bindEvents();
-        this.render();
+        await this.render();
     }
 
     static loadData() {
@@ -409,13 +586,25 @@ class MomentsPageManager {
 
         const closeBtn = modal.querySelector('.close');
         if (closeBtn) {
-            const handler = () => modal.style.display = 'none';
+            const handler = () => {
+                modal.style.display = 'none';
+                if (appState.currentMomentId) {
+                    firebaseHandler.stopListening(appState.currentMomentId);
+                    appState.currentMomentId = null;
+                }
+            };
             closeBtn.addEventListener('click', handler);
             this.eventListeners.set('modalClose', { element: closeBtn, handler });
         }
 
         window.addEventListener('click', (e) => {
-            if (e.target === modal) modal.style.display = 'none';
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                if (appState.currentMomentId) {
+                    firebaseHandler.stopListening(appState.currentMomentId);
+                    appState.currentMomentId = null;
+                }
+            }
         });
 
         const submitBtn = document.getElementById('submitComment');
@@ -438,7 +627,7 @@ class MomentsPageManager {
         }
     }
 
-    static render(filteredData = null) {
+    static async render(filteredData = null) {
         const container = document.getElementById('momentsContainer');
         if (!container) return;
 
@@ -451,9 +640,68 @@ class MomentsPageManager {
             return;
         }
 
-        container.innerHTML = sorted.map((moment, index) =>
-            this.renderMomentCard(moment, index)
-        ).join('');
+        // 显示加载状态
+        container.innerHTML = '<div class="loading-spinner">加载中...</div>';
+
+        // 渲染卡片
+        const cardsHtml = [];
+        for (let i = 0; i < sorted.length; i++) {
+            const moment = sorted[i];
+            const likes = await firebaseHandler.getLikes(moment.id);
+            const comments = await firebaseHandler.getComments(moment.id);
+            cardsHtml.push(this.renderMomentCard(moment, i, likes, comments.length));
+        }
+
+        container.innerHTML = cardsHtml.join('');
+
+        // 设置实时监听
+        sorted.forEach(moment => {
+            this.setupRealtimeListeners(moment.id);
+        });
+    }
+
+    static setupRealtimeListeners(momentId) {
+        // 监听点赞变化
+        firebaseHandler.onLikesChange(momentId, (newLikes) => {
+            const likeBtn = document.querySelector(`button[data-like-id="${momentId}"]`);
+            if (!likeBtn) return;
+
+            const likeCount = likeBtn.querySelector('.like-count');
+            if (newLikes > 0) {
+                if (!likeCount) {
+                    likeBtn.innerHTML = `
+                        <i class="fas fa-heart"></i>
+                        <span class="like-count">${newLikes}</span>
+                    `;
+                } else {
+                    likeCount.textContent = newLikes;
+                }
+                likeBtn.classList.add('liked');
+            } else {
+                likeBtn.innerHTML = '<i class="far fa-heart"></i>';
+                likeBtn.classList.remove('liked');
+            }
+        });
+
+        // 监听评论变化
+        firebaseHandler.onCommentsChange(momentId, (newComments) => {
+            const commentBtn = document.querySelector(`button[data-comment-id="${momentId}"]`);
+            if (!commentBtn) return;
+
+            const commentCount = commentBtn.querySelector('.comment-count');
+            if (newComments.length > 0) {
+                if (!commentCount) {
+                    commentBtn.innerHTML = `
+                        <i class="far fa-comment"></i>
+                        <span class="comment-count">${newComments.length}</span>
+                    `;
+                } else {
+                    commentCount.textContent = newComments.length;
+                }
+            } else {
+                commentBtn.innerHTML = '<i class="far fa-comment"></i>';
+            }
+        });
     }
 
     static filterByCategory(data) {
@@ -464,10 +712,10 @@ class MomentsPageManager {
         return [...data].sort((a, b) => new Date(b.time) - new Date(a.time));
     }
 
-    static renderMomentCard(moment, index) {
+    static renderMomentCard(moment, index, likes = 0, commentsCount = 0) {
         const hasImage = moment.image && moment.image.trim();
-        const hasComments = moment.comments && moment.comments.length > 0;
-        const hasLikes = moment.likes > 0;
+        const hasComments = commentsCount > 0;
+        const hasLikes = likes > 0;
 
         return `
             <div class="moment-card" style="animation-delay: ${index * ANIMATION_DELAY}s">
@@ -493,13 +741,14 @@ class MomentsPageManager {
                                 onclick="MomentsPageManager.handleLike(${moment.id})"
                                 aria-label="点赞">
                             <i class="${hasLikes ? 'fas' : 'far'} fa-heart"></i>
-                            ${hasLikes ? `<span>${moment.likes}</span>` : ''}
+                            ${hasLikes ? `<span class="like-count">${likes}</span>` : ''}
                         </button>
                         <button class="action-btn"
+                                data-comment-id="${moment.id}"
                                 onclick="MomentsPageManager.openCommentModal(${moment.id})"
                                 aria-label="评论">
                             <i class="far fa-comment"></i>
-                            ${hasComments ? `<span>${moment.comments.length}</span>` : ''}
+                            ${hasComments ? `<span class="comment-count">${commentsCount}</span>` : ''}
                         </button>
                     </div>
                 </div>
@@ -507,28 +756,41 @@ class MomentsPageManager {
         `;
     }
 
-    static handleLike(id) {
+    static async handleLike(id) {
         const moment = this.data.find(m => m.id === id);
         if (!moment) return;
 
-        const hasLiked = moment.likes > 0;
-        moment.likes = hasLiked ? 0 : 1;
+        const likeBtn = document.querySelector(`button[data-like-id="${id}"]`);
+        if (!likeBtn) return;
 
-        if (this.saveData()) {
-            this.render();
-            if (!hasLiked) {
-                const btn = document.querySelector(`button[data-like-id="${id}"]`);
-                if (btn) {
-                    btn.style.transform = 'scale(1.2)';
-                    setTimeout(() => {
-                        btn.style.transform = 'scale(1)';
-                    }, 200);
-                }
+        // 防止重复点击
+        if (likeBtn.disabled) return;
+        likeBtn.disabled = true;
+
+        const hasLiked = likeBtn.classList.contains('liked');
+        
+        try {
+            if (hasLiked) {
+                await firebaseHandler.removeLike(id);
+            } else {
+                await firebaseHandler.addLike(id);
+                // 添加点赞动画
+                likeBtn.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    likeBtn.style.transform = 'scale(1)';
+                }, 200);
             }
+        } catch (error) {
+            console.error('点赞操作失败:', error);
+            NotificationManager.show('操作失败，请重试', 'error');
+        } finally {
+            setTimeout(() => {
+                likeBtn.disabled = false;
+            }, 300);
         }
     }
 
-    static openCommentModal(id) {
+    static async openCommentModal(id) {
         appState.currentMomentId = id;
         const moment = this.data.find(m => m.id === id);
         if (!moment) return;
@@ -538,11 +800,19 @@ class MomentsPageManager {
 
         modal.style.display = 'block';
 
-        if (!moment.comments) {
-            moment.comments = [];
+        const commentsList = document.getElementById('commentsList');
+        if (commentsList) {
+            commentsList.innerHTML = '<div class="loading">加载评论中...</div>';
         }
 
-        this.renderComments(moment.comments);
+        // 获取并显示评论
+        const comments = await firebaseHandler.getComments(id);
+        this.renderComments(comments);
+
+        // 设置实时监听
+        firebaseHandler.onCommentsChange(id, (newComments) => {
+            this.renderComments(newComments);
+        });
 
         setTimeout(() => {
             const input = document.getElementById('commentInput');
@@ -566,14 +836,32 @@ class MomentsPageManager {
         commentsList.innerHTML = comments.map((comment, index) => `
             <div class="comment-item" style="animation-delay: ${index * 0.05}s">
                 <div style="margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.85rem;">
-                    <i class="far fa-user-circle"></i> 访客 • ${Utils.escapeHtml(comment.time)}
+                    <i class="far fa-user-circle"></i> ${Utils.escapeHtml(comment.author)} • 
+                    ${this.formatCommentTime(comment.timestamp)}
                 </div>
-                <div style="line-height: 1.6;">${Utils.escapeHtml(comment.content)}</div>
+                <div style="line-height: 1.6;">${Utils.escapeHtml(comment.text)}</div>
             </div>
         `).join('');
     }
 
-    static handleCommentSubmit() {
+    static formatCommentTime(timestamp) {
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diff = now - date;
+        
+        if (diff < 60000) return '刚刚';
+        if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`;
+        if (diff < 86400000) return `${Math.floor(diff / 3600000)}小时前`;
+        
+        return date.toLocaleString('zh-CN', {
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    static async handleCommentSubmit() {
         const input = document.getElementById('commentInput');
         if (!input) return;
 
@@ -588,38 +876,25 @@ class MomentsPageManager {
             return;
         }
 
-        const moment = this.data.find(m => m.id === appState.currentMomentId);
-        if (!moment) return;
-
-        if (!moment.comments) {
-            moment.comments = [];
+        if (!appState.currentMomentId) {
+            NotificationManager.show('评论失败，请重试', 'error');
+            return;
         }
 
-        const comment = {
-            content,
-            time: new Date().toLocaleString('zh-CN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            })
-        };
-
-        moment.comments.unshift(comment);
-
-        if (this.saveData()) {
-            this.renderComments(moment.comments);
-            this.render();
+        try {
+            await firebaseHandler.addComment(appState.currentMomentId, content);
             input.value = '';
             NotificationManager.show('评论发表成功！', 'success');
+        } catch (error) {
+            console.error('评论失败:', error);
+            NotificationManager.show('评论失败，请重试', 'error');
         }
     }
 
-    static handleSearch(keyword) {
+    static async handleSearch(keyword) {
         const normalizedKeyword = Utils.normalize(keyword);
         if (!normalizedKeyword) {
-            this.render();
+            await this.render();
             return;
         }
 
@@ -628,7 +903,7 @@ class MomentsPageManager {
             Utils.normalize(moment.category).includes(normalizedKeyword)
         );
 
-        this.render(filtered);
+        await this.render(filtered);
     }
 }
 
@@ -861,15 +1136,11 @@ class SuccessPageManager {
         }
     }
 
-    // ==================== 核心优化：完全单语言显示 ====================
     static renderDiaryCard(entry) {
         const lang = appState.currentLanguage;
-        
-        // 只获取当前语言的内容，如果没有则留空
         const headline = entry.headline?.[lang] || '';
         const content = entry.content?.[lang] || '';
         const highlight = entry.highlight?.[lang] || '';
-        
         const mood = this.getMood(entry.moodCode);
         const tagsHtml = this.renderTags(entry.categories);
         const attachmentsHtml = this.renderAttachments(entry.attachments);
@@ -929,7 +1200,6 @@ class SuccessPageManager {
 
     static renderTags(categories) {
         if (!categories || !categories.length) return '';
-
         return categories.map(code => {
             const label = this.getTagLabel(code);
             return `<span class="tag-pill">${Utils.escapeHtml(label)}</span>`;
@@ -1037,9 +1307,11 @@ class AppController {
     }
 }
 
+// ==================== 全局暴露 ====================
 window.MomentsPageManager = MomentsPageManager;
 window.SuccessPageManager = SuccessPageManager;
 
+// ==================== 初始化 ====================
 document.addEventListener('DOMContentLoaded', () => {
     try {
         AppController.init();
@@ -1049,6 +1321,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// ==================== 动画样式 ====================
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
@@ -1076,104 +1349,41 @@ style.textContent = `
     .notification {
         transform-origin: top right;
     }
+
+    .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        color: #999;
+    }
+
+    .loading-spinner::after {
+        content: '';
+        width: 20px;
+        height: 20px;
+        margin-left: 10px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .like-btn.liked {
+        animation: likeJump 0.3s ease;
+    }
+
+    @keyframes likeJump {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+    }
 `;
 document.head.appendChild(style);
-// ====== 全局计数（仅显示点赞/评论数量）使用 CountAPI ======
-const COUNT_NS = 'kuangke_galaxy_v1'; // 改成你自己的命名空间（只要不和别人重复即可）
-
-function likeKey(id) { return `like_${id}`; }
-function commentKey(id) { return `comment_${id}`; }
-
-// 创建计数器（若不存在）
-async function ensureCounter(key) {
-  const url = `https://api.countapi.xyz/create?namespace=${encodeURIComponent(COUNT_NS)}&key=${encodeURIComponent(key)}&value=0`;
-  try { await fetch(url, { method: 'GET', cache: 'no-store' }); } catch {}
-}
-
-// 获取计数（自动创建）
-async function getCount(key) {
-  const getUrl = `https://api.countapi.xyz/get/${encodeURIComponent(COUNT_NS)}/${encodeURIComponent(key)}`;
-  const res = await fetch(getUrl, { cache: 'no-store' });
-  if (res.status === 404) {
-    await ensureCounter(key);
-    return 0;
-  }
-  const data = await res.json().catch(() => ({}));
-  return Number(data.value || 0);
-}
-
-// 计数 +1（自动创建）
-async function hit(key) {
-  const hitUrl = `https://api.countapi.xyz/hit/${encodeURIComponent(COUNT_NS)}/${encodeURIComponent(key)}`;
-  const res = await fetch(hitUrl, { cache: 'no-store' });
-  const data = await res.json().catch(() => ({}));
-  return Number(data.value || 0);
-}
-
-// 初始化：把页面上所有按钮的计数拉取并显示
-async function initCounters() {
-  const likeBtns = Array.from(document.querySelectorAll('.like-btn[data-id]'));
-  const commentBtns = Array.from(document.querySelectorAll('.comment-btn[data-id]'));
-
-  // 去重收集所有需要的 id
-  const ids = new Set([
-    ...likeBtns.map(b => b.dataset.id),
-    ...commentBtns.map(b => b.dataset.id),
-  ]);
-
-  // 确保计数器存在并更新界面
-  for (const id of ids) {
-    await Promise.all([ensureCounter(likeKey(id)), ensureCounter(commentKey(id))]);
-
-    // 更新点赞数
-    const likeVal = await getCount(likeKey(id));
-    document.querySelectorAll(`.like-btn[data-id="${CSS.escape(id)}"] .like-count`)
-      .forEach(el => el.textContent = String(likeVal));
-
-    // 更新评论数
-    const cmtVal = await getCount(commentKey(id));
-    document.querySelectorAll(`.comment-btn[data-id="${CSS.escape(id)}"] .comment-count, .comment-count[data-id="${CSS.escape(id)}"]`)
-      .forEach(el => el.textContent = String(cmtVal));
-  }
-}
-
-// 点赞：只负责数量 +1（用 localStorage 简单防止同设备重复点）
-document.addEventListener('click', async (e) => {
-  const btn = e.target.closest('.like-btn[data-id]');
-  if (!btn) return;
-  const id = btn.dataset.id;
-  const flag = `liked_${id}`;
-  if (localStorage.getItem(flag)) {
-    // 已点赞过，直接返回（仅本地限制，非强安全）
-    return;
-  }
-  const val = await hit(likeKey(id));
-  const countEl = btn.querySelector('.like-count');
-  if (countEl) countEl.textContent = String(val);
-  btn.classList.add('liked');
-  localStorage.setItem(flag, '1');
-});
-
-// 评论：如果你不存评论内容，仅在“发送/提交评论”按钮触发时做 +1
-// 假设你的发送按钮是 #submitComment，且当前卡片 id 可从某处拿到：currentMomentId
-// 如果你没有评论弹窗，只是想有个“评论”按钮计数，也可以在评论按钮点击时 +1。
-window.submitCommentCountOnly = async function (currentMomentId) {
-  if (!currentMomentId) return;
-  // 可选：简单节流，避免短时间连续刷
-  const lk = `cmt_ts_${currentMomentId}`;
-  const last = Number(localStorage.getItem(lk) || 0);
-  const now = Date.now();
-  if (now - last < 5000) return; // 5 秒内只算一次
-  localStorage.setItem(lk, String(now));
-
-  const val = await hit(commentKey(currentMomentId));
-  // 更新所有对应位置的评论数
-  document.querySelectorAll(`.comment-btn[data-id="${CSS.escape(currentMomentId)}"] .comment-count, .comment-count[data-id="${CSS.escape(currentMomentId)}"]`)
-    .forEach(el => el.textContent = String(val));
-};
-
-// 页面加载时初始化
-window.addEventListener('DOMContentLoaded', initCounters);
 
 
 
