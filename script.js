@@ -98,14 +98,13 @@ const Utils = {
     formatDiaryDate(dateStr, lang) {
         const date = new Date(dateStr);
         if (Number.isNaN(date.getTime())) return dateStr;
-
+        
         const options = {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
             weekday: 'short'
         };
-
         return date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', options);
     },
 
@@ -142,14 +141,14 @@ class NotificationManager {
     static show(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
-
+        
         const iconMap = {
             success: 'check-circle',
             warning: 'exclamation-circle',
             error: 'times-circle',
             info: 'info-circle'
         };
-
+        
         const colorMap = {
             success: '#10b981',
             warning: '#f59e0b',
@@ -193,7 +192,7 @@ class LanguageManager {
     static translations = {
         zh: {
             successTitle: '成功日记时间轴',
-            successSubtitle: '当你写成功日记的时候，你会对自己，对世界，还有对成功的规律作更深入的思考...',
+            successSubtitle: '当你写成功日记的时候,你会对自己,对世界,还有对成功的规律作更深入的思考...',
             searchPlaceholder: '搜索标题、标签、心情...',
             moodAll: '全部心情',
             sortLabel: '排序',
@@ -254,7 +253,7 @@ class LanguageManager {
         appState.currentLanguage = appState.currentLanguage === 'zh' ? 'en' : 'zh';
         appState.saveToStorage(STORAGE_KEYS.language, appState.currentLanguage);
         this.updateLanguageToggleButton();
-
+        
         if (appState.currentPage === PAGE_TYPES.SUCCESS) {
             SuccessPageManager.updatePage();
         }
@@ -263,10 +262,10 @@ class LanguageManager {
     static updateLanguageToggleButton() {
         const button = document.getElementById('languageToggle');
         if (!button) return;
-
+        
         const icon = button.querySelector('i');
         const span = button.querySelector('span');
-
+        
         if (icon) icon.className = 'fas fa-language';
         if (span) span.textContent = appState.currentLanguage === 'zh' ? '中 → EN' : 'EN → 中';
     }
@@ -306,7 +305,7 @@ class ThemeManager {
     static updateThemeToggleButton() {
         const button = document.getElementById('themeToggle');
         if (!button) return;
-
+        
         const icon = button.querySelector('i');
         if (icon) {
             icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
@@ -314,40 +313,42 @@ class ThemeManager {
     }
 }
 
-// ==================== Firebase Handler (已集成) ====================
-constructor() {
-    // 检查 Firebase 是否已加载且已初始化
-    if (typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0) {
-        console.warn('Firebase SDK 未加载或未初始化，将使用本地存储模式');
-        this.useLocalStorage = true;
-        return;
+// ==================== Firebase Handler (已修复) ====================
+class FirebaseHandler {
+    constructor() {
+        // 检查 Firebase 是否已加载且已初始化
+        if (typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0) {
+            console.warn('Firebase SDK 未加载或未初始化，将使用本地存储模式');
+            this.useLocalStorage = true;
+            return;
+        }
+        
+        try {
+            this.database = firebase.database();
+            this.likesRef = this.database.ref('likes');
+            this.commentsRef = this.database.ref('comments');
+            this.useLocalStorage = false;
+            console.log('FirebaseHandler 初始化完成');
+        } catch (error) {
+            console.error('Firebase 初始化失败:', error);
+            this.useLocalStorage = true;
+        }
     }
-    
-    try {
-        this.database = firebase.database();
-        this.likesRef = this.database.ref('likes');
-        this.commentsRef = this.database.ref('comments');
-        this.useLocalStorage = false;
-        console.log('FirebaseHandler 初始化完成');
-    } catch (error) {
-        console.error('Firebase 初始化失败:', error);
-        this.useLocalStorage = true;
-    }
-}
+
     // ============ 点赞相关方法 ============
     async getLikes(momentId) {
-    if (this.useLocalStorage) {
-        return parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
+        if (this.useLocalStorage) {
+            return parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
+        }
+        try {
+            const snapshot = await this.likesRef.child(momentId).once('value');
+            const likes = snapshot.val();
+            return likes !== null ? likes : 0;
+        } catch (error) {
+            console.error(`获取点赞数失败 [${momentId}]:`, error);
+            return 0;
+        }
     }
-    try {
-        const snapshot = await this.likesRef.child(momentId).once('value');
-        const likes = snapshot.val();
-        return likes !== null ? likes : 0;
-    } catch (error) {
-        console.error(`获取点赞数失败 [${momentId}]:`, error);
-        return 0;
-    }
-}
 
     async addLike(momentId) {
         if (this.useLocalStorage) {
@@ -356,7 +357,6 @@ constructor() {
             localStorage.setItem(`likes_${momentId}`, newLikes.toString());
             return newLikes;
         }
-
         try {
             const currentLikes = await this.getLikes(momentId);
             const newLikes = currentLikes + 1;
@@ -376,7 +376,6 @@ constructor() {
             localStorage.setItem(`likes_${momentId}`, newLikes.toString());
             return newLikes;
         }
-
         try {
             const currentLikes = await this.getLikes(momentId);
             const newLikes = Math.max(0, currentLikes - 1);
@@ -394,7 +393,6 @@ constructor() {
             // 本地存储模式不支持实时监听
             return;
         }
-
         this.likesRef.child(momentId).on('value', (snapshot) => {
             const likes = snapshot.val() !== null ? snapshot.val() : 0;
             callback(likes);
@@ -407,18 +405,14 @@ constructor() {
             const stored = localStorage.getItem(`comments_${momentId}`);
             return stored ? JSON.parse(stored) : [];
         }
-
         try {
             const snapshot = await this.commentsRef.child(momentId).once('value');
             const commentsData = snapshot.val();
-            
             if (!commentsData) {
                 return [];
             }
-
             const commentsArray = Object.values(commentsData);
             commentsArray.sort((a, b) => b.timestamp - a.timestamp);
-            
             return commentsArray;
         } catch (error) {
             console.error(`获取评论失败 [${momentId}]:`, error);
@@ -439,7 +433,6 @@ constructor() {
             localStorage.setItem(`comments_${momentId}`, JSON.stringify(comments));
             return comment;
         }
-
         try {
             const newCommentRef = this.commentsRef.child(momentId).push();
             const comment = {
@@ -448,7 +441,6 @@ constructor() {
                 timestamp: Date.now(),
                 author: author
             };
-            
             await newCommentRef.set(comment);
             console.log(`评论添加成功 [${momentId}]:`, comment);
             return comment;
@@ -463,15 +455,12 @@ constructor() {
             // 本地存储模式不支持实时监听
             return;
         }
-
         this.commentsRef.child(momentId).on('value', (snapshot) => {
             const commentsData = snapshot.val();
-            
             if (!commentsData) {
                 callback([]);
                 return;
             }
-
             const commentsArray = Object.values(commentsData);
             commentsArray.sort((a, b) => b.timestamp - a.timestamp);
             callback(commentsArray);
@@ -480,7 +469,6 @@ constructor() {
 
     stopListening(momentId = null) {
         if (this.useLocalStorage) return;
-
         if (momentId) {
             this.likesRef.child(momentId).off();
             this.commentsRef.child(momentId).off();
@@ -668,7 +656,6 @@ class MomentsPageManager {
         firebaseHandler.onLikesChange(momentId, (newLikes) => {
             const likeBtn = document.querySelector(`button[data-like-id="${momentId}"]`);
             if (!likeBtn) return;
-
             const likeCount = likeBtn.querySelector('.like-count');
             if (newLikes > 0) {
                 if (!likeCount) {
@@ -690,7 +677,6 @@ class MomentsPageManager {
         firebaseHandler.onCommentsChange(momentId, (newComments) => {
             const commentBtn = document.querySelector(`button[data-comment-id="${momentId}"]`);
             if (!commentBtn) return;
-
             const commentCount = commentBtn.querySelector('.comment-count');
             if (newComments.length > 0) {
                 if (!commentCount) {
@@ -719,6 +705,10 @@ class MomentsPageManager {
         const hasImage = moment.image && moment.image.trim();
         const hasComments = commentsCount > 0;
         const hasLikes = likes > 0;
+        
+        // 检查用户是否已点赞
+        const userLikeKey = `user_liked_${moment.id}`;
+        const hasUserLiked = localStorage.getItem(userLikeKey) === 'true';
 
         return `
             <div class="moment-card" style="animation-delay: ${index * ANIMATION_DELAY}s">
@@ -739,11 +729,11 @@ class MomentsPageManager {
                         <i class="far fa-clock"></i> ${Utils.formatTime(moment.time)}
                     </span>
                     <div class="moment-actions">
-                        <button class="action-btn ${hasLikes ? 'liked' : ''}"
+                        <button class="action-btn ${hasLikes || hasUserLiked ? 'liked' : ''}"
                                 data-like-id="${moment.id}"
                                 onclick="MomentsPageManager.handleLike(${moment.id})"
                                 aria-label="点赞">
-                            <i class="${hasLikes ? 'fas' : 'far'} fa-heart"></i>
+                            <i class="${hasLikes || hasUserLiked ? 'fas' : 'far'} fa-heart"></i>
                             ${hasLikes ? `<span class="like-count">${likes}</span>` : ''}
                         </button>
                         <button class="action-btn"
@@ -762,7 +752,7 @@ class MomentsPageManager {
     static async handleLike(id) {
         const moment = this.data.find(m => m.id === id);
         if (!moment) return;
-
+        
         const likeBtn = document.querySelector(`button[data-like-id="${id}"]`);
         if (!likeBtn) return;
 
@@ -770,18 +760,27 @@ class MomentsPageManager {
         if (likeBtn.disabled) return;
         likeBtn.disabled = true;
 
+        // 检查用户是否已点赞（使用 localStorage）
+        const userLikeKey = `user_liked_${id}`;
+        const hasUserLiked = localStorage.getItem(userLikeKey) === 'true';
         const hasLiked = likeBtn.classList.contains('liked');
-        
+
         try {
-            if (hasLiked) {
+            if (hasLiked || hasUserLiked) {
+                // 取消点赞
                 await firebaseHandler.removeLike(id);
+                localStorage.removeItem(userLikeKey);
+                NotificationManager.show('已取消点赞', 'info');
             } else {
+                // 添加点赞
                 await firebaseHandler.addLike(id);
+                localStorage.setItem(userLikeKey, 'true');
                 // 添加点赞动画
                 likeBtn.style.transform = 'scale(1.2)';
                 setTimeout(() => {
                     likeBtn.style.transform = 'scale(1)';
                 }, 200);
+                NotificationManager.show('点赞成功！', 'success');
             }
         } catch (error) {
             console.error('点赞操作失败:', error);
@@ -802,7 +801,6 @@ class MomentsPageManager {
         if (!modal) return;
 
         modal.style.display = 'block';
-
         const commentsList = document.getElementById('commentsList');
         if (commentsList) {
             commentsList.innerHTML = '<div class="loading">加载评论中...</div>';
@@ -839,7 +837,7 @@ class MomentsPageManager {
         commentsList.innerHTML = comments.map((comment, index) => `
             <div class="comment-item" style="animation-delay: ${index * 0.05}s">
                 <div style="margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.85rem;">
-                    <i class="far fa-user-circle"></i> ${Utils.escapeHtml(comment.author)} • 
+                    <i class="far fa-user-circle"></i> ${Utils.escapeHtml(comment.author)} •
                     ${this.formatCommentTime(comment.timestamp)}
                 </div>
                 <div style="line-height: 1.6;">${Utils.escapeHtml(comment.text)}</div>
@@ -885,7 +883,14 @@ class MomentsPageManager {
         }
 
         try {
-            await firebaseHandler.addComment(appState.currentMomentId, content);
+            // 获取或生成用户昵称
+            let username = localStorage.getItem('username');
+            if (!username) {
+                username = '游客' + Math.floor(Math.random() * 10000);
+                localStorage.setItem('username', username);
+            }
+
+            await firebaseHandler.addComment(appState.currentMomentId, content, username);
             input.value = '';
             NotificationManager.show('评论发表成功！', 'success');
         } catch (error) {
@@ -905,7 +910,6 @@ class MomentsPageManager {
             Utils.normalize(moment.content).includes(normalizedKeyword) ||
             Utils.normalize(moment.category).includes(normalizedKeyword)
         );
-
         await this.render(filtered);
     }
 }
@@ -967,7 +971,7 @@ class SuccessPageManager {
                 });
                 btn.classList.add('active');
                 btn.setAttribute('aria-pressed', 'true');
-
+                
                 const viewType = btn.dataset.view;
                 const timeline = document.getElementById('diaryTimeline');
                 if (timeline) {
@@ -985,15 +989,15 @@ class SuccessPageManager {
 
     static resetFilters() {
         appState.resetDiaryFilters();
-
+        
         const searchInput = document.getElementById('diarySearchInput');
         const moodSelect = document.getElementById('diaryMoodSelect');
         const sortSelect = document.getElementById('diarySortSelect');
-
+        
         if (searchInput) searchInput.value = '';
         if (moodSelect) moodSelect.value = 'all';
         if (sortSelect) sortSelect.value = 'dateDesc';
-
+        
         this.renderTagFilters();
         this.render();
     }
@@ -1022,7 +1026,6 @@ class SuccessPageManager {
         const moodLibrary = window.moodLibrary || {};
 
         let optionsHtml = `<option value="all">${LanguageManager.t('moodAll')}</option>`;
-
         Object.keys(moodLibrary).forEach(code => {
             const mood = moodLibrary[code];
             const label = mood[appState.currentLanguage] || mood.zh || code;
@@ -1038,7 +1041,6 @@ class SuccessPageManager {
         if (!container) return;
 
         const tagLibrary = window.diaryTagLibrary || [];
-
         container.innerHTML = tagLibrary.map(tag => {
             const isActive = appState.selectedDiaryTags.has(tag.code);
             const label = tag[appState.currentLanguage] || tag.zh || tag.code;
@@ -1070,7 +1072,6 @@ class SuccessPageManager {
         if (!container) return;
 
         const filtered = this.getFilteredData();
-
         if (filtered.length === 0) {
             container.innerHTML = `
                 <div class="diary-empty">${LanguageManager.t('timelineEmpty')}</div>
@@ -1104,7 +1105,6 @@ class SuccessPageManager {
         }
 
         data.sort((a, b) => this.compareEntries(a, b));
-
         return data;
     }
 
@@ -1121,7 +1121,6 @@ class SuccessPageManager {
             ...entry.categories.map(code => this.getTagLabel(code)),
             this.getMoodLabel(entry.moodCode)
         ];
-
         return fields.some(field => field && Utils.normalize(field).includes(keyword));
     }
 
@@ -1215,12 +1214,10 @@ class SuccessPageManager {
         const items = attachments.map(path => {
             const trimmed = path.trim();
             if (!trimmed) return '';
-
             const isImage = /\.(png|jpe?g|gif|webp|svg)$/i.test(trimmed);
             if (isImage) {
                 return `<img src="${Utils.escapeHtml(trimmed)}" alt="附件" class="diary-attachment" onerror="this.style.display='none'">`;
             }
-
             return `<a href="${Utils.escapeHtml(trimmed)}" target="_blank" rel="noopener" class="diary-attachment-link">${Utils.escapeHtml(trimmed)}</a>`;
         }).filter(Boolean).join('');
 
@@ -1264,7 +1261,6 @@ class SuccessPageManager {
     static updateCounter(count) {
         const counter = document.getElementById('diaryCounter');
         if (!counter) return;
-
         const text = LanguageManager.t('entryCount');
         counter.textContent = typeof text === 'function' ? text(count) : text;
     }
@@ -1337,7 +1333,7 @@ style.textContent = `
             opacity: 1;
         }
     }
-
+    
     @keyframes slideOutRight {
         from {
             transform: translateX(0);
@@ -1348,11 +1344,11 @@ style.textContent = `
             opacity: 0;
         }
     }
-
+    
     .notification {
         transform-origin: top right;
     }
-
+    
     .loading-spinner {
         display: flex;
         justify-content: center;
@@ -1360,7 +1356,7 @@ style.textContent = `
         padding: 2rem;
         color: #999;
     }
-
+    
     .loading-spinner::after {
         content: '';
         width: 20px;
@@ -1371,19 +1367,35 @@ style.textContent = `
         border-radius: 50%;
         animation: spin 1s linear infinite;
     }
-
+    
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
-
+    
     .like-btn.liked {
         animation: likeJump 0.3s ease;
     }
-
+    
     @keyframes likeJump {
         0%, 100% { transform: scale(1); }
         50% { transform: scale(1.2); }
+    }
+    
+    .comment-item {
+        animation: fadeInUp 0.3s ease forwards;
+        opacity: 0;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 `;
 document.head.appendChild(style);
