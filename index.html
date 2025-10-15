@@ -4,7 +4,7 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>狂客·银河</title>
+    <title>狂客·银河 - 探索你的星辰大海</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -81,74 +81,73 @@
         .ai-nav-button {
             animation: ai-glow 3s ease-in-out infinite;
         }
+
+        /* 统一图标大小和颜色 */
+        .success-icon, .sky-icon, .ai-icon, .exam-icon {
+            color: #fff; /* 确保图标颜色在按钮背景上可见 */
+            font-size: 16px; /* 统一图标大小 */
+        }
     </style>
 </head>
-        <!-- Firebase SDK（放在其他脚本之前） -->
+<body data-page="moments">
+    <!-- Firebase SDK（放在其他脚本之前） -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <!-- Firebase 配置 -->
     <script>
-        // 替换为你从 Firebase Console 复制的配置
-       const firebaseConfig = {
-  apiKey: "AIzaSyD9NwlJxYiRjFh3cPjpJGmQAhogmrFpU4M",
-  authDomain: "kuangke-galaxy.firebaseapp.com",
-  projectId: "kuangke-galaxy",
-  storageBucket: "kuangke-galaxy.firebasestorage.app",
-  messagingSenderId: "416862048915",
-  appId: "1:416862048915:web:6578fcd23d8cf882c53366",
-  measurementId: "G-VZCQM1H4BR"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyD9NwlJxYiRjFh3cPjpJGmQAhogmrFpU4M",
+            authDomain: "kuangke-galaxy.firebaseapp.com",
+            projectId: "kuangke-galaxy",
+            storageBucket: "kuangke-galaxy.firebasestorage.app",
+            messagingSenderId: "416862048915",
+            appId: "1:416862048915:web:6578fcd23d8cf882c53366",
+            measurementId: "G-VZCQM1H4BR"
+        };
 
         // 初始化 Firebase
         firebase.initializeApp(firebaseConfig);
         console.log('Firebase 初始化成功！');
     </script>
 
-    <!-- 项目脚本 -->
-    <script src="data.js"></script>
-    <script src="firebase-handler.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
-<body data-page="moments">
     <header class="header">
         <div class="container">
             <div class="header-left">
                 <h1 class="logo">狂客·银河</h1>
-                <a class="success-link" href="success.html">
-                    <span class="success-icon">
-                        <i class="fas fa-meteor"></i>
-                    </span>
-                    <span class="success-text">成功日记</span>
-                </a>
-                <a class="sky-link" href="reading.html">
-                    <span class="sky-icon">
-                        <i class="fas fa-star"></i>
-                    </span>
-                    <span class="sky-text">星空</span>
-                </a>
-                <!-- 新增：AI前沿按钮 -->
-               <a class="ai-nav-button" href="ai.html">
-                    <span class="ai-icon">
-                        <i class="fas fa-robot"></i>
-                    </span>
-                    <span class="ai-text">AI前沿</span>
-                </a>
-                <!-- 新增：考试相关按钮 -->
-                <a class="exam-link" href="exam.html">
-                    <span class="exam-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </span>
-                    <span class="exam-text">考试相关</span>
-                </a>
+                <nav class="main-nav">
+                    <a class="success-link" href="success.html">
+                        <span class="success-icon">
+                            <i class="fas fa-meteor"></i>
+                        </span>
+                        <span class="success-text">成功日记</span>
+                    </a>
+                    <a class="sky-link" href="reading.html">
+                        <span class="sky-icon">
+                            <i class="fas fa-star"></i>
+                        </span>
+                        <span class="sky-text">星空</span>
+                    </a>
+                    <a class="ai-nav-button" href="ai.html">
+                        <span class="ai-icon">
+                            <i class="fas fa-robot"></i>
+                        </span>
+                        <span class="ai-text">AI前沿</span>
+                    </a>
+                    <a class="exam-link" href="exam.html">
+                        <span class="exam-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </span>
+                        <span class="exam-text">考试相关</span>
+                    </a>
+                </nav>
             </div>
             <div class="controls">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
                     <input type="text" id="searchInput" placeholder="搜索银河中...">
                 </div>
-                <button id="themeToggle" class="theme-toggle">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
@@ -178,44 +177,50 @@
     </nav>
     <main class="main-content">
         <div class="container">
-            <div id="momentsContainer" class="moments-grid"></div>
+            <div id="momentsContainer" class="moments-grid">
+                <!-- 动态加载的内容将在这里显示 -->
+            </div>
         </div>
     </main>
     
-    <!-- 新增底部社交媒体区域 -->
     <footer class="social-footer">
         <div class="container">
             <div class="social-links">
                 <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" 
-   target="_blank" class="social-link wechat" title="微信公众号">
-    <i class="fab fa-weixin"></i>
-</a>
-               
-                <a href="https://github.com/kuangketongxue" target="_blank" class="social-link github" title="GitHub">
+                   target="_blank" class="social-link wechat" title="微信公众号" rel="noopener noreferrer">
+                    <i class="fab fa-weixin"></i>
+                </a>
+                <a href="https://github.com/kuangketongxue" target="_blank" class="social-link github" title="GitHub" rel="noopener noreferrer">
                     <i class="fab fa-github"></i>
                 </a>
-                <a href="https://x.com/kuangketongxue" target="_blank" class="social-link x" title="X">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-    </svg>
-</a>
+                <a href="https://x.com/kuangketongxue" target="_blank" class="social-link x" title="X (前 Twitter)" rel="noopener noreferrer">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
             </div>
             <p class="copyright">© 2025 狂客·银河 版权所有</p>
         </div>
     </footer>
     
-    <div id="commentModal" class="modal">
+    <div id="commentModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="commentModalTitle">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>评论</h2>
-            <div id="commentsList" class="comments-list"></div>
+            <span class="close" aria-label="关闭评论弹窗">&times;</span>
+            <h2 id="commentModalTitle">评论</h2>
+            <div id="commentsList" class="comments-list">
+                <!-- 评论将在这里动态加载 -->
+            </div>
             <div class="comment-input-area">
-                <input type="text" id="commentInput" placeholder="写下你的评论...">
+                <label for="commentInput" class="sr-only">输入你的评论</label>
+                <input type="text" id="commentInput" placeholder="写下你的评论..." aria-label="评论输入框">
                 <button id="submitComment">发送</button>
             </div>
         </div>
     </div>
+
+    <!-- 项目脚本 -->
     <script src="data.js"></script>
+    <script src="firebase-handler.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
