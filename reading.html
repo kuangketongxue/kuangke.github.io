@@ -1,2509 +1,1105 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>狂客·星空 - 阅读日志</title>
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* ========== 全局样式 ========== */
-        * {
-            box-sizing: border-box;
-        }
-
-        body[data-page="reading"] {
-            background: url("images/reading-bg.jpg") center/cover no-repeat fixed;
-            color: #f5f7ff;
-            position: relative;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        body[data-page="reading"]::before,
-        body[data-page="reading"]::after {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        body[data-page="reading"]::before {
-            background: linear-gradient(135deg, rgba(25, 51, 120, 0.45), rgba(15, 18, 60, 0.65));
-            mix-blend-mode: screen;
-        }
-
-        body[data-page="reading"]::after {
-            background:
-                radial-gradient(circle at 20% 15%, rgba(120, 160, 255, 0.27), transparent 55%),
-                radial-gradient(circle at 78% 10%, rgba(255, 150, 255, 0.2), transparent 60%),
-                rgba(6, 10, 42, 0.35);
-        }
-
-        /* ========== 头部样式 ========== */
-        .reading-header .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .reading-header-left {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .reading-return {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.55rem;
-            padding: 0.7rem 1.4rem;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(139, 92, 246, 0.45);
-            color: #f4f7ff;
-            text-decoration: none;
-            font-size: 0.98rem;
-            letter-spacing: 0.02em;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 22px rgba(99, 102, 241, 0.28);
-        }
-
-        body.light-mode .reading-return {
-            background: rgba(99, 102, 241, 0.08);
-            color: var(--accent-hover);
-            box-shadow: none;
-        }
-
-        .reading-return:hover {
-            transform: translateY(-3px);
-            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
-            color: #fff;
-            border-color: transparent;
-            box-shadow: 0 16px 32px rgba(99, 102, 241, 0.35);
-        }
-
-        .reading-title-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .reading-title-group .logo {
-            font-size: 2.1rem;
-            margin: 0;
-        }
-
-        .reading-subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            letter-spacing: 0.05em;
-        }
-
-        /* ========== 主内容区域 ========== */
-        .reading-main {
-            padding: 2.8rem 0 5rem;
-        }
-
-        .reading-card {
-            position: relative;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 26px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .reading-card::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), transparent 55%);
-            opacity: 0.8;
-            pointer-events: none;
-        }
-
-        .reading-card::after {
-            content: "";
-            position: absolute;
-            top: -120px;
-            right: -90px;
-            width: 260px;
-            height: 260px;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.22), transparent 70%);
-            filter: blur(40px);
-            animation: float 16s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(18px) rotate(6deg);
-            }
-        }
-
-        .reading-card-body {
-            position: relative;
-            padding: 2.4rem 2.2rem;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        /* ========== 卡片头部 ========== */
-        .reading-card-header {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .reading-card-title {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.9rem;
-            flex-wrap: wrap;
-        }
-
-        .reading-card-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
-            box-shadow: 0 12px 28px rgba(79, 70, 229, 0.35);
-            color: #fff;
-            font-size: 1.4rem;
-        }
-
-        body.light-mode .reading-card-icon {
-            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.25);
-        }
-
-        .reading-card-caption {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-        }
-
-        /* ========== 表单样式 ========== */
-        .reading-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.6rem;
-        }
-
-        .reading-form .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.1rem 1.4rem;
-        }
-
-        .reading-form textarea {
-            min-height: 140px;
-            resize: vertical;
-        }
-
-        .reading-form textarea.long {
-            min-height: 220px;
-        }
-
-        .reading-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            justify-content: flex-end;
-        }
-
-        .reading-actions .ghost-btn,
-        .reading-actions .primary-btn {
-            text-decoration: none;
-        }
-
-        /* ========== 锁定横幅 ========== */
-        .reading-lock-banner {
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.05));
-            border: 1px solid rgba(255, 193, 7, 0.3);
-            border-radius: 16px;
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-
-        .reading-lock-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            flex-shrink: 0;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.8), rgba(255, 152, 0, 0.75));
-            color: #fff;
-            font-size: 1.1rem;
-        }
-
-        .reading-lock-content h3 {
-            font-size: 1.1rem;
-            color: var(--accent-hover);
-            margin: 0 0 0.5rem 0;
-        }
-
-        .reading-lock-content p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        .reading-lock-content a {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .reading-lock-content a:hover {
-            text-decoration: underline;
-            color: var(--accent-hover);
-        }
-
-        /* ========== 书摘区域 ========== */
-        .reading-guides {
-            margin-top: 2.6rem;
-            background: var(--bg-card-soft);
-            border: 1px solid var(--border-color);
-            border-radius: 22px;
-            padding: 1.8rem 2rem;
-            box-shadow: var(--shadow-soft);
-            display: flex;
-            flex-direction: column;
-            gap: 1.1rem;
-        }
-
-        .reading-guides h2 {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 1.25rem;
-            color: var(--accent-hover);
-            letter-spacing: 0.05em;
-        }
-
-        .reading-guides ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: grid;
-            gap: 0.75rem;
-        }
-
-        .reading-guides li {
-            display: flex;
-            gap: 0.65rem;
-            color: var(--text-secondary);
-            line-height: 1.75;
-        }
-
-        .reading-guides li i {
-            color: var(--accent-color);
-            margin-top: 0.25rem;
-            flex-shrink: 0;
-        }
-
-        /* ========== 书摘精选区域 ========== */
-        .reading-digest {
-            margin-top: 2rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 22px;
-            padding: 1.8rem 2rem;
-            box-shadow: var(--shadow);
-            position: relative;
-            z-index: 1;
-        }
-
-        .reading-digest-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 1.2rem;
-            margin-bottom: 1.8rem;
-            flex-wrap: wrap;
-        }
-
-        .digest-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            flex-shrink: 0;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.9), rgba(255, 152, 0, 0.85));
-            box-shadow: 0 10px 24px rgba(255, 193, 7, 0.3);
-            color: #fff;
-            font-size: 1.2rem;
-        }
-
-        .reading-digest-header > div {
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .reading-digest-header h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: 0.06em;
-            margin: 0 0 0.3rem 0;
-        }
-
-        .reading-digest-header p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* ========== 搜索栏 ========== */
-        .digest-search {
-            margin-top: 1rem;
-            display: flex;
-            gap: 0.6rem;
-            flex-wrap: wrap;
-        }
-
-        .digest-search input {
-            flex: 1 1 260px;
-            padding: 0.6rem 1rem;
-            border-radius: 999px;
-            border: 1px solid rgba(139, 92, 246, 0.35);
-            background: rgba(17, 24, 54, 0.45);
-            color: #f5f7ff;
-            outline: none;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        body.light-mode .digest-search input {
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--text-primary);
-            border-color: rgba(139, 92, 246, 0.25);
-        }
-
-        .digest-search input:focus {
-            border-color: rgba(99, 102, 241, 0.65);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
-        }
-
-        .digest-search input::placeholder {
-            color: rgba(245, 247, 255, 0.5);
-        }
-
-        body.light-mode .digest-search input::placeholder {
-            color: rgba(0, 0, 0, 0.4);
-        }
-
-        .digest-search button {
-            padding: 0.6rem 1.4rem;
-            border: none;
-            border-radius: 999px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
-            color: #fff;
-            cursor: pointer;
-            font-size: 0.95rem;
-            letter-spacing: 0.03em;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .digest-search button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(99, 102, 241, 0.35);
-        }
-
-        .digest-search button:active {
-            transform: translateY(0);
-        }
-
-        body.light-mode .digest-search button {
-            box-shadow: 0 8px 18px rgba(99, 102, 241, 0.25);
-        }
-
-        body.light-mode .digest-search button:hover {
-            box-shadow: 0 12px 28px rgba(99, 102, 241, 0.3);
-        }
-
-        /* ========== 书摘表格 ========== */
-        .reading-digest-table {
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-            margin-top: 1.2rem;
-        }
-
-        .digest-row {
-            display: grid;
-            grid-template-columns: minmax(220px, 1fr) 2.5fr minmax(90px, 0.8fr) minmax(70px, 0.6fr);
-            gap: 1.2rem;
-            align-items: start;
-            padding: 1.2rem 1.4rem;
-            background: var(--bg-card-soft);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .digest-row--head {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(56, 189, 248, 0.1));
-            font-weight: 600;
-            color: var(--accent-hover);
-            letter-spacing: 0.05em;
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-
-        .digest-row:hover:not(.digest-row--head) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
-            border-color: rgba(139, 92, 246, 0.25);
-        }
-
-        .digest-col {
-            word-wrap: break-word;
-            word-break: break-word;
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        .digest-col--book {
-            color: var(--accent-color);
-            font-weight: 500;
-        }
-
-        .digest-col--content {
-            color: var(--text-primary);
-        }
-
-        .digest-col--date {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
-
-        .digest-col--rating {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* ========== 评分徽章 ========== */
-        .rating-badge {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 36px;
-            height: 36px;
-            padding: 0 8px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .rating-badge::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
-            pointer-events: none;
-        }
-
-        /* 10-9分：金色 */
-        .rating-value-10, .rating-value-9 {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
-        }
-
-        .rating-value-10:hover, .rating-value-9:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(255, 215, 0, 0.5);
-        }
-
-        /* 8-7分：绿色 */
-        .rating-value-8, .rating-value-7 {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-        }
-
-        .rating-value-8:hover, .rating-value-7:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
-        }
-
-        /* 6-5分：蓝色 */
-        .rating-value-6, .rating-value-5 {
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-        }
-
-        .rating-value-6:hover, .rating-value-5:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
-        }
-
-        /* 4-3分：橙色 */
-        .rating-value-4, .rating-value-3 {
-            background: linear-gradient(135deg, #FF9800, #F57C00);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
-        }
-
-        .rating-value-4:hover, .rating-value-3:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
-        }
-
-        /* 2-1分：红色 */
-        .rating-value-2, .rating-value-1 {
-            background: linear-gradient(135deg, #F44336, #D32F2F);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
-        }
-
-        .rating-value-2:hover, .rating-value-1:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(244, 67, 54, 0.4);
-        }
-
-        /* 空评分 */
-        .rating-empty {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            color: var(--text-secondary);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            font-style: italic;
-        }
-
-        /* 星星图标动画 */
-        .rating-badge .star-icon {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-            animation: twinkle 2s ease-in-out infinite;
-        }
-
-        @keyframes twinkle {
-            0% {
-                opacity: 0.45;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.9;
-                transform: scale(1.02);
-            }
-            100% {
-                opacity: 0.55;
-                transform: scale(1.04);
-            }
-        }
-
-        /* ========== 返回顶部按钮（新增强化版） ========== */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.95), rgba(56, 189, 248, 0.9));
-            color: #fff;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.8);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
-            z-index: 9999;
-            backdrop-filter: blur(10px);
-        }
-
-        .back-to-top:hover {
-            transform: translateY(-5px) scale(1);
-            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.6);
-            background: linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(56, 189, 248, 0.95));
-        }
-
-        .back-to-top:active {
-            transform: translateY(-2px) scale(0.95);
-        }
-
-        .back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: scale(1);
-        }
-
-        .back-to-top i {
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-8px);
-            }
-            60% {
-                transform: translateY(-4px);
-            }
-        }
-
-        body.light-mode .back-to-top {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.95), rgba(56, 189, 248, 0.9));
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
-        }
-
-        body.light-mode .back-to-top:hover {
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5);
-        }
-
-        /* ========== 响应式设计 ========== */
-        @media (max-width: 1024px) {
-            .digest-row {
-                grid-template-columns: minmax(180px, 1.2fr) 2fr minmax(80px, 0.7fr) minmax(60px, 0.5fr);
-                gap: 0.8rem;
-                padding: 1rem 1.2rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .reading-header-left {
-                justify-content: center;
-                width: 100%;
-            }
-
-            .reading-card-body {
-                padding: 2rem 1.4rem;
-            }
-
-            .reading-card-title {
-                font-size: 1.75rem;
-            }
-
-            .reading-guides {
-                padding: 1.6rem 1.4rem;
-            }
-
-            .digest-search {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .digest-search input,
-            .digest-search button {
-                width: 100%;
-            }
-
-            .digest-search button {
-                justify-content: center;
-            }
-
-            .digest-row {
-                grid-template-columns: 1fr;
-                gap: 0.8rem;
-                padding: 1.2rem;
-            }
-
-            .digest-col {
-                width: 100%;
-            }
-
-            .digest-col--book::before {
-                content: "📖 ";
-                font-weight: 600;
-            }
-
-            .digest-col--date::before {
-                content: "📅 ";
-            }
-
-            .digest-col--rating {
-                justify-content: flex-start;
-            }
-
-            .digest-col--rating::before {
-                content: "⭐ ";
-                margin-right: 0.5rem;
-            }
-
-            .back-to-top {
-                bottom: 20px;
-                right: 20px;
-                width: 50px;
-                height: 50px;
-                font-size: 1.1rem;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .reading-return {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .reading-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .reading-actions .ghost-btn,
-            .reading-actions .primary-btn {
-                justify-content: center;
-                width: 100%;
-            }
-
-            .reading-digest-header {
-                flex-direction: column;
-                text-align: center;
-                align-items: center;
-            }
-
-            .digest-search input {
-                min-width: unset;
-            }
-
-            .back-to-top {
-                bottom: 15px;
-                right: 15px;
-                width: 45px;
-                height: 45px;
-                font-size: 1rem;
-            }
-
-            .reading-lock-banner {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-        }
-
-        /* 添加平滑滚动 */
-        html {
-            scroll-behavior: smooth;
-        }
-    </style>
-</head>
-<body data-page="reading">
-    <!-- 头部导航 -->
-    <header class="header reading-header">
-        <div class="container">
-            <div class="reading-header-left">
-                <a class="reading-return" href="index.html" aria-label="返回首页">
-                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
-                    <span>退回到"狂客·银河"</span>
-                </a>
-                <div class="reading-title-group">
-                    <h1 class="logo">星空阅读室</h1>
-                    <p class="reading-subtitle">狂客·星空</p>
-                </div>
-            </div>
-            <div class="controls">
-                <button id="themeToggle" class="theme-toggle" aria-label="切换主题">
-                    <i class="fas fa-moon" aria-hidden="true"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- 主内容区 -->
-    <main class="reading-main">
-        <div class="container reading-container">
-            <!-- 阅读日志卡片 -->
-            <section class="reading-card">
-                <div class="reading-card-body">
-                    <header class="reading-card-header">
-                        <h2 class="reading-card-title">
-                            <span class="reading-card-icon">
-                                <i class="fas fa-meteor" aria-hidden="true"></i>
-                            </span>
-                            星空阅读日志
-                        </h2>
-                        <p class="reading-card-caption">记录你在银河旅途中捕捉到的灵感与感动</p>
-                    </header>
-
-                    <form class="reading-form" autocomplete="off">
-                        <div class="form-grid">
-                            <div class="form-field">
-                                <label for="readingDate">日期</label>
-                                <input type="date" id="readingDate" name="readingDate" disabled aria-disabled="true">
-                            </div>
-                            <div class="form-field">
-                                <label for="readingValue">启发值（1-10）</label>
-                                <input type="number" id="readingValue" name="readingValue" min="1" max="10" placeholder="例如：8" disabled aria-disabled="true">
-                            </div>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="readingInsight">今日启发性观点</label>
-                            <textarea id="readingInsight" name="readingInsight" placeholder="写下让你怦然心动、改变视角或值得珍藏的段落。" readonly aria-readonly="true"></textarea>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="readingApplication">想要尝试的应用</label>
-                            <textarea id="readingApplication" name="readingApplication" class="long" placeholder="把阅读中的灵感带入现实：你准备怎么做？写下可执行的行动步骤。" readonly aria-readonly="true"></textarea>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="readingMood">星空心情/自由笔记</label>
-                            <textarea id="readingMood" name="readingMood" class="long" placeholder="随意记录感受、联想、创意或下次想看的书单。" readonly aria-readonly="true"></textarea>
-                        </div>
-
-                        <div class="reading-actions">
-                            <button type="reset" class="ghost-btn" aria-label="清空表单">
-                                <i class="fas fa-undo-alt" aria-hidden="true"></i>
-                                <span>清空当前记录</span>
-                            </button>
-                            <a href="index.html" class="primary-btn" aria-label="返回首页">
-                                <i class="fas fa-rocket" aria-hidden="true"></i>
-                                <span>返回狂客·银河</span>
-                            </a>
-                        </div>
-                    </form>
-
-                    <!-- GitHub 维护模式提示 -->
-                    <div class="reading-lock-banner" role="alert">
-                        <div class="reading-lock-icon" aria-hidden="true">
-                            <i class="fas fa-lock"></i>
-                        </div>
-                        <div class="reading-lock-content">
-                            <h3>GitHub 维护模式</h3>
-                            <p>星空阅读日志当前为只读展示。如需更新内容，请前往 GitHub 仓库的 <a href="https://github.com/kuangketongxue/kuangke.github.io/blob/main/data.js" target="_blank" rel="noopener noreferrer">data.js</a> 提交修改。</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 星空书摘精选 -->
-            <section class="reading-digest">
-                <header class="reading-digest-header">
-                    <div class="digest-icon" aria-hidden="true">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div>
-                        <h2>星空书摘精选</h2>
-                        <p>以下内容由狂客亲自整理，所有更新均通过 GitHub 完成。</p>
-
-                        <!-- 搜索和排序工具栏 -->
-                        <div class="digest-search">
-                            <input type="search" id="digestSearchInput" placeholder="搜索书名或摘录关键词" aria-label="搜索书摘">
-                            <button type="button" id="digestSearchButton" aria-label="执行搜索">
-                                <i class="fas fa-search" aria-hidden="true"></i>
-                                <span>搜索</span>
-                            </button>
-                            <button type="button" id="digestSearchReset" aria-label="重置搜索">
-                                <i class="fas fa-rotate-left" aria-hidden="true"></i>
-                                <span>重置</span>
-                            </button>
-                            <button type="button" id="digestSortToggle" aria-label="按启发值排序">
-                                <i class="fas fa-sort-numeric-down" aria-hidden="true"></i>
-                                <span>启发值排序</span>
-                            </button>
-                        </div>
-                    </div>
-                </header>
-
-                <!-- 书摘表格 -->
-                <div class="reading-digest-table" role="table" aria-label="书摘列表">
-                    <!-- 表头 -->
-                    <div class="digest-row digest-row--head" role="row">
-                        <div class="digest-col digest-col--book" role="columnheader">书名</div>
-                        <div class="digest-col digest-col--content" role="columnheader">摘录</div>
-                        <div class="digest-col digest-col--date" role="columnheader">日期</div>
-                        <div class="digest-col digest-col--rating" role="columnheader">启发值</div>
-                    </div>
-
-                    <!-- 数据行 -->
-                     <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《万维刚精英日课1~5》</div>
-                        <div class="digest-col digest-col--content" role="cell">最好的失败,就是"在没有人看见的时候偷偷跌倒"；我的失败不是我的成功之母,但是别人的失败则可能是我的成功之母</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/15</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                     <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《财富自由之路》</div>
-                        <div class="digest-col digest-col--content" role="cell">只要我投入时间和精力,从长期看,没有什么是我学不会的；我不应该与别人争辩,因为我不想伤害他们;我也不应该被他们影响,因为我不想伤害自己</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/15</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                     <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《马斯克传》</div>
-                        <div class="digest-col digest-col--content" role="cell">让一家公司成功的不是产品本身，而是高效地制造产品的能力。这个问题其实就是，你怎么制造那些制造机器的机器。换句话说，你是怎么设计工厂的。</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/15</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值3分">3<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                     <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content" role="cell">只要你真的找准了这一两个地方,利润其实是更聚合的。这里你赚到的钱,就是别人的资金"不持久"所造成的亏损；如果投资可以简单获利，就必然是用你的持久钱，去打败别人的非持久钱，你只需要耐心等待，一定会有这样的机会，而且不仅在大周期里，也会在小的回调周期里反复出现。从这个角度讲，时间真的是金钱——如果你想站在时间这边，就不要着急站在收益这边</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/15</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                     <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content" role="cell">图片裁剪</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/15</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值4分">4<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                     <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《个体崛起》</div>
-                        <div class="digest-col digest-col--content" role="cell">我们要做的事情,是你今天的努力和付出,会让三五年后,甚至未来更长时间的收益,都和你今天的行动有关--这才是一门划算的好生意</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/15</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值4分">4<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《请辩》</div>
-                        <div class="digest-col digest-col--content" role="cell">真正好的稳定状态,是永不满足的动态稳定；每一项都在经受考验,都可以往上提,也可能往下掉,但正因为互为备份；有多元系统级别的相互备份，才叫稳定；世界跑 100 米 / 秒你也在跑 100 米 / 秒甚至更快的才叫稳定，其他的都不是</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/14</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《个体崛起》</div>
-                        <div class="digest-col digest-col--content" role="cell">你要了解一个人的段位,你只要看他如何处理自己的时间,和如何对待你的时间；承认这个世界是动态的,从"我应该不行",换成"要不试试,可能很好玩"，这世上最大的风险,就是什么都没做</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/14</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content" role="cell">成为合伙人或准合伙人类，你要拿高薪就得到这一层，某些事情非你不可，交给别人 99% 迟早要出大篓子；普通劳动类——要么（有前途的公司）付出额外时间，把事情做得比别人好很多，不是你自以为，而是瞎眼可见比别人好一大截的那种，努力争当领导；要么（没前途的公司）就是用 10 分钟做完人家 1 小时才能做完的事，利用有资格摸鱼的时间努力发展副业，来证明你的劳动时间是可以有更多价值产出的</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/14</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content" role="cell">每日晨读一小时 (听录音读课本就好) 坚持了至少三个月以上。在这样的过程中，大多数语言都已经把握得足够好 (要很久以后才能做到接近 "标准" 呢), 于是，学习音标就有了保障；</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/14</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-3" aria-label="启发值3分">3<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《财富的真相》</div>
-                        <div class="digest-col digest-col--content" role="cell">暴力的价值有天然的缺陷——暴力的价值不持久，因为抢来之后只会消费，终究会坐吃山空，而后就只能再去抢；暴力会吸引更强大的暴力，被抢的一方会想办法变得更强，一方面要避免继续被抢，另一方面可能还要抢回来，与此同时，总有更强大的另外一方在虎视眈眈。这是一个恶性循环。抢来的终将被抢走，这是暴力获益者难逃的宿命</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/14</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-3" aria-label="启发值3分">3<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content" role="cell">布尔运算</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/14</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《beyond feeling》</div>
-                        <div class="digest-col digest-col--content" role="cell">Base your opinions on careful observation rather than on habit or impulse</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/13</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-4" aria-label="启发值4分">4<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《请辩》</div>
-                        <div class="digest-col digest-col--content" role="cell">上一个是互联网时代,信息已经不缺了;现在是AI时代,连在建议也不缺了一一所以告知一些已有的专业知识,卵用没有。那缺的是什么?是基于个性化的确定性解决方案,不仅是确定,还是唯一确定--这叫专业</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/13</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《小狗钱钱》</div>
-                        <div class="digest-col digest-col--content" role="cell">演讲内容应该是一个人的真实经历；忘记你站在很多人的面前，而把注意力只集中在两三个你认识和喜欢的人身上。你可以轮流看着他们，就像是只和他们聊天一样</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/13</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content" role="cell">要在新东西上玩到至少超越一大半的人，然后才选择是不是玩其他，每进入一个领域都要有 "比别人玩得好" 的好胜心，你才会真正在过程中得到财富和成长;不放过任何不懂的东西，不忽视任何高效赚钱的模式;始终保持节点意识——别人都必须通过你才能干什么</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/13</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《把时间当朋友》</div>
-                        <div class="digest-col digest-col--content" role="cell">能够登上金字塔顶端的只有两种动物,一种是雄鹰,一种是蜗牛。雄鹰拥有矫健的翅膀,所以能够飞到金字塔的顶端,而蜗牛只能从底下一点一点爬上去。雄鹰飞到顶端只要一瞬间,而蜗牛可能能需要爬很久很久,也许需要坚持一辈子才能爬到顶端,也许爬到一半滚下来不得不从头爬起。但只要蜗牛爬到顶端,它所到达的高度和看到的世界就和雄鹰是一样的。我们大部分人也许不是雄鹰,但是,我们每一个人都可以拥有蜗牛的精神。我们可以不断地攀登自己生命的高峰,终有一天,我们可以在无限风光的险峰俯视和欣赏这这个美丽的世界。无论是雄鹰,还是蜗牛,因为勤奋和努力,它们就有了时间作为自己的朋友,每一分、每一秒,它们的生命都因此有了它们自己确定的意义,而非虚度。做人要勤奋，做人要执着，但做事不一定要图快。马跑起来比骆驼快，但骆驼一生走过的路是马的两倍。没有人见过在沙漠莫里狂奔的骆驼 -- 除非那头骆驼疯了。我喜欢笑来的观点：一切都靠积累，-切都可提前准备，越早醒悟越好。人的一生是奋斗的一生，但有的人一生过得很伟大，有的人一生过得很琐碎。如果我们有一个个伟大的理想，一颗善良的心，我们就一定能把很多琐碎的日子堆砌起来，变成一个伟大的生命。真正的趋势常常需要在多个周期 (至少 2 个) 之后才能真实展现</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/13</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-3" aria-label="启发值3分">3<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《财富的真相》</div>
-                        <div class="digest-col digest-col--content" role="cell">主动培养自己的长期观念，主动延长自己的思考时间跨度;不长久的富裕和贫穷事实上并无太大差别</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/13</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content" role="cell">每学一个单词，都要多花一点点时间精力把这个单词的衍生词都读一遍，当然是根据音标，或者词典里的真人发音;在重音音节之前要有一个停顿；该停顿的地方就要停顿</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/13</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-4" aria-label="启发值4分">4<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content" role="cell">大额提成，尽量服务有钱人+投资未来资产+有积累效应，是一个马太效应足够强、头部通吃的副业+创建可复制不要管理的系统</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/12</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《财富的真相》</div>
-                        <div class="digest-col digest-col--content" role="cell">比较才是开心与否的关键</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/12</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-1" aria-label="启发值1分">1<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content" role="cell">克服自己想 "快" 一点的欲望，刻意防止自己一不留神地快起来</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/12</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-3" aria-label="启发值3分">3<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《把时间当朋友》</div>
-                        <div class="digest-col digest-col--content" role="cell">安全，要靠避险，而不是冒险；要靠小心，而不是勇气；买书的钱不能省，买工具的钱不能省，事关安全的钱不能省，事关当前享受不可能用未来享受替代的钱不能省（吃，恋爱，性爱，知识产权）</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/12</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content" role="cell">ctrl+D；F4格式刷；编辑顶点；取色器</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/12</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《请辩》</div>
-                        <div class="digest-col digest-col--content" role="cell">赚短期钱就赚短期钱，什么时候出，该出就出，后面的涨跌跟你没关系；而赚长期钱就赚长期钱，无论刮风下雨打雷闪电，你涨也好跌也罢，管你是关税战还是世界大战，我就是闭眼投入，就这么么简单</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/11</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content" role="cell">如果你每月能结余三四百欧（2000元人民币），在英国就超过了 90% 的人</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/11</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-1" aria-label="启发值1分">1<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《专注的真相》</div>
-                        <div class="digest-col digest-col--content" role="cell">今天我要做的的这个事情，真的值得花我一生的万分之一吗？从个体角度望过去，尤其是短期来看，那些看起来的确是偶然，但是如果你把时间拉长到一定程度，那本质上来看就只能是必然；很多人所谓的脆弱根源真的很简单，简单到令人慨叹，那只不过把必然理解成了偶然意外，不幸等等，而不是原本只不过自然而然的必然；要的是自己在不变的情况下继续下去，这才哪到哪,以后的路还长着呢；想尽一切办法集中注意力，不让自己被灾难或者任何其他坏事改变我；你能注意到的广度和深度也会不断延展到最后，你就会像我一样反复发现,这天分智商,聪明机会,这些东西在长期持续,真正的专注面前,请允许我再次用那个粗鄙的说法——屁都不是</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/11</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《自学是门手艺》</div>
-                        <div class="digest-col digest-col--content" role="cell">读读别人写的代码</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/11</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-4" aria-label="启发值4分">4<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《财富的真相》</div>
-                        <div class="digest-col digest-col--content" role="cell">自学才是最重要的能力，没有人逼、没有人教、没有人陪，自己就能学，仅此一点就能超过极高比例的人群；从一开始就建立严格的筛选机制,尽量只挑值得做很久很久的事。仅此一条,就能引发天壤之别。因为一上来选的就是值得做很久很久的事,所以,自然而然地只能长期践行。又因为的确做了很久,自然有积累,自然有改良,效率自然有发展；值得关注的外部，事实上很少，因为外部的绝大多数事情与提高自身生产效率毫无关系，毕竟我的所有财富,不管是物质财富还是精神财富,全来自我的时间,或者准确地讲,来自我的时间的体积。我哪有什么时间可以浪费呢?又有什么道理浪费在它们身上呢?时时刻刻专注提高效率才是正事</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/11</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content" role="cell">暂时不必过分追求 "标准"，多听多说</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/11</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-4" aria-label="启发值4分">4<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content" role="cell">在排版时，一个文本框尽量只留一个文字，这样有利于位置的调整</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/11</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-5" aria-label="启发值5分">5<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="digest-row" role="row">
-                        <div class="digest-col digest-col--book" role="cell">《把时间当朋友》</div>
-                        <div class="digest-col digest-col--content" role="cell">拼命锻炼自己的创作技能</div>
-                        <div class="digest-col digest-col--date" role="cell">2025/10/11</div>
-                        <div class="digest-col digest-col--rating" role="cell">
-                            <span class="rating-badge rating-value-3" aria-label="启发值3分">3<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《把时间当朋友》</div>
-                        <div class="digest-col digest-col--content">绝对不要盲目地试图减少睡眠时间——15 岁之后，每天最好能睡上 6~7 小时；一定要尽量抽出时间详细地回答前来问你一道难题解法的同学，只要你确实知道正确的解法；你比别人强一点根本没用，真正有用的是你比别人强很多；天长日久</div>
-                        <div class="digest-col digest-col--date">2025/10/10</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《请辩》</div>
-                        <div class="digest-col digest-col--content">脱离总价去谈相对值，是没有意义的；得看这些东西的世俗总价是多少，以及他获取这些东西的难易程度；今天有没有学到新东西；今天有什么事情是没有必要做的；今天到底做了什么有效的事情，价值产出是多少，有没有计算过？反馈密度是多久一次——如果你有3小时没在产品上有新产出了,你就有问题？疯狂地干上几周，立刻就知道要不要继续干了；</div>
-                        <div class="digest-col digest-col--date">2025/10/10</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《专注的真相》</div>
-                        <div class="digest-col digest-col--content">你注意不到的就不是你的；外界很少有人真正关心你，自己>家人>朋友>同事>世界</div>
-                        <div class="digest-col digest-col--date">2025/10/10</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《自学是门手艺》</div>
-                        <div class="digest-col digest-col--content">刻意思考哪里需要刻意练习；学英语,最简单的刻意练习就是朗读。每天朗读一小时,一百天下来,不仅会超越绝大多数人,更会跨过自己原本可能永远都跨不过去的那道坎--神奇的是,读什么内容,无所谓;更神奇的是,在一开始,发音好不好听甚至好不好都无所谓,反正过不了几天就能发现自己己有大幅的进步;最神奇的是,这么简单的事情,99.99%的人不去做；每个人都有必须刻意练习的地方，都有对别人来说无比容易可对自己来说就是很难做到的事情</div>
-                        <div class="digest-col digest-col--date">2025/10/10</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《财富的真相》</div>
-                        <div class="digest-col digest-col--content">想办法提高自己的生产效率就完事了,就这么简单</div>
-                        <div class="digest-col digest-col--date">2025/10/10</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content">必须保证大量输入——至少要坚持六个月，建议每天的输入时间不要低于四个小时——只要开始做，就会发现其实并不难，因为 " 哪怕听不懂都无所谓 "。听得多了，听得久了，早晚有一天想听不懂都不太容易</div>
-                        <div class="digest-col digest-col--date">2025/10/10</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                     <div class="digest-row">
-                        <div class="digest-col digest-col--book">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content">微软雅黑✅；Arial✅</div>
-                        <div class="digest-col digest-col--date">2025/10/10</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-1">1<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                     <div class="digest-row">
-                        <div class="digest-col digest-col--book">《小狗钱钱》</div>
-                        <div class="digest-col digest-col--content">糟糕的是因为害怕的缘故就不去做我们本应做的事情</div>
-                        <div class="digest-col digest-col--date">2025/10/09</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-1">1<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                     <div class="digest-row">
-                        <div class="digest-col digest-col--book">《把时间当朋友》</div>
-                        <div class="digest-col digest-col--content">如果有一件需要你每天专注 4 小时才能实现的事情你竟然坚持做完了，那么你肯定会被身边的人羡慕。比获得羡慕更重要的是，你会因此赢得尊重 -- 他们知道自己做不到，尽管你并没有、也没必要提醒他们；今天的我和昨天的我、明天的我和今天的我之间的比较；当一个人准备好以后，随处都是机会，而且所有的机会都是切实的、可以把握的；集中精力改变那些自己改变的事情，暂时忽略那些自己不能改变的事情。专心打造自自己，让自己成为一个优秀的人、一个有用的人、一个独立的人，比什么都重要。打造自己，就等于打造自己的人脉；学会独善其身，以不给他人制造麻烦为美德，用自己的独立赢得尊重；在自己的语言中，把 "优点" 和 "缺点" 这两个词替换换成 " 特点 "；当我们不停地鼓励所有人的时候,最大的受益者其实是我们自己,因为最终我们会发现,自己开始进入一种他人无法想象的状态,成为一个不需要他人鼓励的人。这一点很重要</div>
-                        <div class="digest-col digest-col--date">2025/10/09</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                     <div class="digest-row">
-                        <div class="digest-col digest-col--book">《财富的真相》</div>
-                        <div class="digest-col digest-col--content">提高生产效率获得的时间自由；越是虚荣的人,富裕指数越低。并且,虚荣同样消耗时间,越是虚荣,消耗的时间越多,无论是生产力还是生产效率都会因此降低。更为严重的是,虚荣天然就会招致攀比,导致虚荣的成本越来越高,恶性循环的结果就是生产力只能越来越趋近于0,于是富裕指数最终只能定格在0。永远没有翻盘的可能；返贫的核心原因都是一模一样的：消费支出的增长速度远远超过生产收入的增长速度——欲望这个东西没有尽头，如果不能适当控制，它其实有能力让任何人返贫，不管其生产能力有多强</div>
-                        <div class="digest-col digest-col--date">2025/10/09</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                     <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">别人都没看到占有那件东西可以怎样,大家都忽略了,而你看到了,占有了,等别人之后再反应过来,你就获利了；越好的东西，越确定的赚钱机会，往往门槛越高，否则这种东西就会由于大家都看到了机会，迅速涌入而变得无利可图。所以门槛是用来赚钱的，没有门槛就没有机会；投资要投什么?1.不让买的东西；2.人们想要但买不起的东西；3.买起来很麻烦的东西，符合以上三个,是比较确定的好投资；只能是当买得到、买得起，但购买非常麻烦的时候，你别嫌麻烦就行了</div>
-                        <div class="digest-col digest-col--date">2025/10/09</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                     <div class="digest-row">
-                        <div class="digest-col digest-col--book">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content">对于来自他人的嘲弄,如果你竟然在意了,那就真的让人家得逞了,因为你受伤了,他幸灾乐祸了。如果你全然不在意,他就没劲了,因为无法因此获得快感了脆弱的家伙就只能自己生气了,或者生自己的气了</div>
-                        <div class="digest-col digest-col--date">2025/10/09</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-2">2<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                     <div class="digest-row">
-                        <div class="digest-col digest-col--book">《专注的真相》</div>
-                        <div class="digest-col digest-col--content">睡眠>运动>放松>学习>工作>其他；发呆,泡澡,晒太阳,散步,唱歌,跳舞——一定要专注放松，掺杂着任何多任务，都是非放松；没有什么厂家生产的东西比你更为精密，并且呢。没有什么其他智能设备，比你自己这个智能设备更为重要；以学习的方式工作</div>
-                        <div class="digest-col digest-col--date">2025/10/09</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                     <div class="digest-row">
-                        <div class="digest-col digest-col--book">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content">小点缀</div>
-                        <div class="digest-col digest-col--date">2025/10/09</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-1">1<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《自学是门手艺》</div>
-                        <div class="digest-col digest-col--content">绝对不做预算不够的事情；学➡️练➡️用➡️造；只要你不断重复,你的大脑就会不由自主地把那些已经掌握的知识点与当前尚未掌握的知识点区分开来，在这个过程中，绝大多数的归纳和整理工作就自动完成了。最后，加上一点刻意的、收尾性的归纳、总结、整理工作 -- 大功告成</div>
-                        <div class="digest-col digest-col--date">2025/10/09</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                     <div class="digest-row">
-                        <div class="digest-col digest-col--book">《把时间当朋友》</div>
-                        <div class="digest-col digest-col--content">一定要想办法不时做出令人敬佩的事情；理性讨论基本原则"（不要当争论者而要当讨论者）：如果没有确凿的证居，就不能随意作出判断；有了确凿的证据，就算结论令人难以接受，也必须接受；错了就要承认并改正；对了也好，错了也罢，不许对对方进行人身攻击，对事不对人；谁有道理就听谁的；如果双方都有一定的道理，就要看谁的理由更站得住脚，谁的结论更切合实际；如果双方的提案都不好，那么只好 "两害相权取其轻"；尽管讨论都是从交流双方的" 看法 "开始的，但讨论的最终目的是剔除" 看法 "、萃取" 事实 "、把理解中不可靠的因素过滤掉；试用类比,跨越未知与已知之间的障碍；做好了才有兴趣</div>
-                        <div class="digest-col digest-col--date">2025/10/08</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                     <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">人靠意志力能做到的事情其实非常有限,所有目标的达成,基本都是环境和机制的影响。但是不是在还能控制自己行动,还能操控自己决策,在基因还没能彻底接管我们之前,主动让自己去置于某种环境之下,这是我们可以主动选择的。</div>
-                        <div class="digest-col digest-col--date">2025/10/08</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                     <div class="digest-row">
-                        <div class="digest-col digest-col--book">《自学是门手艺》</div>
-                        <div class="digest-col digest-col--content"> 第一查询对象只能是官方文档</div>
-                        <div class="digest-col digest-col--date">2025/10/08</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                     <div class="digest-row">
-                        <div class="digest-col digest-col--book">《专注的真相》</div>
-                        <div class="digest-col digest-col--content">朗读；跑步；唱歌；弹奏；乐器>冥想🧘‍♀️</div>
-                        <div class="digest-col digest-col--date">2025/10/08</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content">删；拆分</div>
-                        <div class="digest-col digest-col--date">2025/10/08</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-1">1<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《专注的真相》</div>
-                        <div class="digest-col digest-col--content">选择意味着放弃</div>
-                        <div class="digest-col digest-col--date">2025/10/07</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content">母版</div>
-                        <div class="digest-col digest-col--date">2025/10/07</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《自学是门手艺》</div>
-                        <div class="digest-col digest-col--content">读不懂也要读完,然后重复很多遍;只字不差地阅读;就算不明白也要先记住;我们原本就是可以直接使用自己并不真正理解的物件、技能、原理、知识的</div>
-                        <div class="digest-col digest-col--date">2025/10/07</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content">完全不必因为自己的发音不标准、不好听、不清楚感到自卑，那其实是正常的、自然的、不可避免的</div>
-                        <div class="digest-col digest-col--date">2025/10/07</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content">找出事物属性上的共同点➡️找出事件结果的共性➡️多问一个"所以呢"</div>
-                        <div class="digest-col digest-col--date">2025/10/06</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《财富的真相》</div>
-                        <div class="digest-col digest-col--content">把时间花在自学"生产知识>销售知识>投资知识"上面，花掉时间赚到钱，做更多的事情</div>
-                        <div class="digest-col digest-col--date">2025/10/06</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《专注的真相》</div>
-                        <div class="digest-col digest-col--content">纵容好习惯会有效的抑制坏习惯</div>
-                        <div class="digest-col digest-col--date">2025/10/06</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>  
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">如果你幸运地获得了第一桶金,怎么办?我的建议是:什么也别办——忽视一切机会，将这笔钱的绝大部分存起来，至少一年定期不能动，竭尽全力地学习，将小部分拿出来尝试，付费也好，亏完也罢，都不重要，重要的是在这个过程中攒下资源，攒下人脉，尝试去跳入那些获得第一桶金前没能跳进去的陷阱，必须加快踩坑的频率，加大学习和践行的量</div>
-                        <div class="digest-col digest-col--date">2025/10/06</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>    
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《马斯克传》</div>
-                        <div class="digest-col digest-col--content">技术进步并不是必然的；只有当很多人为此不懈奋斗，它才会至臻完善；殖民其他星球有助于确保人类文明和意识的保留和赓续，以防我们脆弱的地球家园遭遇不测；人生在世不能只是为了解决问题，人必须追求伟大的梦想。那个值得追求的东西，是能让我们从睡梦中醒来去迎接崭新一天的东西。真正的里程碑屈指可数：单细胞生命出现，多细胞生命出现，植物和动物的分化，生命从海洋走向陆地，哺乳动物出现，意识出现；在这个尺度上，下一个重大进展是显而易见的：使地球生命成为多行星生命</div>
-                        <div class="digest-col digest-col--date">2025/10/05</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5</span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">第一桶金必须冒险；只听自己的；收敛自己的物质欲望——你每消费一笔,除了损失本金以外,都含有机会和额外回报在里面；这不是说你要像老一辈的生意人那样刻意清苦，而是你只需要把你的精力全心全意地都放在自己的生意上，物质欲望自然常常就忘记了，做生意,万事无常,到了你必须吃苦的时候,那你真的什么苦都得吃。不习惯于高物质欲望,能让你在必须吃苦的时候不那么苦</div>
-                        <div class="digest-col digest-col--date">2025/10/05</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5</span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《专注的真相》</div>
-                        <div class="digest-col digest-col--content">如果某个道理听来看来之后,自己觉得有道理,不能就那么过去了,一定要加上一个极为关键且不可或缺的步骤,叫做复数。什么叫复述呢?就是用你自己的话,对自己再讲一遍。不仅如此,还要讲很多遍,并且还要换很多种说法,换很多个角度,还要时不时就给自己再复述一遍；短时间内足量重复的向自己复述重要的道理，甚至还要 多角度反复尝试，是真正改变自己的最有效方式，起码是最有效方式之一，因为你已经用上了天下最狠的手段。是什么呢？就是给自己洗脑</div>
-                        <div class="digest-col digest-col--date">2025/10/05</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5</span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《财富的真相》</div>
-                        <div class="digest-col digest-col--content">一切复杂系统的发展，都是靠且只靠选代。通过反复迭代极为简单的规则或者过程，就可能发展出极为复杂且难以想象的结果；天下最有用的东西,到最后都一样,都只能靠自学；人们生活艰辛的根本原因，只不过是因为太过远离生产</div>
-                        <div class="digest-col digest-col--date">2025/10/05</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3</span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content">不重不漏</div>
-                        <div class="digest-col digest-col--date">2025/10/05</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-2">2<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《AI时代》</div>
-                        <div class="digest-col digest-col--content">能够继续追问</div>
-                        <div class="digest-col digest-col--date">2025/10/04</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">长期主义的长期学习,是为了筛掉其他人;而赚快钱的长期学习,则是为了提升发现机会的敏感度和准度。</div>
-                        <div class="digest-col digest-col--date">2025/10/04</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《专注的真相》</div>
-                        <div class="digest-col digest-col--content">文字给了人类一个经验，可以跨代传播的能力，这可是其他所有动物都不具备的能力，仅靠基因遗传递经验，不仅太慢太低效，也实在是太局限了，压根就不可能传递大量的，复杂的，甚至系统的经验</div>
-                        <div class="digest-col digest-col--date">2025/10/04</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《财富的真相》</div>
-                        <div class="digest-col digest-col--content">赚 "发展的结果", 参与 "无限游戏</div>
-                        <div class="digest-col digest-col--date">2025/10/04</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content">自己给自己改作文——不要写完马上改，而是隔天再修改；帮别人改作文</div>
-                        <div class="digest-col digest-col--date">2025/10/04</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">认真地选取标的——独自研究,独自决策,独自承担后果;除非它本身出现了逻辑上的问题，否则无论价格如何变化，你都不应该再花时间在它上面，只需要持有或定投</div>
-                        <div class="digest-col digest-col--date">2025/10/03</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《财富的真相》</div>
-                        <div class="digest-col digest-col--content">钱，更恰当的用处只能是生产</div>
-                        <div class="digest-col digest-col--date">2025/10/03</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content">"这句话应该怎么理解呢?"或者"这句话到底是什么意思?";只能说、只会说自己准备过的话</div>
-                        <div class="digest-col digest-col--date">2025/10/03</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content">统一、对齐、层次、亲密、均衡、尺寸、焦点</div>
-                        <div class="digest-col digest-col--date">2025/10/03</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《把时间当朋友》</div>
-                        <div class="digest-col digest-col--content">为了真正做到有效倾听,最需要克制的就是过早质疑；如果是事实,我们就要花时间想想"他所陈述的内容真实性如何"。如果是看法,我们就要花时间想想"他的这个看法/意见的根源在哪里</div>
-                        <div class="digest-col digest-col--date">2025/10/03</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《AI时代》</div>
-                        <div class="digest-col digest-col--content">'所有擅长使用工具的人,都是时代的领先者。"</div>
-                        <div class="digest-col digest-col--date">2025/10/02</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">你对标的是否结束一次投资的判断,永远应该是把之前全部归零,从今天刚开始持有它的角度,去判断它的未来。它和你过去那一段的所有,例如你赚或亏多少钱、你的仓位高低、你自己设定的止盈或止损点,都是完全独立的事件</div>
-                        <div class="digest-col digest-col--date">2025/10/02</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《专注的真相》</div>
-                        <div class="digest-col digest-col--content">诱惑这个东西,它不是来自于外部的某人,某物,而是生于自身,自身的价值观决定了诱惑是否存在,以及如果存在的话,那诱惑的程度变变有多高</div>
-                        <div class="digest-col digest-col--date">2025/10/02</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《财富的真相》</div>
-                        <div class="digest-col digest-col--content">现在的你很难再乱花钱，因为你觉得应该用它生产；你很难再仇富，因为你知道有钱人是债权人；你很难再漠视理财，因为你知道钱是万物的存储，那里存着你的自由；你很难再安于直接出售你的时间，因为你知道那是最差的个人商业模式；你很难再怨天尤人，因为你已经清楚地知道，其实，所有的一切都是从你自己的时间里挖出出来的。</div>
-                        <div class="digest-col digest-col--date">2025/10/02</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content">每天花十分钟到半个小时，把自己想要表达的内容用中文记录下来。坚持一段时间之后，每天再多花点时间把那些你要说的话用英文表达出来</div>
-                        <div class="digest-col digest-col--date">2025/10/02</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《AI时代》</div>
-                        <div class="digest-col digest-col--content">从0到1的思考非常重要；复杂问题解决与批判性思维；情商与人际交往能力；跨学科学习与终身学习能力；道德判断与价值观</div>
-                        <div class="digest-col digest-col--date">2025/10/01</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-2">2<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">选对一个标的,然后长期持有到以下三种情况之一:1.标的本身发生了变化;2.标的的投资逻辑发生了变化;3.这个标的成了你性价比最低的资产,且有性价比更高的资产出现</div>
-                        <div class="digest-col digest-col--date">2025/10/01</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《小狗钱钱》</div>
-                        <div class="digest-col digest-col--content">买基金</div>
-                        <div class="digest-col digest-col--date">2025/09/30</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-1">1<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">在牛市,只买不卖，去持有本轮牛市热点中的龙头币种，不换仓，在牛市快到之前,把你所有其他数字货币全部换成比特币,然后躺平，你是无法靠躺平在比特币以外的币种上穿越多个牛熊的</div>
-                        <div class="digest-col digest-col--date">2025/09/30</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《专注的真相》</div>
-                        <div class="digest-col digest-col--content">资讯越丰富，注意力就越稀缺，人与人之间最大的差异是注意力上的贫富差距，真正意义上的学习,无论是学习,练习,应用,还是创造。其实都需要相对极长的注意</div>
-                        <div class="digest-col digest-col--date">2025/09/30</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content">"没什么话可说"是核心问题</div>
-                        <div class="digest-col digest-col--date">2025/09/30</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-1">1<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content">看成形状,边缘对齐,等距分布,总体兼顾</div>
-                        <div class="digest-col digest-col--date">2025/09/30</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《把时间当朋友》</div>
-                        <div class="digest-col digest-col--content">牢记在这世界上确实存在 " 与现有经验相悖的知识 ", 再把这句话变成经验，用它去类比未知，然后投入大量的时间和精力去学习和掌握 "科学方法论", 挣扎着进化成真正意义上的 "人";写作能力（写出简洁、有效、准确、朴素、具体的说明性和说理性文章的能力）；</div>
-                        <div class="digest-col digest-col--date">2025/09/30</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《AI时代》</div>
-                        <div class="digest-col digest-col--content">学好英语是迎接未来的重要准备</div>
-                        <div class="digest-col digest-col--date">2025/09/29</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-2">2<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">当我们去考虑投资品价值时，还要考虑它的流动性+深度一一你的标的下面,有多少需求,又有多少真实托单?他们分别都托在了哪里?投资品的真实市值相对高低=累加每一笔的成交价格*成交数量；只有那些能交易出去的财富,才算是真正的财富</div>
-                        <div class="digest-col digest-col--date">2025/09/29</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《专注的真相》</div>
-                        <div class="digest-col digest-col--content">不看新闻，不看综艺，不看剧集，就算完全不看，都不会受到任何实际影响</div>
-                        <div class="digest-col digest-col--date">2025/09/29</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《把时间当朋友》</div>
-                        <div class="digest-col digest-col--content">为常见任务制定流程</div>
-                        <div class="digest-col digest-col--date">2025/09/29</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《ppt设计的艺术：人人都用得上的ppt设计书》</div>
-                        <div class="digest-col digest-col--content">留出空间，留出韵味，留出焦点，留出呼吸</div>
-                        <div class="digest-col digest-col--date">2025/09/29</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-2">2<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《小狗钱钱》</div>
-                        <div class="digest-col digest-col--content">应该把钱投资在安全的地方；我的钱应该下很多"金蛋"；我们的投资应该简单明了</div>
-                        <div class="digest-col digest-col--date">2025/09/28</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-1">1<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《AI时代》</div>
-                        <div class="digest-col digest-col--content">你想什么时候学习就什么时候学习，想怎么学习就怎么学习</div>
-                        <div class="digest-col digest-col--date">2025/09/28</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-1">1<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">再好的投资品也会经历牛熊，也会有周期，你盈不盈利，往往取决于你在熊市中是不是比其他人更 "抗揍"。一起挨揍一起亏钱，要被揍多久不知道，你只知道多数人被揍死了你就开始挣钱了，除非被揍死的人是你</div>
-                        <div class="digest-col digest-col--date">2025/09/28</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《财富的真相》</div>
-                        <div class="digest-col digest-col--content">做销售性价比极高</div>
-                        <div class="digest-col digest-col--date">2025/09/28</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content">翻译，实际上大部分工作作内容是 "再创作"</div>
-                        <div class="digest-col digest-col--date">2025/09/28</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《AI时代》</div>
-                        <div class="digest-col digest-col--content">通过提出问题、寻找解决方案，最终找到解决问题的路径</div>
-                        <div class="digest-col digest-col--date">2025/09/27</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-2">2<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">买本来就是为了卖，只是选择什么时候卖的问题，打死不卖的就是被压体质，忘了游戏的本质，那就是从古至今，所有台子的宿命都是倒塌</div>
-                        <div class="digest-col digest-col--date">2025/09/27</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《专注的真相》</div>
-                        <div class="digest-col digest-col--content">只有那些我注意到的东西才会塑造我的思想</div>
-                        <div class="digest-col digest-col--date">2025/09/27</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content">只有不断地 "用", 才能真正地 "学"</div>
-                        <div class="digest-col digest-col--date">2025/09/27</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《自学是门手艺》</div>
-                        <div class="digest-col digest-col--content">选择阅读"有繁殖能力"的内容（能给我们带来新视野的、能改变我们思考模式的，甚至能让我们拥有一项新技能的内容）</div>
-                        <div class="digest-col digest-col--date">2025/09/27</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《小狗钱钱》</div>
-                        <div class="digest-col digest-col--content">你要做的只是你力所能及的事。你能和两个人讲你的故事,也就能和200个人讲你的故事。做你喜欢做的事,就会抑制住你的恐惧心理。</div>
-                        <div class="digest-col digest-col--date">2025/09/26</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">简单的事情一旦加上"每天",只要不是基因层面原本就享受的事情(比如每天吃饭),就必定能筛掉大部分人；人无法真正意义上跳出舒适区,但可以重新定义舒适区：早起早睡，运动阅读，生产课程，长期高价值，保护注意力，开源节流，就是我的舒适区；成功必须达到平台级提升才有用,而失败只需要能够排除一个错误答案就有用；人是趋势动物,无论你有多么想展示全部实力,都不能亮出底牌,必须始终保持层层递进。因为别人只会长期为趋势中假想的未来付出成本,不会永远为你当下的绝对价值买单。</div>
-                        <div class="digest-col digest-col--date">2025/09/26</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《专注的真相》</div>
-                        <div class="digest-col digest-col--content">所有新闻都跟自己没有关系</div>
-                        <div class="digest-col digest-col--date">2025/09/26</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《财富的真相》</div>
-                        <div class="digest-col digest-col--content">财富的来源只有一个,竟然是自身</div>
-                        <div class="digest-col digest-col--date">2025/09/26</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《自学是门手艺》</div>
-                        <div class="digest-col digest-col--content">尽量只靠阅读学会编程,哪怕仅仅是人门,这经历和经验都那是极为宝贵的。</div>
-                        <div class="digest-col digest-col--date">2025/09/26</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《自学是门手艺》</div>
-                        <div class="digest-col digest-col--content">自学能力是唯一值得被不断磨炼的长技</div>
-                        <div class="digest-col digest-col--date">2025/09/25</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《小狗钱钱》</div>
-                        <div class="digest-col digest-col--content">我干的活最多只值报酬的一半，另一半报酬源于我的想法和实施这个想法的勇气</div>
-                        <div class="digest-col digest-col--date">2025/09/25</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《AI时代》</div>
-                        <div class="digest-col digest-col--content">从0到1的创造</div>
-                        <div class="digest-col digest-col--date">2025/09/25</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-1">1<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">尽量地节衣缩食到被动收入可以覆盖基础生活成本</div>
-                        <div class="digest-col digest-col--date">2025/09/25</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《财富的真相》</div>
-                        <div class="digest-col digest-col--content">生产收入要大于必需消费的支出，持续长久地生产。生活就应该以生产为中心。其他的无论是什么,都得排在其后,没有什么比生产更为重要--起码,在生活必需得到满足之前</div>
-                        <div class="digest-col digest-col--date">2025/09/25</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content">我也行</div>
-                        <div class="digest-col digest-col--date">2025/09/25</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-1">1<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《人人都能用英语》</div>
-                        <div class="digest-col digest-col--content">做事之前先在脑子里预演</div>
-                        <div class="digest-col digest-col--date">2025/09/24</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《思考的真相》</div>
-                        <div class="digest-col digest-col--content">真正有意义的学习 (无论好书、好课还是好的讨论), 一切有意义的思考和实践 (无论是行动、经历意外还是解决问题), 都会引发这三张表（概念表，关系表，流程表）的变化、积累或者更新，如果花钱买了书买了课，花时间看了书听了课，耗费时间精力参与了讨论，这三张表竟然没有发生任何变化，那就只能说明全无收获</div>
-                        <div class="digest-col digest-col--date">2025/09/24</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">对新钱的获取（互联网，金融，科技）才是超越阶层的核心,一定不能为任何低流动性的投资放弃所有探索新钱获取的渠道</div>
-                        <div class="digest-col digest-col--date">2025/09/24</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《AI时代》</div>
-                        <div class="digest-col digest-col--content">一旦你将工作完全数字化,就能节省很多时间和精力</div>
-                        <div class="digest-col digest-col--date">2025/09/23</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《思考的真相》</div>
-                        <div class="digest-col digest-col--content">决策：定义（有必要；无歧义）➡️分类（合理不重合，完整）➡️比较（客观依据按照重要性排列,分别给予不同的权重，计算出总分）➡️因果</div>
-                        <div class="digest-col digest-col--date">2025/09/22</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《蔡叔的财富秘籍》</div>
-                        <div class="digest-col digest-col--content">尽量压缩生活开支,将自己的保险交完善,其余钱可以ALL IN 或近乎 ALL IN</div>
-                        <div class="digest-col digest-col--date">2025/09/22</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《真需求》</div>
-                        <div class="digest-col digest-col--content">要回溯到这个品类的开端,从这个品类最根本的存在价值和物理要素来观察,以不断接近问题的根本的方式,去重构解决方案；一个行业存在的原因,就是这个业务能存在的本质,基本都指向功能需求的第一性；做"美"的产品；提升掌控精确度；</div>
-                        <div class="digest-col digest-col--date">2025/09/21</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《小狗钱钱》</div>
-                        <div class="digest-col digest-col--content">把 50% 的收入投资,40% 放入梦想储蓄罐，剩下的 10% 用来花</div>
-                        <div class="digest-col digest-col--date">2025/09/21</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-2">2<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">定价优先于产品一先找好销售渠道；查邮件不是什么了不起的惊世骇俗的事，也不是只有你才会的技能；</div>
-                        <div class="digest-col digest-col--date">2025/09/20</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《小狗钱钱》</div>
-                        <div class="digest-col digest-col--content">绝不借债；问自己"这真的有必要吗?"</div>
-                        <div class="digest-col digest-col--date">2025/09/20</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-2">2<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《AI时代》</div>
-                        <div class="digest-col digest-col--content">适度简化问题、抓住关键，而不是过度纠结细节；在任务的重要程度相同的情况下，优先从耗时最短的任务开始做起；而在重要程度不同的情况下，则应从任务密度（性价比）最大的事情做起</div>
-                        <div class="digest-col digest-col--date">2025/09/20</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">每周六一整天远离电脑手机等等一切电子产品，媒体戒斋日；不连续不断地查看邮件,应该在固定的时间段查看邮件；不和低效能高维护成本的顾客过度沟通——通向成功并没有一条确定的路线,但一条必定失败的路就是试图去取悦每个人；不为了逃避令人不快的谈话而拖延做决定；不在没有详细日程表或结束时间的情况下答应去参加某个会议或接听某个电话；不给人闲扯的机会；</div>
-                        <div class="digest-col digest-col--date">2025/09/19</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《小狗钱钱》</div>
-                        <div class="digest-col digest-col--content">当我决定做一件事情的时候，我必须在 72 小时之内完成，否则我很可能永远不会再做了</div>
-                        <div class="digest-col digest-col--date">2025/09/19</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《真需求》</div>
-                        <div class="digest-col digest-col--content">有失败才会说真话,告诉你什么是那个最坚硬的真实</div>
-                        <div class="digest-col digest-col--date">2025/09/18</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">如果你要做大事的话,就得放任那些不好的小事发生；"坏"事真的会发生吗?会不会小麻烦不断?当然会。大部分人会抱怨,然后就迅速忘记了,但当你完成了更重要的事情时,你看到的情形却是:这些小事无非是一些鸡毛蒜皮和可以修补恢复的片段而已；我致力于做某件饶不有趣的却有些遥不可及的事时，别指望大部分人都能理解。去他们的吧！没有哪个雕像是为批评家而创作的；在乐观向上的同时还保持饥饿状态；当我觉得不堪重负的时候,重新思考一下这个问题:我就要崩消溃了,还是就要有所突破了？</div>
-                        <div class="digest-col digest-col--date">2025/09/18</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《AI时代》</div>
-                        <div class="digest-col digest-col--content">把"可以复制、重复或有固定流程"的任务都交给AI做</div>
-                        <div class="digest-col digest-col--date">2025/09/18</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-2">2<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《真需求》</div>
-                        <div class="digest-col digest-col--content">培养演化思维：没有计划，只有一个大概的方向和大概的原则，根据世界的真实反馈进行调整和迭代</div>
-                        <div class="digest-col digest-col--date">2025/09/17</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">不回复那些不会带来销售利润的电子邮件,不回复那些可以通过常见问题解答或自动回复设置回答的电子邮件；不在自己生活、睡觉或者应该休息的地方工作；以2~4周为周期,对己的工作和个人生活进行一个全面的80/20法则分析；只要达到不错或者良好就可以了；不把某个产品、某件事情或某个项目当成终点和人生存在的意义</div>
-                        <div class="digest-col digest-col--date">2025/09/17</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《小狗钱钱》</div>
-                        <div class="digest-col digest-col--content">制作成功日记</div>
-                        <div class="digest-col digest-col--date">2025/09/17</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《真需求》</div>
-                        <div class="digest-col digest-col--content">明确产品从商家/市场/风险投资人资本市场/政府手里拿钱哪里拿钱？明确产品边界</div>
-                        <div class="digest-col digest-col--date">2025/09/16</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">强化英语学习+运动</div>
-                        <div class="digest-col digest-col--date">2025/09/16</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-1">1<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《小狗钱钱》</div>
-                        <div class="digest-col digest-col--content">制作"梦想储蓄罐和梦想相册"</div>
-                        <div class="digest-col digest-col--date">2025/09/16</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《AI时代》</div>
-                        <div class="digest-col digest-col--content">用阿里云百炼做一个老王模型</div>
-                        <div class="digest-col digest-col--date">2025/09/16</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-1">1<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《真需求》</div>
-                        <div class="digest-col digest-col--content">创作爆款要尽量多地占用对方大脑的时间，先占据内心时长，还要保持长期价值，这既是真正拥有一件产品的前提，也是结果</div>
-                        <div class="digest-col digest-col--date">2025/09/15</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">为迷你退休选择地点</div>
-                        <div class="digest-col digest-col--date">2025/09/14</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《小狗钱钱》</div>
-                        <div class="digest-col digest-col--content">写10个想富有的原因</div>
-                        <div class="digest-col digest-col--date">2025/09/14</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">不害怕被学长学姐"解雇"——别人帮了我选择；先不表态，听，边提供情绪价值边找到分歧，给出足够时间空间，同时积极去分享信息,让对方有参与感和掌控感，实现"说服君王"</div>
-                        <div class="digest-col digest-col--date">2025/09/13</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">练习远程学习的能力，如何不被学校困住；每件大事画利益相关人物图；</div>
-                        <div class="digest-col digest-col--date">2025/09/12</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">先进行 "场景穷举"(找一找有没有周期性出现的场景，看看最高频的是哪 个，想一想如何让自己的产品进入这个场景), 再进行 "场景识别"; 将网上的我遇到的所有问题进行格式化解答标签</div>
-                        <div class="digest-col digest-col--date">2025/09/11</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">微型测试我的产品；利用这一点：一个人的长项，就是他的需求；人设=固定人物分类+记忆锤+外在形象特点+性格+特长</div>
-                        <div class="digest-col digest-col--date">2025/09/10</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">先找到一个市场，明确你的目标消费者，再为他们寻找或者制造出一个产品；产品定价：350~1400元；在生产产品之前应该首先测试市场反应；牢记设计成本、单件成本和最小订货量；</div>
-                        <div class="digest-col digest-col--date">2025/09/09</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-5">5<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">每一个被委托出去的任务必须是消耗时间的事情，同时已被精确定义；委托后要求对方几小时后汇报任务进程，确认任务的正确理解和可执行性；按流程办事</div>
-                        <div class="digest-col digest-col--date">2025/09/08</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">做产品（例如我的B站课程）先做基础款，做出最强的基础款；批处理，充分接触所需要的信息独立决策</div>
-                        <div class="digest-col digest-col--date">2025/09/07</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">每天两次查阅电子邮件，一次在中午 12 点或午餐前，另一次在下午 4 点;即使不听任何东西，也要戴上耳机</div>
-                        <div class="digest-col digest-col--date">2025/09/06</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">提升功能价值成为主角而非匪兵甲；信息必须是对紧急或重要的马事情有用。若非如此，就不汲取这种信息</div>
-                        <div class="digest-col digest-col--date">2025/09/05</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">确定几件影响收入的重要事情,用非常短和清楚的时限来计划它们;求助话术："我能提个建议吗?""我们试试......吧,如果不行再试其他的";</div>
-                        <div class="digest-col digest-col--date">2025/09/04</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">去做让我充满激情的事，做一个"不现实"的人</div>
-                        <div class="digest-col digest-col--date">2025/09/03</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《每周工作四小时》</div>
-                        <div class="digest-col digest-col--content">创造价值，取得共识，获得资源，强化竞争力，构建生存的优势；做我们最害怕做的事情（最应该去做的事情）</div>
-                        <div class="digest-col digest-col--date">2025/09/02</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《七年就是一辈子》</div>
-                        <div class="digest-col digest-col--content">把任何群设置为"免打扰</div>
-                        <div class="digest-col digest-col--date">2025/09/01</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《七年就是一辈子》</div>
-                        <div class="digest-col digest-col--content">拼命锻炼自己的可以创造收入的创作技能</div>
-                        <div class="digest-col digest-col--date">2025/08/31</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-2">2<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《七年就是一辈子》</div>
-                        <div class="digest-col digest-col--content">关键是高效而不是忙碌；该收钱时就收钱，为了得到真实的反馈</div>
-                        <div class="digest-col digest-col--date">2025/08/29</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《七年就是一辈子》</div>
-                        <div class="digest-col digest-col--content">做每件事之前常常要在脑子里预演至少一次</div>
-                        <div class="digest-col digest-col--date">2025/08/28</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《七年就是一辈子》</div>
-                        <div class="digest-col digest-col--content">教是最好的学：每学懂一个大点（我认为非常确实好的）就分享</div>
-                        <div class="digest-col digest-col--date">2025/08/27</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《七年就是一辈子》</div>
-                        <div class="digest-col digest-col--content">每时每刻遇到大势，问自己,在这个大势中,我去做什么最划算</div>
-                        <div class="digest-col digest-col--date">2025/08/26</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-3">3<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                        <div class="digest-col digest-col--book">《七年就是一辈子》</div>
-                        <div class="digest-col digest-col--content">甄别出那些有属于自己的的高效操作系统的人，遇到了，必须马上链接</div>
-                        <div class="digest-col digest-col--date">2025/08/24</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                    <div class="digest-row">
-                         <div class="digest-col digest-col--book">《七年就是一辈子》</div>
-                        <div class="digest-col digest-col--content">不休法定节假日：每年可以多工作成长115天，10年就是多成长3年，80年就是多成长24年</div>
-                        <div class="digest-col digest-col--date">2025/08/11</div>
-                        <div class="digest-col digest-col--rating">
-                            <span class="rating-badge rating-value-4">4<i class="fas fa-star star-icon"></i></span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
-
-                    <!-- 继续添加更多数据行... -->
-                    <!-- 为了节省篇幅，这里省略部分重复的数据行代码结构 -->
-                    <!-- 实际使用时建议通过JavaScript从data.js动态加载所有数据 -->
-
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <!-- 返回顶部按钮（增强版） -->
-    <button id="backToTop" class="back-to-top" aria-label="返回顶部" title="返回顶部">
-        <i class="fas fa-arrow-up" aria-hidden="true"></i>
-    </button>
-
-    <!-- JavaScript功能 -->
-    <script>
-        // ========== 主题切换功能 ==========
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-
-        // 检查本地存储的主题设置
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-            body.classList.add('light-mode');
-            themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
-        }
-
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('light-mode');
-            const isLightMode = body.classList.contains('light-mode');
-
-            if (isLightMode) {
-                themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
-                localStorage.setItem('theme', 'light');
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i>';
-                localStorage.setItem('theme', 'dark');
-            }
+// ==================== 优化版常量定义 ====================
+const CONFIG = Object.freeze({
+    STORAGE_KEYS: {
+        moments: 'momentsData',
+        diary: 'successDiaryData',
+        theme: 'theme',
+        language: 'language',
+        username: 'username'
+    },
+    PAGE_TYPES: {
+        MOMENTS: 'moments',
+        SUCCESS: 'success'
+    },
+    TIMING: {
+        DEBOUNCE_DELAY: 300,
+        ANIMATION_DELAY: 0.1,
+        NOTIFICATION_DURATION: 3000,
+        LIKE_ANIMATION: 200
+    },
+    LIMITS: {
+        MAX_COMMENT_LENGTH: 500,
+        MAX_RETRY_ATTEMPTS: 3
+    },
+    FIREBASE: {
+        CONFIG: {
+            apiKey: "AIzaSyD9NwlJxYiRjFh3cPjpJGmQAhogmrFpU4M",
+            authDomain: "kuangke-galaxy.firebaseapp.com",
+            projectId: "kuangke-galaxy",
+            storageBucket: "kuangke-galaxy.firebasestorage.app",
+            messagingSenderId: "416862048915",
+            appId: "1:416862048915:web:6578fcd23d8cf882c53366",
+            measurementId: "G-VZCQM1H4BR"
+        },
+        DB_URL: 'https://kuangke-galaxy-default-rtdb.asia-southeast1.firebasedatabase.app'
+    },
+    PERFORMANCE: {
+        BATCH_RENDER_SIZE: 10,
+        VIRTUAL_SCROLL_THRESHOLD: 50,
+        CACHE_TIMEOUT: 30000,
+        DEBOUNCE_DELAY: 300,
+        THROTTLE_DELAY: 100,
+        MEMORY_CHECK_INTERVAL: 30000
+    },
+    LIMITS: {
+        MAX_RENDER_ITEMS: 1000,
+        MAX_CACHE_ITEMS: 100,
+        MAX_COMMENT_LENGTH: 500,
+        MAX_RETRY_ATTEMPTS: 3
+    }
+});
+
+// ==================== 优化版全局状态管理 ====================
+class AppState {
+    constructor() {
+        this._listeners = new Map();
+        this.reset();
+        this.loadInitialState();
+    }
+
+    reset() {
+        this.currentCategory = 'all';
+        this.currentMomentId = null;
+        this.selectedDiaryTags = new Set();
+        this.diaryMoodFilter = 'all';
+        this.diarySortBy = 'dateDesc';
+        this.diarySearchKeyword = '';
+        this.currentLanguage = 'zh';
+        this.currentPage = CONFIG.PAGE_TYPES.MOMENTS;
+        this.activeFirebaseListeners = new Map();
+        this.pendingOperations = new Map();
+    }
+
+    loadInitialState() {
+        this.currentLanguage = this.loadFromStorage(CONFIG.STORAGE_KEYS.language) || 'zh';
+    }
+
+    // 优化的存储操作
+    loadFromStorage(key) {
+        try {
+            return localStorage.getItem(key);
+        } catch (error) {
+            console.warn(`[AppState] Storage load failed: ${key}`, error);
+            return null;
+        }
+    }
+
+    saveToStorage(key, value) {
+        try {
+            localStorage.setItem(key, value);
+            return true;
+        } catch (error) {
+            console.warn(`[AppState] Storage save failed: ${key}`, error);
+            return false;
+        }
+    }
+
+    // 事件监听系统
+    on(event, callback) {
+        if (!this._listeners.has(event)) {
+            this._listeners.set(event, new Set());
+        }
+        this._listeners.get(event).add(callback);
+    }
+
+    off(event, callback) {
+        const listeners = this._listeners.get(event);
+        if (listeners) {
+            listeners.delete(callback);
+        }
+    }
+
+    emit(event, data) {
+        const listeners = this._listeners.get(event);
+        if (listeners) {
+            listeners.forEach(callback => callback(data));
+        }
+    }
+
+    // Firebase 监听器管理
+    setFirebaseListener(type, id, ref, eventType, callback) {
+        const key = this._getListenerKey(type, id, eventType);
+        this.stopFirebaseListener(type, id, eventType);
+        
+        ref.on(eventType, callback);
+        this.activeFirebaseListeners.set(key, { ref, eventType, callback });
+    }
+
+    stopFirebaseListener(type, id, eventType) {
+        const key = this._getListenerKey(type, id, eventType);
+        const listener = this.activeFirebaseListeners.get(key);
+        if (listener) {
+            listener.ref.off(listener.eventType, listener.callback);
+            this.activeFirebaseListeners.delete(key);
+        }
+    }
+
+    stopAllFirebaseListeners() {
+        this.activeFirebaseListeners.forEach(({ ref, eventType, callback }) => {
+            ref.off(eventType, callback);
+        });
+        this.activeFirebaseListeners.clear();
+    }
+
+    _getListenerKey(type, id, eventType) {
+        return `${type}_${id}_${eventType}`;
+    }
+
+    // 操作锁机制
+    setOperationLock(operationId, duration = 1000) {
+        this.pendingOperations.set(operationId, Date.now());
+        setTimeout(() => {
+            this.pendingOperations.delete(operationId);
+        }, duration);
+    }
+
+    isOperationLocked(operationId) {
+        return this.pendingOperations.has(operationId);
+    }
+}
+
+const appState = new AppState();
+
+// ==================== 优化版工具函数 ====================
+class Utils {
+    static #textEncoder = new TextEncoder();
+    
+    // 安全的HTML转义
+    static escapeHtml(text) {
+        if (text == null) return '';
+        
+        const div = document.createElement('div');
+        div.textContent = String(text);
+        return div.innerHTML;
+    }
+
+    // 多行文本格式化
+    static formatMultiline(text) {
+        if (!text) return '';
+        return this.escapeHtml(text).replace(/\n/g, '<br>');
+    }
+
+    // 优化的时间格式化
+    static formatTime(timeStr) {
+        const date = new Date(timeStr);
+        if (!this.isValidDate(date)) return timeStr;
+
+        const now = new Date();
+        const diff = now - date;
+        const ranges = {
+            minute: 60 * 1000,
+            hour: 60 * 60 * 1000,
+            day: 24 * 60 * 60 * 1000
+        };
+
+        if (diff < ranges.minute) return LanguageManager.t('timeJustNow');
+        if (diff < ranges.hour) return LanguageManager.t('timeMinutesAgo', { 
+            minutes: Math.floor(diff / ranges.minute) 
+        });
+        if (diff < ranges.day) return LanguageManager.t('timeHoursAgo', { 
+            hours: Math.floor(diff / ranges.hour) 
+        });
+        if (diff < ranges.day * 2) return LanguageManager.t('timeYesterday');
+        if (diff < ranges.day * 7) return LanguageManager.t('timeDaysAgo', { 
+            days: Math.floor(diff / ranges.day) 
         });
 
-        // ========== 返回顶部功能（增强版） ==========
-        const backToTopButton = document.getElementById('backToTop');
-        let scrollTimeout;
-
-        // 监听滚动事件（带节流优化）
-        window.addEventListener('scroll', () => {
-            // 清除之前的超时
-            clearTimeout(scrollTimeout);
-
-            // 设置新的超时
-            scrollTimeout = setTimeout(() => {
-                if (window.pageYOffset > 300) {
-                    backToTopButton.classList.add('visible');
-                } else {
-                    backToTopButton.classList.remove('visible');
-                }
-            }, 100);
-        }, { passive: true });
-
-        // 点击返回顶部（增强动画）
-        backToTopButton.addEventListener('click', () => {
-            // 添加点击动画效果
-            backToTopButton.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                backToTopButton.style.transform = '';
-            }, 200);
-
-            // 平滑滚动到顶部
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+        return date.toLocaleDateString(appState.currentLanguage === 'zh' ? 'zh-CN' : 'en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
         });
+    }
 
-        // 键盘快捷键支持（按Home键回到顶部）
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Home' && !e.ctrlKey && !e.shiftKey && !e.altKey) {
-                e.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }
+    static formatDiaryDate(dateStr, lang) {
+        const date = new Date(dateStr);
+        if (!this.isValidDate(date)) return dateStr;
+
+        return date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            weekday: 'short'
         });
+    }
 
-        // ========== 搜索和排序功能 ==========
-        const digestSearchInput = document.getElementById('digestSearchInput');
-        const digestSearchButton = document.getElementById('digestSearchButton');
-        const digestSearchReset = document.getElementById('digestSearchReset');
-        const digestSortToggle = document.getElementById('digestSortToggle');
-        const digestRows = document.querySelectorAll('.digest-row:not(.digest-row--head)');
+    static isValidDate(date) {
+        return date instanceof Date && !isNaN(date.getTime());
+    }
 
-        let currentSortOrder = 'desc'; // 默认降序排列
+    // 文本处理
+    static normalize(text) {
+        return String(text ?? '').toLowerCase().trim();
+    }
 
-        // 搜索功能
-        function performSearch() {
-            const searchTerm = digestSearchInput.value.toLowerCase().trim();
-
-            if (!searchTerm) {
-                // 如果搜索词为空，显示所有行
-                digestRows.forEach(row => {
-                    row.style.display = '';
-                });
-                return;
-            }
-
-            let visibleCount = 0;
-            digestRows.forEach(row => {
-                const bookName = row.querySelector('.digest-col--book')?.textContent.toLowerCase() || '';
-                const content = row.querySelector('.digest-col--content')?.textContent.toLowerCase() || '';
-
-                if (bookName.includes(searchTerm) || content.includes(searchTerm)) {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-
-            // 可选：显示搜索结果数量
-            console.log(`找到 ${visibleCount} 条匹配结果`);
-        }
-
-        // 重置搜索
-        function resetSearch() {
-            digestSearchInput.value = '';
-            digestRows.forEach(row => {
-                row.style.display = '';
-            });
-            digestSearchInput.focus();
-        }
-
-        // 获取启发值
-        function getRatingValue(row) {
-            const ratingBadge = row.querySelector('.rating-badge');
-            if (!ratingBadge || ratingBadge.classList.contains('rating-empty')) {
-                return -1; // 空值排在最后
-            }
-
-            const ratingText = ratingBadge.textContent.trim();
-            const ratingMatch = ratingText.match(/\d+/);
-            return ratingMatch ? parseInt(ratingMatch[0]) : -1;
-        }
-
-        // 排序功能
-        function sortByRating() {
-            const table = document.querySelector('.reading-digest-table');
-            const headerRow = table.querySelector('.digest-row--head');
-            const rowsArray = Array.from(digestRows);
-
-            rowsArray.sort((a, b) => {
-                const ratingA = getRatingValue(a);
-                const ratingB = getRatingValue(b);
-
-                if (currentSortOrder === 'desc') {
-                    return ratingB - ratingA;
-                } else {
-                    return ratingA - ratingB;
-                }
-            });
-
-            // 清空表格（保留表头）
-            table.innerHTML = '';
-            table.appendChild(headerRow);
-
-            // 添加排序后的行
-            rowsArray.forEach(row => {
-                table.appendChild(row);
-            });
-
-            // 切换排序顺序
-            currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
-
-            // 更新按钮图标和文本
-            if (currentSortOrder === 'desc') {
-                digestSortToggle.innerHTML = '<i class="fas fa-sort-numeric-down" aria-hidden="true"></i><span>启发值排序</span>';
-            } else {
-                digestSortToggle.innerHTML = '<i class="fas fa-sort-numeric-up" aria-hidden="true"></i><span>启发值排序</span>';
-            }
-        }
-
-        // 事件监听器
-        digestSearchButton.addEventListener('click', performSearch);
-        digestSearchReset.addEventListener('click', resetSearch);
-        digestSortToggle.addEventListener('click', sortByRating);
-
-        // 支持回车键搜索
-        digestSearchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                performSearch();
-            }
-        });
-
-        // ========== 防抖函数 ==========
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
+    // 性能优化的防抖
+    static debounce(func, wait = CONFIG.TIMING.DEBOUNCE_DELAY, immediate = false) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
                 clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
+                if (!immediate) func.apply(this, args);
             };
+            
+            const callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            
+            if (callNow) func.apply(this, args);
+        };
+    }
+
+    // 节流函数
+    static throttle(func, limit) {
+        let lastCall = 0;
+        return function(...args) {
+            const now = Date.now();
+            if (now - lastCall >= limit) {
+                lastCall = now;
+                return func.apply(this, args);
+            }
+        };
+    }
+
+    // 生成唯一ID
+    static generateId(prefix = '') {
+        return `${prefix}${Date.now()}${Math.random().toString(36).substr(2, 9)}`;
+    }
+
+    static generateGuestUsername() {
+        return `${LanguageManager.t('guest')}${Math.floor(Math.random() * 10000)}`;
+    }
+
+    // 安全的JSON解析
+    static safeJsonParse(str, fallback = null) {
+        try {
+            return JSON.parse(str);
+        } catch {
+            return fallback;
+        }
+    }
+
+    // 图片预加载
+    static preloadImage(src) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = src;
+        });
+    }
+}
+
+// ==================== 优化事件管理器 ====================
+class EventManager {
+    static #eventHandlers = new Map();
+
+    static delegate(container, event, selector, handler, options = {}) {
+        const key = `${event}_${selector}`;
+        
+        if (!this.#eventHandlers.has(key)) {
+            const delegatedHandler = (e) => {
+                const target = e.target.closest(selector);
+                if (target && container.contains(target)) {
+                    handler.call(target, e, target);
+                }
+            };
+            
+            container.addEventListener(event, delegatedHandler, options);
+            this.#eventHandlers.set(key, delegatedHandler);
+        }
+    }
+
+    static removeDelegated(container, event, selector) {
+        const key = `${event}_${selector}`;
+        const handler = this.#eventHandlers.get(key);
+        if (handler) {
+            container.removeEventListener(event, handler);
+            this.#eventHandlers.delete(key);
+        }
+    }
+
+    static clearAll() {
+        this.#eventHandlers.forEach((handler, key) => {
+            const [event, selector] = key.split('_');
+            // 这里需要知道容器，简化处理
+            document.removeEventListener(event, handler);
+        });
+        this.#eventHandlers.clear();
+    }
+}
+
+// ==================== 内存管理器 ====================
+class MemoryManager {
+    static #cleanupCallbacks = [];
+
+    static registerCleanup(callback) {
+        this.#cleanupCallbacks.push(callback);
+    }
+
+    static cleanup() {
+        console.log('[MemoryManager] 执行内存清理');
+        
+        this.#cleanupCallbacks.forEach(callback => {
+            try {
+                callback();
+            } catch (error) {
+                console.warn('清理回调执行失败:', error);
+            }
+        });
+
+        // 强制垃圾回收（如果可用）
+        if (window.gc) {
+            window.gc();
         }
 
-        // 对搜索输入应用防抖
-        digestSearchInput.addEventListener('input', debounce(performSearch, 300));
+        this.#cleanupCallbacks = [];
+    }
 
-        // ========== 设置当前日期 ==========
-        const readingDate = document.getElementById('readingDate');
-        const today = new Date().toISOString().split('T')[0];
-        readingDate.value = today;
+    // 监控内存使用
+    static startMonitoring() {
+        if (performance.memory) {
+            setInterval(() => {
+                const memory = performance.memory;
+                const used = memory.usedJSHeapSize / 1048576; // MB
+                const limit = memory.jsHeapSizeLimit / 1048576; // MB
+                
+                if (used / limit > 0.7) { // 内存使用超过70%
+                    this.cleanup();
+                }
+            }, CONFIG.PERFORMANCE.MEMORY_CHECK_INTERVAL);
+        }
+    }
+}
 
-        // ========== 页面加载完成提示 ==========
-        window.addEventListener('load', () => {
-            console.log('星空阅读室已加载完成 🌟');
+// ==================== 优化版通知管理器 ====================
+class NotificationManager {
+    static #container = null;
+    static #notifications = new Set();
+
+    static init() {
+        this.#createContainer();
+    }
+
+    static #createContainer() {
+        this.#container = document.createElement('div');
+        this.#container.className = 'notification-container';
+        Object.assign(this.#container.style, {
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            zIndex: '10000',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px'
         });
-    </script>
-</body>
-</html>
+        document.body.appendChild(this.#container);
+    }
+
+    static show(message, type = 'info', duration = CONFIG.TIMING.NOTIFICATION_DURATION) {
+        if (!this.#container) this.init();
+
+        const notification = this.#createNotificationElement(message, type);
+        this.#container.appendChild(notification);
+        this.#notifications.add(notification);
+
+        // 自动移除
+        const removeTimer = setTimeout(() => {
+            this.remove(notification);
+        }, duration);
+
+        // 点击移除
+        notification.addEventListener('click', () => {
+            clearTimeout(removeTimer);
+            this.remove(notification);
+        });
+
+        return notification;
+    }
+
+    static #createNotificationElement(message, type) {
+        const config = {
+            success: { icon: 'check-circle', color: '#10b981' },
+            warning: { icon: 'exclamation-triangle', color: '#f59e0b' },
+            error: { icon: 'times-circle', color: '#ef4444' },
+            info: { icon: 'info-circle', color: '#3b82f6' }
+        }[type] || config.info;
+
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${config.icon}"></i>
+            <span>${Utils.escapeHtml(message)}</span>
+            <button class="notification-close" aria-label="关闭">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+
+        Object.assign(notification.style, {
+            background: config.color,
+            color: 'white',
+            padding: '1rem 1.5rem',
+            borderRadius: '12px',
+            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            cursor: 'pointer',
+            animation: 'notificationSlideIn 0.3s ease-out',
+            maxWidth: '300px',
+            wordBreak: 'break-word'
+        });
+
+        // 关闭按钮事件
+        const closeBtn = notification.querySelector('.notification-close');
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.remove(notification);
+        });
+
+        return notification;
+    }
+
+    static remove(notification) {
+        if (!this.#notifications.has(notification)) return;
+
+        notification.style.animation = 'notificationSlideOut 0.3s ease-out';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+            this.#notifications.delete(notification);
+        }, 300);
+    }
+
+    static clearAll() {
+        this.#notifications.forEach(notification => this.remove(notification));
+    }
+}
+
+// ==================== 优化版语言管理器 ====================
+class LanguageManager {
+    static #translations = {
+        zh: {
+            successTitle: '成功日记时间轴',
+            successSubtitle: '当你写成功日记的时候,你会对自己,对世界,还有对成功的规律作更深入的思考...',
+            searchPlaceholder: '搜索标题、标签、心情...',
+            moodAll: '全部心情',
+            sortLabel: '排序',
+            sortDateDesc: '日期：最新优先',
+            sortDateAsc: '日期：最旧优先',
+            sortAchievementDesc: '成就值：最高优先',
+            sortAchievementAsc: '成就值：最低优先',
+            moodLabel: '心情',
+            tagLabel: '分类标签',
+            resetFilters: '重置筛选',
+            timelineEmpty: '暂无符合条件的成功日记',
+            timelineTags: '标签',
+            timelineMood: '心情',
+            timelineAchievement: '成就值',
+            timelineNotes: '意外收获',
+            attachments: '附件',
+            entryCount: (count) => `共 ${count} 条记录`,
+            commentPlaceholder: '说点什么...',
+            commentSubmit: '发表',
+            commentEmpty: '暂无评论，快来抢沙发吧！',
+            noResults: '暂无内容',
+            timeJustNow: '刚刚',
+            timeMinutesAgo: (data) => `${data.minutes}分钟前`,
+            timeHoursAgo: (data) => `${data.hours}小时前`,
+            timeYesterday: '昨天',
+            timeDaysAgo: (data) => `${data.days}天前`,
+            loadingComments: '加载评论中...',
+            loadingData: '加载中...',
+            enterCommentContent: '请输入评论内容',
+            commentTooLong: '评论内容不能超过500字',
+            commentFailed: '评论失败，请重试',
+            commentSuccess: '评论发表成功！',
+            operationFailed: '操作失败，请重试',
+            likeSuccess: '点赞成功！',
+            unlikeSuccess: '已取消点赞',
+            pageInitFailed: '页面初始化失败，请刷新重试',
+            firebaseWarnLocal: 'Firebase SDK 未加载或未初始化，将使用本地存储模式',
+            firebaseErrorInit: 'Firebase 初始化失败',
+            guest: '游客',
+            likeAriaLabel: '点赞',
+            commentAriaLabel: '评论'
+        },
+        en: {
+            successTitle: 'Success Diary Timeline',
+            successSubtitle: 'When you write a success diary, you gain deeper insights into yourself, the world, and the laws of success...',
+            searchPlaceholder: 'Search title, tags, mood...',
+            moodAll: 'All Moods',
+            sortLabel: 'Sort',
+            sortDateDesc: 'Date: Newest First',
+            sortDateAsc: 'Date: Oldest First',
+            sortAchievementDesc: 'Achievement: Highest First',
+            sortAchievementAsc: 'Achievement: Lowest First',
+            moodLabel: 'Mood',
+            tagLabel: 'Tags',
+            resetFilters: 'Reset Filters',
+            timelineEmpty: 'No matching success diary entries',
+            timelineTags: 'Tags',
+            timelineMood: 'Mood',
+            timelineAchievement: 'Achievement',
+            timelineNotes: 'Unexpected Gains',
+            attachments: 'Attachments',
+            entryCount: (count) => `Total ${count} entries`,
+            commentPlaceholder: 'Say something...',
+            commentSubmit: 'Submit',
+            commentEmpty: 'No comments yet, be the first!',
+            noResults: 'No content',
+            timeJustNow: 'Just now',
+            timeMinutesAgo: (data) => `${data.minutes} minutes ago`,
+            timeHoursAgo: (data) => `${data.hours} hours ago`,
+            timeYesterday: 'Yesterday',
+            timeDaysAgo: (data) => `${data.days} days ago`,
+            loadingComments: 'Loading comments...',
+            loadingData: 'Loading...',
+            enterCommentContent: 'Please enter comment content',
+            commentTooLong: 'Comment cannot exceed 500 characters',
+            commentFailed: 'Comment failed, please try again',
+            commentSuccess: 'Comment posted successfully!',
+            operationFailed: 'Operation failed, please try again',
+            likeSuccess: 'Liked successfully!',
+            unlikeSuccess: 'Like removed',
+            pageInitFailed: 'Page initialization failed, please refresh',
+            firebaseWarnLocal: 'Firebase SDK not loaded or initialized, using local storage mode',
+            firebaseErrorInit: 'Firebase initialization failed',
+            guest: 'Guest',
+            likeAriaLabel: 'Like',
+            commentAriaLabel: 'Comment'
+        }
+    };
+
+    static t(key, data = {}) {
+        const langPack = this.#translations[appState.currentLanguage] || this.#translations.zh;
+        const fallbackPack = this.#translations.zh;
+        
+        let value = langPack[key] ?? fallbackPack[key] ?? key;
+
+        if (typeof value === 'function') {
+            return value(data);
+        }
+        return value;
+    }
+
+    static toggle() {
+        appState.currentLanguage = appState.currentLanguage === 'zh' ? 'en' : 'zh';
+        appState.saveToStorage(CONFIG.STORAGE_KEYS.language, appState.currentLanguage);
+        
+        this.updateLanguageToggleButton();
+        this.updatePageTexts();
+        
+        // 通知页面更新
+        appState.emit('languageChanged', appState.currentLanguage);
+    }
+
+    static updateLanguageToggleButton() {
+        const button = document.getElementById('languageToggle');
+        if (!button) return;
+
+        const icon = button.querySelector('i');
+        const span = button.querySelector('span');
+
+        if (icon) icon.className = 'fas fa-language';
+        if (span) span.textContent = appState.currentLanguage === 'zh' ? '中 → EN' : 'EN → 中';
+    }
+
+    static updatePageTexts() {
+        // 更新所有带data-i18n属性的元素
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.dataset.i18n;
+            const value = this.t(key);
+            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                element.placeholder = value;
+            } else {
+                element.textContent = value;
+            }
+        });
+
+        // 更新特定元素的文本
+        this.#updateSpecificElements();
+    }
+
+    static #updateSpecificElements() {
+        const elements = {
+            '#diarySearchInput': 'searchPlaceholder',
+            '#commentInput': 'commentPlaceholder',
+            '#submitComment': 'commentSubmit'
+        };
+
+        Object.entries(elements).forEach(([selector, key]) => {
+            const element = document.querySelector(selector);
+            if (element) {
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    element.placeholder = this.t(key);
+                } else {
+                    element.textContent = this.t(key);
+                }
+            }
+        });
+    }
+}
+
+// ==================== 优化版Firebase处理器 ====================
+class FirebaseHandler {
+    constructor() {
+        this.#requestCache = new Map();
+        this.#cacheTimeout = CONFIG.PERFORMANCE.CACHE_TIMEOUT;
+        this.#init();
+    }
+
+    #init() {
+        console.log('[FirebaseHandler] 初始化开始');
+        
+        if (this.#isFirebaseUnavailable()) {
+            console.warn(LanguageManager.t('firebaseWarnLocal'));
+            this.useLocalStorage = true;
+            return;
+        }
+
+        try {
+            this.#initializeFirebase();
+            this.useLocalStorage = false;
+            console.log('[FirebaseHandler] Firebase模式初始化完成');
+        } catch (error) {
+            console.error(LanguageManager.t('firebaseErrorInit'), error);
+            this.useLocalStorage = true;
+        }
+    }
+
+    #isFirebaseUnavailable() {
+        return typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0;
+    }
+
+    #initializeFirebase() {
+        if (!firebase.apps.length) {
+            firebase.initializeApp(CONFIG.FIREBASE.CONFIG);
+        }
+        
+        this.database = firebase.database(CONFIG.FIREBASE.DB_URL);
+        this.likesRef = this.database.ref('likes');
+        this.commentsRef = this.database.ref('comments');
+        this.momentsRef = this.database.ref('moments');
+    }
+
+    // 重试机制
+    async #withRetry(operation, maxAttempts = CONFIG.LIMITS.MAX_RETRY_ATTEMPTS) {
+        let lastError;
+        
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                return await operation();
+            } catch (error) {
+                lastError = error;
+                if (attempt < maxAttempts) {
+                    await this.#delay(attempt * 1000); // 指数退避
+                }
+            }
+        }
+        
+        throw lastError;
+    }
+
+    #delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // 缓存机制
+    #getFromCache(key) {
+        const item = this.#requestCache.get(key);
+        if (item && Date.now() - item.timestamp < this.#cacheTimeout) {
+            return item.value;
+        }
+        this.#requestCache.delete(key);
+        return null;
+    }
+
+    #setCache(key, value) {
+        // 限制缓存大小
+        if (this.#requestCache.size >= CONFIG.LIMITS.MAX_CACHE_ITEMS) {
+            const firstKey = this.#requestCache.keys().next().value;
+            this.#requestCache.delete(firstKey);
+        }
+        
+        this.#requestCache.set(key, {
+            value,
+            timestamp: Date.now()
+        });
+    }
+
+    static clearCache() {
+        this.#requestCache.clear();
+    }
+
+    // 数据同步
+    async syncMomentsData() {
+        if (this.useLocalStorage) {
+            return window.momentsData || [];
+        }
+        
+        return this.#withRetry(async () => {
+            const snapshot = await this.momentsRef.once('value');
+            const fbMoments = snapshot.val() || [];
+            const localMoments = window.momentsData || [];
+
+            // 合并去重
+            const fbIds = new Set(fbMoments.map(m => m.id));
+            const merged = [
+                ...fbMoments,
+                ...localMoments.filter(m => !fbIds.has(m.id))
+            ];
+            
+            return merged;
+        });
+    }
+
+    async saveMomentsToFirebase(moments) {
+        if (this.useLocalStorage) return false;
+        
+        return this.#withRetry(async () => {
+            await this.momentsRef.set(moments);
+            return true;
+        });
+    }
+
+    // 点赞相关方法
+    async getLikes(momentId) {
+        const cacheKey = `likes_${momentId}`;
+        const cached = this.#getFromCache(cacheKey);
+        if (cached !== null) return cached;
+
+        if (this.useLocalStorage) {
+            const result = parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
+            this.#setCache(cacheKey, result);
+            return result;
+        }
+
+        return this.#withRetry(async () => {
+            const snapshot = await this.likesRef.child(momentId).once('value');
+            const result = snapshot.val() || 0;
+            this.#setCache(cacheKey, result);
+            return result;
+        });
+    }
+
+    async addLike(momentId) {
+        return this.#modifyLikeCount(momentId, 1);
+    }
+
+    async removeLike(momentId) {
+        return this.#modifyLikeCount(momentId, -1);
+    }
+
+    async #modifyLikeCount(momentId, delta) {
+        if (this.useLocalStorage) {
+            return this.#handleLocalLike(momentId, delta);
+        }
+
+        return this.#withRetry(async () => {
+            let newLikes = 0;
+            await this.likesRef.child(momentId).transaction((currentLikes) => {
+                newLikes = Math.max(0, (currentLikes || 0) + delta);
+                return newLikes;
+            });
+            
+            // 更新缓存
+            this.#setCache(`likes_${momentId}`, newLikes);
+            return newLikes;
+        });
+    }
+
+    #handleLocalLike(momentId, delta) {
+        const current = parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
+        const newLikes = Math.max(0, current + delta);
+        localStorage.setItem(`likes_${momentId}`, newLikes.toString());
+        this.#setCache(`likes_${momentId}`, newLikes);
+        return newLikes;
+    }
+
+    // 评论相关方法
+    async getComments(momentId) {
+        const cacheKey = `comments_${momentId}`;
+        const cached = this.#getFromCache(cacheKey);
+        if (cached !== null) return cached;
+
+        if (this.useLocalStorage) {
+            const stored = localStorage.getItem(`comments_${momentId}`);
+            const result = Utils.safeJsonParse(stored, []);
+            this.#setCache(cacheKey, result);
+            return result;
+        }
+
+        return this.#withRetry(async () => {
+            const snapshot = await this.commentsRef.child(momentId).once('value');
+            const commentsData = snapshot.val();
+            const result = commentsData ? Object.values(commentsData).sort((a, b) => b.timestamp - a.timestamp) : [];
+            this.#setCache(cacheKey, result);
+            return result;
+        });
+    }
+
+    async addComment(momentId, commentText, author) {
+        if (this.useLocalStorage) {
+            return this.#handleLocalComment(momentId, commentText, author);
+        }
+
+        return this.#withRetry(async () => {
+            const newCommentRef = this.commentsRef.child(momentId).push();
+            const comment = {
+                id: newCommentRef.key,
+                text: commentText,
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                author: author
+            };
+            
+            await newCommentRef.set(comment);
+            
+            // 清除评论缓存
+            this.#requestCache.delete(`comments_${momentId}`);
+            return comment;
+        });
+    }
+
+    #handleLocalComment(momentId, commentText, author) {
+        const comments = this.getComments(momentId);
+        const comment = {
+            id: Utils.generateId('comment_'),
+            text: commentText,
+            timestamp: Date.now(),
+            author: author
+        };
+        
+        comments.unshift(comment);
+        localStorage.setItem(`comments_${momentId}`, JSON.stringify(comments));
+        this.#requestCache.delete(`comments_${momentId}`);
+        return comment;
+    }
+
+    // 批量操作优化
+    async batchGetLikes(momentIds) {
+        if (this.useLocalStorage) {
+            return momentIds.map(id => 
+                parseInt(localStorage.getItem(`likes_${id}`) || '0')
+            );
+        }
+
+        const promises = momentIds.map(id => this.getLikes(id));
+        return Promise.all(promises);
+    }
+
+    async batchGetComments(momentIds) {
+        if (this.useLocalStorage) {
+            return momentIds.map(id => 
+                Utils.safeJsonParse(localStorage.getItem(`comments_${id}`), [])
+            );
+        }
+
+        const promises = momentIds.map(id => this.getComments(id));
+        return Promise.all(promises);
+    }
+
+    // 监听器方法
+    onLikesChange(momentId, callback) {
+        if (this.useLocalStorage) return;
+        
+        const ref = this.likesRef.child(momentId);
+        appState.setFirebaseListener('likes', momentId, ref, 'value', (snapshot) => {
+            const likes = snapshot.val() || 0;
+            this.#setCache(`likes_${momentId}`, likes);
+            callback(likes);
+        });
+    }
+
+    onCommentsChange(momentId, callback) {
+        if (this.useLocalStorage) return;
+        
+        const ref = this.commentsRef.child(momentId);
+        appState.setFirebaseListener('comments', momentId, ref, 'value', (snapshot) => {
+            const commentsData = snapshot.val();
+            const commentsArray = commentsData ? Object.values(commentsData) : [];
+            commentsArray.sort((a, b) => b.timestamp - a.timestamp);
+            this.#setCache(`comments_${momentId}`, commentsArray);
+            callback(commentsArray);
+        });
+    }
+
+    stopListening(momentId = null) {
+        if (this.useLocalStorage) return;
+
+        if (momentId) {
+            appState.stopFirebaseListener('likes', momentId, 'value');
+            appState.stopFirebaseListener('comments', momentId, 'value');
+        } else {
+            appState.stopAllFirebaseListeners();
+        }
+    }
+}
+
+// 单例模式确保FirebaseHandler唯一实例
+if (typeof window.firebaseHandler === 'undefined') {
+    window.firebaseHandler = new FirebaseHandler();
+}
+
+// ==================== 优化版朋友圈页面管理器 ====================
+class MomentsPageManager {
+    static #data = [];
+    static #renderCache = new Map(); // 渲染缓存
+    static #isRendering = false;
+    static #renderQueue = [];
+    static #likeProcessing = new Set();
+
+    static async init() {
+        await this.#loadData();
+        this.#bindEvents();
+        await this.render();
+        
+        // 监听语言变化
+        appState.on('languageChanged', () => this.render());
+        
+        // 注册内存清理
+        MemoryManager.registerCleanup(() => this.cleanup());
+    }
+
+    static async #loadData() {
+        try {
+            const savedData = this.#loadFromStorage();
+            const defaultData = window.momentsData || [];
+            const fbSyncedData = await this.#syncFirebaseData();
+
+            this.#data = this.#mergeData(savedData, fbSyncedData, defaultData);
+            this.#ensureDataIds();
+            this.#saveData();
+            
+        } catch (error) {
+            console.error('加载朋友圈数据失败:', error);
+            this.#data = window.momentsData || [];
+        }
+    }
+
+    static #loadFromStorage() {
+        try {
+            const saved = appState.loadFromStorage(CONFIG.STORAGE_KEYS.moments);
+            return saved ? JSON.parse(saved) : null;
+        } catch {
+            return null;
+        }
+    }
+
+    static async #syncFirebaseData() {
+        if (window.firebaseHandler.useLocalStorage) return [];
+        
+        try {
+            return await window.firebaseHandler.syncMomentsData();
+        } catch (error) {
+            console.error('Firebase数据同步失败:', error);
+            return [];
+        }
+    }
+
+    static #mergeData(saved, firebase, defaults) {
+        const allIds = new Set();
+        const merged = [];
+
+        // 按优先级合并数据
+        [firebase, saved, defaults].forEach(source => {
+            if (!source) return;
+            
+            source.forEach(item => {
+                if (item.id && !allIds.has(item.id)) {
+                    allIds.add(item.id);
+                    merged.push(item);
+                }
+            });
+        });
+
+        return merged;
+    }
+
+    static #ensureDataIds() {
+        this.#data = this.#data.map(m => ({
+            ...m,
+            id: m.id || Utils.generateId('moment_')
+        }));
+    }
+
+    static #saveData() {
+        try {
+            appState.saveToStorage(CONFIG.STORAGE_KEYS.moments, JSON.stringify(this.#data));
+            // 异步同步到Firebase
+            if (!window.firebaseHandler.useLocalStorage) {
+                window.firebaseHandler.saveMomentsToFirebase(this.#data).catch(console.error);
+            }
+        } catch (error) {
+            console.error('保存数据失败:', error);
+        }
+    }
+
+    static #bindEvents() {
+        this.#clearEventListeners();
+        this.#bindSearch();
+        this.#bindCategories();
+        this.#initCommentModal();
+        LanguageManager.updatePageTexts();
+    }
+
+    static #clearEventListeners() {
+        EventManager.clearAll();
+    }
+
+    static #bindSearch() {
+        const searchInput = document.getElementById('momentsSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', Utils.debounce((e) => {
+                this.handleSearch(e.target.value);
+            }, CONFIG.PERFORMANCE.DEBOUNCE_DELAY));
+        }
+    }
+
+    static #bindCategories() {
+        const container = document.querySelector('.category-filters');
+        if (container) {
+            EventManager.delegate(container, 'click', '.category-filter', (e, target) => {
+                e.preventDefault();
+                const category = target.dataset.category;
+                appState.currentCategory = category;
+                this.render();
+            });
+        }
+    }
+
+    static #initCommentModal() {
+        // 评论模态框初始化代码
+    }
+
+    static async render(filteredData = null) {
+        // 防重复渲染
+        if (this.#isRendering) {
+            this.#renderQueue.push(filteredData);
+            return;
+        }
+
+        this.#isRendering = true;
+        const container = document.getElementById('momentsContainer');
+        if (!container) {
+            this.#isRendering = false;
+            return;
+        }
+
+        window.firebaseHandler.stopListening();
+
+        const dataToRender = filteredData || this.#data;
+        const filtered = this.#filterByCategory(dataToRender);
+        const sorted = this.#sortByDate(filtered);
+
+        if (sorted.length === 0) {
+            container.innerHTML = this.#renderEmptyState();
+            this.#isRendering = false;
+            this.#processRenderQueue();
+            return;
+        }
+
+        // 使用虚拟滚动优化大数据量
