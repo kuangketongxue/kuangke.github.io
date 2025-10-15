@@ -426,7 +426,8 @@ class FirebaseHandler {
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
-            this.database = firebase.database();
+            // 关键修复：使用警告提示的区域专属数据库URL
+            this.database = firebase.database('https://kuangke-galaxy-default-rtdb.asia-southeast1.firebasedatabase.app');
             this.likesRef = this.database.ref('likes');
             this.commentsRef = this.database.ref('comments');
             this.momentsRef = this.database.ref('moments'); // 朋友圈数据的 Firebase 引用
@@ -611,7 +612,8 @@ class FirebaseHandler {
     }
 }
 }
-const firebaseHandler = new FirebaseHandler();
+// 修复：避免重复声明firebaseHandler变量
+window.firebaseHandler = window.firebaseHandler || new FirebaseHandler();
 
 // ==================== 本地存储管理器 ====================
 class StorageManager {
@@ -631,7 +633,7 @@ class StorageManager {
         try {
             appState.saveToStorage(STORAGE_KEYS.moments, JSON.stringify(data));
             // 尝试同步到 Firebase
-            firebaseHandler.saveMomentsToFirebase(data).catch(err => {
+            window.firebaseHandler.saveMomentsToFirebase(data).catch(err => {
                 console.error('同步朋友圈数据到 Firebase 失败:', err);
             });
             return true;
@@ -662,7 +664,7 @@ class MomentsPageManager {
 
         // 从 Firebase 同步数据（若未禁用）
         if (!this.useLocalStorageOnly) {
-            fbSyncedData = await firebaseHandler.syncMomentsData();
+            fbSyncedData = await window.firebaseHandler.syncMomentsData();
         }
 
         if (savedData && savedData.length > 0) {
@@ -739,7 +741,7 @@ class MomentsPageManager {
             const handler = () => {
                 modal.style.display = 'none';
                 if (appState.currentMomentId) {
-                    firebaseHandler.stopListening(appState.currentMomentId);
+                    window.firebaseHandler.stopListening(appState.currentMomentId);
                     appState.currentMomentId = null;
                 }
             };
@@ -751,7 +753,7 @@ class MomentsPageManager {
             if (e.target === modal) {
                 modal.style.display = 'none';
                 if (appState.currentMomentId) {
-                    firebaseHandler.stopListening(appState.currentMomentId);
+                    window.firebaseHandler.stopListening(appState.currentMomentId);
                     appState.currentMomentId = null;
                 }
             }
@@ -783,7 +785,7 @@ class MomentsPageManager {
         const container = document.getElementById('momentsContainer');
         if (!container) return;
 
-        firebaseHandler.stopListening();
+        window.firebaseHandler.stopListening();
 
         const dataToRender = filteredData || this.data;
         const filtered = this.filterByCategory(dataToRender);
@@ -799,8 +801,8 @@ class MomentsPageManager {
         const cardsHtml = [];
         for (let i = 0; i < sorted.length; i++) {
             const moment = sorted[i];
-            const likes = await firebaseHandler.getLikes(moment.id);
-            const comments = await firebaseHandler.getComments(moment.id);
+            const likes = await window.firebaseHandler.getLikes(moment.id);
+            const comments = await window.firebaseHandler.getComments(moment.id);
             cardsHtml.push(this.renderMomentCard(moment, i, likes, comments.length));
         }
 
@@ -812,7 +814,7 @@ class MomentsPageManager {
     }
 
     static setupRealtimeListeners(momentId) {
-        firebaseHandler.onLikesChange(momentId, (newLikes) => {
+        window.firebaseHandler.onLikesChange(momentId, (newLikes) => {
             const likeBtn = document.querySelector(`button[data-like-id="${momentId}"]`);
             if (!likeBtn) return;
 
@@ -827,7 +829,7 @@ class MomentsPageManager {
             likeBtn.classList.toggle('liked', hasActiveLike);
         });
 
-        firebaseHandler.onCommentsChange(momentId, (newComments) => {
+        window.firebaseHandler.onCommentsChange(momentId, (newComments) => {
             const commentBtn = document.querySelector(`button[data-comment-id="${momentId}"]`);
             if (!commentBtn) return;
 
@@ -910,11 +912,11 @@ class MomentsPageManager {
 
         try {
             if (hasUserLiked) {
-                await firebaseHandler.removeLike(id);
+                await window.firebaseHandler.removeLike(id);
                 localStorage.removeItem(userLikeKey);
                 NotificationManager.show(LanguageManager.t('unlikeSuccess'), 'info');
             } else {
-                await firebaseHandler.addLike(id);
+                await window.firebaseHandler.addLike(id);
                 localStorage.setItem(userLikeKey, 'true');
                 likeBtn.style.transform = 'scale(1.2)';
                 setTimeout(() => {
@@ -933,7 +935,7 @@ class MomentsPageManager {
 
     static async openCommentModal(id) {
         if (appState.currentMomentId && appState.currentMomentId !== id) {
-            firebaseHandler.stopListening(appState.currentMomentId);
+            window.firebaseHandler.stopListening(appState.currentMomentId);
         }
 
         appState.currentMomentId = id;
@@ -950,14 +952,14 @@ class MomentsPageManager {
         }
 
         try {
-            const comments = await firebaseHandler.getComments(id);
+            const comments = await window.firebaseHandler.getComments(id);
             this.renderComments(comments);
         } catch (error) {
             console.error("Failed to load initial comments:", error);
             commentsList.innerHTML = `<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">${LanguageManager.t('operationFailed')}</p>`;
         }
 
-        firebaseHandler.onCommentsChange(id, (newComments) => {
+        window.firebaseHandler.onCommentsChange(id, (newComments) => {
             this.renderComments(newComments);
         });
 
@@ -1021,7 +1023,7 @@ class MomentsPageManager {
                 appState.saveToStorage(STORAGE_KEYS.username, username);
             }
 
-            await firebaseHandler.addComment(appState.currentMomentId, content, username);
+            await window.firebaseHandler.addComment(appState.currentMomentId, content, username);
             input.value = '';
             NotificationManager.show(LanguageManager.t('commentSuccess'), 'success');
         } catch (error) {
@@ -1105,7 +1107,6 @@ class SuccessPageManager {
                 btn.classList.add('active');
                 btn.setAttribute('aria-pressed', 'true');
 
-                const viewType = btn.dataset.view;
                 const timeline = document.getElementById('diaryTimeline');
                 if (timeline) {
                     if (viewType === 'grid') {
