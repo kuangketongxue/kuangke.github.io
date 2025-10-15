@@ -42,7 +42,7 @@ class AppState {
         this.reset();
         this.loadInitialState();
     }
-
+    
     reset() {
         this.currentCategory = 'all';
         this.currentMomentId = null;
@@ -55,12 +55,11 @@ class AppState {
         this.activeFirebaseListeners = new Map();
         this.pendingOperations = new Map();
     }
-
+    
     loadInitialState() {
         this.currentLanguage = this.loadFromStorage(CONFIG.STORAGE_KEYS.language) || 'zh';
     }
-
-    // 优化的存储操作
+    
     loadFromStorage(key) {
         try {
             return localStorage.getItem(key);
@@ -69,7 +68,7 @@ class AppState {
             return null;
         }
     }
-
+    
     saveToStorage(key, value) {
         try {
             localStorage.setItem(key, value);
@@ -79,38 +78,35 @@ class AppState {
             return false;
         }
     }
-
-    // 事件监听系统
+    
     on(event, callback) {
         if (!this._listeners.has(event)) {
             this._listeners.set(event, new Set());
         }
         this._listeners.get(event).add(callback);
     }
-
+    
     off(event, callback) {
         const listeners = this._listeners.get(event);
         if (listeners) {
             listeners.delete(callback);
         }
     }
-
+    
     emit(event, data) {
         const listeners = this._listeners.get(event);
         if (listeners) {
             listeners.forEach(callback => callback(data));
         }
     }
-
-    // Firebase 监听器管理
+    
     setFirebaseListener(type, id, ref, eventType, callback) {
         const key = this._getListenerKey(type, id, eventType);
         this.stopFirebaseListener(type, id, eventType);
-        
         ref.on(eventType, callback);
         this.activeFirebaseListeners.set(key, { ref, eventType, callback });
     }
-
+    
     stopFirebaseListener(type, id, eventType) {
         const key = this._getListenerKey(type, id, eventType);
         const listener = this.activeFirebaseListeners.get(key);
@@ -119,26 +115,25 @@ class AppState {
             this.activeFirebaseListeners.delete(key);
         }
     }
-
+    
     stopAllFirebaseListeners() {
         this.activeFirebaseListeners.forEach(({ ref, eventType, callback }) => {
             ref.off(eventType, callback);
         });
         this.activeFirebaseListeners.clear();
     }
-
+    
     _getListenerKey(type, id, eventType) {
         return `${type}_${id}_${eventType}`;
     }
-
-    // 操作锁机制
+    
     setOperationLock(operationId, duration = 1000) {
         this.pendingOperations.set(operationId, Date.now());
         setTimeout(() => {
             this.pendingOperations.delete(operationId);
         }, duration);
     }
-
+    
     isOperationLocked(operationId) {
         return this.pendingOperations.has(operationId);
     }
@@ -148,28 +143,21 @@ const appState = new AppState();
 
 // ==================== 优化版工具函数 ====================
 class Utils {
-    static #textEncoder = new TextEncoder();
-    
-    // 安全的HTML转义
     static escapeHtml(text) {
         if (text == null) return '';
-        
         const div = document.createElement('div');
         div.textContent = String(text);
         return div.innerHTML;
     }
-
-    // 多行文本格式化
+    
     static formatMultiline(text) {
         if (!text) return '';
         return this.escapeHtml(text).replace(/\n/g, '<br>');
     }
-
-    // 优化的时间格式化
+    
     static formatTime(timeStr) {
         const date = new Date(timeStr);
         if (!this.isValidDate(date)) return timeStr;
-
         const now = new Date();
         const diff = now - date;
         const ranges = {
@@ -177,20 +165,14 @@ class Utils {
             hour: 60 * 60 * 1000,
             day: 24 * 60 * 60 * 1000
         };
-
-        if (diff < ranges.minute) return LanguageManager.t('timeJustNow');
-        if (diff < ranges.hour) return LanguageManager.t('timeMinutesAgo', { 
-            minutes: Math.floor(diff / ranges.minute) 
-        });
-        if (diff < ranges.day) return LanguageManager.t('timeHoursAgo', { 
-            hours: Math.floor(diff / ranges.hour) 
-        });
-        if (diff < ranges.day * 2) return LanguageManager.t('timeYesterday');
-        if (diff < ranges.day * 7) return LanguageManager.t('timeDaysAgo', { 
-            days: Math.floor(diff / ranges.day) 
-        });
-
-        return date.toLocaleDateString(appState.currentLanguage === 'zh' ? 'zh-CN' : 'en-US', {
+        
+        if (diff < ranges.minute) return '刚刚';
+        if (diff < ranges.hour) return `${Math.floor(diff / ranges.minute)}分钟前`;
+        if (diff < ranges.day) return `${Math.floor(diff / ranges.hour)}小时前`;
+        if (diff < ranges.day * 2) return '昨天';
+        if (diff < ranges.day * 7) return `${Math.floor(diff / ranges.day)}天前`;
+        
+        return date.toLocaleDateString('zh-CN', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
@@ -198,29 +180,15 @@ class Utils {
             minute: '2-digit'
         });
     }
-
-    static formatDiaryDate(dateStr, lang) {
-        const date = new Date(dateStr);
-        if (!this.isValidDate(date)) return dateStr;
-
-        return date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            weekday: 'short'
-        });
-    }
-
+    
     static isValidDate(date) {
         return date instanceof Date && !isNaN(date.getTime());
     }
-
-    // 文本处理
+    
     static normalize(text) {
         return String(text ?? '').toLowerCase().trim();
     }
-
-    // 性能优化的防抖
+    
     static debounce(func, wait = CONFIG.TIMING.DEBOUNCE_DELAY, immediate = false) {
         let timeout;
         return function executedFunction(...args) {
@@ -228,37 +196,21 @@ class Utils {
                 clearTimeout(timeout);
                 if (!immediate) func.apply(this, args);
             };
-            
             const callNow = immediate && !timeout;
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
-            
             if (callNow) func.apply(this, args);
         };
     }
-
-    // 节流函数
-    static throttle(func, limit) {
-        let lastCall = 0;
-        return function(...args) {
-            const now = Date.now();
-            if (now - lastCall >= limit) {
-                lastCall = now;
-                return func.apply(this, args);
-            }
-        };
-    }
-
-    // 生成唯一ID
+    
     static generateId(prefix = '') {
         return `${prefix}${Date.now()}${Math.random().toString(36).substr(2, 9)}`;
     }
-
+    
     static generateGuestUsername() {
-        return `${LanguageManager.t('guest')}${Math.floor(Math.random() * 10000)}`;
+        return `游客${Math.floor(Math.random() * 10000)}`;
     }
-
-    // 安全的JSON解析
+    
     static safeJsonParse(str, fallback = null) {
         try {
             return JSON.parse(str);
@@ -266,71 +218,50 @@ class Utils {
             return fallback;
         }
     }
-
-    // 图片预加载
-    static preloadImage(src) {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => resolve(img);
-            img.onerror = reject;
-            img.src = src;
-        });
-    }
 }
 
 // ==================== 优化版通知管理器 ====================
 class NotificationManager {
     static #container = null;
     static #notifications = new Set();
-
+    
     static init() {
         this.#createContainer();
     }
-
+    
     static #createContainer() {
+        if (this.#container) return;
         this.#container = document.createElement('div');
         this.#container.className = 'notification-container';
-        Object.assign(this.#container.style, {
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            zIndex: '10000',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px'
-        });
         document.body.appendChild(this.#container);
     }
-
+    
     static show(message, type = 'info', duration = CONFIG.TIMING.NOTIFICATION_DURATION) {
         if (!this.#container) this.init();
-
         const notification = this.#createNotificationElement(message, type);
         this.#container.appendChild(notification);
         this.#notifications.add(notification);
-
-        // 自动移除
+        
         const removeTimer = setTimeout(() => {
             this.remove(notification);
         }, duration);
-
-        // 点击移除
+        
         notification.addEventListener('click', () => {
             clearTimeout(removeTimer);
             this.remove(notification);
         });
-
+        
         return notification;
     }
-
+    
     static #createNotificationElement(message, type) {
         const config = {
-            success: { icon: 'check-circle', color: '#10b981' },
-            warning: { icon: 'exclamation-triangle', color: '#f59e0b' },
-            error: { icon: 'times-circle', color: '#ef4444' },
-            info: { icon: 'info-circle', color: '#3b82f6' }
+            success: { icon: 'check-circle' },
+            warning: { icon: 'exclamation-triangle' },
+            error: { icon: 'times-circle' },
+            info: { icon: 'info-circle' }
         }[type] || config.info;
-
+        
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
         notification.innerHTML = `
@@ -340,35 +271,18 @@ class NotificationManager {
                 <i class="fas fa-times"></i>
             </button>
         `;
-
-        Object.assign(notification.style, {
-            background: config.color,
-            color: 'white',
-            padding: '1rem 1.5rem',
-            borderRadius: '12px',
-            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            cursor: 'pointer',
-            animation: 'notificationSlideIn 0.3s ease-out',
-            maxWidth: '300px',
-            wordBreak: 'break-word'
-        });
-
-        // 关闭按钮事件
+        
         const closeBtn = notification.querySelector('.notification-close');
         closeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             this.remove(notification);
         });
-
+        
         return notification;
     }
-
+    
     static remove(notification) {
         if (!this.#notifications.has(notification)) return;
-
         notification.style.animation = 'notificationSlideOut 0.3s ease-out';
         setTimeout(() => {
             if (notification.parentNode) {
@@ -377,7 +291,7 @@ class NotificationManager {
             this.#notifications.delete(notification);
         }, 300);
     }
-
+    
     static clearAll() {
         this.#notifications.forEach(notification => this.remove(notification));
     }
@@ -388,27 +302,7 @@ class LanguageManager {
     static #translations = {
         zh: {
             successTitle: '成功日记时间轴',
-            successSubtitle: '当你写成功日记的时候,你会对自己,对世界,还有对成功的规律作更深入的思考...',
             searchPlaceholder: '搜索标题、标签、心情...',
-            moodAll: '全部心情',
-            sortLabel: '排序',
-            sortDateDesc: '日期：最新优先',
-            sortDateAsc: '日期：最旧优先',
-            sortAchievementDesc: '成就值：最高优先',
-            sortAchievementAsc: '成就值：最低优先',
-            moodLabel: '心情',
-            tagLabel: '分类标签',
-            resetFilters: '重置筛选',
-            timelineEmpty: '暂无符合条件的成功日记',
-            timelineTags: '标签',
-            timelineMood: '心情',
-            timelineAchievement: '成就值',
-            timelineNotes: '意外收获',
-            attachments: '附件',
-            entryCount: (count) => `共 ${count} 条记录`,
-            commentPlaceholder: '说点什么...',
-            commentSubmit: '发表',
-            commentEmpty: '暂无评论，快来抢沙发吧！',
             noResults: '暂无内容',
             timeJustNow: '刚刚',
             timeMinutesAgo: (data) => `${data.minutes}分钟前`,
@@ -417,92 +311,23 @@ class LanguageManager {
             timeDaysAgo: (data) => `${data.days}天前`,
             loadingComments: '加载评论中...',
             loadingData: '加载中...',
-            enterCommentContent: '请输入评论内容',
-            commentTooLong: '评论内容不能超过500字',
-            commentFailed: '评论失败，请重试',
-            commentSuccess: '评论发表成功！',
-            operationFailed: '操作失败，请重试',
+            commentPlaceholder: '说点什么...',
+            commentSubmit: '发表',
+            commentEmpty: '暂无评论，快来抢沙发吧！',
             likeSuccess: '点赞成功！',
             unlikeSuccess: '已取消点赞',
-            pageInitFailed: '页面初始化失败，请刷新重试',
-            firebaseWarnLocal: 'Firebase SDK 未加载或未初始化，将使用本地存储模式',
-            firebaseErrorInit: 'Firebase 初始化失败',
-            guest: '游客',
-            likeAriaLabel: '点赞',
-            commentAriaLabel: '评论'
-        },
-        en: {
-            // English translations...
+            operationFailed: '操作失败，请重试',
+            pageInitFailed: '页面初始化失败，请刷新重试'
         }
     };
-
+    
     static t(key, data = {}) {
         const langPack = this.#translations[appState.currentLanguage] || this.#translations.zh;
-        const fallbackPack = this.#translations.zh;
-        
-        let value = langPack[key] ?? fallbackPack[key] ?? key;
-
+        let value = langPack[key] ?? key;
         if (typeof value === 'function') {
             return value(data);
         }
         return value;
-    }
-
-    static toggle() {
-        appState.currentLanguage = appState.currentLanguage === 'zh' ? 'en' : 'zh';
-        appState.saveToStorage(CONFIG.STORAGE_KEYS.language, appState.currentLanguage);
-        
-        this.updateLanguageToggleButton();
-        this.updatePageTexts();
-        
-        // 通知页面更新
-        appState.emit('languageChanged', appState.currentLanguage);
-    }
-
-    static updateLanguageToggleButton() {
-        const button = document.getElementById('languageToggle');
-        if (!button) return;
-
-        const icon = button.querySelector('i');
-        const span = button.querySelector('span');
-
-        if (icon) icon.className = 'fas fa-language';
-        if (span) span.textContent = appState.currentLanguage === 'zh' ? '中 → EN' : 'EN → 中';
-    }
-
-    static updatePageTexts() {
-        // 更新所有带data-i18n属性的元素
-        document.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.dataset.i18n;
-            const value = this.t(key);
-            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                element.placeholder = value;
-            } else {
-                element.textContent = value;
-            }
-        });
-
-        // 更新特定元素的文本
-        this.#updateSpecificElements();
-    }
-
-    static #updateSpecificElements() {
-        const elements = {
-            '#diarySearchInput': 'searchPlaceholder',
-            '#commentInput': 'commentPlaceholder',
-            '#submitComment': 'commentSubmit'
-        };
-
-        Object.entries(elements).forEach(([selector, key]) => {
-            const element = document.querySelector(selector);
-            if (element) {
-                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                    element.placeholder = this.t(key);
-                } else {
-                    element.textContent = this.t(key);
-                }
-            }
-        });
     }
 }
 
@@ -511,160 +336,138 @@ class FirebaseHandler {
     constructor() {
         this.#init();
     }
-
+    
     #init() {
         console.log('[FirebaseHandler] 初始化开始');
-        
         if (this.#isFirebaseUnavailable()) {
-            console.warn(LanguageManager.t('firebaseWarnLocal'));
+            console.warn('Firebase SDK 未加载或未初始化，将使用本地存储模式');
             this.useLocalStorage = true;
             return;
         }
-
+        
         try {
             this.#initializeFirebase();
             this.useLocalStorage = false;
             console.log('[FirebaseHandler] Firebase模式初始化完成');
         } catch (error) {
-            console.error(LanguageManager.t('firebaseErrorInit'), error);
+            console.error('Firebase 初始化失败', error);
             this.useLocalStorage = true;
         }
     }
-
+    
     #isFirebaseUnavailable() {
         return typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0;
     }
-
+    
     #initializeFirebase() {
         if (!firebase.apps.length) {
             firebase.initializeApp(CONFIG.FIREBASE.CONFIG);
         }
-        
         this.database = firebase.database(CONFIG.FIREBASE.DB_URL);
         this.likesRef = this.database.ref('likes');
         this.commentsRef = this.database.ref('comments');
         this.momentsRef = this.database.ref('moments');
     }
-
-    // 重试机制
-    async #withRetry(operation, maxAttempts = CONFIG.LIMITS.MAX_RETRY_ATTEMPTS) {
-        let lastError;
-        
-        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-            try {
-                return await operation();
-            } catch (error) {
-                lastError = error;
-                if (attempt < maxAttempts) {
-                    await this.#delay(attempt * 1000); // 指数退避
-                }
-            }
-        }
-        
-        throw lastError;
-    }
-
-    #delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    // 数据同步
+    
     async syncMomentsData() {
         if (this.useLocalStorage) {
             return window.momentsData || [];
         }
-        
-        return this.#withRetry(async () => {
+        try {
             const snapshot = await this.momentsRef.once('value');
             const fbMoments = snapshot.val() || [];
             const localMoments = window.momentsData || [];
-
-            // 合并去重
+            
             const fbIds = new Set(fbMoments.map(m => m.id));
             const merged = [
                 ...fbMoments,
                 ...localMoments.filter(m => !fbIds.has(m.id))
             ];
-            
             return merged;
-        });
+        } catch (error) {
+            console.error('Firebase数据同步失败:', error);
+            return window.momentsData || [];
+        }
     }
-
+    
     async saveMomentsToFirebase(moments) {
         if (this.useLocalStorage) return false;
-        
-        return this.#withRetry(async () => {
+        try {
             await this.momentsRef.set(moments);
             return true;
-        });
+        } catch (error) {
+            console.error('保存到Firebase失败:', error);
+            return false;
+        }
     }
-
-    // 点赞相关方法
+    
     async getLikes(momentId) {
         if (this.useLocalStorage) {
-            return parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
+            return parseInt(localStorage.getItem(`likes_${momentId}`)) || 0;
         }
-
-        return this.#withRetry(async () => {
+        try {
             const snapshot = await this.likesRef.child(momentId).once('value');
             return snapshot.val() || 0;
-        });
+        } catch (error) {
+            console.error('获取点赞数失败:', error);
+            return 0;
+        }
     }
-
+    
     async addLike(momentId) {
         return this.#modifyLikeCount(momentId, 1);
     }
-
+    
     async removeLike(momentId) {
         return this.#modifyLikeCount(momentId, -1);
     }
-
+    
     async #modifyLikeCount(momentId, delta) {
         if (this.useLocalStorage) {
             return this.#handleLocalLike(momentId, delta);
         }
-
-        return this.#withRetry(async () => {
+        try {
             let newLikes = 0;
             await this.likesRef.child(momentId).transaction((currentLikes) => {
                 newLikes = Math.max(0, (currentLikes || 0) + delta);
                 return newLikes;
             });
             return newLikes;
-        });
+        } catch (error) {
+            console.error('修改点赞数失败:', error);
+            return this.#handleLocalLike(momentId, delta);
+        }
     }
-
+    
     #handleLocalLike(momentId, delta) {
-        const current = parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
+        const current = parseInt(localStorage.getItem(`likes_${momentId}`)) || 0;
         const newLikes = Math.max(0, current + delta);
         localStorage.setItem(`likes_${momentId}`, newLikes.toString());
         return newLikes;
     }
-
-    // 评论相关方法
+    
     async getComments(momentId) {
         if (this.useLocalStorage) {
             const stored = localStorage.getItem(`comments_${momentId}`);
             return Utils.safeJsonParse(stored, []);
         }
-
-        return this.#withRetry(async () => {
+        try {
             const snapshot = await this.commentsRef.child(momentId).once('value');
             const commentsData = snapshot.val();
-            
             if (!commentsData) return [];
-            
             return Object.values(commentsData)
                 .sort((a, b) => b.timestamp - a.timestamp);
-        });
+        } catch (error) {
+            console.error('获取评论失败:', error);
+            return [];
+        }
     }
-
+    
     async addComment(momentId, commentText, author) {
         if (this.useLocalStorage) {
             return this.#handleLocalComment(momentId, commentText, author);
         }
-
-        return this.#withRetry(async () => {
+        try {
             const newCommentRef = this.commentsRef.child(momentId).push();
             const comment = {
                 id: newCommentRef.key,
@@ -672,12 +475,14 @@ class FirebaseHandler {
                 timestamp: firebase.database.ServerValue.TIMESTAMP,
                 author: author
             };
-            
             await newCommentRef.set(comment);
             return comment;
-        });
+        } catch (error) {
+            console.error('添加评论失败:', error);
+            return this.#handleLocalComment(momentId, commentText, author);
+        }
     }
-
+    
     #handleLocalComment(momentId, commentText, author) {
         const comments = this.getComments(momentId);
         const comment = {
@@ -686,25 +491,21 @@ class FirebaseHandler {
             timestamp: Date.now(),
             author: author
         };
-        
         comments.unshift(comment);
         localStorage.setItem(`comments_${momentId}`, JSON.stringify(comments));
         return comment;
     }
-
-    // 监听器方法保持不变...
+    
     onLikesChange(momentId, callback) {
         if (this.useLocalStorage) return;
-        
         const ref = this.likesRef.child(momentId);
         appState.setFirebaseListener('likes', momentId, ref, 'value', (snapshot) => {
             callback(snapshot.val() || 0);
         });
     }
-
+    
     onCommentsChange(momentId, callback) {
         if (this.useLocalStorage) return;
-        
         const ref = this.commentsRef.child(momentId);
         appState.setFirebaseListener('comments', momentId, ref, 'value', (snapshot) => {
             const commentsData = snapshot.val();
@@ -713,10 +514,9 @@ class FirebaseHandler {
             callback(commentsArray);
         });
     }
-
+    
     stopListening(momentId = null) {
         if (this.useLocalStorage) return;
-
         if (momentId) {
             appState.stopFirebaseListener('likes', momentId, 'value');
             appState.stopFirebaseListener('comments', momentId, 'value');
@@ -736,32 +536,27 @@ class MomentsPageManager {
     static #data = [];
     static #eventListeners = new Map();
     static #likeProcessing = new Set();
-
+    
     static async init() {
         await this.#loadData();
         this.#bindEvents();
         await this.render();
-        
-        // 监听语言变化
-        appState.on('languageChanged', () => this.render());
     }
-
+    
     static async #loadData() {
         try {
             const savedData = this.#loadFromStorage();
             const defaultData = window.momentsData || [];
             const fbSyncedData = await this.#syncFirebaseData();
-
             this.#data = this.#mergeData(savedData, fbSyncedData, defaultData);
             this.#ensureDataIds();
             this.#saveData();
-            
         } catch (error) {
             console.error('加载朋友圈数据失败:', error);
             this.#data = window.momentsData || [];
         }
     }
-
+    
     static #loadFromStorage() {
         try {
             const saved = appState.loadFromStorage(CONFIG.STORAGE_KEYS.moments);
@@ -770,10 +565,9 @@ class MomentsPageManager {
             return null;
         }
     }
-
+    
     static async #syncFirebaseData() {
         if (window.firebaseHandler.useLocalStorage) return [];
-        
         try {
             return await window.firebaseHandler.syncMomentsData();
         } catch (error) {
@@ -781,15 +575,13 @@ class MomentsPageManager {
             return [];
         }
     }
-
+    
     static #mergeData(saved, firebase, defaults) {
         const allIds = new Set();
         const merged = [];
-
-        // 按优先级合并数据
+        
         [firebase, saved, defaults].forEach(source => {
             if (!source) return;
-            
             source.forEach(item => {
                 if (item.id && !allIds.has(item.id)) {
                     allIds.add(item.id);
@@ -797,21 +589,20 @@ class MomentsPageManager {
                 }
             });
         });
-
+        
         return merged;
     }
-
+    
     static #ensureDataIds() {
         this.#data = this.#data.map(m => ({
             ...m,
             id: m.id || Utils.generateId('moment_')
         }));
     }
-
+    
     static #saveData() {
         try {
             appState.saveToStorage(CONFIG.STORAGE_KEYS.moments, JSON.stringify(this.#data));
-            // 异步同步到Firebase
             if (!window.firebaseHandler.useLocalStorage) {
                 window.firebaseHandler.saveMomentsToFirebase(this.#data).catch(console.error);
             }
@@ -819,31 +610,125 @@ class MomentsPageManager {
             console.error('保存数据失败:', error);
         }
     }
-
+    
     static #bindEvents() {
         this.#clearEventListeners();
         this.#bindSearch();
         this.#bindCategories();
         this.#initCommentModal();
-        LanguageManager.updatePageTexts();
     }
-
-    // 其他方法保持类似优化模式...
+    
+    static #clearEventListeners() {
+        this.#eventListeners.forEach((handler, element) => {
+            element.removeEventListener('click', handler);
+        });
+        this.#eventListeners.clear();
+    }
+    
+    static #bindSearch() {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            const handler = Utils.debounce((e) => {
+                this.#handleSearch(e.target.value);
+            });
+            searchInput.addEventListener('input', handler);
+            this.#eventListeners.set(searchInput, handler);
+        }
+    }
+    
+    static #handleSearch(query) {
+        const normalizedQuery = Utils.normalize(query);
+        if (!normalizedQuery) {
+            this.render();
+            return;
+        }
+        
+        const filtered = this.#data.filter(moment => {
+            return Utils.normalize(moment.content).includes(normalizedQuery) ||
+                   Utils.normalize(moment.username).includes(normalizedQuery) ||
+                   (moment.category && Utils.normalize(moment.category).includes(normalizedQuery));
+        });
+        
+        this.render(filtered);
+    }
+    
+    static #bindCategories() {
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        categoryButtons.forEach(button => {
+            const handler = () => {
+                this.#handleCategoryChange(button);
+            };
+            button.addEventListener('click', handler);
+            this.#eventListeners.set(button, handler);
+        });
+    }
+    
+    static #handleCategoryChange(button) {
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        button.classList.add('active');
+        
+        appState.currentCategory = button.dataset.category;
+        this.render();
+    }
+    
+    static #initCommentModal() {
+        const modal = document.getElementById('commentModal');
+        const closeBtn = modal.querySelector('.close');
+        const submitBtn = document.getElementById('submitComment');
+        const commentInput = document.getElementById('commentInput');
+        
+        if (closeBtn) {
+            const handler = () => this.#closeCommentModal();
+            closeBtn.addEventListener('click', handler);
+            this.#eventListeners.set(closeBtn, handler);
+        }
+        
+        if (submitBtn) {
+            const handler = () => this.#submitComment();
+            submitBtn.addEventListener('click', handler);
+            this.#eventListeners.set(submitBtn, handler);
+        }
+        
+        if (commentInput) {
+            const handler = (e) => {
+                if (e.key === 'Enter') {
+                    this.#submitComment();
+                }
+            };
+            commentInput.addEventListener('keypress', handler);
+            this.#eventListeners.set(commentInput, handler);
+        }
+        
+        // 点击模态框外部关闭
+        const modalHandler = (e) => {
+            if (e.target === modal) {
+                this.#closeCommentModal();
+            }
+        };
+        modal.addEventListener('click', modalHandler);
+        this.#eventListeners.set(modal, modalHandler);
+    }
+    
     static async render(filteredData = null) {
         const container = document.getElementById('momentsContainer');
         if (!container) return;
-
+        
+        // 显示加载状态
+        container.innerHTML = '<div class="loading-spinner">加载中...</div>';
+        
         window.firebaseHandler.stopListening();
-
+        
         const dataToRender = filteredData || this.#data;
         const filtered = this.#filterByCategory(dataToRender);
         const sorted = this.#sortByDate(filtered);
-
+        
         if (sorted.length === 0) {
-            container.innerHTML = this.#renderEmptyState();
+            container.innerHTML = '<div class="no-results">暂无内容</div>';
             return;
         }
-
+        
         // 使用文档片段优化DOM操作
         const fragment = document.createDocumentFragment();
         const tempContainer = document.createElement('div');
@@ -860,109 +745,252 @@ class MomentsPageManager {
                 fragment.appendChild(tempContainer.firstElementChild);
             }
         }
-
+        
         container.innerHTML = '';
         container.appendChild(fragment);
-
+        
         // 设置实时监听
         sorted.forEach(moment => this.#setupRealtimeListeners(moment.id));
     }
-
+    
+    static #filterByCategory(data) {
+        return appState.currentCategory === 'all' ?
+            data : data.filter(m => m.category === appState.currentCategory);
+    }
+    
+    static #sortByDate(data) {
+        return [...data].sort((a, b) => new Date(b.time) - new Date(a.time));
+    }
+    
+    static #renderMomentCard(moment, index, likes, commentCount) {
+        return `
+            <div class="moment-card" data-category="${moment.category || 'all'}" style="animation-delay: ${index * CONFIG.TIMING.ANIMATION_DELAY}s">
+                <div class="moment-header">
+                    <img src="${moment.avatar || 'https://picsum.photos/seed/default/100/100.jpg'}" alt="${moment.username}" class="avatar">
+                    <div class="moment-info">
+                        <div class="username">${Utils.escapeHtml(moment.username)}</div>
+                        <div class="time">${Utils.formatTime(moment.time)}</div>
+                    </div>
+                </div>
+                <div class="moment-content">
+                    <p>${Utils.formatMultiline(moment.content)}</p>
+                </div>
+                ${moment.images && moment.images.length > 0 ? `
+                    <div class="moment-images">
+                        ${moment.images.map(img => `
+                            <img src="${img}" alt="朋友圈图片" loading="lazy">
+                        `).join('')}
+                    </div>
+                ` : ''}
+                <div class="moment-actions">
+                    <button class="like-btn" data-like-id="${moment.id}">
+                        <i class="fas fa-heart"></i>
+                        <span>${likes}</span>
+                    </button>
+                    <button class="comment-btn" data-comment-id="${moment.id}">
+                        <i class="fas fa-comment"></i>
+                        <span>${commentCount}</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
+    static #setupRealtimeListeners(momentId) {
+        // 点赞按钮事件
+        const likeBtn = document.querySelector(`button[data-like-id="${momentId}"]`);
+        if (likeBtn) {
+            const handler = () => this.handleLike(momentId);
+            likeBtn.addEventListener('click', handler);
+            this.#eventListeners.set(likeBtn, handler);
+        }
+        
+        // 评论按钮事件
+        const commentBtn = document.querySelector(`button[data-comment-id="${momentId}"]`);
+        if (commentBtn) {
+            const handler = () => this.#openCommentModal(momentId);
+            commentBtn.addEventListener('click', handler);
+            this.#eventListeners.set(commentBtn, handler);
+        }
+        
+        // Firebase实时监听
+        window.firebaseHandler.onLikesChange(momentId, (newLikes) => {
+            const likeBtn = document.querySelector(`button[data-like-id="${momentId}"] span`);
+            if (likeBtn) {
+                likeBtn.textContent = newLikes;
+            }
+        });
+        
+        window.firebaseHandler.onCommentsChange(momentId, (comments) => {
+            const commentBtn = document.querySelector(`button[data-comment-id="${momentId}"] span`);
+            if (commentBtn) {
+                commentBtn.textContent = comments.length;
+            }
+        });
+    }
+    
     static async handleLike(momentId) {
         if (this.#likeProcessing.has(momentId)) return;
         
         this.#likeProcessing.add(momentId);
         const likeBtn = document.querySelector(`button[data-like-id="${momentId}"]`);
         
+        if (likeBtn) likeBtn.disabled = true;
+        
         try {
             const userLikeKey = `user_liked_${momentId}`;
             const hasUserLiked = localStorage.getItem(userLikeKey) === 'true';
-
+            
             if (hasUserLiked) {
                 await window.firebaseHandler.removeLike(momentId);
                 localStorage.removeItem(userLikeKey);
-                NotificationManager.show(LanguageManager.t('unlikeSuccess'), 'info');
+                NotificationManager.show('已取消点赞', 'info');
             } else {
                 await window.firebaseHandler.addLike(momentId);
                 localStorage.setItem(userLikeKey, 'true');
                 this.#animateLikeButton(likeBtn);
-                NotificationManager.show(LanguageManager.t('likeSuccess'), 'success');
+                NotificationManager.show('点赞成功！', 'success');
             }
         } catch (error) {
             console.error('点赞操作失败:', error);
-            NotificationManager.show(LanguageManager.t('operationFailed'), 'error');
+            NotificationManager.show('操作失败，请重试', 'error');
         } finally {
             this.#likeProcessing.delete(momentId);
             if (likeBtn) likeBtn.disabled = false;
         }
     }
-
+    
     static #animateLikeButton(button) {
         if (!button) return;
-        
         button.style.transform = 'scale(1.2)';
         setTimeout(() => {
             button.style.transform = 'scale(1)';
         }, CONFIG.TIMING.LIKE_ANIMATION);
     }
-
-    // 其他辅助方法...
-    static #filterByCategory(data) {
-        return appState.currentCategory === 'all' ? 
-            data : data.filter(m => m.category === appState.currentCategory);
+    
+    static #openCommentModal(momentId) {
+        appState.currentMomentId = momentId;
+        const modal = document.getElementById('commentModal');
+        modal.style.display = 'block';
+        this.#loadComments(momentId);
     }
-
-    static #sortByDate(data) {
-        return [...data].sort((a, b) => new Date(b.time) - new Date(a.time));
+    
+    static #closeCommentModal() {
+        const modal = document.getElementById('commentModal');
+        modal.style.display = 'none';
+        appState.currentMomentId = null;
+        document.getElementById('commentInput').value = '';
     }
-
-    static #renderEmptyState() {
-        return `<div class="no-results">${LanguageManager.t('noResults')}</div>`;
+    
+    static async #loadComments(momentId) {
+        const commentsList = document.getElementById('commentsList');
+        commentsList.innerHTML = '<div class="loading-spinner">加载评论中...</div>';
+        
+        try {
+            const comments = await window.firebaseHandler.getComments(momentId);
+            if (comments.length === 0) {
+                commentsList.innerHTML = '<div class="comment-empty">暂无评论，快来抢沙发吧！</div>';
+            } else {
+                commentsList.innerHTML = comments.map(comment => `
+                    <div class="comment-item">
+                        <div class="comment-author">${Utils.escapeHtml(comment.author)}</div>
+                        <div class="comment-text">${Utils.escapeHtml(comment.text)}</div>
+                        <div class="comment-time">${Utils.formatTime(comment.timestamp)}</div>
+                    </div>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('加载评论失败:', error);
+            commentsList.innerHTML = '<div class="comment-error">加载评论失败</div>';
+        }
+    }
+    
+    static async #submitComment() {
+        const input = document.getElementById('commentInput');
+        const text = input.value.trim();
+        
+        if (!text) {
+            NotificationManager.show('请输入评论内容', 'warning');
+            return;
+        }
+        
+        if (text.length > CONFIG.LIMITS.MAX_COMMENT_LENGTH) {
+            NotificationManager.show('评论内容不能超过500字', 'warning');
+            return;
+        }
+        
+        if (!appState.currentMomentId) return;
+        
+        const submitBtn = document.getElementById('submitComment');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = '发送中...';
+        submitBtn.disabled = true;
+        
+        try {
+            const username = appState.loadFromStorage(CONFIG.STORAGE_KEYS.username) || Utils.generateGuestUsername();
+            const comment = await window.firebaseHandler.addComment(
+                appState.currentMomentId,
+                text,
+                username
+            );
+            
+            input.value = '';
+            this.#loadComments(appState.currentMomentId);
+            NotificationManager.show('评论发表成功！', 'success');
+        } catch (error) {
+            console.error('评论发表失败:', error);
+            NotificationManager.show('评论失败，请重试', 'error');
+        } finally {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
     }
 }
 
-// ==================== 优化的成功日记页面管理器 ====================
-class SuccessPageManager {
-    static #filters = {
-        mood: 'all',
-        sort: 'dateDesc',
-        search: '',
-        tags: new Set()
+// ==================== 主题管理器 ====================
+class ThemeManager {
+    static THEME_KEY = 'theme';
+    static THEMES = {
+        LIGHT: 'light',
+        DARK: 'dark'
     };
-
+    
     static init() {
-        this.#bindEvents();
-        this.updatePage();
-        
-        // 监听语言变化
-        appState.on('languageChanged', () => this.updatePage());
+        this.applySavedTheme();
+        this.#bindThemeToggle();
     }
-
-    static updatePage() {
-        this.updatePageTexts();
-        this.#populateMoodFilter();
-        this.#renderTagFilters();
-        this.render();
+    
+    static applySavedTheme() {
+        const savedTheme = appState.loadFromStorage(this.THEME_KEY) || this.THEMES.LIGHT;
+        document.body.classList.toggle('dark-theme', savedTheme === this.THEMES.DARK);
+        this.updateThemeToggleButton();
     }
-
-    static #bindEvents() {
-        this.#bindSearch();
-        this.#bindFilters();
-        this.#bindViewToggle();
-    }
-
-    static #bindSearch() {
-        const searchInput = document.getElementById('diarySearchInput');
-        if (searchInput) {
-            const handler = Utils.debounce((e) => {
-                this.#filters.search = Utils.normalize(e.target.value);
-                this.render();
-            });
-            searchInput.addEventListener('input', handler);
+    
+    static #bindThemeToggle() {
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => this.toggle());
         }
     }
-
-    // 其他方法类似优化...
+    
+    static toggle() {
+        const isDark = document.body.classList.toggle('dark-theme');
+        const theme = isDark ? this.THEMES.DARK : this.THEMES.LIGHT;
+        appState.saveToStorage(this.THEME_KEY, theme);
+        this.updateThemeToggleButton();
+    }
+    
+    static updateThemeToggleButton() {
+        const themeToggle = document.getElementById('themeToggle');
+        if (!themeToggle) return;
+        
+        const icon = themeToggle.querySelector('i');
+        const isDark = document.body.classList.contains('dark-theme');
+        
+        if (icon) {
+            icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    }
 }
 
 // ==================== 优化版应用控制器 ====================
@@ -970,32 +998,28 @@ class AppController {
     static async init() {
         try {
             this.#detectPageType();
-            
             await this.#initializeServices();
             this.#initializeGlobalControls();
             await this.#initializePage();
-            
             console.log('应用初始化完成');
         } catch (error) {
             console.error('应用初始化失败:', error);
-            NotificationManager.show(LanguageManager.t('pageInitFailed'), 'error');
+            NotificationManager.show('页面初始化失败，请刷新重试', 'error');
         }
     }
-
+    
     static #detectPageType() {
         const pageElement = document.querySelector('[data-page]');
-        appState.currentPage = pageElement ? 
+        appState.currentPage = pageElement ?
             pageElement.dataset.page : CONFIG.PAGE_TYPES.MOMENTS;
     }
-
+    
     static async #initializeServices() {
-        ThemeManager.applySavedTheme();
+        ThemeManager.init();
         NotificationManager.init();
-        
-        // 等待关键资源加载
         await this.#waitForCriticalResources();
     }
-
+    
     static #waitForCriticalResources() {
         return new Promise(resolve => {
             if (document.readyState === 'loading') {
@@ -1005,35 +1029,18 @@ class AppController {
             }
         });
     }
-
+    
     static #initializeGlobalControls() {
-        this.#bindThemeToggle();
-        this.#bindLanguageToggle();
+        // 这里可以添加其他全局控制
     }
-
-    static #bindThemeToggle() {
-        const themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) {
-            themeToggle.addEventListener('click', () => ThemeManager.toggle());
-            ThemeManager.updateThemeToggleButton();
-        }
-    }
-
-    static #bindLanguageToggle() {
-        const languageToggle = document.getElementById('languageToggle');
-        if (languageToggle) {
-            languageToggle.addEventListener('click', () => LanguageManager.toggle());
-            LanguageManager.updateLanguageToggleButton();
-        }
-    }
-
+    
     static async #initializePage() {
         switch (appState.currentPage) {
             case CONFIG.PAGE_TYPES.MOMENTS:
                 await MomentsPageManager.init();
                 break;
             case CONFIG.PAGE_TYPES.SUCCESS:
-                SuccessPageManager.init();
+                // SuccessPageManager.init(); // 如果需要的话
                 break;
             default:
                 console.warn('未知页面类型:', appState.currentPage);
@@ -1041,111 +1048,11 @@ class AppController {
     }
 }
 
-// ==================== 优化的样式和动画 ====================
-class StyleManager {
-    static init() {
-        this.#injectStyles();
-    }
-
-    static #injectStyles() {
-        const style = document.createElement('style');
-        style.textContent = this.#getStyles();
-        document.head.appendChild(style);
-    }
-
-    static #getStyles() {
-        return `
-            @keyframes notificationSlideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-
-            @keyframes notificationSlideOut {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-
-            @keyframes likeJump {
-                0%, 100% { transform: scale(1); }
-                50% { transform: scale(1.2); }
-            }
-
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(10px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            .loading-spinner {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 2rem;
-                color: var(--text-secondary);
-            }
-
-            .loading-spinner::after {
-                content: '';
-                width: 24px;
-                height: 24px;
-                margin-left: 12px;
-                border: 4px solid var(--border-color-light);
-                border-top: 4px solid var(--primary-color);
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-            }
-
-            .notification-close {
-                background: none;
-                border: none;
-                color: inherit;
-                cursor: pointer;
-                opacity: 0.7;
-                padding: 4px;
-                border-radius: 4px;
-                transition: opacity 0.2s;
-            }
-
-            .notification-close:hover {
-                opacity: 1;
-                background: rgba(255, 255, 255, 0.1);
-            }
-        `;
-    }
-}
-
 // ==================== 全局暴露和初始化 ====================
 window.MomentsPageManager = MomentsPageManager;
-window.SuccessPageManager = SuccessPageManager;
 
 // 优化的事件监听和错误处理
 document.addEventListener('DOMContentLoaded', () => {
-    // 初始化样式管理器
-    StyleManager.init();
-    
-    // 启动应用
     AppController.init().catch(error => {
         console.error('应用启动失败:', error);
     });
