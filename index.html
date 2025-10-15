@@ -83,6 +83,34 @@
         }
     </style>
 </head>
+        <!-- Firebase SDK（放在其他脚本之前） -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- Firebase 配置 -->
+    <script>
+        // 替换为你从 Firebase Console 复制的配置
+       const firebaseConfig = {
+  apiKey: "AIzaSyD9NwlJxYiRjFh3cPjpJGmQAhogmrFpU4M",
+  authDomain: "kuangke-galaxy.firebaseapp.com",
+  projectId: "kuangke-galaxy",
+  storageBucket: "kuangke-galaxy.firebasestorage.app",
+  messagingSenderId: "416862048915",
+  appId: "1:416862048915:web:6578fcd23d8cf882c53366",
+  measurementId: "G-VZCQM1H4BR"
+};
+
+        // 初始化 Firebase
+        firebase.initializeApp(firebaseConfig);
+        console.log('Firebase 初始化成功！');
+    </script>
+
+    <!-- 项目脚本 -->
+    <script src="data.js"></script>
+    <script src="firebase-handler.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
 <body data-page="moments">
     <header class="header">
         <div class="container">
