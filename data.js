@@ -1330,7 +1330,7 @@ console.log('🚀 开始加载数据模块...');
 console.log('🔍 验证成功日记数据...');
 const validationResults = successDiaryData.map(entry => ({
     id: entry.id,
-    valid: validateDiaryEntry(entry)
+    valid: validateDiaryEntry(entry, diaryTagLibrary, moodLibrary)
 }));
 
 const invalidCount = validationResults.filter(r => !r.valid).length;
