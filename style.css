@@ -460,6 +460,23 @@ body.light-mode .sky-icon {
     position: relative;
     z-index: 1;
 }
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+}
+.moment-info {
+    flex: 1;
+    margin-left: 12px;
+}
+.author-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
 .category-tag {
     padding: 0.32rem 0.85rem;
     background: linear-gradient(135deg, var(--accent-color), #f472b6);
@@ -486,6 +503,34 @@ body.light-mode .sky-icon {
     position: relative;
     z-index: 1;
     white-space: pre-wrap;
+}
+.moment-text {
+    color: var(--text-primary);
+    line-height: 1.8;
+}
+.moment-images {
+    display: grid;
+    gap: 8px;
+    margin-top: 12px;
+}
+.moment-images.single-image {
+    grid-template-columns: 1fr;
+}
+.moment-images:not(.single-image) {
+    grid-template-columns: repeat(3, 1fr);
+}
+.moment-images img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.moment-images img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 .moment-image {
     width: 100%;
@@ -557,6 +602,12 @@ body.light-mode .sky-icon {
 .action-btn.liked::before {
     background: rgba(248, 113, 113, 0.2);
 }
+.like-count,
+.comment-count {
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
 /* Comment modal */
 .modal {
     display: none;
@@ -570,6 +621,8 @@ body.light-mode .sky-icon {
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     animation: fadeIn 0.3s ease-out;
+    align-items: center;
+    justify-content: center;
 }
 .modal-content {
     background: var(--bg-card);
@@ -630,6 +683,49 @@ body.light-mode .sky-icon {
 .comment-item:hover {
     border-color: rgba(139, 92, 246, 0.45);
     transform: translateX(6px);
+}
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.comment-author {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.comment-author i {
+    margin-right: 6px;
+    color: var(--accent-color);
+}
+.comment-time {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+.comment-text {
+    color: var(--text-primary);
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+.no-comments {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+}
+.no-comments i {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.3;
+    display: block;
+}
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-secondary);
+}
+.error {
+    text-align: center;
+    padding: 20px;
+    color: #ef4444;
 }
 .comment-input-area {
     display: flex;
@@ -1465,6 +1561,20 @@ body.light-mode .digest-col--rating {
         filter: drop-shadow(0 0 18px rgba(236, 72, 153, 0.45));
     }
 }
+@keyframes heartFloat {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px) scale(1.5);
+    }
+}
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
 /* ==================== 缺失样式补充 ==================== */
 /* 隐藏类 */
 .hidden {
@@ -1633,7 +1743,6 @@ body.light-mode .digest-col--rating {
     transform: rotate(180deg);
 }
 /* 返回顶部按钮 */
-/* 返回顶部按钮 */
 .back-to-top {
     position: fixed;
     bottom: 2rem;
@@ -1707,6 +1816,28 @@ body.light-mode .digest-col--rating {
     /* 保持原有的时间轴样式 */
 }
 /* 加载动画 */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    font-size: 16px;
+    color: #999;
+}
+.loading-spinner::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 @keyframes rotate {
     from {
         transform: rotate(0deg);
@@ -1885,55 +2016,52 @@ body.light-mode .circle {
     border-radius: 20px;
     text-decoration: none;
     color: var(--text-primary);
-    background: var(--card-bg);
+    background: var(--bg-card-soft);
     transition: all 0.3s ease;
     margin-right: 15px;
+    border: 1px solid var(--border-color);
 }
-
 .exam-link:hover {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    border-color: transparent;
 }
-
 .exam-icon {
     font-size: 18px;
     display: flex;
     align-items: center;
 }
-
 .exam-text {
     font-size: 14px;
     font-weight: 500;
 }
-
 /* 响应式设计 */
 @media (max-width: 768px) {
     .exam-text {
         display: none;
     }
-    
     .exam-link {
         padding: 8px 12px;
     }
 }
 /* 社交媒体底部样式 */
 .social-footer {
-    background-color: var(--bg-color);
+    background: var(--bg-card);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
     border-top: 1px solid var(--border-color);
     padding: 2rem 0;
     margin-top: 3rem;
     text-align: center;
 }
-
 .social-links {
     display: flex;
     justify-content: center;
     gap: 2rem;
     margin-bottom: 1rem;
 }
-
 .social-link {
     display: flex;
     align-items: center;
@@ -1941,52 +2069,59 @@ body.light-mode .circle {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: var(--card-bg);
+    background: var(--bg-secondary);
     border: 2px solid var(--border-color);
-    color: var(--text-color);
+    color: var(--text-primary);
     font-size: 1.5rem;
     transition: all 0.3s ease;
     text-decoration: none;
 }
-
 .social-link:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
 }
-
 .social-link.wechat:hover {
     background-color: #07C160;
     border-color: #07C160;
     color: white;
 }
-
 .social-link.github:hover {
     background-color: #333;
     border-color: #333;
     color: white;
 }
-
 .social-link.x:hover {
     background-color: #000;
     border-color: #000;
     color: white;
 }
-
 .copyright {
-    color: var(--text-muted);
+    color: var(--text-secondary);
     font-size: 0.9rem;
     margin: 0;
 }
-
 /* 响应式设计 */
 @media (max-width: 768px) {
     .social-links {
         gap: 1.5rem;
     }
-    
     .social-link {
         width: 45px;
         height: 45px;
         font-size: 1.3rem;
     }
+}
+/* Toast 提示样式 */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    z-index: 10000;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
 }
