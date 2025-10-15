@@ -1,969 +1,31 @@
-// ==================== 优化版常量定义 ====================
-const CONFIG = Object.freeze({
-    STORAGE_KEYS: {
-        moments: 'momentsData',
-        diary: 'successDiaryData',
-        theme: 'theme',
-        language: 'language',
-        username: 'username'
-    },
-    PAGE_TYPES: {
-        MOMENTS: 'moments',
-        SUCCESS: 'success'
-    },
-    TIMING: {
-        DEBOUNCE_DELAY: 300,
-        ANIMATION_DELAY: 0.1,
-        NOTIFICATION_DURATION: 3000,
-        LIKE_ANIMATION: 200
-    },
-    LIMITS: {
-        MAX_COMMENT_LENGTH: 500,
-        MAX_RETRY_ATTEMPTS: 3
-    },
-    FIREBASE: {
-        CONFIG: {
-            apiKey: "AIzaSyD9NwlJxYiRjFh3cPjpJGmQAhogmrFpU4M",
-            authDomain: "kuangke-galaxy.firebaseapp.com",
-            projectId: "kuangke-galaxy",
-            storageBucket: "kuangke-galaxy.firebasestorage.app",
-            messagingSenderId: "416862048915",
-            appId: "1:416862048915:web:6578fcd23d8cf882c53366",
-            measurementId: "G-VZCQM1H4BR"
-        },
-        DB_URL: 'https://kuangke-galaxy-default-rtdb.asia-southeast1.firebasedatabase.app'
-    },
-    PERFORMANCE: {
-        BATCH_RENDER_SIZE: 10,
-        VIRTUAL_SCROLL_THRESHOLD: 50,
-        CACHE_TIMEOUT: 30000,
-        DEBOUNCE_DELAY: 300,
-        THROTTLE_DELAY: 100,
-        MEMORY_CHECK_INTERVAL: 30000
-    },
-    LIMITS: {
-        MAX_RENDER_ITEMS: 1000,
-        MAX_CACHE_ITEMS: 100,
-        MAX_COMMENT_LENGTH: 500,
-        MAX_RETRY_ATTEMPTS: 3
-    }
-});
-
-// ==================== 优化版全局状态管理 ====================
-class AppState {
-    constructor() {
-        this._listeners = new Map();
-        this.reset();
-        this.loadInitialState();
-    }
-
-    reset() {
-        this.currentCategory = 'all';
-        this.currentMomentId = null;
-        this.selectedDiaryTags = new Set();
-        this.diaryMoodFilter = 'all';
-        this.diarySortBy = 'dateDesc';
-        this.diarySearchKeyword = '';
-        this.currentLanguage = 'zh';
-        this.currentPage = CONFIG.PAGE_TYPES.MOMENTS;
-        this.activeFirebaseListeners = new Map();
-        this.pendingOperations = new Map();
-    }
-
-    loadInitialState() {
-        this.currentLanguage = this.loadFromStorage(CONFIG.STORAGE_KEYS.language) || 'zh';
-    }
-
-    // 优化的存储操作
-    loadFromStorage(key) {
-        try {
-            return localStorage.getItem(key);
-        } catch (error) {
-            console.warn(`[AppState] Storage load failed: ${key}`, error);
-            return null;
-        }
-    }
-
-    saveToStorage(key, value) {
-        try {
-            localStorage.setItem(key, value);
-            return true;
-        } catch (error) {
-            console.warn(`[AppState] Storage save failed: ${key}`, error);
-            return false;
-        }
-    }
-
-    // 事件监听系统
-    on(event, callback) {
-        if (!this._listeners.has(event)) {
-            this._listeners.set(event, new Set());
-        }
-        this._listeners.get(event).add(callback);
-    }
-
-    off(event, callback) {
-        const listeners = this._listeners.get(event);
-        if (listeners) {
-            listeners.delete(callback);
-        }
-    }
-
-    emit(event, data) {
-        const listeners = this._listeners.get(event);
-        if (listeners) {
-            listeners.forEach(callback => callback(data));
-        }
-    }
-
-    // Firebase 监听器管理
-    setFirebaseListener(type, id, ref, eventType, callback) {
-        const key = this._getListenerKey(type, id, eventType);
-        this.stopFirebaseListener(type, id, eventType);
-        
-        ref.on(eventType, callback);
-        this.activeFirebaseListeners.set(key, { ref, eventType, callback });
-    }
-
-    stopFirebaseListener(type, id, eventType) {
-        const key = this._getListenerKey(type, id, eventType);
-        const listener = this.activeFirebaseListeners.get(key);
-        if (listener) {
-            listener.ref.off(listener.eventType, listener.callback);
-            this.activeFirebaseListeners.delete(key);
-        }
-    }
-
-    stopAllFirebaseListeners() {
-        this.activeFirebaseListeners.forEach(({ ref, eventType, callback }) => {
-            ref.off(eventType, callback);
-        });
-        this.activeFirebaseListeners.clear();
-    }
-
-    _getListenerKey(type, id, eventType) {
-        return `${type}_${id}_${eventType}`;
-    }
-
-    // 操作锁机制
-    setOperationLock(operationId, duration = 1000) {
-        this.pendingOperations.set(operationId, Date.now());
-        setTimeout(() => {
-            this.pendingOperations.delete(operationId);
-        }, duration);
-    }
-
-    isOperationLocked(operationId) {
-        return this.pendingOperations.has(operationId);
-    }
-}
-
-const appState = new AppState();
-
-// ==================== 优化版工具函数 ====================
-class Utils {
-    static #textEncoder = new TextEncoder();
-    
-    // 安全的HTML转义
-    static escapeHtml(text) {
-        if (text == null) return '';
-        
-        const div = document.createElement('div');
-        div.textContent = String(text);
-        return div.innerHTML;
-    }
-
-    // 多行文本格式化
-    static formatMultiline(text) {
-        if (!text) return '';
-        return this.escapeHtml(text).replace(/\n/g, '<br>');
-    }
-
-    // 优化的时间格式化
-    static formatTime(timeStr) {
-        const date = new Date(timeStr);
-        if (!this.isValidDate(date)) return timeStr;
-
-        const now = new Date();
-        const diff = now - date;
-        const ranges = {
-            minute: 60 * 1000,
-            hour: 60 * 60 * 1000,
-            day: 24 * 60 * 60 * 1000
-        };
-
-        if (diff < ranges.minute) return LanguageManager.t('timeJustNow');
-        if (diff < ranges.hour) return LanguageManager.t('timeMinutesAgo', { 
-            minutes: Math.floor(diff / ranges.minute) 
-        });
-        if (diff < ranges.day) return LanguageManager.t('timeHoursAgo', { 
-            hours: Math.floor(diff / ranges.hour) 
-        });
-        if (diff < ranges.day * 2) return LanguageManager.t('timeYesterday');
-        if (diff < ranges.day * 7) return LanguageManager.t('timeDaysAgo', { 
-            days: Math.floor(diff / ranges.day) 
-        });
-
-        return date.toLocaleDateString(appState.currentLanguage === 'zh' ? 'zh-CN' : 'en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    }
-
-    static formatDiaryDate(dateStr, lang) {
-        const date = new Date(dateStr);
-        if (!this.isValidDate(date)) return dateStr;
-
-        return date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            weekday: 'short'
-        });
-    }
-
-    static isValidDate(date) {
-        return date instanceof Date && !isNaN(date.getTime());
-    }
-
-    // 文本处理
-    static normalize(text) {
-        return String(text ?? '').toLowerCase().trim();
-    }
-
-    // 性能优化的防抖
-    static debounce(func, wait = CONFIG.TIMING.DEBOUNCE_DELAY, immediate = false) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                if (!immediate) func.apply(this, args);
-            };
-            
-            const callNow = immediate && !timeout;
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-            
-            if (callNow) func.apply(this, args);
-        };
-    }
-
-    // 节流函数
-    static throttle(func, limit) {
-        let lastCall = 0;
-        return function(...args) {
-            const now = Date.now();
-            if (now - lastCall >= limit) {
-                lastCall = now;
-                return func.apply(this, args);
-            }
-        };
-    }
-
-    // 生成唯一ID
-    static generateId(prefix = '') {
-        return `${prefix}${Date.now()}${Math.random().toString(36).substr(2, 9)}`;
-    }
-
-    static generateGuestUsername() {
-        return `${LanguageManager.t('guest')}${Math.floor(Math.random() * 10000)}`;
-    }
-
-    // 安全的JSON解析
-    static safeJsonParse(str, fallback = null) {
-        try {
-            return JSON.parse(str);
-        } catch {
-            return fallback;
-        }
-    }
-
-    // 图片预加载
-    static preloadImage(src) {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => resolve(img);
-            img.onerror = reject;
-            img.src = src;
-        });
-    }
-}
-
-// ==================== 优化事件管理器 ====================
-class EventManager {
-    static #eventHandlers = new Map();
-
-    static delegate(container, event, selector, handler, options = {}) {
-        const key = `${event}_${selector}`;
-        
-        if (!this.#eventHandlers.has(key)) {
-            const delegatedHandler = (e) => {
-                const target = e.target.closest(selector);
-                if (target && container.contains(target)) {
-                    handler.call(target, e, target);
-                }
-            };
-            
-            container.addEventListener(event, delegatedHandler, options);
-            this.#eventHandlers.set(key, delegatedHandler);
-        }
-    }
-
-    static removeDelegated(container, event, selector) {
-        const key = `${event}_${selector}`;
-        const handler = this.#eventHandlers.get(key);
-        if (handler) {
-            container.removeEventListener(event, handler);
-            this.#eventHandlers.delete(key);
-        }
-    }
-
-    static clearAll() {
-        this.#eventHandlers.forEach((handler, key) => {
-            const [event, selector] = key.split('_');
-            // 这里需要知道容器，简化处理
-            document.removeEventListener(event, handler);
-        });
-        this.#eventHandlers.clear();
-    }
-}
-
-// ==================== 内存管理器 ====================
-class MemoryManager {
-    static #cleanupCallbacks = [];
-
-    static registerCleanup(callback) {
-        this.#cleanupCallbacks.push(callback);
-    }
-
-    static cleanup() {
-        console.log('[MemoryManager] 执行内存清理');
-        
-        this.#cleanupCallbacks.forEach(callback => {
-            try {
-                callback();
-            } catch (error) {
-                console.warn('清理回调执行失败:', error);
-            }
-        });
-
-        // 强制垃圾回收（如果可用）
-        if (window.gc) {
-            window.gc();
-        }
-
-        this.#cleanupCallbacks = [];
-    }
-
-    // 监控内存使用
-    static startMonitoring() {
-        if (performance.memory) {
-            setInterval(() => {
-                const memory = performance.memory;
-                const used = memory.usedJSHeapSize / 1048576; // MB
-                const limit = memory.jsHeapSizeLimit / 1048576; // MB
-                
-                if (used / limit > 0.7) { // 内存使用超过70%
-                    this.cleanup();
-                }
-            }, CONFIG.PERFORMANCE.MEMORY_CHECK_INTERVAL);
-        }
-    }
-}
-
-// ==================== 优化版通知管理器 ====================
-class NotificationManager {
-    static #container = null;
-    static #notifications = new Set();
-
-    static init() {
-        this.#createContainer();
-    }
-
-    static #createContainer() {
-        this.#container = document.createElement('div');
-        this.#container.className = 'notification-container';
-        Object.assign(this.#container.style, {
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            zIndex: '10000',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px'
-        });
-        document.body.appendChild(this.#container);
-    }
-
-    static show(message, type = 'info', duration = CONFIG.TIMING.NOTIFICATION_DURATION) {
-        if (!this.#container) this.init();
-
-        const notification = this.#createNotificationElement(message, type);
-        this.#container.appendChild(notification);
-        this.#notifications.add(notification);
-
-        // 自动移除
-        const removeTimer = setTimeout(() => {
-            this.remove(notification);
-        }, duration);
-
-        // 点击移除
-        notification.addEventListener('click', () => {
-            clearTimeout(removeTimer);
-            this.remove(notification);
-        });
-
-        return notification;
-    }
-
-    static #createNotificationElement(message, type) {
-        const config = {
-            success: { icon: 'check-circle', color: '#10b981' },
-            warning: { icon: 'exclamation-triangle', color: '#f59e0b' },
-            error: { icon: 'times-circle', color: '#ef4444' },
-            info: { icon: 'info-circle', color: '#3b82f6' }
-        }[type] || config.info;
-
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.innerHTML = `
-            <i class="fas fa-${config.icon}"></i>
-            <span>${Utils.escapeHtml(message)}</span>
-            <button class="notification-close" aria-label="关闭">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-
-        Object.assign(notification.style, {
-            background: config.color,
-            color: 'white',
-            padding: '1rem 1.5rem',
-            borderRadius: '12px',
-            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            cursor: 'pointer',
-            animation: 'notificationSlideIn 0.3s ease-out',
-            maxWidth: '300px',
-            wordBreak: 'break-word'
-        });
-
-        // 关闭按钮事件
-        const closeBtn = notification.querySelector('.notification-close');
-        closeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.remove(notification);
-        });
-
-        return notification;
-    }
-
-    static remove(notification) {
-        if (!this.#notifications.has(notification)) return;
-
-        notification.style.animation = 'notificationSlideOut 0.3s ease-out';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-            this.#notifications.delete(notification);
-        }, 300);
-    }
-
-    static clearAll() {
-        this.#notifications.forEach(notification => this.remove(notification));
-    }
-}
-
-// ==================== 优化版语言管理器 ====================
-class LanguageManager {
-    static #translations = {
-        zh: {
-            successTitle: '成功日记时间轴',
-            successSubtitle: '当你写成功日记的时候,你会对自己,对世界,还有对成功的规律作更深入的思考...',
-            searchPlaceholder: '搜索标题、标签、心情...',
-            moodAll: '全部心情',
-            sortLabel: '排序',
-            sortDateDesc: '日期：最新优先',
-            sortDateAsc: '日期：最旧优先',
-            sortAchievementDesc: '成就值：最高优先',
-            sortAchievementAsc: '成就值：最低优先',
-            moodLabel: '心情',
-            tagLabel: '分类标签',
-            resetFilters: '重置筛选',
-            timelineEmpty: '暂无符合条件的成功日记',
-            timelineTags: '标签',
-            timelineMood: '心情',
-            timelineAchievement: '成就值',
-            timelineNotes: '意外收获',
-            attachments: '附件',
-            entryCount: (count) => `共 ${count} 条记录`,
-            commentPlaceholder: '说点什么...',
-            commentSubmit: '发表',
-            commentEmpty: '暂无评论，快来抢沙发吧！',
-            noResults: '暂无内容',
-            timeJustNow: '刚刚',
-            timeMinutesAgo: (data) => `${data.minutes}分钟前`,
-            timeHoursAgo: (data) => `${data.hours}小时前`,
-            timeYesterday: '昨天',
-            timeDaysAgo: (data) => `${data.days}天前`,
-            loadingComments: '加载评论中...',
-            loadingData: '加载中...',
-            enterCommentContent: '请输入评论内容',
-            commentTooLong: '评论内容不能超过500字',
-            commentFailed: '评论失败，请重试',
-            commentSuccess: '评论发表成功！',
-            operationFailed: '操作失败，请重试',
-            likeSuccess: '点赞成功！',
-            unlikeSuccess: '已取消点赞',
-            pageInitFailed: '页面初始化失败，请刷新重试',
-            firebaseWarnLocal: 'Firebase SDK 未加载或未初始化，将使用本地存储模式',
-            firebaseErrorInit: 'Firebase 初始化失败',
-            guest: '游客',
-            likeAriaLabel: '点赞',
-            commentAriaLabel: '评论'
-        },
-        en: {
-            successTitle: 'Success Diary Timeline',
-            successSubtitle: 'When you write a success diary, you gain deeper insights into yourself, the world, and the laws of success...',
-            searchPlaceholder: 'Search title, tags, mood...',
-            moodAll: 'All Moods',
-            sortLabel: 'Sort',
-            sortDateDesc: 'Date: Newest First',
-            sortDateAsc: 'Date: Oldest First',
-            sortAchievementDesc: 'Achievement: Highest First',
-            sortAchievementAsc: 'Achievement: Lowest First',
-            moodLabel: 'Mood',
-            tagLabel: 'Tags',
-            resetFilters: 'Reset Filters',
-            timelineEmpty: 'No matching success diary entries',
-            timelineTags: 'Tags',
-            timelineMood: 'Mood',
-            timelineAchievement: 'Achievement',
-            timelineNotes: 'Unexpected Gains',
-            attachments: 'Attachments',
-            entryCount: (count) => `Total ${count} entries`,
-            commentPlaceholder: 'Say something...',
-            commentSubmit: 'Submit',
-            commentEmpty: 'No comments yet, be the first!',
-            noResults: 'No content',
-            timeJustNow: 'Just now',
-            timeMinutesAgo: (data) => `${data.minutes} minutes ago`,
-            timeHoursAgo: (data) => `${data.hours} hours ago`,
-            timeYesterday: 'Yesterday',
-            timeDaysAgo: (data) => `${data.days} days ago`,
-            loadingComments: 'Loading comments...',
-            loadingData: 'Loading...',
-            enterCommentContent: 'Please enter comment content',
-            commentTooLong: 'Comment cannot exceed 500 characters',
-            commentFailed: 'Comment failed, please try again',
-            commentSuccess: 'Comment posted successfully!',
-            operationFailed: 'Operation failed, please try again',
-            likeSuccess: 'Liked successfully!',
-            unlikeSuccess: 'Like removed',
-            pageInitFailed: 'Page initialization failed, please refresh',
-            firebaseWarnLocal: 'Firebase SDK not loaded or initialized, using local storage mode',
-            firebaseErrorInit: 'Firebase initialization failed',
-            guest: 'Guest',
-            likeAriaLabel: 'Like',
-            commentAriaLabel: 'Comment'
-        }
-    };
-
-    static t(key, data = {}) {
-        const langPack = this.#translations[appState.currentLanguage] || this.#translations.zh;
-        const fallbackPack = this.#translations.zh;
-        
-        let value = langPack[key] ?? fallbackPack[key] ?? key;
-
-        if (typeof value === 'function') {
-            return value(data);
-        }
-        return value;
-    }
-
-    static toggle() {
-        appState.currentLanguage = appState.currentLanguage === 'zh' ? 'en' : 'zh';
-        appState.saveToStorage(CONFIG.STORAGE_KEYS.language, appState.currentLanguage);
-        
-        this.updateLanguageToggleButton();
-        this.updatePageTexts();
-        
-        // 通知页面更新
-        appState.emit('languageChanged', appState.currentLanguage);
-    }
-
-    static updateLanguageToggleButton() {
-        const button = document.getElementById('languageToggle');
-        if (!button) return;
-
-        const icon = button.querySelector('i');
-        const span = button.querySelector('span');
-
-        if (icon) icon.className = 'fas fa-language';
-        if (span) span.textContent = appState.currentLanguage === 'zh' ? '中 → EN' : 'EN → 中';
-    }
-
-    static updatePageTexts() {
-        // 更新所有带data-i18n属性的元素
-        document.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.dataset.i18n;
-            const value = this.t(key);
-            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                element.placeholder = value;
-            } else {
-                element.textContent = value;
-            }
-        });
-
-        // 更新特定元素的文本
-        this.#updateSpecificElements();
-    }
-
-    static #updateSpecificElements() {
-        const elements = {
-            '#diarySearchInput': 'searchPlaceholder',
-            '#commentInput': 'commentPlaceholder',
-            '#submitComment': 'commentSubmit'
-        };
-
-        Object.entries(elements).forEach(([selector, key]) => {
-            const element = document.querySelector(selector);
-            if (element) {
-                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                    element.placeholder = this.t(key);
-                } else {
-                    element.textContent = this.t(key);
-                }
-            }
-        });
-    }
-}
-
-// ==================== 优化版Firebase处理器 ====================
-class FirebaseHandler {
-    constructor() {
-        this.#requestCache = new Map();
-        this.#cacheTimeout = CONFIG.PERFORMANCE.CACHE_TIMEOUT;
-        this.#init();
-    }
-
-    #init() {
-        console.log('[FirebaseHandler] 初始化开始');
-        
-        if (this.#isFirebaseUnavailable()) {
-            console.warn(LanguageManager.t('firebaseWarnLocal'));
-            this.useLocalStorage = true;
-            return;
-        }
-
-        try {
-            this.#initializeFirebase();
-            this.useLocalStorage = false;
-            console.log('[FirebaseHandler] Firebase模式初始化完成');
-        } catch (error) {
-            console.error(LanguageManager.t('firebaseErrorInit'), error);
-            this.useLocalStorage = true;
-        }
-    }
-
-    #isFirebaseUnavailable() {
-        return typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0;
-    }
-
-    #initializeFirebase() {
-        if (!firebase.apps.length) {
-            firebase.initializeApp(CONFIG.FIREBASE.CONFIG);
-        }
-        
-        this.database = firebase.database(CONFIG.FIREBASE.DB_URL);
-        this.likesRef = this.database.ref('likes');
-        this.commentsRef = this.database.ref('comments');
-        this.momentsRef = this.database.ref('moments');
-    }
-
-    // 重试机制
-    async #withRetry(operation, maxAttempts = CONFIG.LIMITS.MAX_RETRY_ATTEMPTS) {
-        let lastError;
-        
-        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-            try {
-                return await operation();
-            } catch (error) {
-                lastError = error;
-                if (attempt < maxAttempts) {
-                    await this.#delay(attempt * 1000); // 指数退避
-                }
-            }
-        }
-        
-        throw lastError;
-    }
-
-    #delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    // 缓存机制
-    #getFromCache(key) {
-        const item = this.#requestCache.get(key);
-        if (item && Date.now() - item.timestamp < this.#cacheTimeout) {
-            return item.value;
-        }
-        this.#requestCache.delete(key);
-        return null;
-    }
-
-    #setCache(key, value) {
-        // 限制缓存大小
-        if (this.#requestCache.size >= CONFIG.LIMITS.MAX_CACHE_ITEMS) {
-            const firstKey = this.#requestCache.keys().next().value;
-            this.#requestCache.delete(firstKey);
-        }
-        
-        this.#requestCache.set(key, {
-            value,
-            timestamp: Date.now()
-        });
-    }
-
-    static clearCache() {
-        this.#requestCache.clear();
-    }
-
-    // 数据同步
-    async syncMomentsData() {
-        if (this.useLocalStorage) {
-            return window.momentsData || [];
-        }
-        
-        return this.#withRetry(async () => {
-            const snapshot = await this.momentsRef.once('value');
-            const fbMoments = snapshot.val() || [];
-            const localMoments = window.momentsData || [];
-
-            // 合并去重
-            const fbIds = new Set(fbMoments.map(m => m.id));
-            const merged = [
-                ...fbMoments,
-                ...localMoments.filter(m => !fbIds.has(m.id))
-            ];
-            
-            return merged;
-        });
-    }
-
-    async saveMomentsToFirebase(moments) {
-        if (this.useLocalStorage) return false;
-        
-        return this.#withRetry(async () => {
-            await this.momentsRef.set(moments);
-            return true;
-        });
-    }
-
-    // 点赞相关方法
-    async getLikes(momentId) {
-        const cacheKey = `likes_${momentId}`;
-        const cached = this.#getFromCache(cacheKey);
-        if (cached !== null) return cached;
-
-        if (this.useLocalStorage) {
-            const result = parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
-            this.#setCache(cacheKey, result);
-            return result;
-        }
-
-        return this.#withRetry(async () => {
-            const snapshot = await this.likesRef.child(momentId).once('value');
-            const result = snapshot.val() || 0;
-            this.#setCache(cacheKey, result);
-            return result;
-        });
-    }
-
-    async addLike(momentId) {
-        return this.#modifyLikeCount(momentId, 1);
-    }
-
-    async removeLike(momentId) {
-        return this.#modifyLikeCount(momentId, -1);
-    }
-
-    async #modifyLikeCount(momentId, delta) {
-        if (this.useLocalStorage) {
-            return this.#handleLocalLike(momentId, delta);
-        }
-
-        return this.#withRetry(async () => {
-            let newLikes = 0;
-            await this.likesRef.child(momentId).transaction((currentLikes) => {
-                newLikes = Math.max(0, (currentLikes || 0) + delta);
-                return newLikes;
-            });
-            
-            // 更新缓存
-            this.#setCache(`likes_${momentId}`, newLikes);
-            return newLikes;
-        });
-    }
-
-    #handleLocalLike(momentId, delta) {
-        const current = parseInt(localStorage.getItem(`likes_${momentId}`) || '0');
-        const newLikes = Math.max(0, current + delta);
-        localStorage.setItem(`likes_${momentId}`, newLikes.toString());
-        this.#setCache(`likes_${momentId}`, newLikes);
-        return newLikes;
-    }
-
-    // 评论相关方法
-    async getComments(momentId) {
-        const cacheKey = `comments_${momentId}`;
-        const cached = this.#getFromCache(cacheKey);
-        if (cached !== null) return cached;
-
-        if (this.useLocalStorage) {
-            const stored = localStorage.getItem(`comments_${momentId}`);
-            const result = Utils.safeJsonParse(stored, []);
-            this.#setCache(cacheKey, result);
-            return result;
-        }
-
-        return this.#withRetry(async () => {
-            const snapshot = await this.commentsRef.child(momentId).once('value');
-            const commentsData = snapshot.val();
-            const result = commentsData ? Object.values(commentsData).sort((a, b) => b.timestamp - a.timestamp) : [];
-            this.#setCache(cacheKey, result);
-            return result;
-        });
-    }
-
-    async addComment(momentId, commentText, author) {
-        if (this.useLocalStorage) {
-            return this.#handleLocalComment(momentId, commentText, author);
-        }
-
-        return this.#withRetry(async () => {
-            const newCommentRef = this.commentsRef.child(momentId).push();
-            const comment = {
-                id: newCommentRef.key,
-                text: commentText,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                author: author
-            };
-            
-            await newCommentRef.set(comment);
-            
-            // 清除评论缓存
-            this.#requestCache.delete(`comments_${momentId}`);
-            return comment;
-        });
-    }
-
-    #handleLocalComment(momentId, commentText, author) {
-        const comments = this.getComments(momentId);
-        const comment = {
-            id: Utils.generateId('comment_'),
-            text: commentText,
-            timestamp: Date.now(),
-            author: author
-        };
-        
-        comments.unshift(comment);
-        localStorage.setItem(`comments_${momentId}`, JSON.stringify(comments));
-        this.#requestCache.delete(`comments_${momentId}`);
-        return comment;
-    }
-
-    // 批量操作优化
-    async batchGetLikes(momentIds) {
-        if (this.useLocalStorage) {
-            return momentIds.map(id => 
-                parseInt(localStorage.getItem(`likes_${id}`) || '0')
-            );
-        }
-
-        const promises = momentIds.map(id => this.getLikes(id));
-        return Promise.all(promises);
-    }
-
-    async batchGetComments(momentIds) {
-        if (this.useLocalStorage) {
-            return momentIds.map(id => 
-                Utils.safeJsonParse(localStorage.getItem(`comments_${id}`), [])
-            );
-        }
-
-        const promises = momentIds.map(id => this.getComments(id));
-        return Promise.all(promises);
-    }
-
-    // 监听器方法
-    onLikesChange(momentId, callback) {
-        if (this.useLocalStorage) return;
-        
-        const ref = this.likesRef.child(momentId);
-        appState.setFirebaseListener('likes', momentId, ref, 'value', (snapshot) => {
-            const likes = snapshot.val() || 0;
-            this.#setCache(`likes_${momentId}`, likes);
-            callback(likes);
-        });
-    }
-
-    onCommentsChange(momentId, callback) {
-        if (this.useLocalStorage) return;
-        
-        const ref = this.commentsRef.child(momentId);
-        appState.setFirebaseListener('comments', momentId, ref, 'value', (snapshot) => {
-            const commentsData = snapshot.val();
-            const commentsArray = commentsData ? Object.values(commentsData) : [];
-            commentsArray.sort((a, b) => b.timestamp - a.timestamp);
-            this.#setCache(`comments_${momentId}`, commentsArray);
-            callback(commentsArray);
-        });
-    }
-
-    stopListening(momentId = null) {
-        if (this.useLocalStorage) return;
-
-        if (momentId) {
-            appState.stopFirebaseListener('likes', momentId, 'value');
-            appState.stopFirebaseListener('comments', momentId, 'value');
-        } else {
-            appState.stopAllFirebaseListeners();
-        }
-    }
-}
-
-// 单例模式确保FirebaseHandler唯一实例
-if (typeof window.firebaseHandler === 'undefined') {
-    window.firebaseHandler = new FirebaseHandler();
-}
-
-// ==================== 优化版朋友圈页面管理器 ====================
-class MomentsPageManager {
-    static #data = [];
-    static #renderCache = new Map(); // 渲染缓存
-    static #isRendering = false;
-    static #renderQueue = [];
-    static #likeProcessing = new Set();
-
+/**
+ * Moments 页面核心类（使用 ES2022 私有静态字段）
+ * 负责数据加载、合并、持久化、渲染以及事件管理。
+ */
+class MomentsPage {
+    /* ---------- 私有静态字段 ---------- */
+    static #data = [];                     // 完整数据集合
+    static #isRendering = false;          // 防止并发渲染
+    static #renderQueue = [];             // 待渲染任务队列
+    static #virtualScroll = null;         // 虚拟滚动实例（后文实现）
+    static #PAGE_SIZE = 30;               // 每次渲染的条目数（虚拟滚动）
+
+    /* ---------- 公共入口 ---------- */
     static async init() {
-        await this.#loadData();
-        this.#bindEvents();
-        await this.render();
-        
-        // 监听语言变化
-        appState.on('languageChanged', () => this.render());
-        
-        // 注册内存清理
-        MemoryManager.registerCleanup(() => this.cleanup());
+        try {
+            await this.#loadData();               // 读取本地、Firebase、默认数据并合并
+            this.#bindEvents();                   // 绑定 UI 交互
+            await this.render();                  // 首次渲染
+            // 监听语言变化，自动重新渲染
+            appState.on('languageChanged', () => this.render());
+            // 注册内存清理回调
+            MemoryManager.registerCleanup(() => this.cleanup());
+        } catch (e) {
+            console.error('MomentsPage 初始化失败:', e);
+        }
     }
 
+    /* ---------- 数据加载与合并 ---------- */
     static async #loadData() {
         try {
             const savedData = this.#loadFromStorage();
@@ -972,30 +34,32 @@ class MomentsPageManager {
 
             this.#data = this.#mergeData(savedData, fbSyncedData, defaultData);
             this.#ensureDataIds();
-            this.#saveData();
-            
+            this.#saveData();   // 将合并后的结果写回本地（并异步同步到 Firebase）
         } catch (error) {
             console.error('加载朋友圈数据失败:', error);
+            // 读取不到任何数据时仍保持默认数据，以免页面空白
             this.#data = window.momentsData || [];
         }
     }
 
     static #loadFromStorage() {
         try {
-            const saved = appState.loadFromStorage(CONFIG.STORAGE_KEYS.moments);
-            return saved ? JSON.parse(saved) : null;
-        } catch {
+            const raw = appState.loadFromStorage(CONFIG.STORAGE_KEYS.moments);
+            return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+            console.warn('本地存储读取异常，已回退到默认数据', e);
             return null;
         }
     }
 
     static async #syncFirebaseData() {
+        // 本地调试或离线模式下直接返回空数组
         if (window.firebaseHandler.useLocalStorage) return [];
-        
+
         try {
             return await window.firebaseHandler.syncMomentsData();
         } catch (error) {
-            console.error('Firebase数据同步失败:', error);
+            console.error('Firebase 数据同步失败:', error);
             return [];
         }
     }
@@ -1004,10 +68,9 @@ class MomentsPageManager {
         const allIds = new Set();
         const merged = [];
 
-        // 按优先级合并数据
+        // 合并顺序：Firebase > 本地保存 > 默认数据（优先级高的在前）
         [firebase, saved, defaults].forEach(source => {
             if (!source) return;
-            
             source.forEach(item => {
                 if (item.id && !allIds.has(item.id)) {
                     allIds.add(item.id);
@@ -1015,7 +78,6 @@ class MomentsPageManager {
                 }
             });
         });
-
         return merged;
     }
 
@@ -1028,22 +90,25 @@ class MomentsPageManager {
 
     static #saveData() {
         try {
-            appState.saveToStorage(CONFIG.STORAGE_KEYS.moments, JSON.stringify(this.#data));
-            // 异步同步到Firebase
+            const payload = JSON.stringify(this.#data);
+            appState.saveToStorage(CONFIG.STORAGE_KEYS.moments, payload);
+
+            // 异步同步到 Firebase（不阻塞 UI）
             if (!window.firebaseHandler.useLocalStorage) {
                 window.firebaseHandler.saveMomentsToFirebase(this.#data).catch(console.error);
             }
-        } catch (error) {
-            console.error('保存数据失败:', error);
+        } catch (e) {
+            console.error('保存数据失败:', e);
         }
     }
 
+    /* ---------- 事件绑定 ---------- */
     static #bindEvents() {
         this.#clearEventListeners();
         this.#bindSearch();
         this.#bindCategories();
         this.#initCommentModal();
-        LanguageManager.updatePageTexts();
+        LanguageManager.updatePageTexts(); // 首次渲染前确保语言文本已更新
     }
 
     static #clearEventListeners() {
@@ -1052,54 +117,237 @@ class MomentsPageManager {
 
     static #bindSearch() {
         const searchInput = document.getElementById('momentsSearch');
-        if (searchInput) {
-            searchInput.addEventListener('input', Utils.debounce((e) => {
-                this.handleSearch(e.target.value);
-            }, CONFIG.PERFORMANCE.DEBOUNCE_DELAY));
-        }
+        if (!searchInput) return;
+
+        // 使用 debounce 防止输入频繁触发渲染
+        const handler = Utils.debounce(e => {
+            this.handleSearch(e.target.value);
+        }, CONFIG.PERFORMANCE.DEBOUNCE_DELAY);
+
+        searchInput.addEventListener('input', handler);
     }
 
     static #bindCategories() {
         const container = document.querySelector('.category-filters');
-        if (container) {
-            EventManager.delegate(container, 'click', '.category-filter', (e, target) => {
-                e.preventDefault();
-                const category = target.dataset.category;
-                appState.currentCategory = category;
-                this.render();
-            });
-        }
+        if (!container) return;
+
+        // 采用事件委托，避免为每个按钮单独绑定
+        EventManager.delegate(container, 'click', '.category-filter', (e, target) => {
+            e.preventDefault();
+            const category = target.dataset.category;
+            appState.currentCategory = category;
+            this.render(); // 切换分类后立即渲染
+        });
     }
 
     static #initCommentModal() {
-        // 评论模态框初始化代码
+        // 这里可以放置评论弹窗的初始化逻辑（如实例化 Modal、绑定关闭事件等）
+        // 示例：
+        // this.#commentModal = new CommentModal('#commentModal');
     }
 
+    /* ---------- 渲染入口 ---------- */
     static async render(filteredData = null) {
-        // 防重复渲染
+        // 防止并发渲染：若已有渲染任务在执行，则把本次请求压入队列
         if (this.#isRendering) {
             this.#renderQueue.push(filteredData);
             return;
         }
 
         this.#isRendering = true;
-        const container = document.getElementById('momentsContainer');
-        if (!container) {
+        try {
+            const container = document.getElementById('momentsContainer');
+            if (!container) {
+                console.warn('渲染容器 #momentsContainer 未找到');
+                return;
+            }
+
+            // 停止 Firebase 实时监听，防止渲染期间数据突变
+            if (window.firebaseHandler && typeof window.firebaseHandler.stopListening === 'function') {
+                window.firebaseHandler.stopListening();
+            }
+
+            const dataToRender = filteredData || this.#data;
+            const filtered = this.#filterByCategory(dataToRender);
+            const sorted = this.#sortByDate(filtered);
+
+            if (sorted.length === 0) {
+                container.innerHTML = this.#renderEmptyState();
+                return;
+            }
+
+            // ---------- 虚拟滚动渲染 ----------
+            // 若已有虚拟滚动实例则复用，否则创建新实例
+            if (!this.#virtualScroll) {
+                this.#virtualScroll = new VirtualScroll({
+                    container,
+                    itemHeight: 120,               // 估算的单条目高度（可根据实际 UI 调整）
+                    pageSize: this.#PAGE_SIZE,
+                    renderItem: this.#renderMomentItem.bind(this)
+                });
+            }
+            this.#virtualScroll.updateData(sorted);
+            this.#virtualScroll.refresh(); // 触发首次渲染
+
+        } catch (e) {
+            console.error('渲染过程出错:', e);
+        } finally {
             this.#isRendering = false;
+            // 处理队列中的后续渲染请求
+            if (this.#renderQueue.length > 0) {
+                const next = this.#renderQueue.shift();
+                this.render(next);
+            }
+        }
+    }
+
+    /* ---------- 数据过滤 & 排序 ---------- */
+    static #filterByCategory(data) {
+        const cur = appState.currentCategory;
+        if (!cur || cur === 'all') return data;
+        return data.filter(item => item.category === cur);
+    }
+
+    static #sortByDate(data) {
+        // 按时间倒序（最新在前），若时间字段不存在则保持原顺序
+        return data.slice().sort((a, b) => {
+            const ta = new Date(a.time).getTime() || 0;
+            const tb = new Date(b.time).getTime() || 0;
+            return tb - ta;
+        });
+    }
+
+    /* ---------- 单条目渲染 ---------- */
+    static #renderMomentItem(item) {
+        // 这里返回完整的 HTML 片段，供 VirtualScroll 插入到容器中
+        // 为了保持代码简洁，仅示例关键字段，实际可自行补全样式与交互
+        return `
+            <div class="moment-item" data-id="${item.id}">
+                <div class="moment-header">
+                    <img class="avatar" src="${item.avatar || 'default-avatar.png'}" alt="头像">
+                    <span class="username">${item.username || '匿名'}</span>
+                    <span class="time">${new Date(item.time).toLocaleString()}</span>
+                </div>
+                <div class="moment-content">${item.content || ''}</div>
+                ${item.images ? `<div class="moment-images">${item.images.map(src => `<img src="${src}" alt="图片">`).join('')}</div>` : ''}
+                <div class="moment-actions">
+                    <button class="like-btn">👍 ${item.likes || 0}</button>
+                    <button class="comment-btn">💬 ${item.comments?.length || 0}</button>
+                </div>
+            </div>
+        `;
+    }
+
+    /* ---------- 空状态渲染 ---------- */
+    static #renderEmptyState() {
+        return `
+            <div class="empty-state">
+                <p>暂无动态，快去发布第一条吧！</p>
+            </div>
+        `;
+    }
+
+    /* ---------- 清理资源 ---------- */
+    static cleanup() {
+        // 解除所有事件监听，防止内存泄漏
+        this.#clearEventListeners();
+
+        // 销毁虚拟滚动实例（如果有的话）
+        if (this.#virtualScroll && typeof this.#virtualScroll.destroy === 'function') {
+            this.#virtualScroll.destroy();
+            this.#virtualScroll = null;
+        }
+
+        // 关闭 Firebase 实时监听
+        if (window.firebaseHandler && typeof window.firebaseHandler.stopListening === 'function') {
+            window.firebaseHandler.stopListening();
+        }
+    }
+
+    /* ---------- 搜索处理（示例实现） ---------- */
+    static handleSearch(keyword) {
+        const trimmed = keyword.trim().toLowerCase();
+        if (!trimmed) {
+            this.render(); // 清空搜索时恢复全部
             return;
         }
 
-        window.firebaseHandler.stopListening();
+        const filtered = this.#data.filter(item => {
+            const text = `${item.username || ''} ${item.content || ''}`.toLowerCase();
+            return text.includes(trimmed);
+        });
+        this.render(filtered);
+    }
+}
 
-        const dataToRender = filteredData || this.#data;
-        const filtered = this.#filterByCategory(dataToRender);
-        const sorted = this.#sortByDate(filtered);
+/* ---------- 虚拟滚动实现（简化版） ---------- */
+class VirtualScroll {
+    /**
+     * @param {Object} options
+     *   container: 渲染容器 DOM
+     *   itemHeight: 单条目预估高度（像素）
+     *   pageSize: 每次渲染的条目数量
+     *   renderItem: (item) => HTMLString
+     */
+    constructor({ container, itemHeight = 120, pageSize = 30, renderItem }) {
+        this.container = container;
+        this.itemHeight = itemHeight;
+        this.pageSize = pageSize;
+        this.renderItem = renderItem;
 
-        if (sorted.length === 0) {
-            container.innerHTML = this.#renderEmptyState();
-            this.#isRendering = false;
-            this.#processRenderQueue();
-            return;
+        this.data = [];
+        this.totalHeight = 0;
+        this.scrollHandler = this.onScroll.bind(this);
+        this.container.addEventListener('scroll', this.scrollHandler);
+    }
+
+    updateData(data) {
+        this.data = data;
+        this.totalHeight = data.length * this.itemHeight;
+    }
+
+    refresh() {
+        // 初始化占位容器
+        this.container.innerHTML = `<div class="vs-spacer" style="height:${this.totalHeight}px;position:relative;"></div>`;
+        this.renderVisible(); // 首次渲染可视区
+    }
+
+    onScroll() {
+        this.renderVisible();
+    }
+
+    renderVisible() {
+        const scrollTop = this.container.scrollTop;
+        const containerHeight = this.container.clientHeight;
+
+        const startIdx = Math.max(0, Math.floor(scrollTop / this.itemHeight) - this.pageSize);
+        const endIdx = Math.min(this.data.length, Math.ceil((scrollTop + containerHeight) / this.itemHeight) + this.pageSize);
+
+        const fragment = document.createDocumentFragment();
+        for (let i = startIdx; i < endIdx; i++) {
+            const itemHtml = this.renderItem(this.data[i]);
+            const wrapper = document.createElement('div');
+            wrapper.style.position = 'absolute';
+            wrapper.style.top = `${i * this.itemHeight}px`;
+            wrapper.style.width = '100%';
+            wrapper.innerHTML = itemHtml;
+            fragment.appendChild(wrapper);
         }
 
-        // 使用虚拟滚动优化大数据量
+        // 清空旧内容后插入新内容
+        const spacer = this.container.querySelector('.vs-spacer');
+        spacer.innerHTML = ''; // 移除旧子节点
+        spacer.appendChild(fragment);
+    }
+
+    destroy() {
+        this.container.removeEventListener('scroll', this.scrollHandler);
+        this.container.innerHTML = '';
+        this.data = [];
+    }
+}
+
+/* ---------- 启动入口 ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+    MomentsPage.init();
+});
