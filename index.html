@@ -23,7 +23,6 @@
             overflow: hidden;
             font-weight: 600;
         }
-        
         .ai-nav-button::before {
             content: '';
             position: absolute;
@@ -34,22 +33,18 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
             transition: left 0.5s ease;
         }
-        
         .ai-nav-button:hover::before {
             left: 100%;
         }
-        
         .ai-nav-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
             background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
-        
         .ai-nav-button:active {
             transform: translateY(0);
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
-        
         .ai-icon {
             display: flex;
             align-items: center;
@@ -61,31 +56,113 @@
             border-radius: 6px;
             transition: all 0.3s ease;
         }
-        
         .ai-nav-button:hover .ai-icon {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
         }
-        
         .ai-text {
             font-size: 14px;
             letter-spacing: 0.5px;
         }
-        
         /* 为AI按钮添加呼吸动画效果 */
         @keyframes ai-glow {
             0%, 100% { box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); }
             50% { box-shadow: 0 4px 20px rgba(102, 126, 234, 0.6); }
         }
-        
         .ai-nav-button {
             animation: ai-glow 3s ease-in-out infinite;
         }
-
         /* 统一图标大小和颜色 */
         .success-icon, .sky-icon, .ai-icon, .exam-icon {
             color: #fff; /* 确保图标颜色在按钮背景上可见 */
             font-size: 16px; /* 统一图标大小 */
+        }
+        
+        /* 添加加载状态样式 */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: var(--text-secondary, #666);
+        }
+        .loading-spinner::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            margin-left: 12px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary, #666);
+            font-size: 1.1rem;
+        }
+        
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .notification {
+            background: #3b82f6;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            animation: notificationSlideIn 0.3s ease-out;
+            max-width: 300px;
+            word-break: break-word;
+        }
+        
+        .notification-success { background: #10b981; }
+        .notification-warning { background: #f59e0b; }
+        .notification-error { background: #ef4444; }
+        
+        @keyframes notificationSlideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            opacity: 0.7;
+            padding: 4px;
+            border-radius: 4px;
+            transition: opacity 0.2s;
+        }
+        
+        .notification-close:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
@@ -93,7 +170,6 @@
     <!-- Firebase SDK（放在其他脚本之前） -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
     <!-- Firebase 配置 -->
     <script>
         const firebaseConfig = {
@@ -105,12 +181,53 @@
             appId: "1:416862048915:web:6578fcd23d8cf882c53366",
             measurementId: "G-VZCQM1H4BR"
         };
-
         // 初始化 Firebase
         firebase.initializeApp(firebaseConfig);
         console.log('Firebase 初始化成功！');
     </script>
-
+    
+    <!-- 添加默认数据 -->
+    <script>
+        // 确保有默认的朋友圈数据
+        window.momentsData = [
+            {
+                id: 'moment_1',
+                avatar: 'https://picsum.photos/seed/avatar1/100/100.jpg',
+                username: '狂客同学',
+                time: '2025-01-15 10:30:00',
+                content: '今天学习了新的AI技术，感觉收获满满！继续加油💪',
+                images: ['https://picsum.photos/seed/ai1/300/200.jpg'],
+                likes: 42,
+                comments: [
+                    { id: 'c1', text: '太棒了！', timestamp: Date.now() - 3600000, author: '小明' }
+                ],
+                category: '学习成长'
+            },
+            {
+                id: 'moment_2',
+                avatar: 'https://picsum.photos/seed/avatar2/100/100.jpg',
+                username: '星空探索者',
+                time: '2025-01-14 15:45:00',
+                content: '分享一个很棒的学习方法：番茄工作法真的能提高效率！',
+                images: ['https://picsum.photos/seed/study1/300/200.jpg'],
+                likes: 28,
+                comments: [],
+                category: '学习成长'
+            },
+            {
+                id: 'moment_3',
+                avatar: 'https://picsum.photos/seed/avatar3/100/100.jpg',
+                username: '美食达人',
+                time: '2025-01-13 18:20:00',
+                content: '今天尝试了新的食谱，味道超赞！🍜',
+                images: ['https://picsum.photos/seed/food1/300/200.jpg', 'https://picsum.photos/seed/food2/300/200.jpg'],
+                likes: 35,
+                comments: [],
+                category: '美食分享'
+            }
+        ];
+    </script>
+    
     <header class="header">
         <div class="container">
             <div class="header-left">
@@ -182,11 +299,10 @@
             </div>
         </div>
     </main>
-    
     <footer class="social-footer">
         <div class="container">
             <div class="social-links">
-                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" 
+                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89"
                    target="_blank" class="social-link wechat" title="微信公众号" rel="noopener noreferrer">
                     <i class="fab fa-weixin"></i>
                 </a>
@@ -202,7 +318,6 @@
             <p class="copyright">© 2025 狂客·银河 版权所有</p>
         </div>
     </footer>
-    
     <div id="commentModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="commentModalTitle">
         <div class="modal-content">
             <span class="close" aria-label="关闭评论弹窗">&times;</span>
@@ -217,7 +332,6 @@
             </div>
         </div>
     </div>
-
     <!-- 项目脚本 -->
     <script src="data.js"></script>
     <script src="firebase-handler.js"></script>
