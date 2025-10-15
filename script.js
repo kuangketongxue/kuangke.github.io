@@ -402,57 +402,73 @@ class ThemeManager {
     }
 }
 
-// ==================== Firebase Handler (修复重复声明 + 数据库URL) ====================
-if (typeof FirebaseHandler === 'undefined') {
+// ==================== Firebase Handler（完整定义，确保方法可见） ====================
 class FirebaseHandler {
     constructor() {
+        console.log('[FirebaseHandler] 初始化开始');
         if (typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0) {
             console.warn(LanguageManager.t('firebaseWarnLocal'));
             this.useLocalStorage = true;
+            console.log('[FirebaseHandler] 切换到本地存储模式');
             return;
         }
 
         try {
-            // 修复：配置正确的 Firebase 数据库 URL（地区专属）
-           const firebaseConfig = {
-  apiKey: "AIzaSyD9NwlJxYiRjFh3cPjpJGmQAhogmrFpU4M",
-  authDomain: "kuangke-galaxy.firebaseapp.com",
-  projectId: "kuangke-galaxy",
-  storageBucket: "kuangke-galaxy.firebasestorage.app",
-  messagingSenderId: "416862048915",
-  appId: "1:416862048915:web:6578fcd23d8cf882c53366",
-  measurementId: "G-VZCQM1H4BR"
-};
+            // 完整Firebase配置
+            const firebaseConfig = {
+                apiKey: "AIzaSyD9NwlJxYiRjFh3cPjpJGmQAhogmrFpU4M",
+                authDomain: "kuangke-galaxy.firebaseapp.com",
+                projectId: "kuangke-galaxy",
+                storageBucket: "kuangke-galaxy.firebasestorage.app",
+                messagingSenderId: "416862048915",
+                appId: "1:416862048915:web:6578fcd23d8cf882c53366",
+                measurementId: "G-VZCQM1H4BR"
+            };
+            
+            // 初始化Firebase应用
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
+                console.log('[FirebaseHandler] Firebase应用初始化成功');
             }
-            // 关键修复：使用警告提示的区域专属数据库URL
+            
+            // 关键修复：使用亚洲东南区数据库URL
             this.database = firebase.database('https://kuangke-galaxy-default-rtdb.asia-southeast1.firebasedatabase.app');
+            console.log('[FirebaseHandler] 数据库连接成功');
+            
+            // 初始化数据引用
             this.likesRef = this.database.ref('likes');
             this.commentsRef = this.database.ref('comments');
-            this.momentsRef = this.database.ref('moments'); // 朋友圈数据的 Firebase 引用
+            this.momentsRef = this.database.ref('moments');
             this.useLocalStorage = false;
-            console.log('FirebaseHandler 初始化完成（已修正数据库URL）');
+            console.log('[FirebaseHandler] Firebase模式初始化完成');
         } catch (error) {
             console.error(LanguageManager.t('firebaseErrorInit'), error);
             this.useLocalStorage = true;
+            console.log('[FirebaseHandler] 初始化失败，切换到本地存储模式');
         }
     }
 
-    // ============ 朋友圈数据同步 ============
+    // ============ 朋友圈数据同步方法（确保方法存在且可见） ============
     async syncMomentsData() {
-        if (this.useLocalStorage) return window.momentsData || [];
+        console.log('[FirebaseHandler] 调用syncMomentsData方法');
+        if (this.useLocalStorage) {
+            console.log('[FirebaseHandler] 使用本地存储数据');
+            return window.momentsData || [];
+        }
+        
         try {
+            console.log('[FirebaseHandler] 从Firebase加载朋友圈数据');
             const snapshot = await this.momentsRef.once('value');
             const fbMoments = snapshot.val() || [];
             const localMoments = window.momentsData || [];
 
-            // 合并：Firebase 数据 + 本地默认数据（去重，优先 Firebase）
+            // 合并去重数据（Firebase数据优先）
             const fbIds = new Set(fbMoments.map(m => m.id));
             const merged = [...fbMoments, ...localMoments.filter(m => !fbIds.has(m.id))];
+            console.log('[FirebaseHandler] 数据合并完成，共', merged.length, '条');
             return merged;
         } catch (error) {
-            console.error('同步 Firebase 朋友圈数据失败:', error);
+            console.error('同步Firebase朋友圈数据失败:', error);
             return window.momentsData || [];
         }
     }
@@ -461,10 +477,10 @@ class FirebaseHandler {
         if (this.useLocalStorage) return false;
         try {
             await this.momentsRef.set(moments);
-            console.log('朋友圈数据已同步到 Firebase');
+            console.log('朋友圈数据已同步到Firebase');
             return true;
         } catch (error) {
-            console.error('保存朋友圈数据到 Firebase 失败:', error);
+            console.error('保存朋友圈数据到Firebase失败:', error);
             return false;
         }
     }
@@ -611,9 +627,11 @@ class FirebaseHandler {
         }
     }
 }
+
+// 初始化FirebaseHandler实例（确保全局唯一）
+if (typeof window.firebaseHandler === 'undefined') {
+    window.firebaseHandler = new FirebaseHandler();
 }
-// 修复：避免重复声明firebaseHandler变量
-window.firebaseHandler = window.firebaseHandler || new FirebaseHandler();
 
 // ==================== 本地存储管理器 ====================
 class StorageManager {
@@ -632,9 +650,9 @@ class StorageManager {
     static saveMomentsData(data) {
         try {
             appState.saveToStorage(STORAGE_KEYS.moments, JSON.stringify(data));
-            // 尝试同步到 Firebase
+            // 同步到Firebase
             window.firebaseHandler.saveMomentsToFirebase(data).catch(err => {
-                console.error('同步朋友圈数据到 Firebase 失败:', err);
+                console.error('同步朋友圈数据到Firebase失败:', err);
             });
             return true;
         } catch (error) {
@@ -645,46 +663,57 @@ class StorageManager {
     }
 }
 
-// ==================== 朋友圈页面管理器（集成 Firebase 同步）====================
+// ==================== 朋友圈页面管理器 ====================
 class MomentsPageManager {
     static data = [];
     static eventListeners = new Map();
-    static useLocalStorageOnly = false; // 调试用：是否仅用本地存储
+    static useLocalStorageOnly = false;
 
     static async init() {
+        console.log('MomentsPageManager初始化开始');
         await this.loadData();
         this.bindEvents();
         await this.render();
     }
 
     static async loadData() {
+        console.log('MomentsPageManager.loadData调用');
+        // 验证firebaseHandler实例和方法
+        console.log('window.firebaseHandler:', window.firebaseHandler);
+        console.log('syncMomentsData类型:', typeof window.firebaseHandler.syncMomentsData);
+
         const savedData = StorageManager.loadMomentsData();
         const defaultData = window.momentsData || [];
         let fbSyncedData = [];
 
-        // 从 Firebase 同步数据（若未禁用）
+        // 从Firebase同步数据
         if (!this.useLocalStorageOnly) {
+            console.log('开始同步Firebase数据');
             fbSyncedData = await window.firebaseHandler.syncMomentsData();
+            console.log('Firebase数据同步完成，共', fbSyncedData.length, '条');
         }
 
+        // 合并数据
         if (savedData && savedData.length > 0) {
-            // 合并：本地存储 + Firebase 同步 + 默认数据（去重）
             const savedIds = new Set(savedData.map(m => m.id));
             const fbIds = new Set(fbSyncedData.map(m => m.id));
             const newDefaults = defaultData.filter(m => !savedIds.has(m.id) && !fbIds.has(m.id));
             this.data = [...savedData, ...fbSyncedData, ...newDefaults];
         } else {
-            // 本地存储为空时，使用 Firebase 同步 + 默认数据
             const fbIds = new Set(fbSyncedData.map(m => m.id));
             const newDefaults = defaultData.filter(m => !fbIds.has(m.id));
             this.data = [...fbSyncedData, ...newDefaults];
         }
 
-        // 确保每条数据有 ID
-        this.data = this.data.map(m => ({ ...m, id: m.id || `moment_${Date.now() + Math.random().toString().slice(2, 6)}` }));
+        // 确保每条数据有ID
+        this.data = this.data.map(m => ({ 
+            ...m, 
+            id: m.id || `moment_${Date.now() + Math.random().toString().slice(2, 6)}` 
+        }));
 
         // 保存合并后的数据
         StorageManager.saveMomentsData(this.data);
+        console.log('朋友圈数据加载完成，共', this.data.length, '条');
     }
 
     static saveData() {
@@ -955,7 +984,7 @@ class MomentsPageManager {
             const comments = await window.firebaseHandler.getComments(id);
             this.renderComments(comments);
         } catch (error) {
-            console.error("Failed to load initial comments:", error);
+            console.error("加载评论失败:", error);
             commentsList.innerHTML = `<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">${LanguageManager.t('operationFailed')}</p>`;
         }
 
@@ -1109,7 +1138,7 @@ class SuccessPageManager {
 
                 const timeline = document.getElementById('diaryTimeline');
                 if (timeline) {
-                    if (viewType === 'grid') {
+                    if (btn.dataset.view === 'grid') {
                         timeline.classList.add('grid-view');
                         timeline.classList.remove('timeline-view');
                     } else {
@@ -1447,6 +1476,7 @@ window.SuccessPageManager = SuccessPageManager;
 // ==================== 初始化 ====================
 document.addEventListener('DOMContentLoaded', () => {
     try {
+        console.log('页面DOM加载完成，开始初始化应用');
         AppController.init();
     } catch (error) {
         console.error('页面初始化失败:', error);
