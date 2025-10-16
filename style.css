@@ -2249,3 +2249,60 @@ body.light-mode .circle {
   color: white;             /* 图标变白 */
   transform: translateY(-3px); /* 轻微上移 */
 }
+/* 社交页脚整体样式 */
+.social-footer {
+  background-color: var(--bg-secondary); /* 与书籍卡片背景一致 */
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* 顶部细边框 */
+  padding: 2rem 1rem; /* 内边距 */
+  margin-top: 4rem; /* 与上方书籍区拉开距离 */
+}
+
+/* 容器居中 */
+.social-footer .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem; /* 图标与文字的间距 */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 社交图标容器 */
+.social-links {
+  display: flex;
+  gap: 1.5rem; /* 图标之间的间距 */
+  align-items: center;
+}
+
+/* 单个社交图标 */
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* 圆形 hover 区域 */
+  color: var(--text-primary); /* 图标默认颜色 */
+  text-decoration: none;
+  transition: all 0.3s ease; /* hover 动画过渡 */
+}
+
+/* 图标 hover 效果 */
+.social-link:hover {
+  transform: translateY(-3px); /* 轻微上移 */
+  color: var(--accent-1); /*  hover 时变亮蓝 */
+}
+
+/* 版权文字样式 */
+.copyright {
+  color: rgba(255, 255, 255, 0.7); /* 浅色调，不抢视觉焦点 */
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* 适配 X 图标（SVG）的大小 */
+.social-link svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor; /* 继承文字颜色 */
+}
