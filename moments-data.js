@@ -1,21 +1,79 @@
 // moments-data.js - 朋友圈数据管理
 class MomentsData {
     constructor() {
-        this.className = 'Moments'; // 对应你的LeanCloud表名
+        this.className = 'Moments';
     }
 
     // 获取所有朋友圈数据
     async getAllMoments() {
         try {
             const query = new AV.Query(this.className);
-            query.descending('createdAt'); // 按创建时间倒序
-            query.include('author'); // 包含作者信息
+            query.descending('createdAt');
+            query.include('author');
             const results = await query.find();
+            
+            // 如果Moments表为空，从_User表获取数据作为示例
+            if (results.length === 0) {
+                return await this.getUserMoments();
+            }
+            
             return this.formatMoments(results);
         } catch (error) {
             console.error('获取朋友圈数据失败:', error);
-            throw error;
+            // 如果Moments表不存在，从_User表获取
+            return await this.getUserMoments();
         }
+    }
+
+    // 从_User表获取用户数据作为朋友圈内容
+    async getUserMoments() {
+        try {
+            const query = new AV.Query('_User');
+            const users = await query.find();
+            
+            return users.map((user, index) => {
+                const userData = user.toJSON();
+                return {
+                    id: userData.objectId,
+                    username: userData.username || '用户' + (index + 1),
+                    avatar: userData.avatar || 'images/avatar-default.jpg',
+                    content: userData.bio || '这是我的第一条朋友圈！',
+                    images: userData.images || [],
+                    category: this.getRandomCategory(),
+                    timestamp: this.formatTime(userData.createdAt),
+                    likes: Math.floor(Math.random() * 50),
+                    comments: Math.floor(Math.random() * 20),
+                    isLiked: false
+                };
+            });
+        } catch (error) {
+            console.error('获取用户数据失败:', error);
+            return this.getDefaultMoments();
+        }
+    }
+
+    // 获取默认朋友圈数据
+    getDefaultMoments() {
+        return [
+            {
+                id: 'default-1',
+                username: '狂客同学',
+                avatar: 'images/avatar-default.jpg',
+                content: '欢迎使用狂客·银河朋友圈！这里可以分享你的生活点滴。',
+                images: [],
+                category: '生活日常',
+                timestamp: '刚刚',
+                likes: 0,
+                comments: 0,
+                isLiked: false
+            }
+        ];
+    }
+
+    // 随机获取分类
+    getRandomCategory() {
+        const categories = ['生活日常', '美食分享', '旅行见闻', '工作相关', '学习成长'];
+        return categories[Math.floor(Math.random() * categories.length)];
     }
 
     // 根据分类获取朋友圈数据
@@ -28,10 +86,20 @@ class MomentsData {
             query.descending('createdAt');
             query.include('author');
             const results = await query.find();
+            
+            if (results.length === 0) {
+                // 如果Moments表为空，从用户数据中筛选
+                const userMoments = await this.getUserMoments();
+                return category === 'all' ? userMoments : 
+                    userMoments.filter(moment => moment.category === category);
+            }
+            
             return this.formatMoments(results);
         } catch (error) {
             console.error('按分类获取数据失败:', error);
-            throw error;
+            const userMoments = await this.getUserMoments();
+            return category === 'all' ? userMoments : 
+                userMoments.filter(moment => moment.category === category);
         }
     }
 
@@ -39,11 +107,13 @@ class MomentsData {
     formatMoments(results) {
         return results.map(item => {
             const data = item.toJSON();
+            const author = data.author || {};
+            
             return {
                 id: data.objectId,
-                username: data.author ? data.author.username : '匿名用户',
-                avatar: data.author ? data.author.avatar : 'images/avatar-default.jpg',
-                content: data.content || '',
+                username: author.username || '匿名用户',
+                avatar: author.avatar || 'images/avatar-default.jpg',
+                content: data.content || '分享了一条内容',
                 images: data.images || [],
                 category: data.category || '生活日常',
                 timestamp: this.formatTime(data.createdAt),
@@ -93,7 +163,36 @@ class MomentsData {
             return false;
         }
     }
+
+    // 创建新的朋友圈
+    async createMoment(content, images = [], category = '生活日常') {
+        try {
+            const Moment = AV.Object.extend(this.className);
+            const moment = new Moment();
+            
+            moment.set('content', content);
+            moment.set('images', images);
+            moment.set('category', category);
+            moment.set('likes', 0);
+            moment.set('commentCount', 0);
+            
+            // 如果用户已登录，设置为作者
+            const currentUser = AV.User.current();
+            if (currentUser) {
+                moment.set('author', currentUser);
+            }
+            
+            await moment.save();
+            return moment.toJSON();
+        } catch (error) {
+            console.error('创建朋友圈失败:', error);
+            throw error;
+        }
+    }
 }
+
+// 创建全局实例
+window.momentsData = new MomentsData();
 
 // 创建全局实例
 window.momentsData = new MomentsData();
