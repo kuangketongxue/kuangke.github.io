@@ -1,3 +1,102 @@
+// moments-data.js - 朋友圈数据管理
+class MomentsData {
+    constructor() {
+        this.className = 'Moments'; // 对应你的LeanCloud表名
+    }
+
+    // 获取所有朋友圈数据
+    async getAllMoments() {
+        try {
+            const query = new AV.Query(this.className);
+            query.descending('createdAt'); // 按创建时间倒序
+            query.include('author'); // 包含作者信息
+            const results = await query.find();
+            return this.formatMoments(results);
+        } catch (error) {
+            console.error('获取朋友圈数据失败:', error);
+            throw error;
+        }
+    }
+
+    // 根据分类获取朋友圈数据
+    async getMomentsByCategory(category) {
+        try {
+            const query = new AV.Query(this.className);
+            if (category !== 'all') {
+                query.equalTo('category', category);
+            }
+            query.descending('createdAt');
+            query.include('author');
+            const results = await query.find();
+            return this.formatMoments(results);
+        } catch (error) {
+            console.error('按分类获取数据失败:', error);
+            throw error;
+        }
+    }
+
+    // 格式化朋友圈数据
+    formatMoments(results) {
+        return results.map(item => {
+            const data = item.toJSON();
+            return {
+                id: data.objectId,
+                username: data.author ? data.author.username : '匿名用户',
+                avatar: data.author ? data.author.avatar : 'images/avatar-default.jpg',
+                content: data.content || '',
+                images: data.images || [],
+                category: data.category || '生活日常',
+                timestamp: this.formatTime(data.createdAt),
+                likes: data.likes || 0,
+                comments: data.commentCount || 0,
+                isLiked: false
+            };
+        });
+    }
+
+    // 格式化时间
+    formatTime(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diff = now - date;
+        
+        if (diff < 60000) return '刚刚';
+        if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`;
+        if (diff < 86400000) return `${Math.floor(diff / 3600000)}小时前`;
+        if (diff < 604800000) return `${Math.floor(diff / 86400000)}天前`;
+        
+        return date.toLocaleDateString('zh-CN');
+    }
+
+    // 点赞
+    async likeMoment(momentId) {
+        try {
+            const moment = AV.Object.createWithoutData(this.className, momentId);
+            moment.increment('likes');
+            await moment.save();
+            return true;
+        } catch (error) {
+            console.error('点赞失败:', error);
+            return false;
+        }
+    }
+
+    // 取消点赞
+    async unlikeMoment(momentId) {
+        try {
+            const moment = AV.Object.createWithoutData(this.className, momentId);
+            moment.increment('likes', -1);
+            await moment.save();
+            return true;
+        } catch (error) {
+            console.error('取消点赞失败:', error);
+            return false;
+        }
+    }
+}
+
+// 创建全局实例
+window.momentsData = new MomentsData();
 // ==================== 朋友圈数据 ====================
 /**
  * 朋友圈数据集
