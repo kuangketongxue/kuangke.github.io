@@ -1,4 +1,17 @@
-// ==================== 优化版常量定义 ====================
+
+// Firebase初始化测试
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM加载完成');
+    console.log('Firebase SDK状态:', typeof firebase !== 'undefined' ? '已加载' : '未加载');
+    console.log('Firebase应用状态:', firebase.apps.length > 0 ? '已初始化' : '未初始化');
+    
+    // 延迟初始化确保资源加载完成
+    setTimeout(() => {
+        AppController.init().catch(error => {
+            console.error('应用启动失败:', error);
+        });
+    }, 100);
+});// ==================== 优化版常量定义 ====================
 const CONFIG = Object.freeze({
     STORAGE_KEYS: {
         moments: 'momentsData',
