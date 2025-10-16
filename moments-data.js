@@ -229,7 +229,7 @@ const localMomentsData = [
     {
         id: 22,
         username: '狂客同学',
-        avatar: 'https://picsum.photos/100/100?random=22',
+        avatar: 'images/favicon.ico',
         content: '马斯克与弗里费德曼的播客不错-https://youtu.be/JN3KPFbWCy8?si=z0HMVS7Jw-GSO5zC',
         images: [],
         category: '问答互动',
@@ -241,7 +241,7 @@ const localMomentsData = [
     {
         id: 21,
         username: '狂客同学',
-        avatar: 'https://picsum.photos/100/100?random=21',
+        avatar: 'images/favicon.ico',
         content: '无人扶我青云志,我自踏雪至山巅。\n若是命中无此运,孤身亦可登昆仑。\n红尘赠我三尺剑,酒看瘦马一世街。\n世人朝路乃绝润,独见众生止步前。\n海到尽头天作岸,山登绝顶我为峰。\n如若东山能再起,大鹏展翅九万里。\n一入红尘梦易真,一朝悟透心境名。\n一朝悟道见真我,昔日枷锁皆云烟。\n天门将至百运开,拂尘轻笑问仙来。',
         images: [],
         category: '问答互动',
