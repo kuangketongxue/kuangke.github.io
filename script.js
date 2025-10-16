@@ -1,3 +1,4 @@
+/* ==================== CSS样式定义 ==================== */
 /* 图片放大效果 */
 .moment-images img.zoomed {
     position: fixed;
@@ -49,7 +50,7 @@
     100% { transform: rotate(360deg); }
 }
 
-// ==================== 优化版常量定义（恢复LeanCloud配置） ====================
+// ==================== 优化版常量定义 ====================
 const CONFIG = Object.freeze({
     STORAGE_KEYS: {
         moments: 'momentsData',
@@ -72,7 +73,7 @@ const CONFIG = Object.freeze({
         MAX_COMMENT_LENGTH: 500,
         MAX_RETRY_ATTEMPTS: 3
     },
-    // 恢复LeanCloud配置（用于朋友圈点赞/评论云端存储）
+    // LeanCloud配置（仅用于朋友圈点赞/评论）
     LEANCLOUD: {
         APP_ID: '2pmu0Y0IKEfIKXhdJHNEd1uU-gzGzoHsz',
         APP_KEY: 'cbLreTdVyxyXuWgmfwdQxPFF',
@@ -80,7 +81,7 @@ const CONFIG = Object.freeze({
     }
 });
 
-// ==================== 优化版全局状态管理 ====================
+// ==================== 全局状态管理 ====================
 class AppState {
     constructor() {
         this._listeners = new Map();
@@ -159,7 +160,7 @@ class AppState {
 
 const appState = new AppState();
 
-// ==================== 优化版工具函数 ====================
+// ==================== 工具函数类 ====================
 class Utils {
     static escapeHtml(text) {
         if (text == null) return '';
@@ -196,6 +197,17 @@ class Utils {
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit'
+        });
+    }
+
+    static formatDate(dateStr) {
+        const date = new Date(dateStr);
+        if (!this.isValidDate(date)) return dateStr;
+        
+        return date.toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
         });
     }
 
@@ -238,7 +250,7 @@ class Utils {
     }
 }
 
-// ==================== 优化版通知管理器 ====================
+// ==================== 通知管理器 ====================
 class NotificationManager {
     static #container = null;
     static #notifications = new Set();
@@ -316,7 +328,7 @@ class NotificationManager {
     }
 }
 
-// ==================== 优化版语言管理器 ====================
+// ==================== 语言管理器 ====================
 class LanguageManager {
     static #translations = {
         zh: {
@@ -350,11 +362,11 @@ class LanguageManager {
     }
 }
 
-// ==================== 恢复LeanCloud处理器（仅用于朋友圈点赞/评论） ====================
+// ==================== LeanCloud处理器（仅用于朋友圈） ====================
 class LeanCloudHandler {
     constructor() {
         this.initialized = false;
-        this.useLocalStorage = false; // 优先云端，云端不可用时降级本地
+        this.useLocalStorage = false;
         this.#init();
     }
 
@@ -368,7 +380,6 @@ class LeanCloudHandler {
         }
 
         try {
-            // 初始化LeanCloud（仅用于点赞/评论云端交互）
             AV.init({
                 appId: CONFIG.LEANCLOUD.APP_ID,
                 appKey: CONFIG.LEANCLOUD.APP_KEY,
@@ -377,14 +388,13 @@ class LeanCloudHandler {
             
             this.initialized = true;
             this.useLocalStorage = false;
-            console.log('[LeanCloudHandler] LeanCloud初始化完成（点赞/评论功能可用）');
+            console.log('[LeanCloudHandler] LeanCloud初始化完成');
         } catch (error) {
             console.error('LeanCloud 初始化失败，降级为本地存储:', error);
             this.useLocalStorage = true;
         }
     }
 
-    // ---------- 点赞相关（云端优先，本地降级） ----------
     async getLikes(momentId) {
         if (this.useLocalStorage) {
             return this.#getLocalLikes(momentId);
@@ -454,7 +464,6 @@ class LeanCloudHandler {
         }
     }
 
-    // ---------- 评论相关（云端优先，本地降级） ----------
     async getComments(momentId) {
         if (this.useLocalStorage) {
             return this.#getLocalComments(momentId);
@@ -503,7 +512,6 @@ class LeanCloudHandler {
         }
     }
 
-    // ---------- 本地存储降级工具方法 ----------
     #getLocalLikes(momentId) {
         return parseInt(localStorage.getItem(`likes_${momentId}`)) || 0;
     }
@@ -535,12 +543,11 @@ class LeanCloudHandler {
     }
 }
 
-// 创建全局LeanCloud实例（仅用于朋友圈点赞/评论）
 if (typeof window.cloudHandler === 'undefined') {
     window.cloudHandler = new LeanCloudHandler();
 }
 
-// ==================== 朋友圈页面管理器（点赞/评论用云端，其他本地） ====================
+// ==================== 朋友圈页面管理器 ====================
 class MomentsPageManager {
     static #data = [];
     static #eventListeners = new Map();
@@ -557,7 +564,6 @@ class MomentsPageManager {
             const savedData = this.#loadFromStorage();
             const defaultData = window.momentsData || [];
             
-            // 朋友圈主体数据本地存储（仅点赞/评论用云端）
             this.#data = this.#mergeData(savedData, defaultData);
             this.#ensureDataIds();
             this.#saveData();
@@ -703,7 +709,6 @@ class MomentsPageManager {
             this.#eventListeners.set(commentInput, handler);
         }
 
-        // 点击模态框外部关闭
         const modalHandler = (e) => {
             if (e.target === modal) {
                 this.#closeCommentModal();
@@ -734,11 +739,7 @@ class MomentsPageManager {
 
         for (let i = 0; i < sorted.length; i++) {
             const moment = sorted[i];
-            
-            // 点赞数：调用LeanCloudHandler（云端优先）
             const likes = await window.cloudHandler.getLikes(moment.id);
-            
-            // 评论：调用LeanCloudHandler（云端优先）
             const comments = await window.cloudHandler.getComments(moment.id);
 
             tempContainer.innerHTML = this.#renderMomentCard(moment, i, likes, comments.length);
@@ -798,7 +799,6 @@ class MomentsPageManager {
     }
 
     static #setupRealtimeListeners(momentId) {
-        // 点赞按钮（调用云端接口）
         const likeBtn = document.querySelector(`button[data-like-id="${momentId}"]`);
         if (likeBtn) {
             const handler = () => this.handleLike(momentId);
@@ -806,7 +806,6 @@ class MomentsPageManager {
             this.#eventListeners.set(likeBtn, handler);
         }
 
-        // 评论按钮（调用云端接口）
         const commentBtn = document.querySelector(`button[data-comment-id="${momentId}"]`);
         if (commentBtn) {
             const handler = () => this.#openCommentModal(momentId);
@@ -827,7 +826,6 @@ class MomentsPageManager {
             const hasUserLiked = localStorage.getItem(userLikeKey) === 'true';
 
             if (hasUserLiked) {
-                // 取消点赞：调用云端接口
                 const newLikes = await window.cloudHandler.removeLike(momentId);
                 localStorage.removeItem(userLikeKey);
                 NotificationManager.show('已取消点赞', 'info');
@@ -835,7 +833,6 @@ class MomentsPageManager {
                 const likeBtnSpan = likeBtn.querySelector('span');
                 if (likeBtnSpan) likeBtnSpan.textContent = newLikes;
             } else {
-                // 点赞：调用云端接口
                 const newLikes = await window.cloudHandler.addLike(momentId);
                 localStorage.setItem(userLikeKey, 'true');
                 this.#animateLikeButton(likeBtn);
@@ -887,7 +884,6 @@ class MomentsPageManager {
         commentsList.innerHTML = '<div class="loading-spinner">加载评论中...</div>';
 
         try {
-            // 加载评论：调用云端接口
             const comments = await window.cloudHandler.getComments(momentId);
             
             if (comments.length === 0) {
@@ -934,7 +930,6 @@ class MomentsPageManager {
         try {
             const username = appState.loadFromStorage(CONFIG.STORAGE_KEYS.username) || Utils.generateGuestUsername();
             
-            // 提交评论：调用云端接口
             await window.cloudHandler.addComment(
                 appState.currentMomentId,
                 text,
@@ -944,7 +939,6 @@ class MomentsPageManager {
             input.value = '';
             await this.#loadComments(appState.currentMomentId);
             
-            // 更新评论数：重新从云端获取
             const comments = await window.cloudHandler.getComments(appState.currentMomentId);
             const commentBtn = document.querySelector(`button[data-comment-id="${appState.currentMomentId}"] span`);
             if (commentBtn) commentBtn.textContent = comments.length;
@@ -957,6 +951,392 @@ class MomentsPageManager {
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
         }
+    }
+}
+
+// ==================== 成功日记页面管理器 ====================
+class SuccessPageManager {
+    static #data = [];
+    static #filteredData = [];
+    static #eventListeners = new Map();
+
+    static async init() {
+        console.log('✅ 初始化成功日记页面管理器');
+        await this.#loadData();
+        this.#initFilters();
+        this.#bindEvents();
+        this.render();
+    }
+
+    static async #loadData() {
+        try {
+            this.#data = window.successDiaryData || [];
+            console.log(`📝 加载成功日记数据：${this.#data.length} 条记录`);
+            this.#filteredData = [...this.#data];
+        } catch (error) {
+            console.error('加载成功日记数据失败:', error);
+            this.#data = [];
+            this.#filteredData = [];
+        }
+    }
+
+    static #initFilters() {
+        this.#initTagFilter();
+        this.#initMoodFilter();
+    }
+
+    static #initTagFilter() {
+        const tagFilterContainer = document.getElementById('diaryTagFilter');
+        if (!tagFilterContainer) return;
+
+        const allTags = new Set();
+        this.#data.forEach(entry => {
+            if (entry.tags && Array.isArray(entry.tags)) {
+                entry.tags.forEach(tag => allTags.add(tag));
+            }
+        });
+
+        const sortedTags = Array.from(allTags).sort();
+        
+        tagFilterContainer.innerHTML = `
+            <button class="filter-chip active" data-tag="all">
+                <i class="fas fa-globe"></i>
+                全部
+            </button>
+            ${sortedTags.map(tag => `
+                <button class="filter-chip" data-tag="${Utils.escapeHtml(tag)}">
+                    <i class="fas fa-tag"></i>
+                    ${Utils.escapeHtml(tag)}
+                </button>
+            `).join('')}
+        `;
+    }
+
+    static #initMoodFilter() {
+        const moodSelect = document.getElementById('diaryMoodSelect');
+        if (!moodSelect) return;
+
+        const allMoods = new Set();
+        this.#data.forEach(entry => {
+            if (entry.mood) {
+                allMoods.add(entry.mood);
+            }
+        });
+
+        const sortedMoods = Array.from(allMoods).sort();
+        
+        moodSelect.innerHTML = `
+            <option value="all">全部心情</option>
+            ${sortedMoods.map(mood => `
+                <option value="${Utils.escapeHtml(mood)}">${Utils.escapeHtml(mood)}</option>
+            `).join('')}
+        `;
+    }
+
+    static #bindEvents() {
+        this.#clearEventListeners();
+        this.#bindSearch();
+        this.#bindTagFilter();
+        this.#bindMoodFilter();
+        this.#bindSortFilter();
+        this.#bindResetButton();
+        this.#bindViewToggle();
+    }
+
+    static #clearEventListeners() {
+        this.#eventListeners.forEach((handler, element) => {
+            const eventType = handler.eventType || 'click';
+            element.removeEventListener(eventType, handler);
+        });
+        this.#eventListeners.clear();
+    }
+
+    static #bindSearch() {
+        const searchInput = document.getElementById('diarySearchInput');
+        const clearBtn = document.getElementById('searchClear');
+        
+        if (searchInput) {
+            const handler = Utils.debounce((e) => {
+                appState.diarySearchKeyword = e.target.value;
+                if (clearBtn) {
+                    clearBtn.style.display = e.target.value ? 'block' : 'none';
+                }
+                this.#applyFilters();
+            });
+            handler.eventType = 'input';
+            
+            searchInput.addEventListener('input', handler);
+            this.#eventListeners.set(searchInput, handler);
+        }
+
+        if (clearBtn) {
+            const handler = () => {
+                if (searchInput) {
+                    searchInput.value = '';
+                    appState.diarySearchKeyword = '';
+                    clearBtn.style.display = 'none';
+                    this.#applyFilters();
+                }
+            };
+            
+            clearBtn.addEventListener('click', handler);
+            this.#eventListeners.set(clearBtn, handler);
+        }
+    }
+
+    static #bindTagFilter() {
+        const tagButtons = document.querySelectorAll('#diaryTagFilter .filter-chip');
+        
+        tagButtons.forEach(button => {
+            const handler = () => {
+                const tag = button.dataset.tag;
+                
+                if (tag === 'all') {
+                    appState.selectedDiaryTags.clear();
+                    tagButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                } else {
+                    document.querySelector('[data-tag="all"]')?.classList.remove('active');
+                    
+                    if (appState.selectedDiaryTags.has(tag)) {
+                        appState.selectedDiaryTags.delete(tag);
+                        button.classList.remove('active');
+                        
+                        if (appState.selectedDiaryTags.size === 0) {
+                            document.querySelector('[data-tag="all"]')?.classList.add('active');
+                        }
+                    } else {
+                        appState.selectedDiaryTags.add(tag);
+                        button.classList.add('active');
+                    }
+                }
+                
+                this.#applyFilters();
+            };
+            
+            button.addEventListener('click', handler);
+            this.#eventListeners.set(button, handler);
+        });
+    }
+
+    static #bindMoodFilter() {
+        const moodSelect = document.getElementById('diaryMoodSelect');
+        
+        if (moodSelect) {
+            const handler = (e) => {
+                appState.diaryMoodFilter = e.target.value;
+                this.#applyFilters();
+            };
+            handler.eventType = 'change';
+            
+            moodSelect.addEventListener('change', handler);
+            this.#eventListeners.set(moodSelect, handler);
+        }
+    }
+
+    static #bindSortFilter() {
+        const sortSelect = document.getElementById('diarySortSelect');
+        
+        if (sortSelect) {
+            const handler = (e) => {
+                appState.diarySortBy = e.target.value;
+                this.render();
+            };
+            handler.eventType = 'change';
+            
+            sortSelect.addEventListener('change', handler);
+            this.#eventListeners.set(sortSelect, handler);
+        }
+    }
+
+    static #bindResetButton() {
+        const resetBtn = document.getElementById('diaryResetFilters');
+        
+        if (resetBtn) {
+            const handler = () => {
+                appState.selectedDiaryTags.clear();
+                appState.diaryMoodFilter = 'all';
+                appState.diarySortBy = 'dateDesc';
+                appState.diarySearchKeyword = '';
+                
+                const searchInput = document.getElementById('diarySearchInput');
+                const clearBtn = document.getElementById('searchClear');
+                const moodSelect = document.getElementById('diaryMoodSelect');
+                const sortSelect = document.getElementById('diarySortSelect');
+                
+                if (searchInput) searchInput.value = '';
+                if (clearBtn) clearBtn.style.display = 'none';
+                if (moodSelect) moodSelect.value = 'all';
+                if (sortSelect) sortSelect.value = 'dateDesc';
+                
+                document.querySelectorAll('#diaryTagFilter .filter-chip').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector('[data-tag="all"]')?.classList.add('active');
+                
+                this.#applyFilters();
+                NotificationManager.show('已重置所有筛选条件', 'info');
+            };
+            
+            resetBtn.addEventListener('click', handler);
+            this.#eventListeners.set(resetBtn, handler);
+        }
+    }
+
+    static #bindViewToggle() {
+        const viewButtons = document.querySelectorAll('.view-btn');
+        
+        viewButtons.forEach(button => {
+            const handler = () => {
+                viewButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-pressed', 'false');
+                });
+                
+                button.classList.add('active');
+                button.setAttribute('aria-pressed', 'true');
+                
+                const timeline = document.getElementById('diaryTimeline');
+                if (timeline) {
+                    const view = button.dataset.view;
+                    timeline.className = view === 'grid' ? 'timeline grid-view' : 'timeline';
+                }
+            };
+            
+            button.addEventListener('click', handler);
+            this.#eventListeners.set(button, handler);
+        });
+    }
+
+    static #applyFilters() {
+        let filtered = [...this.#data];
+
+        // 搜索过滤
+        if (appState.diarySearchKeyword) {
+            const keyword = Utils.normalize(appState.diarySearchKeyword);
+            filtered = filtered.filter(entry => {
+                return Utils.normalize(entry.title).includes(keyword) ||
+                       Utils.normalize(entry.content).includes(keyword) ||
+                       (entry.tags && entry.tags.some(tag => Utils.normalize(tag).includes(keyword))) ||
+                       (entry.mood && Utils.normalize(entry.mood).includes(keyword));
+            });
+        }
+
+        // 标签过滤
+        if (appState.selectedDiaryTags.size > 0) {
+            filtered = filtered.filter(entry => {
+                if (!entry.tags || !Array.isArray(entry.tags)) return false;
+                return Array.from(appState.selectedDiaryTags).some(tag => 
+                    entry.tags.includes(tag)
+                );
+            });
+        }
+
+        // 心情过滤
+        if (appState.diaryMoodFilter !== 'all') {
+            filtered = filtered.filter(entry => 
+                entry.mood === appState.diaryMoodFilter
+            );
+        }
+
+        this.#filteredData = filtered;
+        this.render();
+    }
+
+    static render() {
+        const timeline = document.getElementById('diaryTimeline');
+        const emptyState = document.querySelector('.empty-state');
+        const counter = document.getElementById('diaryCounter');
+
+        if (!timeline) return;
+
+        // 更新计数器
+        if (counter) {
+            const count = this.#filteredData.length;
+            counter.innerHTML = `
+                <i class="fas fa-chart-line"></i>
+                <span>共 <strong>${count}</strong> 条记录</span>
+            `;
+        }
+
+        // 排序
+        const sorted = this.#sortData([...this.#filteredData]);
+
+        // 空状态处理
+        if (sorted.length === 0) {
+            timeline.innerHTML = '';
+            if (emptyState) {
+                emptyState.classList.remove('hidden');
+            }
+            return;
+        }
+
+        if (emptyState) {
+            emptyState.classList.add('hidden');
+        }
+
+        // 渲染时间轴
+        const fragment = document.createDocumentFragment();
+        const tempContainer = document.createElement('div');
+
+        sorted.forEach((entry, index) => {
+            tempContainer.innerHTML = this.#renderDiaryCard(entry, index);
+            if (tempContainer.firstElementChild) {
+                fragment.appendChild(tempContainer.firstElementChild);
+            }
+        });
+
+        timeline.innerHTML = '';
+        timeline.appendChild(fragment);
+    }
+
+    static #sortData(data) {
+        const sortFunctions = {
+            dateDesc: (a, b) => new Date(b.date) - new Date(a.date),
+            dateAsc: (a, b) => new Date(a.date) - new Date(b.date),
+            achievementDesc: (a, b) => (b.achievement || 0) - (a.achievement || 0),
+            achievementAsc: (a, b) => (a.achievement || 0) - (b.achievement || 0)
+        };
+
+        const sortFn = sortFunctions[appState.diarySortBy] || sortFunctions.dateDesc;
+        return data.sort(sortFn);
+    }
+
+    static #renderDiaryCard(entry, index) {
+        const achievement = entry.achievement || 0;
+        const achievementStars = '⭐'.repeat(Math.min(5, achievement));
+        
+        return `
+            <div class="timeline-item" style="animation-delay: ${index * CONFIG.TIMING.ANIMATION_DELAY}s">
+                <div class="timeline-date">${Utils.formatDate(entry.date)}</div>
+                <div class="timeline-content">
+                    <div class="diary-header">
+                        <h3 class="diary-title">${Utils.escapeHtml(entry.title)}</h3>
+                        ${entry.mood ? `<span class="diary-mood">${Utils.escapeHtml(entry.mood)}</span>` : ''}
+                    </div>
+                    <div class="diary-body">
+                        <p class="diary-text">${Utils.formatMultiline(entry.content)}</p>
+                    </div>
+                    ${entry.tags && entry.tags.length > 0 ? `
+                        <div class="diary-tags">
+                            ${entry.tags.map(tag => `
+                                <span class="diary-tag">
+                                    <i class="fas fa-tag"></i>
+                                    ${Utils.escapeHtml(tag)}
+                                </span>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    ${achievement > 0 ? `
+                        <div class="diary-achievement">
+                            <span class="achievement-label">成就值:</span>
+                            <span class="achievement-stars">${achievementStars}</span>
+                            <span class="achievement-value">${achievement}/5</span>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
     }
 }
 
@@ -1006,7 +1386,7 @@ class ThemeManager {
     }
 }
 
-// ==================== 优化版应用控制器 ====================
+// ==================== 应用控制器 ====================
 class AppController {
     static async init() {
         try {
@@ -1014,9 +1394,9 @@ class AppController {
             await this.#initializeServices();
             this.#initializeGlobalControls();
             await this.#initializePage();
-            console.log('应用初始化完成（朋友圈点赞/评论已启用LeanCloud）');
+            console.log(`✅ 应用初始化完成 [页面: ${appState.currentPage}]`);
         } catch (error) {
-            console.error('应用初始化失败:', error);
+            console.error('❌ 应用初始化失败:', error);
             NotificationManager.show('页面初始化失败，请刷新重试', 'error');
         }
     }
@@ -1025,6 +1405,8 @@ class AppController {
         const pageElement = document.querySelector('[data-page]');
         appState.currentPage = pageElement ?
             pageElement.dataset.page : CONFIG.PAGE_TYPES.MOMENTS;
+        
+        console.log(`📄 检测到页面类型: ${appState.currentPage}`);
     }
 
     static async #initializeServices() {
@@ -1044,47 +1426,44 @@ class AppController {
     }
 
     static #initializeGlobalControls() {
-        // 这里可以添加其他全局控制
+        // 可以添加全局控制逻辑
     }
 
     static async #initializePage() {
         switch (appState.currentPage) {
             case CONFIG.PAGE_TYPES.MOMENTS:
+                console.log('🎭 初始化朋友圈页面（启用LeanCloud）');
                 await MomentsPageManager.init();
                 break;
             case CONFIG.PAGE_TYPES.SUCCESS:
-                // SuccessPageManager.init(); // 成功日记页面逻辑（无LeanCloud依赖）
+                console.log('📔 初始化成功日记页面（本地数据）');
+                await SuccessPageManager.init();
                 break;
             default:
-                console.warn('未知页面类型:', appState.currentPage);
+                console.warn('⚠️ 未知页面类型:', appState.currentPage);
         }
     }
 }
 
 // ==================== 全局暴露和初始化 ====================
 window.MomentsPageManager = MomentsPageManager;
+window.SuccessPageManager = SuccessPageManager;
 
-// 初始化前确保LeanCloud SDK已加载（需在HTML中引入AV SDK）
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM加载完成');
-    console.log('LeanCloud SDK状态:', typeof AV !== 'undefined' ? '已加载' : '未加载（将降级本地）');
-
-    // 延迟初始化确保资源加载完成
+    console.log('🚀 DOM加载完成，准备初始化应用...');
+    console.log('📦 LeanCloud SDK状态:', typeof AV !== 'undefined' ? '已加载' : '未加载（朋友圈将降级本地）');
+    
     setTimeout(() => {
         AppController.init().catch(error => {
-            console.error('应用启动失败:', error);
+            console.error('💥 应用启动失败:', error);
         });
     }, 100);
 });
 
-// 全局错误处理
 window.addEventListener('error', (event) => {
-    console.error('全局错误:', event.error);
+    console.error('🔥 全局错误:', event.error);
 });
 
 window.addEventListener('unhandledrejection', (event) => {
-    console.error('未处理的Promise拒绝:', event.reason);
+    console.error('🔥 未处理的Promise拒绝:', event.reason);
 });
-
-
-
