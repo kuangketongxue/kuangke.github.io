@@ -1,21 +1,3 @@
-// config.js - LeanCloud配置
-const APP_ID = '2pmu0Y0IKEfIKXhdJHNEd1uU-gzGzoHsz'; // 替换为你的App ID
-const APP_KEY = 'cbLreTdVyxyXuWgmfwdQxPFF'; // 替换为你的App Key
-const SERVER_URL = 'https://2pmu0y0i.lc-cn-n1-shared.com'; // 替换为你的服务器URL
-
-// 初始化LeanCloud
-AV.init({
-    appId: APP_ID,
-    appKey: APP_KEY,
-    serverUrl: SERVER_URL
-});
-
-// 导出配置
-window.CONFIG = {
-    APP_ID,
-    APP_KEY,
-    SERVER_URL
-};
 // ==================== 数据字典 & 配置 ====================
 
 /**
@@ -85,7 +67,7 @@ if (typeof window !== 'undefined') {
     window.diaryTagLibrary = diaryTagLibrary;
     window.moodLibrary = moodLibrary;
     window.momentCategories = momentCategories;
-    console.log('✅ 配置模块已加载');
+    console.log('✅ 配置模块（数据字典）已加载');
 }
 
 // ==================== Node.js 环境模块导出 ====================
