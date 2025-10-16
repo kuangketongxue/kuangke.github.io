@@ -337,16 +337,25 @@ class LanguageManager {
 }
 
 // ==================== 优化版Firebase处理器 ====================
+// ==================== 优化版Firebase处理器 ====================
 class FirebaseHandler {
     constructor() {
+        this.database = null;
+        this.likesRef = null;
+        this.commentsRef = null;
+        this.momentsRef = null;
+        this.useLocalStorage = true; // 默认使用本地存储
+        
         this.#init();
     }
 
     #init() {
         console.log('[FirebaseHandler] 初始化开始');
+        
+        // 等待Firebase SDK加载
         if (this.#isFirebaseUnavailable()) {
-            console.warn('Firebase SDK 未加载或未初始化，将使用本地存储模式');
-            this.useLocalStorage = true;
+            console.warn('Firebase SDK 未加载，将在5秒后重试...');
+            setTimeout(() => this.#init(), 5000);
             return;
         }
 
@@ -355,27 +364,35 @@ class FirebaseHandler {
             this.useLocalStorage = false;
             console.log('[FirebaseHandler] Firebase模式初始化完成');
         } catch (error) {
-            console.error('Firebase 初始化失败', error);
+            console.error('Firebase 初始化失败:', error);
             this.useLocalStorage = true;
         }
     }
 
     #isFirebaseUnavailable() {
-        return typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0;
+        return typeof firebase === 'undefined';
     }
 
     #initializeFirebase() {
+        // 检查是否已经初始化
         if (!firebase.apps.length) {
+            console.log('正在初始化Firebase应用...');
             firebase.initializeApp(CONFIG.FIREBASE.CONFIG);
+        } else {
+            console.log('Firebase应用已存在，使用现有实例');
         }
-        this.database = firebase.database(CONFIG.FIREBASE.DB_URL);
+        
+        this.database = firebase.database();
         this.likesRef = this.database.ref('likes');
         this.commentsRef = this.database.ref('comments');
         this.momentsRef = this.database.ref('moments');
+        
+        console.log('Firebase引用创建成功');
     }
 
     async syncMomentsData() {
         if (this.useLocalStorage) {
+            console.log('使用本地存储模式');
             return window.momentsData || [];
         }
 
@@ -388,21 +405,28 @@ class FirebaseHandler {
                 ...fbMoments,
                 ...localMoments.filter(m => !fbIds.has(m.id))
             ];
+            console.log('Firebase数据同步成功:', merged.length, '条记录');
             return merged;
         } catch (error) {
             console.error('Firebase数据同步失败:', error);
+            this.useLocalStorage = true;
             return window.momentsData || [];
         }
     }
 
     async saveMomentsToFirebase(moments) {
-        if (this.useLocalStorage) return false;
+        if (this.useLocalStorage) {
+            console.log('本地存储模式，跳过Firebase保存');
+            return false;
+        }
 
         try {
             await this.momentsRef.set(moments);
+            console.log('数据保存到Firebase成功');
             return true;
         } catch (error) {
             console.error('保存到Firebase失败:', error);
+            this.useLocalStorage = true;
             return false;
         }
     }
@@ -538,6 +562,8 @@ class FirebaseHandler {
         }
     }
 }
+ 
+        
 
 // 单例模式确保FirebaseHandler唯一实例
 if (typeof window.firebaseHandler === 'undefined') {
