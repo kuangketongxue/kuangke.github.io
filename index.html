@@ -74,10 +74,9 @@
         }
         /* 统一图标大小和颜色 */
         .success-icon, .sky-icon, .ai-icon, .exam-icon {
-            color: #fff; /* 确保图标颜色在按钮背景上可见 */
-            font-size: 16px; /* 统一图标大小 */
+            color: #fff;
+            font-size: 16px;
         }
-        
         /* 添加加载状态样式 */
         .loading-spinner {
             display: flex;
@@ -96,19 +95,16 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
         .no-results {
             text-align: center;
             padding: 3rem;
             color: var(--text-secondary, #666);
             font-size: 1.1rem;
         }
-        
         .notification-container {
             position: fixed;
             top: 20px;
@@ -118,7 +114,6 @@
             flex-direction: column;
             gap: 10px;
         }
-        
         .notification {
             background: #3b82f6;
             color: white;
@@ -133,11 +128,9 @@
             max-width: 300px;
             word-break: break-word;
         }
-        
         .notification-success { background: #10b981; }
         .notification-warning { background: #f59e0b; }
         .notification-error { background: #ef4444; }
-        
         @keyframes notificationSlideIn {
             from {
                 transform: translateX(100%);
@@ -148,7 +141,16 @@
                 opacity: 1;
             }
         }
-        
+        @keyframes notificationSlideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
         .notification-close {
             background: none;
             border: none;
@@ -159,7 +161,6 @@
             border-radius: 4px;
             transition: opacity 0.2s;
         }
-        
         .notification-close:hover {
             opacity: 1;
             background: rgba(255, 255, 255, 0.1);
@@ -167,26 +168,9 @@
     </style>
 </head>
 <body data-page="moments">
-    <!-- Firebase SDK（放在其他脚本之前） -->
-  <!-- 在 script.js 之前添加 -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <!-- Firebase 配置 -->
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyD9NwlJxYiRjFh3cPjpJGmQAhogmrFpU4M",
-            authDomain: "kuangke-galaxy.firebaseapp.com",
-            projectId: "kuangke-galaxy",
-            storageBucket: "kuangke-galaxy.firebasestorage.app",
-            messagingSenderId: "416862048915",
-            appId: "1:416862048915:web:6578fcd23d8cf882c53366",
-            measurementId: "G-VZCQM1H4BR"
-        };
-        // 初始化 Firebase
-        firebase.initializeApp(firebaseConfig);
-        console.log('Firebase 初始化成功！');
-    </script>
-    
+    <!-- LeanCloud SDK（放在其他脚本之前） -->
+    <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.15.2/dist/av-min.js"></script>
+
     <!-- 添加默认数据 -->
     <script>
         // 确保有默认的朋友圈数据
@@ -198,10 +182,6 @@
                 time: '2025-01-15 10:30:00',
                 content: '今天学习了新的AI技术，感觉收获满满！继续加油💪',
                 images: ['https://picsum.photos/seed/ai1/300/200.jpg'],
-                likes: 42,
-                comments: [
-                    { id: 'c1', text: '太棒了！', timestamp: Date.now() - 3600000, author: '小明' }
-                ],
                 category: '学习成长'
             },
             {
@@ -211,8 +191,6 @@
                 time: '2025-01-14 15:45:00',
                 content: '分享一个很棒的学习方法：番茄工作法真的能提高效率！',
                 images: ['https://picsum.photos/seed/study1/300/200.jpg'],
-                likes: 28,
-                comments: [],
                 category: '学习成长'
             },
             {
@@ -222,13 +200,29 @@
                 time: '2025-01-13 18:20:00',
                 content: '今天尝试了新的食谱，味道超赞！🍜',
                 images: ['https://picsum.photos/seed/food1/300/200.jpg', 'https://picsum.photos/seed/food2/300/200.jpg'],
-                likes: 35,
-                comments: [],
                 category: '美食分享'
+            },
+            {
+                id: 'moment_4',
+                avatar: 'https://picsum.photos/seed/avatar4/100/100.jpg',
+                username: '技术极客',
+                time: '2025-01-12 14:00:00',
+                content: '刚完成了一个有趣的项目，用LeanCloud实现了实时数据同步！',
+                images: ['https://picsum.photos/seed/tech1/300/200.jpg'],
+                category: '科技数码'
+            },
+            {
+                id: 'moment_5',
+                avatar: 'https://picsum.photos/seed/avatar5/100/100.jpg',
+                username: '旅行者',
+                time: '2025-01-11 09:30:00',
+                content: '周末去了郊外，风景真的太美了！🌄',
+                images: ['https://picsum.photos/seed/travel1/300/200.jpg', 'https://picsum.photos/seed/travel2/300/200.jpg'],
+                category: '旅行见闻'
             }
         ];
     </script>
-    
+
     <header class="header">
         <div class="container">
             <div class="header-left">
@@ -271,6 +265,7 @@
             </div>
         </div>
     </header>
+
     <nav class="category-nav">
         <div class="container">
             <div class="category-scroll">
@@ -293,13 +288,16 @@
             </div>
         </div>
     </nav>
+
     <main class="main-content">
         <div class="container">
             <div id="momentsContainer" class="moments-grid">
                 <!-- 动态加载的内容将在这里显示 -->
+                <div class="loading-spinner">正在加载内容</div>
             </div>
         </div>
     </main>
+
     <footer class="social-footer">
         <div class="container">
             <div class="social-links">
@@ -319,6 +317,8 @@
             <p class="copyright">© 2025 狂客·银河 版权所有</p>
         </div>
     </footer>
+
+    <!-- 评论弹窗 -->
     <div id="commentModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="commentModalTitle">
         <div class="modal-content">
             <span class="close" aria-label="关闭评论弹窗">&times;</span>
@@ -333,9 +333,9 @@
             </div>
         </div>
     </div>
-    <!-- 项目脚本 -->
+
+    <!-- 项目脚本（按顺序加载） -->
     <script src="data.js"></script>
-    <script src="firebase-handler.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
