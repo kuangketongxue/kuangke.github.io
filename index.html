@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- LeanCloud SDK - 放在head中确保优先加载 -->
+    <!-- LeanCloud SDK - 必须在moments-data.js前加载（因MomentsData类依赖AV） -->
     <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.15.2/dist/av-min.js"></script>
     
     <style>
@@ -79,7 +79,7 @@
             color: #fff;
             font-size: 16px;
         }
-        /* 朋友圈核心样式 - 合并内联样式，统一管理 */
+        /* 朋友圈核心样式 */
         .moments-grid {
             display: grid;
             gap: 20px;
@@ -137,6 +137,7 @@
             margin: 8px 0;
             line-height: 1.5;
             color: #333;
+            white-space: pre-line; /* 支持换行符\n显示换行 */
         }
         .moment-images {
             display: grid;
@@ -205,7 +206,7 @@
             color: var(--text-secondary, #666);
             font-size: 1.1rem;
         }
-        /* 通知样式 - 统一使用 */
+        /* 通知样式 */
         .notification-container {
             position: fixed;
             top: 20px;
@@ -330,6 +331,42 @@
             display: flex;
             flex-direction: column;
         }
+        .comment-item {
+            display: flex;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .comment-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .comment-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .comment-content {
+            flex: 1;
+        }
+        .comment-author {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .comment-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        .comment-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
         .comment-input-area {
             display: flex;
             gap: 8px;
@@ -370,7 +407,7 @@
             padding: 0 16px;
             white-space: nowrap;
         }
-        /* 头部基础样式补充 */
+        /* 头部基础样式 */
         .header {
             padding: 16px 0;
             border-bottom: 1px solid #f0f0f0;
@@ -438,7 +475,7 @@
         .theme-toggle:hover {
             background: #f9fafb;
         }
-        /* 页脚样式补充 */
+        /* 页脚样式 */
         .social-footer {
             padding: 24px 0;
             border-top: 1px solid #f0f0f0;
@@ -585,36 +622,44 @@
         </div>
     </div>
 
-    <!-- 脚本加载顺序：配置→数据→工具→基础逻辑→业务脚本（关键：moment-data.js必须在核心脚本前加载） -->
-    <script src="config.js"></script>
-    <script src="success-diary-data.js"></script>
-    <script src="moment-data.js"></script> <!-- 1. 先加载朋友圈数据，暴露window.moments -->
-    <script src="utils.js"></script>
-    <script src="script.js"></script>
+    <!-- 脚本加载顺序：按依赖优先级排列（关键！） -->
+    <script src="config.js"></script> <!-- 配置文件（如LeanCloud初始化） -->
+    <script src="success-diary-data.js"></script> <!-- 其他页面数据 -->
+    <script src="moments-data.js"></script> <!-- 朋友圈数据核心（依赖AV，需在LeanCloud SDK后加载） -->
+    <script src="utils.js"></script> <!-- 工具函数 -->
+    <script src="script.js"></script> <!-- 基础业务逻辑 -->
     
-    <!-- 朋友圈核心脚本（从window.moments获取数据，不再内置数据） -->
+    <!-- 朋友圈核心脚本（完全对接moments-data.js的API） -->
     <script>
         class SimpleMomentsApp {
             constructor() {
-                // 从moment-data.js获取全局数据（关键：确保window.moments已存在）
-                this.moments = window.moments || []; 
+                // 从moments-data.js获取全局实例（关键：依赖其暴露的window.momentsData）
+                this.momentsData = window.momentsData || new window.MomentsData();
                 this.currentCategory = 'all';
+                this.cachedMoments = []; // 缓存已加载的所有数据，避免重复请求
                 this.notificationContainer = null;
             }
 
-            // 初始化入口：DOM加载后执行
-            init() {
+            // 初始化入口（异步处理，因getAllMoments是async方法）
+            async init() {
                 console.log('朋友圈应用初始化...');
-                // 验证数据是否加载成功（便于调试）
-                if (this.moments.length === 0) {
-                    console.warn('警告：未加载到朋友圈数据，请检查moment-data.js文件路径和内容');
-                }
                 this.createNotificationContainer();
                 this.bindEventListeners();
-                this.renderMoments(this.moments); // 用外部数据渲染页面
+                
+                try {
+                    // 调用moments-data.js的方法加载数据（本地→LeanCloud→默认）
+                    this.cachedMoments = await this.momentsData.getAllMoments();
+                    this.renderMoments(this.cachedMoments);
+                } catch (error) {
+                    console.error('初始化加载数据失败:', error);
+                    // 加载失败时使用默认数据
+                    this.cachedMoments = this.momentsData.getDefaultMoments();
+                    this.renderMoments(this.cachedMoments);
+                    this.showNotification('数据加载失败，已显示默认内容', 'error');
+                }
             }
 
-            // 创建通知容器（避免重复创建）
+            // 创建通知容器
             createNotificationContainer() {
                 this.notificationContainer = document.querySelector('.notification-container');
                 if (!this.notificationContainer) {
@@ -626,14 +671,14 @@
 
             // 统一绑定所有事件
             bindEventListeners() {
-                // 分类筛选事件
+                // 1. 分类筛选事件
                 document.querySelectorAll('.category-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        this.filterByCategory(btn.dataset.category);
+                    btn.addEventListener('click', async () => {
+                        await this.filterByCategory(btn.dataset.category);
                     });
                 });
 
-                // 搜索事件（实时搜索）
+                // 2. 搜索事件（实时搜索）
                 const searchInput = document.getElementById('searchInput');
                 if (searchInput) {
                     searchInput.addEventListener('input', (e) => {
@@ -641,21 +686,21 @@
                     });
                 }
 
-                // 点赞/评论/分享事件（事件委托，优化性能）
+                // 3. 点赞/评论/分享事件（事件委托）
                 const momentsContainer = document.getElementById('momentsContainer');
                 if (momentsContainer) {
-                    momentsContainer.addEventListener('click', (e) => {
+                    momentsContainer.addEventListener('click', async (e) => {
                         const likeBtn = e.target.closest('.like-btn');
                         const commentBtn = e.target.closest('.comment-btn');
                         const shareBtn = e.target.closest('.share-btn');
 
-                        if (likeBtn) this.handleLike(likeBtn);
+                        if (likeBtn) await this.handleLike(likeBtn);
                         if (commentBtn) this.handleComment(commentBtn);
                         if (shareBtn) this.handleShare();
                     });
                 }
 
-                // 评论弹窗关闭事件
+                // 4. 评论弹窗关闭事件
                 const closeModal = document.querySelector('#commentModal .close');
                 if (closeModal) {
                     closeModal.addEventListener('click', () => {
@@ -663,23 +708,31 @@
                     });
                 }
 
-                // 评论提交事件
+                // 5. 评论提交事件
                 const submitCommentBtn = document.getElementById('submitComment');
                 if (submitCommentBtn) {
                     submitCommentBtn.addEventListener('click', () => {
                         this.submitComment();
                     });
                 }
+
+                // 6. 点击弹窗外部关闭评论框
+                window.addEventListener('click', (e) => {
+                    const modal = document.getElementById('commentModal');
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
             }
 
-            // 渲染朋友圈内容（使用外部数据）
+            // 渲染朋友圈内容
             renderMoments(moments) {
                 const container = document.getElementById('momentsContainer');
                 if (!container) return;
 
                 // 无数据处理
                 if (!moments || moments.length === 0) {
-                    container.innerHTML = '<div class="no-results">暂无朋友圈内容</div>';
+                    container.innerHTML = '<div class="no-results">暂无相关内容</div>';
                     return;
                 }
 
@@ -691,14 +744,14 @@
                 });
             }
 
-            // 创建单条朋友圈卡片（字段与moment-data.js对应）
+            // 创建单条朋友圈卡片（与moments-data.js数据结构对齐）
             createMomentCard(moment) {
                 const card = document.createElement('div');
                 card.className = 'moment-card';
                 card.dataset.category = moment.category || '未分类';
-                card.dataset.id = moment.id || Date.now(); // 用时间戳兜底ID
+                card.dataset.id = moment.id || Date.now();
 
-                // 图片列表HTML（处理无图场景）
+                // 处理图片列表（支持0/1/2/3张图）
                 const imagesHtml = moment.images && moment.images.length > 0 
                     ? `
                         <div class="moment-images">
@@ -709,15 +762,16 @@
                     ` 
                     : '';
 
-                // 卡片HTML结构（字段与moment-data.js完全对应）
+                // 卡片HTML（支持内容换行，适配moments-data.js中的\n）
                 card.innerHTML = `
                     <div class="moment-header">
                         <div class="user-avatar">
-                            <img src="${moment.avatar || 'images/avatars/default.jpg'}" alt="${moment.username || '未知用户'}">
+                            <img src="${moment.avatar || 'https://picsum.photos/100/100?random=default'}" 
+                                 alt="${moment.username || '未知用户'}">
                         </div>
                         <div class="user-info">
                             <h3 class="username">${moment.username || '未知用户'}</h3>
-                            <span class="timestamp">${moment.timestamp || new Date().toLocaleString()}</span>
+                            <span class="timestamp">${moment.timestamp || '未知时间'}</span>
                         </div>
                         <button class="moment-menu" aria-label="更多操作">
                             <i class="fas fa-ellipsis-h"></i>
@@ -752,7 +806,7 @@
                 return card;
             }
 
-            // 分类筛选逻辑
+            // 分类筛选（调用moments-data.js的getMomentsByCategory方法）
             async filterByCategory(category) {
                 console.log('筛选分类:', category);
                 this.currentCategory = category;
@@ -768,64 +822,125 @@
                 container.innerHTML = '<div class="loading-spinner">正在加载内容</div>';
 
                 try {
-                    // 用外部数据筛选
-                    const filteredMoments = category === 'all' 
-                        ? this.moments 
-                        : this.moments.filter(moment => moment.category === category);
+                    // 调用moments-data.js的分类接口
+                    const filteredMoments = await this.momentsData.getMomentsByCategory(category);
                     this.renderMoments(filteredMoments);
                 } catch (error) {
                     console.error('分类加载失败:', error);
                     container.innerHTML = '<div class="no-results">加载失败，请刷新重试</div>';
+                    this.showNotification('分类加载失败', 'error');
                 }
             }
 
-            // 点赞逻辑
-            handleLike(btn) {
+            // 点赞处理（对接moments-data.js的like/unlike方法）
+            async handleLike(btn) {
+                const momentId = btn.dataset.id;
                 const isLiked = btn.dataset.liked === 'true';
                 const heartIcon = btn.querySelector('i');
                 const countSpan = btn.querySelector('.like-count');
                 let count = parseInt(countSpan.textContent) || 0;
 
-                // 更新UI状态
-                if (isLiked) {
-                    btn.dataset.liked = 'false';
-                    heartIcon.className = 'far fa-heart';
-                    btn.classList.remove('liked');
-                    count = Math.max(0, count - 1); // 避免负数
-                    this.showNotification('取消点赞', 'success');
-                } else {
-                    btn.dataset.liked = 'true';
-                    heartIcon.className = 'fas fa-heart';
-                    btn.classList.add('liked');
-                    count++;
-                    this.showNotification('点赞成功', 'success');
-                }
+                try {
+                    // 调用moments-data.js的点赞/取消点赞接口
+                    if (isLiked) {
+                        await this.momentsData.unlikeMoment(momentId);
+                        btn.dataset.liked = 'false';
+                        heartIcon.className = 'far fa-heart';
+                        btn.classList.remove('liked');
+                        count = Math.max(0, count - 1); // 避免负数
+                        this.showNotification('取消点赞成功', 'success');
+                    } else {
+                        await this.momentsData.likeMoment(momentId);
+                        btn.dataset.liked = 'true';
+                        heartIcon.className = 'fas fa-heart';
+                        btn.classList.add('liked');
+                        count++;
+                        this.showNotification('点赞成功', 'success');
+                    }
 
-                countSpan.textContent = count;
+                    // 更新UI点赞数
+                    countSpan.textContent = count;
+                } catch (error) {
+                    console.error('点赞操作失败:', error);
+                    this.showNotification(isLiked ? '取消点赞失败' : '点赞失败', 'error');
+                }
             }
 
-            // 评论逻辑（打开弹窗）
+            // 评论处理（打开弹窗）
             handleComment(btn) {
                 const momentId = btn.dataset.id;
                 const modal = document.getElementById('commentModal');
-                if (modal) {
-                    // 可扩展：根据momentId从接口加载对应评论
-                    document.getElementById('commentsList').innerHTML = '<div class="loading-spinner" style="padding: 1rem;">加载评论中...</div>';
-                    modal.style.display = 'flex';
-                    // 聚焦评论输入框
-                    const commentInput = document.getElementById('commentInput');
-                    if (commentInput) commentInput.focus();
+                const commentsList = document.getElementById('commentsList');
+                if (!modal || !commentsList) return;
+
+                // 显示加载状态
+                commentsList.innerHTML = '<div class="loading-spinner" style="padding: 1rem;">加载评论中...</div>';
+                modal.style.display = 'flex';
+
+                // 模拟加载评论（实际项目可对接LeanCloud评论接口）
+                setTimeout(() => {
+                    commentsList.innerHTML = `
+                        <div class="comment-item">
+                            <div class="comment-avatar">
+                                <img src="https://picsum.photos/100/100?random=comment1" alt="用户头像">
+                            </div>
+                            <div class="comment-content">
+                                <div class="comment-author">访客1号</div>
+                                <div class="comment-text">这段内容很有启发！</div>
+                                <div class="comment-time">1小时前</div>
+                            </div>
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-avatar">
+                                <img src="https://picsum.photos/100/100?random=comment2" alt="用户头像">
+                            </div>
+                            <div class="comment-content">
+                                <div class="comment-author">访客2号</div>
+                                <div class="comment-text">请问在哪里可以看到完整内容呀？</div>
+                                <div class="comment-time">30分钟前</div>
+                            </div>
+                        </div>
+                    `;
+                }, 800);
+
+                // 聚焦评论输入框
+                const commentInput = document.getElementById('commentInput');
+                if (commentInput) {
+                    commentInput.focus();
+                    // 存储当前评论的朋友圈ID（用于提交时关联）
+                    commentInput.dataset.momentId = momentId;
                 }
             }
 
-            // 提交评论（简化版）
+            // 提交评论（简化版，实际可对接LeanCloud）
             submitComment() {
                 const commentInput = document.getElementById('commentInput');
                 const commentText = commentInput.value.trim();
-                if (!commentText) return;
+                const momentId = commentInput.dataset.momentId;
 
+                if (!commentText || !momentId) return;
+
+                // 模拟提交成功（实际项目需调用接口）
                 this.showNotification('评论提交成功', 'success');
                 commentInput.value = '';
+
+                // 刷新评论列表（添加新评论到顶部）
+                const commentsList = document.getElementById('commentsList');
+                if (commentsList) {
+                    const newComment = document.createElement('div');
+                    newComment.className = 'comment-item';
+                    newComment.innerHTML = `
+                        <div class="comment-avatar">
+                            <img src="https://picsum.photos/100/100?random=current" alt="你的头像">
+                        </div>
+                        <div class="comment-content">
+                            <div class="comment-author">我</div>
+                            <div class="comment-text">${commentText}</div>
+                            <div class="comment-time">刚刚</div>
+                        </div>
+                    `;
+                    commentsList.prepend(newComment);
+                }
             }
 
             // 分享逻辑
@@ -833,7 +948,7 @@
                 if (navigator.share) {
                     navigator.share({
                         title: '狂客·银河朋友圈',
-                        text: '看看我分享的内容',
+                        text: '看看我发现的精彩内容',
                         url: window.location.href
                     }).catch(error => {
                         console.error('分享失败:', error);
@@ -856,22 +971,29 @@
                     });
             }
 
-            // 搜索逻辑（用外部数据搜索）
+            // 搜索逻辑（基于缓存数据筛选，避免重复请求）
             searchMoments(keyword) {
                 const trimmedKeyword = keyword.trim();
-                const filteredMoments = trimmedKeyword 
-                    ? this.moments.filter(moment => 
+                let filteredMoments = [];
+
+                if (trimmedKeyword) {
+                    // 从缓存数据中筛选（内容/用户名匹配）
+                    filteredMoments = this.cachedMoments.filter(moment => 
                         (moment.content && moment.content.toLowerCase().includes(trimmedKeyword.toLowerCase())) ||
                         (moment.username && moment.username.toLowerCase().includes(trimmedKeyword.toLowerCase()))
-                      )
-                    : this.moments;
+                    );
+                } else {
+                    // 无关键词时，显示当前分类的所有数据
+                    filteredMoments = this.currentCategory === 'all' 
+                        ? this.cachedMoments 
+                        : this.cachedMoments.filter(moment => moment.category === this.currentCategory);
+                }
 
                 this.renderMoments(filteredMoments);
-                // 同步更新分类按钮状态
+                // 同步更新分类按钮状态（搜索时默认激活"全部"）
                 document.querySelectorAll('.category-btn').forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.category === 'all');
                 });
-                this.currentCategory = 'all';
             }
 
             // 显示通知
@@ -912,17 +1034,15 @@
             }
         }
 
-        // 等待DOM和数据完全加载后初始化
+        // 等待DOM完全加载后初始化（确保moments-data.js已暴露全局变量）
         document.addEventListener('DOMContentLoaded', () => {
-            // 确保moment-data.js加载完成后再创建实例
-            if (window.moments) {
-                window.momentsApp = new SimpleMomentsApp();
-                window.momentsApp.init();
-                console.log('朋友圈脚本加载完成');
+            // 验证moments-data.js是否加载成功
+            if (window.MomentsData && window.momentsData) {
+                const app = new SimpleMomentsApp();
+                app.init(); // 异步初始化
             } else {
-                // 数据加载失败的降级处理
-                console.error('朋友圈数据加载失败，无法初始化应用');
-                document.getElementById('momentsContainer').innerHTML = '<div class="no-results">数据加载失败，请刷新页面重试</div>';
+                console.error('moments-data.js加载失败，无法初始化朋友圈');
+                document.getElementById('momentsContainer').innerHTML = '<div class="no-results">核心数据文件加载失败，请刷新页面</div>';
             }
         });
     </script>
