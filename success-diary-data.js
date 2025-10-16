@@ -4,7 +4,7 @@
  * 成功日记数据集
  * @type {Array<Object>}
  */
-let successDiaryData = [
+window.successDiaryData = [
     {
         id: 33,
         date: '2025-10-14',
