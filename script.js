@@ -48,7 +48,8 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-// ==================== 优化版常量定义 ====================
+
+// ==================== 优化版常量定义（恢复LeanCloud配置） ====================
 const CONFIG = Object.freeze({
     STORAGE_KEYS: {
         moments: 'momentsData',
@@ -71,6 +72,7 @@ const CONFIG = Object.freeze({
         MAX_COMMENT_LENGTH: 500,
         MAX_RETRY_ATTEMPTS: 3
     },
+    // 恢复LeanCloud配置（用于朋友圈点赞/评论云端存储）
     LEANCLOUD: {
         APP_ID: '2pmu0Y0IKEfIKXhdJHNEd1uU-gzGzoHsz',
         APP_KEY: 'cbLreTdVyxyXuWgmfwdQxPFF',
@@ -352,24 +354,25 @@ class LanguageManager {
     }
 }
 
-// ==================== LeanCloud处理器 ====================
+// ==================== 恢复LeanCloud处理器（仅用于朋友圈点赞/评论） ====================
 class LeanCloudHandler {
     constructor() {
         this.initialized = false;
-        this.useLocalStorage = true;
+        this.useLocalStorage = false; // 优先云端，云端不可用时降级本地
         this.#init();
     }
 
     #init() {
-        console.log('[LeanCloudHandler] 初始化开始');
+        console.log('[LeanCloudHandler] 初始化（用于朋友圈点赞/评论）');
         
         if (typeof AV === 'undefined') {
-            console.warn('LeanCloud SDK 未加载，将在3秒后重试...');
-            setTimeout(() => this.#init(), 3000);
+            console.warn('LeanCloud SDK 未加载，将降级为本地存储');
+            this.useLocalStorage = true;
             return;
         }
 
         try {
+            // 初始化LeanCloud（仅用于点赞/评论云端交互）
             AV.init({
                 appId: CONFIG.LEANCLOUD.APP_ID,
                 appKey: CONFIG.LEANCLOUD.APP_KEY,
@@ -377,17 +380,17 @@ class LeanCloudHandler {
             });
             this.initialized = true;
             this.useLocalStorage = false;
-            console.log('[LeanCloudHandler] LeanCloud初始化完成');
+            console.log('[LeanCloudHandler] LeanCloud初始化完成（点赞/评论功能可用）');
         } catch (error) {
-            console.error('LeanCloud 初始化失败:', error);
+            console.error('LeanCloud 初始化失败，降级为本地存储:', error);
             this.useLocalStorage = true;
         }
     }
 
-    // 获取点赞数
+    // ---------- 点赞相关（云端优先，本地降级） ----------
     async getLikes(momentId) {
         if (this.useLocalStorage) {
-            return parseInt(localStorage.getItem(`likes_${momentId}`)) || 0;
+            return this.#getLocalLikes(momentId);
         }
 
         try {
@@ -396,12 +399,11 @@ class LeanCloudHandler {
             const result = await query.first();
             return result ? result.get('count') : 0;
         } catch (error) {
-            console.error('获取点赞数失败:', error);
+            console.error('云端获取点赞数失败，降级本地:', error);
             return this.#getLocalLikes(momentId);
         }
     }
 
-    // 点赞
     async addLike(momentId) {
         if (this.useLocalStorage) {
             return this.#handleLocalLike(momentId, 1);
@@ -425,12 +427,11 @@ class LeanCloudHandler {
 
             return likeObj.get('count');
         } catch (error) {
-            console.error('点赞失败:', error);
+            console.error('云端点赞失败，降级本地:', error);
             return this.#handleLocalLike(momentId, 1);
         }
     }
 
-    // 取消点赞
     async removeLike(momentId) {
         if (this.useLocalStorage) {
             return this.#handleLocalLike(momentId, -1);
@@ -451,23 +452,12 @@ class LeanCloudHandler {
             }
             return 0;
         } catch (error) {
-            console.error('取消点赞失败:', error);
+            console.error('云端取消点赞失败，降级本地:', error);
             return this.#handleLocalLike(momentId, -1);
         }
     }
 
-    #getLocalLikes(momentId) {
-        return parseInt(localStorage.getItem(`likes_${momentId}`)) || 0;
-    }
-
-    #handleLocalLike(momentId, delta) {
-        const current = this.#getLocalLikes(momentId);
-        const newLikes = Math.max(0, current + delta);
-        localStorage.setItem(`likes_${momentId}`, newLikes.toString());
-        return newLikes;
-    }
-
-    // 获取评论
+    // ---------- 评论相关（云端优先，本地降级） ----------
     async getComments(momentId) {
         if (this.useLocalStorage) {
             return this.#getLocalComments(momentId);
@@ -486,12 +476,11 @@ class LeanCloudHandler {
                 timestamp: comment.get('createdAt').getTime()
             }));
         } catch (error) {
-            console.error('获取评论失败:', error);
+            console.error('云端获取评论失败，降级本地:', error);
             return this.#getLocalComments(momentId);
         }
     }
 
-    // 添加评论
     async addComment(momentId, commentText, author) {
         if (this.useLocalStorage) {
             return this.#handleLocalComment(momentId, commentText, author);
@@ -512,9 +501,21 @@ class LeanCloudHandler {
                 timestamp: comment.get('createdAt').getTime()
             };
         } catch (error) {
-            console.error('添加评论失败:', error);
+            console.error('云端添加评论失败，降级本地:', error);
             return this.#handleLocalComment(momentId, commentText, author);
         }
+    }
+
+    // ---------- 本地存储降级工具方法 ----------
+    #getLocalLikes(momentId) {
+        return parseInt(localStorage.getItem(`likes_${momentId}`)) || 0;
+    }
+
+    #handleLocalLike(momentId, delta) {
+        const current = this.#getLocalLikes(momentId);
+        const newLikes = Math.max(0, current + delta);
+        localStorage.setItem(`likes_${momentId}`, newLikes.toString());
+        return newLikes;
     }
 
     #getLocalComments(momentId) {
@@ -536,12 +537,12 @@ class LeanCloudHandler {
     }
 }
 
-// 创建全局实例
+// 创建全局LeanCloud实例（仅用于朋友圈点赞/评论）
 if (typeof window.cloudHandler === 'undefined') {
     window.cloudHandler = new LeanCloudHandler();
 }
 
-// ==================== 优化版朋友圈页面管理器 ====================
+// ==================== 朋友圈页面管理器（点赞/评论用云端，其他本地） ====================
 class MomentsPageManager {
     static #data = [];
     static #eventListeners = new Map();
@@ -558,7 +559,8 @@ class MomentsPageManager {
             const savedData = this.#loadFromStorage();
             const defaultData = window.momentsData || [];
 
-            this.#data = this.#mergeData(savedData, [], defaultData);
+            // 朋友圈主体数据本地存储（仅点赞/评论用云端）
+            this.#data = this.#mergeData(savedData, defaultData);
             this.#ensureDataIds();
             this.#saveData();
         } catch (error) {
@@ -576,11 +578,11 @@ class MomentsPageManager {
         }
     }
 
-    static #mergeData(saved, cloud, defaults) {
+    static #mergeData(saved, defaults) {
         const allIds = new Set();
         const merged = [];
 
-        [cloud, saved, defaults].forEach(source => {
+        [saved, defaults].forEach(source => {
             if (!source) return;
             source.forEach(item => {
                 if (item.id && !allIds.has(item.id)) {
@@ -604,7 +606,7 @@ class MomentsPageManager {
         try {
             appState.saveToStorage(CONFIG.STORAGE_KEYS.moments, JSON.stringify(this.#data));
         } catch (error) {
-            console.error('保存数据失败:', error);
+            console.error('保存朋友圈数据失败:', error);
         }
     }
 
@@ -714,7 +716,6 @@ class MomentsPageManager {
         const container = document.getElementById('momentsContainer');
         if (!container) return;
 
-        // 显示加载状态
         container.innerHTML = '<div class="loading-spinner">加载中...</div>';
 
         const dataToRender = filteredData || this.#data;
@@ -726,16 +727,15 @@ class MomentsPageManager {
             return;
         }
 
-        // 使用文档片段优化DOM操作
         const fragment = document.createDocumentFragment();
         const tempContainer = document.createElement('div');
 
         for (let i = 0; i < sorted.length; i++) {
             const moment = sorted[i];
-            const [likes, comments] = await Promise.all([
-                window.cloudHandler.getLikes(moment.id),
-                window.cloudHandler.getComments(moment.id)
-            ]);
+            // 点赞数：调用LeanCloudHandler（云端优先）
+            const likes = await window.cloudHandler.getLikes(moment.id);
+            // 评论：调用LeanCloudHandler（云端优先）
+            const comments = await window.cloudHandler.getComments(moment.id);
 
             tempContainer.innerHTML = this.#renderMomentCard(moment, i, likes, comments.length);
             if (tempContainer.firstElementChild) {
@@ -745,8 +745,6 @@ class MomentsPageManager {
 
         container.innerHTML = '';
         container.appendChild(fragment);
-
-        // 设置事件监听
         sorted.forEach(moment => this.#setupRealtimeListeners(moment.id));
     }
 
@@ -794,7 +792,7 @@ class MomentsPageManager {
     }
 
     static #setupRealtimeListeners(momentId) {
-        // 点赞按钮事件
+        // 点赞按钮（调用云端接口）
         const likeBtn = document.querySelector(`button[data-like-id="${momentId}"]`);
         if (likeBtn) {
             const handler = () => this.handleLike(momentId);
@@ -802,7 +800,7 @@ class MomentsPageManager {
             this.#eventListeners.set(likeBtn, handler);
         }
 
-        // 评论按钮事件
+        // 评论按钮（调用云端接口）
         const commentBtn = document.querySelector(`button[data-comment-id="${momentId}"]`);
         if (commentBtn) {
             const handler = () => this.#openCommentModal(momentId);
@@ -823,20 +821,21 @@ class MomentsPageManager {
             const hasUserLiked = localStorage.getItem(userLikeKey) === 'true';
 
             if (hasUserLiked) {
-                await window.cloudHandler.removeLike(momentId);
+                // 取消点赞：调用云端接口
+                const newLikes = await window.cloudHandler.removeLike(momentId);
                 localStorage.removeItem(userLikeKey);
                 NotificationManager.show('已取消点赞', 'info');
+                const likeBtnSpan = likeBtn.querySelector('span');
+                if (likeBtnSpan) likeBtnSpan.textContent = newLikes;
             } else {
-                await window.cloudHandler.addLike(momentId);
+                // 点赞：调用云端接口
+                const newLikes = await window.cloudHandler.addLike(momentId);
                 localStorage.setItem(userLikeKey, 'true');
                 this.#animateLikeButton(likeBtn);
                 NotificationManager.show('点赞成功！', 'success');
+                const likeBtnSpan = likeBtn.querySelector('span');
+                if (likeBtnSpan) likeBtnSpan.textContent = newLikes;
             }
-
-            // 立即更新显示
-            const likes = await window.cloudHandler.getLikes(momentId);
-            const likeBtnSpan = likeBtn.querySelector('span');
-            if (likeBtnSpan) likeBtnSpan.textContent = likes;
         } catch (error) {
             console.error('点赞操作失败:', error);
             NotificationManager.show('操作失败，请重试', 'error');
@@ -880,6 +879,7 @@ class MomentsPageManager {
         commentsList.innerHTML = '<div class="loading-spinner">加载评论中...</div>';
 
         try {
+            // 加载评论：调用云端接口
             const comments = await window.cloudHandler.getComments(momentId);
             if (comments.length === 0) {
                 commentsList.innerHTML = '<div class="comment-empty">暂无评论，快来抢沙发吧！</div>';
@@ -925,6 +925,7 @@ class MomentsPageManager {
 
         try {
             const username = appState.loadFromStorage(CONFIG.STORAGE_KEYS.username) || Utils.generateGuestUsername();
+            // 提交评论：调用云端接口
             await window.cloudHandler.addComment(
                 appState.currentMomentId,
                 text,
@@ -934,7 +935,7 @@ class MomentsPageManager {
             input.value = '';
             await this.#loadComments(appState.currentMomentId);
             
-            // 更新评论数显示
+            // 更新评论数：重新从云端获取
             const comments = await window.cloudHandler.getComments(appState.currentMomentId);
             const commentBtn = document.querySelector(`button[data-comment-id="${appState.currentMomentId}"] span`);
             if (commentBtn) commentBtn.textContent = comments.length;
@@ -1003,7 +1004,7 @@ class AppController {
             await this.#initializeServices();
             this.#initializeGlobalControls();
             await this.#initializePage();
-            console.log('应用初始化完成');
+            console.log('应用初始化完成（朋友圈点赞/评论已启用LeanCloud）');
         } catch (error) {
             console.error('应用初始化失败:', error);
             NotificationManager.show('页面初始化失败，请刷新重试', 'error');
@@ -1042,7 +1043,7 @@ class AppController {
                 await MomentsPageManager.init();
                 break;
             case CONFIG.PAGE_TYPES.SUCCESS:
-                // SuccessPageManager.init(); // 如果需要的话
+                // SuccessPageManager.init(); // 成功日记页面逻辑（无LeanCloud依赖）
                 break;
             default:
                 console.warn('未知页面类型:', appState.currentPage);
@@ -1053,10 +1054,10 @@ class AppController {
 // ==================== 全局暴露和初始化 ====================
 window.MomentsPageManager = MomentsPageManager;
 
-// 优化的事件监听和错误处理
+// 初始化前确保LeanCloud SDK已加载（需在HTML中引入AV SDK）
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM加载完成');
-    console.log('LeanCloud SDK状态:', typeof AV !== 'undefined' ? '已加载' : '未加载');
+    console.log('LeanCloud SDK状态:', typeof AV !== 'undefined' ? '已加载' : '未加载（将降级本地）');
     
     // 延迟初始化确保资源加载完成
     setTimeout(() => {
