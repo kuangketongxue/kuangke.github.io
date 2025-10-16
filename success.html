@@ -195,6 +195,7 @@
         </div>
     </footer>
     <!-- 脚本引用（保持原加载顺序，确保数据优先加载） -->
+    <!-- 注：若config.js中有LeanCloud相关代码，需同步移除其中AV初始化逻辑 -->
     <script src="config.js"></script>
     <script src="success-diary-data.js"></script>
     <script src="utils.js"></script>
@@ -248,6 +249,10 @@
                 console.log('🧪 测试：强制显示按钮');
                 backToTopBtn.classList.add('show');
             }, 3000);
+
+            // ==================== 额外：初始化日记数据渲染（假设script.js中需基于successDiaryData处理） ====================
+            console.log('📝 成功日记数据：', window.successDiaryData);
+            // 若script.js中有数据渲染逻辑，需确保successDiaryData已加载并可用
         });
     </script>
 </body>
