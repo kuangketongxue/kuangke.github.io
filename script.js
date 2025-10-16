@@ -1,17 +1,4 @@
-
-// Firebase初始化测试
-window.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM加载完成');
-    console.log('Firebase SDK状态:', typeof firebase !== 'undefined' ? '已加载' : '未加载');
-    console.log('Firebase应用状态:', firebase.apps.length > 0 ? '已初始化' : '未初始化');
-    
-    // 延迟初始化确保资源加载完成
-    setTimeout(() => {
-        AppController.init().catch(error => {
-            console.error('应用启动失败:', error);
-        });
-    }, 100);
-});// ==================== 优化版常量定义 ====================
+// ==================== 优化版常量定义 ====================
 const CONFIG = Object.freeze({
     STORAGE_KEYS: {
         moments: 'momentsData',
@@ -34,17 +21,10 @@ const CONFIG = Object.freeze({
         MAX_COMMENT_LENGTH: 500,
         MAX_RETRY_ATTEMPTS: 3
     },
-    FIREBASE: {
-        CONFIG: {
-            apiKey: "AIzaSyD9NwlJxYiRjFh3cPjpJGmQAhogmrFpU4M",
-            authDomain: "kuangke-galaxy.firebaseapp.com",
-            projectId: "kuangke-galaxy",
-            storageBucket: "kuangke-galaxy.firebasestorage.app",
-            messagingSenderId: "416862048915",
-            appId: "1:416862048915:web:6578fcd23d8cf882c53366",
-            measurementId: "G-VZCQM1H4BR"
-        },
-        DB_URL: 'https://kuangke-galaxy-default-rtdb.asia-southeast1.firebasedatabase.app'
+    LEANCLOUD: {
+        APP_ID: '2pmu0Y0IKEfIKXhdJHNEd1uU-gzGzoHsz',
+        APP_KEY: 'cbLreTdVyxyXuWgmfwdQxPFF',
+        SERVER_URL: 'https://2pmu0y0i.lc-cn-n1-shared.com'
     }
 });
 
@@ -65,7 +45,7 @@ class AppState {
         this.diarySearchKeyword = '';
         this.currentLanguage = 'zh';
         this.currentPage = CONFIG.PAGE_TYPES.MOMENTS;
-        this.activeFirebaseListeners = new Map();
+        this.activeListeners = new Map();
         this.pendingOperations = new Map();
     }
 
@@ -111,33 +91,6 @@ class AppState {
         if (listeners) {
             listeners.forEach(callback => callback(data));
         }
-    }
-
-    setFirebaseListener(type, id, ref, eventType, callback) {
-        const key = this._getListenerKey(type, id, eventType);
-        this.stopFirebaseListener(type, id, eventType);
-        ref.on(eventType, callback);
-        this.activeFirebaseListeners.set(key, { ref, eventType, callback });
-    }
-
-    stopFirebaseListener(type, id, eventType) {
-        const key = this._getListenerKey(type, id, eventType);
-        const listener = this.activeFirebaseListeners.get(key);
-        if (listener) {
-            listener.ref.off(listener.eventType, listener.callback);
-            this.activeFirebaseListeners.delete(key);
-        }
-    }
-
-    stopAllFirebaseListeners() {
-        this.activeFirebaseListeners.forEach(({ ref, eventType, callback }) => {
-            ref.off(eventType, callback);
-        });
-        this.activeFirebaseListeners.clear();
-    }
-
-    _getListenerKey(type, id, eventType) {
-        return `${type}_${id}_${eventType}`;
     }
 
     setOperationLock(operationId, duration = 1000) {
@@ -349,189 +302,178 @@ class LanguageManager {
     }
 }
 
-// ==================== 优化版Firebase处理器 ====================
-// ==================== 优化版Firebase处理器 ====================
-class FirebaseHandler {
+// ==================== LeanCloud处理器 ====================
+class LeanCloudHandler {
     constructor() {
-        this.database = null;
-        this.likesRef = null;
-        this.commentsRef = null;
-        this.momentsRef = null;
-        this.useLocalStorage = true; // 默认使用本地存储
-        
+        this.initialized = false;
+        this.useLocalStorage = true;
         this.#init();
     }
 
     #init() {
-        console.log('[FirebaseHandler] 初始化开始');
+        console.log('[LeanCloudHandler] 初始化开始');
         
-        // 等待Firebase SDK加载
-        if (this.#isFirebaseUnavailable()) {
-            console.warn('Firebase SDK 未加载，将在5秒后重试...');
-            setTimeout(() => this.#init(), 5000);
+        if (typeof AV === 'undefined') {
+            console.warn('LeanCloud SDK 未加载，将在3秒后重试...');
+            setTimeout(() => this.#init(), 3000);
             return;
         }
 
         try {
-            this.#initializeFirebase();
+            AV.init({
+                appId: CONFIG.LEANCLOUD.APP_ID,
+                appKey: CONFIG.LEANCLOUD.APP_KEY,
+                serverURL: CONFIG.LEANCLOUD.SERVER_URL
+            });
+            this.initialized = true;
             this.useLocalStorage = false;
-            console.log('[FirebaseHandler] Firebase模式初始化完成');
+            console.log('[LeanCloudHandler] LeanCloud初始化完成');
         } catch (error) {
-            console.error('Firebase 初始化失败:', error);
+            console.error('LeanCloud 初始化失败:', error);
             this.useLocalStorage = true;
         }
     }
 
-    #isFirebaseUnavailable() {
-        return typeof firebase === 'undefined';
-    }
-
-    #initializeFirebase() {
-        // 检查是否已经初始化
-        if (!firebase.apps.length) {
-            console.log('正在初始化Firebase应用...');
-            firebase.initializeApp(CONFIG.FIREBASE.CONFIG);
-        } else {
-            console.log('Firebase应用已存在，使用现有实例');
-        }
-        
-        this.database = firebase.database();
-        this.likesRef = this.database.ref('likes');
-        this.commentsRef = this.database.ref('comments');
-        this.momentsRef = this.database.ref('moments');
-        
-        console.log('Firebase引用创建成功');
-    }
-
-    async syncMomentsData() {
-        if (this.useLocalStorage) {
-            console.log('使用本地存储模式');
-            return window.momentsData || [];
-        }
-
-        try {
-            const snapshot = await this.momentsRef.once('value');
-            const fbMoments = snapshot.val() || [];
-            const localMoments = window.momentsData || [];
-            const fbIds = new Set(fbMoments.map(m => m.id));
-            const merged = [
-                ...fbMoments,
-                ...localMoments.filter(m => !fbIds.has(m.id))
-            ];
-            console.log('Firebase数据同步成功:', merged.length, '条记录');
-            return merged;
-        } catch (error) {
-            console.error('Firebase数据同步失败:', error);
-            this.useLocalStorage = true;
-            return window.momentsData || [];
-        }
-    }
-
-    async saveMomentsToFirebase(moments) {
-        if (this.useLocalStorage) {
-            console.log('本地存储模式，跳过Firebase保存');
-            return false;
-        }
-
-        try {
-            await this.momentsRef.set(moments);
-            console.log('数据保存到Firebase成功');
-            return true;
-        } catch (error) {
-            console.error('保存到Firebase失败:', error);
-            this.useLocalStorage = true;
-            return false;
-        }
-    }
-
+    // 获取点赞数
     async getLikes(momentId) {
         if (this.useLocalStorage) {
             return parseInt(localStorage.getItem(`likes_${momentId}`)) || 0;
         }
 
         try {
-            const snapshot = await this.likesRef.child(momentId).once('value');
-            return snapshot.val() || 0;
+            const query = new AV.Query('Likes');
+            query.equalTo('momentId', momentId);
+            const result = await query.first();
+            return result ? result.get('count') : 0;
         } catch (error) {
             console.error('获取点赞数失败:', error);
-            return 0;
+            return this.#getLocalLikes(momentId);
         }
     }
 
+    // 点赞
     async addLike(momentId) {
-        return this.#modifyLikeCount(momentId, 1);
-    }
-
-    async removeLike(momentId) {
-        return this.#modifyLikeCount(momentId, -1);
-    }
-
-    async #modifyLikeCount(momentId, delta) {
         if (this.useLocalStorage) {
-            return this.#handleLocalLike(momentId, delta);
+            return this.#handleLocalLike(momentId, 1);
         }
 
         try {
-            let newLikes = 0;
-            await this.likesRef.child(momentId).transaction((currentLikes) => {
-                newLikes = Math.max(0, (currentLikes || 0) + delta);
-                return newLikes;
-            });
-            return newLikes;
+            const query = new AV.Query('Likes');
+            query.equalTo('momentId', momentId);
+            let likeObj = await query.first();
+
+            if (likeObj) {
+                likeObj.increment('count', 1);
+                await likeObj.save();
+            } else {
+                const Likes = AV.Object.extend('Likes');
+                likeObj = new Likes();
+                likeObj.set('momentId', momentId);
+                likeObj.set('count', 1);
+                await likeObj.save();
+            }
+
+            return likeObj.get('count');
         } catch (error) {
-            console.error('修改点赞数失败:', error);
-            return this.#handleLocalLike(momentId, delta);
+            console.error('点赞失败:', error);
+            return this.#handleLocalLike(momentId, 1);
         }
     }
 
+    // 取消点赞
+    async removeLike(momentId) {
+        if (this.useLocalStorage) {
+            return this.#handleLocalLike(momentId, -1);
+        }
+
+        try {
+            const query = new AV.Query('Likes');
+            query.equalTo('momentId', momentId);
+            const likeObj = await query.first();
+
+            if (likeObj) {
+                const currentCount = likeObj.get('count');
+                if (currentCount > 0) {
+                    likeObj.increment('count', -1);
+                    await likeObj.save();
+                    return likeObj.get('count');
+                }
+            }
+            return 0;
+        } catch (error) {
+            console.error('取消点赞失败:', error);
+            return this.#handleLocalLike(momentId, -1);
+        }
+    }
+
+    #getLocalLikes(momentId) {
+        return parseInt(localStorage.getItem(`likes_${momentId}`)) || 0;
+    }
+
     #handleLocalLike(momentId, delta) {
-        const current = parseInt(localStorage.getItem(`likes_${momentId}`)) || 0;
+        const current = this.#getLocalLikes(momentId);
         const newLikes = Math.max(0, current + delta);
         localStorage.setItem(`likes_${momentId}`, newLikes.toString());
         return newLikes;
     }
 
+    // 获取评论
     async getComments(momentId) {
         if (this.useLocalStorage) {
-            const stored = localStorage.getItem(`comments_${momentId}`);
-            return Utils.safeJsonParse(stored, []);
+            return this.#getLocalComments(momentId);
         }
 
         try {
-            const snapshot = await this.commentsRef.child(momentId).once('value');
-            const commentsData = snapshot.val();
-            if (!commentsData) return [];
-            return Object.values(commentsData)
-                .sort((a, b) => b.timestamp - a.timestamp);
+            const query = new AV.Query('Comments');
+            query.equalTo('momentId', momentId);
+            query.descending('createdAt');
+            const results = await query.find();
+            
+            return results.map(comment => ({
+                id: comment.id,
+                text: comment.get('text'),
+                author: comment.get('author'),
+                timestamp: comment.get('createdAt').getTime()
+            }));
         } catch (error) {
             console.error('获取评论失败:', error);
-            return [];
+            return this.#getLocalComments(momentId);
         }
     }
 
+    // 添加评论
     async addComment(momentId, commentText, author) {
         if (this.useLocalStorage) {
             return this.#handleLocalComment(momentId, commentText, author);
         }
 
         try {
-            const newCommentRef = this.commentsRef.child(momentId).push();
-            const comment = {
-                id: newCommentRef.key,
+            const Comment = AV.Object.extend('Comments');
+            const comment = new Comment();
+            comment.set('momentId', momentId);
+            comment.set('text', commentText);
+            comment.set('author', author);
+            await comment.save();
+
+            return {
+                id: comment.id,
                 text: commentText,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                author: author
+                author: author,
+                timestamp: comment.get('createdAt').getTime()
             };
-            await newCommentRef.set(comment);
-            return comment;
         } catch (error) {
             console.error('添加评论失败:', error);
             return this.#handleLocalComment(momentId, commentText, author);
         }
     }
 
+    #getLocalComments(momentId) {
+        const stored = localStorage.getItem(`comments_${momentId}`);
+        return Utils.safeJsonParse(stored, []);
+    }
+
     #handleLocalComment(momentId, commentText, author) {
-        const comments = this.getComments(momentId);
+        const comments = this.#getLocalComments(momentId);
         const comment = {
             id: Utils.generateId('comment_'),
             text: commentText,
@@ -542,45 +484,11 @@ class FirebaseHandler {
         localStorage.setItem(`comments_${momentId}`, JSON.stringify(comments));
         return comment;
     }
-
-    onLikesChange(momentId, callback) {
-        if (this.useLocalStorage) return;
-
-        const ref = this.likesRef.child(momentId);
-        appState.setFirebaseListener('likes', momentId, ref, 'value', (snapshot) => {
-            callback(snapshot.val() || 0);
-        });
-    }
-
-    onCommentsChange(momentId, callback) {
-        if (this.useLocalStorage) return;
-
-        const ref = this.commentsRef.child(momentId);
-        appState.setFirebaseListener('comments', momentId, ref, 'value', (snapshot) => {
-            const commentsData = snapshot.val();
-            const commentsArray = commentsData ? Object.values(commentsData) : [];
-            commentsArray.sort((a, b) => b.timestamp - a.timestamp);
-            callback(commentsArray);
-        });
-    }
-
-    stopListening(momentId = null) {
-        if (this.useLocalStorage) return;
-
-        if (momentId) {
-            appState.stopFirebaseListener('likes', momentId, 'value');
-            appState.stopFirebaseListener('comments', momentId, 'value');
-        } else {
-            appState.stopAllFirebaseListeners();
-        }
-    }
 }
- 
-        
 
-// 单例模式确保FirebaseHandler唯一实例
-if (typeof window.firebaseHandler === 'undefined') {
-    window.firebaseHandler = new FirebaseHandler();
+// 创建全局实例
+if (typeof window.cloudHandler === 'undefined') {
+    window.cloudHandler = new LeanCloudHandler();
 }
 
 // ==================== 优化版朋友圈页面管理器 ====================
@@ -599,9 +507,8 @@ class MomentsPageManager {
         try {
             const savedData = this.#loadFromStorage();
             const defaultData = window.momentsData || [];
-            const fbSyncedData = await this.#syncFirebaseData();
 
-            this.#data = this.#mergeData(savedData, fbSyncedData, defaultData);
+            this.#data = this.#mergeData(savedData, [], defaultData);
             this.#ensureDataIds();
             this.#saveData();
         } catch (error) {
@@ -619,22 +526,11 @@ class MomentsPageManager {
         }
     }
 
-    static async #syncFirebaseData() {
-        if (window.firebaseHandler.useLocalStorage) return [];
-
-        try {
-            return await window.firebaseHandler.syncMomentsData();
-        } catch (error) {
-            console.error('Firebase数据同步失败:', error);
-            return [];
-        }
-    }
-
-    static #mergeData(saved, firebase, defaults) {
+    static #mergeData(saved, cloud, defaults) {
         const allIds = new Set();
         const merged = [];
 
-        [firebase, saved, defaults].forEach(source => {
+        [cloud, saved, defaults].forEach(source => {
             if (!source) return;
             source.forEach(item => {
                 if (item.id && !allIds.has(item.id)) {
@@ -657,9 +553,6 @@ class MomentsPageManager {
     static #saveData() {
         try {
             appState.saveToStorage(CONFIG.STORAGE_KEYS.moments, JSON.stringify(this.#data));
-            if (!window.firebaseHandler.useLocalStorage) {
-                window.firebaseHandler.saveMomentsToFirebase(this.#data).catch(console.error);
-            }
         } catch (error) {
             console.error('保存数据失败:', error);
         }
@@ -728,6 +621,8 @@ class MomentsPageManager {
 
     static #initCommentModal() {
         const modal = document.getElementById('commentModal');
+        if (!modal) return;
+
         const closeBtn = modal.querySelector('.close');
         const submitBtn = document.getElementById('submitComment');
         const commentInput = document.getElementById('commentInput');
@@ -746,7 +641,8 @@ class MomentsPageManager {
 
         if (commentInput) {
             const handler = (e) => {
-                if (e.key === 'Enter') {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
                     this.#submitComment();
                 }
             };
@@ -771,8 +667,6 @@ class MomentsPageManager {
         // 显示加载状态
         container.innerHTML = '<div class="loading-spinner">加载中...</div>';
 
-        window.firebaseHandler.stopListening();
-
         const dataToRender = filteredData || this.#data;
         const filtered = this.#filterByCategory(dataToRender);
         const sorted = this.#sortByDate(filtered);
@@ -789,8 +683,8 @@ class MomentsPageManager {
         for (let i = 0; i < sorted.length; i++) {
             const moment = sorted[i];
             const [likes, comments] = await Promise.all([
-                window.firebaseHandler.getLikes(moment.id),
-                window.firebaseHandler.getComments(moment.id)
+                window.cloudHandler.getLikes(moment.id),
+                window.cloudHandler.getComments(moment.id)
             ]);
 
             tempContainer.innerHTML = this.#renderMomentCard(moment, i, likes, comments.length);
@@ -802,7 +696,7 @@ class MomentsPageManager {
         container.innerHTML = '';
         container.appendChild(fragment);
 
-        // 设置实时监听
+        // 设置事件监听
         sorted.forEach(moment => this.#setupRealtimeListeners(moment.id));
     }
 
@@ -865,21 +759,6 @@ class MomentsPageManager {
             commentBtn.addEventListener('click', handler);
             this.#eventListeners.set(commentBtn, handler);
         }
-
-        // Firebase实时监听
-        window.firebaseHandler.onLikesChange(momentId, (newLikes) => {
-            const likeBtn = document.querySelector(`button[data-like-id="${momentId}"] span`);
-            if (likeBtn) {
-                likeBtn.textContent = newLikes;
-            }
-        });
-
-        window.firebaseHandler.onCommentsChange(momentId, (comments) => {
-            const commentBtn = document.querySelector(`button[data-comment-id="${momentId}"] span`);
-            if (commentBtn) {
-                commentBtn.textContent = comments.length;
-            }
-        });
     }
 
     static async handleLike(momentId) {
@@ -894,15 +773,20 @@ class MomentsPageManager {
             const hasUserLiked = localStorage.getItem(userLikeKey) === 'true';
 
             if (hasUserLiked) {
-                await window.firebaseHandler.removeLike(momentId);
+                await window.cloudHandler.removeLike(momentId);
                 localStorage.removeItem(userLikeKey);
                 NotificationManager.show('已取消点赞', 'info');
             } else {
-                await window.firebaseHandler.addLike(momentId);
+                await window.cloudHandler.addLike(momentId);
                 localStorage.setItem(userLikeKey, 'true');
                 this.#animateLikeButton(likeBtn);
                 NotificationManager.show('点赞成功！', 'success');
             }
+
+            // 立即更新显示
+            const likes = await window.cloudHandler.getLikes(momentId);
+            const likeBtnSpan = likeBtn.querySelector('span');
+            if (likeBtnSpan) likeBtnSpan.textContent = likes;
         } catch (error) {
             console.error('点赞操作失败:', error);
             NotificationManager.show('操作失败，请重试', 'error');
@@ -923,23 +807,30 @@ class MomentsPageManager {
     static #openCommentModal(momentId) {
         appState.currentMomentId = momentId;
         const modal = document.getElementById('commentModal');
-        modal.style.display = 'block';
-        this.#loadComments(momentId);
+        if (modal) {
+            modal.style.display = 'block';
+            this.#loadComments(momentId);
+        }
     }
 
     static #closeCommentModal() {
         const modal = document.getElementById('commentModal');
-        modal.style.display = 'none';
+        if (modal) {
+            modal.style.display = 'none';
+        }
         appState.currentMomentId = null;
-        document.getElementById('commentInput').value = '';
+        const input = document.getElementById('commentInput');
+        if (input) input.value = '';
     }
 
     static async #loadComments(momentId) {
         const commentsList = document.getElementById('commentsList');
+        if (!commentsList) return;
+
         commentsList.innerHTML = '<div class="loading-spinner">加载评论中...</div>';
 
         try {
-            const comments = await window.firebaseHandler.getComments(momentId);
+            const comments = await window.cloudHandler.getComments(momentId);
             if (comments.length === 0) {
                 commentsList.innerHTML = '<div class="comment-empty">暂无评论，快来抢沙发吧！</div>';
             } else {
@@ -959,6 +850,8 @@ class MomentsPageManager {
 
     static async #submitComment() {
         const input = document.getElementById('commentInput');
+        if (!input) return;
+
         const text = input.value.trim();
 
         if (!text) {
@@ -974,20 +867,28 @@ class MomentsPageManager {
         if (!appState.currentMomentId) return;
 
         const submitBtn = document.getElementById('submitComment');
+        if (!submitBtn) return;
+
         const originalText = submitBtn.textContent;
         submitBtn.textContent = '发送中...';
         submitBtn.disabled = true;
 
         try {
             const username = appState.loadFromStorage(CONFIG.STORAGE_KEYS.username) || Utils.generateGuestUsername();
-            const comment = await window.firebaseHandler.addComment(
+            await window.cloudHandler.addComment(
                 appState.currentMomentId,
                 text,
                 username
             );
 
             input.value = '';
-            this.#loadComments(appState.currentMomentId);
+            await this.#loadComments(appState.currentMomentId);
+            
+            // 更新评论数显示
+            const comments = await window.cloudHandler.getComments(appState.currentMomentId);
+            const commentBtn = document.querySelector(`button[data-comment-id="${appState.currentMomentId}"] span`);
+            if (commentBtn) commentBtn.textContent = comments.length;
+
             NotificationManager.show('评论发表成功！', 'success');
         } catch (error) {
             console.error('评论发表失败:', error);
@@ -1104,9 +1005,15 @@ window.MomentsPageManager = MomentsPageManager;
 
 // 优化的事件监听和错误处理
 document.addEventListener('DOMContentLoaded', () => {
-    AppController.init().catch(error => {
-        console.error('应用启动失败:', error);
-    });
+    console.log('DOM加载完成');
+    console.log('LeanCloud SDK状态:', typeof AV !== 'undefined' ? '已加载' : '未加载');
+    
+    // 延迟初始化确保资源加载完成
+    setTimeout(() => {
+        AppController.init().catch(error => {
+            console.error('应用启动失败:', error);
+        });
+    }, 100);
 });
 
 // 全局错误处理
