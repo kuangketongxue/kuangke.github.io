@@ -3,274 +3,718 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>星空书摘 - 优化版</title>
+    <title>狂客·星空 - 阅读日志</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ========================================
-           CSS 变量 - 统一主题管理
-        ======================================== */
-        :root {
-            /* 颜色系统 */
-            --primary-color: #8b5cf6;
-            --primary-hover: #7c3aed;
-            --secondary-color: #38bdf8;
-            --accent-color: #6366f1;
-            --accent-hover: #4f46e5;
-            
-            /* 背景色 */
-            --bg-primary: #0a0e27;
-            --bg-secondary: #111836;
-            --bg-card: rgba(17, 24, 54, 0.6);
-            --bg-card-soft: rgba(17, 24, 54, 0.45);
-            --bg-overlay: rgba(0, 0, 0, 0.8);
-            
-            /* 文字颜色 */
-            --text-primary: #f5f7ff;
-            --text-secondary: rgba(245, 247, 255, 0.7);
-            --text-muted: rgba(245, 247, 255, 0.5);
-            
-            /* 边框 */
-            --border-color: rgba(139, 92, 246, 0.2);
-            --border-hover: rgba(139, 92, 246, 0.4);
-            
-            /* 阴影 */
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
-            --shadow-lg: 0 8px 24px rgba(99, 102, 241, 0.2);
-            
-            /* 间距 */
-            --spacing-xs: 0.5rem;
-            --spacing-sm: 0.75rem;
-            --spacing-md: 1rem;
-            --spacing-lg: 1.5rem;
-            --spacing-xl: 2rem;
-            
-            /* 圆角 */
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
-            --radius-full: 999px;
-            
-            /* 过渡 */
-            --transition-fast: 0.2s ease;
-            --transition-base: 0.3s ease;
-            --transition-slow: 0.5s ease;
-        }
-
-        /* 亮色模式 */
-        body.light-mode {
-            --bg-primary: #f8f9ff;
-            --bg-secondary: #ffffff;
-            --bg-card: rgba(255, 255, 255, 0.9);
-            --bg-card-soft: rgba(255, 255, 255, 0.85);
-            --bg-overlay: rgba(0, 0, 0, 0.5);
-            
-            --text-primary: #1a1a2e;
-            --text-secondary: rgba(26, 26, 46, 0.7);
-            --text-muted: rgba(26, 26, 46, 0.5);
-            
-            --border-color: rgba(139, 92, 246, 0.15);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-        }
-
-        /* ========================================
-           全局样式
-        ======================================== */
+        /* ========== 全局样式 ========== */
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 
-                         'Microsoft YaHei', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            transition: background var(--transition-base), color var(--transition-base);
+        
+        body[data-page="reading"] {
+            background: url("images/reading-bg.jpg") center/cover no-repeat fixed;
+            color: #f5f7ff;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        body[data-page="reading"]::before,
+        body[data-page="reading"]::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        body[data-page="reading"]::before {
+            background: linear-gradient(135deg, rgba(25, 51, 120, 0.45), rgba(15, 18, 60, 0.65));
+            mix-blend-mode: screen;
+        }
+        
+        body[data-page="reading"]::after {
+            background:
+                radial-gradient(circle at 20% 15%, rgba(120, 160, 255, 0.27), transparent 55%),
+                radial-gradient(circle at 78% 10%, rgba(255, 150, 255, 0.2), transparent 60%),
+                rgba(6, 10, 42, 0.35);
         }
 
-        /* ========================================
-           容器布局
-        ======================================== */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: var(--spacing-xl);
-        }
-
-        /* ========================================
-           书摘区域
-        ======================================== */
-        .reading-digest {
-            margin-top: var(--spacing-xl);
-        }
-
-        .reading-digest-header {
+        /* ========== 头部样式 ========== */
+        .reading-header .container {
             display: flex;
-            gap: var(--spacing-lg);
-            align-items: flex-start;
-            margin-bottom: var(--spacing-xl);
-            padding: var(--spacing-xl);
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .reading-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .reading-return {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.7rem 1.4rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.45);
+            color: #f4f7ff;
+            text-decoration: none;
+            font-size: 0.98rem;
+            letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 22px rgba(99, 102, 241, 0.28);
+        }
+        
+        body.light-mode .reading-return {
+            background: rgba(99, 102, 241, 0.08);
+            color: var(--accent-hover);
+            box-shadow: none;
+        }
+        
+        .reading-return:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 16px 32px rgba(99, 102, 241, 0.35);
+        }
+        
+        .reading-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .reading-title-group .logo {
+            font-size: 2.1rem;
+            margin: 0;
+        }
+        
+        .reading-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* ========== 主内容区域 ========== */
+        .reading-main {
+            padding: 2.8rem 0 5rem;
+        }
+
+        /* ========== 书籍展示柜 ========== */
+        .books-showcase {
+            position: relative;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: var(--radius-xl);
-            backdrop-filter: blur(20px);
+            border-radius: 26px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-out;
+            margin-bottom: 2rem;
+        }
+        
+        .books-showcase::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), transparent 55%);
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        
+        .books-showcase::after {
+            content: "";
+            position: absolute;
+            top: -120px;
+            right: -90px;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.22), transparent 70%);
+            filter: blur(40px);
+            animation: float 16s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(18px) rotate(6deg);
+            }
+        }
+        
+        .books-showcase-body {
+            position: relative;
+            padding: 2.4rem 2.2rem;
+            z-index: 1;
         }
 
-        .digest-icon {
-            width: 60px;
-            height: 60px;
+        .books-showcase-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+        
+        .books-showcase-title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border-radius: var(--radius-lg);
-            font-size: 1.5rem;
-            color: white;
-            flex-shrink: 0;
+            gap: 0.9rem;
+            flex-wrap: wrap;
         }
-
-        .reading-digest-header h2 {
-            font-size: 1.8rem;
-            margin-bottom: var(--spacing-sm);
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        
+        .books-showcase-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
+            box-shadow: 0 12px 28px rgba(79, 70, 229, 0.35);
+            color: #fff;
+            font-size: 1.4rem;
         }
-
-        .reading-digest-header p {
+        
+        body.light-mode .books-showcase-icon {
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.25);
+        }
+        
+        .books-showcase-caption {
             color: var(--text-secondary);
-            margin-bottom: var(--spacing-lg);
+            font-size: 1.05rem;
         }
 
-        /* ========================================
-           搜索工具栏 - 优化版
-        ======================================== */
-        .digest-search {
+        /* 书籍网格布局 */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .book-item {
+            position: relative;
+            group: true;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+
+        .book-item:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        .book-cover {
+            position: relative;
+            width: 100%;
+            padding-bottom: 140%; /* 书籍比例 */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(56, 189, 248, 0.05));
+        }
+
+        .book-cover img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .book-item:hover .book-cover {
+            box-shadow: 0 16px 40px rgba(139, 92, 246, 0.4);
+            transform: perspective(1000px) rotateY(-5deg);
+        }
+
+        .book-item:hover .book-cover img {
+            transform: scale(1.08);
+        }
+
+        .book-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            padding: 1.5rem 1rem 1rem;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .book-item:hover .book-info {
+            opacity: 1;
+        }
+
+        .book-title {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .book-author {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .book-rating {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            color: #FFD700;
+            padding: 0.4rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            z-index: 2;
+        }
+
+        .book-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
+            color: #fff;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* 书籍详情模态框 */
+        .book-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 2rem;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .book-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .modal-body {
             display: flex;
             flex-wrap: wrap;
-            gap: var(--spacing-sm);
-            margin-top: var(--spacing-md);
+            gap: 2rem;
+            padding: 2rem;
         }
 
-        .search-input-wrapper {
-            position: relative;
-            flex: 1;
-            min-width: 280px;
+        .modal-cover {
+            flex: 0 0 200px;
         }
 
-        .digest-search input {
+        .modal-cover img {
             width: 100%;
-            padding: 0.7rem 1.2rem;
-            padding-right: 2.5rem;
-            border-radius: var(--radius-full);
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-info {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-author {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .modal-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .meta-item i {
+            color: var(--accent-color);
+        }
+
+        .modal-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-notes {
+            background: rgba(139, 92, 246, 0.05);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .modal-notes h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-notes p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* 统计信息 */
+        .books-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(139, 92, 246, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* 筛选标签 */
+        .filter-tags {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            padding: 0.6rem 1.2rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 25px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .filter-tag:hover,
+        .filter-tag.active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
+            color: #fff;
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+        /* ========== 锁定横幅 ========== */
+        .reading-lock-banner {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.05));
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .reading-lock-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.8), rgba(255, 152, 0, 0.75));
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        
+        .reading-lock-content h3 {
+            font-size: 1.1rem;
+            color: var(--accent-hover);
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .reading-lock-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .reading-lock-content a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .reading-lock-content a:hover {
+            text-decoration: underline;
+            color: var(--accent-hover);
+        }
+
+        /* ========== 书摘精选区域 ========== */
+        .reading-digest {
+            margin-top: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            padding: 1.8rem 2rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .reading-digest-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+        }
+        
+        .digest-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.9), rgba(255, 152, 0, 0.85));
+            box-shadow: 0 10px 24px rgba(255, 193, 7, 0.3);
+            color: #fff;
+            font-size: 1.2rem;
+        }
+        
+        .reading-digest-header > div {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .reading-digest-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.06em;
+            margin: 0 0 0.3rem 0;
+        }
+        
+        .reading-digest-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* ========== 搜索栏 ========== */
+        .digest-search {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        
+        .digest-search input {
+            flex: 1 1 260px;
+            padding: 0.6rem 1rem;
+            border-radius: 999px;
             border: 1px solid rgba(139, 92, 246, 0.35);
             background: rgba(17, 24, 54, 0.45);
-            color: var(--text-primary);
+            color: #f5f7ff;
             outline: none;
-            transition: all var(--transition-base);
+            transition: all 0.3s ease;
             font-size: 0.95rem;
         }
-
+        
         body.light-mode .digest-search input {
             background: rgba(255, 255, 255, 0.9);
+            color: var(--text-primary);
             border-color: rgba(139, 92, 246, 0.25);
         }
-
+        
         .digest-search input:focus {
-            border-color: var(--accent-color);
+            border-color: rgba(99, 102, 241, 0.65);
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
         }
-
+        
         .digest-search input::placeholder {
-            color: var(--text-muted);
+            color: rgba(245, 247, 255, 0.5);
         }
-
-        /* 搜索图标 */
-        .search-icon {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            pointer-events: none;
+        
+        body.light-mode .digest-search input::placeholder {
+            color: rgba(0, 0, 0, 0.4);
         }
-
-        /* 按钮统一样式 */
+        
         .digest-search button {
-            padding: 0.7rem 1.4rem;
+            padding: 0.6rem 1.4rem;
             border: none;
-            border-radius: var(--radius-full);
+            border-radius: 999px;
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
-            color: white;
+            color: #fff;
             cursor: pointer;
             font-size: 0.95rem;
-            font-weight: 500;
             letter-spacing: 0.03em;
             display: inline-flex;
             align-items: center;
             gap: 0.45rem;
-            transition: all var(--transition-base);
+            transition: all 0.3s ease;
             white-space: nowrap;
-            position: relative;
-            overflow: hidden;
         }
-
-        .digest-search button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .digest-search button:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
+        
         .digest-search button:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 24px rgba(99, 102, 241, 0.35);
         }
-
+        
         .digest-search button:active {
             transform: translateY(0);
         }
-
-        .digest-search button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+        
+        body.light-mode .digest-search button {
+            box-shadow: 0 8px 18px rgba(99, 102, 241, 0.25);
+        }
+        
+        body.light-mode .digest-search button:hover {
+            box-shadow: 0 12px 28px rgba(99, 102, 241, 0.3);
         }
 
-        /* 重置按钮 */
-        #digestSearchReset {
-            background: rgba(239, 68, 68, 0.9);
-        }
-
-        #digestSearchReset:hover {
-            box-shadow: 0 12px 24px rgba(239, 68, 68, 0.35);
-        }
-
-        /* ========================================
-           书摘表格 - 优化版
-        ======================================== */
+        /* ========== 书摘表格 ========== */
         .reading-digest-table {
             display: flex;
             flex-direction: column;
             gap: 0.6rem;
+            margin-top: 1.2rem;
         }
-
+        
         .digest-row {
             display: grid;
             grid-template-columns: minmax(220px, 1fr) 2.5fr minmax(90px, 0.8fr) minmax(70px, 0.6fr);
@@ -279,978 +723,1020 @@
             padding: 1.2rem 1.4rem;
             background: var(--bg-card-soft);
             border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            transition: all var(--transition-base);
-            animation: fadeIn 0.5s ease;
+            border-radius: 16px;
+            transition: all 0.3s ease;
         }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
+        
         .digest-row--head {
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(56, 189, 248, 0.1));
             font-weight: 600;
             color: var(--accent-hover);
             letter-spacing: 0.05em;
             border-color: rgba(139, 92, 246, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 10;
         }
-
+        
         .digest-row:hover:not(.digest-row--head) {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--border-hover);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
+            border-color: rgba(139, 92, 246, 0.25);
         }
-
+        
         .digest-col {
             word-wrap: break-word;
             word-break: break-word;
             line-height: 1.6;
             font-size: 0.95rem;
         }
-
+        
         .digest-col--book {
             color: var(--accent-color);
             font-weight: 500;
         }
-
+        
         .digest-col--content {
             color: var(--text-primary);
         }
-
-        /* 搜索高亮 */
-        .highlight {
-            background: linear-gradient(120deg, #fbbf24 0%, #f59e0b 100%);
-            color: #000;
-            padding: 0.1rem 0.2rem;
-            border-radius: 3px;
-            font-weight: 600;
-        }
-
+        
         .digest-col--date {
             color: var(--text-secondary);
             font-size: 0.9rem;
             white-space: nowrap;
         }
-
+        
         .digest-col--rating {
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* ========================================
-           评分徽章
-        ======================================== */
+        /* ========== 评分徽章 ========== */
         .rating-badge {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 0.3rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: var(--radius-full);
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            border-radius: 12px;
             font-weight: 600;
             font-size: 0.9rem;
-            transition: all var(--transition-base);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .rating-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+            pointer-events: none;
         }
 
-        .rating-badge:hover {
+        /* 10-9分：金色 */
+        .rating-value-10, .rating-value-9 {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+        
+        .rating-value-10:hover, .rating-value-9:hover {
             transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(255, 215, 0, 0.5);
         }
 
-        .star-icon {
-            font-size: 0.8rem;
+        /* 8-7分：绿色 */
+        .rating-value-8, .rating-value-7 {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .rating-value-8:hover, .rating-value-7:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
         }
 
-        .rating-value-9 {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        /* 6-5分：蓝色 */
+        .rating-value-6, .rating-value-5 {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+        
+        .rating-value-6:hover, .rating-value-5:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
         }
 
-        .rating-value-8 {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        /* 4-3分：橙色 */
+        .rating-value-4, .rating-value-3 {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+        
+        .rating-value-4:hover, .rating-value-3:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
         }
 
-        .rating-value-6 {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: white;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        /* 2-1分：红色 */
+        .rating-value-2, .rating-value-1 {
+            background: linear-gradient(135deg, #F44336, #D32F2F);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+        }
+        
+        .rating-value-2:hover, .rating-value-1:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(244, 67, 54, 0.4);
         }
 
-        .rating-value-4 {
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            color: white;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-        }
-
-        .rating-value-2 {
-            background: linear-gradient(135deg, #6b7280, #4b5563);
-            color: white;
-            box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
-        }
-
-        /* ========================================
-           状态提示
-        ======================================== */
-        .empty-state,
-        .loading-state {
-            text-align: center;
-            padding: var(--spacing-xl) var(--spacing-lg);
+        /* 空评分 */
+        .rating-empty {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
             color: var(--text-secondary);
-            background: var(--bg-card);
-            border: 1px dashed var(--border-color);
-            border-radius: var(--radius-lg);
-            margin-top: var(--spacing-md);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            font-style: italic;
         }
 
-        .empty-state i,
-        .loading-state i {
-            font-size: 3rem;
-            margin-bottom: var(--spacing-md);
-            color: var(--text-muted);
+        /* 星星图标动画 */
+        .rating-badge .star-icon {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            animation: twinkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes twinkle {
+            0% {
+                opacity: 0.45;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.9;
+                transform: scale(1.02);
+            }
+            100% {
+                opacity: 0.55;
+                transform: scale(1.04);
+            }
         }
 
-        .loading-state i {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* ========================================
-           分页控件
-        ======================================== */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: var(--spacing-sm);
-            margin-top: var(--spacing-xl);
-            flex-wrap: wrap;
-        }
-
-        .pagination button {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all var(--transition-base);
-            font-size: 0.9rem;
-        }
-
-        .pagination button:hover:not(:disabled) {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-
-        .pagination button:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .pagination button.active {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-
-        .pagination-info {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* ========================================
-           主题切换按钮
-        ======================================== */
-        .theme-toggle {
+        /* ========== 返回顶部按钮 ========== */
+        .back-to-top {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 50px;
-            height: 50px;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border: none;
-            color: white;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.95), rgba(56, 189, 248, 0.9));
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            transition: all var(--transition-base);
-            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.8);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-5px) scale(1);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.6);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(56, 189, 248, 0.95));
+        }
+        
+        .back-to-top:active {
+            transform: translateY(-2px) scale(0.95);
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+        
+        .back-to-top i {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-8px);
+            }
+            60% {
+                transform: translateY(-4px);
+            }
+        }
+        
+        body.light-mode .back-to-top {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.95), rgba(56, 189, 248, 0.9));
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+        }
+        
+        body.light-mode .back-to-top:hover {
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5);
         }
 
-        .theme-toggle:hover {
-            transform: scale(1.1) rotate(15deg);
-        }
-
-        /* ========================================
-           响应式设计
-        ======================================== */
+        /* ========== 响应式设计 ========== */
         @media (max-width: 1024px) {
+            .books-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1.5rem;
+            }
+            
             .digest-row {
-                grid-template-columns: 1fr 2fr 0.8fr 0.6fr;
+                grid-template-columns: minmax(180px, 1.2fr) 2fr minmax(80px, 0.7fr) minmax(60px, 0.5fr);
                 gap: 0.8rem;
-                padding: 1rem;
+                padding: 1rem 1.2rem;
             }
         }
-
+        
         @media (max-width: 768px) {
-            .container {
-                padding: var(--spacing-md);
+            .reading-header-left {
+                justify-content: center;
+                width: 100%;
             }
-
-            .reading-digest-header {
+            
+            .books-showcase-body {
+                padding: 2rem 1.4rem;
+            }
+            
+            .books-showcase-title {
+                font-size: 1.75rem;
+            }
+            
+            .books-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 1rem;
+            }
+            
+            .books-stats {
+                gap: 1.5rem;
+            }
+            
+            .modal-body {
                 flex-direction: column;
                 text-align: center;
             }
-
+            
+            .modal-cover {
+                flex: 0 0 auto;
+                max-width: 200px;
+                margin: 0 auto;
+            }
+            
             .digest-search {
                 flex-direction: column;
+                align-items: stretch;
             }
-
-            .search-input-wrapper {
-                min-width: 100%;
+            
+            .digest-search input,
+            .digest-search button {
+                width: 100%;
             }
-
+            
+            .digest-search button {
+                justify-content: center;
+            }
+            
             .digest-row {
                 grid-template-columns: 1fr;
-                gap: 0.6rem;
+                gap: 0.8rem;
+                padding: 1.2rem;
             }
-
-            .digest-col--date,
-            .digest-col--rating {
-                justify-self: start;
+            
+            .digest-col {
+                width: 100%;
             }
-
-            .digest-row--head {
-                display: none;
-            }
-
-            .digest-col::before {
-                content: attr(data-label);
+            
+            .digest-col--book::before {
+                content: "📖 ";
                 font-weight: 600;
-                color: var(--accent-color);
-                display: block;
-                margin-bottom: 0.3rem;
+            }
+            
+            .digest-col--date::before {
+                content: "📅 ";
+            }
+            
+            .digest-col--rating {
+                justify-content: flex-start;
+            }
+            
+            .digest-col--rating::before {
+                content: "⭐ ";
+                margin-right: 0.5rem;
+            }
+            
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 520px) {
+            .reading-return {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+            
+            .filter-tags {
+                gap: 0.5rem;
+            }
+            
+            .filter-tag {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .books-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .back-to-top {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+            
+            .reading-lock-banner {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
         }
 
-        /* ========================================
-           辅助功能优化
-        ======================================== */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border-width: 0;
+        /* 添加平滑滚动 */
+        html {
+            scroll-behavior: smooth;
         }
 
-        /* 键盘焦点样式 */
-        *:focus-visible {
-            outline: 2px solid var(--accent-color);
-            outline-offset: 2px;
+        /* 社交页脚样式 */
+        .social-footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .social-footer .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            color: var(--accent-color);
+        }
+
+        .social-link.wechat:hover {
+            color: #07C160;
+            box-shadow: 0 8px 20px rgba(7, 193, 96, 0.3);
+        }
+
+        .social-link.github:hover {
+            color: #333;
+            box-shadow: 0 8px 20px rgba(51, 51, 51, 0.2);
+        }
+
+        .social-link.x:hover {
+            color: #000;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <section class="reading-digest">
-            <header class="reading-digest-header">
-                <div class="digest-icon" aria-hidden="true">
-                    <i class="fas fa-star"></i>
+<body data-page="reading">
+    <!-- 头部导航 -->
+    <header class="header reading-header">
+        <div class="container">
+            <div class="reading-header-left">
+                <a class="reading-return" href="index.html" aria-label="返回首页">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    <span>退回到"狂客·银河"</span>
+                </a>
+                <div class="reading-title-group">
+                    <h1 class="logo">星空阅读室</h1>
+                    <p class="reading-subtitle">狂客·星空</p>
                 </div>
-                <div style="flex: 1;">
-                    <h2>星空书摘精选</h2>
-                    <p>以下内容由狂客亲自整理，所有更新均通过 GitHub 完成。</p>
-                    
-                    <!-- 搜索和排序工具栏 -->
-                    <div class="digest-search" role="search">
-                        <div class="search-input-wrapper">
-                            <input 
-                                type="search" 
-                                id="digestSearchInput" 
-                                placeholder="搜索书名或摘录关键词 (Ctrl+K)" 
-                                aria-label="搜索书摘"
-                                autocomplete="off">
-                            <i class="fas fa-search search-icon" aria-hidden="true"></i>
+            </div>
+            <div class="controls">
+                <button id="themeToggle" class="theme-toggle" aria-label="切换主题">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="reading-main">
+        <div class="container reading-container">
+            <!-- 书籍展示柜 -->
+            <section class="books-showcase">
+                <div class="books-showcase-body">
+                    <header class="books-showcase-header">
+                        <h2 class="books-showcase-title">
+                            <span class="books-showcase-icon">
+                                <i class="fas fa-book-open" aria-hidden="true"></i>
+                            </span>
+                            星空书柜
+                        </h2>
+                        <p class="books-showcase-caption">已读完的精选书籍收藏</p>
+                    </header>
+
+                    <!-- 统计信息 -->
+                    <div class="books-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="totalBooks">0</span>
+                            <span class="stat-label">总藏书</span>
                         </div>
-                        <button type="button" id="digestSearchButton" aria-label="执行搜索">
-                            <i class="fas fa-search" aria-hidden="true"></i>
-                            <span>搜索</span>
-                        </button>
-                        <button type="button" id="digestSearchReset" aria-label="重置搜索">
-                            <i class="fas fa-rotate-left" aria-hidden="true"></i>
-                            <span>重置</span>
-                        </button>
-                        <button type="button" id="digestSortToggle" aria-label="按启发值排序">
-                            <i class="fas fa-sort-numeric-down" aria-hidden="true"></i>
-                            <span>启发值排序</span>
-                        </button>
+                        <div class="stat-item">
+                            <span class="stat-number" id="thisYearBooks">0</span>
+                            <span class="stat-label">今年阅读</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="avgRating">0.0</span>
+                            <span class="stat-label">平均评分</span>
+                        </div>
+                    </div>
+
+                    <!-- 筛选标签 -->
+                    <div class="filter-tags">
+                        <span class="filter-tag active" data-filter="all">全部</span>
+                        <span class="filter-tag" data-filter="favorite">最爱</span>
+                        <span class="filter-tag" data-filter="recent">最近</span>
+                        <span class="filter-tag" data-filter="classic">经典</span>
+                        <span class="filter-tag" data-filter="tech">技术</span>
+                    </div>
+
+                    <!-- 书籍网格 -->
+                    <div class="books-grid" id="booksGrid">
+                        <!-- 书籍项目将在这里动态加载 -->
+                    </div>
+
+                    <!-- GitHub 维护模式提示 -->
+                    <div class="reading-lock-banner" role="alert">
+                        <div class="reading-lock-icon" aria-hidden="true">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="reading-lock-content">
+                            <h3>GitHub 维护模式</h3>
+                            <p>书籍展示柜当前为只读展示。如需更新内容，请前往 GitHub 仓库的 <a href="https://github.com/kuangketongxue/kuangke.github.io/blob/main/data.js" target="_blank" rel="noopener noreferrer">data.js</a> 提交修改。</p>
+                        </div>
                     </div>
                 </div>
-            </header>
+            </section>
 
-            <!-- 书摘表格 -->
-            <div class="reading-digest-table" role="table" aria-label="书摘列表">
-                <!-- 表头 -->
-                <div class="digest-row digest-row--head" role="row">
-                    <div class="digest-col digest-col--book" role="columnheader">书名</div>
-                    <div class="digest-col digest-col--content" role="columnheader">摘录</div>
-                    <div class="digest-col digest-col--date" role="columnheader">日期</div>
-                    <div class="digest-col digest-col--rating" role="columnheader">启发值</div>
+            <!-- 星空书摘精选 -->
+            <section class="reading-digest">
+                <header class="reading-digest-header">
+                    <div class="digest-icon" aria-hidden="true">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div>
+                        <h2>星空书摘精选</h2>
+                        <p>以下内容由狂客亲自整理，所有更新均通过 GitHub 完成。</p>
+                        <!-- 搜索和排序工具栏 -->
+                        <div class="digest-search">
+                            <input type="search" id="digestSearchInput" placeholder="搜索书名或摘录关键词" aria-label="搜索书摘">
+                            <button type="button" id="digestSearchButton" aria-label="执行搜索">
+                                <i class="fas fa-search" aria-hidden="true"></i>
+                                <span>搜索</span>
+                            </button>
+                            <button type="button" id="digestSearchReset" aria-label="重置搜索">
+                                <i class="fas fa-rotate-left" aria-hidden="true"></i>
+                                <span>重置</span>
+                            </button>
+                            <button type="button" id="digestSortToggle" aria-label="按启发值排序">
+                                <i class="fas fa-sort-numeric-down" aria-hidden="true"></i>
+                                <span>启发值排序</span>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- 书摘表格 -->
+                <div class="reading-digest-table" role="table" aria-label="书摘列表">
+                    <!-- 表头 -->
+                    <div class="digest-row digest-row--head" role="row">
+                        <div class="digest-col digest-col--book" role="columnheader">书名</div>
+                        <div class="digest-col digest-col--content" role="columnheader">摘录</div>
+                        <div class="digest-col digest-col--date" role="columnheader">日期</div>
+                        <div class="digest-col digest-col--rating" role="columnheader">启发值</div>
+                    </div>
+                    <!-- 数据行将在这里动态加载 -->
                 </div>
-                <!-- 数据行将通过 JavaScript 动态生成 -->
-            </div>
+            </section>
+        </div>
+    </main>
 
-            <!-- 分页控件 -->
-            <div class="pagination" id="paginationContainer">
-                <!-- 分页按钮将通过 JavaScript 动态生成 -->
+    <!-- 书籍详情模态框 -->
+    <div class="book-modal" id="bookModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body" id="modalBody">
+                <!-- 模态框内容将在这里动态加载 -->
             </div>
-        </section>
+        </div>
     </div>
 
-    <!-- 主题切换按钮 -->
-    <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
-        <i class="fas fa-moon"></i>
+    <!-- 返回顶部按钮 -->
+    <button id="backToTop" class="back-to-top" aria-label="返回顶部" title="返回顶部">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script>
-        // ========================================
-        // 配置常量
-        // ========================================
-        const CONFIG = {
-            ITEMS_PER_PAGE: 10,
-            DEBOUNCE_DELAY: 300,
-            STORAGE_KEY: {
-                THEME: 'digest-theme',
-                SORT_ORDER: 'digest-sort-order'
-            }
-        };
+    <!-- 页脚 -->
+    <footer class="social-footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89"
+                   target="_blank" class="social-link wechat" title="微信公众号" rel="noopener noreferrer">
+                    <i class="fab fa-weixin"></i>
+                </a>
+                <a href="https://github.com/kuangketongxue" target="_blank" class="social-link github" title="GitHub" rel="noopener noreferrer">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://x.com/kuangketongxue" target="_blank" class="social-link x" title="X (前 Twitter)" rel="noopener noreferrer">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+            </div>
+            <p class="copyright">© 2025 狂客·银河 版权所有</p>
+        </div>
+    </footer>
 
-        // ========================================
-        // 模拟数据 (实际应从 data.js 加载)
-        // ========================================
-        const digestData = [
+    <script>
+        // 书籍数据
+        const booksData = [
             {
-                book: '《万维刚精英日课1~5》',
-                content: '最好的失败,就是"在没有人看见的时候偷偷跌倒";我的失败不是我的成功之母,但是别人的失败则可能是我的成功之母',
-                date: '2025/10/15',
-                rating: 7
+                id: 1,
+                title: "万维刚精英日课1~5",
+                author: "万维刚",
+                cover: "https://picsum.photos/seed/book1/300/420",
+                rating: 7,
+                category: ["favorite", "recent"],
+                readDate: "2025-10-15",
+                description: "万维刚精英日课系列，汇集了作者多年的思考精华，涵盖了认知科学、学习方法、决策思维等多个领域的知识。",
+                notes: "这本书改变了我对学习的认知，特别是关于刻意练习和元认知的部分。"
             },
             {
-                book: '《财富自由之路》',
-                content: '只要我投入时间和精力,从长期看,没有什么是我学不会的;我不应该与别人争辩,因为我不想伤害他们;我也不应该被他们影响,因为我不想伤害自己',
-                date: '2025/10/15',
-                rating: 9
+                id: 2,
+                title: "财富自由之路",
+                author: "李笑来",
+                cover: "https://picsum.photos/seed/book2/300/420",
+                rating: 9,
+                category: ["favorite", "classic"],
+                readDate: "2025-10-10",
+                description: "一本关于个人成长和财富积累的经典之作，作者分享了自己在投资、创业和人生规划方面的经验。",
+                notes: "笑来老师的思维方式给了我很大启发，特别是关于长期主义和复利效应的理解。"
             },
             {
-                book: '《马斯克传》',
-                content: '当你面临困难时,要么选择放弃,要么选择坚持。坚持下去的人最终会看到曙光。',
-                date: '2025/10/14',
-                rating: 8
+                id: 3,
+                title: "马斯克传",
+                author: "Ashlee Vance",
+                cover: "https://picsum.photos/seed/book3/300/420",
+                rating: 3,
+                category: ["recent", "tech"],
+                readDate: "2025-09-28",
+                description: "深入剖析埃隆·马斯克的创业历程和思维方式，展现了一个科技狂人的真实面貌。",
+                notes: "马斯克的工程思维和第一性原理思考方式值得学习，但他的管理风格有待商榷。"
             },
             {
-                book: '《深度工作》',
-                content: '在一个充满干扰的世界里,专注力是稀缺资源。掌握深度工作的能力,就掌握了成功的钥匙。',
-                date: '2025/10/13',
-                rating: 9
+                id: 4,
+                title: "原则",
+                author: "Ray Dalio",
+                cover: "https://picsum.photos/seed/book4/300/420",
+                rating: 8,
+                category: ["favorite", "classic"],
+                readDate: "2025-08-15",
+                description: "桥水基金创始人的人生和工作原则，分享了他40多年的投资和管理经验。",
+                notes: "极度透明和极度求真的原则虽然难以实施，但确实能提高组织效率。"
             },
             {
-                book: '《思考,快与慢》',
-                content: '我们的大脑有两个系统:系统1快速、直觉;系统2缓慢、理性。了解它们如何工作,才能做出更好的决策。',
-                date: '2025/10/12',
-                rating: 10
+                id: 5,
+                title: "思考，快与慢",
+                author: "Daniel Kahneman",
+                cover: "https://picsum.photos/seed/book5/300/420",
+                rating: 9,
+                category: ["classic", "favorite"],
+                readDate: "2025-07-20",
+                description: "诺贝尔经济学奖得主的心理学巨作，深入剖析了人类思维的两个系统。",
+                notes: "了解认知偏差对做出更好的决策至关重要，这本书是必读经典。"
             },
             {
-                book: '《原则》',
-                content: '拥抱现实,应对现实。痛苦+反思=进步。',
-                date: '2025/10/11',
-                rating: 8
-            },
-            {
-                book: '《纳瓦尔宝典》',
-                content: '财富自由不是拥有更多的钱,而是拥有更多的时间自由。',
-                date: '2025/10/10',
-                rating: 7
-            },
-            {
-                book: '《刻意练习》',
-                content: '天才不是天生的,而是通过正确的练习方法培养出来的。',
-                date: '2025/10/09',
-                rating: 6
-            },
-            {
-                book: '《影响力》',
-                content: '说服他人的关键不是强硬的论证,而是理解人性的弱点。',
-                date: '2025/10/08',
-                rating: 5
-            },
-            {
-                book: '《非暴力沟通》',
-                content: '观察而非评论,感受而非想法,需要而非策略,请求而非命令。',
-                date: '2025/10/07',
-                rating: 4
-            },
-            {
-                book: '《人类简史》',
-                content: '智人之所以能够统治地球,是因为我们能够创造和相信虚构的故事。',
-                date: '2025/10/06',
-                rating: 9
-            },
-            {
-                book: '《乌合之众》',
-                content: '群体永远徘徊在无意识的领域,会随时听命于一切暗示。',
-                date: '2025/10/05',
-                rating: 7
+                id: 6,
+                title: "代码大全",
+                author: "Steve McConnell",
+                cover: "https://picsum.photos/seed/book6/300/420",
+                rating: 10,
+                category: ["tech", "classic", "favorite"],
+                readDate: "2025-06-10",
+                description: "软件开发的百科全书，涵盖了编程的方方面面，从代码构造到项目管理。",
+                notes: "每个程序员都应该读这本书，它会让你重新思考什么是好的代码。"
             }
         ];
 
-        // ========================================
-        // 工具函数模块
-        // ========================================
-        const Utils = {
-            /**
-             * 防抖函数
-             * @param {Function} func - 要执行的函数
-             * @param {number} delay - 延迟时间(毫秒)
-             * @returns {Function}
-             */
-            debounce(func, delay) {
-                let timeoutId;
-                return function(...args) {
-                    clearTimeout(timeoutId);
-                    timeoutId = setTimeout(() => func.apply(this, args), delay);
-                };
+        // 书摘数据
+        const digestData = [
+            {
+                book: "《万维刚精英日课1~5》",
+                content: "最好的失败,就是'在没有人看见的时候偷偷跌倒'；我的失败不是我的成功之母,但是别人的失败则可能是我的成功之母",
+                date: "2025/10/15",
+                rating: 7
             },
-
-            /**
-             * 高亮搜索关键词
-             * @param {string} text - 原文本
-             * @param {string} keyword - 关键词
-             * @returns {string}
-             */
-            highlightText(text, keyword) {
-                if (!keyword.trim()) return text;
-                const regex = new RegExp(`(${keyword})`, 'gi');
-                return text.replace(regex, '<span class="highlight">$1</span>');
+            {
+                book: "《财富自由之路》",
+                content: "只要我投入时间和精力,从长期看,没有什么是我学不会的；我不应该与别人争辩,因为我不想伤害他们;我也不应该被他们影响,因为我不想伤害自己",
+                date: "2025/10/15",
+                rating: 9
             },
-
-            /**
-             * 获取评分样式类
-             * @param {number} rating - 评分值
-             * @returns {string}
-             */
-            getRatingClass(rating) {
-                if (rating >= 9) return 'rating-value-9';
-                if (rating >= 7) return 'rating-value-8';
-                if (rating >= 5) return 'rating-value-6';
-                if (rating >= 3) return 'rating-value-4';
-                if (rating >= 1) return 'rating-value-2';
-                return 'rating-empty';
-            },
-
-            /**
-             * 保存到本地存储
-             * @param {string} key - 键名
-             * @param {*} value - 值
-             */
-            saveToStorage(key, value) {
-                try {
-                    localStorage.setItem(key, JSON.stringify(value));
-                } catch (error) {
-                    console.error('保存到本地存储失败:', error);
-                }
-            },
-
-            /**
-             * 从本地存储读取
-             * @param {string} key - 键名
-             * @param {*} defaultValue - 默认值
-             * @returns {*}
-             */
-            loadFromStorage(key, defaultValue) {
-                try {
-                    const item = localStorage.getItem(key);
-                    return item ? JSON.parse(item) : defaultValue;
-                } catch (error) {
-                    console.error('从本地存储读取失败:', error);
-                    return defaultValue;
-                }
+            {
+                book: "《马斯克传》",
+                content: "让一家公司成功的不是产品本身，而是高效地制造产品的能力。这个问题其实就是，你怎么制造那些制造机器的机器。换句话说，你是怎么设计工厂的。",
+                date: "2025/10/15",
+                rating: 3
             }
-        };
+        ];
 
-        // ========================================
-        // 数据管理模块
-        // ========================================
-        const DataManager = {
-            originalData: [...digestData],
-            filteredData: [...digestData],
-            currentPage: 1,
-            itemsPerPage: CONFIG.ITEMS_PER_PAGE,
-            currentSearchTerm: '',
-            currentSortOrder: Utils.loadFromStorage(CONFIG.STORAGE_KEY.SORT_ORDER, 'desc'),
+        // ========== 主题切换功能 ==========
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
 
-            /**
-             * 搜索数据
-             * @param {string} searchTerm - 搜索关键词
-             */
-            search(searchTerm) {
-                this.currentSearchTerm = searchTerm.toLowerCase().trim();
-                this.currentPage = 1;
+        // 检查本地存储的主题设置
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            body.classList.add('light-mode');
+            themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
+        }
 
-                if (!this.currentSearchTerm) {
-                    this.filteredData = [...this.originalData];
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            const isLightMode = body.classList.contains('light-mode');
+            if (isLightMode) {
+                themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i>';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // ========== 返回顶部功能 ==========
+        const backToTopButton = document.getElementById('backToTop');
+        let scrollTimeout;
+
+        window.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
                 } else {
-                    this.filteredData = this.originalData.filter(item =>
-                        item.book.toLowerCase().includes(this.currentSearchTerm) ||
-                        item.content.toLowerCase().includes(this.currentSearchTerm)
+                    backToTopButton.classList.remove('visible');
+                }
+            }, 100);
+        }, { passive: true });
+
+        backToTopButton.addEventListener('click', () => {
+            backToTopButton.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                backToTopButton.style.transform = '';
+            }, 200);
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ========== 渲染书籍展示柜 ==========
+        function renderBooks(books = booksData) {
+            const booksGrid = document.getElementById('booksGrid');
+            booksGrid.innerHTML = '';
+
+            books.forEach(book => {
+                const bookItem = document.createElement('div');
+                bookItem.className = 'book-item';
+                bookItem.onclick = () => showBookModal(book);
+
+                const bookCover = document.createElement('div');
+                bookCover.className = 'book-cover';
+
+                const img = document.createElement('img');
+                img.src = book.cover;
+                img.alt = book.title;
+                img.loading = 'lazy';
+
+                const bookInfo = document.createElement('div');
+                bookInfo.className = 'book-info';
+
+                const bookTitle = document.createElement('div');
+                bookTitle.className = 'book-title';
+                bookTitle.textContent = book.title;
+
+                const bookAuthor = document.createElement('div');
+                bookAuthor.className = 'book-author';
+                bookAuthor.textContent = book.author;
+
+                const bookRating = document.createElement('div');
+                bookRating.className = 'book-rating';
+                bookRating.innerHTML = `<i class="fas fa-star"></i> ${book.rating}`;
+
+                // 添加徽章
+                let badgeHtml = '';
+                if (book.category.includes('favorite')) {
+                    badgeHtml = '<div class="book-badge">最爱</div>';
+                } else if (book.category.includes('recent')) {
+                    badgeHtml = '<div class="book-badge">最新</div>';
+                }
+
+                bookCover.appendChild(img);
+                bookInfo.appendChild(bookTitle);
+                bookInfo.appendChild(bookAuthor);
+                bookCover.appendChild(bookInfo);
+                bookCover.appendChild(bookRating);
+                bookItem.innerHTML = badgeHtml;
+                bookItem.appendChild(bookCover);
+
+                booksGrid.appendChild(bookItem);
+            });
+
+            updateStats(books);
+        }
+
+        // ========== 更新统计信息 ==========
+        function updateStats(books) {
+            const totalBooks = document.getElementById('totalBooks');
+            const thisYearBooks = document.getElementById('thisYearBooks');
+            const avgRating = document.getElementById('avgRating');
+
+            totalBooks.textContent = books.length;
+
+            const currentYear = new Date().getFullYear();
+            const thisYearCount = books.filter(book => 
+                new Date(book.readDate).getFullYear() === currentYear
+            ).length;
+            thisYearBooks.textContent = thisYearCount;
+
+            const avgRatingValue = books.reduce((sum, book) => sum + book.rating, 0) / books.length;
+            avgRating.textContent = avgRatingValue.toFixed(1);
+        }
+
+        // ========== 显示书籍详情模态框 ==========
+        function showBookModal(book) {
+            const modal = document.getElementById('bookModal');
+            const modalBody = document.getElementById('modalBody');
+
+            modalBody.innerHTML = `
+                <div class="modal-cover">
+                    <img src="${book.cover}" alt="${book.title}">
+                </div>
+                <div class="modal-info">
+                    <h3 class="modal-title">${book.title}</h3>
+                    <p class="modal-author">作者：${book.author}</p>
+                    <div class="modal-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-star"></i>
+                            <span>评分：${book.rating}/10</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>读完：${book.readDate}</span>
+                        </div>
+                    </div>
+                    <div class="modal-description">
+                        ${book.description}
+                    </div>
+                    <div class="modal-notes">
+                        <h4>我的笔记</h4>
+                        <p>${book.notes}</p>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // ========== 关闭模态框 ==========
+        function closeModal() {
+            const modal = document.getElementById('bookModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('modalClose').addEventListener('click', closeModal);
+
+        document.getElementById('bookModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeModal();
+            }
+        });
+
+        // ========== 筛选功能 ==========
+        const filterTags = document.querySelectorAll('.filter-tag');
+        let currentFilter = 'all';
+
+        filterTags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                filterTags.forEach(t => t.classList.remove('active'));
+                tag.classList.add('active');
+                
+                currentFilter = tag.dataset.filter;
+                
+                let filteredBooks = booksData;
+                if (currentFilter !== 'all') {
+                    filteredBooks = booksData.filter(book => 
+                        book.category.includes(currentFilter)
                     );
                 }
+                
+                renderBooks(filteredBooks);
+            });
+        });
 
-                this.applyCurrentSort();
-            },
-
-            /**
-             * 排序数据
-             */
-            toggleSort() {
-                this.currentSortOrder = this.currentSortOrder === 'desc' ? 'asc' : 'desc';
-                Utils.saveToStorage(CONFIG.STORAGE_KEY.SORT_ORDER, this.currentSortOrder);
-                this.applyCurrentSort();
-            },
-
-            /**
-             * 应用当前排序
-             */
-            applyCurrentSort() {
-                this.filteredData.sort((a, b) => {
-                    return this.currentSortOrder === 'desc' 
-                        ? b.rating - a.rating 
-                        : a.rating - b.rating;
-                });
-            },
-
-            /**
-             * 重置数据
-             */
-            reset() {
-                this.filteredData = [...this.originalData];
-                this.currentSearchTerm = '';
-                this.currentPage = 1;
-            },
-
-            /**
-             * 获取当前页数据
-             * @returns {Array}
-             */
-            getCurrentPageData() {
-                const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-                const endIndex = startIndex + this.itemsPerPage;
-                return this.filteredData.slice(startIndex, endIndex);
-            },
-
-            /**
-             * 获取总页数
-             * @returns {number}
-             */
-            getTotalPages() {
-                return Math.ceil(this.filteredData.length / this.itemsPerPage);
-            },
-
-            /**
-             * 设置当前页
-             * @param {number} page - 页码
-             */
-            setCurrentPage(page) {
-                const totalPages = this.getTotalPages();
-                if (page >= 1 && page <= totalPages) {
-                    this.currentPage = page;
-                    return true;
-                }
-                return false;
-            }
-        };
-
-        // ========================================
-        // UI渲染模块
-        // ========================================
-        const UIRenderer = {
-            /**
-             * 渲染书摘表格
-             */
-            renderDigestTable() {
-                const table = document.querySelector('.reading-digest-table');
-                const headerRow = table.querySelector('.digest-row--head');
-                const currentData = DataManager.getCurrentPageData();
-
-                // 清空现有数据行
-                table.innerHTML = '';
-                table.appendChild(headerRow);
-
-                // 显示加载状态
-                if (currentData.length === 0) {
-                    this.showEmptyState(table);
-                    return;
-                }
-
-                // 渲染数据行
-                currentData.forEach((item, index) => {
-                    const row = this.createDigestRow(item, index);
-                    table.appendChild(row);
-                });
-            },
-
-            /**
-             * 创建书摘行
-             * @param {Object} item - 书摘数据
-             * @param {number} index - 索引
-             * @returns {HTMLElement}
-             */
-            createDigestRow(item, index) {
+        // ========== 渲染书摘数据 ==========
+        function renderDigestData(data) {
+            const table = document.querySelector('.reading-digest-table');
+            const headerRow = table.querySelector('.digest-row--head');
+            
+            // 清空现有数据行
+            table.innerHTML = '';
+            table.appendChild(headerRow);
+            
+            // 渲染数据行
+            data.forEach(item => {
                 const row = document.createElement('div');
                 row.className = 'digest-row';
                 row.setAttribute('role', 'row');
-                row.style.animationDelay = `${index * 0.05}s`;
-
-                const ratingClass = Utils.getRatingClass(item.rating);
-                const highlightedBook = Utils.highlightText(item.book, DataManager.currentSearchTerm);
-                const highlightedContent = Utils.highlightText(item.content, DataManager.currentSearchTerm);
-
-                row.innerHTML = `
-                    <div class="digest-col digest-col--book" role="cell" data-label="书名">${highlightedBook}</div>
-                    <div class="digest-col digest-col--content" role="cell" data-label="摘录">${highlightedContent}</div>
-                    <div class="digest-col digest-col--date" role="cell" data-label="日期">${item.date}</div>
-                    <div class="digest-col digest-col--rating" role="cell" data-label="启发值">
-                        <span class="rating-badge ${ratingClass}" aria-label="启发值${item.rating}分">
-                            ${item.rating}<i class="fas fa-star star-icon" aria-hidden="true"></i>
-                        </span>
-                    </div>
-                `;
-
-                return row;
-            },
-
-            /**
-             * 显示空状态
-             * @param {HTMLElement} container - 容器元素
-             */
-            showEmptyState(container) {
-                const emptyState = document.createElement('div');
-                emptyState.className = 'empty-state';
-                emptyState.innerHTML = `
-                    <i class="fas fa-inbox" aria-hidden="true"></i>
-                    <p>未找到匹配的书摘</p>
-                    <small>尝试使用其他关键词搜索</small>
-                `;
-                container.appendChild(emptyState);
-            },
-
-            /**
-             * 渲染分页控件
-             */
-            renderPagination() {
-                const container = document.getElementById('paginationContainer');
-                const totalPages = DataManager.getTotalPages();
-                const currentPage = DataManager.currentPage;
-
-                if (totalPages <= 1) {
-                    container.innerHTML = '';
-                    return;
-                }
-
-                let html = `
-                    <button ${currentPage === 1 ? 'disabled' : ''} data-page="prev" aria-label="上一页">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                `;
-
-                // 智能显示页码
-                const pageRange = this.getPageRange(currentPage, totalPages);
-                pageRange.forEach(page => {
-                    if (page === '...') {
-                        html += `<span class="pagination-ellipsis">...</span>`;
-                    } else {
-                        html += `
-                            <button 
-                                ${page === currentPage ? 'class="active"' : ''} 
-                                data-page="${page}"
-                                aria-label="第${page}页"
-                                ${page === currentPage ? 'aria-current="page"' : ''}>
-                                ${page}
-                            </button>
-                        `;
-                    }
-                });
-
-                html += `
-                    <button ${currentPage === totalPages ? 'disabled' : ''} data-page="next" aria-label="下一页">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <span class="pagination-info">共 ${DataManager.filteredData.length} 条</span>
-                `;
-
-                container.innerHTML = html;
-            },
-
-            /**
-             * 获取页码范围
-             * @param {number} current - 当前页
-             * @param {number} total - 总页数
-             * @returns {Array}
-             */
-            getPageRange(current, total) {
-                const delta = 2;
-                const range = [];
-                const rangeWithDots = [];
-
-                for (let i = 1; i <= total; i++) {
-                    if (i === 1 || i === total || (i >= current - delta && i <= current + delta)) {
-                        range.push(i);
-                    }
-                }
-
-                let prev;
-                for (const i of range) {
-                    if (prev) {
-                        if (i - prev === 2) {
-                            rangeWithDots.push(prev + 1);
-                        } else if (i - prev !== 1) {
-                            rangeWithDots.push('...');
-                        }
-                    }
-                    rangeWithDots.push(i);
-                    prev = i;
-                }
-
-                return rangeWithDots;
-            },
-
-            /**
-             * 更新排序按钮
-             */
-            updateSortButton() {
-                const button = document.getElementById('digestSortToggle');
-                const iconClass = DataManager.currentSortOrder === 'desc' 
-                    ? 'fa-sort-numeric-down' 
-                    : 'fa-sort-numeric-up';
                 
-                button.innerHTML = `
-                    <i class="fas ${iconClass}" aria-hidden="true"></i>
-                    <span>启发值排序</span>
-                `;
-            },
-
-            /**
-             * 完整渲染
-             */
-            render() {
-                this.renderDigestTable();
-                this.renderPagination();
-                this.updateSortButton();
-            }
-        };
-
-        // ========================================
-        // 事件处理模块
-        // ========================================
-        const EventHandler = {
-            /**
-             * 初始化所有事件监听器
-             */
-            init() {
-                this.initSearchEvents();
-                this.initPaginationEvents();
-                this.initThemeToggle();
-                this.initKeyboardShortcuts();
-            },
-
-            /**
-             * 初始化搜索相关事件
-             */
-            initSearchEvents() {
-                const searchInput = document.getElementById('digestSearchInput');
-                const searchButton = document.getElementById('digestSearchButton');
-                const resetButton = document.getElementById('digestSearchReset');
-                const sortButton = document.getElementById('digestSortToggle');
-
-                // 搜索输入 - 防抖处理
-                const debouncedSearch = Utils.debounce(() => {
-                    DataManager.search(searchInput.value);
-                    UIRenderer.render();
-                }, CONFIG.DEBOUNCE_DELAY);
-
-                searchInput.addEventListener('input', debouncedSearch);
-
-                // 搜索按钮
-                searchButton.addEventListener('click', () => {
-                    DataManager.search(searchInput.value);
-                    UIRenderer.render();
-                });
-
-                // 回车搜索
-                searchInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        DataManager.search(searchInput.value);
-                        UIRenderer.render();
-                    }
-                });
-
-                // 重置按钮
-                resetButton.addEventListener('click', () => {
-                    searchInput.value = '';
-                    DataManager.reset();
-                    UIRenderer.render();
-                    searchInput.focus();
-                });
-
-                // 排序按钮
-                sortButton.addEventListener('click', () => {
-                    DataManager.toggleSort();
-                    UIRenderer.render();
-                });
-            },
-
-            /**
-             * 初始化分页事件
-             */
-            initPaginationEvents() {
-                document.getElementById('paginationContainer').addEventListener('click', (e) => {
-                    const button = e.target.closest('button[data-page]');
-                    if (!button) return;
-
-                    const page = button.dataset.page;
-                    let newPage;
-
-                    if (page === 'prev') {
-                        newPage = DataManager.currentPage - 1;
-                    } else if (page === 'next') {
-                        newPage = DataManager.currentPage + 1;
-                    } else {
-                        newPage = parseInt(page);
-                    }
-
-                    if (DataManager.setCurrentPage(newPage)) {
-                        UIRenderer.render();
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                });
-            },
-
-            /**
-             * 初始化主题切换
-             */
-            initThemeToggle() {
-                const themeToggle = document.getElementById('themeToggle');
-                const savedTheme = Utils.loadFromStorage(CONFIG.STORAGE_KEY.THEME, 'dark');
-
-                // 应用保存的主题
-                if (savedTheme === 'light') {
-                    document.body.classList.add('light-mode');
-                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                }
-
-                themeToggle.addEventListener('click', () => {
-                    document.body.classList.toggle('light-mode');
-                    const isLight = document.body.classList.contains('light-mode');
-                    
-                    themeToggle.innerHTML = isLight 
-                        ? '<i class="fas fa-sun"></i>' 
-                        : '<i class="fas fa-moon"></i>';
-                    
-                    Utils.saveToStorage(CONFIG.STORAGE_KEY.THEME, isLight ? 'light' : 'dark');
-                });
-            },
-
-            /**
-             * 初始化键盘快捷键
-             */
-            initKeyboardShortcuts() {
-                document.addEventListener('keydown', (e) => {
-                    // Ctrl/Cmd + K: 聚焦搜索框
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                        e.preventDefault();
-                        document.getElementById('digestSearchInput').focus();
-                    }
-
-                    // Esc: 清空搜索
-                    if (e.key === 'Escape') {
-                        const searchInput = document.getElementById('digestSearchInput');
-                        if (document.activeElement === searchInput) {
-                            searchInput.value = '';
-                            DataManager.reset();
-                            UIRenderer.render();
-                        }
-                    }
-                });
-            }
-        };
-
-        // ========================================
-        // 应用初始化
-        // ========================================
-        const App = {
-            init() {
-                try {
-                    // 应用初始排序
-                    DataManager.applyCurrentSort();
-                    
-                    // 初始渲染
-                    UIRenderer.render();
-                    
-                    // 初始化事件
-                    EventHandler.init();
-
-                    console.log('✅ 应用初始化成功');
-                } catch (error) {
-                    console.error('❌ 应用初始化失败:', error);
-                    this.showError();
-                }
-            },
-
-            showError() {
-                const table = document.querySelector('.reading-digest-table');
-                table.innerHTML = `
-                    <div class="empty-state" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3);">
-                        <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
-                        <p style="color: #ef4444;">加载失败</p>
-                        <small>请刷新页面重试</small>
+                const ratingClass = getRatingClass(item.rating);
+                
+                row.innerHTML = `
+                    <div class="digest-col digest-col--book" role="cell">${item.book}</div>
+                    <div class="digest-col digest-col--content" role="cell">${item.content}</div>
+                    <div class="digest-col digest-col--date" role="cell">${item.date}</div>
+                    <div class="digest-col digest-col--rating" role="cell">
+                        <span class="rating-badge ${ratingClass}" aria-label="启发值${item.rating}分">${item.rating}<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
                     </div>
                 `;
-            }
-        };
-
-        // 页面加载完成后初始化
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => App.init());
-        } else {
-            App.init();
+                
+                table.appendChild(row);
+            });
         }
+
+        // ========== 获取评分样式类 ==========
+        function getRatingClass(rating) {
+            if (rating >= 9) return 'rating-value-9';
+            if (rating >= 7) return 'rating-value-8';
+            if (rating >= 5) return 'rating-value-6';
+            if (rating >= 3) return 'rating-value-4';
+            if (rating >= 1) return 'rating-value-2';
+            return 'rating-empty';
+        }
+
+        // ========== 搜索和排序功能 ==========
+        const digestSearchInput = document.getElementById('digestSearchInput');
+        const digestSearchButton = document.getElementById('digestSearchButton');
+        const digestSearchReset = document.getElementById('digestSearchReset');
+        const digestSortToggle = document.getElementById('digestSortToggle');
+        let currentSortOrder = 'desc';
+
+        function performSearch() {
+            const searchTerm = digestSearchInput.value.toLowerCase().trim();
+            if (!searchTerm) {
+                renderDigestData(digestData);
+                return;
+            }
+
+            const filteredData = digestData.filter(item => 
+                item.book.toLowerCase().includes(searchTerm) || 
+                item.content.toLowerCase().includes(searchTerm)
+            );
+            
+            renderDigestData(filteredData);
+        }
+
+        function resetSearch() {
+            digestSearchInput.value = '';
+            renderDigestData(digestData);
+            digestSearchInput.focus();
+        }
+
+        function sortByRating() {
+            const sortedData = [...digestData].sort((a, b) => {
+                if (currentSortOrder === 'desc') {
+                    return b.rating - a.rating;
+                } else {
+                    return a.rating - b.rating;
+                }
+            });
+
+            renderDigestData(sortedData);
+            currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
+
+            // 更新按钮图标
+            if (currentSortOrder === 'desc') {
+                digestSortToggle.innerHTML = '<i class="fas fa-sort-numeric-down" aria-hidden="true"></i><span>启发值排序</span>';
+            } else {
+                digestSortToggle.innerHTML = '<i class="fas fa-sort-numeric-up" aria-hidden="true"></i><span>启发值排序</span>';
+            }
+        }
+
+        // 事件监听器
+        digestSearchButton.addEventListener('click', performSearch);
+        digestSearchReset.addEventListener('click', resetSearch);
+        digestSortToggle.addEventListener('click', sortByRating);
+
+        digestSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                performSearch();
+            }
+        });
+
+        // 防抖函数
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        digestSearchInput.addEventListener('input', debounce(performSearch, 300));
+
+        // ========== 初始化页面 ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            renderBooks();
+            renderDigestData(digestData);
+            console.log('星空阅读室已加载完成 🌟');
+        });
+
+        // ESC 键关闭模态框
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
