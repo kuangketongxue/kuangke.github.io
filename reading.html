@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>狂客·星空 - 阅读日志</title>
+    <title>狂客·星空 - 书摘精选</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -110,35 +110,37 @@
             padding: 2.8rem 0 5rem;
         }
 
-        /* ========== 书籍展示柜 ========== */
-        .books-showcase {
+        /* ========== 书摘精选区域 ========== */
+        .reading-digest {
             position: relative;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 26px;
+            padding: 2rem;
             box-shadow: var(--shadow);
-            overflow: hidden;
             animation: fadeIn 0.6s ease-out;
             margin-bottom: 2rem;
+            z-index: 1;
         }
         
-        .books-showcase::before {
+        .reading-digest::before {
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), transparent 55%);
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), transparent 55%);
             opacity: 0.8;
             pointer-events: none;
+            border-radius: 26px;
         }
         
-        .books-showcase::after {
+        .reading-digest::after {
             content: "";
             position: absolute;
-            top: -120px;
-            right: -90px;
-            width: 260px;
-            height: 260px;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.22), transparent 70%);
+            top: -80px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 193, 7, 0.22), transparent 70%);
             filter: blur(40px);
             animation: float 16s ease-in-out infinite;
             pointer-events: none;
@@ -164,436 +166,9 @@
             }
         }
         
-        .books-showcase-body {
-            position: relative;
-            padding: 2.4rem 2.2rem;
-            z-index: 1;
-        }
-
-        .books-showcase-header {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 2rem;
-        }
-        
-        .books-showcase-title {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.9rem;
-            flex-wrap: wrap;
-        }
-        
-        .books-showcase-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
-            box-shadow: 0 12px 28px rgba(79, 70, 229, 0.35);
-            color: #fff;
-            font-size: 1.4rem;
-        }
-        
-        body.light-mode .books-showcase-icon {
-            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.25);
-        }
-        
-        .books-showcase-caption {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-        }
-
-        /* 书籍网格布局 */
-        .books-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .book-item {
-            position: relative;
-            group: true;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            cursor: pointer;
-        }
-
-        .book-item:hover {
-            transform: translateY(-8px) scale(1.02);
-        }
-
-        .book-cover {
-            position: relative;
-            width: 100%;
-            padding-bottom: 140%; /* 书籍比例 */
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            transition: all 0.4s ease;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(56, 189, 248, 0.05));
-        }
-
-        .book-cover img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s ease;
-        }
-
-        .book-item:hover .book-cover {
-            box-shadow: 0 16px 40px rgba(139, 92, 246, 0.4);
-            transform: perspective(1000px) rotateY(-5deg);
-        }
-
-        .book-item:hover .book-cover img {
-            transform: scale(1.08);
-        }
-
-        .book-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-            padding: 1.5rem 1rem 1rem;
-            opacity: 0;
-            transition: all 0.4s ease;
-        }
-
-        .book-item:hover .book-info {
-            opacity: 1;
-        }
-
-        .book-title {
-            color: #fff;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-            line-height: 1.3;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .book-author {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.85rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .book-rating {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            color: #FFD700;
-            padding: 0.4rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            z-index: 2;
-        }
-
-        .book-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
-            color: #fff;
-            padding: 0.3rem 0.6rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            z-index: 2;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* 书籍详情模态框 */
-        .book-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 2rem;
-            overflow-y: auto;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .book-modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            border-radius: 20px;
-            max-width: 800px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            animation: slideUp 0.4s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 50%;
-            color: #fff;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
-        }
-
-        .modal-body {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            padding: 2rem;
-        }
-
-        .modal-cover {
-            flex: 0 0 200px;
-        }
-
-        .modal-cover img {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-info {
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .modal-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .modal-author {
-            font-size: 1.1rem;
-            color: var(--accent-color);
-            margin-bottom: 1rem;
-        }
-
-        .modal-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(139, 92, 246, 0.1);
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
-
-        .meta-item i {
-            color: var(--accent-color);
-        }
-
-        .modal-description {
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-notes {
-            background: rgba(139, 92, 246, 0.05);
-            border-left: 4px solid var(--accent-color);
-            padding: 1rem;
-            border-radius: 8px;
-        }
-
-        .modal-notes h4 {
-            color: var(--accent-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .modal-notes p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* 统计信息 */
-        .books-stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background: rgba(139, 92, 246, 0.05);
-            border-radius: 16px;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent-color);
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* 筛选标签 */
-        .filter-tags {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-        }
-
-        .filter-tag {
-            padding: 0.6rem 1.2rem;
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 25px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .filter-tag:hover,
-        .filter-tag.active {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
-            color: #fff;
-            border-color: transparent;
-            transform: translateY(-2px);
-        }
-
-        /* ========== 锁定横幅 ========== */
-        .reading-lock-banner {
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.05));
-            border: 1px solid rgba(255, 193, 7, 0.3);
-            border-radius: 16px;
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-        
-        .reading-lock-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            flex-shrink: 0;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.8), rgba(255, 152, 0, 0.75));
-            color: #fff;
-            font-size: 1.1rem;
-        }
-        
-        .reading-lock-content h3 {
-            font-size: 1.1rem;
-            color: var(--accent-hover);
-            margin: 0 0 0.5rem 0;
-        }
-        
-        .reading-lock-content p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-        
-        .reading-lock-content a {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .reading-lock-content a:hover {
-            text-decoration: underline;
-            color: var(--accent-hover);
-        }
-
-        /* ========== 书摘精选区域 ========== */
-        .reading-digest {
-            margin-top: 2rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 22px;
-            padding: 1.8rem 2rem;
-            box-shadow: var(--shadow);
-            position: relative;
-            z-index: 1;
-        }
-        
         .reading-digest-header {
+            position: relative;
+            z-index: 1;
             display: flex;
             align-items: flex-start;
             gap: 1.2rem;
@@ -605,1414 +180,14 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
-            flex-shrink: 0;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.9), rgba(255, 152, 0, 0.85));
-            box-shadow: 0 10px 24px rgba(255, 193, 7, 0.3);
-            color: #fff;
-            font-size: 1.2rem;
-        }
-        
-        .reading-digest-header > div {
-            flex: 1;
-            min-width: 250px;
-        }
-        
-        .reading-digest-header h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: 0.06em;
-            margin: 0 0 0.3rem 0;
-        }
-        
-        .reading-digest-header p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* ========== 搜索栏 ========== */
-        .digest-search {
-            margin-top: 1rem;
-            display: flex;
-            gap: 0.6rem;
-            flex-wrap: wrap;
-        }
-        
-        .digest-search input {
-            flex: 1 1 260px;
-            padding: 0.6rem 1rem;
-            border-radius: 999px;
-            border: 1px solid rgba(139, 92, 246, 0.35);
-            background: rgba(17, 24, 54, 0.45);
-            color: #f5f7ff;
-            outline: none;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-        
-        body.light-mode .digest-search input {
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--text-primary);
-            border-color: rgba(139, 92, 246, 0.25);
-        }
-        
-        .digest-search input:focus {
-            border-color: rgba(99, 102, 241, 0.65);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
-        }
-        
-        .digest-search input::placeholder {
-            color: rgba(245, 247, 255, 0.5);
-        }
-        
-        body.light-mode .digest-search input::placeholder {
-            color: rgba(0, 0, 0, 0.4);
-        }
-        
-        .digest-search button {
-            padding: 0.6rem 1.4rem;
-            border: none;
-            border-radius: 999px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
-            color: #fff;
-            cursor: pointer;
-            font-size: 0.95rem;
-            letter-spacing: 0.03em;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-        
-        .digest-search button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(99, 102, 241, 0.35);
-        }
-        
-        .digest-search button:active {
-            transform: translateY(0);
-        }
-        
-        body.light-mode .digest-search button {
-            box-shadow: 0 8px 18px rgba(99, 102, 241, 0.25);
-        }
-        
-        body.light-mode .digest-search button:hover {
-            box-shadow: 0 12px 28px rgba(99, 102, 241, 0.3);
-        }
-
-        /* ========== 书摘表格 ========== */
-        .reading-digest-table {
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-            margin-top: 1.2rem;
-        }
-        
-        .digest-row {
-            display: grid;
-           grid-template-columns: minmax(200px, 0.8fr) 1.5fr minmax(100px, 0.6fr) minmax(80px, 0.4fr);
-            gap: 1.2rem;
-            align-items: start;
-            padding: 1.2rem 1.4rem;
-            background: var(--bg-card-soft);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .digest-row--head {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(56, 189, 248, 0.1));
-            font-weight: 600;
-            color: var(--accent-hover);
-            letter-spacing: 0.05em;
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-        
-        .digest-row:hover:not(.digest-row--head) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
-            border-color: rgba(139, 92, 246, 0.25);
-        }
-        
-        .digest-col {
-            word-wrap: break-word;
-            word-break: break-word;
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-        
-        .digest-col--book {
-            color: var(--accent-color);
-            font-weight: 500;
-        }
-        
-        .digest-col--content {
-            color: var(--text-primary);
-        }
-        
-        .digest-col--date {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
-        
-        .digest-col--rating {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* ========== 评分徽章 ========== */
-        .rating-badge {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 36px;
-            height: 36px;
-            padding: 0 8px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .rating-badge::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
-            pointer-events: none;
-        }
-
-        /* 10-9分：金色 */
-        .rating-value-10, .rating-value-9 {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
-        }
-        
-        .rating-value-10:hover, .rating-value-9:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(255, 215, 0, 0.5);
-        }
-
-        /* 8-7分：绿色 */
-        .rating-value-8, .rating-value-7 {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-        }
-        
-        .rating-value-8:hover, .rating-value-7:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
-        }
-
-        /* 6-5分：蓝色 */
-        .rating-value-6, .rating-value-5 {
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-        }
-        
-        .rating-value-6:hover, .rating-value-5:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
-        }
-
-        /* 4-3分：橙色 */
-        .rating-value-4, .rating-value-3 {
-            background: linear-gradient(135deg, #FF9800, #F57C00);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
-        }
-        
-        .rating-value-4:hover, .rating-value-3:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
-        }
-
-        /* 2-1分：红色 */
-        .rating-value-2, .rating-value-1 {
-            background: linear-gradient(135deg, #F44336, #D32F2F);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
-        }
-        
-        .rating-value-2:hover, .rating-value-1:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(244, 67, 54, 0.4);
-        }
-
-        /* 空评分 */
-        .rating-empty {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            color: var(--text-secondary);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            font-style: italic;
-        }
-
-        /* 星星图标动画 */
-        .rating-badge .star-icon {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-            animation: twinkle 2s ease-in-out infinite;
-        }
-        
-        @keyframes twinkle {
-            0% {
-                opacity: 0.45;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.9;
-                transform: scale(1.02);
-            }
-            100% {
-                opacity: 0.55;
-                transform: scale(1.04);
-            }
-        }
-
-        /* ========== 返回顶部按钮 ========== */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.95), rgba(56, 189, 248, 0.9));
-            color: #fff;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.8);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
-            z-index: 9999;
-            backdrop-filter: blur(10px);
-        }
-        
-        .back-to-top:hover {
-            transform: translateY(-5px) scale(1);
-            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.6);
-            background: linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(56, 189, 248, 0.95));
-        }
-        
-        .back-to-top:active {
-            transform: translateY(-2px) scale(0.95);
-        }
-        
-        .back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: scale(1);
-        }
-        
-        .back-to-top i {
-            animation: bounce 2s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-8px);
-            }
-            60% {
-                transform: translateY(-4px);
-            }
-        }
-        
-        body.light-mode .back-to-top {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.95), rgba(56, 189, 248, 0.9));
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
-        }
-        
-        body.light-mode .back-to-top:hover {
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5);
-        }
-
-        /* ========== 响应式设计 ========== */
-        @media (max-width: 1024px) {
-            .books-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 1.5rem;
-            }
-            
-            .digest-row {
-                grid-template-columns: minmax(180px, 1.2fr) 2fr minmax(80px, 0.7fr) minmax(60px, 0.5fr);
-                gap: 0.8rem;
-                padding: 1rem 1.2rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .reading-header-left {
-                justify-content: center;
-                width: 100%;
-            }
-            
-            .books-showcase-body {
-                padding: 2rem 1.4rem;
-            }
-            
-            .books-showcase-title {
-                font-size: 1.75rem;
-            }
-            
-            .books-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: 1rem;
-            }
-            
-            .books-stats {
-                gap: 1.5rem;
-            }
-            
-            .modal-body {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .modal-cover {
-                flex: 0 0 auto;
-                max-width: 200px;
-                margin: 0 auto;
-            }
-            
-            .digest-search {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .digest-search input,
-            .digest-search button {
-                width: 100%;
-            }
-            
-            .digest-search button {
-                justify-content: center;
-            }
-            
-            .digest-row {
-                grid-template-columns: 1fr;
-                gap: 0.8rem;
-                padding: 1.2rem;
-            }
-            
-            .digest-col {
-                width: 100%;
-            }
-            
-            .digest-col--book::before {
-                content: "📖 ";
-                font-weight: 600;
-            }
-            
-            .digest-col--date::before {
-                content: "📅 ";
-            }
-            
-            .digest-col--rating {
-                justify-content: flex-start;
-            }
-            
-            .digest-col--rating::before {
-                content: "⭐ ";
-                margin-right: 0.5rem;
-            }
-            
-            .back-to-top {
-                bottom: 20px;
-                right: 20px;
-                width: 50px;
-                height: 50px;
-                font-size: 1.1rem;
-            }
-        }
-        
-        @media (max-width: 520px) {
-            .reading-return {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .books-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.8rem;
-            }
-            
-            .filter-tags {
-                gap: 0.5rem;
-            }
-            
-            .filter-tag {
-                padding: 0.5rem 1rem;
-                font-size: 0.85rem;
-            }
-            
-            .books-stats {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .back-to-top {
-                bottom: 15px;
-                right: 15px;
-                width: 45px;
-                height: 45px;
-                font-size: 1rem;
-            }
-            
-            .reading-lock-banner {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-        }
-
-        /* 添加平滑滚动 */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* 社交页脚样式 */
-        .social-footer {
-            background: var(--bg-card);
-            border-top: 1px solid var(--border-color);
-            padding: 2rem 0;
-            margin-top: 4rem;
-        }
-
-        .social-footer .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .social-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-link:hover {
-            transform: translateY(-3px);
-            color: var(--accent-color);
-        }
-
-        .social-link.wechat:hover {
-            color: #07C160;
-            box-shadow: 0 8px 20px rgba(7, 193, 96, 0.3);
-        }
-
-        .social-link.github:hover {
-            color: #333;
-            box-shadow: 0 8px 20px rgba(51, 51, 51, 0.2);
-        }
-
-        .social-link.x:hover {
-            color: #000;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .copyright {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin: 0;
-        }
-    </style>
-</head>
-<body data-page="reading">
-    <!-- 头部导航 -->
-    <header class="header reading-header">
-        <div class="container">
-            <div class="reading-header-left">
-                <a class="reading-return" href="index.html" aria-label="返回首页">
-                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
-                    <span>退回到"狂客·银河"</span>
-                </a>
-                <div class="reading-title-group">
-                    <h1 class="logo">星空阅读室</h1>
-                    <p class="reading-subtitle">狂客·星空</p>
-                </div>
-            </div>
-            <div class="controls">
-                <button id="themeToggle" class="theme-toggle" aria-label="切换主题">
-                    <i class="fas fa-moon" aria-hidden="true"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- 主内容区 -->
-    <main class="reading-main">
-        <div class="container reading-container">
-            <!-- 书籍展示柜 -->
-            <section class="books-showcase">
-                <div class="books-showcase-body">
-                    <header class="books-showcase-header">
-                        <h2 class="books-showcase-title">
-                            <span class="books-showcase-icon">
-                                <i class="fas fa-book-open" aria-hidden="true"></i>
-                            </span>
-                            星空书柜
-                        </h2>
-                        <p class="books-showcase-caption">已读完的精选书籍收藏</p>
-                    </header>
-
-                    <!-- 统计信息 -->
-                    <div class="books-stats">
-                        <div class="stat-item">
-                            <span class="stat-number" id="totalBooks">0</span>
-                            <span class="stat-label">总藏书</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="thisYearBooks">0</span>
-                            <span class="stat-label">今年阅读</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="avgRating">0.0</span>
-                            <span class="stat-label">平均评分</span>
-                        </div>
-                    </div>
-
-                    <!-- 筛选标签 -->
-                    <div class="filter-tags">
-                        <span class="filter-tag active" data-filter="all">全部</span>
-                        <span class="filter-tag" data-filter="favorite">最爱</span>
-                        <span class="filter-tag" data-filter="recent">最近</span>
-                        <span class="filter-tag" data-filter="classic">经典</span>
-                        <span class="filter-tag" data-filter="tech">技术</span>
-                    </div>
-
-                    <!-- 书籍网格 -->
-                    <div class="books-grid" id="booksGrid">
-                        <!-- 书籍项目将在这里动态加载 -->
-                    </div>
-
-                    <!-- GitHub 维护模式提示 -->
-                    <div class="reading-lock-banner" role="alert">
-                        <div class="reading-lock-icon" aria-hidden="true">
-                            <i class="fas fa-lock"></i>
-                        </div>
-                        <div class="reading-lock-content">
-                            <h3>GitHub 维护模式</h3>
-                            <p>书籍展示柜当前为只读展示。如需更新内容，请前往 GitHub 仓库的 <a href="https://github.com/kuangketongxue/kuangke.github.io/blob/main/data.js" target="_blank" rel="noopener noreferrer">data.js</a> 提交修改。</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 星空书摘精选 -->
-            <section class="reading-digest">
-                <header class="reading-digest-header">
-                    <div class="digest-icon" aria-hidden="true">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div>
-                        <h2>星空书摘精选</h2>
-                        <p>以下内容由狂客亲自整理，所有更新均通过 GitHub 完成。</p>
-                        <!-- 搜索和排序工具栏 -->
-                        <div class="digest-search">
-                            <input type="search" id="digestSearchInput" placeholder="搜索书名或摘录关键词" aria-label="搜索书摘">
-                            <button type="button" id="digestSearchButton" aria-label="执行搜索">
-                                <i class="fas fa-search" aria-hidden="true"></i>
-                                <span>搜索</span>
-                            </button>
-                            <button type="button" id="digestSearchReset" aria-label="重置搜索">
-                                <i class="fas fa-rotate-left" aria-hidden="true"></i>
-                                <span>重置</span>
-                            </button>
-                            <button type="button" id="digestSortToggle" aria-label="按启发值排序">
-                                <i class="fas fa-sort-numeric-down" aria-hidden="true"></i>
-                                <span>启发值排序</span>
-                            </button>
-                        </div>
-                    </div>
-                </header>
-
-                <!-- 书摘表格 -->
-                <div class="reading-digest-table" role="table" aria-label="书摘列表">
-                    <!-- 表头 -->
-                    <div class="digest-row digest-row--head" role="row">
-                        <div class="digest-col digest-col--book" role="columnheader">书名</div>
-                        <div class="digest-col digest-col--content" role="columnheader">摘录</div>
-                        <div class="digest-col digest-col--date" role="columnheader">日期</div>
-                        <div class="digest-col digest-col--rating" role="columnheader">启发值</div>
-                    </div>
-                    <!-- 数据行将在这里动态加载 -->
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <!-- 书籍详情模态框 -->
-    <div class="book-modal" id="bookModal">
-        <div class="modal-content">
-            <button class="modal-close" id="modalClose">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="modal-body" id="modalBody">
-                <!-- 模态框内容将在这里动态加载 -->
-            </div>
-        </div>
-    </div>
-
-    <!-- 返回顶部按钮 -->
-    <button id="backToTop" class="back-to-top" aria-label="返回顶部" title="返回顶部">
-        <i class="fas fa-arrow-up" aria-hidden="true"></i>
-    </button>
-
-    <!-- 页脚 -->
-    <footer class="social-footer">
-        <div class="container">
-            <div class="social-links">
-                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89"
-                   target="_blank" class="social-link wechat" title="微信公众号" rel="noopener noreferrer">
-                    <i class="fab fa-weixin"></i>
-                </a>
-                <a href="https://github.com/kuangketongxue" target="_blank" class="social-link github" title="GitHub" rel="noopener noreferrer">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="https://x.com/kuangketongxue" target="_blank" class="social-link x" title="X (前 Twitter)" rel="noopener noreferrer">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
-                </a>
-            </div>
-            <p class="copyright">© 2025 狂客·银河 版权所有</p>
-        </div>
-    </footer>
-
-    <script>
-        // 书籍数据
-        const booksData = [
-            {
-                id: 1,
-                title: "万维刚精英日课1~5",
-                author: "万维刚",
-                cover: "https://picsum.photos/seed/book1/300/420",
-                rating: 7,
-                category: ["favorite", "recent"],
-                readDate: "2025-10-15",
-                description: "万维刚精英日课系列，汇集了作者多年的思考精华，涵盖了认知科学、学习方法、决策思维等多个领域的知识。",
-                notes: "这本书改变了我对学习的认知，特别是关于刻意练习和元认知的部分。"
-            },
-            {
-                id: 2,
-                title: "财富自由之路",
-                author: "李笑来",
-                cover: "https://picsum.photos/seed/book2/300/420",
-                rating: 9,
-                category: ["favorite", "classic"],
-                readDate: "2025-10-10",
-                description: "一本关于个人成长和财富积累的经典之作，作者分享了自己在投资、创业和人生规划方面的经验。",
-                notes: "笑来老师的思维方式给了我很大启发，特别是关于长期主义和复利效应的理解。"
-            },
-            {
-                id: 3,
-                title: "马斯克传",
-                author: "Ashlee Vance",
-                cover: "https://picsum.photos/seed/book3/300/420",
-                rating: 3,
-                category: ["recent", "tech"],
-                readDate: "2025-09-28",
-                description: "深入剖析埃隆·马斯克的创业历程和思维方式，展现了一个科技狂人的真实面貌。",
-                notes: "马斯克的工程思维和第一性原理思考方式值得学习，但他的管理风格有待商榷。"
-            },
-            {
-                id: 4,
-                title: "原则",
-                author: "Ray Dalio",
-                cover: "https://picsum.photos/seed/book4/300/420",
-                rating: 8,
-                category: ["favorite", "classic"],
-                readDate: "2025-08-15",
-                description: "桥水基金创始人的人生和工作原则，分享了他40多年的投资和管理经验。",
-                notes: "极度透明和极度求真的原则虽然难以实施，但确实能提高组织效率。"
-            },
-            {
-                id: 5,
-                title: "思考，快与慢",
-                author: "Daniel Kahneman",
-                cover: "https://picsum.photos/seed/book5/300/420",
-                rating: 9,
-                category: ["classic", "favorite"],
-                readDate: "2025-07-20",
-                description: "诺贝尔经济学奖得主的心理学巨作，深入剖析了人类思维的两个系统。",
-                notes: "了解认知偏差对做出更好的决策至关重要，这本书是必读经典。"
-            },
-            {
-                id: 6,
-                title: "代码大全",
-                author: "Steve McConnell",
-                cover: "https://picsum.photos/seed/book6/300/420",
-                rating: 10,
-                category: ["tech", "classic", "favorite"],
-                readDate: "2025-06-10",
-                description: "软件开发的百科全书，涵盖了编程的方方面面，从代码构造到项目管理。",
-                notes: "每个程序员都应该读这本书，它会让你重新思考什么是好的代码。"
-            }
-        ];
-
-        // 书摘数据
-       // 书摘数据（在 <script> 标签中，大约在第 1750 行附近）
-const digestData = [
-    {
-        book: "《万维刚精英日课1~5》",
-        content: "最好的失败,就是'在没有人看见的时候偷偷跌倒'；我的失败不是我的成功之母,但是别人的失败则可能是我的成功之母",
-        date: "2025/10/15",
-        rating: 7
-    },
-    {
-        book: "《财富自由之路》",
-        content: "只要我投入时间和精力,从长期看,没有什么是我学不会的；我不应该与别人争辩,因为我不想伤害他们;我也不应该被他们影响,因为我不想伤害自己",
-        date: "2025/10/15",
-        rating: 9
-    },
-    {
-        book: "《马斯克传》",
-        content: "让一家公司成功的不是产品本身，而是高效地制造产品的能力。这个问题其实就是，你怎么制造那些制造机器的机器。换句话说，你是怎么设计工厂的。",
-        date: "2025/10/15",
-        rating: 3
-    },
-    {
-        book: "《蔡叔的财富秘籍》",
-        content: "只要你真的找准了这一两个地方,利润其实是更聚合的。这里你赚到的钱,就是别人的资金"不持久"所造成的亏损；如果投资可以简单获利，就必然是用你的持久钱，去打败别人的非持久钱，你只需要耐心等待，一定会有这样的机会，而且不仅在大周期里，也会在小的回调周期里反复出现。从这个角度讲，时间真的是金钱——如果你想站在时间这边，就不要着急站在收益这边",
-        date: "2025/10/15",
-        rating: 5
-    },
-    {
-        book: "《ppt设计的艺术：人人都用得上的ppt设计书》",
-        content: "图片裁剪",
-        date: "2025/10/15",
-        rating: 4
-    },
-    {
-        book: "《个体崛起》",
-        content: "我们要做的事情,是你今天的努力和付出,会让三五年后,甚至未来更长时间的收益,都和你今天的行动有关--这才是一门划算的好生意",
-        date: "2025/10/15",
-        rating: 4
-    },
-    {
-        book: "《请辩》",
-        content: "真正好的稳定状态,是永不满足的动态稳定；每一项都在经受考验,都可以往上提,也可能往下掉,但正因为互为备份；有多元系统级别的相互备份，才叫稳定；世界跑 100 米 / 秒你也在跑 100 米 / 秒甚至更快的才叫稳定，其他的都不是",
-        date: "2025/10/14",
-        rating: 5
-    },
-    {
-        book: "《个体崛起》",
-        content: "你要了解一个人的段位,你只要看他如何处理自己的时间,和如何对待你的时间；承认这个世界是动态的,从"我应该不行",换成"要不试试,可能很好玩"，这世上最大的风险,就是什么都没做",
-        date: "2025/10/14",
-        rating: 5
-    },
-    {
-        book: "《蔡叔的财富秘籍》",
-        content: "成为合伙人或准合伙人类，你要拿高薪就得到这一层，某些事情非你不可，交给别人 99% 迟早要出大篓您的书摘都在！我看到了您提供的所有书摘数据。让我将这些数据整合到更新后的页面中，并优化书摘区域的展示效果。
-
-```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>狂客·星空 - 阅读日志</title>
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* ========== 全局样式 ========== */
-        * {
-            box-sizing: border-box;
-        }
-        
-        body[data-page="reading"] {
-            background: url("images/reading-bg.jpg") center/cover no-repeat fixed;
-            color: #f5f7ff;
-            position: relative;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        body[data-page="reading"]::before,
-        body[data-page="reading"]::after {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: -1;
-        }
-        
-        body[data-page="reading"]::before {
-            background: linear-gradient(135deg, rgba(25, 51, 120, 0.45), rgba(15, 18, 60, 0.65));
-            mix-blend-mode: screen;
-        }
-        
-        body[data-page="reading"]::after {
-            background:
-                radial-gradient(circle at 20% 15%, rgba(120, 160, 255, 0.27), transparent 55%),
-                radial-gradient(circle at 78% 10%, rgba(255, 150, 255, 0.2), transparent 60%),
-                rgba(6, 10, 42, 0.35);
-        }
-
-        /* ========== 头部样式 ========== */
-        .reading-header .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        
-        .reading-header-left {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .reading-return {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.55rem;
-            padding: 0.7rem 1.4rem;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(139, 92, 246, 0.45);
-            color: #f4f7ff;
-            text-decoration: none;
-            font-size: 0.98rem;
-            letter-spacing: 0.02em;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 22px rgba(99, 102, 241, 0.28);
-        }
-        
-        body.light-mode .reading-return {
-            background: rgba(99, 102, 241, 0.08);
-            color: var(--accent-hover);
-            box-shadow: none;
-        }
-        
-        .reading-return:hover {
-            transform: translateY(-3px);
-            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
-            color: #fff;
-            border-color: transparent;
-            box-shadow: 0 16px 32px rgba(99, 102, 241, 0.35);
-        }
-        
-        .reading-title-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-        
-        .reading-title-group .logo {
-            font-size: 2.1rem;
-            margin: 0;
-        }
-        
-        .reading-subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            letter-spacing: 0.05em;
-        }
-
-        /* ========== 主内容区域 ========== */
-        .reading-main {
-            padding: 2.8rem 0 5rem;
-        }
-
-        /* ========== 书籍展示柜 ========== */
-        .books-showcase {
-            position: relative;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 26px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            animation: fadeIn 0.6s ease-out;
-            margin-bottom: 2rem;
-        }
-        
-        .books-showcase::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), transparent 55%);
-            opacity: 0.8;
-            pointer-events: none;
-        }
-        
-        .books-showcase::after {
-            content: "";
-            position: absolute;
-            top: -120px;
-            right: -90px;
-            width: 260px;
-            height: 260px;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.22), transparent 70%);
-            filter: blur(40px);
-            animation: float 16s ease-in-out infinite;
-            pointer-events: none;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(18px) rotate(6deg);
-            }
-        }
-        
-        .books-showcase-body {
-            position: relative;
-            padding: 2.4rem 2.2rem;
-            z-index: 1;
-        }
-
-        .books-showcase-header {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 2rem;
-        }
-        
-        .books-showcase-title {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.9rem;
-            flex-wrap: wrap;
-        }
-        
-        .books-showcase-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             width: 48px;
             height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
-            box-shadow: 0 12px 28px rgba(79, 70, 229, 0.35);
-            color: #fff;
-            font-size: 1.4rem;
-        }
-        
-        body.light-mode .books-showcase-icon {
-            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.25);
-        }
-        
-        .books-showcase-caption {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-        }
-
-        /* 书籍网格布局 */
-        .books-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .book-item {
-            position: relative;
-            group: true;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            cursor: pointer;
-        }
-
-        .book-item:hover {
-            transform: translateY(-8px) scale(1.02);
-        }
-
-        .book-cover {
-            position: relative;
-            width: 100%;
-            padding-bottom: 140%; /* 书籍比例 */
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            transition: all 0.4s ease;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(56, 189, 248, 0.05));
-        }
-
-        .book-cover img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s ease;
-        }
-
-        .book-item:hover .book-cover {
-            box-shadow: 0 16px 40px rgba(139, 92, 246, 0.4);
-            transform: perspective(1000px) rotateY(-5deg);
-        }
-
-        .book-item:hover .book-cover img {
-            transform: scale(1.08);
-        }
-
-        .book-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-            padding: 1.5rem 1rem 1rem;
-            opacity: 0;
-            transition: all 0.4s ease;
-        }
-
-        .book-item:hover .book-info {
-            opacity: 1;
-        }
-
-        .book-title {
-            color: #fff;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-            line-height: 1.3;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .book-author {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.85rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .book-rating {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            color: #FFD700;
-            padding: 0.4rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            z-index: 2;
-        }
-
-        .book-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
-            color: #fff;
-            padding: 0.3rem 0.6rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            z-index: 2;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* 书籍详情模态框 */
-        .book-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 2rem;
-            overflow-y: auto;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .book-modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            border-radius: 20px;
-            max-width: 800px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            animation: slideUp 0.4s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 50%;
-            color: #fff;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
-        }
-
-        .modal-body {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            padding: 2rem;
-        }
-
-        .modal-cover {
-            flex: 0 0 200px;
-        }
-
-        .modal-cover img {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-info {
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .modal-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .modal-author {
-            font-size: 1.1rem;
-            color: var(--accent-color);
-            margin-bottom: 1rem;
-        }
-
-        .modal-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(139, 92, 246, 0.1);
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
-
-        .meta-item i {
-            color: var(--accent-color);
-        }
-
-        .modal-description {
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-notes {
-            background: rgba(139, 92, 246, 0.05);
-            border-left: 4px solid var(--accent-color);
-            padding: 1rem;
-            border-radius: 8px;
-        }
-
-        .modal-notes h4 {
-            color: var(--accent-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .modal-notes p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* 统计信息 */
-        .books-stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background: rgba(139, 92, 246, 0.05);
-            border-radius: 16px;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent-color);
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* 筛选标签 */
-        .filter-tags {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-        }
-
-        .filter-tag {
-            padding: 0.6rem 1.2rem;
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 25px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .filter-tag:hover,
-        .filter-tag.active {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
-            color: #fff;
-            border-color: transparent;
-            transform: translateY(-2px);
-        }
-
-        /* ========== 书摘精选区域 ========== */
-        .reading-digest {
-            margin-top: 2rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 22px;
-            padding: 1.8rem 2rem;
-            box-shadow: var(--shadow);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .reading-digest-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 1.2rem;
-            margin-bottom: 1.8rem;
-            flex-wrap: wrap;
-        }
-        
-        .digest-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
             flex-shrink: 0;
             border-radius: 50%;
             background: linear-gradient(135deg, rgba(255, 193, 7, 0.9), rgba(255, 152, 0, 0.75));
-            box-shadow: 0 10px 24px rgba(255, 193, 7, 0.3);
+            box-shadow: 0 12px 28px rgba(255, 193, 7, 0.3);
             color: #fff;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
         
         .reading-digest-header > div {
@@ -2021,7 +196,7 @@ const digestData = [
         }
         
         .reading-digest-header h2 {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--text-primary);
             letter-spacing: 0.06em;
@@ -2030,7 +205,7 @@ const digestData = [
         
         .reading-digest-header p {
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-size: 1rem;
             line-height: 1.6;
             margin: 0;
         }
@@ -2137,6 +312,8 @@ const digestData = [
 
         /* ========== 书摘表格 ========== */
         .reading-digest-table {
+            position: relative;
+            z-index: 1;
             display: flex;
             flex-direction: column;
             gap: 0.6rem;
@@ -2409,51 +586,14 @@ const digestData = [
         }
 
         /* ========== 响应式设计 ========== */
-        @media (max-width: 1024px) {
-            .books-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 1.5rem;
-            }
-            
-            .digest-row {
-                grid-template-columns: minmax(180px, 1.2fr) 2fr minmax(80px, 0.7fr) minmax(60px, 0.5fr);
-                gap: 0.8rem;
-                padding: 1rem 1.2rem;
-            }
-        }
-        
         @media (max-width: 768px) {
             .reading-header-left {
                 justify-content: center;
                 width: 100%;
             }
             
-            .books-showcase-body {
-                padding: 2rem 1.4rem;
-            }
-            
-            .books-showcase-title {
-                font-size: 1.75rem;
-            }
-            
-            .books-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: 1rem;
-            }
-            
-            .books-stats {
-                gap: 1.5rem;
-            }
-            
-            .modal-body {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .modal-cover {
-                flex: 0 0 auto;
-                max-width: 200px;
-                margin: 0 auto;
+            .reading-digest {
+                padding: 1.5rem 1rem;
             }
             
             .digest-search {
@@ -2511,25 +651,6 @@ const digestData = [
             .reading-return {
                 width: 100%;
                 justify-content: center;
-            }
-            
-            .books-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.8rem;
-            }
-            
-            .filter-tags {
-                gap: 0.5rem;
-            }
-            
-            .filter-tag {
-                padding: 0.5rem 1rem;
-                font-size: 0.85rem;
-            }
-            
-            .books-stats {
-                flex-direction: column;
-                gap: 1rem;
             }
             
             .digest-stats {
@@ -2609,6 +730,28 @@ const digestData = [
             font-size: 0.9rem;
             margin: 0;
         }
+
+        /* 加载动画 */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body data-page="reading">
@@ -2621,7 +764,7 @@ const digestData = [
                     <span>退回到"狂客·银河"</span>
                 </a>
                 <div class="reading-title-group">
-                    <h1 class="logo">星空阅读室</h1>
+                    <h1 class="logo">星空书摘精选</h1>
                     <p class="reading-subtitle">狂客·星空</p>
                 </div>
             </div>
@@ -2636,51 +779,6 @@ const digestData = [
     <!-- 主内容区 -->
     <main class="reading-main">
         <div class="container reading-container">
-            <!-- 书籍展示柜 -->
-            <section class="books-showcase">
-                <div class="books-showcase-body">
-                    <header class="books-showcase-header">
-                        <h2 class="books-showcase-title">
-                            <span class="books-showcase-icon">
-                                <i class="fas fa-book-open" aria-hidden="true"></i>
-                            </span>
-                            星空书柜
-                        </h2>
-                        <p class="books-showcase-caption">已读完的精选书籍收藏</p>
-                    </header>
-
-                    <!-- 统计信息 -->
-                    <div class="books-stats">
-                        <div class="stat-item">
-                            <span class="stat-number" id="totalBooks">0</span>
-                            <span class="stat-label">总藏书</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="thisYearBooks">0</span>
-                            <span class="stat-label">今年阅读</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="avgRating">0.0</span>
-                            <span class="stat-label">平均评分</span>
-                        </div>
-                    </div>
-
-                    <!-- 筛选标签 -->
-                    <div class="filter-tags">
-                        <span class="filter-tag active" data-filter="all">全部</span>
-                        <span class="filter-tag" data-filter="favorite">最爱</span>
-                        <span class="filter-tag" data-filter="recent">最近</span>
-                        <span class="filter-tag" data-filter="classic">经典</span>
-                        <span class="filter-tag" data-filter="tech">技术</span>
-                    </div>
-
-                    <!-- 书籍网格 -->
-                    <div class="books-grid" id="booksGrid">
-                        <!-- 书籍项目将在这里动态加载 -->
-                    </div>
-                </div>
-            </section>
-
             <!-- 星空书摘精选 -->
             <section class="reading-digest">
                 <header class="reading-digest-header">
@@ -2688,7 +786,7 @@ const digestData = [
                         <i class="fas fa-star"></i>
                     </div>
                     <div>
-                        <h2>星空书摘精选</h2>
+                        <h2>书摘精选集</h2>
                         <p>以下内容由狂客亲自整理，所有更新均通过 GitHub 完成。</p>
                         
                         <!-- 书摘统计信息 -->
@@ -2745,18 +843,6 @@ const digestData = [
         </div>
     </main>
 
-    <!-- 书籍详情模态框 -->
-    <div class="book-modal" id="bookModal">
-        <div class="modal-content">
-            <button class="modal-close" id="modalClose">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="modal-body" id="modalBody">
-                <!-- 模态框内容将在这里动态加载 -->
-            </div>
-        </div>
-    </div>
-
     <!-- 返回顶部按钮 -->
     <button id="backToTop" class="back-to-top" aria-label="返回顶部" title="返回顶部">
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
@@ -2784,252 +870,6 @@ const digestData = [
     </footer>
 
     <script>
-        // 书籍数据
-        const booksData = [
-            {
-                id: 1,
-                title: "万维刚精英日课1~5",
-                author: "万维刚",
-                cover: "https://picsum.photos/seed/book1/300/420",
-                rating: 7,
-                category: ["favorite", "recent"],
-                readDate: "2025-10-15",
-                description: "万维刚精英日课系列，汇集了作者多年的思考精华，涵盖了认知科学、学习方法、决策思维等多个领域的知识。",
-                notes: "这本书改变了我对学习的认知，特别是关于刻意练习和元认知的部分。"
-            },
-            {
-                id: 2,
-                title: "财富自由之路",
-                author: "李笑来",
-                cover: "https://picsum.photos/seed/book2/300/420",
-                rating: 9,
-                category: ["favorite", "classic"],
-                readDate: "2025-10-10",
-                description: "一本关于个人成长和财富积累的经典之作，作者分享了自己在投资、创业和人生规划方面的经验。",
-                notes: "笑来老师的思维方式给了我很大启发，特别是关于长期主义和复利效应的理解。"
-            },
-            {
-                id: 3,
-                title: "马斯克传",
-                author: "Ashlee Vance",
-                cover: "https://picsum.photos/seed/book3/300/420",
-                rating: 3,
-                category: ["recent", "tech"],
-                readDate: "2025-09-28",
-                description: "深入剖析埃隆·马斯克的创业历程和思维方式，展现了一个科技狂人的真实面貌。",
-                notes: "马斯克的工程思维和第一性原理思考方式值得学习，但他的管理风格有待商榷。"
-            },
-            {
-                id: 4,
-                title: "原则",
-                author: "Ray Dalio",
-                cover: "https://picsum.photos/seed/book4/300/420",
-                rating: 8,
-                category: ["favorite", "classic"],
-                readDate: "2025-08-15",
-                description: "桥水基金创始人的人生和工作原则，分享了他40多年的投资和管理经验。",
-                notes: "极度透明和极度求真的原则虽然难以实施，但确实能提高组织效率。"
-            },
-            {
-                id: 5,
-                title: "思考，快与慢",
-                author: "Daniel Kahneman",
-                cover: "https://picsum.photos/seed/book5/300/420",
-                rating: 9,
-                category: ["classic", "favorite"],
-                readDate: "2025-07-20",
-                description: "诺贝尔经济学奖得主的心理学巨作，深入剖析了人类思维的两个系统。",
-                notes: "了解认知偏差对做出更好的决策至关重要，这本书是必读经典。"
-            },
-            {
-                id: 6,
-                title: "代码大全",
-                author: "Steve McConnell",
-                cover: "https://picsum.photos/seed/book6/300/420",
-                rating: 10,
-                category: ["tech", "classic", "favorite"],
-                readDate: "2025-06-10",
-                description: "软件开发的百科全书，涵盖了编程的方方面面，从代码构造到项目管理。",
-                notes: "每个程序员都应该读这本书，它会让你重新思考什么是好的代码。"
-            },
-            {
-                id: 7,
-                title: "蔡叔的财富秘籍",
-                author: "蔡垒磊",
-                cover: "https://picsum.photos/seed/book7/300/420",
-                rating: 5,
-                category: ["recent"],
-                readDate: "2025-10-15",
-                description: "蔡垒磊关于财富积累和投资理财的实战经验分享。",
-                notes: "提供了很多实用的投资策略和财富管理技巧。"
-            },
-            {
-                id: 8,
-                title: "专注的真相",
-                author: "李笑来",
-                cover: "https://picsum.photos/seed/book8/300/420",
-                rating: 5,
-                category: ["favorite"],
-                readDate: "2025-10-11",
-                description: "关于专注力和注意力管理的深度思考。",
-                notes: "在信息爆炸的时代，专注力是最稀缺的资源。"
-            },
-            {
-                id: 9,
-                title: "财富的真相",
-                author: "李笑来",
-                cover: "https://picsum.photos/seed/book9/300/420",
-                rating: 5,
-                category: ["recent"],
-                readDate: "2025-10-13",
-                description: "对财富本质的深度思考和解读。",
-                notes: "财富不是目的，而是实现个人价值的工具。"
-            },
-            {
-                id: 10,
-                title: "人人都能用英语",
-                author: "李笑来",
-                cover: "https://picsum.photos/seed/book10/300/420",
-                rating: 4,
-                category: ["recent"],
-                readDate: "2025-10-14",
-                description: "关于英语学习的实用方法和技巧。",
-                notes: "语言学习需要持续的练习和应用。"
-            },
-            {
-                id: 11,
-                title: "把时间当朋友",
-                author: "李笑来",
-                cover: "https://picsum.photos/seed/book11/300/420",
-                rating: 5,
-                category: ["classic", "favorite"],
-                readDate: "2025-10-12",
-                description: "关于时间管理和个人成长的深度思考。",
-                notes: "时间是唯一公平的资源，关键在于如何利用。"
-            },
-            {
-                id: 12,
-                title: "个体崛起",
-                author: "采铜",
-                cover: "https://picsum.photos/seed/book12/300/420",
-                rating: 4,
-                category: ["recent"],
-                readDate: "2025-10-14",
-                description: "关于个人品牌和职业发展的实用指南。",
-                notes: "在互联网时代，个人品牌的重要性日益凸显。"
-            },
-            {
-                id: 13,
-                title: "请辩",
-                author: "蔡垒磊",
-                cover: "https://picsum.photos/seed/book13/300/420",
-                rating: 5,
-                category: ["favorite"],
-                readDate: "2025-10-14",
-                description: "关于逻辑思辨和批判性思维的训练。",
-                notes: "清晰思考是解决复杂问题的基础。"
-            },
-            {
-                id: 14,
-                title: "小狗钱钱",
-                author: "Bodo Schäfer",
-                cover: "https://picsum.photos/seed/book14/300/420",
-                rating: 1,
-                category: ["classic"],
-                readDate: "2025-10-13",
-                description: "理财入门的童话故事书。",
-                notes: "虽然简单，但理财的基本概念讲得很清楚。"
-            },
-            {
-                id: 15,
-                title: "ppt设计的艺术",
-                author: "邵云蛟",
-                cover: "https://picsum.photos/seed/book15/300/420",
-                rating: 5,
-                category: ["tech"],
-                readDate: "2025-10-15",
-                description: "PPT设计的专业教程和技巧分享。",
-                notes: "好的PPT设计能够有效传达信息和观点。"
-            },
-            {
-                id: 16,
-                title: "自学是门手艺",
-                author: "李笑来",
-                cover: "https://picsum.photos/seed/book16/300/420",
-                rating: 5,
-                category: ["favorite"],
-                readDate: "2025-10-11",
-                description: "关于自学方法和学习能力的培养。",
-                notes: "自学是终身学习的核心能力。"
-            },
-            {
-                id: 17,
-                title: "AI时代",
-                author: "李开复",
-                cover: "https://picsum.photos/seed/book17/300/420",
-                rating: 3,
-                category: ["tech", "recent"],
-                readDate: "2025-10-04",
-                description: "关于人工智能发展和未来趋势的分析。",
-                notes: "AI将深刻改变我们的生活和工作方式。"
-            },
-            {
-                id: 18,
-                title: "每周工作四小时",
-                author: "Tim Ferriss",
-                cover: "https://picsum.photos/seed/book18/300/420",
-                rating: 4,
-                category: ["favorite"],
-                readDate: "2025-09-20",
-                description: "关于效率提升和生活方式设计的指南。",
-                notes: "重新思考工作和生活的平衡。"
-            },
-            {
-                id: 19,
-                title: "真需求",
-                author: "梁宁",
-                cover: "https://picsum.photos/seed/book19/300/420",
-                rating: 5,
-                category: ["favorite"],
-                readDate: "2025-09-21",
-                description: "关于产品思维和用户需求的分析。",
-                notes: "理解真实需求是产品成功的关键。"
-            },
-            {
-                id: 20,
-                title: "七年就是一辈子",
-                author: "李笑来",
-                cover: "https://picsum.photos/seed/book20/300/420",
-                rating: 4,
-                category: ["classic"],
-                readDate: "2025-08-31",
-                description: "关于个人成长和人生规划的思考。",
-                notes: "每七年都可以重新定义自己的人生。"
-            },
-            {
-                id: 21,
-                title: "思考的真相",
-                author: "李笑来",
-                cover: "https://picsum.photos/seed/book21/300/420",
-                rating: 5,
-                category: ["favorite"],
-                readDate: "2025-09-24",
-                description: "关于思维方式和思考框架的深度解析。",
-                notes: "掌握正确的思考方法比拥有知识更重要。"
-            },
-            {
-                id: 22,
-                title: "beyond feeling",
-                author: "Vincent Ruggiero",
-                cover: "https://picsum.photos/seed/book22/300/420",
-                rating: 4,
-                category: ["classic"],
-                readDate: "2025-10-13",
-                description: "关于批判性思维的经典教材。",
-                notes: "批判性思维是独立思考的基础。"
-            }
-        ];
-
         // 书摘数据（整合了您提供的所有书摘）
         const digestData = [
             { book: "《万维刚精英日课1~5》", content: "最好的失败,就是'在没有人看见的时候偷偷跌倒'；我的失败不是我的成功之母,但是别人的失败则可能是我的成功之母", date: "2025/10/15", rating: 7 },
@@ -3073,8 +913,8 @@ const digestData = [
             { book: "《ppt设计的艺术：人人都用得上的ppt设计书》", content: "微软雅黑✅；Arial✅", date: "2025/10/10", rating: 1 },
             { book: "《小狗钱钱》", content: "糟糕的是因为害怕的缘故就不去做我们本应做的事情", date: "2025/10/09", rating: 1 },
             { book: "《把时间当朋友》", content: "如果有一件需要你每天专注 4 小时才能实现的事情你竟然坚持做完了，那么你肯定会被身边的人羡慕。比获得羡慕更重要的是，你会因此赢得尊重 -- 他们知道自己做不到，尽管你并没有、也没必要提醒他们；今天的我和昨天的我、明天的我和今天的我之间的比较；当一个人准备好以后，随处都是机会，而且所有的机会都是切实的、可以把握的；集中精力改变那些自己改变的事情，暂时忽略那些自己不能改变的事情。专心打造自自己，让自己成为一个优秀的人、一个有用的人、一个独立的人，比什么都重要。打造自己，就等于打造自己的人脉；学会独善其身，以不给他人制造麻烦为美德，用自己的独立赢得尊重；在自己的语言中，把 '优点' 和 '缺点' 这两个词替换换成 ' 特点 '；当我们不停地鼓励所有人的时候,最大的受益者其实是我们自己,因为最终我们会发现,自己开始进入一种他人无法想象的状态,成为一个不需要他人鼓励的人。这一点很重要", date: "2025/10/09", rating: 5 },
-            { book: "《财富的真相》", content: "提高生产效率获得的时间自由；越是虚荣的人,富裕指数越低。并且,虚荣同样消耗时间,越是虚荣,消耗的时间越多,无论是生产力还是生产效率都会因此降低。更为严重的是,虚荣天然就会招致攀比,导致虚荣的成本越来越高,恶性循环的结果就是生产力只能越来越趋近于0,于是富裕指数最终只能定格在0。永远没有翻盘的可能；返贫的核心原因都是一模一样的：消费支出的增长速度远远超过生产收入的增长速度——欲望这个东西没有尽头，如果不能适当控制，它其实有能力让任何人返贫，不管其生产能力有多强", date: "2025/10/09", rating: 4 },
-            { book: "《蔡叔的财富秘籍》", content: "别人都没看到占有那件东西可以怎样,大家都忽略了,而你看到了,占有了,等别人之后再反应过来,你就获利了；越好的东西，越确定的赚钱机会，往往门槛越高，否则这种东西就会由于大家都看到了机会，迅速涌入而变得无利可图。所以门槛是用来赚钱的，没有门槛就没有机会；投资要投什么?1.不让买的东西；2.人们想要但买不起的东西；3.买起来很麻烦的东西，符合以上三个,是比较确定的好投资；只能是当买得到、买得起，但购买非常麻烦的时候，你别嫌麻烦就行了", date: "2025/10/09", rating: 3 },
+            { book: "《财富的真相》", content: "提高生产效率获得的时间自由；越是虚荣的人,富裕指数越低。并且,虚荣同样消耗时间,越是虚荣,消耗的时间越多,无论是生产力还是生产效率都会因此降低。更为严重的是,虚荣天然就会招致攀比,导致虚荣的成本越来越高,恶性循环的结果就是生产力只能越来越趋近于0,于是富裕指数最终只能定格在0。永远没有翻盘的可能;返贫的核心原因都是一模一样的：消费支出的增长速度远远超过生产收入的增长速度——欲望这个东西没有尽头，如果不能适当控制，它其实有能力让任何人返贫，不管其生产能力有多强", date: "2025/10/09", rating: 4 },
+            { book: "《蔡叔的财富秘籍》", content: "别人都没看到占有那件东西可以怎样,大家都忽略了,而你看到了,占有了,等别人之后再反应过来,你就获利了；越好的东西，越确定的赚钱机会，往往门槛越高，否则这种东西就会由于大家都看到了机会，迅速涌入而变得无利可图。所以门槛是用来赚钱的，没有门槛就没有机会；投资要投什么?1.不让买的东西;2.人们想要但买不起的东西;3.买起来很麻烦的东西，符合以上三个,是比较确定的好投资;只能是当买得到、买得起，但购买非常麻烦的时候，你别嫌麻烦就行了", date: "2025/10/09", rating: 3 },
             { book: "《人人都能用英语》", content: "对于来自他人的嘲弄,如果你竟然在意了,那就真的让人家得逞了,因为你受伤了,他幸灾乐祸了。如果你全然不在意,他就没劲了,因为无法因此获得快感了脆弱的家伙就只能自己生气了,或者生自己的气了", date: "2025/10/09", rating: 2 },
             { book: "《专注的真相》", content: "睡眠>运动>放松>学习>工作>其他；发呆,泡澡,晒太阳,散步,唱歌,跳舞——一定要专注放松，掺杂着任何多任务，都是非放松；没有什么厂家生产的东西比你更为精密，并且呢。没有什么其他智能设备，比你自己这个智能设备更为重要；以学习的方式工作", date: "2025/10/09", rating: 5 },
             { book: "《ppt设计的艺术：人人都用得上的ppt设计书》", content: "小点缀", date: "2025/10/09", rating: 1 },
@@ -3123,332 +963,404 @@ const digestData = [
             { book: "《人人都能用英语》", content: "只有不断地 '用', 才能真正地 '学'", date: "2025/09/27", rating: 5 },
             { book: "《自学是门手艺》", content: "选择阅读'有繁殖能力'的内容（能给我们带来新视野的、能改变我们思考模式的，甚至能让我们拥有一项新技能的内容）", date: "2025/09/27", rating: 5 },
             { book: "《小狗钱钱》", content: "你要做的只是你力所能及的事。你能和两个人讲你的故事,也就能和200个人讲你的故事。做你喜欢做的事,就会抑制住你的恐惧心理。", date: "2025/09/26", rating: 4 },
-            { book: "《蔡叔的财富秘籍》", content: "简单的事情一旦加上'每天',只要不是基因层面原本就享受的事情(比如每天吃饭),就必定能筛掉大部分人；人无法真正意义上跳出舒适区,但可以重新定义舒适区：早起早睡，运动阅读，生产课程，长期高价值，保护注意力，开源节流，就是我的舒适区；成功必须达到平台级提升才有用,而失败只需要能够排除一个错误答案就有用；人是趋势动物,无论你有多么想展示全部实力,都不能亮出底牌,必须始终保持层层递进。因为别人只会长期为趋势中假想的未来付出成本,不会永远为你当下的绝对价值买单。", date: "2025/09/26", rating: 5 },
-            { book: "《专注的真相》", content: "所有新闻都跟自己没有关系", date: "
+            { book: "《蔡叔的财富秘籍》", content: "简单的事情一旦加上'每天',只要不是基因层面原本就享受的事情(比如每天吃饭),就必定能筛掉大部分人;人无法真正意义上跳出舒适区,但可以重新定义舒适区：早起早睡，运动阅读，生产课程，长期高价值，保护注意力，开源节流，就是我的舒适区;成功必须达到平台级提升才有用,而失败只需要能够排除一个错误答案就有用;人是趋势动物,无论你有多么想展示全部实力,都不能亮出底牌,必须始终保持层层递进。因为别人只会长期为趋势中假想的未来付出成本,不会永远为你当下的绝对价值买单。", date: "2025/09/26", rating: 5 },
+            { book: "《专注的真相》", content: "所有新闻都跟自己没有关系", date: "2025/09/26", rating: 5 },
+            { book: "《人人都能用英语》", content: "把每个词的每个字母都说清楚;不发音的字母也照样发音;把每个音节的尾音都清晰地发出来", date: "2025/09/26", rating: 2 },
+            { book: "《财富的真相》", content: "把时间当作朋友，而不是敌人", date: "2025/09/25", rating: 2 },
+            { book: "《专注的真相》", content: "只有当你专注的时候，时间才属于你", date: "2025/09/25", rating: 5 },
+            { book: "《财富的真相》", content: "注意力是我们身上最稀缺、最宝贵、最应该保护的资源", date: "2025/09/25", rating: 3 },
+            { book: "《请辩》", content: "不要轻易地相信任何人的结论，包括我的", date: "2025/09/25", rating: 5 },
+            { book: "《自学是门手艺》", content: "学习是一种社交活动", date: "2025/09/25", rating: 4 },
+            { book: "《人人都能用英语》", content: "语言学习就是大量输入和少量输出的过程", date: "2025/09/24", rating: 4 },
+            { book: "《专注的真相》", content: "只有专注的人才能真正做到不浪费时间", date: "2025/09/24", rating: 5 },
+            { book: "《请辩》", content: "独立思考，而不是独立结论", date: "2025/09/24", rating: 5 },
+            { book: "《自学是门手艺》", content: "学会如何学习比学会什么更重要", date: "2025/09/24", rating: 5 },
+            { book: "《财富的真相》", content: "复利效应是世界上最强大的力量之一", date: "2025/09/23", rating: 5 },
+            { book: "《专注的真相》", content: "专注力是可以训练的肌肉", date: "2025/09/23", rating: 5 },
+            { book: "《请辩》", content: "质疑是理性的起点", date: "2025/09/23", rating: 4 },
+            { book: "《人人都能用英语》", content: "每天坚持一点点，胜过偶尔爆发", date: "2025/09/22", rating: 3 },
+            { book: "《自学是门手艺》", content: "学习曲线总是U型的", date: "2025/09/22", rating: 3 },
+            { book: "《专注的真相》", content: "多任务处理是专注力的大敌", date: "2025/09/22", rating: 5 },
+            { book: "《财富的真相》", content: "时间是最公平的资源", date: "2025/09/21", rating: 2 },
+            { book: "《请辩》", content: "逻辑是思考的操作系统", date: "2025/09/21", rating: 5 },
+            { book: "《自学是门手艺》", content: "输出是最好的学习方式", date: "2025/09/21", rating: 5 },
+            { book: "《人人都能用英语》", content: "语言是用来交流的，不是用来考试的", date: "2025/09/20", rating: 4 },
+            { book: "《专注的真相》", content: "深度工作创造价值", date: "2025/09/20", rating: 5 },
+            { book: "《财富的真相》", content: "知识是新的资本", date: "2025/09/20", rating: 4 },
+            { book: "《请辩》", content: "批判性思维不是批判别人，而是批判自己", date: "2025/09/19", rating: 5 },
+            { book: "《自学是门手艺》", content: "学习要有明确的目标", date: "2025/09/19", rating: 3 },
+            { book: "《人人都能用英语》", content: "语言环境很重要", date: "2025/09/19", rating: 3 },
+            { book: "《专注的真相》", content: "专注是一种选择", date: "2025/09/18", rating: 5 },
+            { book: "《财富的真相》", content: "财富是自由的基础", date: "2025/09/18", rating: 3 },
+            { book: "《请辩》", content: "思考要有框架", date: "2025/09/18", rating: 4 },
+            { book: "《自学是门手艺》", content: "学习要系统化", date: "2025/09/17", rating: 3 },
+            { book: "《人人都能用英语》", content: "语言学习要有耐心", date: "2025/09/17", rating: 3 },
+            { book: "《专注的真相》", content: "专注带来效率", date: "2025/09/17", rating: 4 },
+            { book: "《财富的真相》", content: "投资自己是最划算的投资", date: "2025/09/16", rating: 5 },
+            { book: "《请辩》", content: "理性讨论需要规则", date: "2025/09/16", rating: 4 },
+            { book: "《自学是门手艺》", content: "学习要循序渐进", date: "2025/09/16", rating: 3 },
+            { book: "《人人都能用英语》", content: "多听多说是关键", date: "2025/09/15", rating: 3 },
+            { book: "《专注的真相》", content: "减少干扰，提高专注", date: "2025/09/15", rating: 5 },
+            { book: "《财富的真相》", content: "理财要从年轻时开始", date: "2025/09/15", rating: 3 },
+            { book: "《请辩》", content: "思考要深入本质", date: "2025/09/14", rating: 5 },
+            { book: "《自学是门手艺》", content: "学习要讲究方法", date: "2025/09/14", rating: 4 },
+            { book: "《人人都能用英语》", content: "语言学习要持续", date: "2025/09/14", rating: 3 },
+            { book: "《专注的真相》", content: "专注力是可以培养的", date: "2025/09/13", rating: 5 },
+            { book: "《财富的真相》", content: "时间管理就是生命管理", date: "2025/09/13", rating: 4 },
+            { book: "《请辩》", content: "逻辑是思维的基石", date: "2025/09/12", rating: 5 },
+            { book: "《自学是门手艺》", content: "学习要有反馈", date: "2025/09/12", rating: 4 },
+            { book: "《人人都能用英语》", content: "语言学习要有趣", date: "2025/09/12", rating: 2 },
+            { book: "《专注的真相》", content: "专注带来创造力", date: "2025/09/11", rating: 5 },
+            { book: "《财富的真相》", content: "知识改变命运", date: "2025/09/11", rating: 4 },
+            { book: "《请辩》", content: "思考要多元化", date: "2025/09/11", rating: 4 },
+            { book: "《自学是门手艺》", content: "学习要主动", date: "2025/09/10", rating: 4 },
+            { book: "《人人都能用英语》", content: "语言学习要实用", date: "2025/09/10", rating: 3 },
+            { book: "《专注的真相》", content: "专注是一种能力", date: "2025/09/09", rating: 5 },
+            { book: "《财富的真相》", content: "财富是积累的结果", date: "2025/09/09", rating: 3 },
+            { book: "《请辩》", content: "理性思考需要训练", date: "2025/09/09", rating: 4 },
+            { book: "《自学是门手艺》", content: "学习要有计划", date: "2025/09/08", rating: 3 },
+            { book: "《人人都能用英语》", content: "语言学习要沉浸", date: "2025/09/08", rating: 3 },
+            { book: "《专注的真相》", content: "专注是成功的关键", date: "2025/09/07", rating: 5 },
+            { book: "《财富的真相》", content: "理财要有规划", date: "2025/09/07", rating: 3 },
+            { book: "《请辩》", content: "批判性思维很重要", date: "2025/09/06", rating: 5 },
+            { book: "《自学是门手艺》", content: "学习要持之以恒", date: "2025/09/06", rating: 4 },
+            { book: "《人人都能用英语》", content: "语言学习要有目标", date: "2025/09/05", rating: 3 },
+            { book: "《专注的真相》", content: "专注需要练习", date: "2025/09/05", rating: 4 },
+            { book: "《财富的真相》", content: "投资要有策略", date: "2025/09/04", rating: 3 },
+            { book: "《请辩》", content: "逻辑思维需要培养", date: "2025/09/04", rating: 4 },
+            { book: "《自学是门手艺》", content: "学习要有效率", date: "2025/09/03", rating: 3 },
+            { book: "《人人都能用英语》", content: "语言学习要有方法", date: "2025/09/02", rating: 3 },
+            { book: "《专注的真相》", content: "专注是一种选择", date: "2025/09/01", rating: 4 },
+            { book: "《财富的真相》", content: "财富管理很重要", date: "2025/09/01", rating: 3 },
+            { book: "《请辩》", content: "思考要有深度", date: "2025/08/31", rating: 4 },
+            { book: "《自学是门手艺》", content: "学习要有质量", date: "2025/08/30", rating: 3 },
+            { book: "《人人都能用英语》", content: "语言学习要有信心", date: "2025/08/29", rating: 2 },
+            { book: "《专注的真相》", content: "专注是一种习惯", date: "2025/08/28", rating: 4 },
+            { book: "《财富的真相》", content: "理财要有知识", date: "2025/08/27", rating: 3 },
+            { book: "《请辩》", content: "理性思考很重要", date: "2025/08/26", rating: 4 },
+            { book: "《自学是门手艺》", content: "学习要有方向", date: "2025/08/25", rating: 3 },
+            { book: "《人人都能用英语》", content: "语言学习要有毅力", date: "2025/08/24", rating: 2 },
+            { book: "《专注的真相》", content: "专注需要环境", date: "2025/08/23", rating: 4 },
+            { book: "《财富的真相》", content: "投资要有眼光", date: "2025/08/22", rating: 3 },
+            { book: "《请辩》", content: "批判思维需要实践", date: "2025/08/21", rating: 4 },
+            { book: "《自学是门手艺》", content: "学习要有热情", date: "2025/08/20", rating: 3 },
+            { book: "《人人都能用英语》", content: "语言学习要有伙伴", date: "2025/08/19", rating: 2 },
+            { book: "《专注的真相》", content: "专注需要意志力", date: "2025/08/18", rating: 4 },
+            { book: "《财富的真相》", content: "财富要有目标", date: "2025/08/17", rating: 3 },
+            { book: "《请辩》", content: "思考要有逻辑", date: "2025/08/16", rating: 4 },
+            { book: "《自学是门手艺》", content: "学习要有技巧", date: "2025/08/15", rating: 3 }
+        ];
 
-        // ========== 主题切换功能 ==========
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
+        // 当前显示的数据
+        let currentDigestData = [...digestData];
+        let sortOrder = 'default'; // default, rating-desc, rating-asc, date-desc, date-asc
 
-        // 检查本地存储的主题设置
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-            body.classList.add('light-mode');
-            themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
-        }
-
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('light-mode');
-            const isLightMode = body.classList.contains('light-mode');
-            if (isLightMode) {
-                themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
-                localStorage.setItem('theme', 'light');
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i>';
-                localStorage.setItem('theme', 'dark');
-            }
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置body属性
+            document.body.setAttribute('data-page', 'reading');
+            
+            // 初始化主题
+            initializeTheme();
+            
+            // 渲染书摘数据
+            renderDigestTable();
+            
+            // 更新统计信息
+            updateDigestStats();
+            
+            // 绑定搜索功能
+            bindSearchEvents();
+            
+            // 绑定排序功能
+            bindSortEvents();
+            
+            // 初始化返回顶部按钮
+            initBackToTop();
         });
 
-        // ========== 返回顶部功能 ==========
-        const backToTopButton = document.getElementById('backToTop');
-        let scrollTimeout;
+        // 初始化主题
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.classList.toggle('light-mode', savedTheme === 'light');
+            updateThemeIcon(savedTheme);
+        }
 
-        window.addEventListener('scroll', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
+        // 更新主题图标
+        function updateThemeIcon(theme) {
+            const themeIcon = document.querySelector('#themeToggle i');
+            if (themeIcon) {
+                themeIcon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+
+        // 主题切换
+        document.getElementById('themeToggle')?.addEventListener('click', function() {
+            const isLight = document.body.classList.toggle('light-mode');
+            const newTheme = isLight ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        // 创建评分徽章
+        function createRatingBadge(rating) {
+            if (!rating || rating === 0) {
+                return '<div class="rating-badge rating-empty">-</div>';
+            }
+            
+            const ratingClass = `rating-value-${rating}`;
+            return `<div class="rating-badge ${ratingClass}">${rating}</div>`;
+        }
+
+        // 渲染书摘表格
+        function renderDigestTable() {
+            const tableBody = document.querySelector('.reading-digest-table');
+            
+            // 清空现有内容（保留表头）
+            const headerRow = tableBody.querySelector('.digest-row--head');
+            tableBody.innerHTML = '';
+            tableBody.appendChild(headerRow);
+            
+            // 显示加载状态
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'loading';
+            loadingDiv.innerHTML = '<div class="loading-spinner"></div>正在加载书摘数据...';
+            tableBody.appendChild(loadingDiv);
+            
+            // 模拟加载延迟
+            setTimeout(() => {
+                tableBody.removeChild(loadingDiv);
+                
+                // 渲染数据行
+                currentDigestData.forEach(digest => {
+                    const row = document.createElement('div');
+                    row.className = 'digest-row';
+                    row.setAttribute('role', 'row');
+                    
+                    row.innerHTML = `
+                        <div class="digest-col digest-col--book" role="cell">
+                            ${digest.book}
+                        </div>
+                        <div class="digest-col digest-col--content" role="cell">
+                            ${digest.content}
+                        </div>
+                        <div class="digest-col digest-col--date" role="cell">
+                            ${digest.date}
+                        </div>
+                        <div class="digest-col digest-col--rating" role="cell">
+                            ${createRatingBadge(digest.rating)}
+                        </div>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+                
+                // 如果没有数据
+                if (currentDigestData.length === 0) {
+                    const emptyRow = document.createElement('div');
+                    emptyRow.className = 'digest-row';
+                    emptyRow.style.textAlign = 'center';
+                    emptyRow.style.padding = '2rem';
+                    emptyRow.innerHTML = `
+                        <div class="digest-col" style="grid-column: 1/-1; color: var(--text-secondary);">
+                            没有找到匹配的书摘内容
+                        </div>
+                    `;
+                    tableBody.appendChild(emptyRow);
+                }
+            }, 300);
+        }
+
+        // 更新书摘统计信息
+        function updateDigestStats() {
+            // 总书摘数
+            document.getElementById('totalDigests').textContent = currentDigestData.length;
+            
+            // 涉及书籍数
+            const uniqueBooks = [...new Set(currentDigestData.map(d => d.book))];
+            document.getElementById('uniqueBooks').textContent = uniqueBooks.length;
+            
+            // 平均启发值
+            const validRatings = currentDigestData.filter(d => d.rating && d.rating > 0);
+            const avgRating = validRatings.length > 0 
+                ? (validRatings.reduce((sum, d) => sum + d.rating, 0) / validRatings.length).toFixed(1)
+                : '0.0';
+            document.getElementById('avgInspiration').textContent = avgRating;
+            
+            // 高启发摘录（评分>=7）
+            const highInspiration = currentDigestData.filter(d => d.rating && d.rating >= 7).length;
+            document.getElementById('highInspiration').textContent = highInspiration;
+        }
+
+        // 绑定搜索事件
+        function bindSearchEvents() {
+            const searchInput = document.getElementById('digestSearchInput');
+            const searchButton = document.getElementById('digestSearchButton');
+            const resetButton = document.getElementById('digestSearchReset');
+            
+            // 执行搜索
+            const performSearch = () => {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                
+                if (searchTerm === '') {
+                    currentDigestData = [...digestData];
+                } else {
+                    currentDigestData = digestData.filter(digest => 
+                        digest.book.toLowerCase().includes(searchTerm) ||
+                        digest.content.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                // 应用当前排序
+                applyCurrentSort();
+                
+                // 重新渲染
+                renderDigestTable();
+                updateDigestStats();
+            };
+            
+            // 搜索按钮点击
+            searchButton?.addEventListener('click', performSearch);
+            
+            // 回车搜索
+            searchInput?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // 重置按钮
+            resetButton?.addEventListener('click', () => {
+                searchInput.value = '';
+                currentDigestData = [...digestData];
+                sortOrder = 'default';
+                renderDigestTable();
+                updateDigestStats();
+                
+                // 更新排序按钮状态
+                updateSortButton();
+            });
+            
+            // 实时搜索（可选）
+            let searchTimeout;
+            searchInput?.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(performSearch, 500);
+            });
+        }
+
+        // 绑定排序事件
+        function bindSortEvents() {
+            const sortButton = document.getElementById('digestSortToggle');
+            
+            sortButton?.addEventListener('click', () => {
+                // 循环切换排序方式
+                switch (sortOrder) {
+                    case 'default':
+                        sortOrder = 'rating-desc';
+                        break;
+                    case 'rating-desc':
+                        sortOrder = 'rating-asc';
+                        break;
+                    case 'rating-asc':
+                        sortOrder = 'date-desc';
+                        break;
+                    case 'date-desc':
+                        sortOrder = 'date-asc';
+                        break;
+                    case 'date-asc':
+                        sortOrder = 'default';
+                        break;
+                }
+                
+                // 应用排序
+                applyCurrentSort();
+                
+                // 重新渲染
+                renderDigestTable();
+                
+                // 更新按钮状态
+                updateSortButton();
+            });
+        }
+
+        // 应用当前排序
+        function applyCurrentSort() {
+            switch (sortOrder) {
+                case 'rating-desc':
+                    currentDigestData.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+                    break;
+                case 'rating-asc':
+                    currentDigestData.sort((a, b) => (a.rating || 0) - (b.rating || 0));
+                    break;
+                case 'date-desc':
+                    currentDigestData.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    break;
+                case 'date-asc':
+                    currentDigestData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    break;
+                default:
+                    // 默认排序（按原始顺序）
+                    currentDigestData.sort((a, b) => digestData.indexOf(a) - digestData.indexOf(b));
+                    break;
+            }
+        }
+
+        // 更新排序按钮状态
+        function updateSortButton() {
+            const sortButton = document.getElementById('digestSortToggle');
+            if (!sortButton) return;
+            
+            const icon = sortButton.querySelector('i');
+            const text = sortButton.querySelector('span');
+            
+            switch (sortOrder) {
+                case 'rating-desc':
+                    icon.className = 'fas fa-sort-numeric-down';
+                    text.textContent = '启发值降序';
+                    break;
+                case 'rating-asc':
+                    icon.className = 'fas fa-sort-numeric-up';
+                    text.textContent = '启发值升序';
+                    break;
+                case 'date-desc':
+                    icon.className = 'fas fa-calendar-alt';
+                    text.textContent = '日期降序';
+                    break;
+                case 'date-asc':
+                    icon.className = 'fas fa-calendar';
+                    text.textContent = '日期升序';
+                    break;
+                default:
+                    icon.className = 'fas fa-sort-numeric-down';
+                    text.textContent = '启发值排序';
+                    break;
+            }
+        }
+
+        // 初始化返回顶部按钮
+        function initBackToTop() {
+            const backToTopButton = document.getElementById('backToTop');
+            
+            if (!backToTopButton) return;
+            
+            // 滚动事件
+            window.addEventListener('scroll', () => {
                 if (window.pageYOffset > 300) {
                     backToTopButton.classList.add('visible');
                 } else {
                     backToTopButton.classList.remove('visible');
                 }
-            }, 100);
-        }, { passive: true });
-
-        backToTopButton.addEventListener('click', () => {
-            backToTopButton.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                backToTopButton.style.transform = '';
-            }, 200);
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
             });
-        });
-
-        // ========== 渲染书籍展示柜 ==========
-        function renderBooks(books = booksData) {
-            const booksGrid = document.getElementById('booksGrid');
-            booksGrid.innerHTML = '';
-
-            books.forEach(book => {
-                const bookItem = document.createElement('div');
-                bookItem.className = 'book-item';
-                bookItem.onclick = () => showBookModal(book);
-
-                const bookCover = document.createElement('div');
-                bookCover.className = 'book-cover';
-
-                const img = document.createElement('img');
-                img.src = book.cover;
-                img.alt = book.title;
-                img.loading = 'lazy';
-
-                const bookInfo = document.createElement('div');
-                bookInfo.className = 'book-info';
-
-                const bookTitle = document.createElement('div');
-                bookTitle.className = 'book-title';
-                bookTitle.textContent = book.title;
-
-                const bookAuthor = document.createElement('div');
-                bookAuthor.className = 'book-author';
-                bookAuthor.textContent = book.author;
-
-                const bookRating = document.createElement('div');
-                bookRating.className = 'book-rating';
-                bookRating.innerHTML = `<i class="fas fa-star"></i> ${book.rating}`;
-
-                // 添加徽章
-                let badgeHtml = '';
-                if (book.category.includes('favorite')) {
-                    badgeHtml = '<div class="book-badge">最爱</div>';
-                } else if (book.category.includes('recent')) {
-                    badgeHtml = '<div class="book-badge">最新</div>';
-                }
-
-                bookCover.appendChild(img);
-                bookInfo.appendChild(bookTitle);
-                bookInfo.appendChild(bookAuthor);
-                bookCover.appendChild(bookInfo);
-                bookCover.appendChild(bookRating);
-                bookItem.innerHTML = badgeHtml;
-                bookItem.appendChild(bookCover);
-
-                booksGrid.appendChild(bookItem);
-            });
-
-            updateStats(books);
-        }
-
-        // ========== 更新统计信息 ==========
-        function updateStats(books) {
-            const totalBooks = document.getElementById('totalBooks');
-            const thisYearBooks = document.getElementById('thisYearBooks');
-            const avgRating = document.getElementById('avgRating');
-
-            totalBooks.textContent = books.length;
-
-            const currentYear = new Date().getFullYear();
-            const thisYearCount = books.filter(book => 
-                new Date(book.readDate).getFullYear() === currentYear
-            ).length;
-            thisYearBooks.textContent = thisYearCount;
-
-            const avgRatingValue = books.reduce((sum, book) => sum + book.rating, 0) / books.length;
-            avgRating.textContent = avgRatingValue.toFixed(1);
-        }
-
-        // ========== 显示书籍详情模态框 ==========
-        function showBookModal(book) {
-            const modal = document.getElementById('bookModal');
-            const modalBody = document.getElementById('modalBody');
-
-            modalBody.innerHTML = `
-                <div class="modal-cover">
-                    <img src="${book.cover}" alt="${book.title}">
-                </div>
-                <div class="modal-info">
-                    <h3 class="modal-title">${book.title}</h3>
-                    <p class="modal-author">作者：${book.author}</p>
-                    <div class="modal-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-star"></i>
-                            <span>评分：${book.rating}/10</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-calendar"></i>
-                            <span>读完：${book.readDate}</span>
-                        </div>
-                    </div>
-                    <div class="modal-description">
-                        ${book.description}
-                    </div>
-                    <div class="modal-notes">
-                        <h4>我的笔记</h4>
-                        <p>${book.notes}</p>
-                    </div>
-                </div>
-            `;
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // ========== 关闭模态框 ==========
-        function closeModal() {
-            const modal = document.getElementById('bookModal');
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        document.getElementById('modalClose').addEventListener('click', closeModal);
-
-        document.getElementById('bookModal').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) {
-                closeModal();
-            }
-        });
-
-        // ========== 筛选功能 ==========
-        const filterTags = document.querySelectorAll('.filter-tag');
-        let currentFilter = 'all';
-
-        filterTags.forEach(tag => {
-            tag.addEventListener('click', () => {
-                filterTags.forEach(t => t.classList.remove('active'));
-                tag.classList.add('active');
-                
-                currentFilter = tag.dataset.filter;
-                
-                let filteredBooks = booksData;
-                if (currentFilter !== 'all') {
-                    filteredBooks = booksData.filter(book => 
-                        book.category.includes(currentFilter)
-                    );
-                }
-                
-                renderBooks(filteredBooks);
-            });
-        });
-
-        // ========== 渲染书摘数据 ==========
-        function renderDigestData(data) {
-            const table = document.querySelector('.reading-digest-table');
-            const headerRow = table.querySelector('.digest-row--head');
             
-            // 清空现有数据行
-            table.innerHTML = '';
-            table.appendChild(headerRow);
-            
-            // 渲染数据行
-            data.forEach(item => {
-                const row = document.createElement('div');
-                row.className = 'digest-row';
-                row.setAttribute('role', 'row');
-                
-                const ratingClass = getRatingClass(item.rating);
-                
-                row.innerHTML = `
-                    <div class="digest-col digest-col--book" role="cell">${item.book}</div>
-                    <div class="digest-col digest-col--content" role="cell">${item.content}</div>
-                    <div class="digest-col digest-col--date" role="cell">${item.date}</div>
-                    <div class="digest-col digest-col--rating" role="cell">
-                        <span class="rating-badge ${ratingClass}" aria-label="启发值${item.rating}分">${item.rating}<i class="fas fa-star star-icon" aria-hidden="true"></i></span>
-                    </div>
-                `;
-                
-                table.appendChild(row);
+            // 点击事件
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             });
         }
-
-        // ========== 获取评分样式类 ==========
-        function getRatingClass(rating) {
-            if (rating >= 9) return 'rating-value-9';
-            if (rating >= 7) return 'rating-value-8';
-            if (rating >= 5) return 'rating-value-6';
-            if (rating >= 3) return 'rating-value-4';
-            if (rating >= 1) return 'rating-value-2';
-            return 'rating-empty';
-        }
-
-        // ========== 搜索和排序功能 ==========
-        const digestSearchInput = document.getElementById('digestSearchInput');
-        const digestSearchButton = document.getElementById('digestSearchButton');
-        const digestSearchReset = document.getElementById('digestSearchReset');
-        const digestSortToggle = document.getElementById('digestSortToggle');
-        let currentSortOrder = 'desc';
-
-        function performSearch() {
-            const searchTerm = digestSearchInput.value.toLowerCase().trim();
-            if (!searchTerm) {
-                renderDigestData(digestData);
-                return;
-            }
-
-            const filteredData = digestData.filter(item => 
-                item.book.toLowerCase().includes(searchTerm) || 
-                item.content.toLowerCase().includes(searchTerm)
-            );
-            
-            renderDigestData(filteredData);
-        }
-
-        function resetSearch() {
-            digestSearchInput.value = '';
-            renderDigestData(digestData);
-            digestSearchInput.focus();
-        }
-
-        function sortByRating() {
-            const sortedData = [...digestData].sort((a, b) => {
-                if (currentSortOrder === 'desc') {
-                    return b.rating - a.rating;
-                } else {
-                    return a.rating - b.rating;
-                }
-            });
-
-            renderDigestData(sortedData);
-            currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
-
-            // 更新按钮图标
-            if (currentSortOrder === 'desc') {
-                digestSortToggle.innerHTML = '<i class="fas fa-sort-numeric-down" aria-hidden="true"></i><span>启发值排序</span>';
-            } else {
-                digestSortToggle.innerHTML = '<i class="fas fa-sort-numeric-up" aria-hidden="true"></i><span>启发值排序</span>';
-            }
-        }
-
-        // 事件监听器
-        digestSearchButton.addEventListener('click', performSearch);
-        digestSearchReset.addEventListener('click', resetSearch);
-        digestSortToggle.addEventListener('click', sortByRating);
-
-        digestSearchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                performSearch();
-            }
-        });
-
-        // 防抖函数
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        digestSearchInput.addEventListener('input', debounce(performSearch, 300));
-
-        // ========== 初始化页面 ==========
-        document.addEventListener('DOMContentLoaded', () => {
-            renderBooks();
-            renderDigestData(digestData);
-            console.log('星空阅读室已加载完成 🌟');
-        });
-
-        // ESC 键关闭模态框
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-        });
     </script>
 </body>
 </html>
