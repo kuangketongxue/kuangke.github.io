@@ -439,17 +439,31 @@ class MomentsApp {
     }
 }
 
-// 页面加载完成后初始化应用
-document.addEventListener('DOMContentLoaded', function() {
-    // 确保LeanCloud已初始化
-    if (typeof AV !== 'undefined') {
-        window.momentsApp = new MomentsApp();
+// 在 moments-script.js 文件最后，替换原来的初始化代码：
+
+// 立即创建应用实例并暴露到全局
+(function() {
+    // 创建应用实例
+    const app = new MomentsApp();
+    
+    // 暴露到全局
+    window.momentsApp = app;
+    
+    // 确保DOM加载完成后再初始化
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            app.init();
+        });
     } else {
-        console.error('LeanCloud SDK未加载');
-        document.getElementById('momentsContainer').innerHTML = 
-            '<div class="no-results">系统初始化失败，请刷新页面重试</div>';
+        // DOM已经加载完成
+        setTimeout(() => app.init(), 100);
     }
+})();
+
+// 全局错误处理
+window.addEventListener('error', function(e) {
+    console.error('全局错误:', e.error);
 });
 
-// 全局函数，用于内联事件处理
-window.momentsApp = window.momentsApp || null;
+// 添加调试信息
+console.log('moments-script.js 加载完成');
