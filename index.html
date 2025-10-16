@@ -4,9 +4,13 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>狂客·银河</title>
+    <title>狂客·银河 - 探索你的星辰大海</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- LeanCloud SDK - 放在head中确保优先加载 -->
+    <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.15.2/dist/av-min.js"></script>
+    
     <style>
         /* AI前沿按钮专属样式 */
         .ai-nav-button {
@@ -22,8 +26,8 @@
             position: relative;
             overflow: hidden;
             font-weight: 600;
+            animation: ai-glow 3s ease-in-out infinite;
         }
-        
         .ai-nav-button::before {
             content: '';
             position: absolute;
@@ -34,22 +38,18 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
             transition: left 0.5s ease;
         }
-        
         .ai-nav-button:hover::before {
             left: 100%;
         }
-        
         .ai-nav-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
             background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
-        
         .ai-nav-button:active {
             transform: translateY(0);
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
-        
         .ai-icon {
             display: flex;
             align-items: center;
@@ -61,25 +61,415 @@
             border-radius: 6px;
             transition: all 0.3s ease;
         }
-        
         .ai-nav-button:hover .ai-icon {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
         }
-        
         .ai-text {
             font-size: 14px;
             letter-spacing: 0.5px;
         }
-        
-        /* 为AI按钮添加呼吸动画效果 */
+        /* AI按钮呼吸动画 */
         @keyframes ai-glow {
             0%, 100% { box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); }
             50% { box-shadow: 0 4px 20px rgba(102, 126, 234, 0.6); }
         }
-        
-        .ai-nav-button {
-            animation: ai-glow 3s ease-in-out infinite;
+        /* 统一图标样式 */
+        .success-icon, .sky-icon, .ai-icon, .exam-icon {
+            color: #fff;
+            font-size: 16px;
+        }
+        /* 朋友圈核心样式 - 合并内联样式，统一管理 */
+        .moments-grid {
+            display: grid;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .moment-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .moment-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        .moment-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+        }
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 12px;
+        }
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .user-info .username {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .user-info .timestamp {
+            color: #999;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+        .moment-menu {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            margin-left: auto;
+        }
+        .moment-content {
+            padding: 0 16px 16px;
+        }
+        .moment-text {
+            margin: 8px 0;
+            line-height: 1.5;
+            color: #333;
+        }
+        .moment-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .moment-images img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            loading: lazy; /* 优化图片加载性能 */
+        }
+        .moment-footer {
+            padding: 12px 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .moment-stats {
+            display: flex;
+            gap: 24px;
+        }
+        .stat-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+        .stat-btn:hover {
+            color: #3b82f6;
+        }
+        .stat-btn.liked {
+            color: #ef4444;
+        }
+        /* 加载状态样式 */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: var(--text-secondary, #666);
+        }
+        .loading-spinner::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            margin-left: 12px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary, #666);
+            font-size: 1.1rem;
+        }
+        /* 通知样式 - 统一使用 */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .notification {
+            background: #3b82f6;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            animation: notificationSlideIn 0.3s ease-out;
+            max-width: 300px;
+            word-break: break-word;
+        }
+        .notification-success { background: #10b981; }
+        .notification-warning { background: #f59e0b; }
+        .notification-error { background: #ef4444; }
+        @keyframes notificationSlideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes notificationSlideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        .notification-close {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            opacity: 0.7;
+            padding: 4px;
+            border-radius: 4px;
+            transition: opacity 0.2s;
+            margin-left: auto;
+        }
+        .notification-close:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        /* 分类按钮样式 */
+        .category-btn {
+            padding: 8px 16px;
+            border: none;
+            background: #f3f4f6;
+            color: #666;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .category-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+        .category-btn:hover {
+            background: #e5e7eb;
+        }
+        .category-btn.active:hover {
+            background: #2563eb;
+        }
+        /* 评论弹窗基础样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        #commentModalTitle {
+            margin-top: 0;
+            font-size: 18px;
+            color: #333;
+        }
+        .comments-list {
+            margin: 20px 0;
+            gap: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        .comment-input-area {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        #commentInput {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        #commentInput:focus {
+            border-color: #3b82f6;
+        }
+        #submitComment {
+            padding: 10px 20px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        #submitComment:hover {
+            background: #2563eb;
+        }
+        /* 分类导航滚动样式 */
+        .category-nav {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            overflow-x: auto;
+        }
+        .category-scroll {
+            display: flex;
+            gap: 8px;
+            padding: 0 16px;
+            white-space: nowrap;
+        }
+        /* 头部基础样式补充 */
+        .header {
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .main-nav {
+            display: flex;
+            gap: 16px;
+        }
+        .success-link, .sky-link, .exam-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        .success-link:hover, .sky-link:hover, .exam-link:hover {
+            background: #f9fafb;
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 8px 12px;
+            gap: 8px;
+        }
+        #searchInput {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 200px;
+        }
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        .theme-toggle:hover {
+            background: #f9fafb;
+        }
+        /* 页脚样式补充 */
+        .social-footer {
+            padding: 24px 0;
+            border-top: 1px solid #f0f0f0;
+            margin-top: 32px;
+        }
+        .social-links {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f9fafb;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .social-link:hover {
+            background: #f3f4f6;
+            color: #333;
+        }
+        .copyright {
+            margin: 0;
+            color: #999;
+            font-size: 14px;
+            text-align: center;
         }
     </style>
 </head>
@@ -88,44 +478,45 @@
         <div class="container">
             <div class="header-left">
                 <h1 class="logo">狂客·银河</h1>
-                <a class="success-link" href="success.html">
-                    <span class="success-icon">
-                        <i class="fas fa-meteor"></i>
-                    </span>
-                    <span class="success-text">成功日记</span>
-                </a>
-                <a class="sky-link" href="reading.html">
-                    <span class="sky-icon">
-                        <i class="fas fa-star"></i>
-                    </span>
-                    <span class="sky-text">星空</span>
-                </a>
-                <!-- 新增：AI前沿按钮 -->
-               <a class="ai-nav-button" href="ai.html">
-                    <span class="ai-icon">
-                        <i class="fas fa-robot"></i>
-                    </span>
-                    <span class="ai-text">AI前沿</span>
-                </a>
-                <!-- 新增：考试相关按钮 -->
-                <a class="exam-link" href="exam.html">
-                    <span class="exam-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </span>
-                    <span class="exam-text">考试相关</span>
-                </a>
+                <nav class="main-nav">
+                    <a class="success-link" href="success.html">
+                        <span class="success-icon">
+                            <i class="fas fa-meteor"></i>
+                        </span>
+                        <span class="success-text">成功日记</span>
+                    </a>
+                    <a class="sky-link" href="reading.html">
+                        <span class="sky-icon">
+                            <i class="fas fa-star"></i>
+                        </span>
+                        <span class="sky-text">星空</span>
+                    </a>
+                    <a class="ai-nav-button" href="ai.html">
+                        <span class="ai-icon">
+                            <i class="fas fa-robot"></i>
+                        </span>
+                        <span class="ai-text">AI前沿</span>
+                    </a>
+                    <a class="exam-link" href="exam.html">
+                        <span class="exam-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </span>
+                        <span class="exam-text">考试相关</span>
+                    </a>
+                </nav>
             </div>
             <div class="controls">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="搜索银河中...">
+                    <input type="text" id="searchInput" placeholder="搜索银河中..." aria-label="搜索内容">
                 </div>
-                <button id="themeToggle" class="theme-toggle">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
         </div>
     </header>
+    
     <nav class="category-nav">
         <div class="container">
             <div class="category-scroll">
@@ -148,46 +539,392 @@
             </div>
         </div>
     </nav>
+    
     <main class="main-content">
         <div class="container">
-            <div id="momentsContainer" class="moments-grid"></div>
+            <div id="momentsContainer" class="moments-grid">
+                <!-- 动态加载的内容将在这里显示 -->
+                <div class="loading-spinner">正在加载内容</div>
+            </div>
         </div>
     </main>
     
-    <!-- 新增底部社交媒体区域 -->
     <footer class="social-footer">
         <div class="container">
             <div class="social-links">
-                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" 
-   target="_blank" class="social-link wechat" title="微信公众号">
-    <i class="fab fa-weixin"></i>
-</a>
-               
-                <a href="https://github.com/kuangketongxue" target="_blank" class="social-link github" title="GitHub">
+                <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxNzcyMjAzNQ==&scene=124#wechat_redirect"
+                   target="_blank" class="social-link wechat" title="微信公众号" rel="noopener noreferrer">
+                    <i class="fab fa-weixin"></i>
+                </a>
+                <a href="https://github.com/kuangketongxue" target="_blank" class="social-link github" title="GitHub" rel="noopener noreferrer">
                     <i class="fab fa-github"></i>
                 </a>
-                <a href="https://x.com/kuangketongxue" target="_blank" class="social-link x" title="X">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-    </svg>
-</a>
+                <a href="https://x.com/kuangketongxue" target="_blank" class="social-link x" title="X (前 Twitter)" rel="noopener noreferrer">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
             </div>
             <p class="copyright">© 2025 狂客·银河 版权所有</p>
         </div>
     </footer>
     
-    <div id="commentModal" class="modal">
+    <!-- 评论弹窗 -->
+    <div id="commentModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="commentModalTitle">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>评论</h2>
-            <div id="commentsList" class="comments-list"></div>
+            <span class="close" aria-label="关闭评论弹窗">&times;</span>
+            <h2 id="commentModalTitle">评论</h2>
+            <div id="commentsList" class="comments-list">
+                <!-- 评论将在这里动态加载 -->
+            </div>
             <div class="comment-input-area">
-                <input type="text" id="commentInput" placeholder="写下你的评论...">
+                <label for="commentInput" class="sr-only">输入你的评论</label>
+                <input type="text" id="commentInput" placeholder="写下你的评论..." aria-label="评论输入框">
                 <button id="submitComment">发送</button>
             </div>
         </div>
     </div>
-    <script src="data.js"></script>
+
+    <!-- 脚本加载顺序：配置→数据→工具→基础逻辑→业务脚本（关键：moment-data.js必须在核心脚本前加载） -->
+    <script src="config.js"></script>
+    <script src="success-diary-data.js"></script>
+    <script src="moment-data.js"></script> <!-- 1. 先加载朋友圈数据，暴露window.moments -->
+    <script src="utils.js"></script>
     <script src="script.js"></script>
+    
+    <!-- 朋友圈核心脚本（从window.moments获取数据，不再内置数据） -->
+    <script>
+        class SimpleMomentsApp {
+            constructor() {
+                // 从moment-data.js获取全局数据（关键：确保window.moments已存在）
+                this.moments = window.moments || []; 
+                this.currentCategory = 'all';
+                this.notificationContainer = null;
+            }
+
+            // 初始化入口：DOM加载后执行
+            init() {
+                console.log('朋友圈应用初始化...');
+                // 验证数据是否加载成功（便于调试）
+                if (this.moments.length === 0) {
+                    console.warn('警告：未加载到朋友圈数据，请检查moment-data.js文件路径和内容');
+                }
+                this.createNotificationContainer();
+                this.bindEventListeners();
+                this.renderMoments(this.moments); // 用外部数据渲染页面
+            }
+
+            // 创建通知容器（避免重复创建）
+            createNotificationContainer() {
+                this.notificationContainer = document.querySelector('.notification-container');
+                if (!this.notificationContainer) {
+                    this.notificationContainer = document.createElement('div');
+                    this.notificationContainer.className = 'notification-container';
+                    document.body.appendChild(this.notificationContainer);
+                }
+            }
+
+            // 统一绑定所有事件
+            bindEventListeners() {
+                // 分类筛选事件
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.filterByCategory(btn.dataset.category);
+                    });
+                });
+
+                // 搜索事件（实时搜索）
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        this.searchMoments(e.target.value);
+                    });
+                }
+
+                // 点赞/评论/分享事件（事件委托，优化性能）
+                const momentsContainer = document.getElementById('momentsContainer');
+                if (momentsContainer) {
+                    momentsContainer.addEventListener('click', (e) => {
+                        const likeBtn = e.target.closest('.like-btn');
+                        const commentBtn = e.target.closest('.comment-btn');
+                        const shareBtn = e.target.closest('.share-btn');
+
+                        if (likeBtn) this.handleLike(likeBtn);
+                        if (commentBtn) this.handleComment(commentBtn);
+                        if (shareBtn) this.handleShare();
+                    });
+                }
+
+                // 评论弹窗关闭事件
+                const closeModal = document.querySelector('#commentModal .close');
+                if (closeModal) {
+                    closeModal.addEventListener('click', () => {
+                        document.getElementById('commentModal').style.display = 'none';
+                    });
+                }
+
+                // 评论提交事件
+                const submitCommentBtn = document.getElementById('submitComment');
+                if (submitCommentBtn) {
+                    submitCommentBtn.addEventListener('click', () => {
+                        this.submitComment();
+                    });
+                }
+            }
+
+            // 渲染朋友圈内容（使用外部数据）
+            renderMoments(moments) {
+                const container = document.getElementById('momentsContainer');
+                if (!container) return;
+
+                // 无数据处理
+                if (!moments || moments.length === 0) {
+                    container.innerHTML = '<div class="no-results">暂无朋友圈内容</div>';
+                    return;
+                }
+
+                // 渲染卡片列表
+                container.innerHTML = '';
+                moments.forEach(moment => {
+                    const momentCard = this.createMomentCard(moment);
+                    container.appendChild(momentCard);
+                });
+            }
+
+            // 创建单条朋友圈卡片（字段与moment-data.js对应）
+            createMomentCard(moment) {
+                const card = document.createElement('div');
+                card.className = 'moment-card';
+                card.dataset.category = moment.category || '未分类';
+                card.dataset.id = moment.id || Date.now(); // 用时间戳兜底ID
+
+                // 图片列表HTML（处理无图场景）
+                const imagesHtml = moment.images && moment.images.length > 0 
+                    ? `
+                        <div class="moment-images">
+                            ${moment.images.map((img, index) => `
+                                <img src="${img}" alt="分享图片${index + 1}" loading="lazy">
+                            `).join('')}
+                        </div>
+                    ` 
+                    : '';
+
+                // 卡片HTML结构（字段与moment-data.js完全对应）
+                card.innerHTML = `
+                    <div class="moment-header">
+                        <div class="user-avatar">
+                            <img src="${moment.avatar || 'images/avatars/default.jpg'}" alt="${moment.username || '未知用户'}">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="username">${moment.username || '未知用户'}</h3>
+                            <span class="timestamp">${moment.timestamp || new Date().toLocaleString()}</span>
+                        </div>
+                        <button class="moment-menu" aria-label="更多操作">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                    <div class="moment-content">
+                        <p class="moment-text">${moment.content || '无内容'}</p>
+                        ${imagesHtml}
+                    </div>
+                    <div class="moment-footer">
+                        <div class="moment-stats">
+                            <button class="stat-btn like-btn ${moment.isLiked ? 'liked' : ''}" 
+                                    data-liked="${moment.isLiked || false}" 
+                                    data-id="${moment.id}"
+                                    aria-label="${moment.isLiked ? '取消点赞' : '点赞'}">
+                                <i class="${moment.isLiked ? 'fas' : 'far'} fa-heart"></i>
+                                <span class="like-count">${moment.likes || 0}</span>
+                            </button>
+                            <button class="stat-btn comment-btn" 
+                                    data-id="${moment.id}"
+                                    aria-label="查看评论">
+                                <i class="far fa-comment"></i>
+                                <span class="comment-count">${moment.comments || 0}</span>
+                            </button>
+                            <button class="stat-btn share-btn" aria-label="分享">
+                                <i class="fas fa-share"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                return card;
+            }
+
+            // 分类筛选逻辑
+            async filterByCategory(category) {
+                console.log('筛选分类:', category);
+                this.currentCategory = category;
+                const container = document.getElementById('momentsContainer');
+                if (!container) return;
+
+                // 更新按钮激活状态
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.category === category);
+                });
+
+                // 显示加载状态
+                container.innerHTML = '<div class="loading-spinner">正在加载内容</div>';
+
+                try {
+                    // 用外部数据筛选
+                    const filteredMoments = category === 'all' 
+                        ? this.moments 
+                        : this.moments.filter(moment => moment.category === category);
+                    this.renderMoments(filteredMoments);
+                } catch (error) {
+                    console.error('分类加载失败:', error);
+                    container.innerHTML = '<div class="no-results">加载失败，请刷新重试</div>';
+                }
+            }
+
+            // 点赞逻辑
+            handleLike(btn) {
+                const isLiked = btn.dataset.liked === 'true';
+                const heartIcon = btn.querySelector('i');
+                const countSpan = btn.querySelector('.like-count');
+                let count = parseInt(countSpan.textContent) || 0;
+
+                // 更新UI状态
+                if (isLiked) {
+                    btn.dataset.liked = 'false';
+                    heartIcon.className = 'far fa-heart';
+                    btn.classList.remove('liked');
+                    count = Math.max(0, count - 1); // 避免负数
+                    this.showNotification('取消点赞', 'success');
+                } else {
+                    btn.dataset.liked = 'true';
+                    heartIcon.className = 'fas fa-heart';
+                    btn.classList.add('liked');
+                    count++;
+                    this.showNotification('点赞成功', 'success');
+                }
+
+                countSpan.textContent = count;
+            }
+
+            // 评论逻辑（打开弹窗）
+            handleComment(btn) {
+                const momentId = btn.dataset.id;
+                const modal = document.getElementById('commentModal');
+                if (modal) {
+                    // 可扩展：根据momentId从接口加载对应评论
+                    document.getElementById('commentsList').innerHTML = '<div class="loading-spinner" style="padding: 1rem;">加载评论中...</div>';
+                    modal.style.display = 'flex';
+                    // 聚焦评论输入框
+                    const commentInput = document.getElementById('commentInput');
+                    if (commentInput) commentInput.focus();
+                }
+            }
+
+            // 提交评论（简化版）
+            submitComment() {
+                const commentInput = document.getElementById('commentInput');
+                const commentText = commentInput.value.trim();
+                if (!commentText) return;
+
+                this.showNotification('评论提交成功', 'success');
+                commentInput.value = '';
+            }
+
+            // 分享逻辑
+            handleShare() {
+                if (navigator.share) {
+                    navigator.share({
+                        title: '狂客·银河朋友圈',
+                        text: '看看我分享的内容',
+                        url: window.location.href
+                    }).catch(error => {
+                        console.error('分享失败:', error);
+                        this.fallbackShare(); // 降级为复制链接
+                    });
+                } else {
+                    this.fallbackShare();
+                }
+            }
+
+            // 分享降级方案：复制链接
+            fallbackShare() {
+                navigator.clipboard.writeText(window.location.href)
+                    .then(() => {
+                        this.showNotification('链接已复制到剪贴板', 'success');
+                    })
+                    .catch(error => {
+                        console.error('复制失败:', error);
+                        this.showNotification('复制失败，请手动复制链接', 'error');
+                    });
+            }
+
+            // 搜索逻辑（用外部数据搜索）
+            searchMoments(keyword) {
+                const trimmedKeyword = keyword.trim();
+                const filteredMoments = trimmedKeyword 
+                    ? this.moments.filter(moment => 
+                        (moment.content && moment.content.toLowerCase().includes(trimmedKeyword.toLowerCase())) ||
+                        (moment.username && moment.username.toLowerCase().includes(trimmedKeyword.toLowerCase()))
+                      )
+                    : this.moments;
+
+                this.renderMoments(filteredMoments);
+                // 同步更新分类按钮状态
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.category === 'all');
+                });
+                this.currentCategory = 'all';
+            }
+
+            // 显示通知
+            showNotification(message, type = 'success') {
+                if (!this.notificationContainer) return;
+
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.innerHTML = `
+                    ${message}
+                    <button class="notification-close" aria-label="关闭通知">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+
+                this.notificationContainer.appendChild(notification);
+
+                // 关闭按钮事件
+                const closeBtn = notification.querySelector('.notification-close');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        this.removeNotification(notification);
+                    });
+                }
+
+                // 自动关闭（3秒后）
+                setTimeout(() => {
+                    this.removeNotification(notification);
+                }, 3000);
+            }
+
+            // 移除通知（带动画）
+            removeNotification(notification) {
+                notification.style.animation = 'notificationSlideOut 0.3s ease-out';
+                notification.addEventListener('animationend', () => {
+                    notification.remove();
+                });
+            }
+        }
+
+        // 等待DOM和数据完全加载后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 确保moment-data.js加载完成后再创建实例
+            if (window.moments) {
+                window.momentsApp = new SimpleMomentsApp();
+                window.momentsApp.init();
+                console.log('朋友圈脚本加载完成');
+            } else {
+                // 数据加载失败的降级处理
+                console.error('朋友圈数据加载失败，无法初始化应用');
+                document.getElementById('momentsContainer').innerHTML = '<div class="no-results">数据加载失败，请刷新页面重试</div>';
+            }
+        });
+    </script>
 </body>
 </html>
