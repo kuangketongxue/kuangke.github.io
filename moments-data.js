@@ -267,7 +267,7 @@ const localMomentsData = [
         username: '狂客同学',
         avatar: 'images/favicon.ico',
         content: 'The journey is the reward.',
-        images: [],
+        images: [images/The process itself is the reward.],
         category: '工作相关',
         timestamp: '2天前',
         likes: 6,
