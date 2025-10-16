@@ -954,11 +954,34 @@ class MomentsPageManager {
     }
 }
 
-// ==================== 成功日记页面管理器 ====================
+// ==================== 成功日记页面管理器（适配新数据结构）====================
 class SuccessPageManager {
     static #data = [];
     static #filteredData = [];
     static #eventListeners = new Map();
+    
+    // 心情代码映射
+    static #moodMap = {
+        'hungry': '🔥 饥渴',
+        'satisfied': '😌 满足',
+        'calm': '😊 平静',
+        'happy': '😄 开心',
+        'excited': '🎉 兴奋'
+    };
+
+    // 分类映射（中英文）
+    static #categoryMap = {
+        'study': { zh: '学习', en: 'Study', icon: '📚' },
+        'work': { zh: '工作', en: 'Work', icon: '💼' },
+        'creative': { zh: '创作', en: 'Creative', icon: '🎨' },
+        'reading': { zh: '阅读', en: 'Reading', icon: '📖' },
+        'fitness': { zh: '健身', en: 'Fitness', icon: '💪' },
+        'film': { zh: '影视', en: 'Film', icon: '🎬' },
+        'music': { zh: '音乐', en: 'Music', icon: '🎵' },
+        'nature': { zh: '自然', en: 'Nature', icon: '🌿' },
+        'travel': { zh: '旅行', en: 'Travel', icon: '✈️' },
+        'finance': { zh: '理财', en: 'Finance', icon: '💰' }
+    };
 
     static async init() {
         console.log('✅ 初始化成功日记页面管理器');
@@ -970,7 +993,8 @@ class SuccessPageManager {
 
     static async #loadData() {
         try {
-            this.#data = window.successDiaryData || [];
+            // 支持多种数据源命名
+            this.#data = window.successDiaryData || window.successDiaries || [];
             console.log(`📝 加载成功日记数据：${this.#data.length} 条记录`);
             this.#filteredData = [...this.#data];
         } catch (error) {
@@ -989,26 +1013,31 @@ class SuccessPageManager {
         const tagFilterContainer = document.getElementById('diaryTagFilter');
         if (!tagFilterContainer) return;
 
-        const allTags = new Set();
+        const allCategories = new Set();
         this.#data.forEach(entry => {
-            if (entry.tags && Array.isArray(entry.tags)) {
-                entry.tags.forEach(tag => allTags.add(tag));
+            if (entry.categories && Array.isArray(entry.categories)) {
+                entry.categories.forEach(cat => allCategories.add(cat));
             }
         });
 
-        const sortedTags = Array.from(allTags).sort();
+        const sortedCategories = Array.from(allCategories).sort();
+        const currentLang = appState.currentLanguage;
         
         tagFilterContainer.innerHTML = `
             <button class="filter-chip active" data-tag="all">
                 <i class="fas fa-globe"></i>
-                全部
+                ${currentLang === 'zh' ? '全部' : 'All'}
             </button>
-            ${sortedTags.map(tag => `
-                <button class="filter-chip" data-tag="${Utils.escapeHtml(tag)}">
-                    <i class="fas fa-tag"></i>
-                    ${Utils.escapeHtml(tag)}
-                </button>
-            `).join('')}
+            ${sortedCategories.map(cat => {
+                const catInfo = this.#categoryMap[cat] || { zh: cat, en: cat, icon: '🏷️' };
+                const displayName = currentLang === 'zh' ? catInfo.zh : catInfo.en;
+                return `
+                    <button class="filter-chip" data-tag="${Utils.escapeHtml(cat)}">
+                        <span>${catInfo.icon}</span>
+                        ${Utils.escapeHtml(displayName)}
+                    </button>
+                `;
+            }).join('')}
         `;
     }
 
@@ -1018,18 +1047,20 @@ class SuccessPageManager {
 
         const allMoods = new Set();
         this.#data.forEach(entry => {
-            if (entry.mood) {
-                allMoods.add(entry.mood);
+            if (entry.moodCode) {
+                allMoods.add(entry.moodCode);
             }
         });
 
         const sortedMoods = Array.from(allMoods).sort();
+        const currentLang = appState.currentLanguage;
         
         moodSelect.innerHTML = `
-            <option value="all">全部心情</option>
-            ${sortedMoods.map(mood => `
-                <option value="${Utils.escapeHtml(mood)}">${Utils.escapeHtml(mood)}</option>
-            `).join('')}
+            <option value="all">${currentLang === 'zh' ? '全部心情' : 'All Moods'}</option>
+            ${sortedMoods.map(moodCode => {
+                const moodDisplay = this.#moodMap[moodCode] || moodCode;
+                return `<option value="${Utils.escapeHtml(moodCode)}">${Utils.escapeHtml(moodDisplay)}</option>`;
+            }).join('')}
         `;
     }
 
@@ -1210,24 +1241,35 @@ class SuccessPageManager {
 
     static #applyFilters() {
         let filtered = [...this.#data];
+        const currentLang = appState.currentLanguage;
 
-        // 搜索过滤
+        // 搜索过滤（支持中英文）
         if (appState.diarySearchKeyword) {
             const keyword = Utils.normalize(appState.diarySearchKeyword);
             filtered = filtered.filter(entry => {
-                return Utils.normalize(entry.title).includes(keyword) ||
-                       Utils.normalize(entry.content).includes(keyword) ||
-                       (entry.tags && entry.tags.some(tag => Utils.normalize(tag).includes(keyword))) ||
-                       (entry.mood && Utils.normalize(entry.mood).includes(keyword));
+                const title = entry.headline?.[currentLang] || entry.headline?.zh || '';
+                const content = entry.content?.[currentLang] || entry.content?.zh || '';
+                const highlight = entry.highlight?.[currentLang] || entry.highlight?.zh || '';
+                
+                return Utils.normalize(title).includes(keyword) ||
+                       Utils.normalize(content).includes(keyword) ||
+                       Utils.normalize(highlight).includes(keyword) ||
+                       (entry.categories && entry.categories.some(cat => {
+                           const catInfo = this.#categoryMap[cat];
+                           return catInfo && (
+                               Utils.normalize(catInfo.zh).includes(keyword) ||
+                               Utils.normalize(catInfo.en).includes(keyword)
+                           );
+                       }));
             });
         }
 
-        // 标签过滤
+        // 分类过滤
         if (appState.selectedDiaryTags.size > 0) {
             filtered = filtered.filter(entry => {
-                if (!entry.tags || !Array.isArray(entry.tags)) return false;
+                if (!entry.categories || !Array.isArray(entry.categories)) return false;
                 return Array.from(appState.selectedDiaryTags).some(tag => 
-                    entry.tags.includes(tag)
+                    entry.categories.includes(tag)
                 );
             });
         }
@@ -1235,7 +1277,7 @@ class SuccessPageManager {
         // 心情过滤
         if (appState.diaryMoodFilter !== 'all') {
             filtered = filtered.filter(entry => 
-                entry.mood === appState.diaryMoodFilter
+                entry.moodCode === appState.diaryMoodFilter
             );
         }
 
@@ -1253,9 +1295,13 @@ class SuccessPageManager {
         // 更新计数器
         if (counter) {
             const count = this.#filteredData.length;
+            const currentLang = appState.currentLanguage;
+            const countText = currentLang === 'zh' ? 
+                `共 <strong>${count}</strong> 条记录` : 
+                `Total <strong>${count}</strong> records`;
             counter.innerHTML = `
                 <i class="fas fa-chart-line"></i>
-                <span>共 <strong>${count}</strong> 条记录</span>
+                <span>${countText}</span>
             `;
         }
 
@@ -1294,8 +1340,8 @@ class SuccessPageManager {
         const sortFunctions = {
             dateDesc: (a, b) => new Date(b.date) - new Date(a.date),
             dateAsc: (a, b) => new Date(a.date) - new Date(b.date),
-            achievementDesc: (a, b) => (b.achievement || 0) - (a.achievement || 0),
-            achievementAsc: (a, b) => (a.achievement || 0) - (b.achievement || 0)
+            achievementDesc: (a, b) => (b.achievementLevel || 0) - (a.achievementLevel || 0),
+            achievementAsc: (a, b) => (a.achievementLevel || 0) - (b.achievementLevel || 0)
         };
 
         const sortFn = sortFunctions[appState.diarySortBy] || sortFunctions.dateDesc;
@@ -1303,33 +1349,67 @@ class SuccessPageManager {
     }
 
     static #renderDiaryCard(entry, index) {
-        const achievement = entry.achievement || 0;
+        const currentLang = appState.currentLanguage;
+        const achievement = entry.achievementLevel || 0;
         const achievementStars = '⭐'.repeat(Math.min(5, achievement));
         
+        // 获取对应语言的内容
+        const title = entry.headline?.[currentLang] || entry.headline?.zh || '无标题';
+        const content = entry.content?.[currentLang] || entry.content?.zh || '';
+        const highlight = entry.highlight?.[currentLang] || entry.highlight?.zh || '';
+        const moodDisplay = this.#moodMap[entry.moodCode] || entry.moodCode || '';
+        
+        // 渲染分类标签
+        const categoriesHtml = (entry.categories && entry.categories.length > 0) ? 
+            entry.categories.map(cat => {
+                const catInfo = this.#categoryMap[cat] || { zh: cat, en: cat, icon: '🏷️' };
+                const displayName = currentLang === 'zh' ? catInfo.zh : catInfo.en;
+                return `
+                    <span class="diary-tag">
+                        <span>${catInfo.icon}</span>
+                        ${Utils.escapeHtml(displayName)}
+                    </span>
+                `;
+            }).join('') : '';
+
+        // 渲染封面图
+        const coverImageHtml = entry.coverImage ? `
+            <div class="diary-cover">
+                <img src="${entry.coverImage}" alt="${Utils.escapeHtml(title)}" loading="lazy">
+            </div>
+        ` : '';
+
         return `
             <div class="timeline-item" style="animation-delay: ${index * CONFIG.TIMING.ANIMATION_DELAY}s">
                 <div class="timeline-date">${Utils.formatDate(entry.date)}</div>
                 <div class="timeline-content">
                     <div class="diary-header">
-                        <h3 class="diary-title">${Utils.escapeHtml(entry.title)}</h3>
-                        ${entry.mood ? `<span class="diary-mood">${Utils.escapeHtml(entry.mood)}</span>` : ''}
+                        <h3 class="diary-title">${Utils.escapeHtml(title)}</h3>
+                        ${moodDisplay ? `<span class="diary-mood">${Utils.escapeHtml(moodDisplay)}</span>` : ''}
                     </div>
+                    
+                    ${coverImageHtml}
+                    
                     <div class="diary-body">
-                        <p class="diary-text">${Utils.formatMultiline(entry.content)}</p>
+                        <p class="diary-text">${Utils.formatMultiline(content)}</p>
                     </div>
-                    ${entry.tags && entry.tags.length > 0 ? `
-                        <div class="diary-tags">
-                            ${entry.tags.map(tag => `
-                                <span class="diary-tag">
-                                    <i class="fas fa-tag"></i>
-                                    ${Utils.escapeHtml(tag)}
-                                </span>
-                            `).join('')}
+                    
+                    ${highlight ? `
+                        <div class="diary-highlight">
+                            <i class="fas fa-star"></i>
+                            <span>${Utils.formatMultiline(highlight)}</span>
                         </div>
                     ` : ''}
+                    
+                    ${categoriesHtml ? `
+                        <div class="diary-tags">
+                            ${categoriesHtml}
+                        </div>
+                    ` : ''}
+                    
                     ${achievement > 0 ? `
                         <div class="diary-achievement">
-                            <span class="achievement-label">成就值:</span>
+                            <span class="achievement-label">${currentLang === 'zh' ? '成就值' : 'Achievement'}:</span>
                             <span class="achievement-stars">${achievementStars}</span>
                             <span class="achievement-value">${achievement}/5</span>
                         </div>
@@ -1386,6 +1466,48 @@ class ThemeManager {
     }
 }
 
+// ==================== 语言切换管理器 ====================
+class LanguageSwitcher {
+    static init() {
+        this.#bindLanguageToggle();
+        this.#updateLanguageDisplay();
+    }
+
+    static #bindLanguageToggle() {
+        const languageToggle = document.getElementById('languageToggle');
+        if (languageToggle) {
+            languageToggle.addEventListener('click', () => this.toggle());
+        }
+    }
+
+    static toggle() {
+        appState.currentLanguage = appState.currentLanguage === 'zh' ? 'en' : 'zh';
+        appState.saveToStorage(CONFIG.STORAGE_KEYS.language, appState.currentLanguage);
+        
+        this.#updateLanguageDisplay();
+        
+        // 重新渲染成功日记页面（如果在该页面）
+        if (appState.currentPage === CONFIG.PAGE_TYPES.SUCCESS && window.SuccessPageManager) {
+            SuccessPageManager.init();
+        }
+        
+        NotificationManager.show(
+            appState.currentLanguage === 'zh' ? '已切换至中文' : 'Switched to English',
+            'success'
+        );
+    }
+
+    static #updateLanguageDisplay() {
+        const languageToggle = document.getElementById('languageToggle');
+        if (!languageToggle) return;
+        
+        const span = languageToggle.querySelector('span');
+        if (span) {
+            span.textContent = appState.currentLanguage === 'zh' ? '中 → EN' : 'EN → 中';
+        }
+    }
+}
+
 // ==================== 应用控制器 ====================
 class AppController {
     static async init() {
@@ -1411,6 +1533,7 @@ class AppController {
 
     static async #initializeServices() {
         ThemeManager.init();
+        LanguageSwitcher.init();
         NotificationManager.init();
         await this.#waitForCriticalResources();
     }
