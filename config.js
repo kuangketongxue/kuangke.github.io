@@ -1,4 +1,5 @@
 // ==================== 数据字典 & 配置 ====================
+
 /**
  * 日记标签库
  * @type {Array<{code: string, zh: string, en: string, icon: string}>}
@@ -66,6 +67,7 @@ if (typeof window !== 'undefined') {
     window.diaryTagLibrary = diaryTagLibrary;
     window.moodLibrary = moodLibrary;
     window.momentCategories = momentCategories;
+    console.log('✅ 配置模块已加载');
 }
 
 // ==================== Node.js 环境模块导出 ====================
