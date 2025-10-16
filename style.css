@@ -2211,12 +2211,41 @@ body.light-mode .circle {
   box-shadow: 0 4px 8px rgba(56, 189, 248, 0.3); /* 阴影加深 */
   background: linear-gradient(135deg, rgba(56, 189, 248, 0.95), rgba(139, 92, 246, 1)); /* 颜色稍亮 */
 }
-/* 页脚样式 */
+/* 页脚整体 */
 .page-footer {
-  text-align: center;
-  margin-top: 4rem;
-  padding: 2rem 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
+  text-align: center;       /* 文字/图标整体居中 */
+  margin-top: 4rem;         /* 与上方内容留间距 */
+  padding: 2rem 1rem;       /* 内边距 */
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* 顶部细边框 */
+  color: rgba(255, 255, 255, 0.7); /* 文字浅色调 */
+  font-size: 0.9rem;        /* 文字大小 */
+}
+
+/* 社交图标容器 */
+.social-links {
+  display: flex;            /* 图标横向排列 */
+  justify-content: center;  /* 图标居中 */
+  gap: 1.5rem;              /* 图标之间的间距 */
+  margin-bottom: 1rem;      /* 与版权文字留间距 */
+}
+
+/* 单个社交图标 */
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;              /* 图标容器大小 */
+  height: 40px;
+  border-radius: 50%;       /* 圆形容器 */
+  background: rgba(255, 255, 255, 0.1); /* 半透明背景 */
+  color: rgba(255, 255, 255, 0.8); /* 图标颜色 */
+  text-decoration: none;    /* 去掉链接下划线 */
+  transition: all 0.3s ease;/*  hover 动画过渡 */
+}
+
+/* 图标 hover 效果 */
+.social-icon:hover {
+  background: linear-gradient(135deg, #38bdf8, #8b5cf6); /* 渐变背景 */
+  color: white;             /* 图标变白 */
+  transform: translateY(-3px); /* 轻微上移 */
 }
