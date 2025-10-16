@@ -1,52 +1,4 @@
-// ==================== 成功日记专属数据模块 ====================
-
-/**
- * 日记标签库
- * @type {Array<{code: string, zh: string, en: string, icon: string}>}
- */
-const diaryTagLibrary = [
-    { code: 'reading',  zh: '📖阅读',       en: '📖Reading',   icon: '📖' },
-    { code: 'fitness',  zh: '🏃‍♀️运动',       en: '🏃‍♀️Fitness',   icon: '🏃‍♀️' },
-    { code: 'work',     zh: '💼工作',       en: '💼Work',      icon: '💼' },
-    { code: 'study',    zh: '📚学习',       en: '📚Study',     icon: '📚' },
-    { code: 'nature',   zh: '🌳自然',       en: '🌳Nature',    icon: '🌳' },
-    { code: 'creative', zh: '✍️创作',       en: '✍️Creative',  icon: '✍️' },
-    { code: 'film',     zh: '🎬追剧/电影',  en: '🎬Films',     icon: '🎬' },
-    { code: 'music',    zh: '🎶音乐',       en: '🎶Music',     icon: '🎶' },
-    { code: 'finance',  zh: '💰理财',       en: '💰Finance',   icon: '💰' },
-    { code: 'travel',   zh: '✈️旅行',       en: '✈️Travel',    icon: '✈️' }
-];
-
-/**
- * 心情库
- * @type {Object<string, {zh: string, en: string, color: string, emoji: string}>}
- */
-const moodLibrary = {
-    satisfied: {
-        zh: '✨满足',
-        en: '✨Satisfied',
-        color: '#10b981',
-        emoji: '✨'
-    },
-    calm: {
-        zh: '😌平静',
-        en: '😌Calm',
-        color: '#38bdf8',
-        emoji: '😌'
-    },
-    hungry: {
-        zh: '🍜保持饥渴感',
-        en: '🍜Stay hungry',
-        color: '#f97316',
-        emoji: '🍜'
-    },
-    happy: {
-        zh: '😊开心',
-        en: '😊Happy',
-        color: '#facc15',
-        emoji: '😊'
-    }
-};
+// ==================== 成功日记数据 ====================
 
 /**
  * 成功日记数据集
@@ -78,8 +30,7 @@ let successDiaryData = [
         coverImage: '',
         attachments: []
     },
-    
-      {
+    {
         id: 32,
         date: '2025-10-13',
         categories: ['study', 'creative'],
@@ -879,7 +830,6 @@ let successDiaryData = [
         coverImage: '',
         attachments: []
     }
-    // ... 其他成功日记数据保持不变
 ];
 
 // 深拷贝默认数据
@@ -890,6 +840,7 @@ if (typeof window !== 'undefined') {
     window.successDiaryData = successDiaryData;
     window.successDiaries = successDiaryData;
     window.successDiaryDefaults = successDiaryDefaults;
+    console.log('✅ 成功日记数据已加载');
 }
 
 // ==================== Node.js 环境模块导出 ====================
