@@ -1,8 +1,8 @@
 // ==================== 数据字典 & 配置 ====================
 /**
- * 日记标签库
- * @type {Array<{code: string, zh: string, en: string, icon: string}>}
- */
+* 日记标签库
+* @type {Array<{code: string, zh: string, en: string, icon: string}>}
+*/
 const diaryTagLibrary = [
     { code: 'reading',  zh: '📖阅读',       en: '📖Reading',   icon: '📖' },
     { code: 'fitness',  zh: '🏃‍♀️运动',       en: '🏃‍♀️Fitness',   icon: '🏃‍♀️' },
@@ -17,9 +17,9 @@ const diaryTagLibrary = [
 ];
 
 /**
- * 心情库
- * @type {Object<string, {zh: string, en: string, color: string, emoji: string}>}
- */
+* 心情库
+* @type {Object<string, {zh: string, en: string, color: string, emoji: string}>}
+*/
 const moodLibrary = {
     satisfied: {
         zh: '✨满足',
@@ -48,9 +48,9 @@ const moodLibrary = {
 };
 
 /**
- * 朋友圈分类
- * @type {Array<{code: string, zh: string, en: string}>}
- */
+* 朋友圈分类
+* @type {Array<{code: string, zh: string, en: string}>}
+*/
 const momentCategories = [
     { code: 'all',      zh: '全部',     en: 'All' },
     { code: '生活日常', zh: '生活日常', en: 'Daily Life' },
@@ -63,9 +63,9 @@ const momentCategories = [
 
 // ==================== 成功日记数据 ====================
 /**
- * 成功日记数据集
- * @type {Array<Object>}
- */
+* 成功日记数据集
+* @type {Array<Object>}
+*/
 let successDiaryData = [
      {
         id: 33,
@@ -101,7 +101,7 @@ let successDiaryData = [
             en: 'Optimization of the financial system + energy replenishment'
         },
         content: {
-            zh: '阅读10本书+。\n持续搭建个人网站,“成功日记”中英互换功能优化+英文Emoji优化+英文左对齐。\n优化原始财务系统表。\n学习8小时+。\n反刍了近500个收集的“今日有价值的互动',
+            zh: '阅读10本书+。\n持续搭建个人网站,"成功日记"中英互换功能优化+英文Emoji优化+英文左对齐。\n优化原始财务系统表。\n学习8小时+。\n反刍了近500个收集的"今日有价值的互动',
             en: 'Read 10+ books.\nContinuously building a personal website, "Success Diary" features enhanced Chinese-to-English translation functionality, optimized English emojis, and left-aligned text in English.\nOptimizing the original financial system tables.\nStudied for 8+ hours.\nAfter going over nearly 500 "interactions that were valuable today" that had been collected.'
         },
         highlight: {
@@ -151,7 +151,7 @@ let successDiaryData = [
             en: 'Getting up early and going to the library.'
         },
         content: {
-            zh: '阅读10本书+。\n持续搭建个人网站,加了“成功日记一键回到顶部的功能”。\n专注比80%。\n学习14小时+',
+            zh: '阅读10本书+。\n持续搭建个人网站,加了"成功日记一键回到顶部的功能"。\n专注比80%。\n学习14小时+',
             en: 'Read 10+ books.\nContinuously building a personal website, Added the feature of "Success Diary: One-click return to top".\nFocus level is around 80%.\nStudied for 14+ hours'
         },
         highlight: {
@@ -899,9 +899,9 @@ const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
 
 // ==================== 朋友圈数据 ====================
 /**
- * 朋友圈数据集
- * @type {Array<Object>}
- */
+* 朋友圈数据集
+* @type {Array<Object>}
+*/
 let momentsData = [
     {
         id: 22,
@@ -927,7 +927,7 @@ let momentsData = [
         id: 20,
         content: '生活标准这个东西，最好就是以年为单位去考量，且很长时间都不要发生改变，这个标准是我的被动收入——我的另一个我不用我操心的，能够过的生活。',
         value: 5,
-        category: '财务理财',
+        category: '财经理财',
         time: '2025-10-13 22:40',
         image: '',
         likes: 0,
@@ -1127,90 +1127,78 @@ let momentsData = [
 
 // ==================== 工具函数 ====================
 /**
- * 验证日记数据格式
- * @param {Object} entry - 日记条目
- * @returns {boolean} 是否验证通过
- */
-/**
- * 验证日记条目的有效性
- * @param {Object} entry - 待验证的日记条目对象
- * @param {Array} diaryTagLibrary - 有效的分类标签库（每个元素含code属性）
- * @param {Object} moodLibrary - 有效的心情代码库（键为心情代码）
- * @returns {boolean} 验证通过返回true，否则返回false
- */
+* 验证日记条目的有效性
+* @param {Object} entry - 待验证的日记条目对象
+* @param {Array} diaryTagLibrary - 有效的分类标签库（每个元素含code属性）
+* @param {Object} moodLibrary - 有效的心情代码库（键为心情代码）
+* @returns {boolean} 验证通过返回true，否则返回false
+*/
 function validateDiaryEntry(entry, diaryTagLibrary, moodLibrary) {
   let isValid = true; // 整体验证结果标记
-
   // 1. 检查必填字段
   const requiredFields = ['id', 'date', 'categories', 'headline', 'content', 'moodCode'];
   const missingFields = requiredFields.filter(field => !(field in entry));
-  
   if (missingFields.length > 0) {
-    console.error(`❌ 日记条目 ${entry.id || '未知ID'} 缺少必需字段：`, missingFields);
+    console.error('❌ 日记条目 ' + (entry.id || '未知ID') + ' 缺少必需字段：', missingFields);
     isValid = false; // 缺少必填字段时直接标记为无效
   }
-
   // 2. 验证分类（仅在存在categories字段时检查）
   if ('categories' in entry) {
     // 先检查categories是否为有效数组
     if (!Array.isArray(entry.categories)) {
-      console.warn(`⚠️ 日记条目 ${entry.id || '未知ID'} 的categories不是数组`);
+      console.warn('⚠️ 日记条目 ' + (entry.id || '未知ID') + ' 的categories不是数组');
       isValid = false;
     } else {
       // 提取有效分类的code列表
       const validCategoryCodes = diaryTagLibrary.map(tag => tag.code);
       // 筛选出无效分类
       const invalidCategories = entry.categories.filter(cat => !validCategoryCodes.includes(cat));
-      
       if (invalidCategories.length > 0) {
-        console.warn(`⚠️ 日记条目 ${entry.id || '未知ID'} 包含无效分类：`, invalidCategories);
+        console.warn('⚠️ 日记条目 ' + (entry.id || '未知ID') + ' 包含无效分类：', invalidCategories);
         isValid = false;
       }
     }
   }
-
   // 3. 验证心情代码（仅在存在moodCode字段时检查）
   if ('moodCode' in entry) {
     // 检查心情代码是否存在于心情库中（不依赖值是否为真值）
     if (!(entry.moodCode in moodLibrary)) {
-      console.warn(`⚠️ 日记条目 ${entry.id || '未知ID'} 包含无效心情代码：${entry.moodCode}`);
+      console.warn('⚠️ 日记条目 ' + (entry.id || '未知ID') + ' 包含无效心情代码：' + entry.moodCode);
       isValid = false;
     }
   }
-
   return isValid;
 }
 
-
 /**
- * 获取标签信息
- * @param {string} code - 标签代码
- * @param {string} lang - 语言('zh' | 'en')
- * @returns {Object|null} 标签信息对象
- */
+* 获取标签信息
+* @param {string} code - 标签代码
+* @param {string} lang - 语言('zh' | 'en')
+* @returns {Object|null} 标签信息对象
+*/
 function getTagInfo(code, lang = 'zh') {
     const tag = diaryTagLibrary.find(t => t.code === code);
     return tag || null;
 }
 
 /**
- * 获取标签名称(含图标)
- * @param {string} code - 标签代码
- * @param {string} lang - 语言('zh' | 'en')
- * @returns {string} 标签名称
- */
+* 获取标签名称(含图标)
+* @param {string} code - 标签代码
+* @param {string} lang - 语言('zh' | 'en')
+* @returns {string} 标签名称
+*/
 function getTagName(code, lang = 'zh') {
     const tag = diaryTagLibrary.find(t => t.code === code);
     if (!tag) return code;
-    return `${tag[lang]} ${tag.icon}`;
+    return tag[lang] + ' ' + tag.icon;
 }
 
 /**
- * 获取心情信息
- * @param {string} code - 心情代码
- * @param {string} lang - 语言('zh' | 'en')
- * @returns {Object} 心情信息对象
- */
+* 获取心情信息
+* @param {string} code - 心情代码
+* @param {string} lang - 语言('zh' | 'en')
+* @returns {Object} 心情信息对象
+*/
 function getMoodInfo(code, lang = 'zh') {
     const mood = moodLibrary[code];
     if (!mood) {
@@ -1228,19 +1216,18 @@ function getMoodInfo(code, lang = 'zh') {
 }
 
 /**
- * 格式化日期
- * @param {string} dateString - 日期字符串
- * @param {string} lang - 语言('zh' | 'en')
- * @param {Object} options - 日期格式化选项
- * @returns {string} 格式化后的日期
- */
+* 格式化日期
+* @param {string} dateString - 日期字符串
+* @param {string} lang - 语言('zh' | 'en')
+* @param {Object} options - 日期格式化选项
+* @returns {string} 格式化后的日期
+*/
 function formatDate(dateString, lang = 'zh', options = {}) {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
         console.error('❌ 无效的日期格式:', dateString);
         return dateString;
     }
-    
     const defaultOptions = {
         year: 'numeric',
         month: lang === 'en' ? 'short' : 'long',
@@ -1248,16 +1235,15 @@ function formatDate(dateString, lang = 'zh', options = {}) {
     };
     const mergedOptions = { ...defaultOptions, ...options };
     const locale = lang === 'en' ? 'en-US' : 'zh-CN';
-    
     return date.toLocaleDateString(locale, mergedOptions);
 }
 
 /**
- * 按日期排序日记
- * @param {Array} diaries - 日记数组
- * @param {boolean} descending - 是否降序排列(默认 true)
- * @returns {Array} 排序后的日记数组
- */
+* 按日期排序日记
+* @param {Array} diaries - 日记数组
+* @param {boolean} descending - 是否降序排列(默认 true)
+* @returns {Array} 排序后的日记数组
+*/
 function sortDiariesByDate(diaries, descending = true) {
     return [...diaries].sort((a, b) => {
         const dateA = new Date(a.date);
@@ -1267,32 +1253,32 @@ function sortDiariesByDate(diaries, descending = true) {
 }
 
 /**
- * 按分类筛选日记
- * @param {Array} diaries - 日记数组
- * @param {string} category - 分类代码
- * @returns {Array} 筛选后的日记数组
- */
+* 按分类筛选日记
+* @param {Array} diaries - 日记数组
+* @param {string} category - 分类代码
+* @returns {Array} 筛选后的日记数组
+*/
 function filterDiariesByCategory(diaries, category) {
     if (!category || category === 'all') return diaries;
     return diaries.filter(diary => diary.categories.includes(category));
 }
 
 /**
- * 按心情筛选日记
- * @param {Array} diaries - 日记数组
- * @param {string} moodCode - 心情代码
- * @returns {Array} 筛选后的日记数组
- */
+* 按心情筛选日记
+* @param {Array} diaries - 日记数组
+* @param {string} moodCode - 心情代码
+* @returns {Array} 筛选后的日记数组
+*/
 function filterDiariesByMood(diaries, moodCode) {
     if (!moodCode) return diaries;
     return diaries.filter(diary => diary.moodCode === moodCode);
 }
 
 /**
- * 获取日记统计信息
- * @param {Array} diaries - 日记数组
- * @returns {Object} 统计信息
- */
+* 获取日记统计信息
+* @param {Array} diaries - 日记数组
+* @returns {Object} 统计信息
+*/
 function getDiaryStats(diaries) {
     const stats = {
         total: diaries.length,
@@ -1306,20 +1292,16 @@ function getDiaryStats(diaries) {
             4: 0
         }
     };
-    
     diaries.forEach(diary => {
         // 统计分类
         diary.categories.forEach(cat => {
             stats.categories[cat] = (stats.categories[cat] || 0) + 1;
         });
-        
         // 统计心情
         stats.moods[diary.moodCode] = (stats.moods[diary.moodCode] || 0) + 1;
-        
         // 统计成就等级
         stats.achievementLevels[diary.achievementLevel]++;
     });
-    
     return stats;
 }
 
@@ -1332,10 +1314,9 @@ const validationResults = successDiaryData.map(entry => ({
     id: entry.id,
     valid: validateDiaryEntry(entry, diaryTagLibrary, moodLibrary)
 }));
-
 const invalidCount = validationResults.filter(r => !r.valid).length;
 if (invalidCount > 0) {
-    console.error(`❌ 发现 ${invalidCount} 条无效日记数据`);
+    console.error('❌ 发现 ' + invalidCount + ' 条无效日记数据');
 } else {
     console.log('✅ 所有日记数据验证通过');
 }
@@ -1355,13 +1336,11 @@ if (typeof window !== 'undefined') {
     window.diaryTagLibrary = diaryTagLibrary;
     window.moodLibrary = moodLibrary;
     window.momentCategories = momentCategories;
-    
     // 数据集
     window.successDiaryData = successDiaryData;
     window.successDiaries = successDiaryData;
     window.successDiaryDefaults = successDiaryDefaults;
     window.momentsData = momentsData;
-    
     // 工具函数
     window.getTagInfo = getTagInfo;
     window.getTagName = getTagName;
@@ -1372,7 +1351,6 @@ if (typeof window !== 'undefined') {
     window.filterDiariesByCategory = filterDiariesByCategory;
     window.filterDiariesByMood = filterDiariesByMood;
     window.getDiaryStats = getDiaryStats;
-    
     console.log('✅ 数据模块已成功加载到全局作用域');
 }
 
@@ -1383,13 +1361,11 @@ if (typeof module !== 'undefined' && module.exports) {
         diaryTagLibrary,
         moodLibrary,
         momentCategories,
-        
         // 数据集
         successDiaryData,
         successDiaries: successDiaryData,
         successDiaryDefaults,
         momentsData,
-        
         // 工具函数
         getTagInfo,
         getTagName,
