@@ -76,8 +76,8 @@ let successDiaryData = [
             en: 'Finished reading "Little Money-Making Pals 2" + High Focus Ratio'
         },
         content: {
-            zh: '阅读16本书+。\n持续搭建个人网站,暂时放弃上传到云端服务器，新开一个仓库做实验。\n早起+早到图书馆+学习12小时+。\n读完《小狗钱钱2》',
-            en: 'Read 10+ books.\nContinuously building a personal website,For the time being, abandon uploading to the cloud server and set up a new warehouse for experimentation.\nGetting up early, arriving at the library early,, and studying for 12 hours straight.\nFinished reading "Money-Making Puppy 2".'
+            zh: '阅读16本书+。\n持续搭建个人网站,暂时放弃上传到云端服务器，新开一个仓库做实验。\n早起+早到图书馆+学习12小时+。\n高强度运动。\n读完《小狗钱钱2》',
+            en: 'Read 10+ books.\nContinuously building a personal website,For the time being, abandon uploading to the cloud server and set up a new warehouse for experimentation.\nGetting up early, arriving at the library early,, and studying for 12 hours straight.\nHigh-intensity exercise.\nFinished reading "Money-Making Puppy 2".'
         },
             highlight: {
             zh: '自己生产的商品上线商店，自己生产的才放心，才能去卖——只卖自己生产的“产品”；罗永浩*宋方金',
