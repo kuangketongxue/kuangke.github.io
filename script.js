@@ -1,116 +1,39 @@
-/* ==================== CSS样式定义 ==================== */
-/* 图片放大效果 */
-.moment-images img.zoomed {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    max-width: 90vw;
-    max-height: 90vh;
-    box-shadow: 0 0 50px rgba(0,0,0,0.8);
-    cursor: zoom-out;
-}
-
-/* 点赞动画 */
-.stat-btn.liked {
-    color: #ef4444;
-    animation: likeAnimation 0.3s ease;
-}
-
-@keyframes likeAnimation {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-}
-
-/* 加载状态优化 */
-.loading-spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 3rem;
-    color: var(--text-secondary, #666);
-    font-size: 1.1rem;
-}
-
-.loading-spinner::after {
-    content: '';
-    width: 24px;
-    height: 24px;
-    margin-left: 12px;
-    border: 3px solid #e5e7eb;
-    border-top: 3px solid #3b82f6;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-// ==================== 优化版常量定义 ====================
-const CONFIG = Object.freeze({
-    STORAGE_KEYS: {
-        moments: 'momentsData',
-        diary: 'successDiaryData',
-        theme: 'theme',
-        language: 'language',
-        username: 'username'
-    },
-    PAGE_TYPES: {
-        MOMENTS: 'moments',
-        SUCCESS: 'success'
-    },
-    TIMING: {
-        DEBOUNCE_DELAY: 300,
-        ANIMATION_DELAY: 0.1,
-        NOTIFICATION_DURATION: 3000,
-        LIKE_ANIMATION: 200
-    },
-    LIMITS: {
-        MAX_COMMENT_LENGTH: 500,
-        MAX_RETRY_ATTEMPTS: 3
-    },
-    // LeanCloud配置（仅用于朋友圈点赞/评论）
-    LEANCLOUD: {
-        APP_ID: '2pmu0Y0IKEfIKXhdJHNEd1uU-gzGzoHsz',
-        APP_KEY: 'cbLreTdVyxyXuWgmfwdQxPFF',
-        SERVER_URL: 'https://2pmu0y0i.lc-cn-n1-shared.com'
-    }
+// ==================== 常量定义 ====================
+const STORAGE_KEYS = Object.freeze({
+    moments: 'momentsData',
+    diary: 'successDiaryData',
+    theme: 'theme',
+    language: 'language'
 });
+
+const PAGE_TYPES = Object.freeze({
+    MOMENTS: 'moments',
+    SUCCESS: 'success'
+});
+
+const DEBOUNCE_DELAY = 300;
+const ANIMATION_DELAY = 0.1;
+const NOTIFICATION_DURATION = 3000;
+const MAX_COMMENT_LENGTH = 500;
 
 // ==================== 全局状态管理 ====================
 class AppState {
     constructor() {
-        this._listeners = new Map();
-        this.reset();
-        this.loadInitialState();
-    }
-
-    reset() {
         this.currentCategory = 'all';
         this.currentMomentId = null;
         this.selectedDiaryTags = new Set();
         this.diaryMoodFilter = 'all';
         this.diarySortBy = 'dateDesc';
         this.diarySearchKeyword = '';
-        this.currentLanguage = 'zh';
-        this.currentPage = CONFIG.PAGE_TYPES.MOMENTS;
-        this.activeListeners = new Map();
-        this.pendingOperations = new Map();
-    }
-
-    loadInitialState() {
-        this.currentLanguage = this.loadFromStorage(CONFIG.STORAGE_KEYS.language) || 'zh';
+        this.currentLanguage = this.loadFromStorage(STORAGE_KEYS.language) || 'zh';
+        this.currentPage = PAGE_TYPES.MOMENTS;
     }
 
     loadFromStorage(key) {
         try {
             return localStorage.getItem(key);
         } catch (error) {
-            console.warn(`[AppState] Storage load failed: ${key}`, error);
+            console.warn(`Failed to load from storage: ${key}`, error);
             return null;
         }
     }
@@ -118,1475 +41,1040 @@ class AppState {
     saveToStorage(key, value) {
         try {
             localStorage.setItem(key, value);
-            return true;
         } catch (error) {
-            console.warn(`[AppState] Storage save failed: ${key}`, error);
-            return false;
+            console.warn(`Failed to save to storage: ${key}`, error);
         }
     }
 
-    on(event, callback) {
-        if (!this._listeners.has(event)) {
-            this._listeners.set(event, new Set());
-        }
-        this._listeners.get(event).add(callback);
-    }
-
-    off(event, callback) {
-        const listeners = this._listeners.get(event);
-        if (listeners) {
-            listeners.delete(callback);
-        }
-    }
-
-    emit(event, data) {
-        const listeners = this._listeners.get(event);
-        if (listeners) {
-            listeners.forEach(callback => callback(data));
-        }
-    }
-
-    setOperationLock(operationId, duration = 1000) {
-        this.pendingOperations.set(operationId, Date.now());
-        setTimeout(() => {
-            this.pendingOperations.delete(operationId);
-        }, duration);
-    }
-
-    isOperationLocked(operationId) {
-        return this.pendingOperations.has(operationId);
+    resetDiaryFilters() {
+        this.selectedDiaryTags.clear();
+        this.diaryMoodFilter = 'all';
+        this.diarySortBy = 'dateDesc';
+        this.diarySearchKeyword = '';
     }
 }
 
 const appState = new AppState();
 
-// ==================== 工具函数类 ====================
-class Utils {
-    static escapeHtml(text) {
-        if (text == null) return '';
+// ==================== 工具函数 ====================
+const Utils = {
+    escapeHtml(text) {
+        if (text === undefined || text === null) return '';
         const div = document.createElement('div');
-        div.textContent = String(text);
+        div.textContent = text;
         return div.innerHTML;
-    }
+    },
 
-    static formatMultiline(text) {
+    formatMultiline(text) {
         if (!text) return '';
         return this.escapeHtml(text).replace(/\n/g, '<br>');
-    }
+    },
 
-    static formatTime(timeStr) {
+    formatTime(timeStr) {
         const date = new Date(timeStr);
-        if (!this.isValidDate(date)) return timeStr;
+        if (Number.isNaN(date.getTime())) return timeStr;
+        
         const now = new Date();
         const diff = now - date;
-        const ranges = {
-            minute: 60 * 1000,
-            hour: 60 * 60 * 1000,
-            day: 24 * 60 * 60 * 1000
-        };
+        const oneMinute = 60 * 1000;
+        const oneHour = 60 * oneMinute;
+        const oneDay = 24 * oneHour;
 
-        if (diff < ranges.minute) return '刚刚';
-        if (diff < ranges.hour) return `${Math.floor(diff / ranges.minute)}分钟前`;
-        if (diff < ranges.day) return `${Math.floor(diff / ranges.hour)}小时前`;
-        if (diff < ranges.day * 2) return '昨天';
-        if (diff < ranges.day * 7) return `${Math.floor(diff / ranges.day)}天前`;
+        if (diff < oneMinute) return '刚刚';
+        if (diff < oneHour) return `${Math.floor(diff / oneMinute)}分钟前`;
+        if (diff < oneDay) return `${Math.floor(diff / oneHour)}小时前`;
+        if (diff < oneDay * 2) return '昨天';
+        if (diff < oneDay * 7) return `${Math.floor(diff / oneDay)}天前`;
 
-        return date.toLocaleDateString('zh-CN', {
+        return date.toLocaleString('zh-CN', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit'
         });
-    }
+    },
 
-    static formatDate(dateStr) {
+    formatDiaryDate(dateStr, lang) {
         const date = new Date(dateStr);
-        if (!this.isValidDate(date)) return dateStr;
+        if (Number.isNaN(date.getTime())) return dateStr;
         
-        return date.toLocaleDateString('zh-CN', {
+        const options = {
             year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    }
+            month: '2-digit',
+            day: '2-digit',
+            weekday: 'short'
+        };
+        
+        return date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', options);
+    },
 
-    static isValidDate(date) {
-        return date instanceof Date && !isNaN(date.getTime());
-    }
+    normalize(text) {
+        return (text || '').toString().toLowerCase().trim();
+    },
 
-    static normalize(text) {
-        return String(text ?? '').toLowerCase().trim();
-    }
-
-    static debounce(func, wait = CONFIG.TIMING.DEBOUNCE_DELAY, immediate = false) {
+    debounce(func, wait = DEBOUNCE_DELAY) {
         let timeout;
         return function executedFunction(...args) {
             const later = () => {
                 clearTimeout(timeout);
-                if (!immediate) func.apply(this, args);
+                func(...args);
             };
-            const callNow = immediate && !timeout;
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
-            if (callNow) func.apply(this, args);
+        };
+    },
+
+    throttle(func, limit) {
+        let inThrottle;
+        return function(...args) {
+            if (!inThrottle) {
+                func.apply(this, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
         };
     }
-
-    static generateId(prefix = '') {
-        return `${prefix}${Date.now()}${Math.random().toString(36).substr(2, 9)}`;
-    }
-
-    static generateGuestUsername() {
-        return `游客${Math.floor(Math.random() * 10000)}`;
-    }
-
-    static safeJsonParse(str, fallback = null) {
-        try {
-            return JSON.parse(str);
-        } catch {
-            return fallback;
-        }
-    }
-}
+};
 
 // ==================== 通知管理器 ====================
 class NotificationManager {
-    static #container = null;
-    static #notifications = new Set();
-
-    static init() {
-        this.#createContainer();
-    }
-
-    static #createContainer() {
-        if (this.#container) return;
-        this.#container = document.createElement('div');
-        this.#container.className = 'notification-container';
-        document.body.appendChild(this.#container);
-    }
-
-    static show(message, type = 'info', duration = CONFIG.TIMING.NOTIFICATION_DURATION) {
-        if (!this.#container) this.init();
-        const notification = this.#createNotificationElement(message, type);
-        this.#container.appendChild(notification);
-        this.#notifications.add(notification);
-
-        const removeTimer = setTimeout(() => {
-            this.remove(notification);
-        }, duration);
-
-        notification.addEventListener('click', () => {
-            clearTimeout(removeTimer);
-            this.remove(notification);
-        });
-
-        return notification;
-    }
-
-    static #createNotificationElement(message, type) {
+    static show(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        
         const iconMap = {
             success: 'check-circle',
-            warning: 'exclamation-triangle',
+            warning: 'exclamation-circle',
             error: 'times-circle',
             info: 'info-circle'
         };
+        
+        const colorMap = {
+            success: '#10b981',
+            warning: '#f59e0b',
+            error: '#ef4444',
+            info: '#3b82f6'
+        };
 
-        const icon = iconMap[type] || 'info-circle';
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
         notification.innerHTML = `
-            <i class="fas fa-${icon}"></i>
+            <i class="fas fa-${iconMap[type]}"></i>
             <span>${Utils.escapeHtml(message)}</span>
-            <button class="notification-close" aria-label="关闭">
-                <i class="fas fa-times"></i>
-            </button>
         `;
 
-        const closeBtn = notification.querySelector('.notification-close');
-        closeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.remove(notification);
+        Object.assign(notification.style, {
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            padding: '1rem 1.5rem',
+            background: colorMap[type],
+            color: 'white',
+            borderRadius: '12px',
+            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+            zIndex: '10000',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            animation: 'slideInRight 0.3s ease-out',
+            fontSize: '0.95rem'
         });
 
-        return notification;
-    }
+        document.body.appendChild(notification);
 
-    static remove(notification) {
-        if (!this.#notifications.has(notification)) return;
-        notification.style.animation = 'notificationSlideOut 0.3s ease-out';
         setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-            this.#notifications.delete(notification);
-        }, 300);
-    }
-
-    static clearAll() {
-        this.#notifications.forEach(notification => this.remove(notification));
+            notification.style.animation = 'slideOutRight 0.3s ease-out';
+            setTimeout(() => notification.remove(), 300);
+        }, NOTIFICATION_DURATION);
     }
 }
 
 // ==================== 语言管理器 ====================
 class LanguageManager {
-    static #translations = {
+    static translations = {
         zh: {
             successTitle: '成功日记时间轴',
+            successSubtitle: '当你写成功日记的时候，你会对自己，对世界，还有对成功的规律作更深入的思考...',
             searchPlaceholder: '搜索标题、标签、心情...',
-            noResults: '暂无内容',
-            timeJustNow: '刚刚',
-            timeMinutesAgo: (data) => `${data.minutes}分钟前`,
-            timeHoursAgo: (data) => `${data.hours}小时前`,
-            timeYesterday: '昨天',
-            timeDaysAgo: (data) => `${data.days}天前`,
-            loadingComments: '加载评论中...',
-            loadingData: '加载中...',
+            moodAll: '全部心情',
+            sortLabel: '排序',
+            sortDateDesc: '日期：最新优先',
+            sortDateAsc: '日期：最旧优先',
+            sortAchievementDesc: '成就值：最高优先',
+            sortAchievementAsc: '成就值：最低优先',
+            moodLabel: '心情',
+            tagLabel: '分类标签',
+            resetFilters: '重置筛选',
+            timelineEmpty: '暂无符合条件的成功日记',
+            timelineTags: '标签',
+            timelineMood: '心情',
+            timelineAchievement: '成就值',
+            timelineNotes: '意外收获',
+            attachments: '附件',
+            entryCount: (count) => `共 ${count} 条记录`,
             commentPlaceholder: '说点什么...',
             commentSubmit: '发表',
             commentEmpty: '暂无评论，快来抢沙发吧！',
-            likeSuccess: '点赞成功！',
-            unlikeSuccess: '已取消点赞',
-            operationFailed: '操作失败，请重试',
-            pageInitFailed: '页面初始化失败，请刷新重试'
+            noResults: '暂无内容'
+        },
+        en: {
+            successTitle: 'Success Diary Timeline',
+            successSubtitle: 'When you write a success journal, you will reflect more deeply...',
+            searchPlaceholder: 'Search title, tags, moods...',
+            moodAll: 'All moods',
+            sortLabel: 'Sort',
+            sortDateDesc: 'Date: newest first',
+            sortDateAsc: 'Date: oldest first',
+            sortAchievementDesc: 'Achievement: highest first',
+            sortAchievementAsc: 'Achievement: lowest first',
+            moodLabel: 'Mood',
+            tagLabel: 'Tags',
+            resetFilters: 'Reset filters',
+            timelineEmpty: 'No diary entries match the filters yet.',
+            timelineTags: 'Tags',
+            timelineMood: 'Mood',
+            timelineAchievement: 'Achievement',
+            timelineNotes: 'serendipity',
+            attachments: 'Attachments',
+            entryCount: (count) => `${count} entries`,
+            commentPlaceholder: 'Write a comment...',
+            commentSubmit: 'Post',
+            commentEmpty: 'No comments yet. Be the first!',
+            noResults: 'No content available'
         }
     };
 
-    static t(key, data = {}) {
-        const langPack = this.#translations[appState.currentLanguage] || this.#translations.zh;
-        let value = langPack[key] ?? key;
-        if (typeof value === 'function') {
-            return value(data);
-        }
-        return value;
-    }
-}
-
-// ==================== LeanCloud处理器（仅用于朋友圈） ====================
-class LeanCloudHandler {
-    constructor() {
-        this.initialized = false;
-        this.useLocalStorage = false;
-        this.#init();
+    static t(key) {
+        const langPack = this.translations[appState.currentLanguage] || this.translations.zh;
+        const fallbackPack = this.translations.zh;
+        const value = langPack[key] !== undefined ? langPack[key] : fallbackPack[key];
+        return value !== undefined ? value : key;
     }
 
-    #init() {
-        console.log('[LeanCloudHandler] 初始化（用于朋友圈点赞/评论）');
+    static toggle() {
+        appState.currentLanguage = appState.currentLanguage === 'zh' ? 'en' : 'zh';
+        appState.saveToStorage(STORAGE_KEYS.language, appState.currentLanguage);
+        this.updateLanguageToggleButton();
         
-        if (typeof AV === 'undefined') {
-            console.warn('LeanCloud SDK 未加载，将降级为本地存储');
-            this.useLocalStorage = true;
-            return;
-        }
-
-        try {
-            AV.init({
-                appId: CONFIG.LEANCLOUD.APP_ID,
-                appKey: CONFIG.LEANCLOUD.APP_KEY,
-                serverURL: CONFIG.LEANCLOUD.SERVER_URL
-            });
-            
-            this.initialized = true;
-            this.useLocalStorage = false;
-            console.log('[LeanCloudHandler] LeanCloud初始化完成');
-        } catch (error) {
-            console.error('LeanCloud 初始化失败，降级为本地存储:', error);
-            this.useLocalStorage = true;
+        if (appState.currentPage === PAGE_TYPES.SUCCESS) {
+            SuccessPageManager.updatePage();
         }
     }
 
-    async getLikes(momentId) {
-        if (this.useLocalStorage) {
-            return this.#getLocalLikes(momentId);
-        }
-
-        try {
-            const query = new AV.Query('Likes');
-            query.equalTo('momentId', momentId);
-            const result = await query.first();
-            return result ? result.get('count') : 0;
-        } catch (error) {
-            console.error('云端获取点赞数失败，降级本地:', error);
-            return this.#getLocalLikes(momentId);
-        }
-    }
-
-    async addLike(momentId) {
-        if (this.useLocalStorage) {
-            return this.#handleLocalLike(momentId, 1);
-        }
-
-        try {
-            const query = new AV.Query('Likes');
-            query.equalTo('momentId', momentId);
-            let likeObj = await query.first();
-
-            if (likeObj) {
-                likeObj.increment('count', 1);
-                await likeObj.save();
-            } else {
-                const Likes = AV.Object.extend('Likes');
-                likeObj = new Likes();
-                likeObj.set('momentId', momentId);
-                likeObj.set('count', 1);
-                await likeObj.save();
-            }
-
-            return likeObj.get('count');
-        } catch (error) {
-            console.error('云端点赞失败，降级本地:', error);
-            return this.#handleLocalLike(momentId, 1);
-        }
-    }
-
-    async removeLike(momentId) {
-        if (this.useLocalStorage) {
-            return this.#handleLocalLike(momentId, -1);
-        }
-
-        try {
-            const query = new AV.Query('Likes');
-            query.equalTo('momentId', momentId);
-            const likeObj = await query.first();
-
-            if (likeObj) {
-                const currentCount = likeObj.get('count');
-                if (currentCount > 0) {
-                    likeObj.increment('count', -1);
-                    await likeObj.save();
-                    return likeObj.get('count');
-                }
-            }
-            return 0;
-        } catch (error) {
-            console.error('云端取消点赞失败，降级本地:', error);
-            return this.#handleLocalLike(momentId, -1);
-        }
-    }
-
-    async getComments(momentId) {
-        if (this.useLocalStorage) {
-            return this.#getLocalComments(momentId);
-        }
-
-        try {
-            const query = new AV.Query('Comments');
-            query.equalTo('momentId', momentId);
-            query.descending('createdAt');
-            const results = await query.find();
-
-            return results.map(comment => ({
-                id: comment.id,
-                text: comment.get('text'),
-                author: comment.get('author'),
-                timestamp: comment.get('createdAt').getTime()
-            }));
-        } catch (error) {
-            console.error('云端获取评论失败，降级本地:', error);
-            return this.#getLocalComments(momentId);
-        }
-    }
-
-    async addComment(momentId, commentText, author) {
-        if (this.useLocalStorage) {
-            return this.#handleLocalComment(momentId, commentText, author);
-        }
-
-        try {
-            const Comment = AV.Object.extend('Comments');
-            const comment = new Comment();
-            comment.set('momentId', momentId);
-            comment.set('text', commentText);
-            comment.set('author', author);
-            await comment.save();
-
-            return {
-                id: comment.id,
-                text: commentText,
-                author: author,
-                timestamp: comment.get('createdAt').getTime()
-            };
-        } catch (error) {
-            console.error('云端添加评论失败，降级本地:', error);
-            return this.#handleLocalComment(momentId, commentText, author);
-        }
-    }
-
-    #getLocalLikes(momentId) {
-        return parseInt(localStorage.getItem(`likes_${momentId}`)) || 0;
-    }
-
-    #handleLocalLike(momentId, delta) {
-        const current = this.#getLocalLikes(momentId);
-        const newLikes = Math.max(0, current + delta);
-        localStorage.setItem(`likes_${momentId}`, newLikes.toString());
-        return newLikes;
-    }
-
-    #getLocalComments(momentId) {
-        const stored = localStorage.getItem(`comments_${momentId}`);
-        return Utils.safeJsonParse(stored, []);
-    }
-
-    #handleLocalComment(momentId, commentText, author) {
-        const comments = this.#getLocalComments(momentId);
-        const comment = {
-            id: Utils.generateId('comment_'),
-            text: commentText,
-            timestamp: Date.now(),
-            author: author
-        };
-        
-        comments.unshift(comment);
-        localStorage.setItem(`comments_${momentId}`, JSON.stringify(comments));
-        return comment;
-    }
-}
-
-if (typeof window.cloudHandler === 'undefined') {
-    window.cloudHandler = new LeanCloudHandler();
-}
-
-// ==================== 朋友圈页面管理器 ====================
-class MomentsPageManager {
-    static #data = [];
-    static #eventListeners = new Map();
-    static #likeProcessing = new Set();
-
-    static async init() {
-        await this.#loadData();
-        this.#bindEvents();
-        await this.render();
-    }
-
-    static async #loadData() {
-        try {
-            const savedData = this.#loadFromStorage();
-            const defaultData = window.momentsData || [];
-            
-            this.#data = this.#mergeData(savedData, defaultData);
-            this.#ensureDataIds();
-            this.#saveData();
-        } catch (error) {
-            console.error('加载朋友圈数据失败:', error);
-            this.#data = window.momentsData || [];
-        }
-    }
-
-    static #loadFromStorage() {
-        try {
-            const saved = appState.loadFromStorage(CONFIG.STORAGE_KEYS.moments);
-            return saved ? JSON.parse(saved) : null;
-        } catch {
-            return null;
-        }
-    }
-
-    static #mergeData(saved, defaults) {
-        const allIds = new Set();
-        const merged = [];
-
-        [saved, defaults].forEach(source => {
-            if (!source) return;
-            source.forEach(item => {
-                if (item.id && !allIds.has(item.id)) {
-                    allIds.add(item.id);
-                    merged.push(item);
-                }
-            });
-        });
-
-        return merged;
-    }
-
-    static #ensureDataIds() {
-        this.#data = this.#data.map(m => ({
-            ...m,
-            id: m.id || Utils.generateId('moment_')
-        }));
-    }
-
-    static #saveData() {
-        try {
-            appState.saveToStorage(CONFIG.STORAGE_KEYS.moments, JSON.stringify(this.#data));
-        } catch (error) {
-            console.error('保存朋友圈数据失败:', error);
-        }
-    }
-
-    static #bindEvents() {
-        this.#clearEventListeners();
-        this.#bindSearch();
-        this.#bindCategories();
-        this.#initCommentModal();
-    }
-
-    static #clearEventListeners() {
-        this.#eventListeners.forEach((handler, element) => {
-            element.removeEventListener('click', handler);
-        });
-        this.#eventListeners.clear();
-    }
-
-    static #bindSearch() {
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            const handler = Utils.debounce((e) => {
-                this.#handleSearch(e.target.value);
-            });
-            
-            searchInput.addEventListener('input', handler);
-            this.#eventListeners.set(searchInput, handler);
-        }
-    }
-
-    static #handleSearch(query) {
-        const normalizedQuery = Utils.normalize(query);
-        if (!normalizedQuery) {
-            this.render();
-            return;
-        }
-
-        const filtered = this.#data.filter(moment => {
-            return Utils.normalize(moment.content).includes(normalizedQuery) ||
-                   Utils.normalize(moment.username).includes(normalizedQuery) ||
-                   (moment.category && Utils.normalize(moment.category).includes(normalizedQuery));
-        });
-
-        this.render(filtered);
-    }
-
-    static #bindCategories() {
-        const categoryButtons = document.querySelectorAll('.category-btn');
-        categoryButtons.forEach(button => {
-            const handler = () => {
-                this.#handleCategoryChange(button);
-            };
-            
-            button.addEventListener('click', handler);
-            this.#eventListeners.set(button, handler);
-        });
-    }
-
-    static #handleCategoryChange(button) {
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        button.classList.add('active');
-        appState.currentCategory = button.dataset.category;
-        this.render();
-    }
-
-    static #initCommentModal() {
-        const modal = document.getElementById('commentModal');
-        if (!modal) return;
-
-        const closeBtn = modal.querySelector('.close');
-        const submitBtn = document.getElementById('submitComment');
-        const commentInput = document.getElementById('commentInput');
-
-        if (closeBtn) {
-            const handler = () => this.#closeCommentModal();
-            closeBtn.addEventListener('click', handler);
-            this.#eventListeners.set(closeBtn, handler);
-        }
-
-        if (submitBtn) {
-            const handler = () => this.#submitComment();
-            submitBtn.addEventListener('click', handler);
-            this.#eventListeners.set(submitBtn, handler);
-        }
-
-        if (commentInput) {
-            const handler = (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    this.#submitComment();
-                }
-            };
-            
-            commentInput.addEventListener('keypress', handler);
-            this.#eventListeners.set(commentInput, handler);
-        }
-
-        const modalHandler = (e) => {
-            if (e.target === modal) {
-                this.#closeCommentModal();
-            }
-        };
-        
-        modal.addEventListener('click', modalHandler);
-        this.#eventListeners.set(modal, modalHandler);
-    }
-
-    static async render(filteredData = null) {
-        const container = document.getElementById('momentsContainer');
-        if (!container) return;
-
-        container.innerHTML = '<div class="loading-spinner">加载中...</div>';
-
-        const dataToRender = filteredData || this.#data;
-        const filtered = this.#filterByCategory(dataToRender);
-        const sorted = this.#sortByDate(filtered);
-
-        if (sorted.length === 0) {
-            container.innerHTML = '<div class="no-results">暂无内容</div>';
-            return;
-        }
-
-        const fragment = document.createDocumentFragment();
-        const tempContainer = document.createElement('div');
-
-        for (let i = 0; i < sorted.length; i++) {
-            const moment = sorted[i];
-            const likes = await window.cloudHandler.getLikes(moment.id);
-            const comments = await window.cloudHandler.getComments(moment.id);
-
-            tempContainer.innerHTML = this.#renderMomentCard(moment, i, likes, comments.length);
-            
-            if (tempContainer.firstElementChild) {
-                fragment.appendChild(tempContainer.firstElementChild);
-            }
-        }
-
-        container.innerHTML = '';
-        container.appendChild(fragment);
-
-        sorted.forEach(moment => this.#setupRealtimeListeners(moment.id));
-    }
-
-    static #filterByCategory(data) {
-        return appState.currentCategory === 'all' ?
-            data : data.filter(m => m.category === appState.currentCategory);
-    }
-
-    static #sortByDate(data) {
-        return [...data].sort((a, b) => new Date(b.time) - new Date(a.time));
-    }
-
-    static #renderMomentCard(moment, index, likes, commentCount) {
-        return `
-            <div class="moment-card" data-category="${moment.category || 'all'}" style="animation-delay: ${index * CONFIG.TIMING.ANIMATION_DELAY}s">
-                <div class="moment-header">
-                    <img src="${moment.avatar || 'https://picsum.photos/seed/default/100/100.jpg'}" alt="${moment.username}" class="avatar">
-                    <div class="moment-info">
-                        <div class="username">${Utils.escapeHtml(moment.username)}</div>
-                        <div class="time">${Utils.formatTime(moment.time)}</div>
-                    </div>
-                </div>
-                <div class="moment-content">
-                    <p>${Utils.formatMultiline(moment.content)}</p>
-                </div>
-                ${moment.images && moment.images.length > 0 ? `
-                    <div class="moment-images">
-                        ${moment.images.map(img => `
-                            <img src="${img}" alt="朋友圈图片" loading="lazy">
-                        `).join('')}
-                    </div>
-                ` : ''}
-                <div class="moment-actions">
-                    <button class="like-btn" data-like-id="${moment.id}">
-                        <i class="fas fa-heart"></i>
-                        <span>${likes}</span>
-                    </button>
-                    <button class="comment-btn" data-comment-id="${moment.id}">
-                        <i class="fas fa-comment"></i>
-                        <span>${commentCount}</span>
-                    </button>
-                </div>
-            </div>
-        `;
-    }
-
-    static #setupRealtimeListeners(momentId) {
-        const likeBtn = document.querySelector(`button[data-like-id="${momentId}"]`);
-        if (likeBtn) {
-            const handler = () => this.handleLike(momentId);
-            likeBtn.addEventListener('click', handler);
-            this.#eventListeners.set(likeBtn, handler);
-        }
-
-        const commentBtn = document.querySelector(`button[data-comment-id="${momentId}"]`);
-        if (commentBtn) {
-            const handler = () => this.#openCommentModal(momentId);
-            commentBtn.addEventListener('click', handler);
-            this.#eventListeners.set(commentBtn, handler);
-        }
-    }
-
-    static async handleLike(momentId) {
-        if (this.#likeProcessing.has(momentId)) return;
-        
-        this.#likeProcessing.add(momentId);
-        const likeBtn = document.querySelector(`button[data-like-id="${momentId}"]`);
-        if (likeBtn) likeBtn.disabled = true;
-
-        try {
-            const userLikeKey = `user_liked_${momentId}`;
-            const hasUserLiked = localStorage.getItem(userLikeKey) === 'true';
-
-            if (hasUserLiked) {
-                const newLikes = await window.cloudHandler.removeLike(momentId);
-                localStorage.removeItem(userLikeKey);
-                NotificationManager.show('已取消点赞', 'info');
-                
-                const likeBtnSpan = likeBtn.querySelector('span');
-                if (likeBtnSpan) likeBtnSpan.textContent = newLikes;
-            } else {
-                const newLikes = await window.cloudHandler.addLike(momentId);
-                localStorage.setItem(userLikeKey, 'true');
-                this.#animateLikeButton(likeBtn);
-                NotificationManager.show('点赞成功！', 'success');
-                
-                const likeBtnSpan = likeBtn.querySelector('span');
-                if (likeBtnSpan) likeBtnSpan.textContent = newLikes;
-            }
-        } catch (error) {
-            console.error('点赞操作失败:', error);
-            NotificationManager.show('操作失败，请重试', 'error');
-        } finally {
-            this.#likeProcessing.delete(momentId);
-            if (likeBtn) likeBtn.disabled = false;
-        }
-    }
-
-    static #animateLikeButton(button) {
+    static updateLanguageToggleButton() {
+        const button = document.getElementById('languageToggle');
         if (!button) return;
-        button.style.transform = 'scale(1.2)';
-        setTimeout(() => {
-            button.style.transform = 'scale(1)';
-        }, CONFIG.TIMING.LIKE_ANIMATION);
-    }
-
-    static #openCommentModal(momentId) {
-        appState.currentMomentId = momentId;
-        const modal = document.getElementById('commentModal');
-        if (modal) {
-            modal.style.display = 'block';
-            this.#loadComments(momentId);
-        }
-    }
-
-    static #closeCommentModal() {
-        const modal = document.getElementById('commentModal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
-        appState.currentMomentId = null;
-        const input = document.getElementById('commentInput');
-        if (input) input.value = '';
-    }
-
-    static async #loadComments(momentId) {
-        const commentsList = document.getElementById('commentsList');
-        if (!commentsList) return;
-
-        commentsList.innerHTML = '<div class="loading-spinner">加载评论中...</div>';
-
-        try {
-            const comments = await window.cloudHandler.getComments(momentId);
-            
-            if (comments.length === 0) {
-                commentsList.innerHTML = '<div class="comment-empty">暂无评论，快来抢沙发吧！</div>';
-            } else {
-                commentsList.innerHTML = comments.map(comment => `
-                    <div class="comment-item">
-                        <div class="comment-author">${Utils.escapeHtml(comment.author)}</div>
-                        <div class="comment-text">${Utils.escapeHtml(comment.text)}</div>
-                        <div class="comment-time">${Utils.formatTime(comment.timestamp)}</div>
-                    </div>
-                `).join('');
-            }
-        } catch (error) {
-            console.error('加载评论失败:', error);
-            commentsList.innerHTML = '<div class="comment-error">加载评论失败</div>';
-        }
-    }
-
-    static async #submitComment() {
-        const input = document.getElementById('commentInput');
-        if (!input) return;
-
-        const text = input.value.trim();
-        if (!text) {
-            NotificationManager.show('请输入评论内容', 'warning');
-            return;
-        }
-
-        if (text.length > CONFIG.LIMITS.MAX_COMMENT_LENGTH) {
-            NotificationManager.show('评论内容不能超过500字', 'warning');
-            return;
-        }
-
-        if (!appState.currentMomentId) return;
-
-        const submitBtn = document.getElementById('submitComment');
-        if (!submitBtn) return;
-
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = '发送中...';
-        submitBtn.disabled = true;
-
-        try {
-            const username = appState.loadFromStorage(CONFIG.STORAGE_KEYS.username) || Utils.generateGuestUsername();
-            
-            await window.cloudHandler.addComment(
-                appState.currentMomentId,
-                text,
-                username
-            );
-
-            input.value = '';
-            await this.#loadComments(appState.currentMomentId);
-            
-            const comments = await window.cloudHandler.getComments(appState.currentMomentId);
-            const commentBtn = document.querySelector(`button[data-comment-id="${appState.currentMomentId}"] span`);
-            if (commentBtn) commentBtn.textContent = comments.length;
-            
-            NotificationManager.show('评论发表成功！', 'success');
-        } catch (error) {
-            console.error('评论发表失败:', error);
-            NotificationManager.show('评论失败，请重试', 'error');
-        } finally {
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-        }
-    }
-}
-
-// ==================== 成功日记页面管理器（适配新数据结构）====================
-class SuccessPageManager {
-    static #data = [];
-    static #filteredData = [];
-    static #eventListeners = new Map();
-    
-    // 心情代码映射
-    static #moodMap = {
-        'hungry': '🔥 饥渴',
-        'satisfied': '😌 满足',
-        'calm': '😊 平静',
-        'happy': '😄 开心',
-        'excited': '🎉 兴奋'
-    };
-
-    // 分类映射（中英文）
-    static #categoryMap = {
-        'study': { zh: '学习', en: 'Study', icon: '📚' },
-        'work': { zh: '工作', en: 'Work', icon: '💼' },
-        'creative': { zh: '创作', en: 'Creative', icon: '🎨' },
-        'reading': { zh: '阅读', en: 'Reading', icon: '📖' },
-        'fitness': { zh: '健身', en: 'Fitness', icon: '💪' },
-        'film': { zh: '影视', en: 'Film', icon: '🎬' },
-        'music': { zh: '音乐', en: 'Music', icon: '🎵' },
-        'nature': { zh: '自然', en: 'Nature', icon: '🌿' },
-        'travel': { zh: '旅行', en: 'Travel', icon: '✈️' },
-        'finance': { zh: '理财', en: 'Finance', icon: '💰' }
-    };
-
-    static async init() {
-        console.log('✅ 初始化成功日记页面管理器');
-        await this.#loadData();
-        this.#initFilters();
-        this.#bindEvents();
-        this.render();
-    }
-
-    static async #loadData() {
-        try {
-            // 支持多种数据源命名
-            this.#data = window.successDiaryData || window.successDiaries || [];
-            console.log(`📝 加载成功日记数据：${this.#data.length} 条记录`);
-            this.#filteredData = [...this.#data];
-        } catch (error) {
-            console.error('加载成功日记数据失败:', error);
-            this.#data = [];
-            this.#filteredData = [];
-        }
-    }
-
-    static #initFilters() {
-        this.#initTagFilter();
-        this.#initMoodFilter();
-    }
-
-    static #initTagFilter() {
-        const tagFilterContainer = document.getElementById('diaryTagFilter');
-        if (!tagFilterContainer) return;
-
-        const allCategories = new Set();
-        this.#data.forEach(entry => {
-            if (entry.categories && Array.isArray(entry.categories)) {
-                entry.categories.forEach(cat => allCategories.add(cat));
-            }
-        });
-
-        const sortedCategories = Array.from(allCategories).sort();
-        const currentLang = appState.currentLanguage;
         
-        tagFilterContainer.innerHTML = `
-            <button class="filter-chip active" data-tag="all">
-                <i class="fas fa-globe"></i>
-                ${currentLang === 'zh' ? '全部' : 'All'}
-            </button>
-            ${sortedCategories.map(cat => {
-                const catInfo = this.#categoryMap[cat] || { zh: cat, en: cat, icon: '🏷️' };
-                const displayName = currentLang === 'zh' ? catInfo.zh : catInfo.en;
-                return `
-                    <button class="filter-chip" data-tag="${Utils.escapeHtml(cat)}">
-                        <span>${catInfo.icon}</span>
-                        ${Utils.escapeHtml(displayName)}
-                    </button>
-                `;
-            }).join('')}
-        `;
+        const icon = button.querySelector('i');
+        const span = button.querySelector('span');
+        
+        if (icon) icon.className = 'fas fa-language';
+        if (span) span.textContent = appState.currentLanguage === 'zh' ? '中 → EN' : 'EN → 中';
     }
 
-    static #initMoodFilter() {
-        const moodSelect = document.getElementById('diaryMoodSelect');
-        if (!moodSelect) return;
-
-        const allMoods = new Set();
-        this.#data.forEach(entry => {
-            if (entry.moodCode) {
-                allMoods.add(entry.moodCode);
+    static updatePageTexts() {
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.dataset.i18n;
+            const value = this.t(key);
+            if (typeof value === 'string') {
+                element.textContent = value;
             }
         });
 
-        const sortedMoods = Array.from(allMoods).sort();
-        const currentLang = appState.currentLanguage;
-        
-        moodSelect.innerHTML = `
-            <option value="all">${currentLang === 'zh' ? '全部心情' : 'All Moods'}</option>
-            ${sortedMoods.map(moodCode => {
-                const moodDisplay = this.#moodMap[moodCode] || moodCode;
-                return `<option value="${Utils.escapeHtml(moodCode)}">${Utils.escapeHtml(moodDisplay)}</option>`;
-            }).join('')}
-        `;
-    }
-
-    static #bindEvents() {
-        this.#clearEventListeners();
-        this.#bindSearch();
-        this.#bindTagFilter();
-        this.#bindMoodFilter();
-        this.#bindSortFilter();
-        this.#bindResetButton();
-        this.#bindViewToggle();
-    }
-
-    static #clearEventListeners() {
-        this.#eventListeners.forEach((handler, element) => {
-            const eventType = handler.eventType || 'click';
-            element.removeEventListener(eventType, handler);
-        });
-        this.#eventListeners.clear();
-    }
-
-    static #bindSearch() {
         const searchInput = document.getElementById('diarySearchInput');
-        const clearBtn = document.getElementById('searchClear');
-        
         if (searchInput) {
-            const handler = Utils.debounce((e) => {
-                appState.diarySearchKeyword = e.target.value;
-                if (clearBtn) {
-                    clearBtn.style.display = e.target.value ? 'block' : 'none';
-                }
-                this.#applyFilters();
-            });
-            handler.eventType = 'input';
-            
-            searchInput.addEventListener('input', handler);
-            this.#eventListeners.set(searchInput, handler);
+            searchInput.placeholder = this.t('searchPlaceholder');
         }
-
-        if (clearBtn) {
-            const handler = () => {
-                if (searchInput) {
-                    searchInput.value = '';
-                    appState.diarySearchKeyword = '';
-                    clearBtn.style.display = 'none';
-                    this.#applyFilters();
-                }
-            };
-            
-            clearBtn.addEventListener('click', handler);
-            this.#eventListeners.set(clearBtn, handler);
-        }
-    }
-
-    static #bindTagFilter() {
-        const tagButtons = document.querySelectorAll('#diaryTagFilter .filter-chip');
-        
-        tagButtons.forEach(button => {
-            const handler = () => {
-                const tag = button.dataset.tag;
-                
-                if (tag === 'all') {
-                    appState.selectedDiaryTags.clear();
-                    tagButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                } else {
-                    document.querySelector('[data-tag="all"]')?.classList.remove('active');
-                    
-                    if (appState.selectedDiaryTags.has(tag)) {
-                        appState.selectedDiaryTags.delete(tag);
-                        button.classList.remove('active');
-                        
-                        if (appState.selectedDiaryTags.size === 0) {
-                            document.querySelector('[data-tag="all"]')?.classList.add('active');
-                        }
-                    } else {
-                        appState.selectedDiaryTags.add(tag);
-                        button.classList.add('active');
-                    }
-                }
-                
-                this.#applyFilters();
-            };
-            
-            button.addEventListener('click', handler);
-            this.#eventListeners.set(button, handler);
-        });
-    }
-
-    static #bindMoodFilter() {
-        const moodSelect = document.getElementById('diaryMoodSelect');
-        
-        if (moodSelect) {
-            const handler = (e) => {
-                appState.diaryMoodFilter = e.target.value;
-                this.#applyFilters();
-            };
-            handler.eventType = 'change';
-            
-            moodSelect.addEventListener('change', handler);
-            this.#eventListeners.set(moodSelect, handler);
-        }
-    }
-
-    static #bindSortFilter() {
-        const sortSelect = document.getElementById('diarySortSelect');
-        
-        if (sortSelect) {
-            const handler = (e) => {
-                appState.diarySortBy = e.target.value;
-                this.render();
-            };
-            handler.eventType = 'change';
-            
-            sortSelect.addEventListener('change', handler);
-            this.#eventListeners.set(sortSelect, handler);
-        }
-    }
-
-    static #bindResetButton() {
-        const resetBtn = document.getElementById('diaryResetFilters');
-        
-        if (resetBtn) {
-            const handler = () => {
-                appState.selectedDiaryTags.clear();
-                appState.diaryMoodFilter = 'all';
-                appState.diarySortBy = 'dateDesc';
-                appState.diarySearchKeyword = '';
-                
-                const searchInput = document.getElementById('diarySearchInput');
-                const clearBtn = document.getElementById('searchClear');
-                const moodSelect = document.getElementById('diaryMoodSelect');
-                const sortSelect = document.getElementById('diarySortSelect');
-                
-                if (searchInput) searchInput.value = '';
-                if (clearBtn) clearBtn.style.display = 'none';
-                if (moodSelect) moodSelect.value = 'all';
-                if (sortSelect) sortSelect.value = 'dateDesc';
-                
-                document.querySelectorAll('#diaryTagFilter .filter-chip').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelector('[data-tag="all"]')?.classList.add('active');
-                
-                this.#applyFilters();
-                NotificationManager.show('已重置所有筛选条件', 'info');
-            };
-            
-            resetBtn.addEventListener('click', handler);
-            this.#eventListeners.set(resetBtn, handler);
-        }
-    }
-
-    static #bindViewToggle() {
-        const viewButtons = document.querySelectorAll('.view-btn');
-        
-        viewButtons.forEach(button => {
-            const handler = () => {
-                viewButtons.forEach(btn => {
-                    btn.classList.remove('active');
-                    btn.setAttribute('aria-pressed', 'false');
-                });
-                
-                button.classList.add('active');
-                button.setAttribute('aria-pressed', 'true');
-                
-                const timeline = document.getElementById('diaryTimeline');
-                if (timeline) {
-                    const view = button.dataset.view;
-                    timeline.className = view === 'grid' ? 'timeline grid-view' : 'timeline';
-                }
-            };
-            
-            button.addEventListener('click', handler);
-            this.#eventListeners.set(button, handler);
-        });
-    }
-
-    static #applyFilters() {
-        let filtered = [...this.#data];
-        const currentLang = appState.currentLanguage;
-
-        // 搜索过滤（支持中英文）
-        if (appState.diarySearchKeyword) {
-            const keyword = Utils.normalize(appState.diarySearchKeyword);
-            filtered = filtered.filter(entry => {
-                const title = entry.headline?.[currentLang] || entry.headline?.zh || '';
-                const content = entry.content?.[currentLang] || entry.content?.zh || '';
-                const highlight = entry.highlight?.[currentLang] || entry.highlight?.zh || '';
-                
-                return Utils.normalize(title).includes(keyword) ||
-                       Utils.normalize(content).includes(keyword) ||
-                       Utils.normalize(highlight).includes(keyword) ||
-                       (entry.categories && entry.categories.some(cat => {
-                           const catInfo = this.#categoryMap[cat];
-                           return catInfo && (
-                               Utils.normalize(catInfo.zh).includes(keyword) ||
-                               Utils.normalize(catInfo.en).includes(keyword)
-                           );
-                       }));
-            });
-        }
-
-        // 分类过滤
-        if (appState.selectedDiaryTags.size > 0) {
-            filtered = filtered.filter(entry => {
-                if (!entry.categories || !Array.isArray(entry.categories)) return false;
-                return Array.from(appState.selectedDiaryTags).some(tag => 
-                    entry.categories.includes(tag)
-                );
-            });
-        }
-
-        // 心情过滤
-        if (appState.diaryMoodFilter !== 'all') {
-            filtered = filtered.filter(entry => 
-                entry.moodCode === appState.diaryMoodFilter
-            );
-        }
-
-        this.#filteredData = filtered;
-        this.render();
-    }
-
-    static render() {
-        const timeline = document.getElementById('diaryTimeline');
-        const emptyState = document.querySelector('.empty-state');
-        const counter = document.getElementById('diaryCounter');
-
-        if (!timeline) return;
-
-        // 更新计数器
-        if (counter) {
-            const count = this.#filteredData.length;
-            const currentLang = appState.currentLanguage;
-            const countText = currentLang === 'zh' ? 
-                `共 <strong>${count}</strong> 条记录` : 
-                `Total <strong>${count}</strong> records`;
-            counter.innerHTML = `
-                <i class="fas fa-chart-line"></i>
-                <span>${countText}</span>
-            `;
-        }
-
-        // 排序
-        const sorted = this.#sortData([...this.#filteredData]);
-
-        // 空状态处理
-        if (sorted.length === 0) {
-            timeline.innerHTML = '';
-            if (emptyState) {
-                emptyState.classList.remove('hidden');
-            }
-            return;
-        }
-
-        if (emptyState) {
-            emptyState.classList.add('hidden');
-        }
-
-        // 渲染时间轴
-        const fragment = document.createDocumentFragment();
-        const tempContainer = document.createElement('div');
-
-        sorted.forEach((entry, index) => {
-            tempContainer.innerHTML = this.#renderDiaryCard(entry, index);
-            if (tempContainer.firstElementChild) {
-                fragment.appendChild(tempContainer.firstElementChild);
-            }
-        });
-
-        timeline.innerHTML = '';
-        timeline.appendChild(fragment);
-    }
-
-    static #sortData(data) {
-        const sortFunctions = {
-            dateDesc: (a, b) => new Date(b.date) - new Date(a.date),
-            dateAsc: (a, b) => new Date(a.date) - new Date(b.date),
-            achievementDesc: (a, b) => (b.achievementLevel || 0) - (a.achievementLevel || 0),
-            achievementAsc: (a, b) => (a.achievementLevel || 0) - (b.achievementLevel || 0)
-        };
-
-        const sortFn = sortFunctions[appState.diarySortBy] || sortFunctions.dateDesc;
-        return data.sort(sortFn);
-    }
-
-    static #renderDiaryCard(entry, index) {
-        const currentLang = appState.currentLanguage;
-        const achievement = entry.achievementLevel || 0;
-        const achievementStars = '⭐'.repeat(Math.min(5, achievement));
-        
-        // 获取对应语言的内容
-        const title = entry.headline?.[currentLang] || entry.headline?.zh || '无标题';
-        const content = entry.content?.[currentLang] || entry.content?.zh || '';
-        const highlight = entry.highlight?.[currentLang] || entry.highlight?.zh || '';
-        const moodDisplay = this.#moodMap[entry.moodCode] || entry.moodCode || '';
-        
-        // 渲染分类标签
-        const categoriesHtml = (entry.categories && entry.categories.length > 0) ? 
-            entry.categories.map(cat => {
-                const catInfo = this.#categoryMap[cat] || { zh: cat, en: cat, icon: '🏷️' };
-                const displayName = currentLang === 'zh' ? catInfo.zh : catInfo.en;
-                return `
-                    <span class="diary-tag">
-                        <span>${catInfo.icon}</span>
-                        ${Utils.escapeHtml(displayName)}
-                    </span>
-                `;
-            }).join('') : '';
-
-        // 渲染封面图
-        const coverImageHtml = entry.coverImage ? `
-            <div class="diary-cover">
-                <img src="${entry.coverImage}" alt="${Utils.escapeHtml(title)}" loading="lazy">
-            </div>
-        ` : '';
-
-        return `
-            <div class="timeline-item" style="animation-delay: ${index * CONFIG.TIMING.ANIMATION_DELAY}s">
-                <div class="timeline-date">${Utils.formatDate(entry.date)}</div>
-                <div class="timeline-content">
-                    <div class="diary-header">
-                        <h3 class="diary-title">${Utils.escapeHtml(title)}</h3>
-                        ${moodDisplay ? `<span class="diary-mood">${Utils.escapeHtml(moodDisplay)}</span>` : ''}
-                    </div>
-                    
-                    ${coverImageHtml}
-                    
-                    <div class="diary-body">
-                        <p class="diary-text">${Utils.formatMultiline(content)}</p>
-                    </div>
-                    
-                    ${highlight ? `
-                        <div class="diary-highlight">
-                            <i class="fas fa-star"></i>
-                            <span>${Utils.formatMultiline(highlight)}</span>
-                        </div>
-                    ` : ''}
-                    
-                    ${categoriesHtml ? `
-                        <div class="diary-tags">
-                            ${categoriesHtml}
-                        </div>
-                    ` : ''}
-                    
-                    ${achievement > 0 ? `
-                        <div class="diary-achievement">
-                            <span class="achievement-label">${currentLang === 'zh' ? '成就值' : 'Achievement'}:</span>
-                            <span class="achievement-stars">${achievementStars}</span>
-                            <span class="achievement-value">${achievement}/5</span>
-                        </div>
-                    ` : ''}
-                </div>
-            </div>
-        `;
     }
 }
 
 // ==================== 主题管理器 ====================
 class ThemeManager {
-    static THEME_KEY = 'theme';
-    static THEMES = {
-        LIGHT: 'light',
-        DARK: 'dark'
-    };
-
-    static init() {
-        this.applySavedTheme();
-        this.#bindThemeToggle();
-    }
-
     static applySavedTheme() {
-        const savedTheme = appState.loadFromStorage(this.THEME_KEY) || this.THEMES.LIGHT;
-        document.body.classList.toggle('dark-theme', savedTheme === this.THEMES.DARK);
-        this.updateThemeToggleButton();
-    }
-
-    static #bindThemeToggle() {
-        const themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) {
-            themeToggle.addEventListener('click', () => this.toggle());
+        const savedTheme = appState.loadFromStorage(STORAGE_KEYS.theme);
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
         }
     }
 
     static toggle() {
-        const isDark = document.body.classList.toggle('dark-theme');
-        const theme = isDark ? this.THEMES.DARK : this.THEMES.LIGHT;
-        appState.saveToStorage(this.THEME_KEY, theme);
+        document.body.classList.toggle('light-mode');
+        const theme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+        appState.saveToStorage(STORAGE_KEYS.theme, theme);
         this.updateThemeToggleButton();
     }
 
     static updateThemeToggleButton() {
-        const themeToggle = document.getElementById('themeToggle');
-        if (!themeToggle) return;
+        const button = document.getElementById('themeToggle');
+        if (!button) return;
         
-        const icon = themeToggle.querySelector('i');
-        const isDark = document.body.classList.contains('dark-theme');
-        
+        const icon = button.querySelector('i');
         if (icon) {
-            icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
         }
     }
 }
 
-// ==================== 语言切换管理器 ====================
-class LanguageSwitcher {
-    static init() {
-        this.#bindLanguageToggle();
-        this.#updateLanguageDisplay();
-    }
-
-    static #bindLanguageToggle() {
-        const languageToggle = document.getElementById('languageToggle');
-        if (languageToggle) {
-            languageToggle.addEventListener('click', () => this.toggle());
-        }
-    }
-
-    static toggle() {
-        appState.currentLanguage = appState.currentLanguage === 'zh' ? 'en' : 'zh';
-        appState.saveToStorage(CONFIG.STORAGE_KEYS.language, appState.currentLanguage);
-        
-        this.#updateLanguageDisplay();
-        
-        // 重新渲染成功日记页面（如果在该页面）
-        if (appState.currentPage === CONFIG.PAGE_TYPES.SUCCESS && window.SuccessPageManager) {
-            SuccessPageManager.init();
-        }
-        
-        NotificationManager.show(
-            appState.currentLanguage === 'zh' ? '已切换至中文' : 'Switched to English',
-            'success'
-        );
-    }
-
-    static #updateLanguageDisplay() {
-        const languageToggle = document.getElementById('languageToggle');
-        if (!languageToggle) return;
-        
-        const span = languageToggle.querySelector('span');
-        if (span) {
-            span.textContent = appState.currentLanguage === 'zh' ? '中 → EN' : 'EN → 中';
-        }
-    }
-}
-
-// ==================== 应用控制器 ====================
-class AppController {
-    static async init() {
+// ==================== 本地存储管理器 ====================
+class StorageManager {
+    static loadMomentsData() {
         try {
-            this.#detectPageType();
-            await this.#initializeServices();
-            this.#initializeGlobalControls();
-            await this.#initializePage();
-            console.log(`✅ 应用初始化完成 [页面: ${appState.currentPage}]`);
+            const saved = appState.loadFromStorage(STORAGE_KEYS.moments);
+            if (!saved) return null;
+            return JSON.parse(saved);
         } catch (error) {
-            console.error('❌ 应用初始化失败:', error);
-            NotificationManager.show('页面初始化失败，请刷新重试', 'error');
+            console.error('加载朋友圈数据失败:', error);
+            NotificationManager.show('数据加载失败', 'error');
+            return null;
         }
     }
 
-    static #detectPageType() {
-        const pageElement = document.querySelector('[data-page]');
-        appState.currentPage = pageElement ?
-            pageElement.dataset.page : CONFIG.PAGE_TYPES.MOMENTS;
-        
-        console.log(`📄 检测到页面类型: ${appState.currentPage}`);
+    static saveMomentsData(data) {
+        try {
+            appState.saveToStorage(STORAGE_KEYS.moments, JSON.stringify(data));
+            return true;
+        } catch (error) {
+            console.error('保存朋友圈数据失败:', error);
+            NotificationManager.show('数据保存失败', 'error');
+            return false;
+        }
+    }
+}
+
+// ==================== 朋友圈页面管理器 ====================
+class MomentsPageManager {
+    static data = [];
+    static eventListeners = new Map();
+
+    static init() {
+        this.loadData();
+        this.bindEvents();
+        this.render();
     }
 
-    static async #initializeServices() {
-        ThemeManager.init();
-        LanguageSwitcher.init();
-        NotificationManager.init();
-        await this.#waitForCriticalResources();
+    static loadData() {
+        const savedData = StorageManager.loadMomentsData();
+        if (savedData) {
+            const savedIds = savedData.map(m => m.id);
+            const newDefaults = (window.momentsData || []).filter(m => !savedIds.includes(m.id));
+            this.data = [...savedData, ...newDefaults];
+        } else {
+            this.data = window.momentsData || [];
+        }
     }
 
-    static #waitForCriticalResources() {
-        return new Promise(resolve => {
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', resolve);
-            } else {
-                resolve();
+    static saveData() {
+        return StorageManager.saveMomentsData(this.data);
+    }
+
+    static bindEvents() {
+        this.clearEventListeners();
+
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            const debouncedSearch = Utils.debounce((e) => {
+                this.handleSearch(e.target.value);
+            });
+            searchInput.addEventListener('input', debouncedSearch);
+            this.eventListeners.set('searchInput', { element: searchInput, handler: debouncedSearch });
+        }
+
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        categoryBtns.forEach(btn => {
+            const handler = () => {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                appState.currentCategory = btn.dataset.category;
+                this.render();
+            };
+            btn.addEventListener('click', handler);
+            this.eventListeners.set(`category-${btn.dataset.category}`, { element: btn, handler });
+        });
+
+        this.initCommentModal();
+    }
+
+    static clearEventListeners() {
+        this.eventListeners.forEach(({ element, handler }, key) => {
+            if (element && handler) {
+                element.removeEventListener('click', handler);
+                element.removeEventListener('input', handler);
             }
+        });
+        this.eventListeners.clear();
+    }
+
+    static initCommentModal() {
+        const modal = document.getElementById('commentModal');
+        if (!modal) return;
+
+        const closeBtn = modal.querySelector('.close');
+        if (closeBtn) {
+            const handler = () => modal.style.display = 'none';
+            closeBtn.addEventListener('click', handler);
+            this.eventListeners.set('modalClose', { element: closeBtn, handler });
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) modal.style.display = 'none';
+        });
+
+        const submitBtn = document.getElementById('submitComment');
+        if (submitBtn) {
+            const handler = () => this.handleCommentSubmit();
+            submitBtn.addEventListener('click', handler);
+            this.eventListeners.set('submitComment', { element: submitBtn, handler });
+        }
+
+        const commentInput = document.getElementById('commentInput');
+        if (commentInput) {
+            const handler = (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    this.handleCommentSubmit();
+                }
+            };
+            commentInput.addEventListener('keypress', handler);
+            this.eventListeners.set('commentInput', { element: commentInput, handler });
+        }
+    }
+
+    static render(filteredData = null) {
+        const container = document.getElementById('momentsContainer');
+        if (!container) return;
+
+        const dataToRender = filteredData || this.data;
+        const filtered = this.filterByCategory(dataToRender);
+        const sorted = this.sortByDate(filtered);
+
+        if (sorted.length === 0) {
+            container.innerHTML = `<div class="no-results">${LanguageManager.t('noResults')}</div>`;
+            return;
+        }
+
+        container.innerHTML = sorted.map((moment, index) =>
+            this.renderMomentCard(moment, index)
+        ).join('');
+    }
+
+    static filterByCategory(data) {
+        return appState.currentCategory === 'all' ? data : data.filter(m => m.category === appState.currentCategory);
+    }
+
+    static sortByDate(data) {
+        return [...data].sort((a, b) => new Date(b.time) - new Date(a.time));
+    }
+
+    static renderMomentCard(moment, index) {
+        const hasImage = moment.image && moment.image.trim();
+        const hasComments = moment.comments && moment.comments.length > 0;
+        const hasLikes = moment.likes > 0;
+
+        return `
+            <div class="moment-card" style="animation-delay: ${index * ANIMATION_DELAY}s">
+                <div class="moment-header">
+                    <span class="category-tag">${Utils.escapeHtml(moment.category)}</span>
+                    <span class="value-badge">⭐ ${moment.value}</span>
+                </div>
+                <div class="moment-content">${Utils.escapeHtml(moment.content)}</div>
+                ${hasImage ? `
+                    <img src="${Utils.escapeHtml(moment.image)}"
+                         alt="图片"
+                         class="moment-image"
+                         onerror="this.style.display='none'"
+                         loading="lazy">
+                ` : ''}
+                <div class="moment-footer">
+                    <span class="moment-time">
+                        <i class="far fa-clock"></i> ${Utils.formatTime(moment.time)}
+                    </span>
+                    <div class="moment-actions">
+                        <button class="action-btn ${hasLikes ? 'liked' : ''}"
+                                data-like-id="${moment.id}"
+                                onclick="MomentsPageManager.handleLike(${moment.id})"
+                                aria-label="点赞">
+                            <i class="${hasLikes ? 'fas' : 'far'} fa-heart"></i>
+                            ${hasLikes ? `<span>${moment.likes}</span>` : ''}
+                        </button>
+                        <button class="action-btn"
+                                onclick="MomentsPageManager.openCommentModal(${moment.id})"
+                                aria-label="评论">
+                            <i class="far fa-comment"></i>
+                            ${hasComments ? `<span>${moment.comments.length}</span>` : ''}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    static handleLike(id) {
+        const moment = this.data.find(m => m.id === id);
+        if (!moment) return;
+
+        const hasLiked = moment.likes > 0;
+        moment.likes = hasLiked ? 0 : 1;
+
+        if (this.saveData()) {
+            this.render();
+            if (!hasLiked) {
+                const btn = document.querySelector(`button[data-like-id="${id}"]`);
+                if (btn) {
+                    btn.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        btn.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            }
+        }
+    }
+
+    static openCommentModal(id) {
+        appState.currentMomentId = id;
+        const moment = this.data.find(m => m.id === id);
+        if (!moment) return;
+
+        const modal = document.getElementById('commentModal');
+        if (!modal) return;
+
+        modal.style.display = 'block';
+
+        if (!moment.comments) {
+            moment.comments = [];
+        }
+
+        this.renderComments(moment.comments);
+
+        setTimeout(() => {
+            const input = document.getElementById('commentInput');
+            if (input) input.focus();
+        }, 100);
+    }
+
+    static renderComments(comments) {
+        const commentsList = document.getElementById('commentsList');
+        if (!commentsList) return;
+
+        if (!comments || comments.length === 0) {
+            commentsList.innerHTML = `
+                <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">
+                    ${LanguageManager.t('commentEmpty')}
+                </p>
+            `;
+            return;
+        }
+
+        commentsList.innerHTML = comments.map((comment, index) => `
+            <div class="comment-item" style="animation-delay: ${index * 0.05}s">
+                <div style="margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.85rem;">
+                    <i class="far fa-user-circle"></i> 访客 • ${Utils.escapeHtml(comment.time)}
+                </div>
+                <div style="line-height: 1.6;">${Utils.escapeHtml(comment.content)}</div>
+            </div>
+        `).join('');
+    }
+
+    static handleCommentSubmit() {
+        const input = document.getElementById('commentInput');
+        if (!input) return;
+
+        const content = input.value.trim();
+        if (!content) {
+            NotificationManager.show('请输入评论内容', 'warning');
+            return;
+        }
+
+        if (content.length > MAX_COMMENT_LENGTH) {
+            NotificationManager.show('评论内容不能超过500字', 'warning');
+            return;
+        }
+
+        const moment = this.data.find(m => m.id === appState.currentMomentId);
+        if (!moment) return;
+
+        if (!moment.comments) {
+            moment.comments = [];
+        }
+
+        const comment = {
+            content,
+            time: new Date().toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            })
+        };
+
+        moment.comments.unshift(comment);
+
+        if (this.saveData()) {
+            this.renderComments(moment.comments);
+            this.render();
+            input.value = '';
+            NotificationManager.show('评论发表成功！', 'success');
+        }
+    }
+
+    static handleSearch(keyword) {
+        const normalizedKeyword = Utils.normalize(keyword);
+        if (!normalizedKeyword) {
+            this.render();
+            return;
+        }
+
+        const filtered = this.data.filter(moment =>
+            Utils.normalize(moment.content).includes(normalizedKeyword) ||
+            Utils.normalize(moment.category).includes(normalizedKeyword)
+        );
+
+        this.render(filtered);
+    }
+}
+
+// ==================== 成功日记页面管理器 ====================
+class SuccessPageManager {
+    static init() {
+        this.updatePageTexts();
+        this.populateMoodFilter();
+        this.renderTagFilters();
+        this.bindEvents();
+        this.render();
+    }
+
+    static updatePage() {
+        this.updatePageTexts();
+        this.populateMoodFilter();
+        this.renderTagFilters();
+        this.render();
+    }
+
+    static bindEvents() {
+        const searchInput = document.getElementById('diarySearchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', Utils.debounce((e) => {
+                appState.diarySearchKeyword = Utils.normalize(e.target.value);
+                this.render();
+            }));
+        }
+
+        const moodSelect = document.getElementById('diaryMoodSelect');
+        if (moodSelect) {
+            moodSelect.addEventListener('change', (e) => {
+                appState.diaryMoodFilter = e.target.value;
+                this.render();
+            });
+        }
+
+        const sortSelect = document.getElementById('diarySortSelect');
+        if (sortSelect) {
+            sortSelect.addEventListener('change', (e) => {
+                appState.diarySortBy = e.target.value;
+                this.render();
+            });
+            this.updateSortOptions();
+        }
+
+        const resetBtn = document.getElementById('diaryResetFilters');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => this.resetFilters());
+        }
+
+        const viewBtns = document.querySelectorAll('.view-btn');
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                viewBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-pressed', 'false');
+                });
+                btn.classList.add('active');
+                btn.setAttribute('aria-pressed', 'true');
+
+                const viewType = btn.dataset.view;
+                const timeline = document.getElementById('diaryTimeline');
+                if (timeline) {
+                    if (viewType === 'grid') {
+                        timeline.classList.add('grid-view');
+                        timeline.classList.remove('timeline-view');
+                    } else {
+                        timeline.classList.add('timeline-view');
+                        timeline.classList.remove('grid-view');
+                    }
+                }
+            });
         });
     }
 
-    static #initializeGlobalControls() {
-        // 可以添加全局控制逻辑
+    static resetFilters() {
+        appState.resetDiaryFilters();
+
+        const searchInput = document.getElementById('diarySearchInput');
+        const moodSelect = document.getElementById('diaryMoodSelect');
+        const sortSelect = document.getElementById('diarySortSelect');
+
+        if (searchInput) searchInput.value = '';
+        if (moodSelect) moodSelect.value = 'all';
+        if (sortSelect) sortSelect.value = 'dateDesc';
+
+        this.renderTagFilters();
+        this.render();
     }
 
-    static async #initializePage() {
+    static updatePageTexts() {
+        LanguageManager.updatePageTexts();
+        this.updateSortOptions();
+    }
+
+    static updateSortOptions() {
+        const sortSelect = document.getElementById('diarySortSelect');
+        if (!sortSelect || sortSelect.options.length < 4) return;
+
+        const options = sortSelect.options;
+        options[0].textContent = LanguageManager.t('sortDateDesc');
+        options[1].textContent = LanguageManager.t('sortDateAsc');
+        options[2].textContent = LanguageManager.t('sortAchievementDesc');
+        options[3].textContent = LanguageManager.t('sortAchievementAsc');
+    }
+
+    static populateMoodFilter() {
+        const moodSelect = document.getElementById('diaryMoodSelect');
+        if (!moodSelect) return;
+
+        const currentValue = moodSelect.value || 'all';
+        const moodLibrary = window.moodLibrary || {};
+
+        let optionsHtml = `<option value="all">${LanguageManager.t('moodAll')}</option>`;
+
+        Object.keys(moodLibrary).forEach(code => {
+            const mood = moodLibrary[code];
+            const label = mood[appState.currentLanguage] || mood.zh || code;
+            optionsHtml += `<option value="${code}">${Utils.escapeHtml(label)}</option>`;
+        });
+
+        moodSelect.innerHTML = optionsHtml;
+        moodSelect.value = currentValue;
+    }
+
+    static renderTagFilters() {
+        const container = document.getElementById('diaryTagFilter');
+        if (!container) return;
+
+        const tagLibrary = window.diaryTagLibrary || [];
+
+        container.innerHTML = tagLibrary.map(tag => {
+            const isActive = appState.selectedDiaryTags.has(tag.code);
+            const label = tag[appState.currentLanguage] || tag.zh || tag.code;
+            return `
+                <button type="button"
+                        class="filter-chip ${isActive ? 'active' : ''}"
+                        data-tag="${tag.code}">
+                    ${Utils.escapeHtml(label)}
+                </button>
+            `;
+        }).join('');
+
+        container.querySelectorAll('.filter-chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const code = btn.dataset.tag;
+                if (appState.selectedDiaryTags.has(code)) {
+                    appState.selectedDiaryTags.delete(code);
+                } else {
+                    appState.selectedDiaryTags.add(code);
+                }
+                this.renderTagFilters();
+                this.render();
+            });
+        });
+    }
+
+    static render() {
+        const container = document.getElementById('diaryTimeline');
+        if (!container) return;
+
+        const filtered = this.getFilteredData();
+
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                <div class="diary-empty">${LanguageManager.t('timelineEmpty')}</div>
+            `;
+            this.updateCounter(0);
+            return;
+        }
+
+        container.innerHTML = filtered.map(entry => this.renderDiaryCard(entry)).join('');
+        this.updateCounter(filtered.length);
+    }
+
+    static getFilteredData() {
+        const diaryData = window.successDiaryData || [];
+        let data = [...diaryData];
+
+        if (appState.selectedDiaryTags.size > 0) {
+            data = data.filter(entry => {
+                return Array.from(appState.selectedDiaryTags).every(tag =>
+                    entry.categories.includes(tag)
+                );
+            });
+        }
+
+        if (appState.diaryMoodFilter !== 'all') {
+            data = data.filter(entry => entry.moodCode === appState.diaryMoodFilter);
+        }
+
+        if (appState.diarySearchKeyword) {
+            data = data.filter(entry => this.matchSearch(entry, appState.diarySearchKeyword));
+        }
+
+        data.sort((a, b) => this.compareEntries(a, b));
+
+        return data;
+    }
+
+    static matchSearch(entry, keyword) {
+        const fields = [
+            entry.headline?.zh,
+            entry.headline?.en,
+            entry.content?.zh,
+            entry.content?.en,
+            entry.highlight?.zh,
+            entry.highlight?.en,
+            entry.notes?.zh,
+            entry.notes?.en,
+            ...entry.categories.map(code => this.getTagLabel(code)),
+            this.getMoodLabel(entry.moodCode)
+        ];
+
+        return fields.some(field => field && Utils.normalize(field).includes(keyword));
+    }
+
+    static compareEntries(a, b) {
+        switch (appState.diarySortBy) {
+            case 'dateAsc':
+                return new Date(a.date) - new Date(b.date);
+            case 'achievementDesc':
+                return b.achievementLevel - a.achievementLevel;
+            case 'achievementAsc':
+                return a.achievementLevel - b.achievementLevel;
+            case 'dateDesc':
+            default:
+                return new Date(b.date) - new Date(a.date);
+        }
+    }
+
+    // ==================== 核心优化：完全单语言显示 ====================
+    static renderDiaryCard(entry) {
+        const lang = appState.currentLanguage;
+        
+        // 只获取当前语言的内容，如果没有则留空
+        const headline = entry.headline?.[lang] || '';
+        const content = entry.content?.[lang] || '';
+        const highlight = entry.highlight?.[lang] || '';
+        
+        const mood = this.getMood(entry.moodCode);
+        const tagsHtml = this.renderTags(entry.categories);
+        const attachmentsHtml = this.renderAttachments(entry.attachments);
+        const coverHtml = this.renderCover(entry.coverImage);
+
+        return `
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-card">
+                    <div class="diary-date">
+                        ${Utils.formatDiaryDate(entry.date, lang)}
+                    </div>
+                    <article class="diary-card-body">
+                        ${coverHtml}
+                        <div class="diary-card-content">
+                            ${headline ? `
+                                <header class="diary-card-header">
+                                    <h3 class="diary-title">
+                                        ${Utils.formatMultiline(headline)}
+                                    </h3>
+                                </header>
+                            ` : ''}
+                            ${content ? `
+                                <div class="diary-text">
+                                    <p>${Utils.formatMultiline(content)}</p>
+                                </div>
+                            ` : ''}
+                            ${highlight ? `
+                                <div class="diary-highlight">
+                                    <strong>${LanguageManager.t('timelineNotes')}：</strong>
+                                    <span>${Utils.formatMultiline(highlight)}</span>
+                                </div>
+                            ` : ''}
+                            <div class="diary-meta">
+                                <div>
+                                    <span class="meta-title">${LanguageManager.t('timelineTags')}：</span>
+                                    <span class="meta-content">${tagsHtml || '—'}</span>
+                                </div>
+                                <div>
+                                    <span class="meta-title">${LanguageManager.t('timelineMood')}：</span>
+                                    <span class="meta-content">
+                                        ${mood ? `<span class="mood-badge" style="border-color:${mood.color}; color:${mood.color};">${Utils.escapeHtml(mood[lang] || mood.zh)}</span>` : '—'}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="meta-title">${LanguageManager.t('timelineAchievement')}：</span>
+                                    <span class="achievement-badge">⭐ ${entry.achievementLevel}</span>
+                                </div>
+                            </div>
+                            ${attachmentsHtml}
+                        </div>
+                    </article>
+                </div>
+            </div>
+        `;
+    }
+
+    static renderTags(categories) {
+        if (!categories || !categories.length) return '';
+
+        return categories.map(code => {
+            const label = this.getTagLabel(code);
+            return `<span class="tag-pill">${Utils.escapeHtml(label)}</span>`;
+        }).join('');
+    }
+
+    static renderAttachments(attachments) {
+        if (!Array.isArray(attachments) || attachments.length === 0) return '';
+
+        const items = attachments.map(path => {
+            const trimmed = path.trim();
+            if (!trimmed) return '';
+
+            const isImage = /\.(png|jpe?g|gif|webp|svg)$/i.test(trimmed);
+            if (isImage) {
+                return `<img src="${Utils.escapeHtml(trimmed)}" alt="附件" class="diary-attachment" onerror="this.style.display='none'">`;
+            }
+
+            return `<a href="${Utils.escapeHtml(trimmed)}" target="_blank" rel="noopener" class="diary-attachment-link">${Utils.escapeHtml(trimmed)}</a>`;
+        }).filter(Boolean).join('');
+
+        return items ? `
+            <div class="diary-attachments">
+                <span class="meta-title">${LanguageManager.t('attachments')}：</span>
+                ${items}
+            </div>
+        ` : '';
+    }
+
+    static renderCover(coverImage) {
+        if (!coverImage) return '';
+        return `
+            <img src="${Utils.escapeHtml(coverImage)}"
+                 alt="封面图片"
+                 class="diary-cover"
+                 onerror="this.style.display='none'"
+                 loading="lazy">
+        `;
+    }
+
+    static getMood(code) {
+        const moodLibrary = window.moodLibrary || {};
+        return moodLibrary[code] || null;
+    }
+
+    static getMoodLabel(code) {
+        const mood = this.getMood(code);
+        if (!mood) return code || '';
+        return mood[appState.currentLanguage] || mood.zh || code;
+    }
+
+    static getTagLabel(code) {
+        const tagLibrary = window.diaryTagLibrary || [];
+        const tag = tagLibrary.find(item => item.code === code);
+        if (!tag) return code || '';
+        return tag[appState.currentLanguage] || tag.zh || code;
+    }
+
+    static updateCounter(count) {
+        const counter = document.getElementById('diaryCounter');
+        if (!counter) return;
+
+        const text = LanguageManager.t('entryCount');
+        counter.textContent = typeof text === 'function' ? text(count) : text;
+    }
+}
+
+// ==================== 全局控制器 ====================
+class AppController {
+    static init() {
+        const pageElement = document.querySelector('[data-page]');
+        appState.currentPage = pageElement ? pageElement.dataset.page : PAGE_TYPES.MOMENTS;
+
+        ThemeManager.applySavedTheme();
+        ThemeManager.updateThemeToggleButton();
+
+        this.initializeGlobalControls();
+        this.initializePage();
+    }
+
+    static initializeGlobalControls() {
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => ThemeManager.toggle());
+        }
+
+        const languageToggle = document.getElementById('languageToggle');
+        if (languageToggle) {
+            languageToggle.addEventListener('click', () => LanguageManager.toggle());
+            LanguageManager.updateLanguageToggleButton();
+        }
+    }
+
+    static initializePage() {
         switch (appState.currentPage) {
-            case CONFIG.PAGE_TYPES.MOMENTS:
-                console.log('🎭 初始化朋友圈页面（启用LeanCloud）');
-                await MomentsPageManager.init();
+            case PAGE_TYPES.MOMENTS:
+                MomentsPageManager.init();
                 break;
-            case CONFIG.PAGE_TYPES.SUCCESS:
-                console.log('📔 初始化成功日记页面（本地数据）');
-                await SuccessPageManager.init();
+            case PAGE_TYPES.SUCCESS:
+                SuccessPageManager.init();
                 break;
             default:
-                console.warn('⚠️ 未知页面类型:', appState.currentPage);
+                console.warn('Unknown page type:', appState.currentPage);
         }
     }
 }
 
-// ==================== 全局暴露和初始化 ====================
 window.MomentsPageManager = MomentsPageManager;
 window.SuccessPageManager = SuccessPageManager;
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 DOM加载完成，准备初始化应用...');
-    console.log('📦 LeanCloud SDK状态:', typeof AV !== 'undefined' ? '已加载' : '未加载（朋友圈将降级本地）');
-    
-    setTimeout(() => {
-        AppController.init().catch(error => {
-            console.error('💥 应用启动失败:', error);
-        });
-    }, 100);
+    try {
+        AppController.init();
+    } catch (error) {
+        console.error('页面初始化失败:', error);
+        NotificationManager.show('页面初始化失败，请刷新重试', 'error');
+    }
 });
 
-window.addEventListener('error', (event) => {
-    console.error('🔥 全局错误:', event.error);
-});
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
 
-window.addEventListener('unhandledrejection', (event) => {
-    console.error('🔥 未处理的Promise拒绝:', event.reason);
-});
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+
+    .notification {
+        transform-origin: top right;
+    }
+`;
+document.head.appendChild(style);
