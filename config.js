@@ -4,7 +4,7 @@
  * 日记标签库
  * @type {Array<{code: string, zh: string, en: string, icon: string}>}
  */
-const diaryTagLibrary = [
+window.successDiaryData  = [
     { code: 'reading',  zh: '📖阅读',       en: '📖Reading',   icon: '📖' },
     { code: 'fitness',  zh: '🏃‍♀️运动',       en: '🏃‍♀️Fitness',   icon: '🏃‍♀️' },
     { code: 'work',     zh: '💼工作',       en: '💼Work',      icon: '💼' },
