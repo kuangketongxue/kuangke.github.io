@@ -1,4 +1,4 @@
-// ==================== 成功日记数据 ====================
+/* ==================== 成功日记数据 ==================== */
 window.successDiaryData = [
     {
         id: 33,
@@ -53,7 +53,7 @@ window.successDiaryData = [
     {
         id: 31,
         date: '2025-10-12',
-        categories: ['study', 'creative','music'],
+        categories: ['study', 'creative', 'music'],
         headline: {
             zh: '读完《专注的真相》+前哨战财务系统优化',
             en: 'Getting up early and going to the library.'
@@ -827,22 +827,34 @@ window.successDiaryData = [
     }
 ];
 
-// 深拷贝默认数据
-const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
-
-// ==================== 浏览器环境全局暴露 ====================
+/* ==================== 浏览器环境全局暴露 ==================== */
 if (typeof window !== 'undefined') {
+    // 支持多种命名方式
     window.successDiaryData = successDiaryData;
     window.successDiaries = successDiaryData;
-    window.successDiaryDefaults = successDiaryDefaults;
-    console.log('✅ 成功日记数据已加载');
+    window.diaryData = successDiaryData;
+    
+    // 深拷贝默认数据
+    window.successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
+    
+    console.log('✅ 成功日记数据已加载:', successDiaryData.length, '条记录');
+    
+    // 调试信息
+    if (window.location.href.includes('success')) {
+        console.log('🎯 成功日记页面数据:', {
+            总数: successDiaryData.length,
+            最新日期: successDiaryData[0]?.date,
+            分类: [...new Set(successDiaryData.flatMap(item => item.categories || []))],
+            心情: [...new Set(successDiaryData.map(item => item.moodCode).filter(Boolean))]
+        });
+    }
 }
 
-// ==================== Node.js 环境模块导出 ====================
+/* ==================== Node.js 环境模块导出 ==================== */
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         successDiaryData,
         successDiaries: successDiaryData,
-        successDiaryDefaults
+        successDiaryDefaults: JSON.parse(JSON.stringify(successDiaryData))
     };
 }
