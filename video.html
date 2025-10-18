@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频矩阵 - 狂客·银河</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .video-matrix-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px 60px;
+        }
+
+        .page-title {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            font-size: 48px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 60px;
+            font-size: 18px;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            animation: fadeIn 1s ease;
+        }
+
+        .matrix-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .matrix-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--card-color-1), var(--card-color-2));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .matrix-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .matrix-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--card-color-1), var(--card-color-2));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .matrix-card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .platform-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .platform-link {
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            background: #f7fafc;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #2d3748;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .platform-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .platform-link:hover::before {
+            left: 100%;
+        }
+
+        .platform-link:hover {
+            background: linear-gradient(135deg, var(--card-color-1), var(--card-color-2));
+            color: white;
+            transform: translateX(8px);
+            border-color: var(--card-color-2);
+        }
+
+        .platform-icon {
+            width: 28px;
+            height: 28px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .platform-name {
+            font-weight: 600;
+            font-size: 15px;
+            flex: 1;
+        }
+
+        .platform-arrow {
+            font-size: 16px;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .platform-link:hover .platform-arrow {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        /* 不同卡片的配色方案 */
+        .matrix-card:nth-child(1) {
+            --card-color-1: #667eea;
+            --card-color-2: #764ba2;
+        }
+
+        .matrix-card:nth-child(2) {
+            --card-color-1: #f093fb;
+            --card-color-2: #f5576c;
+        }
+
+        .matrix-card:nth-child(3) {
+            --card-color-1: #4facfe;
+            --card-color-2: #00f2fe;
+        }
+
+        .matrix-card:nth-child(4) {
+            --card-color-1: #43e97b;
+            --card-color-2: #38f9d7;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* 返回按钮 */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-5px);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 36px;
+            }
+
+            .matrix-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .video-matrix-container {
+                padding: 60px 15px 40px;
+            }
+
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+        }
+
+        /* YouTube特殊样式 */
+        .youtube-icon {
+            color: #FF0000;
+        }
+
+        /* B站特殊样式 */
+        .bilibili-icon {
+            color: #00A1D6;
+        }
+
+        /* 微信特殊样式 */
+        .wechat-icon {
+            color: #07C160;
+        }
+
+        /* X特殊样式 */
+        .x-icon {
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回主页按钮 -->
+    <a href="index.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        返回主页
+    </a>
+
+    <div class="video-matrix-container">
+        <h1 class="page-title">🎬 视频矩阵</h1>
+        <p class="page-subtitle">在不同平台分享精彩内容，满足不同受众需求</p>
+
+        <div class="matrix-grid">
+            <!-- 长视频面向专业人群 -->
+            <div class="matrix-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h2 class="card-title">长视频·专业</h2>
+                    <p class="card-description">深度解析、专业教程、行业洞察</p>
+                </div>
+                <div class="platform-links">
+                    <a href="https://www.youtube.com/@kuangke-tongxue" target="_blank" class="platform-link">
+                        <span class="platform-icon youtube-icon">
+                            <i class="fab fa-youtube"></i>
+                        </span>
+                        <span class="platform-name">YouTube</span>
+                        <span class="platform-arrow">→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 长视频面向大众人群 -->
+            <div class="matrix-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h2 class="card-title">长视频·大众</h2>
+                    <p class="card-description">娱乐内容、生活分享、趣味教程</p>
+                </div>
+                <div class="platform-links">
+                    <a href="https://space.bilibili.com/1835590291" target="_blank" class="platform-link">
+                        <span class="platform-icon bilibili-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0# 视频矩阵页面
+
+以下是完整的 `video.html` 代码：
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频矩阵 - 狂客·银河</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 视频矩阵页面专属样式 */
+        .video-matrix-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .video-header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .video-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .video-header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .video-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .video-category {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .video-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .category-title {
+            flex: 1;
+        }
+        
+        .category-title h2 {
+            margin: 0;
+            color: #333;
+            font-size: 1.5em;
+        }
+        
+        .category-title p {
+            margin: 5px 0 0 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .platform-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .platform-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .platform-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .platform-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            border-color: #667eea;
+        }
+        
+        .platform-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 28px;
+            color: white;
+        }
+        
+        .platform-icon.wechat {
+            background: linear-gradient(135deg, #07c160, #06ae56);
+        }
+        
+        .platform-icon.bilibili {
+            background: linear-gradient(135deg, #fb7299, #f25d8e);
+        }
+        
+        .platform-icon.youtube {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+        }
+        
+        .platform-icon.x {
+            background: linear-gradient(135deg, #000000, #1a1a1a);
+        }
+        
+        .platform-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .platform-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .platform-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .platform-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .stats-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .stats-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .stats-header h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 30px auto;
+            display: block;
+            width: fit-content;
+        }
+        
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .back-link i {
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .video-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-header h1 {
+                font-size: 2em;
+            }
+            
+            .platforms-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <h1 class="logo">狂客·银河</h1>
+                <a class="success-link" href="success.html">
+                    <span class="success-icon">
+                        <i class="fas fa-meteor"></i>
+                    </span>
+                    <span class="success-text">成功日记</span>
+                </a>
+                <a class="sky-link" href="reading.html">
+                    <span class="sky-icon">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span class="sky-text">星空</span>
+                </a>
+                <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/">
+                    <span class="exam-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </span>
+                    <span class="exam-text">冬之街小店</span>
+                </a>
+                <a class="video-link" href="video.html">
+                    <span class="video-icon">
+                        <i class="fas fa-video"></i>
+                    </span>
+                    <span class="video-text">视频矩阵</span>
+                </a>
+            </div>
+            <div class="controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="搜索银河中...">
+                </div>
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="video-matrix-container">
+        <div class="video-header">
+            <h1>视频内容矩阵</h1>
+            <p>多元化视频内容平台，满足不同受众需求</p>
+        </div>
+
+        <div class="video-categories">
+            <!-- 长视频面向专业人群 -->
+            <div class="video-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="category-title">
+                        <h2>长视频 - 专业人群</h2>
+                        <p>深度内容，专业见解</p>
+                    </div>
+                </div>
+                <div class="platforms-grid">
+                    <div class="platform-card">
+                        <div class="platform-icon wechat">
+                            <i class="fab fa-weixin"></i>
+                        </div>
+                        <div class="platform-name">微信公众号</div>
+                        <div class="platform-description">专业技术分享、行业分析、深度解读</div>
+                        <a href="#" class="platform-link" target="_blank">关注公众号</a>
+                    </div>
+                    <div class="platform-card">
+                        <div class="platform-icon bilibili">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="platform-name">B站专业频道</div>
+                        <div class="platform-description">技术教程、专业课程、行业报告</div>
+                        <a href="#" class="platform-link" target="_blank">访问频道</a>
+                    </div>
+                    <div class="platform-card">
+                        <div class="platform-icon youtube">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <div class="platform-name">YouTube专业</div>
+                        <div class="platform-description">国际视野、专业研讨、学术分享</div>
+                        <a href="#" class="platform-link" target="_blank">订阅频道</a>
+                    </div>
+                    <div class="platform-card">
+                        <div class="platform-icon x">
+                            <i class="fab fa-x-twitter"></i>
+                        </div>
+                        <div class="platform-name">X专业版</div>
+                        <div class="platform-description">行业动态、专业观点、即时交流</div>
+                        <a href="#" class="platform-link" target="_blank">关注</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 长视频面向大众人群 -->
+            <div class="video-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="category-title">
+                        <h2>长视频 - 大众人群</h2>
+                        <p>通俗易懂，生活实用</p>
+                    </div>
+                </div>
+                <div class="platforms-grid">
+                    <div class="platform-card">
+                        <div class="platform-icon wechat">
+                            <i class="fab fa-weixin"></i>
+                        </div>
+                        <div class="platform-name">微信公众号</div>
+                        <div class="platform-description">生活技巧、科普知识、实用指南</div>
+                        <a href="#" class="platform-link" target="_blank">关注公众号</a>
+                    </div>
+                    <div class="platform-card">
+                        <div class="platform-icon bilibili">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="platform-name">B站生活频道</div>
+                        <div class="platform-description">生活vlog、娱乐内容、轻松分享</div>
+                        <a href="#" class="platform-link" target="_blank">访问频道</a>
+                    </div>
+                    <div class="platform-card">
+                        <div class="platform-icon youtube">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <div class="platform-name">YouTube生活</div>
+                        <div class="platform-description">生活记录、娱乐节目、大众文化</div>
+                        <a href="#" class="platform-link" target="_blank">订阅频道</a>
+                    </div>
+                    <div class="platform-card">
+                        <div class="platform-icon x">
+                            <i class="fab fa-x-twitter"></i>
+                        </div>
+                        <div class="platform-name">X生活版</div>
+                        <div class="platform-description">生活分享、日常点滴、轻松互动</div>
+                        <a href="#" class="platform-link" target="_blank">关注</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 短视频面向专业人群 -->
+            <div class="video-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="category-title">
+                        <h2>短视频 - 专业人群</h2>
+                        <p>高效传播，专业精要</p>
+                    </div>
+                </div>
+                <div class="platforms-grid">
+                    <div class="platform-card">
+                        <div class="platform-icon wechat">
+                            <i class="fab fa-weixin"></i>
+                        </div>
+                        <div class="platform-name">视频号</div>
+                        <div class="platform-description">专业要点、技能展示、快速学习</div>
+                        <a href="#" class="platform-link" target="_blank">关注视频号</a>
+                    </div>
+                    <div class="platform-card">
+                        <div class="platform-icon bilibili">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="platform-name">B站短视频</div>
+                        <div class="platform-description">知识切片、技术要点、专业分享</div>
+                        <a href="#" class="platform-link" target="_blank">访问频道</a>
+                    </div>
+                    <div class="platform-card">
+                        <div class="platform-icon youtube">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <div class="platform-name">YouTube Shorts</div>
+                        <div class="platform-description">专业知识、技能要点、行业动态</div>
+                        <a href="#" class="platform-link" target="_blank">订阅频道</a>
+                    </div>
+                    <div class="platform-card">
+                        <div class="platform-icon x">
+                            <i class="fab fa-x-twitter"></i>
+                        </div>
+                        <div class="platform-name">X短视频</div>
+                        <div class="platform-description">专业观点、行业洞察、即时分享</div>
+                        <a href="#" class="platform-link" target="_blank">关注</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 短视频面向大众人群 -->
+            <div class="video-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="category-title">
+                        <h2>短视频 - 大众人群</h2>
+                        <p>轻松有趣，快速传播</p>
+                    </div>
+                </div>
+                <div class="platforms-grid">
+                    <div class="platform-card">
+                        <div class="platform-icon wechat">
+                            <i class="fab fa-weixin"></i>
+                        </div>
+                        <div class="platform-name">视频号</div>
+                        <div class="platform-description">生活趣事、娱乐内容、轻松时刻</div>
+                        <a href="#" class="platform-link" target="_blank">关注视频号</a>
+                    </div>
+                    <div class="platform-card">
+                        <div class="platform-icon bilibili">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="platform-name">B站短视频</div>
+                        <div class="platform-description">搞笑内容、生活片段、娱乐分享</div>
+                        <a href="#" class="platform-link" target="_blank">访问频道</a>
+                    </div>
+                    <div class="platform-card">
+                        <div class="platform-icon youtube">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <div class="platform-name">YouTube Shorts</div>
+                        <div class="platform-description">娱乐内容、生活分享、轻松时刻</div>
+                        <a href="#" class="platform-link" target="_blank">订阅频道</a>
+                    </div>
+                    <div class="platform-card">
+                        <div class="platform-icon x">
+                            <i class="fab fa-x-twitter"></i>
+                        </div>
+                        <div class="platform-name">X短视频</div>
+                        <div class="platform-description">日常分享、轻松互动、有趣内容</div>
+                        <a href="#" class="platform-link" target="_blank">关注</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 统计数据区域 -->
+        <div class="stats-section">
+            <div class="stats-header">
+                <h2>平台数据统计</h2>
+                <p>实时更新的视频内容数据</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">128K+</div>
+                    <div class="stat-label">总订阅用户</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3.2M</div>
+                    <div class="stat-label">视频播放量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">856</div>
+                    <div class="stat-label">发布视频数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15K+</div>
+                    <div class="stat-label">互动评论</div>
+                </div>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            返回首页
+        </a>
+    </main>
+
+    <!-- 底部社交媒体区域 -->
+    <footer class="social-footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" target="_blank" class="social-link wechat" title="微信公众号">
+                    <i class="fab fa-weixin"></i>
+                </a>
+                <a href="https://github.com/kuangketongxue" target="_blank" class="social-link github" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://x.com/kuangketongxue" target="_blank" class="social-link x" title="X">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+            </div>
+            <p class="copyright">© 2025 狂客·银河 版权所有</p>
+        </div>
+    </footer>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        
+        // 检查本地存储的主题设置
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-theme');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            const isDark = body.classList.contains('dark-theme');
+            
+            if (isDark) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // 搜索功能
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    // 这里可以添加搜索逻辑
+                    console.log('搜索：', searchTerm);
+                    // 例如：window.location.href = `search.html?q=${encodeURIComponent(searchTerm)}`;
+                }
+            }
+        });
+
+        // 添加数字动画效果
+        function animateNumber(element, target) {
+            const duration = 2000;
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                
+                if (element.textContent.includes('K')) {
+                    element.textContent = (current / 1000).toFixed(0) + 'K+';
+                } else if (element.textContent.includes('M')) {
+                    element.textContent = (current / 1000000).toFixed(1) + 'M';
+                } else {
+                    element.textContent = Math.floor(current).toString();
+                }
+            }, 16);
+        }
+
+        // 当页面加载完成后，触发数字动画
+        window.addEventListener('load', () => {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const text = stat.textContent;
+                let target = 0;
+                
+                if (text.includes('K')) {
+                    target = parseFloat(text.replace('K+', '')) * 1000;
+                } else if (text.includes('M')) {
+                    target = parseFloat(text.replace('M', '')) * 1000000;
+                } else {
+                    target = parseInt(text.replace('+', ''));
+                }
+                
+                // 使用 Intersection Observer 来检测元素是否在视口中
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            animateNumber(stat, target);
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+                
+                observer.observe(stat);
+            });
+        });
+    </script>
+</body>
+</html>
