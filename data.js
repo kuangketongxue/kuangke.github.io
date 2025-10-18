@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+     {
+        id: 34,
+        date: '2025-10-18',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '思维导图构建+信息反刍+教材编写',
+            en: 'Mind mapping creation + information reflection + textbook compilation'
+        },
+        content: {
+            zh: '阅读16本书+。\n持续搭建个人网站,新建N+界面细节优化。\n早起+学习8小时+。\n高强度运动。',
+            en: 'Read 10+ books.\nContinuously building a personal website,Detailed optimization of the newly created N+ interface.\nGetting up early and studying for 8 hours straight.\nHigh-intensity exercise.'
+        },
+            highlight: {
+            zh: '直播单次观看突破500人，2人下单，赚到第一个100元',
+            en: 'Live streaming saw a single-time viewership of over 500 people, with 2 individuals placing orders. The streamer earned their first 100 yuan.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
       {
         id: 33,
         date: '2025-10-17',
