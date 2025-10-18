@@ -1306,55 +1306,83 @@
         }
 
         // 渲染书摘表格
-        function renderDigestTable() {
-            const tableBody = document.querySelector('.reading-digest-table');
-            const headerRow = tableBody.querySelector('.digest-row--head');
-            tableBody.innerHTML = '';
-            tableBody.appendChild(headerRow);
+       // 渲染书摘表格（修复版）
+function renderDigestTable() {
+    const tableBody = document.querySelector('.reading-digest-table');
+    if (!tableBody) {
+        console.error('未找到表格容器');
+        return;
+    }
 
-            const loadingDiv = document.createElement('div');
-            loadingDiv.className = 'loading';
-            loadingDiv.innerHTML = '<div class="loading-spinner"></div>正在加载书摘数据...';
-            tableBody.appendChild(loadingDiv);
+    // 1. 克隆表头（避免DOM引用问题）
+    const headerRow = tableBody.querySelector('.digest-row--head');
+    const headerClone = headerRow ? headerRow.cloneNode(true) : null;
 
-            setTimeout(() => {
-                tableBody.removeChild(loadingDiv);
-                currentDigestData.forEach(digest => {
-                    const row = document.createElement('div');
-                    row.className = 'digest-row';
-                    row.setAttribute('role', 'row');
-                    row.innerHTML = `
-                        <div class="digest-col digest-col--book" role="cell" data-label="📖 书名">
-                            ${digest.book}
-                        </div>
-                        <div class="digest-col digest-col--content" role="cell" data-label="📝 摘录">
-                            ${digest.content}
-                        </div>
-                        <div class="digest-col digest-col--date" role="cell" data-label="📅 日期">
-                            ${digest.date}
-                        </div>
-                        <div class="digest-col digest-col--rating" role="cell" data-label="⭐ 启发值">
-                            ${createRatingBadge(digest.rating)}
-                        </div>
-                    `;
-                    tableBody.appendChild(row);
-                });
+    // 2. 清空表格
+    tableBody.innerHTML = '';
 
-                if (currentDigestData.length === 0) {
-                    const emptyRow = document.createElement('div');
-                    emptyRow.className = 'digest-row';
-                    emptyRow.style.textAlign = 'center';
-                    emptyRow.style.padding = '3rem 1.5rem';
-                    emptyRow.style.gridColumn = '1/-1';
-                    emptyRow.innerHTML = `
-                        <div class="digest-col" style="color: var(--text-secondary);">
-                            😢 没有找到匹配的书摘内容
-                        </div>
-                    `;
-                    tableBody.appendChild(emptyRow);
-                }
-            }, 300);
+    // 3. 重新添加表头
+    if (headerClone) {
+        tableBody.appendChild(headerClone);
+    }
+
+    // 4. 显示加载状态
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'loading';
+    loadingDiv.innerHTML = '<div class="loading-spinner"></div>正在加载书摘数据...';
+    tableBody.appendChild(loadingDiv);
+
+    // 5. 延迟渲染数据
+    setTimeout(() => {
+        // 安全移除加载提示
+        if (loadingDiv.parentNode === tableBody) {
+            tableBody.removeChild(loadingDiv);
         }
+
+        // 渲染数据行
+        if (currentDigestData.length === 0) {
+            // 空状态
+            const emptyRow = document.createElement('div');
+            emptyRow.className = 'digest-row';
+            emptyRow.style.cssText = 'text-align: center; padding: 3rem 1.5rem; grid-column: 1/-1;';
+            emptyRow.innerHTML = `
+                <div class="digest-col" style="color: var(--text-secondary);">
+                    😢 没有找到匹配的书摘内容
+                </div>
+            `;
+            tableBody.appendChild(emptyRow);
+        } else {
+            // 渲染每一行数据
+            currentDigestData.forEach(digest => {
+                const row = document.createElement('div');
+                row.className = 'digest-row';
+                row.setAttribute('role', 'row');
+                row.innerHTML = `
+                    <div class="digest-col digest-col--book" role="cell" data-label="📖 书名">
+                        ${escapeHtml(digest.book)}
+                    </div>
+                    <div class="digest-col digest-col--content" role="cell" data-label="📝 摘录">
+                        ${escapeHtml(digest.content)}
+                    </div>
+                    <div class="digest-col digest-col--date" role="cell" data-label="📅 日期">
+                        ${escapeHtml(digest.date)}
+                    </div>
+                    <div class="digest-col digest-col--rating" role="cell" data-label="⭐ 启发值">
+                        ${createRatingBadge(digest.rating)}
+                    </div>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    }, 300);
+}
+
+// 添加HTML转义函数（防止XSS）
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
 
         // 更新书摘统计信息
         function updateDigestStats() {
