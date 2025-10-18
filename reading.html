@@ -12,15 +12,28 @@
         * {
             box-sizing: border-box;
         }
-        
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px;
+            }
+        }
+
         body[data-page="reading"] {
             background: url("images/reading-bg.jpg") center/cover no-repeat fixed;
             color: #f5f7ff;
             position: relative;
             min-height: 100vh;
             overflow-x: hidden;
+            margin: 0;
+            padding: 0;
         }
-        
+
         body[data-page="reading"]::before,
         body[data-page="reading"]::after {
             content: "";
@@ -29,12 +42,12 @@
             pointer-events: none;
             z-index: -1;
         }
-        
+
         body[data-page="reading"]::before {
             background: linear-gradient(135deg, rgba(25, 51, 120, 0.45), rgba(15, 18, 60, 0.65));
             mix-blend-mode: screen;
         }
-        
+
         body[data-page="reading"]::after {
             background:
                 radial-gradient(circle at 20% 15%, rgba(120, 160, 255, 0.27), transparent 55%),
@@ -43,43 +56,59 @@
         }
 
         /* ========== 头部样式 ========== */
+        .reading-header {
+            background: rgba(10, 15, 40, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
         .reading-header .container {
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
         }
-        
+
         .reading-header-left {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 2rem;
             flex-wrap: wrap;
+            flex: 1;
+            min-width: 250px;
         }
-        
+
         .reading-return {
             display: inline-flex;
             align-items: center;
-            gap: 0.55rem;
+            gap: 0.6rem;
             padding: 0.7rem 1.4rem;
             border-radius: 999px;
             background: rgba(255, 255, 255, 0.12);
             border: 1px solid rgba(139, 92, 246, 0.45);
             color: #f4f7ff;
             text-decoration: none;
-            font-size: 0.98rem;
+            font-size: 0.95rem;
             letter-spacing: 0.02em;
             transition: all 0.3s ease;
             box-shadow: 0 10px 22px rgba(99, 102, 241, 0.28);
+            white-space: nowrap;
         }
-        
+
         body.light-mode .reading-return {
             background: rgba(99, 102, 241, 0.08);
             color: var(--accent-hover);
             box-shadow: none;
         }
-        
+
         .reading-return:hover {
             transform: translateY(-3px);
             background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
@@ -87,27 +116,40 @@
             border-color: transparent;
             box-shadow: 0 16px 32px rgba(99, 102, 241, 0.35);
         }
-        
+
         .reading-title-group {
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.3rem;
         }
-        
+
         .reading-title-group .logo {
-            font-size: 2.1rem;
+            font-size: 1.8rem;
+            font-weight: 700;
             margin: 0;
+            letter-spacing: 0.05em;
         }
-        
+
         .reading-subtitle {
             color: var(--text-secondary);
-            font-size: 1rem;
+            font-size: 0.9rem;
             letter-spacing: 0.05em;
+            margin: 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
         }
 
         /* ========== 主内容区域 ========== */
         .reading-main {
-            padding: 2.8rem 0 5rem;
+            padding: 3rem 1.5rem 5rem;
+        }
+
+        .reading-container {
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         /* ========== 书摘精选区域 ========== */
@@ -115,37 +157,36 @@
             position: relative;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 26px;
-            padding: 2rem;
+            border-radius: 24px;
+            padding: 2.5rem;
             box-shadow: var(--shadow);
             animation: fadeIn 0.6s ease-out;
-            margin-bottom: 2rem;
             z-index: 1;
         }
-        
+
         .reading-digest::before {
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), transparent 55%);
-            opacity: 0.8;
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.15), transparent 55%);
+            opacity: 0.6;
             pointer-events: none;
-            border-radius: 26px;
+            border-radius: 24px;
         }
-        
+
         .reading-digest::after {
             content: "";
             position: absolute;
-            top: -80px;
+            top: -100px;
             right: -60px;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(255, 193, 7, 0.22), transparent 70%);
-            filter: blur(40px);
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(255, 193, 7, 0.2), transparent 70%);
+            filter: blur(50px);
             animation: float 16s ease-in-out infinite;
             pointer-events: none;
         }
-        
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -156,53 +197,53 @@
                 transform: translateY(0);
             }
         }
-        
+
         @keyframes float {
             0%, 100% {
                 transform: translateY(0) rotate(0deg);
             }
             50% {
-                transform: translateY(18px) rotate(6deg);
+                transform: translateY(25px) rotate(6deg);
             }
         }
-        
+
         .reading-digest-header {
             position: relative;
             z-index: 1;
             display: flex;
             align-items: flex-start;
-            gap: 1.2rem;
-            margin-bottom: 1.8rem;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
             flex-wrap: wrap;
         }
-        
+
         .digest-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 48px;
-            height: 48px;
+            width: 56px;
+            height: 56px;
             flex-shrink: 0;
             border-radius: 50%;
             background: linear-gradient(135deg, rgba(255, 193, 7, 0.9), rgba(255, 152, 0, 0.75));
             box-shadow: 0 12px 28px rgba(255, 193, 7, 0.3);
             color: #fff;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
         }
-        
+
         .reading-digest-header > div {
             flex: 1;
-            min-width: 250px;
+            min-width: 280px;
         }
-        
+
         .reading-digest-header h2 {
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--text-primary);
-            letter-spacing: 0.06em;
-            margin: 0 0 0.3rem 0;
+            letter-spacing: 0.05em;
+            margin: 0 0 0.5rem 0;
         }
-        
+
         .reading-digest-header p {
             color: var(--text-secondary);
             font-size: 1rem;
@@ -210,75 +251,102 @@
             margin: 0;
         }
 
-        /* 书摘统计信息 */
+        .bookcase-btn {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .bookcase-btn:hover {
+            border-bottom-color: var(--accent-color);
+        }
+
+        /* ========== 书摘统计信息 ========== */
         .digest-stats {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin: 1.5rem 0;
-            padding: 1rem;
-            background: rgba(255, 193, 7, 0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 193, 7, 0.2);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 193, 7, 0.08);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 193, 7, 0.25);
         }
 
         .digest-stat {
             text-align: center;
+            padding: 0.5rem 0;
         }
 
         .digest-stat-number {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            color: rgba(255, 193, 7, 0.9);
+            color: rgba(255, 193, 7, 0.95);
             display: block;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
         }
 
         .digest-stat-label {
             color: var(--text-secondary);
             font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
         }
 
         /* ========== 搜索栏 ========== */
         .digest-search {
-            margin-top: 1rem;
+            margin: 1.5rem 0 0;
             display: flex;
-            gap: 0.6rem;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            align-items: stretch;
+        }
+
+        .digest-search-wrapper {
+            display: flex;
+            gap: 0.8rem;
+            flex: 1;
+            min-width: 280px;
             flex-wrap: wrap;
         }
-        
+
         .digest-search input {
-            flex: 1 1 260px;
-            padding: 0.6rem 1rem;
+            flex: 1;
+            min-width: 200px;
+            padding: 0.8rem 1.2rem;
             border-radius: 999px;
             border: 1px solid rgba(139, 92, 246, 0.35);
-            background: rgba(17, 24, 54, 0.45);
+            background: rgba(17, 24, 54, 0.5);
             color: #f5f7ff;
             outline: none;
             transition: all 0.3s ease;
             font-size: 0.95rem;
         }
-        
+
         body.light-mode .digest-search input {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.92);
             color: var(--text-primary);
             border-color: rgba(139, 92, 246, 0.25);
         }
-        
+
         .digest-search input:focus {
-            border-color: rgba(99, 102, 241, 0.65);
+            border-color: rgba(99, 102, 241, 0.7);
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
         }
-        
+
         .digest-search input::placeholder {
             color: rgba(245, 247, 255, 0.5);
         }
-        
+
         body.light-mode .digest-search input::placeholder {
             color: rgba(0, 0, 0, 0.4);
         }
-        
+
         .digest-search button {
-            padding: 0.6rem 1.4rem;
+            padding: 0.8rem 1.6rem;
             border: none;
             border-radius: 999px;
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
@@ -288,26 +356,27 @@
             letter-spacing: 0.03em;
             display: inline-flex;
             align-items: center;
-            gap: 0.45rem;
+            gap: 0.5rem;
             transition: all 0.3s ease;
             white-space: nowrap;
+            font-weight: 500;
         }
-        
+
         .digest-search button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(99, 102, 241, 0.35);
+            box-shadow: 0 12px 28px rgba(99, 102, 241, 0.4);
         }
-        
+
         .digest-search button:active {
             transform: translateY(0);
         }
-        
+
         body.light-mode .digest-search button {
             box-shadow: 0 8px 18px rgba(99, 102, 241, 0.25);
         }
-        
+
         body.light-mode .digest-search button:hover {
-            box-shadow: 0 12px 28px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
         }
 
         /* ========== 书摘表格 ========== */
@@ -316,9 +385,9 @@
             z-index: 1;
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
-            margin-top: 1.2rem;
-            max-height: 600px;
+            gap: 0.8rem;
+            margin-top: 2rem;
+            max-height: 700px;
             overflow-y: auto;
             padding-right: 0.5rem;
         }
@@ -341,58 +410,61 @@
         .reading-digest-table::-webkit-scrollbar-thumb:hover {
             background: rgba(139, 92, 246, 0.5);
         }
-        
+
         .digest-row {
             display: grid;
-            grid-template-columns: minmax(220px, 1fr) 2.5fr minmax(90px, 0.8fr) minmax(70px, 0.6fr);
-            gap: 1.2rem;
+            grid-template-columns: 1.2fr 2fr 0.9fr 0.7fr;
+            gap: 1.5rem;
             align-items: start;
-            padding: 1.2rem 1.4rem;
+            padding: 1.4rem 1.6rem;
             background: var(--bg-card-soft);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             transition: all 0.3s ease;
         }
-        
+
         .digest-row--head {
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.15), rgba(255, 152, 0, 0.1));
-            font-weight: 600;
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.18), rgba(255, 152, 0, 0.12));
+            font-weight: 700;
             color: var(--accent-hover);
-            letter-spacing: 0.05em;
-            border-color: rgba(255, 193, 7, 0.3);
+            letter-spacing: 0.06em;
+            border-color: rgba(255, 193, 7, 0.35);
             position: sticky;
             top: 0;
             z-index: 10;
+            padding: 1.2rem 1.6rem;
+            font-size: 0.95rem;
         }
-        
+
         .digest-row:hover:not(.digest-row--head) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
-            border-color: rgba(139, 92, 246, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(99, 102, 241, 0.18);
+            border-color: rgba(139, 92, 246, 0.3);
         }
-        
+
         .digest-col {
             word-wrap: break-word;
             word-break: break-word;
+            overflow-wrap: break-word;
             line-height: 1.6;
             font-size: 0.95rem;
         }
-        
+
         .digest-col--book {
             color: var(--accent-color);
-            font-weight: 500;
+            font-weight: 600;
         }
-        
+
         .digest-col--content {
             color: var(--text-primary);
+            font-size: 0.95rem;
         }
-        
+
         .digest-col--date {
             color: var(--text-secondary);
             font-size: 0.9rem;
-            white-space: nowrap;
         }
-        
+
         .digest-col--rating {
             display: flex;
             align-items: center;
@@ -404,17 +476,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 36px;
-            height: 36px;
-            padding: 0 8px;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 10px;
             border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
             overflow: hidden;
         }
-        
+
         .rating-badge::before {
             content: '';
             position: absolute;
@@ -422,7 +494,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.12));
             pointer-events: none;
         }
 
@@ -430,93 +502,69 @@
         .rating-value-10, .rating-value-9 {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #fff;
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 4px 14px rgba(255, 215, 0, 0.45);
         }
-        
+
         .rating-value-10:hover, .rating-value-9:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(255, 215, 0, 0.5);
+            transform: scale(1.08);
+            box-shadow: 0 6px 18px rgba(255, 215, 0, 0.55);
         }
 
         /* 8-7分：绿色 */
         .rating-value-8, .rating-value-7 {
             background: linear-gradient(135deg, #4CAF50, #45a049);
             color: #fff;
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 4px 14px rgba(76, 175, 80, 0.35);
         }
-        
+
         .rating-value-8:hover, .rating-value-7:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+            transform: scale(1.08);
+            box-shadow: 0 6px 18px rgba(76, 175, 80, 0.45);
         }
 
         /* 6-5分：蓝色 */
         .rating-value-6, .rating-value-5 {
             background: linear-gradient(135deg, #2196F3, #1976D2);
             color: #fff;
-            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+            box-shadow: 0 4px 14px rgba(33, 150, 243, 0.35);
         }
-        
+
         .rating-value-6:hover, .rating-value-5:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+            transform: scale(1.08);
+            box-shadow: 0 6px 18px rgba(33, 150, 243, 0.45);
         }
 
         /* 4-3分：橙色 */
         .rating-value-4, .rating-value-3 {
             background: linear-gradient(135deg, #FF9800, #F57C00);
             color: #fff;
-            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+            box-shadow: 0 4px 14px rgba(255, 152, 0, 0.35);
         }
-        
+
         .rating-value-4:hover, .rating-value-3:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
+            transform: scale(1.08);
+            box-shadow: 0 6px 18px rgba(255, 152, 0, 0.45);
         }
 
         /* 2-1分：红色 */
         .rating-value-2, .rating-value-1 {
             background: linear-gradient(135deg, #F44336, #D32F2F);
             color: #fff;
-            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+            box-shadow: 0 4px 14px rgba(244, 67, 54, 0.35);
         }
-        
+
         .rating-value-2:hover, .rating-value-1:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(244, 67, 54, 0.4);
+            transform: scale(1.08);
+            box-shadow: 0 6px 18px rgba(244, 67, 54, 0.45);
         }
 
         /* 空评分 */
         .rating-empty {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
             color: var(--text-secondary);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border: 1.5px dashed rgba(255, 255, 255, 0.25);
             font-style: italic;
-        }
-
-        /* 星星图标动画 */
-        .rating-badge .star-icon {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-            animation: twinkle 2s ease-in-out infinite;
-        }
-        
-        @keyframes twinkle {
-            0% {
-                opacity: 0.45;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.9;
-                transform: scale(1.02);
-            }
-            100% {
-                opacity: 0.55;
-                transform: scale(1.04);
-            }
+            font-size: 0.85rem;
         }
 
         /* ========== 返回顶部按钮 ========== */
@@ -539,31 +587,31 @@
             visibility: hidden;
             transform: scale(0.8);
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
+            box-shadow: 0 8px 28px rgba(139, 92, 246, 0.55);
             z-index: 9999;
             backdrop-filter: blur(10px);
         }
-        
+
         .back-to-top:hover {
-            transform: translateY(-5px) scale(1);
-            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.6);
-            background: linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(56, 189, 248, 0.95));
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 16px 40px rgba(139, 92, 246, 0.65);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(56, 189, 248, 0.98));
         }
-        
+
         .back-to-top:active {
             transform: translateY(-2px) scale(0.95);
         }
-        
+
         .back-to-top.visible {
             opacity: 1;
             visibility: visible;
             transform: scale(1);
         }
-        
+
         .back-to-top i {
             animation: bounce 2s infinite;
         }
-        
+
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% {
                 transform: translateY(0);
@@ -575,69 +623,248 @@
                 transform: translateY(-4px);
             }
         }
-        
+
         body.light-mode .back-to-top {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.95), rgba(56, 189, 248, 0.9));
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 8px 28px rgba(99, 102, 241, 0.45);
         }
-        
+
         body.light-mode .back-to-top:hover {
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5);
+            box-shadow: 0 16px 40px rgba(99, 102, 241, 0.55);
+        }
+
+        /* ========== 社交页脚样式 ========== */
+        .social-footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 2.5rem 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .social-footer .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .social-link:hover {
+            transform: translateY(-4px);
+            color: var(--accent-color);
+            background: rgba(99, 102, 241, 0.15);
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+            text-align: center;
+        }
+
+        /* ========== 加载动画 ========== */
+        .loading {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-secondary);
+            grid-column: 1/-1;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.8rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* ========== 响应式设计 ========== */
+        @media (max-width: 1024px) {
+            .reading-header .container {
+                padding: 0 1rem;
+                gap: 1rem;
+            }
+
+            .reading-main {
+                padding: 2.5rem 1rem 4rem;
+            }
+
+            .reading-digest {
+                padding: 2rem;
+            }
+
+            .digest-row {
+                grid-template-columns: 1.1fr 1.8fr 0.8fr 0.6fr;
+                gap: 1.2rem;
+                padding: 1.2rem 1.4rem;
+            }
+
+            .reading-digest-header h2 {
+                font-size: 1.6rem;
+            }
+        }
+
         @media (max-width: 768px) {
+            .reading-header {
+                padding: 1rem 0;
+            }
+
+            .reading-header .container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
             .reading-header-left {
-                justify-content: center;
+                gap: 1rem;
                 width: 100%;
             }
-            
-            .reading-digest {
-                padding: 1.5rem 1rem;
+
+            .reading-return {
+                width: 100%;
+                justify-content: center;
+                font-size: 0.9rem;
+                padding: 0.65rem 1.2rem;
             }
-            
+
+            .reading-title-group .logo {
+                font-size: 1.5rem;
+            }
+
+            .controls {
+                width: 100%;
+            }
+
+            .reading-main {
+                padding: 2rem 1rem 3.5rem;
+            }
+
+            .reading-digest {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+
+            .reading-digest-header {
+                gap: 1rem;
+                margin-bottom: 1.8rem;
+            }
+
+            .reading-digest-header h2 {
+                font-size: 1.4rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .digest-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 1.2rem;
+            }
+
+            .digest-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+                padding: 1.2rem;
+                margin: 1.5rem 0;
+            }
+
+            .digest-stat-number {
+                font-size: 1.5rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .digest-stat-label {
+                font-size: 0.8rem;
+            }
+
             .digest-search {
                 flex-direction: column;
-                align-items: stretch;
+                gap: 0.8rem;
             }
-            
+
+            .digest-search-wrapper {
+                min-width: unset;
+                width: 100%;
+            }
+
             .digest-search input,
             .digest-search button {
                 width: 100%;
             }
-            
+
             .digest-search button {
                 justify-content: center;
+                padding: 0.75rem 1.2rem;
             }
-            
+
             .digest-row {
                 grid-template-columns: 1fr;
                 gap: 0.8rem;
                 padding: 1.2rem;
+                margin-bottom: 0.4rem;
             }
-            
+
+            .digest-row--head {
+                display: none;
+            }
+
             .digest-col {
                 width: 100%;
+                font-size: 0.9rem;
             }
-            
-            .digest-col--book::before {
-                content: "📖 ";
-                font-weight: 600;
+
+            .digest-col::before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: var(--accent-color);
+                display: block;
+                margin-bottom: 0.3rem;
+                font-size: 0.85rem;
             }
-            
-            .digest-col--date::before {
-                content: "📅 ";
-            }
-            
+
             .digest-col--rating {
                 justify-content: flex-start;
             }
-            
-            .digest-col--rating::before {
-                content: "⭐ ";
-                margin-right: 0.5rem;
+
+            .rating-badge {
+                min-width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
             }
-            
+
+            .reading-digest-table {
+                max-height: none;
+                gap: 0.6rem;
+                margin-top: 1.5rem;
+            }
+
             .back-to-top {
                 bottom: 20px;
                 right: 20px;
@@ -645,19 +872,80 @@
                 height: 50px;
                 font-size: 1.1rem;
             }
+
+            .social-footer {
+                padding: 2rem 1rem;
+            }
         }
-        
-        @media (max-width: 520px) {
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 13px;
+            }
+
+            .reading-header .container {
+                padding: 0 0.8rem;
+            }
+
             .reading-return {
-                width: 100%;
-                justify-content: center;
+                font-size: 0.85rem;
+                padding: 0.6rem 1rem;
             }
-            
+
+            .reading-return span {
+                display: none;
+            }
+
+            .reading-return::after {
+                content: '返回';
+            }
+
+            .reading-title-group .logo {
+                font-size: 1.3rem;
+            }
+
+            .reading-main {
+                padding: 1.5rem 0.8rem 3rem;
+            }
+
+            .reading-digest {
+                padding: 1.2rem;
+            }
+
+            .reading-digest-header {
+                gap: 0.8rem;
+            }
+
+            .reading-digest-header h2 {
+                font-size: 1.2rem;
+            }
+
+            .reading-digest-header > div {
+                min-width: 100%;
+            }
+
             .digest-stats {
-                flex-direction: column;
-                gap: 1rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+                padding: 1rem;
+                margin: 1rem 0;
             }
-            
+
+            .digest-stat-number {
+                font-size: 1.3rem;
+            }
+
+            .digest-col {
+                font-size: 0.85rem;
+            }
+
+            .rating-badge {
+                min-width: 36px;
+                height: 36px;
+                font-size: 0.8rem;
+                padding: 0 6px;
+            }
+
             .back-to-top {
                 bottom: 15px;
                 right: 15px;
@@ -665,92 +953,16 @@
                 height: 45px;
                 font-size: 1rem;
             }
-        }
 
-        /* 添加平滑滚动 */
-        html {
-            scroll-behavior: smooth;
-        }
+            .social-links {
+                gap: 0.8rem;
+            }
 
-        /* 社交页脚样式 */
-        .social-footer {
-            background: var(--bg-card);
-            border-top: 1px solid var(--border-color);
-            padding: 2rem 0;
-            margin-top: 4rem;
-        }
-
-        .social-footer .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .social-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-link:hover {
-            transform: translateY(-3px);
-            color: var(--accent-color);
-        }
-
-        .social-link.wechat:hover {
-            color: #07C160;
-            box-shadow: 0 8px 20px rgba(7, 193, 96, 0.3);
-        }
-
-        .social-link.github:hover {
-            color: #333;
-            box-shadow: 0 8px 20px rgba(51, 51, 51, 0.2);
-        }
-
-        .social-link.x:hover {
-            color: #000;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .copyright {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin: 0;
-        }
-
-        /* 加载动画 */
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-secondary);
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--accent-color);
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 0.5rem;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            .social-link {
+                width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -764,8 +976,8 @@
                     <span>退回到"狂客·银河"</span>
                 </a>
                 <div class="reading-title-group">
-                    <h1 class="logo">星空书摘精选</h1>
-                    <p class="reading-subtitle">狂客·星空</p>
+                    <h1 class="logo">✨ 星空书摘</h1>
+                    <p class="reading-subtitle">精选智慧·启迪人生</p>
                 </div>
             </div>
             <div class="controls">
@@ -778,7 +990,7 @@
 
     <!-- 主内容区 -->
     <main class="reading-main">
-        <div class="container reading-container">
+        <div class="reading-container">
             <!-- 星空书摘精选 -->
             <section class="reading-digest">
                 <header class="reading-digest-header">
@@ -787,8 +999,7 @@
                     </div>
                     <div>
                         <h2>书摘精选集</h2>
-                        <p><a href="books.html" class="bookcase-btn" target="_blank">星空书柜</a>
-                    </p>
+                        <p>访问 <a href="books.html" class="bookcase-btn" target="_blank">星空书柜</a> 了解更多书籍</p>
                         
                         <!-- 书摘统计信息 -->
                         <div class="digest-stats">
@@ -809,22 +1020,24 @@
                                 <span class="digest-stat-label">高启发摘录</span>
                             </div>
                         </div>
-                        
+
                         <!-- 搜索和排序工具栏 -->
                         <div class="digest-search">
-                            <input type="search" id="digestSearchInput" placeholder="搜索书名或摘录关键词" aria-label="搜索书摘">
-                            <button type="button" id="digestSearchButton" aria-label="执行搜索">
-                                <i class="fas fa-search" aria-hidden="true"></i>
-                                <span>搜索</span>
-                            </button>
-                            <button type="button" id="digestSearchReset" aria-label="重置搜索">
-                                <i class="fas fa-rotate-left" aria-hidden="true"></i>
-                                <span>重置</span>
-                            </button>
-                            <button type="button" id="digestSortToggle" aria-label="按启发值排序">
-                                <i class="fas fa-sort-numeric-down" aria-hidden="true"></i>
-                                <span>启发值排序</span>
-                            </button>
+                            <input type="search" id="digestSearchInput" placeholder="搜索书名或摘录关键词..." aria-label="搜索书摘">
+                            <div class="digest-search-wrapper" style="display: flex; gap: 0.8rem; width: auto;">
+                                <button type="button" id="digestSearchButton" aria-label="执行搜索">
+                                    <i class="fas fa-search" aria-hidden="true"></i>
+                                    <span>搜索</span>
+                                </button>
+                                <button type="button" id="digestSortToggle" aria-label="按启发值排序">
+                                    <i class="fas fa-sort-numeric-down" aria-hidden="true"></i>
+                                    <span>排序</span>
+                                </button>
+                                <button type="button" id="digestSearchReset" aria-label="重置搜索">
+                                    <i class="fas fa-rotate-left" aria-hidden="true"></i>
+                                    <span>重置</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </header>
@@ -838,7 +1051,6 @@
                         <div class="digest-col digest-col--date" role="columnheader">日期</div>
                         <div class="digest-col digest-col--rating" role="columnheader">启发值</div>
                     </div>
-                    <!-- 数据行将在这里动态加载 -->
                 </div>
             </section>
         </div>
@@ -866,14 +1078,15 @@
                     </svg>
                 </a>
             </div>
-            <p class="copyright">© 2025 狂客·银河 版权所有</p>
+            <p class="copyright">© 2025 狂客·银河 版权所有 | 精选书摘 · 启迪人生</p>
         </div>
     </footer>
 
     <script>
-        // 书摘数据（整合了您提供的所有书摘）
+        // [JavaScript 代码保持不变，只需更新表格渲染部分]
         const digestData = [
-            { book: "《个体崛起》", content: "这世上的大多数事,都是关我屁事；你觉得一件正常的事，在别人眼里是装 B, 只有两种可能：要么是你真的在装 B; 要么你就该换圈子了，你原来的圈子，已经不适合你。不懂装 B, 根本就不懂生活", date: "2025/10/17", rating: 3 },
+            // ... [数据保持不变]
+              { book: "《个体崛起》", content: "这世上的大多数事,都是关我屁事；你觉得一件正常的事，在别人眼里是装 B, 只有两种可能：要么是你真的在装 B; 要么你就该换圈子了，你原来的圈子，已经不适合你。不懂装 B, 根本就不懂生活", date: "2025/10/17", rating: 3 },
             { book: "《请辩》", content: "用免费内容先跑起来，先自己研究，自己试错，别怕麻烦，因为你最不值钱的是什么？是时间；先去做具体的事，遇到困难的时候不要躲，越大的困难就越要亲自去解决掉它，做着做着，你的世界就会起变化", date: "2025/10/17", rating: 9 },
             { book: "《小狗钱钱》", content: "如果你有困难，首先想到的应该是你的榜样然后再问一问自己：如果换作是他，他又会怎样做？", date: "2025/10/16", rating: 8 },
             { book: "《蔡叔的财富秘籍》", content: "搬那些最远、最好、最顶级,但你要服务的大多数人还无法接触到的模式——你走到的地方越远,见过的东西越离奇、越好,就有越多可搬的可能性;所有优秀的规则设计者，他都必须是这个规则或类似规则的受益者或者是受害者;没有一个白嫖党可以找到好的赚钱方法", date: "2025/10/16", rating: 9 },
@@ -1065,29 +1278,16 @@
 
         // 当前显示的数据
         let currentDigestData = [...digestData];
-        let sortOrder = 'default'; // default, rating-desc, rating-asc, date-desc, date-asc
+        let sortOrder = 'default';
 
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
-            // 设置body属性
             document.body.setAttribute('data-page', 'reading');
-            
-            // 初始化主题
             initializeTheme();
-            
-            // 渲染书摘数据
             renderDigestTable();
-            
-            // 更新统计信息
             updateDigestStats();
-            
-            // 绑定搜索功能
             bindSearchEvents();
-            
-            // 绑定排序功能
             bindSortEvents();
-            
-            // 初始化返回顶部按钮
             initBackToTop();
         });
 
@@ -1119,7 +1319,6 @@
             if (!rating || rating === 0) {
                 return '<div class="rating-badge rating-empty">-</div>';
             }
-            
             const ratingClass = `rating-value-${rating}`;
             return `<div class="rating-badge ${ratingClass}">${rating}</div>`;
         }
@@ -1127,55 +1326,47 @@
         // 渲染书摘表格
         function renderDigestTable() {
             const tableBody = document.querySelector('.reading-digest-table');
-            
-            // 清空现有内容（保留表头）
             const headerRow = tableBody.querySelector('.digest-row--head');
             tableBody.innerHTML = '';
             tableBody.appendChild(headerRow);
-            
-            // 显示加载状态
+
             const loadingDiv = document.createElement('div');
             loadingDiv.className = 'loading';
             loadingDiv.innerHTML = '<div class="loading-spinner"></div>正在加载书摘数据...';
             tableBody.appendChild(loadingDiv);
-            
-            // 模拟加载延迟
+
             setTimeout(() => {
                 tableBody.removeChild(loadingDiv);
-                
-                // 渲染数据行
                 currentDigestData.forEach(digest => {
                     const row = document.createElement('div');
                     row.className = 'digest-row';
                     row.setAttribute('role', 'row');
-                    
                     row.innerHTML = `
-                        <div class="digest-col digest-col--book" role="cell">
+                        <div class="digest-col digest-col--book" role="cell" data-label="📖 书名">
                             ${digest.book}
                         </div>
-                        <div class="digest-col digest-col--content" role="cell">
+                        <div class="digest-col digest-col--content" role="cell" data-label="📝 摘录">
                             ${digest.content}
                         </div>
-                        <div class="digest-col digest-col--date" role="cell">
+                        <div class="digest-col digest-col--date" role="cell" data-label="📅 日期">
                             ${digest.date}
                         </div>
-                        <div class="digest-col digest-col--rating" role="cell">
+                        <div class="digest-col digest-col--rating" role="cell" data-label="⭐ 启发值">
                             ${createRatingBadge(digest.rating)}
                         </div>
                     `;
-                    
                     tableBody.appendChild(row);
                 });
-                
-                // 如果没有数据
+
                 if (currentDigestData.length === 0) {
                     const emptyRow = document.createElement('div');
                     emptyRow.className = 'digest-row';
                     emptyRow.style.textAlign = 'center';
-                    emptyRow.style.padding = '2rem';
+                    emptyRow.style.padding = '3rem 1.5rem';
+                    emptyRow.style.gridColumn = '1/-1';
                     emptyRow.innerHTML = `
-                        <div class="digest-col" style="grid-column: 1/-1; color: var(--text-secondary);">
-                            没有找到匹配的书摘内容
+                        <div class="digest-col" style="color: var(--text-secondary);">
+                            😢 没有找到匹配的书摘内容
                         </div>
                     `;
                     tableBody.appendChild(emptyRow);
@@ -1185,21 +1376,14 @@
 
         // 更新书摘统计信息
         function updateDigestStats() {
-            // 总书摘数
             document.getElementById('totalDigests').textContent = currentDigestData.length;
-            
-            // 涉及书籍数
             const uniqueBooks = [...new Set(currentDigestData.map(d => d.book))];
             document.getElementById('uniqueBooks').textContent = uniqueBooks.length;
-            
-            // 平均启发值
             const validRatings = currentDigestData.filter(d => d.rating && d.rating > 0);
-            const avgRating = validRatings.length > 0 
+            const avgRating = validRatings.length > 0
                 ? (validRatings.reduce((sum, d) => sum + d.rating, 0) / validRatings.length).toFixed(1)
                 : '0.0';
             document.getElementById('avgInspiration').textContent = avgRating;
-            
-            // 高启发摘录（评分>=7）
             const highInspiration = currentDigestData.filter(d => d.rating && d.rating >= 7).length;
             document.getElementById('highInspiration').textContent = highInspiration;
         }
@@ -1209,51 +1393,34 @@
             const searchInput = document.getElementById('digestSearchInput');
             const searchButton = document.getElementById('digestSearchButton');
             const resetButton = document.getElementById('digestSearchReset');
-            
-            // 执行搜索
+
             const performSearch = () => {
                 const searchTerm = searchInput.value.trim().toLowerCase();
-                
-                if (searchTerm === '') {
-                    currentDigestData = [...digestData];
-                } else {
-                    currentDigestData = digestData.filter(digest => 
+                currentDigestData = searchTerm === ''
+                    ? [...digestData]
+                    : digestData.filter(digest =>
                         digest.book.toLowerCase().includes(searchTerm) ||
                         digest.content.toLowerCase().includes(searchTerm)
                     );
-                }
-                
-                // 应用当前排序
                 applyCurrentSort();
-                
-                // 重新渲染
                 renderDigestTable();
                 updateDigestStats();
             };
-            
-            // 搜索按钮点击
+
             searchButton?.addEventListener('click', performSearch);
-            
-            // 回车搜索
             searchInput?.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
+                if (e.key === 'Enter') performSearch();
             });
-            
-            // 重置按钮
+
             resetButton?.addEventListener('click', () => {
                 searchInput.value = '';
                 currentDigestData = [...digestData];
                 sortOrder = 'default';
                 renderDigestTable();
                 updateDigestStats();
-                
-                // 更新排序按钮状态
                 updateSortButton();
             });
-            
-            // 实时搜索（可选）
+
             let searchTimeout;
             searchInput?.addEventListener('input', () => {
                 clearTimeout(searchTimeout);
@@ -1264,34 +1431,12 @@
         // 绑定排序事件
         function bindSortEvents() {
             const sortButton = document.getElementById('digestSortToggle');
-            
             sortButton?.addEventListener('click', () => {
-                // 循环切换排序方式
-                switch (sortOrder) {
-                    case 'default':
-                        sortOrder = 'rating-desc';
-                        break;
-                    case 'rating-desc':
-                        sortOrder = 'rating-asc';
-                        break;
-                    case 'rating-asc':
-                        sortOrder = 'date-desc';
-                        break;
-                    case 'date-desc':
-                        sortOrder = 'date-asc';
-                        break;
-                    case 'date-asc':
-                        sortOrder = 'default';
-                        break;
-                }
-                
-                // 应用排序
+                const orders = ['default', 'rating-desc', 'rating-asc', 'date-desc', 'date-asc'];
+                const currentIndex = orders.indexOf(sortOrder);
+                sortOrder = orders[(currentIndex + 1) % orders.length];
                 applyCurrentSort();
-                
-                // 重新渲染
                 renderDigestTable();
-                
-                // 更新按钮状态
                 updateSortButton();
             });
         }
@@ -1312,9 +1457,7 @@
                     currentDigestData.sort((a, b) => new Date(a.date) - new Date(b.date));
                     break;
                 default:
-                    // 默认排序（按原始顺序）
                     currentDigestData.sort((a, b) => digestData.indexOf(a) - digestData.indexOf(b));
-                    break;
             }
         }
 
@@ -1322,55 +1465,29 @@
         function updateSortButton() {
             const sortButton = document.getElementById('digestSortToggle');
             if (!sortButton) return;
-            
             const icon = sortButton.querySelector('i');
             const text = sortButton.querySelector('span');
-            
-            switch (sortOrder) {
-                case 'rating-desc':
-                    icon.className = 'fas fa-sort-numeric-down';
-                    text.textContent = '启发值降序';
-                    break;
-                case 'rating-asc':
-                    icon.className = 'fas fa-sort-numeric-up';
-                    text.textContent = '启发值升序';
-                    break;
-                case 'date-desc':
-                    icon.className = 'fas fa-calendar-alt';
-                    text.textContent = '日期降序';
-                    break;
-                case 'date-asc':
-                    icon.className = 'fas fa-calendar';
-                    text.textContent = '日期升序';
-                    break;
-                default:
-                    icon.className = 'fas fa-sort-numeric-down';
-                    text.textContent = '启发值排序';
-                    break;
-            }
+            const labels = {
+                'default': { icon: 'fas fa-sort-numeric-down', text: '排序' },
+                'rating-desc': { icon: 'fas fa-sort-numeric-down', text: '启发值↓' },
+                'rating-asc': { icon: 'fas fa-sort-numeric-up', text: '启发值↑' },
+                'date-desc': { icon: 'fas fa-calendar-alt', text: '日期↓' },
+                'date-asc': { icon: 'fas fa-calendar', text: '日期↑' }
+            };
+            const label = labels[sortOrder] || labels['default'];
+            icon.className = label.icon;
+            text.textContent = label.text;
         }
 
         // 初始化返回顶部按钮
         function initBackToTop() {
             const backToTopButton = document.getElementById('backToTop');
-            
             if (!backToTopButton) return;
-            
-            // 滚动事件
             window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 300) {
-                    backToTopButton.classList.add('visible');
-                } else {
-                    backToTopButton.classList.remove('visible');
-                }
+                backToTopButton.classList.toggle('visible', window.pageYOffset > 300);
             });
-            
-            // 点击事件
             backToTopButton.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
     </script>
