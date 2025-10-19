@@ -928,6 +928,16 @@ const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
  * @type {Array<Object>}
  */
 let momentsData = [
+     {
+        id: 23,
+        content: '我们认真对待我们的周遭环境,我们知道自己很容易被环境所听影响、所塑造;又因为我们一向是以主动为荣的人,所以会时时刻刻提防环境对我们的影响向。我们不花时间与他人争论,我们只为了弄清楚事实而讨论。我们不鄙视他人的能力--我们自己曾经也能力不足,我们倒是不怕自黑,不过,我们更愿意与那些欣赏我们的人共同,成长。我们懂得如何调整焦点，我们会主动尝试从多个角度去看待问题;我们不会把时间浪费在无谓的情绪之中,我们会用时间精力改变那些能够改变的事情。',
+        value: 5,
+        category: '问答互动',
+        time: '2025-10-19 13:05',
+        image: '',
+        likes: 0,
+        comments: []
+    },
     {
         id: 22,
         content: '马斯克与弗里费德曼的播客不错-https://youtu.be/JN3KPFbWCy8?si=z0HMVS7Jw-GSO5zC',
