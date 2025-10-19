@@ -1200,3 +1200,65 @@ if (typeof module !== 'undefined' && module.exports) {
         getMomentsStats  // 🆕 添加这行
     };
 }
+// ==================== 朋友圈统计功能 ====================
+
+// 更新统计数字
+function updateStatsDisplay() {
+    if (!window.momentsData) return;
+    
+    const stats = getMomentsStats(momentsData);
+    
+    // 更新统计卡片
+    const totalEl = document.getElementById('totalMoments');
+    const highValueEl = document.getElementById('highValueMoments');
+    const todayEl = document.getElementById('todayMoments');
+    
+    if (totalEl) {
+        animateCounter(totalEl, 0, stats.total, 1000);
+    }
+    if (highValueEl) {
+        animateCounter(highValueEl, 0, stats.highValue, 1200);
+    }
+    if (todayEl) {
+        animateCounter(todayEl, 0, stats.today, 800);
+    }
+}
+
+// 简单的数字动画
+function animateCounter(element, start, end, duration) {
+    const startTime = Date.now();
+    const range = end - start;
+    
+    function update() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // 缓动效果
+        const value = Math.floor(start + range * easeOutQuart(progress));
+        element.textContent = value;
+        
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+    
+    update();
+}
+
+// 缓动函数
+function easeOutQuart(t) {
+    return 1 - Math.pow(1 - t, 4);
+}
+
+// 页面加载完成后更新统计
+document.addEventListener('DOMContentLoaded', function() {
+    // 延迟一点确保数据已加载
+    setTimeout(updateStatsDisplay, 500);
+});
+
+// 监听分类变化
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('category-btn')) {
+        setTimeout(updateStatsDisplay, 100);
+    }
+});
