@@ -1414,44 +1414,6 @@ function getMomentsStats(moments) {
     return stats;
 }
 
-// ==================== 初始化与验证 ====================
-console.log('🚀 开始加载数据模块...');
-
-// 验证所有日记数据
-console.log('🔍 验证成功日记数据...');
-const validationResults = successDiaryData.map(entry => ({
-    id: entry.id,
-    valid: validateDiaryEntry(entry)
-}));
-
-const invalidCount = validationResults.filter(r => !r.valid).length;
-if (invalidCount > 0) {
-    console.error(`❌ 发现 ${invalidCount} 条无效日记数据`);
-} else {
-    console.log('✅ 所有日记数据验证通过');
-}
-
-// 数据统计
-const stats = getDiaryStats(successDiaryData);
-console.log('📊 数据统计:', {
-    日记总数: stats.total,
-    朋友圈数量: momentsData.length,
-    分类分布: stats.categories,
-    心情分布: stats.moods
-});
-// 数据统计
-const stats = getDiaryStats(successDiaryData);
-
-// 🆕 添加这部分
-const momentsStats = getMomentsStats(momentsData);
-
-console.log('📊 数据统计:', {
-    日记总数: stats.total,
-    朋友圈总数: momentsStats.total,        // 🆕
-    高价值朋友圈: momentsStats.highValue,   // 🆕
-    分类分布: stats.categories,
-    心情分布: stats.moods
-});
 
 // ==================== 浏览器环境全局暴露 ====================
 if (typeof window !== 'undefined') {
