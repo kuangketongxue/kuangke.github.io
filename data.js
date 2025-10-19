@@ -923,29 +923,54 @@ let successDiaryData = [
 const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
 
 // ==================== 朋友圈数据 ====================
-<!-- 朋友圈统计信息 -->
-<div class="moments-stats">
-    <div class="stat-cards">
-        <div class="stat-card">
-            <div class="stat-number" id="totalMoments">0</div>
-            <div class="stat-label">朋友圈总数</div>
-        </div>
-        <div class="stat-card highlight">
-            <div class="stat-number" id="highValueMoments">0</div>
-            <div class="stat-label">高价值内容</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="todayMoments">0</div>
-            <div class="stat-label">今日发布</div>
-        </div>
-    </div>
-</div>
 
-<!-- 朋友圈列表容器 -->
-<div class="moments-container">
-    <!-- 现有的朋友圈列表 -->
-</div>
 /**
+ * 获取朋友圈统计信息
+ * @param {Array} moments - 朋友圈数组
+ * @returns {Object} 统计信息
+ */
+function getMomentsStats(moments) {
+    const today = new Date().toISOString().split('T')[0];
+    
+    const stats = {
+        total: moments.length,
+        highValue: 0,
+        today: 0,
+        categories: {},
+        valueDistribution: {
+            0: 0,
+            1: 0,
+            3: 0,
+            5: 0
+        }
+    };
+
+    moments.forEach(moment => {
+        // 统计高价值内容
+        if (moment.value >= 5) {
+            stats.highValue++;
+        }
+
+        // 统计今日发布
+        const momentDate = moment.time.split(' ')[0];
+        if (momentDate === today) {
+            stats.today++;
+        }
+
+        // 统计价值分布
+        if (moment.value in stats.valueDistribution) {
+            stats.valueDistribution[moment.value]++;
+        }
+
+        // 统计分类
+        stats.categories[moment.category] = (stats.categories[moment.category] || 0) + 1;
+    });
+
+    return stats;
+}
+
+/**
+ 
  * 朋友圈数据集
  * @type {Array<Object>}
  */
