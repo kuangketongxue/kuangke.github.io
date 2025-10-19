@@ -5,12 +5,10 @@ const STORAGE_KEYS = Object.freeze({
     theme: 'theme',
     language: 'language'
 });
-
 const PAGE_TYPES = Object.freeze({
     MOMENTS: 'moments',
     SUCCESS: 'success'
 });
-
 const DEBOUNCE_DELAY = 300;
 const ANIMATION_DELAY = 0.1;
 const NOTIFICATION_DURATION = 3000;
