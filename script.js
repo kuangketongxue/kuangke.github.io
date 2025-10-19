@@ -73,7 +73,7 @@ const Utils = {
     formatTime(timeStr) {
         const date = new Date(timeStr);
         if (Number.isNaN(date.getTime())) return timeStr;
-        
+
         const now = new Date();
         const diff = now - date;
         const oneMinute = 60 * 1000;
@@ -98,14 +98,13 @@ const Utils = {
     formatDiaryDate(dateStr, lang) {
         const date = new Date(dateStr);
         if (Number.isNaN(date.getTime())) return dateStr;
-        
+
         const options = {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
             weekday: 'short'
         };
-        
         return date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', options);
     },
 
@@ -142,14 +141,14 @@ class NotificationManager {
     static show(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
-        
+
         const iconMap = {
             success: 'check-circle',
             warning: 'exclamation-circle',
             error: 'times-circle',
             info: 'info-circle'
         };
-        
+
         const colorMap = {
             success: '#10b981',
             warning: '#f59e0b',
@@ -254,7 +253,6 @@ class LanguageManager {
         appState.currentLanguage = appState.currentLanguage === 'zh' ? 'en' : 'zh';
         appState.saveToStorage(STORAGE_KEYS.language, appState.currentLanguage);
         this.updateLanguageToggleButton();
-        
         if (appState.currentPage === PAGE_TYPES.SUCCESS) {
             SuccessPageManager.updatePage();
         }
@@ -263,10 +261,8 @@ class LanguageManager {
     static updateLanguageToggleButton() {
         const button = document.getElementById('languageToggle');
         if (!button) return;
-        
         const icon = button.querySelector('i');
         const span = button.querySelector('span');
-        
         if (icon) icon.className = 'fas fa-language';
         if (span) span.textContent = appState.currentLanguage === 'zh' ? '中 → EN' : 'EN → 中';
     }
@@ -306,7 +302,6 @@ class ThemeManager {
     static updateThemeToggleButton() {
         const button = document.getElementById('themeToggle');
         if (!button) return;
-        
         const icon = button.querySelector('i');
         if (icon) {
             icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
@@ -340,15 +335,238 @@ class StorageManager {
     }
 }
 
+// ==================== 分页管理器 ====================
+class PaginationManager {
+    constructor(options = {}) {
+        this.itemsPerPage = options.itemsPerPage || 12;
+        this.currentPage = 1;
+        this.totalItems = 0;
+        this.totalPages = 0;
+        this.maxVisiblePages = options.maxVisiblePages || 5;
+        
+        // DOM元素
+        this.container = document.getElementById('momentsContainer');
+        this.firstPageBtn = document.getElementById('firstPage');
+        this.prevPageBtn = document.getElementById('prevPage');
+        this.nextPageBtn = document.getElementById('nextPage');
+        this.lastPageBtn = document.getElementById('lastPage');
+        this.pageNumbersContainer = document.getElementById('pageNumbers');
+        this.itemsPerPageSelect = document.getElementById('itemsPerPage');
+        this.showingStart = document.getElementById('showingStart');
+        this.showingEnd = document.getElementById('showingEnd');
+        this.totalItemsSpan = document.getElementById('totalItems');
+        this.announcer = document.getElementById('announcer');
+        
+        // 数据存储
+        this.allItems = [];
+        this.filteredItems = [];
+        
+        this.init();
+    }
+    
+    init() {
+        this.bindEvents();
+    }
+    
+    bindEvents() {
+        this.firstPageBtn?.addEventListener('click', () => this.goToPage(1));
+        this.prevPageBtn?.addEventListener('click', () => this.goToPage(this.currentPage - 1));
+        this.nextPageBtn?.addEventListener('click', () => this.goToPage(this.currentPage + 1));
+        this.lastPageBtn?.addEventListener('click', () => this.goToPage(this.totalPages));
+        
+        this.itemsPerPageSelect?.addEventListener('change', (e) => {
+            this.itemsPerPage = parseInt(e.target.value);
+            this.currentPage = 1;
+            this.render();
+        });
+    }
+    
+    setData(allItems, filteredItems = null) {
+        this.allItems = allItems;
+        this.filteredItems = filteredItems || allItems;
+        this.totalItems = this.filteredItems.length;
+        this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+        
+        if (this.currentPage > this.totalPages && this.totalPages > 0) {
+            this.currentPage = 1;
+        }
+        
+        this.render();
+    }
+    
+    goToPage(page) {
+        if (page < 1 || page > this.totalPages) return;
+        
+        this.currentPage = page;
+        this.render();
+        this.scrollToTop();
+        this.announce(`已跳转到第 ${page} 页`);
+    }
+    
+    render() {
+        this.renderItems();
+        this.renderControls();
+        this.updateInfo();
+    }
+    
+    renderItems() {
+        if (!this.container) return;
+        
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = Math.min(startIndex + this.itemsPerPage, this.totalItems);
+        const pageItems = this.filteredItems.slice(startIndex, endIndex);
+        
+        const event = new CustomEvent('paginationRender', {
+            detail: {
+                items: pageItems,
+                page: this.currentPage,
+                totalPages: this.totalPages
+            }
+        });
+        document.dispatchEvent(event);
+    }
+    
+    renderControls() {
+        this.updateButtonStates();
+        this.renderPageNumbers();
+    }
+    
+    updateButtonStates() {
+        const isFirstPage = this.currentPage === 1;
+        const isLastPage = this.currentPage === this.totalPages || this.totalPages === 0;
+        
+        if (this.firstPageBtn) this.firstPageBtn.disabled = isFirstPage;
+        if (this.prevPageBtn) this.prevPageBtn.disabled = isFirstPage;
+        if (this.nextPageBtn) this.nextPageBtn.disabled = isLastPage;
+        if (this.lastPageBtn) this.lastPageBtn.disabled = isLastPage;
+    }
+    
+    renderPageNumbers() {
+        if (!this.pageNumbersContainer) return;
+        
+        this.pageNumbersContainer.innerHTML = '';
+        
+        const pages = this.getPageNumbers();
+        
+        pages.forEach(page => {
+            if (page === '...') {
+                const ellipsis = document.createElement('span');
+                ellipsis.className = 'page-ellipsis';
+                ellipsis.textContent = '...';
+                ellipsis.setAttribute('aria-hidden', 'true');
+                this.pageNumbersContainer.appendChild(ellipsis);
+            } else {
+                const button = document.createElement('button');
+                button.className = 'page-number';
+                button.textContent = page;
+                button.setAttribute('aria-label', `第 ${page} 页`);
+                
+                if (page === this.currentPage) {
+                    button.classList.add('active');
+                    button.setAttribute('aria-current', 'page');
+                }
+                
+                button.addEventListener('click', () => this.goToPage(page));
+                this.pageNumbersContainer.appendChild(button);
+            }
+        });
+    }
+    
+    getPageNumbers() {
+        const pages = [];
+        const half = Math.floor(this.maxVisiblePages / 2);
+        
+        if (this.totalPages <= this.maxVisiblePages) {
+            for (let i = 1; i <= this.totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            let start = Math.max(1, this.currentPage - half);
+            let end = Math.min(this.totalPages, start + this.maxVisiblePages - 1);
+            
+            if (end - start < this.maxVisiblePages - 1) {
+                start = Math.max(1, end - this.maxVisiblePages + 1);
+            }
+            
+            if (start > 1) {
+                pages.push(1);
+                if (start > 2) pages.push('...');
+            }
+            
+            for (let i = start; i <= end; i++) {
+                pages.push(i);
+            }
+            
+            if (end < this.totalPages) {
+                if (end < this.totalPages - 1) pages.push('...');
+                pages.push(this.totalPages);
+            }
+        }
+        
+        return pages;
+    }
+    
+    updateInfo() {
+        const startIndex = this.totalItems > 0 ? (this.currentPage - 1) * this.itemsPerPage + 1 : 0;
+        const endIndex = Math.min(this.currentPage * this.itemsPerPage, this.totalItems);
+        
+        if (this.showingStart) this.showingStart.textContent = startIndex;
+        if (this.showingEnd) this.showingEnd.textContent = endIndex;
+        if (this.totalItemsSpan) this.totalItemsSpan.textContent = this.totalItems;
+    }
+    
+    scrollToTop() {
+        const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
+        const categoryHeight = document.querySelector('.category-nav')?.offsetHeight || 0;
+        const offset = headerHeight + categoryHeight + 20;
+        
+        window.scrollTo({
+            top: offset,
+            behavior: 'smooth'
+        });
+    }
+    
+    announce(message) {
+        if (this.announcer) {
+            this.announcer.textContent = message;
+            setTimeout(() => {
+                this.announcer.textContent = '';
+            }, 1000);
+        }
+    }
+    
+    reset() {
+        this.currentPage = 1;
+    }
+}
+
 // ==================== 朋友圈页面管理器 ====================
 class MomentsPageManager {
     static data = [];
     static eventListeners = new Map();
+    static paginationManager = null;
 
     static init() {
         this.loadData();
+        this.initPagination();
         this.bindEvents();
-        this.render();
+        this.updateStats();
+    }
+
+    static initPagination() {
+        this.paginationManager = new PaginationManager({
+            itemsPerPage: 12,
+            maxVisiblePages: 5
+        });
+        
+        // 监听分页渲染事件
+        document.addEventListener('paginationRender', (e) => {
+            const { items } = e.detail;
+            this.renderMoments(items);
+        });
+        
+        // 设置初始数据
+        this.paginationManager.setData(this.data);
     }
 
     static loadData() {
@@ -381,10 +599,14 @@ class MomentsPageManager {
         const categoryBtns = document.querySelectorAll('.category-btn');
         categoryBtns.forEach(btn => {
             const handler = () => {
-                categoryBtns.forEach(b => b.classList.remove('active'));
+                categoryBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected', 'false');
+                });
                 btn.classList.add('active');
+                btn.setAttribute('aria-selected', 'true');
                 appState.currentCategory = btn.dataset.category;
-                this.render();
+                this.filterByCategory();
             };
             btn.addEventListener('click', handler);
             this.eventListeners.set(`category-${btn.dataset.category}`, { element: btn, handler });
@@ -394,7 +616,7 @@ class MomentsPageManager {
     }
 
     static clearEventListeners() {
-        this.eventListeners.forEach(({ element, handler }, key) => {
+        this.eventListeners.forEach(({ element, handler }) => {
             if (element && handler) {
                 element.removeEventListener('click', handler);
                 element.removeEventListener('input', handler);
@@ -409,13 +631,19 @@ class MomentsPageManager {
 
         const closeBtn = modal.querySelector('.close');
         if (closeBtn) {
-            const handler = () => modal.style.display = 'none';
+            const handler = () => {
+                modal.style.display = 'none';
+                modal.setAttribute('aria-hidden', 'true');
+            };
             closeBtn.addEventListener('click', handler);
             this.eventListeners.set('modalClose', { element: closeBtn, handler });
         }
 
         window.addEventListener('click', (e) => {
-            if (e.target === modal) modal.style.display = 'none';
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                modal.setAttribute('aria-hidden', 'true');
+            }
         });
 
         const submitBtn = document.getElementById('submitComment');
@@ -438,26 +666,39 @@ class MomentsPageManager {
         }
     }
 
-    static render(filteredData = null) {
+    static filterByCategory() {
+        const filtered = appState.currentCategory === 'all' 
+            ? this.data 
+            : this.data.filter(m => m.category === appState.currentCategory);
+        
+        this.paginationManager.reset();
+        this.paginationManager.setData(this.data, filtered);
+        this.updateStats();
+    }
+
+    static renderMoments(moments) {
         const container = document.getElementById('momentsContainer');
         if (!container) return;
 
-        const dataToRender = filteredData || this.data;
-        const filtered = this.filterByCategory(dataToRender);
-        const sorted = this.sortByDate(filtered);
+        container.setAttribute('aria-busy', 'true');
 
-        if (sorted.length === 0) {
-            container.innerHTML = `<div class="no-results">${LanguageManager.t('noResults')}</div>`;
+        if (moments.length === 0) {
+            container.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-inbox" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
+                    <p>${LanguageManager.t('noResults')}</p>
+                </div>
+            `;
+            container.setAttribute('aria-busy', 'false');
             return;
         }
 
+        const sorted = this.sortByDate(moments);
         container.innerHTML = sorted.map((moment, index) =>
             this.renderMomentCard(moment, index)
         ).join('');
-    }
 
-    static filterByCategory(data) {
-        return appState.currentCategory === 'all' ? data : data.filter(m => m.category === appState.currentCategory);
+        container.setAttribute('aria-busy', 'false');
     }
 
     static sortByDate(data) {
@@ -470,15 +711,15 @@ class MomentsPageManager {
         const hasLikes = moment.likes > 0;
 
         return `
-            <div class="moment-card" style="animation-delay: ${index * ANIMATION_DELAY}s">
+            <article class="moment-card" style="animation-delay: ${index * ANIMATION_DELAY}s">
                 <div class="moment-header">
                     <span class="category-tag">${Utils.escapeHtml(moment.category)}</span>
                     <span class="value-badge">⭐ ${moment.value}</span>
                 </div>
-                <div class="moment-content">${Utils.escapeHtml(moment.content)}</div>
+                <div class="moment-content">${Utils.formatMultiline(moment.content)}</div>
                 ${hasImage ? `
                     <img src="${Utils.escapeHtml(moment.image)}"
-                         alt="图片"
+                         alt="朋友圈图片"
                          class="moment-image"
                          onerror="this.style.display='none'"
                          loading="lazy">
@@ -491,7 +732,8 @@ class MomentsPageManager {
                         <button class="action-btn ${hasLikes ? 'liked' : ''}"
                                 data-like-id="${moment.id}"
                                 onclick="MomentsPageManager.handleLike(${moment.id})"
-                                aria-label="点赞">
+                                aria-label="点赞"
+                                aria-pressed="${hasLikes}">
                             <i class="${hasLikes ? 'fas' : 'far'} fa-heart"></i>
                             ${hasLikes ? `<span>${moment.likes}</span>` : ''}
                         </button>
@@ -503,7 +745,7 @@ class MomentsPageManager {
                         </button>
                     </div>
                 </div>
-            </div>
+            </article>
         `;
     }
 
@@ -515,7 +757,9 @@ class MomentsPageManager {
         moment.likes = hasLiked ? 0 : 1;
 
         if (this.saveData()) {
-            this.render();
+            // 重新渲染当前页
+            this.paginationManager.render();
+            
             if (!hasLiked) {
                 const btn = document.querySelector(`button[data-like-id="${id}"]`);
                 if (btn) {
@@ -537,6 +781,7 @@ class MomentsPageManager {
         if (!modal) return;
 
         modal.style.display = 'block';
+        modal.setAttribute('aria-hidden', 'false');
 
         if (!moment.comments) {
             moment.comments = [];
@@ -564,11 +809,11 @@ class MomentsPageManager {
         }
 
         commentsList.innerHTML = comments.map((comment, index) => `
-            <div class="comment-item" style="animation-delay: ${index * 0.05}s">
+            <div class="comment-item" style="animation-delay: ${index * 0.05}s" role="listitem">
                 <div style="margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.85rem;">
                     <i class="far fa-user-circle"></i> 访客 • ${Utils.escapeHtml(comment.time)}
                 </div>
-                <div style="line-height: 1.6;">${Utils.escapeHtml(comment.content)}</div>
+                <div style="line-height: 1.6;">${Utils.formatMultiline(comment.content)}</div>
             </div>
         `).join('');
     }
@@ -584,7 +829,7 @@ class MomentsPageManager {
         }
 
         if (content.length > MAX_COMMENT_LENGTH) {
-            NotificationManager.show('评论内容不能超过500字', 'warning');
+            NotificationManager.show(`评论内容不能超过${MAX_COMMENT_LENGTH}字`, 'warning');
             return;
         }
 
@@ -610,7 +855,7 @@ class MomentsPageManager {
 
         if (this.saveData()) {
             this.renderComments(moment.comments);
-            this.render();
+            this.paginationManager.render();
             input.value = '';
             NotificationManager.show('评论发表成功！', 'success');
         }
@@ -618,8 +863,11 @@ class MomentsPageManager {
 
     static handleSearch(keyword) {
         const normalizedKeyword = Utils.normalize(keyword);
+
         if (!normalizedKeyword) {
-            this.render();
+            this.paginationManager.reset();
+            this.paginationManager.setData(this.data);
+            this.updateStats();
             return;
         }
 
@@ -628,115 +876,60 @@ class MomentsPageManager {
             Utils.normalize(moment.category).includes(normalizedKeyword)
         );
 
-        this.render(filtered);
+        this.paginationManager.reset();
+        this.paginationManager.setData(this.data, filtered);
+        this.updateStats();
     }
-}
-/**
- * 渲染朋友圈统计信息
- */
-function renderMomentsStats() {
-    const stats = getMomentsStats(momentsData);
-    const today = new Date().toISOString().split('T')[0];
-    
-    // 统计今日发布数量
-    const todayCount = momentsData.filter(moment => 
-        moment.time && moment.time.startsWith(today)
-    ).length;
-    
-    // 更新统计数字
-    animateNumber('totalMoments', stats.total);
-    animateNumber('highValueMoments', stats.highValue);
-    animateNumber('todayMoments', todayCount);
-    
-    // 添加详细统计提示
-    const statsContainer = document.querySelector('.moments-stats');
-    const tooltip = document.createElement('div');
-    tooltip.className = 'stats-tooltip';
-    tooltip.innerHTML = `
-        <div class="tooltip-content">
-            <h4>详细统计</h4>
-            <p>价值分布：⭐${stats.valueDistribution[1]} ⭐⭐⭐${stats.valueDistribution[3]} ⭐⭐⭐⭐⭐${stats.valueDistribution[5]}</p>
-            <p>分类最多：${getMostFrequentCategory(stats.categories)}</p>
-        </div>
-    `;
-    
-    // 添加悬停显示详细信息
-    statsContainer.addEventListener('mouseenter', function() {
-        this.appendChild(tooltip);
-    });
-    
-    statsContainer.addEventListener('mouseleave', function() {
-        if (tooltip.parentNode === this) {
-            this.removeChild(tooltip);
-        }
-    });
-}
 
-/**
- * 数字动画效果
- */
-function animateNumber(elementId, targetValue) {
-    const element = document.getElementById(elementId);
-    if (!element) return;
-    
-    let currentValue = 0;
-    const increment = targetValue / 20;
-    const timer = setInterval(() => {
-        currentValue += increment;
-        if (currentValue >= targetValue) {
-            currentValue = targetValue;
-            clearInterval(timer);
-        }
-        element.textContent = Math.floor(currentValue);
-    }, 30);
-}
+    static updateStats() {
+        if (!this.paginationManager) return;
+        
+        const filteredData = this.paginationManager.filteredItems;
+        const today = new Date().toISOString().split('T')[0];
 
-/**
- * 获取最频繁的分类
- */
-function getMostFrequentCategory(categories) {
-    let maxCount = 0;
-    let mostFrequent = '';
-    
-    for (const [category, count] of Object.entries(categories)) {
-        if (count > maxCount) {
-            maxCount = count;
-            mostFrequent = category;
-        }
+        let highValue = 0;
+        let todayCount = 0;
+
+        filteredData.forEach(moment => {
+            const value = parseInt(moment.value) || 0;
+            if (value >= 5) highValue++;
+            
+            if (moment.time && moment.time.split(' ')[0] === today) {
+                todayCount++;
+            }
+        });
+
+        // 使用动画更新统计
+        const totalEl = document.getElementById('totalMoments');
+        const highValueEl = document.getElementById('highValueMoments');
+        const todayEl = document.getElementById('todayMoments');
+
+        if (totalEl) this.animateCounter(totalEl, parseInt(totalEl.textContent) || 0, filteredData.length, 800);
+        if (highValueEl) this.animateCounter(highValueEl, parseInt(highValueEl.textContent) || 0, highValue, 1000);
+        if (todayEl) this.animateCounter(todayEl, parseInt(todayEl.textContent) || 0, todayCount, 600);
     }
-    
-    return mostFrequent || '无';
-}
 
-/**
- * 获取朋友圈统计信息（如果之前没有定义）
- */
-function getMomentsStats(moments) {
-    const stats = {
-        total: moments.length,
-        highValue: 0,
-        categories: {},
-        valueDistribution: {
-            0: 0,
-            1: 0,
-            3: 0,
-            5: 0
-        }
-    };
+    static animateCounter(element, start, end, duration) {
+        const startTime = Date.now();
+        const range = end - start;
+        
+        const update = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const value = Math.floor(start + range * this.easeOutQuart(progress));
+            element.textContent = value;
+            
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            }
+        };
+        
+        update();
+    }
 
-    moments.forEach(moment => {
-        if (moment.value >= 5) {
-            stats.highValue++;
-        }
-
-        if (moment.value in stats.valueDistribution) {
-            stats.valueDistribution[moment.value]++;
-        }
-
-        stats.categories[moment.category] = (stats.categories[moment.category] || 0) + 1;
-    });
-
-    return stats;
+    static easeOutQuart(t) {
+        return 1 - Math.pow(1 - t, 4);
+    }
 }
 
 // ==================== 成功日记页面管理器 ====================
@@ -796,7 +989,7 @@ class SuccessPageManager {
                 });
                 btn.classList.add('active');
                 btn.setAttribute('aria-pressed', 'true');
-
+                
                 const viewType = btn.dataset.view;
                 const timeline = document.getElementById('diaryTimeline');
                 if (timeline) {
@@ -874,7 +1067,8 @@ class SuccessPageManager {
             return `
                 <button type="button"
                         class="filter-chip ${isActive ? 'active' : ''}"
-                        data-tag="${tag.code}">
+                        data-tag="${tag.code}"
+                        aria-pressed="${isActive}">
                     ${Utils.escapeHtml(label)}
                 </button>
             `;
@@ -902,7 +1096,10 @@ class SuccessPageManager {
 
         if (filtered.length === 0) {
             container.innerHTML = `
-                <div class="diary-empty">${LanguageManager.t('timelineEmpty')}</div>
+                <div class="diary-empty">
+                    <i class="fas fa-book-open" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
+                    <p>${LanguageManager.t('timelineEmpty')}</p>
+                </div>
             `;
             this.updateCounter(0);
             return;
@@ -968,15 +1165,11 @@ class SuccessPageManager {
         }
     }
 
-    // ==================== 核心优化：完全单语言显示 ====================
     static renderDiaryCard(entry) {
         const lang = appState.currentLanguage;
-        
-        // 只获取当前语言的内容，如果没有则留空
         const headline = entry.headline?.[lang] || '';
         const content = entry.content?.[lang] || '';
         const highlight = entry.highlight?.[lang] || '';
-        
         const mood = this.getMood(entry.moodCode);
         const tagsHtml = this.renderTags(entry.categories);
         const attachmentsHtml = this.renderAttachments(entry.attachments);
@@ -1036,7 +1229,6 @@ class SuccessPageManager {
 
     static renderTags(categories) {
         if (!categories || !categories.length) return '';
-
         return categories.map(code => {
             const label = this.getTagLabel(code);
             return `<span class="tag-pill">${Utils.escapeHtml(label)}</span>`;
@@ -1052,10 +1244,9 @@ class SuccessPageManager {
 
             const isImage = /\.(png|jpe?g|gif|webp|svg)$/i.test(trimmed);
             if (isImage) {
-                return `<img src="${Utils.escapeHtml(trimmed)}" alt="附件" class="diary-attachment" onerror="this.style.display='none'">`;
+                return `<img src="${Utils.escapeHtml(trimmed)}" alt="附件图片" class="diary-attachment" onerror="this.style.display='none'" loading="lazy">`;
             }
-
-            return `<a href="${Utils.escapeHtml(trimmed)}" target="_blank" rel="noopener" class="diary-attachment-link">${Utils.escapeHtml(trimmed)}</a>`;
+            return `<a href="${Utils.escapeHtml(trimmed)}" target="_blank" rel="noopener noreferrer" class="diary-attachment-link">${Utils.escapeHtml(trimmed)}</a>`;
         }).filter(Boolean).join('');
 
         return items ? `
@@ -1144,9 +1335,12 @@ class AppController {
     }
 }
 
+// ==================== 全局暴露 ====================
 window.MomentsPageManager = MomentsPageManager;
 window.SuccessPageManager = SuccessPageManager;
+window.PaginationManager = PaginationManager;
 
+// ==================== 页面初始化 ====================
 document.addEventListener('DOMContentLoaded', () => {
     try {
         AppController.init();
@@ -1156,6 +1350,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// ==================== 样式注入 ====================
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
@@ -1168,7 +1363,6 @@ style.textContent = `
             opacity: 1;
         }
     }
-
     @keyframes slideOutRight {
         from {
             transform: translateX(0);
@@ -1179,155 +1373,42 @@ style.textContent = `
             opacity: 0;
         }
     }
-
     .notification {
         transform-origin: top right;
     }
+    .no-results {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 2rem;
+        text-align: center;
+        color: var(--text-secondary);
+        grid-column: 1 / -1;
+    }
+    .diary-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 2rem;
+        text-align: center;
+        color: var(--text-secondary);
+    }
 `;
 document.head.appendChild(style);
-// ==================== 浏览器环境全局暴露 ====================
-if (typeof window !== 'undefined') {
-    // ... 现有代码 ...
-    window.getDiaryStats = getDiaryStats;
-    window.getMomentsStats = getMomentsStats;  // 🆕 添加这行
-}
 
-// ==================== Node.js 环境模块导出 ====================
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        // ... 现有导出 ...
-        getDiaryStats,
-        getMomentsStats  // 🆕 添加这行
+// ==================== 图片错误处理 ====================
+document.addEventListener('DOMContentLoaded', function() {
+    const handleImageError = (img) => {
+        img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="400" height="300" fill="%23f0f0f0"/><text x="200" y="150" text-anchor="middle" fill="%23999" font-size="16">图片加载失败</text></svg>';
+        img.style.opacity = '0.5';
     };
-}
-// ==================== 朋友圈统计功能 ====================
 
-// 更新统计数字
-function updateStatsDisplay() {
-    if (!window.momentsData) return;
-    
-    const stats = getMomentsStats(momentsData);
-    
-    // 更新统计卡片
-    const totalEl = document.getElementById('totalMoments');
-    const highValueEl = document.getElementById('highValueMoments');
-    const todayEl = document.getElementById('todayMoments');
-    
-    if (totalEl) {
-        animateCounter(totalEl, 0, stats.total, 1000);
-    }
-    if (highValueEl) {
-        animateCounter(highValueEl, 0, stats.highValue, 1200);
-    }
-    if (todayEl) {
-        animateCounter(todayEl, 0, stats.today, 800);
-    }
-}
-
-// 简单的数字动画
-function animateCounter(element, start, end, duration) {
-    const startTime = Date.now();
-    const range = end - start;
-    
-    function update() {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        // 缓动效果
-        const value = Math.floor(start + range * easeOutQuart(progress));
-        element.textContent = value;
-        
-        if (progress < 1) {
-            requestAnimationFrame(update);
+    // 使用事件委托处理所有图片错误
+    document.body.addEventListener('error', (e) => {
+        if (e.target.tagName === 'IMG') {
+            handleImageError(e.target);
         }
-    }
-    
-    update();
-}
-
-// 缓动函数
-function easeOutQuart(t) {
-    return 1 - Math.pow(1 - t, 4);
-}
-
-// 页面加载完成后更新统计
-document.addEventListener('DOMContentLoaded', function() {
-    // 延迟一点确保数据已加载
-    setTimeout(updateStatsDisplay, 500);
-});
-
-// 监听分类变化
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('category-btn')) {
-        setTimeout(updateStatsDisplay, 100);
-    }
-});
-// ==================== 修复 NaN 问题 ====================
-
-// 安全的数字解析
-function safeNumber(value, defaultValue = 0) {
-    const parsed = parseInt(value);
-    return isNaN(parsed) ? defaultValue : parsed;
-}
-
-// 修复后的统计更新
-function updateStatsDisplay() {
-    if (!window.momentsData || !Array.isArray(momentsData)) {
-        console.warn('⚠️ momentsData 不可用');
-        return;
-    }
-    
-    try {
-        const today = new Date().toISOString().split('T')[0];
-        let total = 0;
-        let highValue = 0;
-        let todayCount = 0;
-        
-        momentsData.forEach(moment => {
-            if (!moment) return;
-            
-            total++;
-            
-            const value = safeNumber(moment.value, 0);
-            if (value >= 5) highValue++;
-            
-            if (moment.time && moment.time.split(' ')[0] === today) {
-                todayCount++;
-            }
-        });
-        
-        // 更新显示
-        const totalEl = document.getElementById('totalMoments');
-        const highValueEl = document.getElementById('highValueMoments');
-        const todayEl = document.getElementById('todayMoments');
-        
-        if (totalEl) animateCounter(totalEl, 0, total, 1000);
-        if (highValueEl) animateCounter(highValueEl, 0, highValue, 1200);
-        if (todayEl) animateCounter(todayEl, 0, todayCount, 800);
-        
-        console.log('📊 统计更新:', { total, highValue, today: todayCount });
-        
-    } catch (error) {
-        console.error('❌ 统计更新失败:', error);
-    }
-}
-
-// 页面加载完成后更新
-setTimeout(() => {
-    if (typeof momentsData !== 'undefined') {
-        updateStatsDisplay();
-    }
-}, 1000);
-// 图片加载错误处理（添加到 script.js 最后）
-document.addEventListener('DOMContentLoaded', function() {
-    // 给所有图片添加错误处理
-    const images = document.querySelectorAll('img');
-    
-    images.forEach(img => {
-        img.onerror = function() {
-            // 图片加载失败时显示占位符
-            this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="400" height="300" fill="%23f0f0f0"/><text x="200" y="150" text-anchor="middle" fill="%23999" font-size="16">图片加载失败</text></svg>';
-            this.style.opacity = '0.5';
-        };
-    });
+    }, true);
 });
