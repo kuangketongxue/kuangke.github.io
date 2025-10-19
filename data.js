@@ -89,7 +89,7 @@ let successDiaryData = [
         },
         moodCode: '✨Satisfied',
         achievementLevel: 4,
-        coverImage: '',
+        coverImage: 'images/Friends-S1-E2',
         attachments: []
     },
     {
