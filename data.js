@@ -87,7 +87,7 @@ let successDiaryData = [
             zh: '',
             en: ''
         },
-        moodCode: '✨满足',
+        moodCode: 'Satisfied',
         achievementLevel: 4,
         coverImage: 'images/Friends-S1-E2',
         attachments: []
