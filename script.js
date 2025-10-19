@@ -1262,3 +1262,59 @@ document.addEventListener('click', function(e) {
         setTimeout(updateStatsDisplay, 100);
     }
 });
+// ==================== 修复 NaN 问题 ====================
+
+// 安全的数字解析
+function safeNumber(value, defaultValue = 0) {
+    const parsed = parseInt(value);
+    return isNaN(parsed) ? defaultValue : parsed;
+}
+
+// 修复后的统计更新
+function updateStatsDisplay() {
+    if (!window.momentsData || !Array.isArray(momentsData)) {
+        console.warn('⚠️ momentsData 不可用');
+        return;
+    }
+    
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        let total = 0;
+        let highValue = 0;
+        let todayCount = 0;
+        
+        momentsData.forEach(moment => {
+            if (!moment) return;
+            
+            total++;
+            
+            const value = safeNumber(moment.value, 0);
+            if (value >= 5) highValue++;
+            
+            if (moment.time && moment.time.split(' ')[0] === today) {
+                todayCount++;
+            }
+        });
+        
+        // 更新显示
+        const totalEl = document.getElementById('totalMoments');
+        const highValueEl = document.getElementById('highValueMoments');
+        const todayEl = document.getElementById('todayMoments');
+        
+        if (totalEl) animateCounter(totalEl, 0, total, 1000);
+        if (highValueEl) animateCounter(highValueEl, 0, highValue, 1200);
+        if (todayEl) animateCounter(todayEl, 0, todayCount, 800);
+        
+        console.log('📊 统计更新:', { total, highValue, today: todayCount });
+        
+    } catch (error) {
+        console.error('❌ 统计更新失败:', error);
+    }
+}
+
+// 页面加载完成后更新
+setTimeout(() => {
+    if (typeof momentsData !== 'undefined') {
+        updateStatsDisplay();
+    }
+}, 1000);
