@@ -144,6 +144,53 @@
             <div id="momentsContainer" class="moments-grid"></div>
         </div>
     </main>
+    <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>朋友圈</title>
+</head>
+<body>
+    <!-- 朋友圈统计信息 -->
+    <div class="moments-stats">
+        <div class="stat-cards">
+            <div class="stat-card">
+                <div class="stat-number" id="totalMoments">0</div>
+                <div class="stat-label">朋友圈总数</div>
+            </div>
+            <div class="stat-card highlight">
+                <div class="stat-number" id="highValueMoments">0</div>
+                <div class="stat-label">高价值内容</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="todayMoments">0</div>
+                <div class="stat-label">今日发布</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 朋友圈列表容器 -->
+    <div class="moments-container">
+        <!-- 现有的朋友圈列表 -->
+    </div>
+
+    <!-- 引入 JS 文件 -->
+    <script src="data.js"></script>
+    <script>
+        // 更新统计显示
+        function updateMomentsStats() {
+            const stats = getMomentsStats(momentsData);
+            
+            document.getElementById('totalMoments').textContent = stats.total;
+            document.getElementById('highValueMoments').textContent = stats.highValue;
+            document.getElementById('todayMoments').textContent = stats.today;
+        }
+
+        // 页面加载时更新
+        document.addEventListener('DOMContentLoaded', updateMomentsStats);
+    </script>
+</body>
+</html>
     <!-- 新增底部社交媒体区域 -->
     <footer class="social-footer">
         <div class="container">
