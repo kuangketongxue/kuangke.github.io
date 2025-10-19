@@ -1318,3 +1318,16 @@ setTimeout(() => {
         updateStatsDisplay();
     }
 }, 1000);
+// 图片加载错误处理（添加到 script.js 最后）
+document.addEventListener('DOMContentLoaded', function() {
+    // 给所有图片添加错误处理
+    const images = document.querySelectorAll('img');
+    
+    images.forEach(img => {
+        img.onerror = function() {
+            // 图片加载失败时显示占位符
+            this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="400" height="300" fill="%23f0f0f0"/><text x="200" y="150" text-anchor="middle" fill="%23999" font-size="16">图片加载失败</text></svg>';
+            this.style.opacity = '0.5';
+        };
+    });
+});
