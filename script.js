@@ -631,6 +631,113 @@ class MomentsPageManager {
         this.render(filtered);
     }
 }
+/**
+ * 渲染朋友圈统计信息
+ */
+function renderMomentsStats() {
+    const stats = getMomentsStats(momentsData);
+    const today = new Date().toISOString().split('T')[0];
+    
+    // 统计今日发布数量
+    const todayCount = momentsData.filter(moment => 
+        moment.time && moment.time.startsWith(today)
+    ).length;
+    
+    // 更新统计数字
+    animateNumber('totalMoments', stats.total);
+    animateNumber('highValueMoments', stats.highValue);
+    animateNumber('todayMoments', todayCount);
+    
+    // 添加详细统计提示
+    const statsContainer = document.querySelector('.moments-stats');
+    const tooltip = document.createElement('div');
+    tooltip.className = 'stats-tooltip';
+    tooltip.innerHTML = `
+        <div class="tooltip-content">
+            <h4>详细统计</h4>
+            <p>价值分布：⭐${stats.valueDistribution[1]} ⭐⭐⭐${stats.valueDistribution[3]} ⭐⭐⭐⭐⭐${stats.valueDistribution[5]}</p>
+            <p>分类最多：${getMostFrequentCategory(stats.categories)}</p>
+        </div>
+    `;
+    
+    // 添加悬停显示详细信息
+    statsContainer.addEventListener('mouseenter', function() {
+        this.appendChild(tooltip);
+    });
+    
+    statsContainer.addEventListener('mouseleave', function() {
+        if (tooltip.parentNode === this) {
+            this.removeChild(tooltip);
+        }
+    });
+}
+
+/**
+ * 数字动画效果
+ */
+function animateNumber(elementId, targetValue) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    
+    let currentValue = 0;
+    const increment = targetValue / 20;
+    const timer = setInterval(() => {
+        currentValue += increment;
+        if (currentValue >= targetValue) {
+            currentValue = targetValue;
+            clearInterval(timer);
+        }
+        element.textContent = Math.floor(currentValue);
+    }, 30);
+}
+
+/**
+ * 获取最频繁的分类
+ */
+function getMostFrequentCategory(categories) {
+    let maxCount = 0;
+    let mostFrequent = '';
+    
+    for (const [category, count] of Object.entries(categories)) {
+        if (count > maxCount) {
+            maxCount = count;
+            mostFrequent = category;
+        }
+    }
+    
+    return mostFrequent || '无';
+}
+
+/**
+ * 获取朋友圈统计信息（如果之前没有定义）
+ */
+function getMomentsStats(moments) {
+    const stats = {
+        total: moments.length,
+        highValue: 0,
+        categories: {},
+        valueDistribution: {
+            0: 0,
+            1: 0,
+            3: 0,
+            5: 0
+        }
+    };
+
+    moments.forEach(moment => {
+        if (moment.value >= 5) {
+            stats.highValue++;
+        }
+
+        if (moment.value in stats.valueDistribution) {
+            stats.valueDistribution[moment.value]++;
+        }
+
+        stats.categories[moment.category] = (stats.categories[moment.category] || 0) + 1;
+    });
+
+    return stats;
+}
 
 // ==================== 成功日记页面管理器 ====================
 class SuccessPageManager {
