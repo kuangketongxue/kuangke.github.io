@@ -1331,6 +1331,41 @@ function getDiaryStats(diaries) {
     
     return stats;
 }
+/**
+ * 获取朋友圈统计信息
+ * @param {Array} moments - 朋友圈数组
+ * @returns {Object} 统计信息
+ */
+function getMomentsStats(moments) {
+    const stats = {
+        total: moments.length,  // 总数量
+        highValue: 0,           // 高价值数量（value >= 5）
+        categories: {},         // 分类统计
+        valueDistribution: {    // 价值分布
+            0: 0,
+            1: 0,
+            3: 0,
+            5: 0
+        }
+    };
+
+    moments.forEach(moment => {
+        // 统计高价值内容
+        if (moment.value >= 5) {
+            stats.highValue++;
+        }
+
+        // 统计价值分布
+        if (moment.value in stats.valueDistribution) {
+            stats.valueDistribution[moment.value]++;
+        }
+
+        // 统计分类
+        stats.categories[moment.category] = (stats.categories[moment.category] || 0) + 1;
+    });
+
+    return stats;
+}
 
 // ==================== 初始化与验证 ====================
 console.log('🚀 开始加载数据模块...');
@@ -1354,6 +1389,19 @@ const stats = getDiaryStats(successDiaryData);
 console.log('📊 数据统计:', {
     日记总数: stats.total,
     朋友圈数量: momentsData.length,
+    分类分布: stats.categories,
+    心情分布: stats.moods
+});
+// 数据统计
+const stats = getDiaryStats(successDiaryData);
+
+// 🆕 添加这部分
+const momentsStats = getMomentsStats(momentsData);
+
+console.log('📊 数据统计:', {
+    日记总数: stats.total,
+    朋友圈总数: momentsStats.total,        // 🆕
+    高价值朋友圈: momentsStats.highValue,   // 🆕
     分类分布: stats.categories,
     心情分布: stats.moods
 });
@@ -1381,6 +1429,7 @@ if (typeof window !== 'undefined') {
     window.filterDiariesByCategory = filterDiariesByCategory;
     window.filterDiariesByMood = filterDiariesByMood;
     window.getDiaryStats = getDiaryStats;
+      window.getMomentsStats = getMomentsStats; 
     
     console.log('✅ 数据模块已成功加载到全局作用域');
 }
@@ -1408,6 +1457,7 @@ if (typeof module !== 'undefined' && module.exports) {
         sortDiariesByDate,
         filterDiariesByCategory,
         filterDiariesByMood,
-        getDiaryStats
+        getDiaryStats,
+        getMomentsStats 
     };
 }
