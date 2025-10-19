@@ -1921,3 +1921,210 @@ body.light-mode .digest-col--rating {
         filter: drop-shadow(0 0 18px rgba(236, 72, 153, 0.45));
     }
 }
+/* ==================== 分页样式 ==================== */
+.pagination-container {
+    margin: 40px 0 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+/* 分页信息 */
+.pagination-info {
+    color: var(--text-secondary, #666);
+    font-size: 14px;
+    text-align: center;
+}
+
+.pagination-info strong {
+    color: var(--primary-color, #667eea);
+    font-weight: 600;
+}
+
+/* 分页控制器 */
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* 分页按钮 */
+.pagination-btn {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 2px solid var(--border-color, #e0e0e0);
+    background: var(--card-bg, #fff);
+    color: var(--text-primary, #333);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    border-color: var(--primary-color, #667eea);
+    color: var(--primary-color, #667eea);
+    background: var(--primary-light, rgba(102, 126, 234, 0.1));
+    transform: translateY(-2px);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* 页码容器 */
+.page-numbers {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+/* 页码按钮 */
+.page-number {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 2px solid var(--border-color, #e0e0e0);
+    background: var(--card-bg, #fff);
+    color: var(--text-primary, #333);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-number:hover {
+    border-color: var(--primary-color, #667eea);
+    color: var(--primary-color, #667eea);
+    background: var(--primary-light, rgba(102, 126, 234, 0.1));
+}
+
+.page-number.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.page-ellipsis {
+    min-width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary, #999);
+    font-weight: 600;
+}
+
+/* 分页设置 */
+.pagination-settings {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-secondary, #666);
+}
+
+.pagination-settings label {
+    font-weight: 500;
+}
+
+.pagination-settings select {
+    padding: 8px 12px;
+    border: 2px solid var(--border-color, #e0e0e0);
+    border-radius: 8px;
+    background: var(--card-bg, #fff);
+    color: var(--text-primary, #333);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.pagination-settings select:hover {
+    border-color: var(--primary-color, #667eea);
+}
+
+.pagination-settings select:focus {
+    outline: none;
+    border-color: var(--primary-color, #667eea);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .pagination-info {
+        color: #aaa;
+    }
+    
+    .pagination-btn,
+    .page-number {
+        border-color: #444;
+        background: #2a2a2a;
+        color: #e0e0e0;
+    }
+    
+    .pagination-btn:hover:not(:disabled),
+    .page-number:hover {
+        background: rgba(102, 126, 234, 0.2);
+    }
+    
+    .pagination-settings select {
+        border-color: #444;
+        background: #2a2a2a;
+        color: #e0e0e0;
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .pagination-container {
+        margin: 30px 0 40px;
+        gap: 15px;
+    }
+    
+    .pagination-controls {
+        gap: 4px;
+    }
+    
+    .pagination-btn,
+    .page-number {
+        min-width: 36px;
+        height: 36px;
+        padding: 0 8px;
+        font-size: 13px;
+    }
+    
+    .pagination-settings {
+        font-size: 13px;
+    }
+    
+    .pagination-settings select {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+}
+
+/* 减少动画效果（无障碍） */
+@media (prefers-reduced-motion: reduce) {
+    .pagination-btn,
+    .page-number {
+        transition: none;
+    }
+    
+    .pagination-btn:hover:not(:disabled) {
+        transform: none;
+    }
+}
