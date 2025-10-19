@@ -67,7 +67,7 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
-     {
+    {
         id: 34,
         date: '2025-10-18',
         categories: ['study', 'creative'],
@@ -79,7 +79,7 @@ let successDiaryData = [
             zh: '阅读16本书+。\n持续搭建个人网站,新建N+界面细节优化。\n早起+学习8小时+。\n高强度运动。',
             en: 'Read 10+ books.\nContinuously building a personal website,Detailed optimization of the newly created N+ interface.\nGetting up early and studying for 8 hours straight.\nHigh-intensity exercise.'
         },
-            highlight: {
+        highlight: {
             zh: '直播单次观看突破500人，2人下单，赚到第一个100元',
             en: 'Live streaming saw a single-time viewership of over 500 people, with 2 individuals placing orders. The streamer earned their first 100 yuan.'
         },
@@ -92,7 +92,7 @@ let successDiaryData = [
         coverImage: '',
         attachments: []
     },
-      {
+    {
         id: 33,
         date: '2025-10-17',
         categories: ['study', 'creative'],
@@ -104,8 +104,8 @@ let successDiaryData = [
             zh: '阅读16本书+。\n持续搭建个人网站,暂时放弃上传到云端服务器，新开一个仓库做实验。\n早起+早到图书馆+学习12小时+。\n高强度运动。\n读完《小狗钱钱2》',
             en: 'Read 10+ books.\nContinuously building a personal website,For the time being, abandon uploading to the cloud server and set up a new warehouse for experimentation.\nGetting up early, arriving at the library early,, and studying for 12 hours straight.\nHigh-intensity exercise.\nFinished reading "Money-Making Puppy 2".'
         },
-            highlight: {
-            zh: '自己生产的商品上线商店，自己生产的才放心，才能去卖——只卖自己生产的“产品”；罗永浩*宋方金',
+        highlight: {
+            zh: '自己生产的商品上线商店，自己生产的才放心，才能去卖——只卖自己生产的"产品"；罗永浩*宋方金',
             en: 'Only products that are produced in-house can be confidently sold in the store – selling only products that are produced in-house.Luo Yonghao*Song Fangjin'
         },
         notes: {
@@ -117,7 +117,7 @@ let successDiaryData = [
         coverImage: '',
         attachments: []
     },
-      {
+    {
         id: 32,
         date: '2025-10-13',
         categories: ['study', 'creative'],
@@ -126,7 +126,7 @@ let successDiaryData = [
             en: 'Optimization of the financial system + energy replenishment'
         },
         content: {
-            zh: '阅读10本书+。\n持续搭建个人网站,“成功日记”中英互换功能优化+英文Emoji优化+英文左对齐。\n优化原始财务系统表。\n学习8小时+。\n反刍了近500个收集的“今日有价值的互动',
+            zh: '阅读10本书+。\n持续搭建个人网站,"成功日记"中英互换功能优化+英文Emoji优化+英文左对齐。\n优化原始财务系统表。\n学习8小时+。\n反刍了近500个收集的"今日有价值的互动',
             en: 'Read 10+ books.\nContinuously building a personal website, "Success Diary" features enhanced Chinese-to-English translation functionality, optimized English emojis, and left-aligned text in English.\nOptimizing the original financial system tables.\nStudied for 8+ hours.\nAfter going over nearly 500 "interactions that were valuable today" that had been collected.'
         },
         highlight: {
@@ -176,7 +176,7 @@ let successDiaryData = [
             en: 'Getting up early and going to the library.'
         },
         content: {
-            zh: '阅读10本书+。\n持续搭建个人网站,加了“成功日记一键回到顶部的功能”。\n专注比80%。\n学习14小时+',
+            zh: '阅读10本书+。\n持续搭建个人网站,加了"成功日记一键回到顶部的功能"。\n专注比80%。\n学习14小时+',
             en: 'Read 10+ books.\nContinuously building a personal website, Added the feature of "Success Diary: One-click return to top".\nFocus level is around 80%.\nStudied for 14+ hours'
         },
         highlight: {
@@ -923,7 +923,6 @@ let successDiaryData = [
 const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
 
 // ==================== 朋友圈数据 ====================
-
 /**
  * 获取朋友圈统计信息
  * @param {Array} moments - 朋友圈数组
@@ -931,7 +930,6 @@ const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
  */
 function getMomentsStats(moments) {
     const today = new Date().toISOString().split('T')[0];
-    
     const stats = {
         total: moments.length,
         highValue: 0,
@@ -950,18 +948,15 @@ function getMomentsStats(moments) {
         if (moment.value >= 5) {
             stats.highValue++;
         }
-
         // 统计今日发布
         const momentDate = moment.time.split(' ')[0];
         if (momentDate === today) {
             stats.today++;
         }
-
         // 统计价值分布
         if (moment.value in stats.valueDistribution) {
             stats.valueDistribution[moment.value]++;
         }
-
         // 统计分类
         stats.categories[moment.category] = (stats.categories[moment.category] || 0) + 1;
     });
@@ -970,12 +965,11 @@ function getMomentsStats(moments) {
 }
 
 /**
- 
  * 朋友圈数据集
  * @type {Array<Object>}
  */
 let momentsData = [
-     {
+    {
         id: 23,
         content: '我们认真对待我们的周遭环境,我们知道自己很容易被环境所听影响、所塑造;又因为我们一向是以主动为荣的人,所以会时时刻刻提防环境对我们的影响向。我们不花时间与他人争论,我们只为了弄清楚事实而讨论。我们不鄙视他人的能力--我们自己曾经也能力不足,我们倒是不怕自黑,不过,我们更愿意与那些欣赏我们的人共同,成长。我们懂得如何调整焦点，我们会主动尝试从多个角度去看待问题;我们不会把时间浪费在无谓的情绪之中,我们会用时间精力改变那些能够改变的事情。',
         value: 5,
@@ -995,7 +989,7 @@ let momentsData = [
         likes: 0,
         comments: []
     },
-      {
+    {
         id: 21,
         content: '无人扶我青云志,我自踏雪至山巅。\n若是命中无此运,孤身亦可登昆仑。\n红尘赠我三尺剑,酒看瘦马一世街。\n世人朝路乃绝润,独见众生止步前。\n海到尽头天作岸,山登绝顶我为峰。\n如若东山能再起,大鹏展翅九万里。\n一入红尘梦易真,一朝悟透心境名。\n一朝悟道见真我,昔日枷锁皆云烟。\n天门将至百运开,拂尘轻笑问仙来。',
         value: 5,
@@ -1005,7 +999,7 @@ let momentsData = [
         likes: 0,
         comments: []
     },
-      {
+    {
         id: 20,
         content: '生活标准这个东西，最好就是以年为单位去考量，且很长时间都不要发生改变，这个标准是我的被动收入——我的另一个我不用我操心的，能够过的生活。',
         value: 5,
@@ -1015,7 +1009,7 @@ let momentsData = [
         likes: 0,
         comments: []
     },
-     {
+    {
         id: 19,
         content: 'The journey is the reward.',
         value: 5,
@@ -1025,7 +1019,7 @@ let momentsData = [
         likes: 0,
         comments: []
     },
-     {
+    {
         id: 18,
         content: '当海盗，不要当海军 ，像侠盗一样行事：既为自己的工作感到自豪，又愿意去窃取别人的灵感，快速行动，做成事情',
         value: 5,
@@ -1035,7 +1029,7 @@ let momentsData = [
         likes: 0,
         comments: []
     },
-     {
+    {
         id: 17,
         content: '本来已经看着一辆公交车走了（要再等15分钟）结果没一会就来了，哇~哇~哇~，当时感受💗',
         value: 0,
@@ -1045,7 +1039,7 @@ let momentsData = [
         likes: 0,
         comments: []
     },
-     {
+    {
         id: 16,
         content: '值得关注的外部，事实上很少，因为外部的绝大多数事情与提高自身生产效率毫无关系，毕竟我的所有财富,不管是物质财富还是精神财富,全来自我的时间,或者准确地讲,来自我的时间的体积。我哪有什么时间可以浪费呢?又有什么道理浪费在它们身上呢?时时刻刻专注提高效率才是正事',
         value: 5,
@@ -1065,7 +1059,7 @@ let momentsData = [
         likes: 0,
         comments: []
     },
-     {
+    {
         id: 14,
         content: '当你感觉你去参与这个东西的时候，有很大的负担，甚至要到负债的级别就不要报了，哪怕他是一个真正有用的东西；超过 200 元的花费，提供全面的信息给 ai ，让他帮你避坑',
         value: 5,
@@ -1225,7 +1219,6 @@ function validateDiaryEntry(entry) {
     // 验证分类
     const validCategories = diaryTagLibrary.map(tag => tag.code);
     const invalidCategories = entry.categories.filter(cat => !validCategories.includes(cat));
-    
     if (invalidCategories.length > 0) {
         console.warn(`⚠️ 日记条目 ${entry.id} 包含无效分类:`, invalidCategories);
     }
@@ -1378,42 +1371,35 @@ function getDiaryStats(diaries) {
     
     return stats;
 }
-/**
- * 获取朋友圈统计信息
- * @param {Array} moments - 朋友圈数组
- * @returns {Object} 统计信息
- */
-function getMomentsStats(moments) {
-    const stats = {
-        total: moments.length,  // 总数量
-        highValue: 0,           // 高价值数量（value >= 5）
-        categories: {},         // 分类统计
-        valueDistribution: {    // 价值分布
-            0: 0,
-            1: 0,
-            3: 0,
-            5: 0
-        }
-    };
 
-    moments.forEach(moment => {
-        // 统计高价值内容
-        if (moment.value >= 5) {
-            stats.highValue++;
-        }
+// ==================== 初始化与验证 ====================
+console.log('🚀 开始加载数据模块...');
 
-        // 统计价值分布
-        if (moment.value in stats.valueDistribution) {
-            stats.valueDistribution[moment.value]++;
-        }
+// 验证所有日记数据
+console.log('🔍 验证成功日记数据...');
+const validationResults = successDiaryData.map(entry => ({
+    id: entry.id,
+    valid: validateDiaryEntry(entry)
+}));
 
-        // 统计分类
-        stats.categories[moment.category] = (stats.categories[moment.category] || 0) + 1;
-    });
-
-    return stats;
+const invalidCount = validationResults.filter(r => !r.valid).length;
+if (invalidCount > 0) {
+    console.error(`❌ 发现 ${invalidCount} 条无效日记数据`);
+} else {
+    console.log('✅ 所有日记数据验证通过');
 }
 
+// 数据统计（合并版本，删除第一个重复的声明）
+const stats = getDiaryStats(successDiaryData);
+const momentsStats = getMomentsStats(momentsData);
+
+console.log('📊 数据统计:', {
+    日记总数: stats.total,
+    朋友圈总数: momentsStats.total,
+    高价值朋友圈: momentsStats.highValue,
+    分类分布: stats.categories,
+    心情分布: stats.moods
+});
 
 // ==================== 浏览器环境全局暴露 ====================
 if (typeof window !== 'undefined') {
@@ -1438,7 +1424,7 @@ if (typeof window !== 'undefined') {
     window.filterDiariesByCategory = filterDiariesByCategory;
     window.filterDiariesByMood = filterDiariesByMood;
     window.getDiaryStats = getDiaryStats;
-      window.getMomentsStats = getMomentsStats; 
+    window.getMomentsStats = getMomentsStats;
     
     console.log('✅ 数据模块已成功加载到全局作用域');
 }
@@ -1450,13 +1436,11 @@ if (typeof module !== 'undefined' && module.exports) {
         diaryTagLibrary,
         moodLibrary,
         momentCategories,
-        
         // 数据集
         successDiaryData,
         successDiaries: successDiaryData,
         successDiaryDefaults,
         momentsData,
-        
         // 工具函数
         getTagInfo,
         getTagName,
@@ -1467,6 +1451,6 @@ if (typeof module !== 'undefined' && module.exports) {
         filterDiariesByCategory,
         filterDiariesByMood,
         getDiaryStats,
-        getMomentsStats 
+        getMomentsStats
     };
 }
