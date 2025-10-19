@@ -1185,3 +1185,18 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+// ==================== 浏览器环境全局暴露 ====================
+if (typeof window !== 'undefined') {
+    // ... 现有代码 ...
+    window.getDiaryStats = getDiaryStats;
+    window.getMomentsStats = getMomentsStats;  // 🆕 添加这行
+}
+
+// ==================== Node.js 环境模块导出 ====================
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        // ... 现有导出 ...
+        getDiaryStats,
+        getMomentsStats  // 🆕 添加这行
+    };
+}
