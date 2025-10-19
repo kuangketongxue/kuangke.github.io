@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+     {
+        id: 35,
+        date: '2025-10-19',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '图书馆学习，高专注比',
+            en: 'Studying in the library, high level of focus is essential.'
+        },
+        content: {
+            zh: '阅读16本书+。\n持续搭建个人网站,补全免费课的内容+补齐星空书柜的内容+改阅读室启发值+加了每日思考栏目+优化了小店布局+朋友圈加了统计。\n早起+早到图书馆+学习12小时+。\n高强度运动。',
+            en: 'Read 10+ books.\nContinuously building a personal website,Completing the content of the free course, filling in the content of the Starry Sky Bookcase, modifying the inspiration value of the Reading Room, adding a daily reflection section, optimizing the layout of the small shop, and adding statistics to WeChat Moments.\nGetting up early, arriving at the library early, and studying for 12 hours straight..\nHigh-intensity exercise.'
+        },
+        highlight: {
+            zh: '老友记学习，好看爱看',
+            en: 'Friends is a great show to learn from; it's enjoyable and worth watching.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: '✨Satisfied',
+        achievementLevel: 4,
+        coverImage: '',
+        attachments: []
+    },
     {
         id: 34,
         date: '2025-10-18',
