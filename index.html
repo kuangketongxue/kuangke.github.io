@@ -1,29 +1,59 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <!-- 基础Meta标签 -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>狂客·银河</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO优化 -->
+    <meta name="description" content="狂客·银河 - 记录生活精彩瞬间，分享美好时刻">
+    <meta name="keywords" content="狂客,银河,朋友圈,生活分享,成功日记">
+    <meta name="author" content="狂客">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / 社交媒体分享 -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="狂客·银河">
+    <meta property="og:description" content="记录生活精彩瞬间，分享美好时刻">
+    <meta property="og:site_name" content="狂客·银河">
+    
+    <!-- 网站图标 -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon.ico">
+    
+    <!-- 预连接外部资源 -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <title>狂客·银河 - 记录生活精彩瞬间</title>
+    
+    <!-- 样式表 -->
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="ai-button.css">
+    
     <style>
-        /* AI前沿按钮专属样式 */
+        /* ==================== AI前沿按钮专属样式 ==================== */
         .ai-nav-button {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             padding: 10px 16px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            color: #fff;
             text-decoration: none;
             border-radius: 12px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
             position: relative;
             overflow: hidden;
             font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            will-change: transform, box-shadow;
         }
-        
+
+        /* 光泽效果 */
         .ai-nav-button::before {
             content: '';
             position: absolute;
@@ -31,25 +61,32 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent
+            );
             transition: left 0.5s ease;
         }
-        
+
         .ai-nav-button:hover::before {
             left: 100%;
         }
-        
+
+        /* 悬停效果 */
         .ai-nav-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
             background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
-        
+
+        /* 点击效果 */
         .ai-nav-button:active {
             transform: translateY(0);
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
-        
+
+        /* 图标样式 */
         .ai-icon {
             display: flex;
             align-items: center;
@@ -59,160 +96,321 @@
             margin-right: 8px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 6px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .ai-nav-button:hover .ai-icon {
             background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
+            transform: scale(1.1) rotate(5deg);
         }
-        
-        .ai-text {
-            font-size: 14px;
-            letter-spacing: 0.5px;
-        }
-        
-        /* 为AI按钮添加呼吸动画效果 */
+
+        /* 呼吸光晕动画 */
         @keyframes ai-glow {
-            0%, 100% { box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); }
-            50% { box-shadow: 0 4px 20px rgba(102, 126, 234, 0.6); }
+            0%, 100% { 
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); 
+            }
+            50% { 
+                box-shadow: 0 4px 20px rgba(102, 126, 234, 0.6),
+                            0 0 30px rgba(102, 126, 234, 0.2); 
+            }
         }
-        
+
         .ai-nav-button {
             animation: ai-glow 3s ease-in-out infinite;
         }
+
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            .ai-nav-button {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            
+            .ai-icon {
+                width: 20px;
+                height: 20px;
+                margin-right: 6px;
+            }
+        }
+
+        /* 减少动画效果（尊重用户偏好） */
+        @media (prefers-reduced-motion: reduce) {
+            .ai-nav-button {
+                animation: none;
+                transition: none;
+            }
+            
+            .ai-nav-button::before {
+                transition: none;
+            }
+        }
+
+        /* ==================== 页面加载优化 ==================== */
+        /* 骨架屏样式 */
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                #f0f0f0 25%,
+                #e0e0e0 50%,
+                #f0f0f0 75%
+            );
+            background-size: 200% 100%;
+            animation: loading 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* 深色模式优化 */
+        @media (prefers-color-scheme: dark) {
+            .skeleton {
+                background: linear-gradient(
+                    90deg,
+                    #2a2a2a 25%,
+                    #3a3a3a 50%,
+                    #2a2a2a 75%
+                );
+            }
+        }
     </style>
 </head>
+
 <body data-page="moments">
-    <!-- 头部导航 -->
-    <header class="header">
+    <!-- ==================== 顶部导航栏 ==================== -->
+    <header class="header" role="banner">
         <div class="container">
             <div class="header-left">
-                <h1 class="logo">狂客·银河</h1>
-                <a class="success-link" href="success.html">
-                    <span class="success-icon">
-                        <i class="fas fa-meteor"></i>
-                    </span>
-                    <span class="success-text">成功日记</span>
-                </a>
-                <a class="sky-link" href="reading.html">
-                    <span class="sky-icon">
-                        <i class="fas fa-star"></i>
-                    </span>
-                    <span class="sky-text">星空</span>
-                </a>
-                <!-- 新增：考试相关按钮 -->
-                <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/">
-                    <span class="exam-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </span>
-                    <span class="exam-text">冬之街小店</span>
-                </a>
-                <!-- 新增：视频矩阵按钮 -->
-                <a class="video-link" href="video.html">
-                    <span class="video-icon">
-                        <i class="fas fa-video"></i>
-                    </span>
-                    <span class="video-text">视频矩阵</span>
-                </a>
+                <!-- Logo -->
+                <h1 class="logo">
+                    <a href="index.html" aria-label="返回首页">狂客·银河</a>
+                </h1>
+
+                <!-- 导航链接 -->
+                <nav class="primary-nav" role="navigation" aria-label="主导航">
+                    <!-- 成功日记 -->
+                    <a class="success-link" href="success.html" title="查看成功日记">
+                        <span class="success-icon" aria-hidden="true">
+                            <i class="fas fa-meteor"></i>
+                        </span>
+                        <span class="success-text">成功日记</span>
+                    </a>
+
+                    <!-- 星空 -->
+                    <a class="sky-link" href="reading.html" title="探索星空">
+                        <span class="sky-icon" aria-hidden="true">
+                            <i class="fas fa-star"></i>
+                        </span>
+                        <span class="sky-text">星空</span>
+                    </a>
+
+                    <!-- 冬之街小店 -->
+                    <a class="exam-link" 
+                       href="https://kuangketongxue.github.io/tongxuekuangke/" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       title="访问冬之街小店">
+                        <span class="exam-icon" aria-hidden="true">
+                            <i class="fas fa-graduation-cap"></i>
+                        </span>
+                        <span class="exam-text">冬之街小店</span>
+                    </a>
+
+                    <!-- 视频矩阵 -->
+                    <a class="video-link" href="video.html" title="观看视频内容">
+                        <span class="video-icon" aria-hidden="true">
+                            <i class="fas fa-video"></i>
+                        </span>
+                        <span class="video-text">视频矩阵</span>
+                    </a>
+                </nav>
             </div>
+
+            <!-- 右侧控制区 -->
             <div class="controls">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="搜索银河中...">
+                <!-- 搜索框 -->
+                <div class="search-box" role="search">
+                    <label for="searchInput" class="sr-only">搜索内容</label>
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <input 
+                        type="search" 
+                        id="searchInput" 
+                        placeholder="搜索银河中..."
+                        autocomplete="off"
+                        aria-label="搜索朋友圈内容">
                 </div>
-                <button id="themeToggle" class="theme-toggle">
-                    <i class="fas fa-moon"></i>
+
+                <!-- 主题切换 -->
+                <button 
+                    id="themeToggle" 
+                    class="theme-toggle" 
+                    aria-label="切换深色/浅色主题"
+                    title="切换主题">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- 分类导航 -->
-    <nav class="category-nav">
+    <!-- ==================== 分类导航 ==================== -->
+    <nav class="category-nav" role="navigation" aria-label="内容分类">
         <div class="container">
-            <div class="category-scroll">
-                <button class="category-btn active" data-category="all">全部</button>
-                <button class="category-btn" data-category="生活日常">生活日常</button>
-                <button class="category-btn" data-category="美食分享">美食分享</button>
-                <button class="category-btn" data-category="旅行见闻">旅行见闻</button>
-                <button class="category-btn" data-category="工作相关">工作相关</button>
-                <button class="category-btn" data-category="学习成长">学习成长</button>
-                <button class="category-btn" data-category="健身运动">健身运动</button>
-                <button class="category-btn" data-category="时尚穿搭">时尚穿搭</button>
-                <button class="category-btn" data-category="艺术文化">艺术文化</button>
-                <button class="category-btn" data-category="情感表达">情感表达</button>
-                <button class="category-btn" data-category="节日纪念">节日纪念</button>
-                <button class="category-btn" data-category="公益环保">公益环保</button>
-                <button class="category-btn" data-category="科技数码">科技数码</button>
-                <button class="category-btn" data-category="财经理财">财经理财</button>
-                <button class="category-btn" data-category="幽默段子">幽默段子</button>
-                <button class="category-btn" data-category="问答互动">问答互动</button>
+            <div class="category-scroll" role="tablist">
+                <button class="category-btn active" data-category="all" role="tab" aria-selected="true">
+                    全部
+                </button>
+                <button class="category-btn" data-category="生活日常" role="tab">生活日常</button>
+                <button class="category-btn" data-category="美食分享" role="tab">美食分享</button>
+                <button class="category-btn" data-category="旅行见闻" role="tab">旅行见闻</button>
+                <button class="category-btn" data-category="工作相关" role="tab">工作相关</button>
+                <button class="category-btn" data-category="学习成长" role="tab">学习成长</button>
+                <button class="category-btn" data-category="健身运动" role="tab">健身运动</button>
+                <button class="category-btn" data-category="时尚穿搭" role="tab">时尚穿搭</button>
+                <button class="category-btn" data-category="艺术文化" role="tab">艺术文化</button>
+                <button class="category-btn" data-category="情感表达" role="tab">情感表达</button>
+                <button class="category-btn" data-category="节日纪念" role="tab">节日纪念</button>
+                <button class="category-btn" data-category="公益环保" role="tab">公益环保</button>
+                <button class="category-btn" data-category="科技数码" role="tab">科技数码</button>
+                <button class="category-btn" data-category="财经理财" role="tab">财经理财</button>
+                <button class="category-btn" data-category="幽默段子" role="tab">幽默段子</button>
+                <button class="category-btn" data-category="问答互动" role="tab">问答互动</button>
             </div>
         </div>
     </nav>
 
-    <!-- 主要内容 -->
-    <main class="main-content">
+    <!-- ==================== 主要内容区域 ==================== -->
+    <main class="main-content" role="main">
         <div class="container">
-            <!-- 朋友圈统计信息 -->
-            <div class="moments-stats">
+            <!-- 统计信息卡片 -->
+            <section class="moments-stats" aria-label="朋友圈统计">
                 <div class="stat-cards">
-                    <div class="stat-card">
-                        <div class="stat-number" id="totalMoments">0</div>
+                    <article class="stat-card">
+                        <div class="stat-number" id="totalMoments" aria-live="polite">0</div>
                         <div class="stat-label">朋友圈总数</div>
-                    </div>
-                    <div class="stat-card highlight">
-                        <div class="stat-number" id="highValueMoments">0</div>
+                    </article>
+                    
+                    <article class="stat-card highlight">
+                        <div class="stat-number" id="highValueMoments" aria-live="polite">0</div>
                         <div class="stat-label">高价值内容</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="todayMoments">0</div>
+                    </article>
+                    
+                    <article class="stat-card">
+                        <div class="stat-number" id="todayMoments" aria-live="polite">0</div>
                         <div class="stat-label">今日发布</div>
-                    </div>
+                    </article>
                 </div>
-            </div>
-            
-            <!-- 朋友圈列表容器 -->
-            <div id="momentsContainer" class="moments-grid"></div>
+            </section>
+
+            <!-- 朋友圈内容列表 -->
+            <section 
+                id="momentsContainer" 
+                class="moments-grid" 
+                role="feed"
+                aria-label="朋友圈内容列表"
+                aria-live="polite"
+                aria-busy="false">
+                <!-- 内容由JavaScript动态加载 -->
+            </section>
         </div>
     </main>
 
-    <!-- 社交媒体底部 -->
-    <footer class="social-footer">
+    <!-- ==================== 页面底部 ==================== -->
+    <footer class="social-footer" role="contentinfo">
         <div class="container">
-            <div class="social-links">
-                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" target="_blank" class="social-link wechat" title="微信公众号">
-                    <i class="fab fa-weixin"></i>
+            <!-- 社交媒体链接 -->
+            <nav class="social-links" aria-label="社交媒体">
+                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="social-link wechat" 
+                   title="关注微信公众号"
+                   aria-label="微信公众号">
+                    <i class="fab fa-weixin" aria-hidden="true"></i>
                 </a>
-                <a href="https://github.com/kuangketongxue" target="_blank" class="social-link github" title="GitHub">
-                    <i class="fab fa-github"></i>
+                
+                <a href="https://github.com/kuangketongxue" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="social-link github" 
+                   title="访问GitHub"
+                   aria-label="GitHub主页">
+                    <i class="fab fa-github" aria-hidden="true"></i>
                 </a>
-                <a href="https://x.com/kuangketongxue" target="_blank" class="social-link x" title="X">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                
+                <a href="https://x.com/kuangketongxue" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="social-link x" 
+                   title="关注X(Twitter)"
+                   aria-label="X账号">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                 </a>
-            </div>
-            <p class="copyright">© 2025 狂客·银河 版权所有</p>
+            </nav>
+
+            <!-- 版权信息 -->
+            <p class="copyright">
+                <small>© 2025 狂客·银河 版权所有</small>
+            </p>
         </div>
     </footer>
 
-    <!-- 评论模态框 -->
-    <div id="commentModal" class="modal">
+    <!-- ==================== 评论模态框 ==================== -->
+    <div id="commentModal" 
+         class="modal" 
+         role="dialog" 
+         aria-labelledby="modalTitle"
+         aria-modal="true"
+         aria-hidden="true">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>评论</h2>
-            <div id="commentsList" class="comments-list"></div>
+            <button class="close" 
+                    aria-label="关闭评论窗口"
+                    title="关闭">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            
+            <h2 id="modalTitle">评论</h2>
+            
+            <div id="commentsList" 
+                 class="comments-list" 
+                 role="list"
+                 aria-label="评论列表">
+                <!-- 评论内容由JavaScript动态加载 -->
+            </div>
+            
             <div class="comment-input-area">
-                <input type="text" id="commentInput" placeholder="写下你的评论...">
-                <button id="submitComment">发送</button>
+                <label for="commentInput" class="sr-only">输入评论</label>
+                <input 
+                    type="text" 
+                    id="commentInput" 
+                    placeholder="写下你的评论..."
+                    maxlength="500"
+                    aria-label="评论输入框">
+                <button id="submitComment" aria-label="发送评论">发送</button>
             </div>
         </div>
     </div>
 
-    <!-- 引入JS文件 -->
+    <!-- 无障碍：屏幕阅读器专用文本 -->
+    <div class="sr-only" aria-live="polite" aria-atomic="true" id="announcer"></div>
+
+    <!-- ==================== JavaScript文件 ==================== -->
+    <!-- 数据文件优先加载 -->
     <script src="data.js"></script>
-    <script src="script.js"></script>
+    <!-- 主逻辑文件延迟加载 -->
+    <script src="script.js" defer></script>
+
+    <!-- 性能监控（可选） -->
+    <script>
+        // 页面加载性能监控
+        window.addEventListener('load', () => {
+            if ('performance' in window) {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                console.log('页面加载时间:', perfData.loadEventEnd - perfData.fetchStart, 'ms');
+            }
+        });
+    </script>
 </body>
 </html>
