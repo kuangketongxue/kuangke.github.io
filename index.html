@@ -312,6 +312,70 @@
                 aria-busy="false">
                 <!-- 内容由JavaScript动态加载 -->
             </section>
+            <!-- 朋友圈内容列表 -->
+<section
+    id="momentsContainer"
+    class="moments-grid"
+    role="feed"
+    aria-label="朋友圈内容列表"
+    aria-live="polite"
+    aria-busy="false">
+    <!-- 内容由JavaScript动态加载 -->
+</section>
+
+<!-- ==================== 分页控件 ==================== -->
+<nav class="pagination-container" role="navigation" aria-label="分页导航">
+    <div class="pagination-info">
+        <span id="paginationText" aria-live="polite">
+            显示 <strong id="showingStart">0</strong> - <strong id="showingEnd">0</strong> 
+            共 <strong id="totalItems">0</strong> 条
+        </span>
+    </div>
+    <div class="pagination-controls">
+        <button 
+            id="firstPage" 
+            class="pagination-btn" 
+            aria-label="第一页"
+            title="第一页">
+            <i class="fas fa-angle-double-left"></i>
+        </button>
+        <button 
+            id="prevPage" 
+            class="pagination-btn" 
+            aria-label="上一页"
+            title="上一页">
+            <i class="fas fa-angle-left"></i>
+        </button>
+        
+        <div id="pageNumbers" class="page-numbers" role="list">
+            <!-- 页码由JavaScript动态生成 -->
+        </div>
+        
+        <button 
+            id="nextPage" 
+            class="pagination-btn" 
+            aria-label="下一页"
+            title="下一页">
+            <i class="fas fa-angle-right"></i>
+        </button>
+        <button 
+            id="lastPage" 
+            class="pagination-btn" 
+            aria-label="最后一页"
+            title="最后一页">
+            <i class="fas fa-angle-double-right"></i>
+        </button>
+    </div>
+    <div class="pagination-settings">
+        <label for="itemsPerPage">每页显示：</label>
+        <select id="itemsPerPage" aria-label="选择每页显示条数">
+            <option value="6">6条</option>
+            <option value="12" selected>12条</option>
+            <option value="24">24条</option>
+            <option value="48">48条</option>
+        </select>
+    </div>
+</nav>
         </div>
     </main>
 
