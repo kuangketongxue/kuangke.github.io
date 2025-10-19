@@ -929,7 +929,14 @@ const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
  * @returns {Object} 统计信息
  */
 function getMomentsStats(moments) {
-    const today = new Date().toISOString().split('T')[0];
+    // 获取今天的日期 (格式: YYYY-MM-DD)
+    const today = new Date();
+    const todayString = today.getFullYear() + '-' + 
+                       String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                       String(today.getDate()).padStart(2, '0');
+    
+    console.log('📅 今天的日期:', todayString);
+    
     const stats = {
         total: moments.length,
         highValue: 0,
@@ -944,25 +951,39 @@ function getMomentsStats(moments) {
     };
 
     moments.forEach(moment => {
-        // 统计高价值内容
+        // 统计高价值内容 (value >= 5)
         if (moment.value >= 5) {
             stats.highValue++;
         }
-        // 统计今日发布
-        const momentDate = moment.time.split(' ')[0];
-        if (momentDate === today) {
-            stats.today++;
+        
+        // 统计今日发布 - 修复日期比较逻辑
+        try {
+            // moment.time 格式: "2025-10-19 13:05"
+            const momentDate = moment.time ? moment.time.split(' ')[0] : null;
+            
+            if (momentDate && momentDate === todayString) {
+                stats.today++;
+                console.log('✅ 今日发布:', moment.content.substring(0, 20));
+            }
+        } catch (e) {
+            console.warn('⚠️ 日期解析错误:', moment.time, e.message);
         }
+        
         // 统计价值分布
         if (moment.value in stats.valueDistribution) {
             stats.valueDistribution[moment.value]++;
         }
+        
         // 统计分类
-        stats.categories[moment.category] = (stats.categories[moment.category] || 0) + 1;
+        if (moment.category) {
+            stats.categories[moment.category] = (stats.categories[moment.category] || 0) + 1;
+        }
     });
 
+    console.log('📊 统计结果:', stats);
     return stats;
 }
+   
 
 /**
  * 朋友圈数据集
