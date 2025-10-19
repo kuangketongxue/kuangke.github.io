@@ -81,7 +81,7 @@ let successDiaryData = [
         },
         highlight: {
             zh: '老友记学习，好看爱看',
-            en: 'Friends is a great show to learn from; it's enjoyable and worth watching.'
+            en: 'Friends is a great show to learn from; it is enjoyable and worth watching.'
         },
         notes: {
             zh: '',
