@@ -923,6 +923,28 @@ let successDiaryData = [
 const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
 
 // ==================== 朋友圈数据 ====================
+<!-- 朋友圈统计信息 -->
+<div class="moments-stats">
+    <div class="stat-cards">
+        <div class="stat-card">
+            <div class="stat-number" id="totalMoments">0</div>
+            <div class="stat-label">朋友圈总数</div>
+        </div>
+        <div class="stat-card highlight">
+            <div class="stat-number" id="highValueMoments">0</div>
+            <div class="stat-label">高价值内容</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="todayMoments">0</div>
+            <div class="stat-label">今日发布</div>
+        </div>
+    </div>
+</div>
+
+<!-- 朋友圈列表容器 -->
+<div class="moments-container">
+    <!-- 现有的朋友圈列表 -->
+</div>
 /**
  * 朋友圈数据集
  * @type {Array<Object>}
