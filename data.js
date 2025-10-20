@@ -72,8 +72,8 @@ let successDiaryData = [
         date: '2025-10-20',
         categories: ['study', 'creative'],
         headline: {
-            zh: 'Finished reading "The Age of AI" + tidying up.',
-            en: ''
+            zh: '读完《AI时代》+收拾',
+            en: 'Finished reading "The Age of AI" + tidying up'
         },
         content: {
             zh: '阅读16本书+。\n持续搭建个人网站,给朋友圈加了页面+补充阅读数启发值+补齐星空书柜的内容。\n收拾飞书+浏览器+书柜。\n精读《beyond feeling》，读完《小狗钱钱》\n早起+学习12小时+。\n高强度运动。',
