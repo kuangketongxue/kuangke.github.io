@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>星空书柜</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://picsum.photos">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
   <style>
     :root {
       --bg-primary: #0f172a;
@@ -23,7 +25,7 @@
       --shadow-xl: 0 16px 48px rgba(139, 92, 246, 0.2);
       --border-color: rgba(255, 255, 255, 0.1);
     }
-
+    
     * {
       margin: 0;
       padding: 0;
@@ -51,7 +53,7 @@
       position: relative;
     }
 
-    /* 背景装饰 */
+    /* 背景装饰 - 性能优化 */
     .bg-decoration {
       position: fixed;
       top: 0;
@@ -60,6 +62,8 @@
       bottom: 0;
       pointer-events: none;
       z-index: 0;
+      will-change: transform;
+      contain: layout style paint;
     }
 
     .star {
@@ -69,6 +73,7 @@
       background: white;
       border-radius: 50%;
       animation: twinkle 4s infinite;
+      will-change: opacity;
     }
 
     @keyframes twinkle {
@@ -88,6 +93,7 @@
       padding: 1rem 2rem;
       z-index: 1000;
       transition: all 0.3s ease;
+      will-change: transform;
     }
 
     .navbar.scrolled {
@@ -236,6 +242,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
       font-size: 0.9rem;
+      will-change: transform;
     }
 
     .filter-btn:hover,
@@ -253,9 +260,10 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 2rem;
+      contain: layout style paint;
     }
 
-    /* 书籍卡片 */
+    /* 书籍卡片 - 性能优化 */
     .book-card {
       position: relative;
       background: rgba(30, 41, 59, 0.5);
@@ -264,6 +272,8 @@
       overflow: hidden;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       backdrop-filter: blur(10px);
+      will-change: transform;
+      contain: layout style paint;
     }
 
     .book-card:hover {
@@ -285,6 +295,7 @@
       height: 100%;
       object-fit: cover;
       transition: all 0.4s ease;
+      will-change: transform;
     }
 
     .book-card:hover .book-cover img {
@@ -365,6 +376,7 @@
       text-decoration: none;
       transition: all 0.3s ease;
       cursor: pointer;
+      will-change: transform;
     }
 
     .btn-pdf {
@@ -424,6 +436,7 @@
       color: var(--text-secondary);
       text-decoration: none;
       transition: all 0.3s ease;
+      will-change: transform;
     }
 
     .social-link:hover {
@@ -444,7 +457,6 @@
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 1.5rem;
       }
-      
       .page-header h1 {
         font-size: 2.5rem;
       }
@@ -454,50 +466,39 @@
       .navbar {
         padding: 0.8rem 1rem;
       }
-
       .nav-container {
         padding: 0 1rem;
       }
-
       .main-content {
         margin-top: 70px;
         padding: 1rem 0.5rem;
       }
-
       .page-header {
         margin-bottom: 2rem;
         padding: 1.5rem 1rem;
       }
-
       .page-header h1 {
         font-size: 2rem;
       }
-
       .header-stats {
         gap: 2rem;
       }
-
       .books-container {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 1rem;
       }
-
       .book-cover {
         height: 280px;
       }
-
       .book-info {
         padding: 1rem;
       }
-
       .book-title {
         font-size: 1.1rem;
       }
-
       .book-actions {
         flex-direction: column;
       }
-
       .footer-container {
         flex-direction: column;
         text-align: center;
@@ -508,18 +509,16 @@
       .books-container {
         grid-template-columns: 1fr;
       }
-
       .book-cover {
         height: 240px;
       }
-
       .back-btn {
         padding: 0.5rem 0.8rem;
         font-size: 0.85rem;
       }
     }
 
-    /* 加载动画 */
+    /* 加载动画 - 性能优化 */
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -532,6 +531,7 @@
     }
 
     .book-card {
+      opacity: 0;
       animation: fadeIn 0.6s ease-out forwards;
     }
 
@@ -540,13 +540,43 @@
     .book-card:nth-child(3) { animation-delay: 0.3s; }
     .book-card:nth-child(4) { animation-delay: 0.4s; }
     .book-card:nth-child(5) { animation-delay: 0.5s; }
+    .book-card:nth-child(6) { animation-delay: 0.6s; }
+    .book-card:nth-child(7) { animation-delay: 0.7s; }
+    .book-card:nth-child(8) { animation-delay: 0.8s; }
+    .book-card:nth-child(9) { animation-delay: 0.9s; }
+    .book-card:nth-child(10) { animation-delay: 1s; }
+
+    /* 图片懒加载占位符 */
+    .lazy-image {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .lazy-image.loaded {
+      opacity: 1;
+    }
+
+    /* 减少重绘的类 */
+    .hidden {
+      display: none !important;
+    }
+
+    .fade-out {
+      opacity: 0 !important;
+      transform: translateY(20px) !important;
+    }
+
+    .fade-in {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
   </style>
 </head>
 <body>
   <div class="page-wrapper">
     <!-- 背景装饰 -->
     <div class="bg-decoration" id="stars"></div>
-
+    
     <!-- 导航栏 -->
     <nav class="navbar" id="navbar">
       <div class="nav-container">
@@ -596,321 +626,8 @@
       </div>
 
       <!-- 书籍容器 -->
-      <div class="books-container">
-        <!-- 书籍1：财富的真相 -->
-        <div class="book-card" data-category="wealth recent">
-          <div class="book-cover">
-            <img src="images/wealth-truth.jpg" alt="财富的真相" loading="lazy">
-            <div class="book-overlay"></div>
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">财富的真相</h3>
-            <p class="book-author">李笑来</p>
-            <div class="book-meta">
-              <span class="meta-item">
-                <i class="fas fa-tag"></i>
-                财富思维
-              </span>
-              <span class="meta-item">
-                <i class="fas fa-clock"></i>
-                2024
-              </span>
-            </div>
-            <div class="book-actions">
-              <a href="https://zh.101enfj.ru/book/27562625/fceee0/%E8%B4%A2%E5%AF%8C%E7%9A%84%E7%9C%9F%E7%9B%B8.html" class="book-btn btn-pdf" target="_blank">
-                <i class="fas fa-file-pdf"></i>
-                PDF
-              </a>
-              <a href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnKX0UdYz9cVcnJsyPpW8tuf" class="book-btn btn-notes" target="_blank">
-                <i class="fas fa-book-open"></i>
-                笔记
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 书籍2：专注的真相 -->
-        <div class="book-card" data-category="focus recent">
-          <div class="book-cover">
-            <img src="images/focus-truth.jpg" alt="专注的真相" loading="lazy">
-            <div class="book-overlay"></div>
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">专注的真相</h3>
-            <p class="book-author">李笑来</p>
-            <div class="book-meta">
-              <span class="meta-item">
-                <i class="fas fa-tag"></i>
-                专注力
-              </span>
-              <span class="meta-item">
-                <i class="fas fa-clock"></i>
-                2024
-              </span>
-            </div>
-            <div class="book-actions">
-              <a href="https://zh.101istp.ru/book/116571059/e338fc/%E4%B8%93%E6%B3%A8%E7%9A%84%E7%9C%9F%E7%9B%B8.html" class="book-btn btn-pdf" target="_blank">
-                <i class="fas fa-file-pdf"></i>
-                PDF
-              </a>
-              <a href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcncpAKaBJWk2k6RWI4BFFwdd" class="book-btn btn-notes" target="_blank">
-                <i class="fas fa-book-open"></i>
-                笔记
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 书籍3：请辩 -->
-        <div class="book-card" data-category="philosophy recent">
-          <div class="book-cover">
-            <img src="images/qingbian.jpg" alt="请辩" loading="lazy">
-            <div class="book-overlay"></div>
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">请辩</h3>
-            <p class="book-author">蔡叔</p>
-            <div class="book-meta">
-              <span class="meta-item">
-                <i class="fas fa-tag"></i>
-                哲学思考
-              </span>
-              <span class="meta-item">
-                <i class="fas fa-clock"></i>
-                持续更新
-              </span>
-            </div>
-            <div class="book-actions">
-              <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI0MDg5ODA2NQ==&scene=124#wechat_redirect" class="book-btn btn-pdf" target="_blank">
-                <i class="fas fa-file-pdf"></i>
-                公众号
-              </a>
-              <a href="https://mubu.com/app/folders/home/247HNW732Qa" class="book-btn btn-notes" target="_blank">
-                <i class="fas fa-book-open"></i>
-                思维导图
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 书籍4：蔡叔的财富秘籍 -->
-        <div class="book-card" data-category="wealth">
-          <div class="book-cover">
-            <img src="images/cai-wealth.jpg" alt="蔡叔的财富秘籍" loading="lazy">
-            <div class="book-overlay"></div>
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">蔡叔的财富秘籍</h3>
-            <p class="book-author">蔡叔</p>
-            <div class="book-meta">
-              <span class="meta-item">
-                <i class="fas fa-tag"></i>
-                财富思维
-              </span>
-              <span class="meta-item">
-                <i class="fas fa-clock"></i>
-                经典
-              </span>
-            </div>
-            <div class="book-actions">
-              <a href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc" class="book-btn btn-pdf" target="_blank">
-                <i class="fas fa-file-pdf"></i>
-                PDF
-              </a>
-              <a href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnXAMuqLdMgyxkvatE44LdVc" class="book-btn btn-notes" target="_blank">
-                <i class="fas fa-book-open"></i>
-                笔记
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 书籍5-10：预留空位 -->
-        <div class="book-card" data-category="philosophy">
-          <div class="book-cover">
-            <img src="images/Puppy-Money.jpg" alt="财富思维" loading="lazy">
-            <div class="book-overlay"></div>
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">小狗钱钱1+2</h3>
-            <p class="book-author">博多·舍费尔</p>
-            <div class="book-meta">
-              <span class="meta-item">
-                <i class="fas fa-tag"></i>
-                财富思维
-              </span>
-              <span class="meta-item">
-                <i class="fas fa-clock"></i>
-                经典
-              </span>
-            </div>
-            <div class="book-actions">
-              <a href="https://zh.101run.ru/book/11930655/c7206e/%E5%B0%8F%E7%8B%97%E9%92%B1%E9%92%B1.html" class="book-btn btn-pdf" target="_blank">
-                <i class="fas fa-lock"></i>
-                PDF
-              </a>
-              <a href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnvH5qfel6H6X2E83DHcXCk6" class="book-btn btn-notes" target="_blank">
-                <i class="fas fa-lock"></i>
-                笔记
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="book-card" data-category="focus">
-          <div class="book-cover">
-            <img src="images/The-Truth-About-Thinking.jpg" alt="深度工作" loading="lazy">
-            <div class="book-overlay"></div>
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">思考的真相</h3>
-            <p class="book-author">李笑来</p>
-            <div class="book-meta">
-              <span class="meta-item">
-                <i class="fas fa-tag"></i>
-                专注力
-              </span>
-              <span class="meta-item">
-                <i class="fas fa-clock"></i>
-                经典
-              </span>
-            </div>
-            <div class="book-actions">
-              <a href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc" class="book-btn btn-pdf" target="_blank">
-                <i class="fas fa-lock"></i>
-                PDF
-              </a>
-              <a href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnkxyGE9TdVMbEJ199XPUtAg" class="book-btn btn-notes" target="_blank">
-                <i class="fas fa-lock"></i>
-                笔记
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="book-card" data-category="wealth">
-          <div class="book-cover">
-            <img src="https://picsum.photos/seed/book7/280/380.jpg" alt="投资思维" loading="lazy">
-            <div class="book-overlay"></div>
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">投资思维</h3>
-            <p class="book-author">[作者待定]</p>
-            <div class="book-meta">
-              <span class="meta-item">
-                <i class="fas fa-tag"></i>
-                财富思维
-              </span>
-              <span class="meta-item">
-                <i class="fas fa-clock"></i>
-                计划中
-              </span>
-            </div>
-            <div class="book-actions">
-              <a href="#" class="book-btn btn-pdf" target="_blank">
-                <i class="fas fa-lock"></i>
-                即将上架
-              </a>
-              <a href="#" class="book-btn btn-notes" target="_blank">
-                <i class="fas fa-lock"></i>
-                即将开放
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="book-card" data-category="philosophy">
-          <div class="book-cover">
-            <img src="https://picsum.photos/seed/book8/280/380.jpg" alt="认知觉醒" loading="lazy">
-            <div class="book-overlay"></div>
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">认知觉醒</h3>
-            <p class="book-author">[作者待定]</p>
-            <div class="book-meta">
-              <span class="meta-item">
-                <i class="fas fa-tag"></i>
-                哲学思考
-              </span>
-              <span class="meta-item">
-                <i class="fas fa-clock"></i>
-                计划中
-              </span>
-            </div>
-            <div class="book-actions">
-              <a href="#" class="book-btn btn-pdf" target="_blank">
-                <i class="fas fa-lock"></i>
-                即将上架
-              </a>
-              <a href="#" class="book-btn btn-notes" target="_blank">
-                <i class="fas fa-lock"></i>
-                即将开放
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="book-card" data-category="focus">
-          <div class="book-cover">
-            <img src="https://picsum.photos/seed/book9/280/380.jpg" alt="心流" loading="lazy">
-            <div class="book-overlay"></div>
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">心流</h3>
-            <p class="book-author">[作者待定]</p>
-            <div class="book-meta">
-              <span class="meta-item">
-                <i class="fas fa-tag"></i>
-                专注力
-              </span>
-              <span class="meta-item">
-                <i class="fas fa-clock"></i>
-                计划中
-              </span>
-            </div>
-            <div class="book-actions">
-              <a href="#" class="book-btn btn-pdf" target="_blank">
-                <i class="fas fa-lock"></i>
-                即将上架
-              </a>
-              <a href="#" class="book-btn btn-notes" target="_blank">
-                <i class="fas fa-lock"></i>
-                即将开放
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="book-card" data-category="wealth">
-          <div class="book-cover">
-            <img src="https://picsum.photos/seed/book10/280/380.jpg" alt="富爸爸穷爸爸" loading="lazy">
-            <div class="book-overlay"></div>
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">富爸爸穷爸爸</h3>
-            <p class="book-author">[作者待定]</p>
-            <div class="book-meta">
-              <span class="meta-item">
-                <i class="fas fa-tag"></i>
-                财富思维
-              </span>
-              <span class="meta-item">
-                <i class="fas fa-clock"></i>
-                计划中
-              </span>
-            </div>
-            <div class="book-actions">
-              <a href="#" class="book-btn btn-pdf" target="_blank">
-                <i class="fas fa-lock"></i>
-                即将上架
-              </a>
-              <a href="#" class="book-btn btn-notes" target="_blank">
-                <i class="fas fa-lock"></i>
-                即将开放
-              </a>
-            </div>
-          </div>
-        </div>
+      <div class="books-container" id="booksContainer">
+        <!-- 书籍卡片将通过JS动态生成 -->
       </div>
     </main>
 
@@ -936,10 +653,237 @@
   </div>
 
   <script>
-    // 生成星星背景
+    // 性能优化：使用防抖函数
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    // 性能优化：使用节流函数
+    function throttle(func, limit) {
+      let inThrottle;
+      return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+          func.apply(context, args);
+          inThrottle = true;
+          setTimeout(() => inThrottle = false, limit);
+        }
+      };
+    }
+
+    // 书籍数据
+    const booksData = [
+      {
+        id: 1,
+        title: "财富的真相",
+        author: "李笑来",
+        category: ["wealth", "recent"],
+        tag: "财富思维",
+        time: "2024",
+        cover: "images/wealth-truth.jpg",
+        pdfUrl: "https://zh.101enfj.ru/book/27562625/fceee0/%E8%B4%A2%E5%AF%8C%E7%9A%84%E7%9C%9F%E7%9B%B8.html",
+        notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnKX0UdYz9cVcnJsyPpW8tuf",
+        pdfLabel: "PDF",
+        notesLabel: "笔记"
+      },
+      {
+        id: 2,
+        title: "专注的真相",
+        author: "李笑来",
+        category: ["focus", "recent"],
+        tag: "专注力",
+        time: "2024",
+        cover: "images/focus-truth.jpg",
+        pdfUrl: "https://zh.101istp.ru/book/116571059/e338fc/%E4%B8%93%E6%B3%A8%E7%9A%84%E7%9C%9F%E7%9B%B8.html",
+        notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcncpAKaBJWk2k6RWI4BFFwdd",
+        pdfLabel: "PDF",
+        notesLabel: "笔记"
+      },
+      {
+        id: 3,
+        title: "请辩",
+        author: "蔡叔",
+        category: ["philosophy", "recent"],
+        tag: "哲学思考",
+        time: "持续更新",
+        cover: "images/qingbian.jpg",
+        pdfUrl: "https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI0MDg5ODA2NQ==&scene=124#wechat_redirect",
+        notesUrl: "https://mubu.com/app/folders/home/247HNW732Qa",
+        pdfLabel: "公众号",
+        notesLabel: "思维导图"
+      },
+      {
+        id: 4,
+        title: "蔡叔的财富秘籍",
+        author: "蔡叔",
+        category: ["wealth"],
+        tag: "财富思维",
+        time: "经典",
+        cover: "images/cai-wealth.jpg",
+        pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
+        notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnXAMuqLdMgyxkvatE44LdVc",
+        pdfLabel: "PDF",
+        notesLabel: "笔记"
+      },
+      {
+        id: 5,
+        title: "小狗钱钱1+2",
+        author: "博多·舍费尔",
+        category: ["wealth"],
+        tag: "财富思维",
+        time: "经典",
+        cover: "images/Puppy-Money.jpg",
+        pdfUrl: "https://zh.101run.ru/book/11930655/c7206e/%E5%B0%8F%E7%8B%97%E9%92%B1%E9%92%B1.html",
+        notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnvH5qfel6H6X2E83DHcXCk6",
+        pdfLabel: "PDF",
+        notesLabel: "笔记",
+        locked: true
+      },
+      {
+        id: 6,
+        title: "思考的真相",
+        author: "李笑来",
+        category: ["focus"],
+        tag: "专注力",
+        time: "经典",
+        cover: "images/The-Truth-About-Thinking.jpg",
+        pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
+        notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnkxyGE9TdVMbEJ199XPUtAg",
+        pdfLabel: "PDF",
+        notesLabel: "笔记",
+        locked: true
+      },
+      {
+        id: 7,
+        title: "投资思维",
+        author: "[作者待定]",
+        category: ["wealth"],
+        tag: "财富思维",
+        time: "计划中",
+        cover: "https://picsum.photos/seed/book7/280/380.jpg",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "即将开放",
+        locked: true
+      },
+      {
+        id: 8,
+        title: "认知觉醒",
+        author: "[作者待定]",
+        category: ["philosophy"],
+        tag: "哲学思考",
+        time: "计划中",
+        cover: "https://picsum.photos/seed/book8/280/380.jpg",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "即将开放",
+        locked: true
+      },
+      {
+        id: 9,
+        title: "心流",
+        author: "[作者待定]",
+        category: ["focus"],
+        tag: "专注力",
+        time: "计划中",
+        cover: "https://picsum.photos/seed/book9/280/380.jpg",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "即将开放",
+        locked: true
+      },
+      {
+        id: 10,
+        title: "富爸爸穷爸爸",
+        author: "[作者待定]",
+        category: ["wealth"],
+        tag: "财富思维",
+        time: "计划中",
+        cover: "https://picsum.photos/seed/book10/280/380.jpg",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "即将开放",
+        locked: true
+      }
+    ];
+
+    // 创建书籍卡片
+    function createBookCard(book, index) {
+      const card = document.createElement('div');
+      card.className = 'book-card';
+      card.dataset.category = book.category.join(' ');
+      card.dataset.index = index;
+      
+      const lockIcon = book.locked ? '<i class="fas fa-lock"></i>' : '<i class="fas fa-file-pdf"></i>';
+      const lockIcon2 = book.locked ? '<i class="fas fa-lock"></i>' : '<i class="fas fa-book-open"></i>';
+      
+      card.innerHTML = `
+        <div class="book-cover">
+          <img class="lazy-image" data-src="${book.cover}" alt="${book.title}" loading="lazy">
+          <div class="book-overlay"></div>
+        </div>
+        <div class="book-info">
+          <h3 class="book-title">${book.title}</h3>
+          <p class="book-author">${book.author}</p>
+          <div class="book-meta">
+            <span class="meta-item">
+              <i class="fas fa-tag"></i>
+              ${book.tag}
+            </span>
+            <span class="meta-item">
+              <i class="fas fa-clock"></i>
+              ${book.time}
+            </span>
+          </div>
+          <div class="book-actions">
+            <a href="${book.pdfUrl}" class="book-btn btn-pdf" target="_blank">
+              ${lockIcon}
+              ${book.pdfLabel}
+            </a>
+            <a href="${book.notesUrl}" class="book-btn btn-notes" target="_blank">
+              ${lockIcon2}
+              ${book.notesLabel}
+            </a>
+          </div>
+        </div>
+      `;
+      
+      return card;
+    }
+
+    // 性能优化：使用DocumentFragment批量创建DOM
+    function renderBooks() {
+      const container = document.getElementById('booksContainer');
+      const fragment = document.createDocumentFragment();
+      
+      booksData.forEach((book, index) => {
+        const card = createBookCard(book, index);
+        fragment.appendChild(card);
+      });
+      
+      container.appendChild(fragment);
+    }
+
+    // 生成星星背景 - 性能优化
     function createStars() {
       const starsContainer = document.getElementById('stars');
-      const starCount = 50;
+      const starCount = 30; // 减少星星数量以提升性能
+      
+      // 使用DocumentFragment批量创建星星
+      const fragment = document.createDocumentFragment();
       
       for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
@@ -948,98 +892,164 @@
         star.style.top = Math.random() * 100 + '%';
         star.style.animationDelay = Math.random() * 4 + 's';
         star.style.opacity = Math.random() * 0.8 + 0.2;
-        starsContainer.appendChild(star);
+        fragment.appendChild(star);
       }
+      
+      starsContainer.appendChild(fragment);
     }
 
-    // 导航栏滚动效果
+    // 导航栏滚动效果 - 使用节流优化
     function handleNavbarScroll() {
       const navbar = document.getElementById('navbar');
       let lastScrollY = window.scrollY;
-
-      window.addEventListener('scroll', () => {
+      
+      const throttledScroll = throttle(() => {
         const currentScrollY = window.scrollY;
-        
         if (currentScrollY > 50) {
           navbar.classList.add('scrolled');
         } else {
           navbar.classList.remove('scrolled');
         }
-        
         lastScrollY = currentScrollY;
-      });
+      }, 16); // 约60fps
+      
+      window.addEventListener('scroll', throttledScroll, { passive: true });
     }
 
-    // 筛选功能
+    // 筛选功能 - 性能优化
     function initializeFilter() {
       const filterBtns = document.querySelectorAll('.filter-btn');
-      const bookCards = document.querySelectorAll('.book-card');
-
+      let currentFilter = 'all';
+      
       filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
+          // 避免重复操作
+          if (btn.dataset.filter === currentFilter) return;
+          
           // 更新按钮状态
           filterBtns.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
+          currentFilter = btn.dataset.filter;
           
-          const filter = btn.dataset.filter;
-          
-          // 筛选书籍
-          bookCards.forEach(card => {
-            if (filter === 'all') {
-              card.style.display = 'block';
-              setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-              }, 100);
-            } else {
+          // 使用requestAnimationFrame优化动画
+          requestAnimationFrame(() => {
+            const bookCards = document.querySelectorAll('.book-card');
+            
+            bookCards.forEach(card => {
               const categories = card.dataset.category.split(' ');
-              if (categories.includes(filter)) {
-                card.style.display = 'block';
-                setTimeout(() => {
-                  card.style.opacity = '1';
-                  card.style.transform = 'translateY(0)';
-                }, 100);
+              const shouldShow = currentFilter === 'all' || categories.includes(currentFilter);
+              
+              if (shouldShow) {
+                card.classList.remove('hidden', 'fade-out');
+                card.classList.add('fade-in');
               } else {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
+                card.classList.remove('fade-in');
+                card.classList.add('fade-out');
+                
+                // 延迟隐藏以完成动画
                 setTimeout(() => {
-                  card.style.display = 'none';
+                  if (card.classList.contains('fade-out')) {
+                    card.classList.add('hidden');
+                  }
                 }, 300);
               }
-            }
+            });
           });
         });
       });
     }
 
-    // 图片懒加载
+    // 图片懒加载 - 性能优化
     function initializeLazyLoading() {
-      const images = document.querySelectorAll('img[loading="lazy"]');
-      
       const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const img = entry.target;
-            img.style.opacity = '0';
-            img.addEventListener('load', () => {
-              img.style.transition = 'opacity 0.5s ease';
-              img.style.opacity = '1';
-            });
-            observer.unobserve(img);
+            const src = img.dataset.src;
+            
+            if (src) {
+              // 创建新图片对象预加载
+              const newImg = new Image();
+              newImg.onload = () => {
+                img.src = src;
+                img.classList.add('loaded');
+                observer.unobserve(img);
+              };
+              newImg.src = src;
+            }
           }
         });
+      }, {
+        rootMargin: '50px 0px', // 提前50px加载
+        threshold: 0.1
       });
 
-      images.forEach(img => imageObserver.observe(img));
+      // 延迟观察以确保DOM已准备就绪
+      setTimeout(() => {
+        const lazyImages = document.querySelectorAll('.lazy-image');
+        lazyImages.forEach(img => imageObserver.observe(img));
+      }, 100);
     }
 
-    // 初始化
-    document.addEventListener('DOMContentLoaded', () => {
+    // 预加载关键资源
+    function preloadCriticalResources() {
+      // 预加载字体
+      const fontLink = document.createElement('link');
+      fontLink.rel = 'preload';
+      fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap';
+      fontLink.as = 'style';
+      fontLink.onload = function() {
+        this.rel = 'stylesheet';
+      };
+      document.head.appendChild(fontLink);
+    }
+
+    // 内存清理
+    function cleanup() {
+      // 清理事件监听器
+      window.removeEventListener('scroll', handleNavbarScroll);
+      
+      // 清理观察器
+      if (window.imageObserver) {
+        window.imageObserver.disconnect();
+      }
+    }
+
+    // 初始化应用
+    function initApp() {
+      // 创建星星背景
       createStars();
+      
+      // 渲染书籍
+      renderBooks();
+      
+      // 初始化功能
       handleNavbarScroll();
       initializeFilter();
-      initializeLazyLoading();
-    });
+      
+      // 延迟初始化懒加载以避免阻塞初始渲染
+      setTimeout(() => {
+        initializeLazyLoading();
+      }, 200);
+      
+      // 预加载资源
+      preloadCriticalResources();
+      
+      // 页面卸载时清理内存
+      window.addEventListener('beforeunload', cleanup);
+    }
+
+    // 使用requestIdleCallback优化初始化时机
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(initApp, { timeout: 1000 });
+    } else {
+      // 降级方案
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initApp);
+      } else {
+        initApp();
+      }
+    }
   </script>
 </body>
 </html>
