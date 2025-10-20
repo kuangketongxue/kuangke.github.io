@@ -1013,6 +1013,16 @@ function getMomentsStats(moments) {
  */
 let momentsData = [
     {
+        id: 24,
+        content: '过去的事情是无法更改的,现在的烦恼是无济于事的。但是,将来的尴尬也许是可以避免的--如果现在的行动没有出错的话。换句话讲,为了避免将来的尴尬,必须在今天采取正确的行动。',
+        value: ,
+        category: '问答互动',
+        time: '2025-10-20 17:50',
+        image: '5',
+        likes: 0,
+        comments: []
+    },
+    {
         id: 23,
         content: '我们认真对待我们的周遭环境,我们知道自己很容易被环境所听影响、所塑造;又因为我们一向是以主动为荣的人,所以会时时刻刻提防环境对我们的影响向。我们不花时间与他人争论,我们只为了弄清楚事实而讨论。我们不鄙视他人的能力--我们自己曾经也能力不足,我们倒是不怕自黑,不过,我们更愿意与那些欣赏我们的人共同,成长。我们懂得如何调整焦点，我们会主动尝试从多个角度去看待问题;我们不会把时间浪费在无谓的情绪之中,我们会用时间精力改变那些能够改变的事情。',
         value: 5,
@@ -1025,7 +1035,7 @@ let momentsData = [
     {
         id: 22,
         content: '马斯克与弗里费德曼的播客不错-https://youtu.be/JN3KPFbWCy8?si=z0HMVS7Jw-GSO5zC',
-        value: 5,
+        value: 3,
         category: '问答互动',
         time: '2025-10-14 19:17',
         image: '',
@@ -1045,7 +1055,7 @@ let momentsData = [
     {
         id: 20,
         content: '生活标准这个东西，最好就是以年为单位去考量，且很长时间都不要发生改变，这个标准是我的被动收入——我的另一个我不用我操心的，能够过的生活。',
-        value: 5,
+        value: 4,
         category: '财务理财',
         time: '2025-10-13 22:40',
         image: '',
@@ -1055,7 +1065,7 @@ let momentsData = [
     {
         id: 19,
         content: 'The journey is the reward.',
-        value: 5,
+        value: 3,
         category: '工作相关',
         time: '2025-10-12 15:04',
         image: 'images/The process itself is the reward.',
@@ -1065,7 +1075,7 @@ let momentsData = [
     {
         id: 18,
         content: '当海盗，不要当海军 ，像侠盗一样行事：既为自己的工作感到自豪，又愿意去窃取别人的灵感，快速行动，做成事情',
-        value: 5,
+        value: 4,
         category: '工作相关',
         time: '2025-10-12 15:04',
         image: '',
@@ -1105,7 +1115,7 @@ let momentsData = [
     {
         id: 14,
         content: '当你感觉你去参与这个东西的时候，有很大的负担，甚至要到负债的级别就不要报了，哪怕他是一个真正有用的东西；超过 200 元的花费，提供全面的信息给 ai ，让他帮你避坑',
-        value: 5,
+        value: 3,
         category: '工作相关',
         time: '2025-10-11 22:49',
         image: '',
@@ -1115,7 +1125,7 @@ let momentsData = [
     {
         id: 13,
         content: '哪有那么多天时地利人和都比不过两个字,勤奋。幸运没那么重要,如果还看幸运,说明你还不够勤奋',
-        value: 5,
+        value: 4,
         category: '工作相关',
         time: '2025-10-09 19:58',
         image: '',
@@ -1125,7 +1135,7 @@ let momentsData = [
     {
         id: 12,
         content: '生活黑客都说了,凡是有系统一定有 bug,正常人才会去排队,你黑客都是找 bug 就直接进去了。确实这个世界所谓的炒台班子是哪哪都是千疮百孔的,你正儿八经排队就能排到猴年马月去。你要是不想排队的话,哪有洞你都可以钻进去',
-        value: 5,
+        value: 4,
         category: '生活日常',
         time: '2025-10-09 19:58',
         image: '',
@@ -1215,7 +1225,7 @@ let momentsData = [
     {
         id: 3,
         content: '发国庆祝福时发现有一百多个单删我了。真正值得的人,会留在你的生活里;删掉你的人,也是在帮你腾出空间给更合拍的人;能坦诚交流、愿意回应的人才最值得投入精力。',
-        value: 5,
+        value: 3,
         category: '情感表达',
         time: '2025-10-01 00:16',
         image: '',
@@ -1225,7 +1235,7 @@ let momentsData = [
     {
         id: 2,
         content: '真挤,回来时 504 人真多🥵,应该 16 点就出发的',
-        value: 1,
+        value: 0,
         category: '生活日常',
         time: '2025-09-30 18:36',
         image: '',
@@ -1235,7 +1245,7 @@ let momentsData = [
     {
         id: 1,
         content: '好好好,Claude 也赶中国国庆发模型的节奏',
-        value: 3,
+        value: 1,
         category: '科技数码',
         time: '2025-09-30 12:08',
         image: 'images/d59aff54b056c66e94bc15b5cd3ad78c.png',
