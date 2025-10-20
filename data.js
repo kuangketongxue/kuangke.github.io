@@ -67,7 +67,7 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
-     {
+    {
         id: 35,
         date: '2025-10-19',
         categories: ['study', 'creative'],
@@ -956,10 +956,9 @@ const successDiaryDefaults = JSON.parse(JSON.stringify(successDiaryData));
 function getMomentsStats(moments) {
     // 获取今天的日期 (格式: YYYY-MM-DD)
     const today = new Date();
-    const todayString = today.getFullYear() + '-' + 
-                       String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+    const todayString = today.getFullYear() + '-' +
+                       String(today.getMonth() + 1).padStart(2, '0') + '-' +
                        String(today.getDate()).padStart(2, '0');
-    
     console.log('📅 今天的日期:', todayString);
     
     const stats = {
@@ -974,7 +973,7 @@ function getMomentsStats(moments) {
             5: 0
         }
     };
-
+    
     moments.forEach(moment => {
         // 统计高价值内容 (value >= 5)
         if (moment.value >= 5) {
@@ -985,7 +984,6 @@ function getMomentsStats(moments) {
         try {
             // moment.time 格式: "2025-10-19 13:05"
             const momentDate = moment.time ? moment.time.split(' ')[0] : null;
-            
             if (momentDate && momentDate === todayString) {
                 stats.today++;
                 console.log('✅ 今日发布:', moment.content.substring(0, 20));
@@ -1004,11 +1002,10 @@ function getMomentsStats(moments) {
             stats.categories[moment.category] = (stats.categories[moment.category] || 0) + 1;
         }
     });
-
+    
     console.log('📊 统计结果:', stats);
     return stats;
 }
-   
 
 /**
  * 朋友圈数据集
@@ -1343,7 +1340,6 @@ function formatDate(dateString, lang = 'zh', options = {}) {
     };
     const mergedOptions = { ...defaultOptions, ...options };
     const locale = lang === 'en' ? 'en-US' : 'zh-CN';
-    
     return date.toLocaleDateString(locale, mergedOptions);
 }
 
@@ -1435,7 +1431,7 @@ if (invalidCount > 0) {
     console.log('✅ 所有日记数据验证通过');
 }
 
-// 数据统计（合并版本，删除第一个重复的声明）
+// 数据统计
 const stats = getDiaryStats(successDiaryData);
 const momentsStats = getMomentsStats(momentsData);
 
@@ -1482,11 +1478,13 @@ if (typeof module !== 'undefined' && module.exports) {
         diaryTagLibrary,
         moodLibrary,
         momentCategories,
+        
         // 数据集
         successDiaryData,
         successDiaries: successDiaryData,
         successDiaryDefaults,
         momentsData,
+        
         // 工具函数
         getTagInfo,
         getTagName,
