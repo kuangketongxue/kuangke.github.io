@@ -5,10 +5,12 @@ const STORAGE_KEYS = Object.freeze({
     theme: 'theme',
     language: 'language'
 });
+
 const PAGE_TYPES = Object.freeze({
     MOMENTS: 'moments',
     SUCCESS: 'success'
 });
+
 const DEBOUNCE_DELAY = 300;
 const ANIMATION_DELAY = 0.1;
 const NOTIFICATION_DURATION = 3000;
@@ -71,7 +73,7 @@ const Utils = {
     formatTime(timeStr) {
         const date = new Date(timeStr);
         if (Number.isNaN(date.getTime())) return timeStr;
-
+        
         const now = new Date();
         const diff = now - date;
         const oneMinute = 60 * 1000;
@@ -83,7 +85,7 @@ const Utils = {
         if (diff < oneDay) return `${Math.floor(diff / oneHour)}小时前`;
         if (diff < oneDay * 2) return '昨天';
         if (diff < oneDay * 7) return `${Math.floor(diff / oneDay)}天前`;
-
+        
         return date.toLocaleString('zh-CN', {
             year: 'numeric',
             month: '2-digit',
@@ -96,13 +98,14 @@ const Utils = {
     formatDiaryDate(dateStr, lang) {
         const date = new Date(dateStr);
         if (Number.isNaN(date.getTime())) return dateStr;
-
+        
         const options = {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
             weekday: 'short'
         };
+        
         return date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', options);
     },
 
@@ -139,14 +142,14 @@ class NotificationManager {
     static show(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
-
+        
         const iconMap = {
             success: 'check-circle',
             warning: 'exclamation-circle',
             error: 'times-circle',
             info: 'info-circle'
         };
-
+        
         const colorMap = {
             success: '#10b981',
             warning: '#f59e0b',
@@ -251,6 +254,7 @@ class LanguageManager {
         appState.currentLanguage = appState.currentLanguage === 'zh' ? 'en' : 'zh';
         appState.saveToStorage(STORAGE_KEYS.language, appState.currentLanguage);
         this.updateLanguageToggleButton();
+        
         if (appState.currentPage === PAGE_TYPES.SUCCESS) {
             SuccessPageManager.updatePage();
         }
@@ -259,8 +263,10 @@ class LanguageManager {
     static updateLanguageToggleButton() {
         const button = document.getElementById('languageToggle');
         if (!button) return;
+        
         const icon = button.querySelector('i');
         const span = button.querySelector('span');
+        
         if (icon) icon.className = 'fas fa-language';
         if (span) span.textContent = appState.currentLanguage === 'zh' ? '中 → EN' : 'EN → 中';
     }
@@ -300,6 +306,7 @@ class ThemeManager {
     static updateThemeToggleButton() {
         const button = document.getElementById('themeToggle');
         if (!button) return;
+        
         const icon = button.querySelector('i');
         if (icon) {
             icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
@@ -307,29 +314,342 @@ class ThemeManager {
     }
 }
 
-// ==================== 本地存储管理器 ====================
-class StorageManager {
-    static loadMomentsData() {
+// ==================== 增强的存储管理器 ====================
+class EnhancedStorageManager {
+    static STORAGE_PREFIX = 'kuangke_galaxy_';
+    static COMPRESS_THRESHOLD = 1024 * 1024; // 1MB
+    
+    static getStorageKey(key) {
+        return this.STORAGE_PREFIX + key;
+    }
+    
+    static saveData(key, data) {
         try {
-            const saved = appState.loadFromStorage(STORAGE_KEYS.moments);
-            if (!saved) return null;
-            return JSON.parse(saved);
+            const serialized = JSON.stringify(data);
+            
+            // 数据过大时尝试压缩
+            if (serialized.length > this.COMPRESS_THRESHOLD) {
+                console.warn('数据较大，建议定期清理');
+            }
+            
+            localStorage.setItem(this.getStorageKey(key), serialized);
+            return true;
         } catch (error) {
-            console.error('加载朋友圈数据失败:', error);
-            NotificationManager.show('数据加载失败', 'error');
+            if (error.name === 'QuotaExceededError') {
+                console.error('存储空间不足，尝试清理...');
+                this.cleanupStorage();
+                // 重试一次
+                try {
+                    localStorage.setItem(this.getStorageKey(key), JSON.stringify(data));
+                    return true;
+                } catch (retryError) {
+                    console.error('重试保存失败:', retryError);
+                    NotificationManager.show('存储空间不足，请清理数据', 'error');
+                }
+            } else {
+                console.error('保存数据失败:', error);
+            }
+            return false;
+        }
+    }
+    
+    static loadData(key) {
+        try {
+            const data = localStorage.getItem(this.getStorageKey(key));
+            return data ? JSON.parse(data) : null;
+        } catch (error) {
+            console.error('加载数据失败:', error);
             return null;
         }
     }
+    
+    static cleanupStorage() {
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith(this.STORAGE_PREFIX)) {
+                try {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    // 清理超过30天的备份
+                    if (key.includes('backup') && data.timestamp) {
+                        const age = Date.now() - data.timestamp;
+                        if (age > 30 * 24 * 60 * 60 * 1000) { // 30天
+                            keysToRemove.push(key);
+                        }
+                    }
+                } catch (e) {
+                    keysToRemove.push(key);
+                }
+            }
+        }
+        
+        keysToRemove.forEach(key => {
+            localStorage.removeItem(key);
+            console.log('清理旧数据:', key);
+        });
+        
+        if (keysToRemove.length > 0) {
+            NotificationManager.show(`清理了${keysToRemove.length}个旧数据`, 'info');
+        }
+    }
+    
+    static getStorageUsage() {
+        let total = 0;
+        for (let key in localStorage) {
+            if (localStorage.hasOwnProperty(key)) {
+                total += localStorage[key].length + key.length;
+            }
+        }
+        return {
+            used: total,
+            usedMB: (total / 1024 / 1024).toFixed(2),
+            available: (5 * 1024 * 1024 - total), // 假设总限制5MB
+            availableMB: ((5 * 1024 * 1024 - total) / 1024 / 1024).toFixed(2)
+        };
+    }
+}
 
-    static saveMomentsData(data) {
+// ==================== 数据备份管理器 ====================
+class DataBackupManager {
+    static BACKUP_INTERVAL = 60000; // 1分钟备份一次
+    static MAX_BACKUPS = 10; // 最多保留10个备份
+    
+    static init() {
+        // 立即备份一次
+        this.backupData();
+        
+        // 定期备份
+        setInterval(() => {
+            this.backupData();
+        }, this.BACKUP_INTERVAL);
+        
+        // 页面卸载前备份
+        window.addEventListener('beforeunload', () => {
+            this.backupData();
+        });
+    }
+    
+    static backupData() {
         try {
-            appState.saveToStorage(STORAGE_KEYS.moments, JSON.stringify(data));
-            return true;
+            const backupData = {
+                moments: MomentsPageManager.data || [],
+                timestamp: Date.now(),
+                version: '1.0'
+            };
+            
+            const backups = this.getBackups();
+            backups.push(backupData);
+            
+            // 保留最新的备份
+            if (backups.length > this.MAX_BACKUPS) {
+                backups.splice(0, backups.length - this.MAX_BACKUPS);
+            }
+            
+            EnhancedStorageManager.saveData('moments_backups', backups);
+            console.log('✅ 数据备份成功');
         } catch (error) {
-            console.error('保存朋友圈数据失败:', error);
-            NotificationManager.show('数据保存失败', 'error');
+            console.error('❌ 数据备份失败:', error);
+        }
+    }
+    
+    static getBackups() {
+        try {
+            return EnhancedStorageManager.loadData('moments_backups') || [];
+        } catch (error) {
+            return [];
+        }
+    }
+    
+    static restoreFromBackup(backupIndex = -1) {
+        const backups = this.getBackups();
+        if (backups.length === 0) {
             return false;
         }
+        
+        const backup = backups[backupIndex === -1 ? backups.length - 1 : backupIndex];
+        if (backup && backup.moments) {
+            MomentsPageManager.data = backup.moments;
+            EnhancedStorageManager.saveData(STORAGE_KEYS.moments, MomentsPageManager.data);
+            NotificationManager.show('数据恢复成功', 'success');
+            return true;
+        }
+        
+        return false;
+    }
+    
+    static showRestoreDialog() {
+        const backups = this.getBackups();
+        if (backups.length === 0) {
+            NotificationManager.show('没有可用的备份', 'warning');
+            return;
+        }
+        
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.display = 'block';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 600px;">
+                <h3>选择备份恢复</h3>
+                <div class="backup-list" style="max-height: 400px; overflow-y: auto;">
+                    ${backups.map((backup, index) => {
+                        const date = new Date(backup.timestamp).toLocaleString();
+                        return `
+                            <div class="backup-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;">
+                                <span>${date} (${backup.moments.length}条数据)</span>
+                                <button onclick="DataBackupManager.restoreFromBackup(${index}) && this.closest('.modal').remove()" style="padding: 5px 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    恢复此备份
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                <button onclick="this.closest('.modal').remove()" style="margin-top: 10px; padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    关闭
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    }
+}
+
+// ==================== 数据验证器 ====================
+class DataValidator {
+    static validateMomentsData(data) {
+        if (!Array.isArray(data)) {
+            console.error('朋友圈数据必须是数组');
+            return false;
+        }
+        
+        return data.every((item, index) => {
+            const errors = [];
+            
+            if (!item.id) errors.push('缺少id');
+            if (!item.content) errors.push('缺少content');
+            if (item.value === undefined) errors.push('缺少value');
+            if (!item.category) errors.push('缺少category');
+            if (!item.time) errors.push('缺少time');
+            
+            if (errors.length > 0) {
+                console.error(`朋友圈数据[${index}]验证失败:`, errors);
+                return false;
+            }
+            
+            return true;
+        });
+    }
+    
+    static repairData(data) {
+        return data.map((item, index) => {
+            const repaired = { ...item };
+            
+            // 修复缺失的id
+            if (!repaired.id) {
+                repaired.id = Date.now() + index;
+                console.warn(`修复缺失的id: ${repaired.id}`);
+            }
+            
+            // 修复缺失的时间
+            if (!repaired.time) {
+                repaired.time = new Date().toISOString();
+                console.warn(`修复缺失的时间: ${repaired.id}`);
+            }
+            
+            // 修复缺失的值
+            if (repaired.value === undefined) {
+                repaired.value = 1;
+                console.warn(`修复缺失的value: ${repaired.id}`);
+            }
+            
+            // 确保comments是数组
+            if (!Array.isArray(repaired.comments)) {
+                repaired.comments = [];
+            }
+            
+            // 确保likes是数字
+            if (typeof repaired.likes !== 'number') {
+                repaired.likes = parseInt(repaired.likes) || 0;
+            }
+            
+            return repaired;
+        });
+    }
+    
+    static validateAndRepair() {
+        if (!this.validateMomentsData(MomentsPageManager.data)) {
+            console.warn('数据验证失败，尝试修复...');
+            MomentsPageManager.data = this.repairData(MomentsPageManager.data);
+            
+            if (this.validateMomentsData(MomentsPageManager.data)) {
+                console.log('✅ 数据修复成功');
+                EnhancedStorageManager.saveData(STORAGE_KEYS.moments, MomentsPageManager.data);
+                NotificationManager.show('数据已自动修复', 'success');
+            } else {
+                console.error('❌ 数据修复失败');
+                NotificationManager.show('数据严重损坏，请考虑从备份恢复', 'error');
+                DataBackupManager.showRestoreDialog();
+            }
+        }
+    }
+}
+
+// ==================== 错误恢复系统 ====================
+class ErrorRecoverySystem {
+    static init() {
+        // 监听全局错误
+        window.addEventListener('error', (event) => {
+            this.handleError(event.error, 'JavaScript Error');
+        });
+        
+        window.addEventListener('unhandledrejection', (event) => {
+            this.handleError(event.reason, 'Unhandled Promise Rejection');
+        });
+    }
+    
+    static handleError(error, type) {
+        console.error(`${type}:`, error);
+        
+        // 记录错误
+        this.logError(error, type);
+        
+        // 根据错误类型提供恢复建议
+        if (error.message && error.message.includes('Cannot read property')) {
+            NotificationManager.show('数据读取错误，尝试重新加载', 'warning');
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        } else if (error.message && error.message.includes('localStorage')) {
+            NotificationManager.show('存储访问失败，检查浏览器设置', 'error');
+        }
+    }
+    
+    static logError(error, type) {
+        const errorLog = {
+            type,
+            message: error.message,
+            stack: error.stack,
+            timestamp: Date.now(),
+            url: window.location.href,
+            userAgent: navigator.userAgent
+        };
+        
+        const logs = JSON.parse(localStorage.getItem('error_logs') || '[]');
+        logs.push(errorLog);
+        
+        // 只保留最近50条错误
+        if (logs.length > 50) {
+            logs.splice(0, logs.length - 50);
+        }
+        
+        localStorage.setItem('error_logs', JSON.stringify(logs));
+    }
+    
+    static getErrorLogs() {
+        return JSON.parse(localStorage.getItem('error_logs') || '[]');
+    }
+    
+    static clearErrorLogs() {
+        localStorage.removeItem('error_logs');
     }
 }
 
@@ -361,11 +681,11 @@ class PaginationManager {
         
         this.init();
     }
-    
+
     init() {
         this.bindEvents();
     }
-    
+
     bindEvents() {
         this.firstPageBtn?.addEventListener('click', () => this.goToPage(1));
         this.prevPageBtn?.addEventListener('click', () => this.goToPage(this.currentPage - 1));
@@ -378,7 +698,7 @@ class PaginationManager {
             this.render();
         });
     }
-    
+
     setData(allItems, filteredItems = null) {
         this.allItems = allItems;
         this.filteredItems = filteredItems || allItems;
@@ -391,7 +711,7 @@ class PaginationManager {
         
         this.render();
     }
-    
+
     goToPage(page) {
         if (page < 1 || page > this.totalPages) return;
         
@@ -400,13 +720,13 @@ class PaginationManager {
         this.scrollToTop();
         this.announce(`已跳转到第 ${page} 页`);
     }
-    
+
     render() {
         this.renderItems();
         this.renderControls();
         this.updateInfo();
     }
-    
+
     renderItems() {
         if (!this.container) return;
         
@@ -421,14 +741,15 @@ class PaginationManager {
                 totalPages: this.totalPages
             }
         });
+        
         document.dispatchEvent(event);
     }
-    
+
     renderControls() {
         this.updateButtonStates();
         this.renderPageNumbers();
     }
-    
+
     updateButtonStates() {
         const isFirstPage = this.currentPage === 1;
         const isLastPage = this.currentPage === this.totalPages || this.totalPages === 0;
@@ -438,7 +759,7 @@ class PaginationManager {
         if (this.nextPageBtn) this.nextPageBtn.disabled = isLastPage;
         if (this.lastPageBtn) this.lastPageBtn.disabled = isLastPage;
     }
-    
+
     renderPageNumbers() {
         if (!this.pageNumbersContainer) return;
         
@@ -469,7 +790,7 @@ class PaginationManager {
             }
         });
     }
-    
+
     getPageNumbers() {
         const pages = [];
         const half = Math.floor(this.maxVisiblePages / 2);
@@ -503,7 +824,7 @@ class PaginationManager {
         
         return pages;
     }
-    
+
     updateInfo() {
         const startIndex = this.totalItems > 0 ? (this.currentPage - 1) * this.itemsPerPage + 1 : 0;
         const endIndex = Math.min(this.currentPage * this.itemsPerPage, this.totalItems);
@@ -512,7 +833,7 @@ class PaginationManager {
         if (this.showingEnd) this.showingEnd.textContent = endIndex;
         if (this.totalItemsSpan) this.totalItemsSpan.textContent = this.totalItems;
     }
-    
+
     scrollToTop() {
         const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
         const categoryHeight = document.querySelector('.category-nav')?.offsetHeight || 0;
@@ -523,7 +844,7 @@ class PaginationManager {
             behavior: 'smooth'
         });
     }
-    
+
     announce(message) {
         if (this.announcer) {
             this.announcer.textContent = message;
@@ -532,7 +853,7 @@ class PaginationManager {
             }, 1000);
         }
     }
-    
+
     reset() {
         this.currentPage = 1;
     }
@@ -543,7 +864,7 @@ class MomentsPageManager {
     static data = [];
     static eventListeners = new Map();
     static paginationManager = null;
-
+    
     static init() {
         this.loadData();
         this.initPagination();
@@ -568,7 +889,7 @@ class MomentsPageManager {
     }
 
     static loadData() {
-        const savedData = StorageManager.loadMomentsData();
+        const savedData = EnhancedStorageManager.loadData(STORAGE_KEYS.moments);
         if (savedData) {
             const savedIds = savedData.map(m => m.id);
             const newDefaults = (window.momentsData || []).filter(m => !savedIds.includes(m.id));
@@ -579,12 +900,12 @@ class MomentsPageManager {
     }
 
     static saveData() {
-        return StorageManager.saveMomentsData(this.data);
+        return EnhancedStorageManager.saveData(STORAGE_KEYS.moments, this.data);
     }
 
     static bindEvents() {
         this.clearEventListeners();
-
+        
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
             const debouncedSearch = Utils.debounce((e) => {
@@ -665,10 +986,10 @@ class MomentsPageManager {
     }
 
     static filterByCategory() {
-        const filtered = appState.currentCategory === 'all' 
-            ? this.data 
+        const filtered = appState.currentCategory === 'all'
+            ? this.data
             : this.data.filter(m => m.category === appState.currentCategory);
-        
+            
         this.paginationManager.reset();
         this.paginationManager.setData(this.data, filtered);
         this.updateStats();
@@ -677,7 +998,7 @@ class MomentsPageManager {
     static renderMoments(moments) {
         const container = document.getElementById('momentsContainer');
         if (!container) return;
-
+        
         container.setAttribute('aria-busy', 'true');
 
         if (moments.length === 0) {
@@ -695,7 +1016,7 @@ class MomentsPageManager {
         container.innerHTML = sorted.map((moment, index) =>
             this.renderMomentCard(moment, index)
         ).join('');
-
+        
         container.setAttribute('aria-busy', 'false');
     }
 
@@ -750,10 +1071,10 @@ class MomentsPageManager {
     static handleLike(id) {
         const moment = this.data.find(m => m.id === id);
         if (!moment) return;
-
+        
         const hasLiked = moment.likes > 0;
         moment.likes = hasLiked ? 0 : 1;
-
+        
         if (this.saveData()) {
             // 重新渲染当前页
             this.paginationManager.render();
@@ -861,7 +1182,7 @@ class MomentsPageManager {
 
     static handleSearch(keyword) {
         const normalizedKeyword = Utils.normalize(keyword);
-
+        
         if (!normalizedKeyword) {
             this.paginationManager.reset();
             this.paginationManager.setData(this.data);
@@ -884,7 +1205,7 @@ class MomentsPageManager {
         
         const filteredData = this.paginationManager.filteredItems;
         const today = new Date().toISOString().split('T')[0];
-
+        
         let highValue = 0;
         let todayCount = 0;
 
@@ -1005,15 +1326,15 @@ class SuccessPageManager {
 
     static resetFilters() {
         appState.resetDiaryFilters();
-
+        
         const searchInput = document.getElementById('diarySearchInput');
         const moodSelect = document.getElementById('diaryMoodSelect');
         const sortSelect = document.getElementById('diarySortSelect');
-
+        
         if (searchInput) searchInput.value = '';
         if (moodSelect) moodSelect.value = 'all';
         if (sortSelect) sortSelect.value = 'dateDesc';
-
+        
         this.renderTagFilters();
         this.render();
     }
@@ -1026,7 +1347,7 @@ class SuccessPageManager {
     static updateSortOptions() {
         const sortSelect = document.getElementById('diarySortSelect');
         if (!sortSelect || sortSelect.options.length < 4) return;
-
+        
         const options = sortSelect.options;
         options[0].textContent = LanguageManager.t('sortDateDesc');
         options[1].textContent = LanguageManager.t('sortDateAsc');
@@ -1040,15 +1361,15 @@ class SuccessPageManager {
 
         const currentValue = moodSelect.value || 'all';
         const moodLibrary = window.moodLibrary || {};
-
+        
         let optionsHtml = `<option value="all">${LanguageManager.t('moodAll')}</option>`;
-
+        
         Object.keys(moodLibrary).forEach(code => {
             const mood = moodLibrary[code];
             const label = mood[appState.currentLanguage] || mood.zh || code;
             optionsHtml += `<option value="${code}">${Utils.escapeHtml(label)}</option>`;
         });
-
+        
         moodSelect.innerHTML = optionsHtml;
         moodSelect.value = currentValue;
     }
@@ -1058,10 +1379,11 @@ class SuccessPageManager {
         if (!container) return;
 
         const tagLibrary = window.diaryTagLibrary || [];
-
+        
         container.innerHTML = tagLibrary.map(tag => {
             const isActive = appState.selectedDiaryTags.has(tag.code);
             const label = tag[appState.currentLanguage] || tag.zh || tag.code;
+            
             return `
                 <button type="button"
                         class="filter-chip ${isActive ? 'active' : ''}"
@@ -1227,6 +1549,7 @@ class SuccessPageManager {
 
     static renderTags(categories) {
         if (!categories || !categories.length) return '';
+        
         return categories.map(code => {
             const label = this.getTagLabel(code);
             return `<span class="tag-pill">${Utils.escapeHtml(label)}</span>`;
@@ -1235,15 +1558,17 @@ class SuccessPageManager {
 
     static renderAttachments(attachments) {
         if (!Array.isArray(attachments) || attachments.length === 0) return '';
-
+        
         const items = attachments.map(path => {
             const trimmed = path.trim();
             if (!trimmed) return '';
-
+            
             const isImage = /\.(png|jpe?g|gif|webp|svg)$/i.test(trimmed);
+            
             if (isImage) {
                 return `<img src="${Utils.escapeHtml(trimmed)}" alt="附件图片" class="diary-attachment" onerror="this.style.display='none'" loading="lazy">`;
             }
+            
             return `<a href="${Utils.escapeHtml(trimmed)}" target="_blank" rel="noopener noreferrer" class="diary-attachment-link">${Utils.escapeHtml(trimmed)}</a>`;
         }).filter(Boolean).join('');
 
@@ -1257,6 +1582,7 @@ class SuccessPageManager {
 
     static renderCover(coverImage) {
         if (!coverImage) return '';
+        
         return `
             <img src="${Utils.escapeHtml(coverImage)}"
                  alt="封面图片"
@@ -1287,7 +1613,7 @@ class SuccessPageManager {
     static updateCounter(count) {
         const counter = document.getElementById('diaryCounter');
         if (!counter) return;
-
+        
         const text = LanguageManager.t('entryCount');
         counter.textContent = typeof text === 'function' ? text(count) : text;
     }
@@ -1298,12 +1624,30 @@ class AppController {
     static init() {
         const pageElement = document.querySelector('[data-page]');
         appState.currentPage = pageElement ? pageElement.dataset.page : PAGE_TYPES.MOMENTS;
-
+        
+        // 初始化错误恢复系统
+        ErrorRecoverySystem.init();
+        
+        // 应用主题
         ThemeManager.applySavedTheme();
         ThemeManager.updateThemeToggleButton();
-
+        
+        // 初始化全局控件
         this.initializeGlobalControls();
+        
+        // 初始化备份系统
+        DataBackupManager.init();
+        
+        // 初始化页面
         this.initializePage();
+        
+        // 验证和修复数据
+        if (appState.currentPage === PAGE_TYPES.MOMENTS) {
+            DataValidator.validateAndRepair();
+        }
+        
+        // 显示存储使用情况
+        this.showStorageInfo();
     }
 
     static initializeGlobalControls() {
@@ -1331,12 +1675,23 @@ class AppController {
                 console.warn('Unknown page type:', appState.currentPage);
         }
     }
+    
+    static showStorageInfo() {
+        const usage = EnhancedStorageManager.getStorageUsage();
+        if (usage.usedMB > 4) { // 超过4MB时提醒
+            console.warn(`存储使用量较高: ${usage.usedMB}MB`);
+        }
+    }
 }
 
 // ==================== 全局暴露 ====================
 window.MomentsPageManager = MomentsPageManager;
 window.SuccessPageManager = SuccessPageManager;
 window.PaginationManager = PaginationManager;
+window.DataBackupManager = DataBackupManager;
+window.DataValidator = DataValidator;
+window.ErrorRecoverySystem = ErrorRecoverySystem;
+window.EnhancedStorageManager = EnhancedStorageManager;
 
 // ==================== 页面初始化 ====================
 document.addEventListener('DOMContentLoaded', () => {
@@ -1361,6 +1716,7 @@ style.textContent = `
             opacity: 1;
         }
     }
+    
     @keyframes slideOutRight {
         from {
             transform: translateX(0);
@@ -1371,9 +1727,11 @@ style.textContent = `
             opacity: 0;
         }
     }
+    
     .notification {
         transform-origin: top right;
     }
+    
     .no-results {
         display: flex;
         flex-direction: column;
@@ -1384,6 +1742,7 @@ style.textContent = `
         color: var(--text-secondary);
         grid-column: 1 / -1;
     }
+    
     .diary-empty {
         display: flex;
         flex-direction: column;
@@ -1392,6 +1751,30 @@ style.textContent = `
         padding: 4rem 2rem;
         text-align: center;
         color: var(--text-secondary);
+    }
+    
+    .backup-item:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .modal {
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        display: none;
+    }
+    
+    .modal-content {
+        background-color: white;
+        margin: 10% auto;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 80%;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 `;
 document.head.appendChild(style);
