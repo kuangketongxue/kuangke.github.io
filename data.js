@@ -1012,6 +1012,16 @@ function getMomentsStats(moments) {
  * @type {Array<Object>}
  */
 let momentsData = [
+      {
+        id: 25,
+        content: '给机构做英语教学视频，用即梦和可灵的AI数字人，剪映剪辑，海螺AI配音和声音克隆',
+        value: 3,
+        category: '工作相关',
+        time: '2025-10-20 18:10',
+        image: '',
+        likes: 0,
+        comments: []
+    },
     {
         id: 24,
         content: '过去的事情是无法更改的,现在的烦恼是无济于事的。但是,将来的尴尬也许是可以避免的--如果现在的行动没有出错的话。换句话讲,为了避免将来的尴尬,必须在今天采取正确的行动。',
