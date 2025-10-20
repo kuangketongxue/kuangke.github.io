@@ -1015,10 +1015,10 @@ let momentsData = [
     {
         id: 24,
         content: '过去的事情是无法更改的,现在的烦恼是无济于事的。但是,将来的尴尬也许是可以避免的--如果现在的行动没有出错的话。换句话讲,为了避免将来的尴尬,必须在今天采取正确的行动。',
-        value: ,
+        value: 5,
         category: '问答互动',
         time: '2025-10-20 17:50',
-        image: '5',
+        image: 'images/4bb08fa59a50e5d379c4f2260797d26d.png',
         likes: 0,
         comments: []
     },
