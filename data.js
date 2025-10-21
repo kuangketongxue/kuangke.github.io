@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
      {
+        id: 37,
+        date: '2025-10-21',
+        categories: ['study', 'creative', 'finance'],
+        headline: {
+            zh: '前哨战小创造，找不到，学不完，不如自己做',
+            en: 'A small innovation for a preliminary task; it is hard to find and impossible to master completely. Might as well create it oneself.'
+        },
+        content: {
+            zh: '阅读16本书+。\n睡眠充足。\n学习10小时+',
+            en: 'Read 16+ books.\nAdequate sleep.\nStudied for 10+ hours'
+        },
+        highlight: {
+            zh: '前哨战定投社群',
+            en: 'Frontline Stakeholder Investment Community'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
+     {
         id: 36,
         date: '2025-10-20',
         categories: ['study', 'creative'],
