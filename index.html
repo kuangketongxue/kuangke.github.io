@@ -33,14 +33,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
   
     <style>
-        /* ==================== 导航按钮组样式 ==================== */
-        .nav-buttons-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-right: 15px;
-        }
-
         /* ==================== AI前沿按钮专属样式 ==================== */
         .ai-nav-button {
             display: inline-flex;
@@ -126,29 +118,28 @@
             animation: ai-glow 3s ease-in-out infinite;
         }
 
-        /* ==================== 健康提醒按钮优化样式 ==================== */
+        /* ==================== 健康提醒按钮专属样式 ==================== */
         .health-nav-button {
             display: inline-flex;
             align-items: center;
             padding: 10px 16px;
-            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            background: linear-gradient(135deg, #00c9a7 0%, #8b5cf6 100%);
             color: #fff;
-            text-decoration: none;
+            border: none;
             border-radius: 12px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 201, 167, 0.3);
             position: relative;
             overflow: hidden;
             font-weight: 600;
             font-size: 14px;
             letter-spacing: 0.5px;
             will-change: transform, box-shadow;
-            text-decoration: none;
-            border: none;
+            margin-left: 10px;
             cursor: pointer;
         }
 
-        /* 光泽效果 */
+        /* 健康提醒按钮光泽效果 */
         .health-nav-button::before {
             content: '';
             position: absolute;
@@ -158,7 +149,7 @@
             height: 100%;
             background: linear-gradient(90deg, 
                 transparent, 
-                rgba(255, 255, 255, 0.2), 
+                rgba(255, 255, 255, 0.3), 
                 transparent
             );
             transition: left 0.5s ease;
@@ -168,21 +159,20 @@
             left: 100%;
         }
 
-        /* 悬停效果 */
+        /* 健康提醒按钮悬停效果 */
         .health-nav-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-            background: linear-gradient(135deg, #feca57 0%, #ff6b6b 100%);
-            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(0, 201, 167, 0.4);
+            background: linear-gradient(135deg, #8b5cf6 0%, #00c9a7 100%);
         }
 
-        /* 点击效果 */
+        /* 健康提醒按钮点击效果 */
         .health-nav-button:active {
             transform: translateY(0);
-            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 201, 167, 0.3);
         }
 
-        /* 图标样式 */
+        /* 健康提醒图标样式 */
         .health-icon {
             display: flex;
             align-items: center;
@@ -200,252 +190,381 @@
             transform: scale(1.1) rotate(5deg);
         }
 
-        /* 呼吸光晕动画 */
+        /* 健康提醒呼吸光晕动画 */
         @keyframes health-glow {
             0%, 100% { 
-                box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3); 
+                box-shadow: 0 4px 12px rgba(0, 201, 167, 0.3); 
             }
             50% { 
-                box-shadow: 0 4px 20px rgba(255, 107, 107, 0.6),
-                            0 0 30px rgba(255, 107, 107, 0.2); 
+                box-shadow: 0 4px 20px rgba(0, 201, 167, 0.6),
+                            0 0 30px rgba(0, 201, 167, 0.2); 
             }
         }
 
         .health-nav-button {
-            animation: health-glow 4s ease-in-out infinite;
+            animation: health-glow 3s ease-in-out infinite;
         }
 
-        /* 健康提醒模态框样式 */
-        .health-modal {
-            display: none;
+        /* 健康提醒激活状态 */
+        .health-nav-button.active {
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            animation: none;
+        }
+
+        .health-nav-button.active::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #10b981, #3b82f6, #10b981);
+            border-radius: 12px;
+            z-index: -1;
+            animation: health-rotate 3s linear infinite;
+        }
+
+        @keyframes health-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ==================== 健康提醒通知样式 ==================== */
+        .health-notification {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 10000;
-            backdrop-filter: blur(5px);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .health-modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .health-modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from { 
-                transform: translateY(30px);
-                opacity: 0;
-            }
-            to { 
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .health-modal-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .health-modal-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .health-modal-subtitle {
-            font-size: 16px;
-            color: #666;
-        }
-
-        .timer-display {
+            top: 20px;
+            right: 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .timer-text {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .timer-countdown {
-            font-size: 36px;
-            font-weight: bold;
-            font-family: 'Courier New', monospace;
-        }
-
-        .health-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: #666;
-        }
-
-        .control-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .health-btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #e9ecef;
-            color: #495057;
-        }
-
-        .btn-secondary:hover {
-            background: #dee2e6;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-            color: white;
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(86, 171, 47, 0.4);
-        }
-
-        .health-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 20000;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
             display: none;
+            max-width: 400px;
+            transform: translateX(450px);
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .health-notification.show {
+            display: block;
+            transform: translateX(0);
+        }
+
+        .health-notification.eye-care {
+            background: linear-gradient(135deg, #00c9a7 0%, #8b5cf6 100%);
+        }
+
+        .health-notification.break {
+            background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-icon {
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .health-modal-overlay.active {
-            display: flex;
+        .notification-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            transition: all 0.2s;
         }
 
-        .eye-exercise-content {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 600px;
-            width: 90%;
+        .notification-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .notification-content {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .notification-timer {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
-        .eye-exercise-icon {
-            font-size: 80px;
-            color: #667eea;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
+        .timer-display {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
 
-        @keyframes pulse {
+        .timer-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .eye-care-steps {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .eye-care-steps h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .eye-care-steps ol {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .audio-controls {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .audio-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .audio-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .audio-btn.playing {
+            background: rgba(255, 255, 255, 0.4);
+            animation: audio-pulse 2s infinite;
+        }
+
+        @keyframes audio-pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
         }
 
-        .eye-exercise-title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 15px;
+        .audio-info {
+            flex: 1;
         }
 
-        .eye-exercise-description {
-            font-size: 16px;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 30px;
+        .audio-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
         }
 
-        .eye-exercise-timer {
-            font-size: 48px;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 30px;
-            font-family: 'Courier New', monospace;
+        .audio-status {
+            font-size: 12px;
+            opacity: 0.8;
         }
 
-        .eye-exercise-instruction {
-            background: #f8f9fa;
-            padding: 20px;
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .notification-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
             border-radius: 10px;
-            margin-bottom: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .eye-exercise-steps {
-            text-align: left;
+        .notification-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .notification-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .notification-btn.primary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .notification-btn.primary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .notification-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .notification-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .notification-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* 后台权限提示 */
+        .permission-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 15px 20px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10000;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .permission-banner.show {
+            display: flex;
+        }
+
+        .permission-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .permission-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .permission-text h4 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .permission-text p {
             margin: 0;
-            padding-left: 20px;
+            font-size: 14px;
+            opacity: 0.9;
         }
 
-        .eye-exercise-steps li {
-            margin-bottom: 10px;
-            color: #495057;
+        .permission-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .permission-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .permission-btn.allow {
+            background: white;
+            color: #1e40af;
+        }
+
+        .permission-btn.allow:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+        }
+
+        .permission-btn.deny {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .permission-btn.deny:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         /* 响应式优化 */
@@ -461,21 +580,41 @@
                 margin-right: 6px;
             }
 
-            .health-modal-content {
-                padding: 20px;
+            .health-notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                transform: translateY(-100px);
             }
 
-            .health-stats {
-                grid-template-columns: 1fr;
+            .health-notification.show {
+                transform: translateY(0);
             }
 
-            .eye-exercise-content {
-                padding: 30px 20px;
+            .notification-title {
+                font-size: 16px;
             }
 
-            .nav-buttons-group {
-                gap: 6px;
-                margin-right: 10px;
+            .timer-display {
+                font-size: 20px;
+            }
+
+            .permission-banner {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .permission-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .permission-actions {
+                width: 100%;
+            }
+
+            .permission-btn {
+                flex: 1;
             }
         }
 
@@ -488,6 +627,18 @@
             
             .ai-nav-button::before, .health-nav-button::before {
                 transition: none;
+            }
+
+            .health-notification {
+                transition: none;
+            }
+
+            .health-nav-button.active::after {
+                animation: none;
+            }
+
+            .audio-btn.playing {
+                animation: none;
             }
         }
 
@@ -518,29 +669,6 @@
                     #3a3a3a 50%,
                     #2a2a2a 75%
                 );
-            }
-        }
-
-        /* Toast通知动画 */
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes slideOutRight {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
             }
         }
     </style>
@@ -598,22 +726,21 @@
 
             <!-- 右侧控制区 -->
             <div class="controls">
-                <!-- AI前沿和健康提醒按钮 -->
-                <div class="nav-buttons-group">
-                    <a href="#" class="ai-nav-button" id="aiButton" title="AI前沿技术">
-                        <span class="ai-icon">
-                            <i class="fas fa-brain"></i>
-                        </span>
-                        <span>AI前沿</span>
-                    </a>
-                    
-                    <button href="#" class="health-nav-button" id="healthButton" title="健康提醒">
-                        <span class="health-icon">
-                            <i class="fas fa-heartbeat"></i>
-                        </span>
-                        <span>健康提醒</span>
-                    </button>
-                </div>
+                <!-- AI前沿按钮 -->
+                <a href="ai.html" class="ai-nav-button">
+                    <span class="ai-icon">
+                        <i class="fas fa-brain"></i>
+                    </span>
+                    <span>AI前沿</span>
+                </a>
+
+                <!-- 健康提醒按钮 -->
+                <button id="healthReminderBtn" class="health-nav-button">
+                    <span class="health-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </span>
+                    <span>健康提醒</span>
+                </button>
 
                 <!-- 搜索框 -->
                 <div class="search-box" role="search">
@@ -698,7 +825,7 @@
                 aria-busy="false">
                 <!-- 内容由JavaScript动态加载 -->
             </section>
-
+            
             <!-- ==================== 分页控件 ==================== -->
             <nav class="pagination-container" role="navigation" aria-label="分页导航">
                 <div class="pagination-info">
@@ -833,75 +960,46 @@
         </div>
     </div>
 
-    <!-- ==================== 健康提醒模态框 ==================== -->
-    <div id="healthModal" class="health-modal" role="dialog" aria-modal="true" aria-hidden="true">
-        <div class="health-modal-content">
-            <div class="health-modal-header">
-                <h2 class="health-modal-title">健康提醒中心</h2>
-                <p class="health-modal-subtitle">定时提醒，保护您的健康</p>
-            </div>
-
-            <div class="timer-display">
-                <div class="timer-text">下次提醒时间</div>
-                <div class="timer-countdown" id="timerCountdown">--:--:--</div>
-            </div>
-
-            <div class="health-stats">
-                <div class="stat-card">
-                    <div class="stat-number" id="breakCount">0</div>
-                    <div class="stat-label">今日休息次数</div>
+    <!-- ==================== 健康提醒通知 ==================== -->
+    <div id="healthNotification" class="health-notification">
+        <div class="notification-header">
+            <div class="notification-title" id="notificationTitle">
+                <div class="notification-icon">
+                    <i class="fas fa-heartbeat"></i>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="eyeExerciseCount">0</div>
-                    <div class="stat-label">今日护眼次数</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="totalWorkTime">0h</div>
-                    <div class="stat-label">总工作时间</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="healthScore">100</div>
-                    <div class="stat-label">健康分数</div>
-                </div>
+                <span>健康提醒</span>
             </div>
-
-            <div class="control-buttons">
-                <button id="startHealth" class="health-btn btn-primary">开始提醒</button>
-                <button id="stopHealth" class="health-btn btn-secondary">停止提醒</button>
-                <button id="resetStats" class="health-btn btn-secondary">重置统计</button>
-            </div>
+            <button class="notification-close" id="notificationClose" title="关闭通知">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="notification-content" id="notificationContent">
+            <!-- 动态内容 -->
+        </div>
+        <div class="notification-actions">
+            <button class="notification-btn primary" id="notificationConfirm">
+                <i class="fas fa-check"></i> 确认完成
+            </button>
+            <button class="notification-btn secondary" id="notificationSnooze">
+                <i class="fas fa-clock"></i> 稍后提醒
+            </button>
         </div>
     </div>
 
-    <!-- ==================== 眼保健操模态框 ==================== -->
-    <div id="eyeExerciseModal" class="health-modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
-        <div class="eye-exercise-content">
-            <div class="eye-exercise-icon">
-                <i class="fas fa-eye"></i>
+    <!-- ==================== 权限请求横幅 ==================== -->
+    <div id="permissionBanner" class="permission-banner">
+        <div class="permission-content">
+            <div class="permission-icon">
+                <i class="fas fa-bell"></i>
             </div>
-            <h2 class="eye-exercise-title">眼保健操时间到！</h2>
-            <p class="eye-exercise-description">
-                长时间使用电脑容易导致眼睛疲劳，现在让我们一起做眼保健操，保护眼睛健康。
-            </p>
-            
-            <div class="eye-exercise-timer" id="eyeExerciseTimer">02:00</div>
-            
-            <div class="eye-exercise-instruction">
-                <h3>眼保健操步骤：</h3>
-                <ol class="eye-exercise-steps">
-                    <li>双眼闭合，深呼吸3次</li>
-                    <li>眼球顺时针转动10圈</li>
-                    <li>眼球逆时针转动10圈</li>
-                    <li>上下看10次</li>
-                    <li>左右看10次</li>
-                    <li>远眺窗外30秒</li>
-                    <li>双手搓热，轻敷眼部</li>
-                </ol>
+            <div class="permission-text">
+                <h4>开启后台提醒</h4>
+                <p>允许健康提醒在后台运行，即使在您离开页面时也能及时提醒您</p>
             </div>
-            
-            <button id="completeEyeExercise" class="health-btn btn-success">
-                <i class="fas fa-check"></i> 我已完成眼保健操
-            </button>
+        </div>
+        <div class="permission-actions">
+            <button class="permission-btn allow" id="allowBackgroundBtn">允许</button>
+            <button class="permission-btn deny" id="denyBackgroundBtn">暂不</button>
         </div>
     </div>
 
@@ -914,367 +1012,875 @@
     <!-- 主逻辑文件延迟加载 -->
     <script src="script.js" defer></script>
 
-    <!-- ==================== 健康提醒JavaScript ==================== -->
+    <!-- Service Worker 注册 -->
     <script>
-        class HealthReminder {
-            constructor() {
-                this.isActive = false;
-                this.breakTimer = null;
-                this.eyeExerciseTimer = null;
-                this.breakInterval = 30 * 60 * 1000; // 30分钟
-                this.eyeExerciseInterval = 2 * 60 * 60 * 1000; // 2小时
-                this.nextBreakTime = null;
-                this.nextEyeExerciseTime = null;
-                this.stats = this.loadStats();
-                this.eyeExerciseCountdown = null;
-                
-                this.init();
-            }
-
-            init() {
-                // 绑定事件
-                document.getElementById('healthButton').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.showHealthModal();
+        // 注册 Service Worker 用于后台提醒
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('health-reminder-sw.js')
+                .then(registration => {
+                    console.log('Health Reminder Service Worker 注册成功:', registration);
+                })
+                .catch(error => {
+                    console.log('Health Reminder Service Worker 注册失败:', error);
                 });
+        }
+    </script>
 
-                document.getElementById('startHealth').addEventListener('click', () => this.start());
-                document.getElementById('stopHealth').addEventListener('click', () => this.stop());
-                document.getElementById('resetStats').addEventListener('click', () => this.resetStats());
-                document.getElementById('completeEyeExercise').addEventListener('click', () => this.completeEyeExercise());
+    <!-- 健康提醒功能脚本（支持后台运行和音乐提醒） -->
+    <script>
+        // 健康提醒管理器 - 支持后台运行和音频提醒
+        (function() {
+            'use strict';
 
-                // 点击模态框背景关闭
-                document.getElementById('healthModal').addEventListener('click', (e) => {
-                    if (e.target.id === 'healthModal') {
-                        this.hideHealthModal();
-                    }
-                });
-
-                document.getElementById('eyeExerciseModal').addEventListener('click', (e) => {
-                    if (e.target.id === 'eyeExerciseModal') {
-                        // 防止点击背景关闭，必须点击完成按钮
-                        e.preventDefault();
-                    }
-                });
-
-                // 更新统计显示
-                this.updateStatsDisplay();
-                
-                // 每秒更新倒计时
-                setInterval(() => this.updateCountdown(), 1000);
-            }
-
-            showHealthModal() {
-                document.getElementById('healthModal').classList.add('active');
-                document.getElementById('healthModal').setAttribute('aria-hidden', 'false');
-            }
-
-            hideHealthModal() {
-                document.getElementById('healthModal').classList.remove('active');
-                document.getElementById('healthModal').setAttribute('aria-hidden', 'true');
-            }
-
-            start() {
-                if (this.isActive) return;
-                
-                this.isActive = true;
-                this.scheduleReminders();
-                this.showNotification('健康提醒已开启', '将定期提醒您休息和做眼保健操');
-            }
-
-            stop() {
-                this.isActive = false;
-                this.clearTimers();
-                this.showNotification('健康提醒已停止', '您已停止所有健康提醒');
-            }
-
-            scheduleReminders() {
-                this.clearTimers();
-                
-                const now = Date.now();
-                
-                // 安排下次休息时间（30分钟后）
-                this.nextBreakTime = now + this.breakInterval;
-                this.breakTimer = setTimeout(() => {
-                    this.showBreakReminder();
-                    if (this.isActive) {
-                        this.scheduleReminders(); // 重新安排下次提醒
-                    }
-                }, this.breakInterval);
-                
-                // 安排下次眼保健操时间（2小时后）
-                this.nextEyeExerciseTime = now + this.eyeExerciseInterval;
-                this.eyeExerciseTimer = setTimeout(() => {
-                    this.showEyeExerciseReminder();
-                    if (this.isActive) {
-                        this.scheduleReminders(); // 重新安排下次提醒
-                    }
-                }, this.eyeExerciseInterval);
-            }
-
-            clearTimers() {
-                if (this.breakTimer) {
-                    clearTimeout(this.breakTimer);
-                    this.breakTimer = null;
-                }
-                if (this.eyeExerciseTimer) {
-                    clearTimeout(this.eyeExerciseTimer);
-                    this.eyeExerciseTimer = null;
-                }
-                if (this.eyeExerciseCountdown) {
-                    clearInterval(this.eyeExerciseCountdown);
-                    this.eyeExerciseCountdown = null;
-                }
-            }
-
-            updateCountdown() {
-                if (!this.isActive) {
-                    document.getElementById('timerCountdown').textContent = '--:--:--';
-                    return;
+            class HealthReminderManager {
+                constructor() {
+                    this.isActive = false;
+                    this.breakInterval = null;
+                    this.eyeCareInterval = null;
+                    this.eyeCareTimer = null;
+                    this.eyeCareDuration = 5 * 60 * 1000; // 5分钟眼保健操时间
+                    this.isDoingEyeCare = false;
+                    this.currentNotificationType = null;
+                    this.backgroundModeEnabled = false;
+                    this.audioManager = new AudioManager();
+                    
+                    this.init();
                 }
 
-                const now = Date.now();
-                let nextTime = null;
-                let nextType = '';
-
-                // 找出最近的提醒时间
-                if (this.nextBreakTime && this.nextEyeExerciseTime) {
-                    if (this.nextBreakTime < this.nextEyeExerciseTime) {
-                        nextTime = this.nextBreakTime;
-                        nextType = '休息';
+                init() {
+                    // 等待DOM加载完成
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', () => this.setupEventListeners());
                     } else {
-                        nextTime = this.nextEyeExerciseTime;
-                        nextType = '眼保健操';
+                        this.setupEventListeners();
                     }
-                } else if (this.nextBreakTime) {
-                    nextTime = this.nextBreakTime;
-                    nextType = '休息';
-                } else if (this.nextEyeExerciseTime) {
-                    nextTime = this.nextEyeExerciseTime;
-                    nextType = '眼保健操';
                 }
 
-                if (nextTime) {
-                    const remaining = Math.max(0, nextTime - now);
-                    const hours = Math.floor(remaining / (1000 * 60 * 60));
-                    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                setupEventListeners() {
+                    // 获取DOM元素
+                    this.healthBtn = document.getElementById('healthReminderBtn');
+                    this.notification = document.getElementById('healthNotification');
+                    this.permissionBanner = document.getElementById('permissionBanner');
                     
-                    const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                    document.getElementById('timerCountdown').textContent = timeString;
-                } else {
-                    document.getElementById('timerCountdown').textContent = '--:--:--';
-                }
-            }
-
-            showBreakReminder() {
-                this.stats.breakCount++;
-                this.saveStats();
-                this.updateStatsDisplay();
-                
-                if (Notification.permission === 'granted') {
-                    new Notification('休息时间到！', {
-                        body: '您已经工作了30分钟，请起来活动一下，喝杯水，让眼睛休息一下。',
-                        icon: '/favicon.ico',
-                        requireInteraction: true
-                    });
-                }
-                
-                this.showNotification('休息提醒', '您已工作30分钟，请起来活动一下！');
-            }
-
-            showEyeExerciseReminder() {
-                this.stats.eyeExerciseCount++;
-                this.saveStats();
-                this.updateStatsDisplay();
-                
-                // 显示眼保健操模态框
-                const modal = document.getElementById('eyeExerciseModal');
-                modal.classList.add('active');
-                modal.setAttribute('aria-hidden', 'false');
-                
-                // 开始2分钟倒计时
-                this.startEyeExerciseCountdown();
-                
-                if (Notification.permission === 'granted') {
-                    new Notification('眼保健操时间到！', {
-                        body: '请完成眼保健操以保护您的眼睛健康。',
-                        icon: '/favicon.ico',
-                        requireInteraction: true
-                    });
-                }
-            }
-
-            startEyeExerciseCountdown() {
-                let timeLeft = 2 * 60; // 2分钟
-                const timerElement = document.getElementById('eyeExerciseTimer');
-                
-                this.eyeExerciseCountdown = setInterval(() => {
-                    const minutes = Math.floor(timeLeft / 60);
-                    const seconds = timeLeft % 60;
-                    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    // 绑定通知元素
+                    this.notificationTitle = document.getElementById('notificationTitle');
+                    this.notificationContent = document.getElementById('notificationContent');
+                    this.notificationClose = document.getElementById('notificationClose');
+                    this.notificationConfirm = document.getElementById('notificationConfirm');
+                    this.notificationSnooze = document.getElementById('notificationSnooze');
                     
-                    if (timeLeft <= 0) {
-                        clearInterval(this.eyeExerciseCountdown);
-                        timerElement.textContent = '时间到！';
-                        timerElement.style.color = '#ff6b6b';
+                    // 权限按钮
+                    this.allowBackgroundBtn = document.getElementById('allowBackgroundBtn');
+                    this.denyBackgroundBtn = document.getElementById('denyBackgroundBtn');
+
+                    // 检查元素是否存在
+                    if (!this.healthBtn || !this.notification) {
+                        console.warn('健康提醒功能元素未找到');
+                        return;
                     }
+
+                    // 绑定事件
+                    this.healthBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.toggleHealthReminder();
+                    });
                     
-                    timeLeft--;
-                }, 1000);
-            }
-
-            completeEyeExercise() {
-                // 清除倒计时
-                if (this.eyeExerciseCountdown) {
-                    clearInterval(this.eyeExerciseCountdown);
-                    this.eyeExerciseCountdown = null;
-                }
-                
-                // 增加健康分数
-                this.stats.healthScore = Math.min(100, this.stats.healthScore + 5);
-                this.saveStats();
-                this.updateStatsDisplay();
-                
-                // 关闭眼保健操模态框
-                const modal = document.getElementById('eyeExerciseModal');
-                modal.classList.remove('active');
-                modal.setAttribute('aria-hidden', 'true');
-                
-                // 重置计时器显示
-                const timerElement = document.getElementById('eyeExerciseTimer');
-                timerElement.textContent = '02:00';
-                timerElement.style.color = '#667eea';
-                
-                this.showNotification('恭喜完成！', '您已完成眼保健操，继续保持良好的用眼习惯！');
-            }
-
-            updateStatsDisplay() {
-                document.getElementById('breakCount').textContent = this.stats.breakCount;
-                document.getElementById('eyeExerciseCount').textContent = this.stats.eyeExerciseCount;
-                document.getElementById('totalWorkTime').textContent = this.calculateWorkTime();
-                document.getElementById('healthScore').textContent = this.stats.healthScore;
-            }
-
-            calculateWorkTime() {
-                // 基于休息次数估算工作时间（每次休息代表30分钟工作）
-                const totalMinutes = this.stats.breakCount * 30;
-                const hours = Math.floor(totalMinutes / 60);
-                const minutes = totalMinutes % 60;
-                return `${hours}h${minutes > 0 ? minutes + 'm' : ''}`;
-            }
-
-            resetStats() {
-                if (confirm('确定要重置所有统计数据吗？')) {
-                    this.stats = {
-                        breakCount: 0,
-                        eyeExerciseCount: 0,
-                        healthScore: 100,
-                        startDate: new Date().toISOString()
-                    };
-                    this.saveStats();
-                    this.updateStatsDisplay();
-                    this.showNotification('统计已重置', '所有健康统计数据已清零');
-                }
-            }
-
-            saveStats() {
-                localStorage.setItem('healthStats', JSON.stringify(this.stats));
-            }
-
-            loadStats() {
-                const saved = localStorage.getItem('healthStats');
-                if (saved) {
-                    const stats = JSON.parse(saved);
-                    // 检查是否是新的一天
-                    const today = new Date().toDateString();
-                    const lastDate = new Date(stats.startDate).toDateString();
+                    this.notificationClose.addEventListener('click', () => this.handleClose());
+                    this.notificationConfirm.addEventListener('click', () => this.handleConfirm());
+                    this.notificationSnooze.addEventListener('click', () => this.handleSnooze());
                     
-                    if (today !== lastDate) {
-                        // 新的一天，重置统计数据
-                        return {
-                            breakCount: 0,
-                            eyeExerciseCount: 0,
-                            healthScore: 100,
-                            startDate: new Date().toISOString()
+                    // 权限请求事件
+                    this.allowBackgroundBtn.addEventListener('click', () => this.enableBackgroundMode());
+                    this.denyBackgroundBtn.addEventListener('click', () => this.hidePermissionBanner());
+
+                    // 请求通知权限
+                    this.requestNotificationPermission();
+
+                    // 监听页面可见性变化
+                    document.addEventListener('visibilitychange', () => this.handleVisibilityChange());
+
+                    // 监听 Service Worker 消息
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.addEventListener('message', (event) => {
+                            this.handleServiceWorkerMessage(event.data);
+                        });
+                    }
+
+                    // 从localStorage恢复状态
+                    this.restoreState();
+                }
+
+                // 请求浏览器通知权限
+                async requestNotificationPermission() {
+                    if ('Notification' in window && Notification.permission === 'default') {
+                        try {
+                            const permission = await Notification.requestPermission();
+                            if (permission === 'granted') {
+                                this.showPermissionBanner();
+                            }
+                        } catch (error) {
+                            console.log('通知权限请求失败:', error);
+                        }
+                    } else if ('Notification' in window && Notification.permission === 'granted') {
+                        this.showPermissionBanner();
+                    }
+                }
+
+                // 显示权限请求横幅
+                showPermissionBanner() {
+                    // 检查是否已经请求过后台权限
+                    const hasRequestedBackground = localStorage.getItem('healthReminderBackgroundRequested');
+                    if (!hasRequestedBackground) {
+                        setTimeout(() => {
+                            this.permissionBanner.classList.add('show');
+                        }, 2000);
+                    }
+                }
+
+                // 隐藏权限请求横幅
+                hidePermissionBanner() {
+                    this.permissionBanner.classList.remove('show');
+                    localStorage.setItem('healthReminderBackgroundRequested', 'true');
+                }
+
+                // 启用后台模式
+                async enableBackgroundMode() {
+                    try {
+                        // 请求持久化通知权限
+                        if ('Notification' in window && 'PersistentNotification' in window) {
+                            // 这是一个实验性API，不是所有浏览器都支持
+                            console.log('尝试启用持久化通知');
+                        }
+
+                        this.backgroundModeEnabled = true;
+                        this.hidePermissionBanner();
+                        
+                        // 发送消息给 Service Worker
+                        if ('serviceWorker' in navigator) {
+                            navigator.serviceWorker.ready.then(registration => {
+                                registration.active.postMessage({
+                                    type: 'ENABLE_BACKGROUND',
+                                    isActive: this.isActive
+                                });
+                            });
+                        }
+
+                        this.showNotification(
+                            'background-enabled',
+                            '后台提醒已启用',
+                            `✅ 健康提醒将在后台运行<br>✅ 即使离开页面也能收到提醒<br>✅ 包含音频提醒功能`,
+                            false
+                        );
+
+                        // 5秒后自动关闭
+                        setTimeout(() => {
+                            this.hideNotification();
+                        }, 5000);
+
+                    } catch (error) {
+                        console.log('启用后台模式失败:', error);
+                        this.hidePermissionBanner();
+                    }
+                }
+
+                // 处理页面可见性变化
+                handleVisibilityChange() {
+                    if (document.hidden) {
+                        // 页面隐藏时，将提醒状态同步到 Service Worker
+                        if ('serviceWorker' in navigator && this.backgroundModeEnabled) {
+                            navigator.serviceWorker.ready.then(registration => {
+                                registration.active.postMessage({
+                                    type: 'SYNC_STATE',
+                                    isActive: this.isActive,
+                                    isDoingEyeCare: this.isDoingEyeCare
+                                });
+                            });
+                        }
+                    } else {
+                        // 页面显示时，从 Service Worker 同步状态
+                        if ('serviceWorker' in navigator) {
+                            navigator.serviceWorker.ready.then(registration => {
+                                registration.active.postMessage({
+                                    type: 'REQUEST_SYNC'
+                                });
+                            });
+                        }
+                    }
+                }
+
+                // 处理 Service Worker 消息
+                handleServiceWorkerMessage(data) {
+                    switch (data.type) {
+                        case 'BREAK_REMINDER':
+                            this.showBreakReminder();
+                            this.audioManager.playBreakSound();
+                            break;
+                        case 'EYE_CARE_REMINDER':
+                            this.showEyeCareReminder();
+                            this.audioManager.playEyeCareSound();
+                            break;
+                        case 'SYNC_RESPONSE':
+                            if (data.state) {
+                                this.isActive = data.state.isActive;
+                                this.isDoingEyeCare = data.state.isDoingEyeCare;
+                                this.updateButtonState(this.isActive);
+                            }
+                            break;
+                    }
+                }
+
+                // 切换健康提醒状态
+                toggleHealthReminder() {
+                    this.isActive = !this.isActive;
+                    
+                    if (this.isActive) {
+                        this.startReminders();
+                        this.updateButtonState(true);
+                        this.saveState();
+                        
+                        // 通知 Service Worker
+                        if ('serviceWorker' in navigator) {
+                            navigator.serviceWorker.ready.then(registration => {
+                                registration.active.postMessage({
+                                    type: 'START_REMINDERS'
+                                });
+                            });
+                        }
+                    } else {
+                        this.stopReminders();
+                        this.updateButtonState(false);
+                        this.saveState();
+                        
+                        // 通知 Service Worker
+                        if ('serviceWorker' in navigator) {
+                            navigator.serviceWorker.ready.then(registration => {
+                                registration.active.postMessage({
+                                    type: 'STOP_REMINDERS'
+                                });
+                            });
+                        }
+                    }
+                }
+
+                // 更新按钮状态
+                updateButtonState(active) {
+                    if (active) {
+                        this.healthBtn.classList.add('active');
+                        this.healthBtn.innerHTML = `
+                            <span class="health-icon">
+                                <i class="fas fa-heartbeat"></i>
+                            </span>
+                            <span>健康提醒(开启)</span>
+                        `;
+                    } else {
+                        this.healthBtn.classList.remove('active');
+                        this.healthBtn.innerHTML = `
+                            <span class="health-icon">
+                                <i class="fas fa-heartbeat"></i>
+                            </span>
+                            <span>健康提醒</span>
+                        `;
+                    }
+                }
+
+                // 开始提醒
+                startReminders() {
+                    // 立即显示一个启动提示
+                    setTimeout(() => {
+                        this.showNotification(
+                            'health-start',
+                            '健康提醒已开启',
+                            `✅ 每30分钟提醒活动身体<br>✅ 每2小时提醒做眼保健操<br>✅ 包含音频提醒功能<br>✅ 支持后台运行`,
+                            false
+                        );
+                        this.audioManager.playStartSound();
+                    }, 500);
+
+                    // 30分钟活动提醒
+                    this.breakInterval = setInterval(() => {
+                        this.showBreakReminder();
+                        this.audioManager.playBreakSound();
+                        
+                        // 通知 Service Worker
+                        if ('serviceWorker' in navigator && this.backgroundModeEnabled) {
+                            navigator.serviceWorker.ready.then(registration => {
+                                registration.active.postMessage({
+                                    type: 'SCHEDULE_BREAK'
+                                });
+                            });
+                        }
+                    }, 30 * 60 * 1000);
+
+                    // 2小时眼保健操提醒
+                    this.eyeCareInterval = setInterval(() => {
+                        this.showEyeCareReminder();
+                        this.audioManager.playEyeCareSound();
+                        
+                        // 通知 Service Worker
+                        if ('serviceWorker' in navigator && this.backgroundModeEnabled) {
+                            navigator.serviceWorker.ready.then(registration => {
+                                registration.active.postMessage({
+                                    type: 'SCHEDULE_EYE_CARE'
+                                });
+                            });
+                        }
+                    }, 2 * 60 * 60 * 1000);
+                }
+
+                // 停止提醒
+                stopReminders() {
+                    if (this.breakInterval) {
+                        clearInterval(this.breakInterval);
+                        this.breakInterval = null;
+                    }
+                    if (this.eyeCareInterval) {
+                        clearInterval(this.eyeCareInterval);
+                        this.eyeCareInterval = null;
+                    }
+                    if (this.eyeCareTimer) {
+                        clearTimeout(this.eyeCareTimer);
+                        this.eyeCareTimer = null;
+                    }
+                    this.isDoingEyeCare = false;
+                    this.currentNotificationType = null;
+                    this.audioManager.stopAll();
+                    this.hideNotification();
+                }
+
+                // 显示活动提醒
+                showBreakReminder() {
+                    this.showNotification(
+                        'break',
+                        '活动提醒',
+                        `🚶‍♂️ 您已经坐了30分钟了！<br><br>
+                         <strong>建议活动：</strong><br>
+                         • 站起来走动2-3分钟<br>
+                         • 伸展腰部和肩膀<br>
+                         • 远眺窗外放松眼睛<br>
+                         • 喝一杯水补充水分<br><br>
+                         <div class="audio-controls">
+                            <button class="audio-btn" id="breakAudioBtn" title="播放提醒音乐">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <div class="audio-info">
+                                <div class="audio-title">活动提醒音乐</div>
+                                <div class="audio-status">点击播放轻柔提醒音乐</div>
+                            </div>
+                            <div class="volume-control">
+                                <i class="fas fa-volume-up"></i>
+                                <input type="range" class="volume-slider" id="breakVolumeSlider" min="0" max="100" value="50">
+                            </div>
+                        </div>`,
+                        false
+                    );
+
+                    // 绑定音频控制事件
+                    setTimeout(() => this.bindAudioControls('break'), 100);
+                }
+
+                // 显示眼保健操提醒
+                showEyeCareReminder() {
+                    this.isDoingEyeCare = true;
+                    this.currentNotificationType = 'eye-care';
+                    
+                    this.showNotification(
+                        'eye-care',
+                        '眼保健操时间',
+                        this.getEyeCareContent(),
+                        true
+                    );
+
+                    // 开始倒计时
+                    this.startEyeCareTimer();
+
+                    // 绑定音频控制事件
+                    setTimeout(() => this.bindAudioControls('eye-care'), 100);
+                }
+
+                // 获取眼保健操内容
+                getEyeCareContent() {
+                    return `
+                        <div class="eye-care-steps">
+                            <h4>👁️ 眼保健操步骤：</h4>
+                            <ol>
+                                <li><strong>按揉太阳穴</strong> - 顺时针8圈，逆时针8圈</li>
+                                <li><strong>按揉四白穴</strong> - 眼眶下方，按压8秒</li>
+                                <li><strong>按揉风池穴</strong> - 颈后两侧，按压8秒</li>
+                                <li><strong>远眺调节</strong> - 远看30秒，近看30秒，重复3次</li>
+                            </ol>
+                        </div>
+                        <div class="notification-timer">
+                            <div class="timer-display" id="timerDisplay">05:00</div>
+                            <div class="timer-label">眼保健操倒计时</div>
+                        </div>
+                        <div class="audio-controls">
+                            <button class="audio-btn" id="eyeCareAudioBtn" title="播放眼保健操音乐">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <div class="audio-info">
+                                <div class="audio-title">眼保健操音乐</div>
+                                <div class="audio-status">点击播放舒缓眼保健操音乐</div>
+                            </div>
+                            <div class="volume-control">
+                                <i class="fas fa-volume-up"></i>
+                                <input type="range" class="volume-slider" id="eyeCareVolumeSlider" min="0" max="100" value="50">
+                            </div>
+                        </div>`;
+                }
+
+                // 绑定音频控制
+                bindAudioControls(type) {
+                    const audioBtn = document.getElementById(`${type}AudioBtn`);
+                    const volumeSlider = document.getElementById(`${type}VolumeSlider`);
+                    
+                    if (audioBtn) {
+                        audioBtn.addEventListener('click', () => {
+                            this.audioManager.toggleAudio(type);
+                            const icon = audioBtn.querySelector('i');
+                            if (this.audioManager.isPlaying(type)) {
+                                icon.className = 'fas fa-pause';
+                                audioBtn.classList.add('playing');
+                            } else {
+                                icon.className = 'fas fa-play';
+                                audioBtn.classList.remove('playing');
+                            }
+                        });
+                    }
+
+                    if (volumeSlider) {
+                        volumeSlider.addEventListener('input', (e) => {
+                            this.audioManager.setVolume(type, e.target.value / 100);
+                        });
+                    }
+                }
+
+                // 开始眼保健操计时器
+                startEyeCareTimer() {
+                    let remainingTime = this.eyeCareDuration / 1000;
+                    this.updateTimerDisplay(remainingTime);
+
+                    this.eyeCareTimer = setInterval(() => {
+                        remainingTime--;
+                        this.updateTimerDisplay(remainingTime);
+
+                        if (remainingTime <= 0) {
+                            this.completeEyeCare();
+                        }
+                    }, 1000);
+                }
+
+                // 更新计时器显示
+                updateTimerDisplay(seconds) {
+                    const minutes = Math.floor(seconds / 60);
+                    const secs = seconds % 60;
+                    const display = document.getElementById('timerDisplay');
+                    if (display) {
+                        display.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                    }
+
+                    // 最后10秒添加警告效果
+                    if (seconds <= 10 && seconds > 0) {
+                        this.notification.style.animation = 'pulse 1s infinite';
+                    } else {
+                        this.notification.style.animation = '';
+                    }
+                }
+
+                // 完成眼保健操
+                completeEyeCare() {
+                    clearInterval(this.eyeCareTimer);
+                    this.eyeCareTimer = null;
+                    this.isDoingEyeCare = false;
+                    this.currentNotificationType = null;
+                    this.audioManager.stopAudio('eye-care');
+
+                    this.showNotification(
+                        'eye-care-complete',
+                        '眼保健操完成！',
+                        `🎉 太棒了！您的眼睛得到了充分休息<br><br>
+                         <strong>护眼小贴士：</strong><br>
+                         • 继续保持良好的用眼习惯<br>
+                         • 每20分钟远眺20秒<br>
+                         • 保持适当的屏幕距离<br>
+                         • 定期检查视力`,
+                        false
+                    );
+
+                    this.audioManager.playCompleteSound();
+
+                    // 5秒后自动关闭
+                    setTimeout(() => {
+                        this.hideNotification();
+                    }, 5000);
+                }
+
+                // 显示通知
+                showNotification(type, title, content, isEyeCare = false) {
+                    this.currentNotificationType = type;
+                    
+                    // 设置标题
+                    const titleSpan = this.notificationTitle.querySelector('span');
+                    const icon = this.notificationTitle.querySelector('.notification-icon i');
+                    
+                    titleSpan.textContent = title;
+                    
+                    // 设置图标
+                    if (type === 'eye-care' || type === 'eye-care-complete') {
+                        icon.className = 'fas fa-eye';
+                    } else if (type === 'break') {
+                        icon.className = 'fas fa-walking';
+                    } else if (type === 'health-start' || type === 'background-enabled') {
+                        icon.className = 'fas fa-heartbeat';
+                    }
+
+                    // 设置内容
+                    this.notificationContent.innerHTML = content;
+
+                    // 设置通知样式
+                    this.notification.className = 'health-notification show';
+                    if (type === 'eye-care') {
+                        this.notification.classList.add('eye-care');
+                    } else if (type === 'break') {
+                        this.notification.classList.add('break');
+                    }
+
+                    // 设置按钮状态
+                    if (isEyeCare) {
+                        this.notificationSnooze.style.display = 'none';
+                        this.notificationConfirm.innerHTML = '<i class="fas fa-check"></i> 我已完成';
+                        this.notificationClose.disabled = true;
+                        this.notificationClose.style.opacity = '0.5';
+                        this.notificationClose.style.cursor = 'not-allowed';
+                    } else {
+                        this.notificationSnooze.style.display = 'block';
+                        this.notificationConfirm.innerHTML = '<i class="fas fa-check"></i> 确认完成';
+                        this.notificationClose.disabled = false;
+                        this.notificationClose.style.opacity = '1';
+                        this.notificationClose.style.cursor = 'pointer';
+                    }
+
+                    // 同时显示浏览器通知
+                    this.showBrowserNotification(title, content.replace(/<[^>]*>/g, ''), type);
+                }
+
+                // 显示浏览器通知
+                showBrowserNotification(title, content, type) {
+                    if ('Notification' in window && Notification.permission === 'granted') {
+                        const notification = new Notification(title, {
+                            body: content,
+                            icon: 'images/favicon.ico',
+                            tag: type,
+                            requireInteraction: type === 'eye-care',
+                            silent: false // 允许声音
+                        });
+
+                        // 播放系统通知声音（如果浏览器支持）
+                        if (this.audioManager) {
+                            this.audioManager.playNotificationSound();
+                        }
+
+                        if (type !== 'eye-care') {
+                            setTimeout(() => {
+                                notification.close();
+                            }, 5000);
+                        }
+
+                        // 点击通知时聚焦到页面
+                        notification.onclick = () => {
+                            window.focus();
+                            notification.close();
                         };
                     }
-                    return stats;
                 }
-                
-                return {
-                    breakCount: 0,
-                    eyeExerciseCount: 0,
-                    healthScore: 100,
-                    startDate: new Date().toISOString()
-                };
+
+                // 隐藏通知
+                hideNotification() {
+                    this.notification.classList.remove('show');
+                    this.currentNotificationType = null;
+                }
+
+                // 处理关闭按钮
+                handleClose() {
+                    if (!this.isDoingEyeCare) {
+                        this.hideNotification();
+                        this.audioManager.stopAll();
+                    }
+                }
+
+                // 处理确认完成
+                handleConfirm() {
+                    if (this.isDoingEyeCare) {
+                        this.completeEyeCare();
+                    } else {
+                        this.hideNotification();
+                        this.audioManager.stopAll();
+                    }
+                }
+
+                // 处理稍后提醒
+                handleSnooze() {
+                    if (!this.isDoingEyeCare) {
+                        this.hideNotification();
+                        this.audioManager.stopAll();
+                        // 5分钟后再次提醒
+                        setTimeout(() => {
+                            this.showBreakReminder();
+                            this.audioManager.playBreakSound();
+                        }, 5 * 60 * 1000);
+                    }
+                }
+
+                // 保存状态到localStorage
+                saveState() {
+                    localStorage.setItem('healthReminderActive', this.isActive.toString());
+                    localStorage.setItem('healthReminderBackground', this.backgroundModeEnabled.toString());
+                }
+
+                // 从localStorage恢复状态
+                restoreState() {
+                    const saved = localStorage.getItem('healthReminderActive');
+                    const backgroundSaved = localStorage.getItem('healthReminderBackground');
+                    
+                    if (saved === 'true') {
+                        this.isActive = true;
+                        this.updateButtonState(true);
+                        this.startReminders();
+                    }
+                    
+                    if (backgroundSaved === 'true') {
+                        this.backgroundModeEnabled = true;
+                    }
+                }
             }
 
-            showNotification(title, body) {
-                // 如果有权限，显示浏览器通知
-                if (Notification.permission === 'granted') {
-                    new Notification(title, { body: body, icon: '/favicon.ico' });
-                } else if (Notification.permission !== 'denied') {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            new Notification(title, { body: body, icon: '/favicon.ico' });
+            // 音频管理器
+            class AudioManager {
+                constructor() {
+                    this.audioContext = null;
+                    this.sounds = {
+                        start: null,
+                        break: null,
+                        eyeCare: null,
+                        complete: null,
+                        notification: null
+                    };
+                    this.currentAudio = {
+                        break: null,
+                        eyeCare: null
+                    };
+                    this.volumes = {
+                        break: 0.5,
+                        eyeCare: 0.5
+                    };
+                    this.init();
+                }
+
+                init() {
+                    try {
+                        // 创建音频上下文
+                        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                        this.audioContext = new AudioContext();
+                        
+                        // 生成音频
+                        this.generateSounds();
+                    } catch (error) {
+                        console.log('音频初始化失败:', error);
+                    }
+                }
+
+                // 生成音频（使用 Web Audio API）
+                generateSounds() {
+                    if (!this.audioContext) return;
+
+                    // 开始提示音
+                    this.sounds.start = this.createTone(523.25, 0.1); // C5
+                    
+                    // 活动提醒音
+                    this.sounds.break = this.createMelody([523.25, 659.25, 783.99], 0.2); // C5, E5, G5
+                    
+                    // 眼保健操音乐（舒缓的旋律）
+                    this.sounds.eyeCare = this.createRelaxingMusic();
+                    
+                    // 完成提示音
+                    this.sounds.complete = this.createMelody([783.99, 659.25, 523.25], 0.15); // G5, E5, C5
+                    
+                    // 通知提示音
+                    this.sounds.notification = this.createTone(880, 0.05); // A5
+                }
+
+                // 创建单音
+                createTone(frequency, duration) {
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    oscillator.frequency.value = frequency;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+                    
+                    return { oscillator, gainNode, duration };
+                }
+
+                // 创建旋律
+                createMelody(frequencies, noteDuration) {
+                    return frequencies.map(frequency => this.createTone(frequency, noteDuration));
+                }
+
+                // 创建舒缓的眼保健操音乐
+                createRelaxingMusic() {
+                    // 这是一个简单的循环音乐生成器
+                    const melody = [
+                        261.63, 293.66, 329.63, 349.23, 392.00, 349.23, 329.63, 293.66, // C4, D4, E4, F4, G4, F4, E4, D4
+                        261.63, 293.66, 329.63, 392.00, 440.00, 392.00, 329.63, 293.66  // C4, D4, E4, G4, A4, G4, E4, D4
+                    ];
+                    
+                    return this.createMelody(melody, 0.5);
+                }
+
+                // 播放音频
+                playSound(soundType) {
+                    if (!this.audioContext || !this.sounds[soundType]) return;
+                    
+                    // 恢复音频上下文（如果被暂停）
+                    if (this.audioContext.state === 'suspended') {
+                        this.audioContext.resume();
+                    }
+                    
+                    const sound = this.sounds[soundType];
+                    
+                    if (Array.isArray(sound)) {
+                        // 播放旋律
+                        sound.forEach((note, index) => {
+                            setTimeout(() => {
+                                this.playNote(note);
+                            }, index * 200);
+                        });
+                    } else {
+                        // 播放单音
+                        this.playNote(sound);
+                    }
+                }
+
+                // 播放音符
+                playNote(note) {
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    oscillator.frequency.value = note.oscillator.frequency.value;
+                    oscillator.type = note.oscillator.type;
+                    
+                    gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + note.duration);
+                    
+                    oscillator.start(this.audioContext.currentTime);
+                    oscillator.stop(this.audioContext.currentTime + note.duration);
+                }
+
+                // 播放循环音乐
+                playLoopingAudio(type, soundArray) {
+                    if (this.currentAudio[type]) {
+                        this.stopAudio(type);
+                    }
+                    
+                    let currentIndex = 0;
+                    const playNext = () => {
+                        if (!this.currentAudio[type]) return;
+                        
+                        this.playNote(soundArray[currentIndex]);
+                        currentIndex = (currentIndex + 1) % soundArray.length;
+                        
+                        this.currentAudio[type] = setTimeout(playNext, 200);
+                    };
+                    
+                    playNext();
+                }
+
+                // 播放开始音
+                playStartSound() {
+                    this.playSound('start');
+                }
+
+                // 播放活动提醒音
+                playBreakSound() {
+                    this.playSound('break');
+                }
+
+                // 播放眼保健操音乐
+                playEyeCareSound() {
+                    this.playLoopingAudio('eye-care', this.sounds.eyeCare);
+                }
+
+                // 播放完成音
+                playCompleteSound() {
+                    this.playSound('complete');
+                }
+
+                // 播放通知音
+                playNotificationSound() {
+                    this.playSound('notification');
+                }
+
+                // 切换音频播放
+                toggleAudio(type) {
+                    if (this.currentAudio[type]) {
+                        this.stopAudio(type);
+                    } else {
+                        if (type === 'break') {
+                            this.playLoopingAudio('break', this.sounds.break);
+                        } else if (type === 'eye-care') {
+                            this.playEyeCareSound();
                         }
+                    }
+                }
+
+                // 检查是否正在播放
+                isPlaying(type) {
+                    return this.currentAudio[type] !== null;
+                }
+
+                // 设置音量
+                setVolume(type, volume) {
+                    this.volumes[type] = volume;
+                    // 实际的音量控制需要更复杂的实现
+                }
+
+                // 停止指定音频
+                stopAudio(type) {
+                    if (this.currentAudio[type]) {
+                        clearTimeout(this.currentAudio[type]);
+                        this.currentAudio[type] = null;
+                    }
+                }
+
+                // 停止所有音频
+                stopAll() {
+                    Object.keys(this.currentAudio).forEach(type => {
+                        this.stopAudio(type);
                     });
                 }
-                
-                // 同时显示页面内通知
-                const announcer = document.getElementById('announcer');
-                announcer.textContent = `${title}: ${body}`;
-                
-                // 显示Toast通知
-                this.showToast(title, body);
             }
 
-            showToast(title, message) {
-                // 创建toast元素
-                const toast = document.createElement('div');
-                toast.className = 'health-toast';
-                toast.innerHTML = `
-                    <div class="toast-content">
-                        <strong>${title}</strong>
-                        <p>${message}</p>
-                    </div>
-                `;
-                
-                // 添加样式
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                    padding: 15px 20px;
-                    border-radius: 10px;
-                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-                    z-index: 30000;
-                    max-width: 300px;
-                    animation: slideInRight 0.3s ease;
-                `;
-                
-                document.body.appendChild(toast);
-                
-                // 3秒后自动移除
-                setTimeout(() => {
-                    toast.style.animation = 'slideOutRight 0.3s ease';
-                    setTimeout(() => {
-                        document.body.removeChild(toast);
-                    }, 300);
-                }, 3000);
-            }
-        }
+            // 初始化健康提醒管理器
+            window.healthReminderManager = new HealthReminderManager();
 
-        // 初始化健康提醒系统
-        const healthReminder = new HealthReminder();
+            // 添加脉冲动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.02); }
+                }
+            `;
+            document.head.appendChild(style);
 
-        // 请求通知权限
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
-        }
+        })();
     </script>
 
     <!-- 性能监控（可选） -->
