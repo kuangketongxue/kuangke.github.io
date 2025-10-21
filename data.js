@@ -1068,7 +1068,7 @@ let momentsData = [
         value: 5,
         category: '工作相关',
         time: '2025-10-21 21:45',
-        image: '',
+        image: 'images/laowang.jpg',
         likes: 0,
         comments: []
     },     
