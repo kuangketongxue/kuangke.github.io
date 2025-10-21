@@ -76,8 +76,8 @@ let successDiaryData = [
             en: 'Finished reading "The Age of AI" + tidying up+Optimizing the check-in method for NCEE-CA'
         },
         content: {
-            zh: '阅读16本书+。\n持续搭建个人网站,给朋友圈加了页面+补充阅读数启发值+补齐星空书柜的内容。\n收拾飞书+浏览器+书柜。\n精读《beyond feeling》，读完《小狗钱钱》\n早起+学习12小时+。\n高强度运动。',
-            en: 'Read 10+ books.\nContinuously building a personal website,Added a page to WeChat Moments, supplemented the read count with an inspiring value, and completed the content of the Starry Night Book Shelf.\nOrganizing FlyBook, web browser, and bookshelf.\nCarefully read "Beyond Feeling," followed by "Money-Smart Puppy."\nGetting up early and studying for 12 hours straight.\nHigh-intensity exercise.'
+            zh: '阅读16本书+。\n持续搭建个人网站,给朋友圈加了页面+补充阅读数启发值+补齐星空书柜的内容。\n收拾飞书+浏览器+书柜。\n精读《beyond feeling》，读完《AI时代》\n早起+学习12小时+。\n高强度运动。',
+            en: 'Read 10+ books.\nContinuously building a personal website,Added a page to WeChat Moments, supplemented the read count with an inspiring value, and completed the content of the Starry Night Book Shelf.\nOrganizing FlyBook, web browser, and bookshelf.\nCarefully read "Beyond Feeling," followed by "The Age Of AI."\nGetting up early and studying for 12 hours straight.\nHigh-intensity exercise.'
         },
         highlight: {
             zh: '周课录制，2025.10.19：关于学习的三个阶段......',
