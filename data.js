@@ -1037,6 +1037,16 @@ function getMomentsStats(moments) {
  * @type {Array<Object>}
  */
 let momentsData = [
+       {
+        id: 26,
+        content: '找不到，学不完，不如自己做；调用AI到70/80分足够了；生产者➡️创造者',
+        value: 5,
+        category: '工作相关',
+        time: '2025-10-21 20:20',
+        image: '',
+        likes: 0,
+        comments: []
+    },     
       {
         id: 25,
         content: '给机构做英语教学视频，用即梦和可灵的AI数字人，剪映剪辑，海螺AI配音和声音克隆',
