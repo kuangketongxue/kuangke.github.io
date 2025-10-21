@@ -118,28 +118,354 @@
             animation: ai-glow 3s ease-in-out infinite;
         }
 
+        /* ==================== 健康提醒按钮样式 ==================== */
+        .health-nav-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            will-change: transform, box-shadow;
+            margin-left: 10px;
+        }
+
+        .health-nav-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent
+            );
+            transition: left 0.5s ease;
+        }
+
+        .health-nav-button:hover::before {
+            left: 100%;
+        }
+
+        .health-nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+            background: linear-gradient(135deg, #feca57 0%, #ff6b6b 100%);
+        }
+
+        .health-nav-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .health-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .health-nav-button:hover .health-icon {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        @keyframes health-glow {
+            0%, 100% { 
+                box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3); 
+            }
+            50% { 
+                box-shadow: 0 4px 20px rgba(255, 107, 107, 0.6),
+                            0 0 30px rgba(255, 107, 107, 0.2); 
+            }
+        }
+
+        .health-nav-button {
+            animation: health-glow 4s ease-in-out infinite;
+        }
+
+        /* 健康提醒模态框样式 */
+        .health-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .health-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .health-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .health-modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .health-modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .health-modal-subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .timer-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .timer-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .timer-countdown {
+            font-size: 36px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .health-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .health-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(86, 171, 47, 0.4);
+        }
+
+        .health-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 20000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .health-modal-overlay.active {
+            display: flex;
+        }
+
+        .eye-exercise-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .eye-exercise-icon {
+            font-size: 80px;
+            color: #667eea;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .eye-exercise-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .eye-exercise-description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .eye-exercise-timer {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .eye-exercise-instruction {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .eye-exercise-steps {
+            text-align: left;
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .eye-exercise-steps li {
+            margin-bottom: 10px;
+            color: #495057;
+        }
+
         /* 响应式优化 */
         @media (max-width: 768px) {
-            .ai-nav-button {
+            .ai-nav-button, .health-nav-button {
                 padding: 8px 12px;
                 font-size: 13px;
             }
             
-            .ai-icon {
+            .ai-icon, .health-icon {
                 width: 20px;
                 height: 20px;
                 margin-right: 6px;
+            }
+
+            .health-modal-content {
+                padding: 20px;
+            }
+
+            .health-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .eye-exercise-content {
+                padding: 30px 20px;
             }
         }
 
         /* 减少动画效果（尊重用户偏好） */
         @media (prefers-reduced-motion: reduce) {
-            .ai-nav-button {
+            .ai-nav-button, .health-nav-button {
                 animation: none;
                 transition: none;
             }
             
-            .ai-nav-button::before {
+            .ai-nav-button::before, .health-nav-button::before {
                 transition: none;
             }
         }
@@ -228,6 +554,23 @@
 
             <!-- 右侧控制区 -->
             <div class="controls">
+                <!-- AI前沿和健康提醒按钮 -->
+                <div class="nav-buttons-group">
+                    <a href="#" class="ai-nav-button" id="aiButton" title="AI前沿技术">
+                        <span class="ai-icon">
+                            <i class="fas fa-brain"></i>
+                        </span>
+                        <span>AI前沿</span>
+                    </a>
+                    
+                    <a href="#" class="health-nav-button" id="healthButton" title="健康提醒">
+                        <span class="health-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </span>
+                        <span>健康提醒</span>
+                    </a>
+                </div>
+
                 <!-- 搜索框 -->
                 <div class="search-box" role="search">
                     <label for="searchInput" class="sr-only">搜索内容</label>
@@ -311,70 +654,60 @@
                 aria-busy="false">
                 <!-- 内容由JavaScript动态加载 -->
             </section>
-            <!-- 朋友圈内容列表 -->
-<section
-    id="momentsContainer"
-    class="moments-grid"
-    role="feed"
-    aria-label="朋友圈内容列表"
-    aria-live="polite"
-    aria-busy="false">
-    <!-- 内容由JavaScript动态加载 -->
-</section>
 
-<!-- ==================== 分页控件 ==================== -->
-<nav class="pagination-container" role="navigation" aria-label="分页导航">
-    <div class="pagination-info">
-        <span id="paginationText" aria-live="polite">
-            显示 <strong id="showingStart">0</strong> - <strong id="showingEnd">0</strong> 
-            共 <strong id="totalItems">0</strong> 条
-        </span>
-    </div>
-    <div class="pagination-controls">
-        <button 
-            id="firstPage" 
-            class="pagination-btn" 
-            aria-label="第一页"
-            title="第一页">
-            <i class="fas fa-angle-double-left"></i>
-        </button>
-        <button 
-            id="prevPage" 
-            class="pagination-btn" 
-            aria-label="上一页"
-            title="上一页">
-            <i class="fas fa-angle-left"></i>
-        </button>
-        
-        <div id="pageNumbers" class="page-numbers" role="list">
-            <!-- 页码由JavaScript动态生成 -->
-        </div>
-        
-        <button 
-            id="nextPage" 
-            class="pagination-btn" 
-            aria-label="下一页"
-            title="下一页">
-            <i class="fas fa-angle-right"></i>
-        </button>
-        <button 
-            id="lastPage" 
-            class="pagination-btn" 
-            aria-label="最后一页"
-            title="最后一页">
-            <i class="fas fa-angle-double-right"></i>
-        </button>
-    </div>
-    <div class="pagination-settings">
-        <label for="itemsPerPage">每页显示：</label>
-        <select id="itemsPerPage" aria-label="选择每页显示条数">
-            <option value="6">6条</option>
-            <option value="12" selected>12条</option>
-            <option value="24">24条</option>
-            <option value="48">48条</option>
-        </select>
-    </div>
-</nav>
+            <!-- ==================== 分页控件 ==================== -->
+            <nav class="pagination-container" role="navigation" aria-label="分页导航">
+                <div class="pagination-info">
+                    <span id="paginationText" aria-live="polite">
+                        显示 <strong id="showingStart">0</strong> - <strong id="showingEnd">0</strong> 
+                        共 <strong id="totalItems">0</strong> 条
+                    </span>
+                </div>
+                <div class="pagination-controls">
+                    <button 
+                        id="firstPage" 
+                        class="pagination-btn" 
+                        aria-label="第一页"
+                        title="第一页">
+                        <i class="fas fa-angle-double-left"></i>
+                    </button>
+                    <button 
+                        id="prevPage" 
+                        class="pagination-btn" 
+                        aria-label="上一页"
+                        title="上一页">
+                        <i class="fas fa-angle-left"></i>
+                    </button>
+                    
+                    <div id="pageNumbers" class="page-numbers" role="list">
+                        <!-- 页码由JavaScript动态生成 -->
+                    </div>
+                    
+                    <button 
+                        id="nextPage" 
+                        class="pagination-btn" 
+                        aria-label="下一页"
+                        title="下一页">
+                        <i class="fas fa-angle-right"></i>
+                    </button>
+                    <button 
+                        id="lastPage" 
+                        class="pagination-btn" 
+                        aria-label="最后一页"
+                        title="最后一页">
+                        <i class="fas fa-angle-double-right"></i>
+                    </button>
+                </div>
+                <div class="pagination-settings">
+                    <label for="itemsPerPage">每页显示：</label>
+                    <select id="itemsPerPage" aria-label="选择每页显示条数">
+                        <option value="6">6条</option>
+                        <option value="12" selected>12条</option>
+                        <option value="24">24条</option>
+                        <option value="48">48条</option>
+                    </select>
+                </div>
+            </nav>
         </div>
     </main>
 
@@ -456,6 +789,78 @@
         </div>
     </div>
 
+    <!-- ==================== 健康提醒模态框 ==================== -->
+    <div id="healthModal" class="health-modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="health-modal-content">
+            <div class="health-modal-header">
+                <h2 class="health-modal-title">健康提醒中心</h2>
+                <p class="health-modal-subtitle">定时提醒，保护您的健康</p>
+            </div>
+
+            <div class="timer-display">
+                <div class="timer-text">下次提醒时间</div>
+                <div class="timer-countdown" id="timerCountdown">--:--:--</div>
+            </div>
+
+            <div class="health-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="breakCount">0</div>
+                    <div class="stat-label">今日休息次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="eyeExerciseCount">0</div>
+                    <div class="stat-label">今日护眼次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalWorkTime">0h</div>
+                    <div class="stat-label">总工作时间</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="healthScore">100</div>
+                    <div class="stat-label">健康分数</div>
+                </div>
+            </div>
+
+            <div class="control-buttons">
+                <button id="startHealth" class="health-btn btn-primary">开始提醒</button>
+                <button id="stopHealth" class="health-btn btn-secondary">停止提醒</button>
+                <button id="resetStats" class="health-btn btn-secondary">重置统计</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 眼保健操模态框 ==================== -->
+    <div id="eyeExerciseModal" class="health-modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="eye-exercise-content">
+            <div class="eye-exercise-icon">
+                <i class="fas fa-eye"></i>
+            </div>
+            <h2 class="eye-exercise-title">眼保健操时间到！</h2>
+            <p class="eye-exercise-description">
+                长时间使用电脑容易导致眼睛疲劳，现在让我们一起做眼保健操，保护眼睛健康。
+            </p>
+            
+            <div class="eye-exercise-timer" id="eyeExerciseTimer">02:00</div>
+            
+            <div class="eye-exercise-instruction">
+                <h3>眼保健操步骤：</h3>
+                <ol class="eye-exercise-steps">
+                    <li>双眼闭合，深呼吸3次</li>
+                    <li>眼球顺时针转动10圈</li>
+                    <li>眼球逆时针转动10圈</li>
+                    <li>上下看10次</li>
+                    <li>左右看10次</li>
+                    <li>远眺窗外30秒</li>
+                    <li>双手搓热，轻敷眼部</li>
+                </ol>
+            </div>
+            
+            <button id="completeEyeExercise" class="health-btn btn-success">
+                <i class="fas fa-check"></i> 我已完成眼保健操
+            </button>
+        </div>
+    </div>
+
     <!-- 无障碍：屏幕阅读器专用文本 -->
     <div class="sr-only" aria-live="polite" aria-atomic="true" id="announcer"></div>
 
@@ -464,6 +869,403 @@
     <script src="data.js"></script>
     <!-- 主逻辑文件延迟加载 -->
     <script src="script.js" defer></script>
+
+    <!-- ==================== 健康提醒JavaScript ==================== -->
+    <script>
+        class HealthReminder {
+            constructor() {
+                this.isActive = false;
+                this.breakTimer = null;
+                this.eyeExerciseTimer = null;
+                this.breakInterval = 30 * 60 * 1000; // 30分钟
+                this.eyeExerciseInterval = 2 * 60 * 60 * 1000; // 2小时
+                this.nextBreakTime = null;
+                this.nextEyeExerciseTime = null;
+                this.stats = this.loadStats();
+                this.eyeExerciseCountdown = null;
+                
+                this.init();
+            }
+
+            init() {
+                // 绑定事件
+                document.getElementById('healthButton').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showHealthModal();
+                });
+
+                document.getElementById('startHealth').addEventListener('click', () => this.start());
+                document.getElementById('stopHealth').addEventListener('click', () => this.stop());
+                document.getElementById('resetStats').addEventListener('click', () => this.resetStats());
+                document.getElementById('completeEyeExercise').addEventListener('click', () => this.completeEyeExercise());
+
+                // 点击模态框背景关闭
+                document.getElementById('healthModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'healthModal') {
+                        this.hideHealthModal();
+                    }
+                });
+
+                document.getElementById('eyeExerciseModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'eyeExerciseModal') {
+                        // 防止点击背景关闭，必须点击完成按钮
+                        e.preventDefault();
+                    }
+                });
+
+                // 更新统计显示
+                this.updateStatsDisplay();
+                
+                // 每秒更新倒计时
+                setInterval(() => this.updateCountdown(), 1000);
+            }
+
+            showHealthModal() {
+                document.getElementById('healthModal').classList.add('active');
+                document.getElementById('healthModal').setAttribute('aria-hidden', 'false');
+            }
+
+            hideHealthModal() {
+                document.getElementById('healthModal').classList.remove('active');
+                document.getElementById('healthModal').setAttribute('aria-hidden', 'true');
+            }
+
+            start() {
+                if (this.isActive) return;
+                
+                this.isActive = true;
+                this.scheduleReminders();
+                this.showNotification('健康提醒已开启', '将定期提醒您休息和做眼保健操');
+            }
+
+            stop() {
+                this.isActive = false;
+                this.clearTimers();
+                this.showNotification('健康提醒已停止', '您已停止所有健康提醒');
+            }
+
+            scheduleReminders() {
+                this.clearTimers();
+                
+                const now = Date.now();
+                
+                // 安排下次休息时间（30分钟后）
+                this.nextBreakTime = now + this.breakInterval;
+                this.breakTimer = setTimeout(() => {
+                    this.showBreakReminder();
+                    if (this.isActive) {
+                        this.scheduleReminders(); // 重新安排下次提醒
+                    }
+                }, this.breakInterval);
+                
+                // 安排下次眼保健操时间（2小时后）
+                this.nextEyeExerciseTime = now + this.eyeExerciseInterval;
+                this.eyeExerciseTimer = setTimeout(() => {
+                    this.showEyeExerciseReminder();
+                    if (this.isActive) {
+                        this.scheduleReminders(); // 重新安排下次提醒
+                    }
+                }, this.eyeExerciseInterval);
+            }
+
+            clearTimers() {
+                if (this.breakTimer) {
+                    clearTimeout(this.breakTimer);
+                    this.breakTimer = null;
+                }
+                if (this.eyeExerciseTimer) {
+                    clearTimeout(this.eyeExerciseTimer);
+                    this.eyeExerciseTimer = null;
+                }
+                if (this.eyeExerciseCountdown) {
+                    clearInterval(this.eyeExerciseCountdown);
+                    this.eyeExerciseCountdown = null;
+                }
+            }
+
+            updateCountdown() {
+                if (!this.isActive) {
+                    document.getElementById('timerCountdown').textContent = '--:--:--';
+                    return;
+                }
+
+                const now = Date.now();
+                let nextTime = null;
+                let nextType = '';
+
+                // 找出最近的提醒时间
+                if (this.nextBreakTime && this.nextEyeExerciseTime) {
+                    if (this.nextBreakTime < this.nextEyeExerciseTime) {
+                        nextTime = this.nextBreakTime;
+                        nextType = '休息';
+                    } else {
+                        nextTime = this.nextEyeExerciseTime;
+                        nextType = '眼保健操';
+                    }
+                } else if (this.nextBreakTime) {
+                    nextTime = this.nextBreakTime;
+                    nextType = '休息';
+                } else if (this.nextEyeExerciseTime) {
+                    nextTime = this.nextEyeExerciseTime;
+                    nextType = '眼保健操';
+                }
+
+                if (nextTime) {
+                    const remaining = Math.max(0, nextTime - now);
+                    const hours = Math.floor(remaining / (1000 * 60 * 60));
+                    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                    
+                    const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    document.getElementById('timerCountdown').textContent = timeString;
+                } else {
+                    document.getElementById('timerCountdown').textContent = '--:--:--';
+                }
+            }
+
+            showBreakReminder() {
+                this.stats.breakCount++;
+                this.saveStats();
+                this.updateStatsDisplay();
+                
+                if (Notification.permission === 'granted') {
+                    new Notification('休息时间到！', {
+                        body: '您已经工作了30分钟，请起来活动一下，喝杯水，让眼睛休息一下。',
+                        icon: '/favicon.ico',
+                        requireInteraction: true
+                    });
+                }
+                
+                this.showNotification('休息提醒', '您已工作30分钟，请起来活动一下！');
+            }
+
+            showEyeExerciseReminder() {
+                this.stats.eyeExerciseCount++;
+                this.saveStats();
+                this.updateStatsDisplay();
+                
+                // 显示眼保健操模态框
+                const modal = document.getElementById('eyeExerciseModal');
+                modal.classList.add('active');
+                modal.setAttribute('aria-hidden', 'false');
+                
+                // 开始2分钟倒计时
+                this.startEyeExerciseCountdown();
+                
+                if (Notification.permission === 'granted') {
+                    new Notification('眼保健操时间到！', {
+                        body: '请完成眼保健操以保护您的眼睛健康。',
+                        icon: '/favicon.ico',
+                        requireInteraction: true
+                    });
+                }
+            }
+
+            startEyeExerciseCountdown() {
+                let timeLeft = 2 * 60; // 2分钟
+                const timerElement = document.getElementById('eyeExerciseTimer');
+                
+                this.eyeExerciseCountdown = setInterval(() => {
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(this.eyeExerciseCountdown);
+                        timerElement.textContent = '时间到！';
+                        timerElement.style.color = '#ff6b6b';
+                    }
+                    
+                    timeLeft--;
+                }, 1000);
+            }
+
+            completeEyeExercise() {
+                // 清除倒计时
+                if (this.eyeExerciseCountdown) {
+                    clearInterval(this.eyeExerciseCountdown);
+                    this.eyeExerciseCountdown = null;
+                }
+                
+                // 增加健康分数
+                this.stats.healthScore = Math.min(100, this.stats.healthScore + 5);
+                this.saveStats();
+                this.updateStatsDisplay();
+                
+                // 关闭眼保健操模态框
+                const modal = document.getElementById('eyeExerciseModal');
+                modal.classList.remove('active');
+                modal.setAttribute('aria-hidden', 'true');
+                
+                // 重置计时器显示
+                const timerElement = document.getElementById('eyeExerciseTimer');
+                timerElement.textContent = '02:00';
+                timerElement.style.color = '#667eea';
+                
+                this.showNotification('恭喜完成！', '您已完成眼保健操，继续保持良好的用眼习惯！');
+            }
+
+            updateStatsDisplay() {
+                document.getElementById('breakCount').textContent = this.stats.breakCount;
+                document.getElementById('eyeExerciseCount').textContent = this.stats.eyeExerciseCount;
+                document.getElementById('totalWorkTime').textContent = this.calculateWorkTime();
+                document.getElementById('healthScore').textContent = this.stats.healthScore;
+            }
+
+            calculateWorkTime() {
+                // 基于休息次数估算工作时间（每次休息代表30分钟工作）
+                const totalMinutes = this.stats.breakCount * 30;
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = totalMinutes % 60;
+                return `${hours}h${minutes > 0 ? minutes + 'm' : ''}`;
+            }
+
+            resetStats() {
+                if (confirm('确定要重置所有统计数据吗？')) {
+                    this.stats = {
+                        breakCount: 0,
+                        eyeExerciseCount: 0,
+                        healthScore: 100,
+                        startDate: new Date().toISOString()
+                    };
+                    this.saveStats();
+                    this.updateStatsDisplay();
+                    this.showNotification('统计已重置', '所有健康统计数据已清零');
+                }
+            }
+
+            saveStats() {
+                localStorage.setItem('healthStats', JSON.stringify(this.stats));
+            }
+
+            loadStats() {
+                const saved = localStorage.getItem('healthStats');
+                if (saved) {
+                    const stats = JSON.parse(saved);
+                    // 检查是否是新的一天
+                    const today = new Date().toDateString();
+                    const lastDate = new Date(stats.startDate).toDateString();
+                    
+                    if (today !== lastDate) {
+                        // 新的一天，重置统计数据
+                        return {
+                            breakCount: 0,
+                            eyeExerciseCount: 0,
+                            healthScore: 100,
+                            startDate: new Date().toISOString()
+                        };
+                    }
+                    return stats;
+                }
+                
+                return {
+                    breakCount: 0,
+                    eyeExerciseCount: 0,
+                    healthScore: 100,
+                    startDate: new Date().toISOString()
+                };
+            }
+
+            showNotification(title, body) {
+                // 如果有权限，显示浏览器通知
+                if (Notification.permission === 'granted') {
+                    new Notification(title, { body: body, icon: '/favicon.ico' });
+                } else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            new Notification(title, { body: body, icon: '/favicon.ico' });
+                        }
+                    });
+                }
+                
+                // 同时显示页面内通知
+                const announcer = document.getElementById('announcer');
+                announcer.textContent = `${title}: ${body}`;
+                
+                // 显示Toast通知
+                this.showToast(title, body);
+            }
+
+            showToast(title, message) {
+                // 创建toast元素
+                const toast = document.createElement('div');
+                toast.className = 'health-toast';
+                toast.innerHTML = `
+                    <div class="toast-content">
+                        <strong>${title}</strong>
+                        <p>${message}</p>
+                    </div>
+                `;
+                
+                // 添加样式
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                    z-index: 30000;
+                    max-width: 300px;
+                    animation: slideInRight 0.3s ease;
+                `;
+                
+                document.body.appendChild(toast);
+                
+                // 3秒后自动移除
+                setTimeout(() => {
+                    toast.style.animation = 'slideOutRight 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // 添加动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+            
+            .nav-buttons-group {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-right: 15px;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 初始化健康提醒系统
+        const healthReminder = new HealthReminder();
+
+        // 请求通知权限
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+    </script>
 
     <!-- 性能监控（可选） -->
     <script>
