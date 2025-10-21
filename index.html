@@ -33,6 +33,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
   
     <style>
+        /* ==================== 导航按钮组样式 ==================== */
+        .nav-buttons-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 15px;
+        }
+
         /* ==================== AI前沿按钮专属样式 ==================== */
         .ai-nav-button {
             display: inline-flex;
@@ -118,7 +126,7 @@
             animation: ai-glow 3s ease-in-out infinite;
         }
 
-        /* ==================== 健康提醒按钮样式 ==================== */
+        /* ==================== 健康提醒按钮优化样式 ==================== */
         .health-nav-button {
             display: inline-flex;
             align-items: center;
@@ -135,9 +143,12 @@
             font-size: 14px;
             letter-spacing: 0.5px;
             will-change: transform, box-shadow;
-            margin-left: 10px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
         }
 
+        /* 光泽效果 */
         .health-nav-button::before {
             content: '';
             position: absolute;
@@ -157,17 +168,21 @@
             left: 100%;
         }
 
+        /* 悬停效果 */
         .health-nav-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
             background: linear-gradient(135deg, #feca57 0%, #ff6b6b 100%);
+            text-decoration: none;
         }
 
+        /* 点击效果 */
         .health-nav-button:active {
             transform: translateY(0);
             box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
         }
 
+        /* 图标样式 */
         .health-icon {
             display: flex;
             align-items: center;
@@ -185,6 +200,7 @@
             transform: scale(1.1) rotate(5deg);
         }
 
+        /* 呼吸光晕动画 */
         @keyframes health-glow {
             0%, 100% { 
                 box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3); 
@@ -456,6 +472,11 @@
             .eye-exercise-content {
                 padding: 30px 20px;
             }
+
+            .nav-buttons-group {
+                gap: 6px;
+                margin-right: 10px;
+            }
         }
 
         /* 减少动画效果（尊重用户偏好） */
@@ -497,6 +518,29 @@
                     #3a3a3a 50%,
                     #2a2a2a 75%
                 );
+            }
+        }
+
+        /* Toast通知动画 */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
             }
         }
     </style>
@@ -563,12 +607,12 @@
                         <span>AI前沿</span>
                     </a>
                     
-                    <a href="#" class="health-nav-button" id="healthButton" title="健康提醒">
+                    <button href="#" class="health-nav-button" id="healthButton" title="健康提醒">
                         <span class="health-icon">
                             <i class="fas fa-heartbeat"></i>
                         </span>
                         <span>健康提醒</span>
-                    </a>
+                    </button>
                 </div>
 
                 <!-- 搜索框 -->
@@ -1223,40 +1267,6 @@
                 }, 3000);
             }
         }
-
-        // 添加动画样式
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideInRight {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            
-            @keyframes slideOutRight {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-            
-            .nav-buttons-group {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                margin-right: 15px;
-            }
-        `;
-        document.head.appendChild(style);
 
         // 初始化健康提醒系统
         const healthReminder = new HealthReminder();
