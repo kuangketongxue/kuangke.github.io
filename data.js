@@ -1063,6 +1063,16 @@ function getMomentsStats(moments) {
  */
 let momentsData = [
        {
+        id: 27,
+        content: '用特斯拉股票计价，你是要马斯克给你打工还是去吃一个不知道老板给的甚至是预制菜',
+        value: 5,
+        category: '工作相关',
+        time: '2025-10-21 21:45',
+        image: '',
+        likes: 0,
+        comments: []
+    },     
+       {
         id: 26,
         content: '找不到，学不完，不如自己做；调用AI到70/80分足够了；生产者➡️创造者',
         value: 5,
