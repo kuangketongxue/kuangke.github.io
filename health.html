@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="健康提醒 - 定时提醒您活动身体和保护视力">
+    <meta name="keywords" content="健康提醒,眼保健操,活动提醒,健康生活">
+    <title>健康提醒 - 狂客·银河</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #00c9a7 0%, #8b5cf6 100%);
+            --success-gradient: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --card-bg: #1e293b;
+                --text-primary: #f1f5f9;
+                --text-secondary: #94a3b8;
+                --border-color: #334155;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        /* 头部样式 */
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: translateX(5px);
+        }
+
+        .logo i {
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.75rem;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* 主要内容区域 */
+        main {
+            flex: 1;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        .health-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* 计时器卡片样式 */
+        .timer-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .timer-card.exercise::before {
+            background: var(--secondary-gradient);
+        }
+
+        .timer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .timer-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .timer-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .timer-icon.exercise {
+            background: var(--secondary-gradient);
+        }
+
+        .timer-icon.eyecare {
+            background: var(--success-gradient);
+        }
+
+        .timer-title h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .timer-title p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .timer-display {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .timer-display {
+                background: linear-gradient(135deg, #334155 0%, #475569 100%);
+            }
+        }
+
+        .timer-value {
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.05em;
+        }
+
+        .timer-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .control-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .control-btn.primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .control-btn.secondary {
+            background: #f1f5f9;
+            color: var(--text-primary);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .control-btn.secondary {
+                background: #334155;
+                color: var(--text-primary);
+            }
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 建议卡片样式 */
+        .suggestions-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .suggestions-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .suggestions-header h2 {
+            font-size: 1.75rem;
+            color: var(--text-primary);
+        }
+
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .suggestion-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .suggestion-card {
+                background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            }
+        }
+
+        .suggestion-card.exercise {
+            border-left-color: #00c9a7;
+        }
+
+        .suggestion-card.eyecare {
+            border-left-color: #10b981;
+        }
+
+        .suggestion-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .suggestion-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .suggestion-icon.exercise {
+            background: var(--secondary-gradient);
+        }
+
+        .suggestion-icon.eyecare {
+            background: var(--success-gradient);
+        }
+
+        .suggestion-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .suggestion-list {
+            list-style: none;
+            color: var(--text-secondary);
+        }
+
+        .suggestion-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .suggestion-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        /* 通知样式 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            max-width: 400px;
+            transform: translateX(450px);
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-left: 4px solid;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.exercise {
+            border-left-color: #00c9a7;
+        }
+
+        .notification.eyecare {
+            border-left-color: #10b981;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notification-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0.25rem;
+            transition: all 0.2s;
+        }
+
+        .notification-close:hover {
+            color: var(--text-primary);
+            transform: scale(1.2);
+        }
+
+        .notification-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .notification-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .notification-btn.primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .notification-btn.secondary {
+            background: #f1f5f9;
+            color: var(--text-primary);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .notification-btn.secondary {
+                background: #334155;
+                color: var(--text-primary);
+            }
+        }
+
+        .notification-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 统计卡片 */
+        .stats-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .stat-card {
+                background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* 进度条 */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .progress-bar {
+                background: #334155;
+            }
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .health-dashboard {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .timer-value {
+                font-size: 2.5rem;
+            }
+
+            .suggestions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            main {
+                margin: 1rem auto;
+                padding: 0 1rem;
+            }
+
+            .timer-card {
+                padding: 1.5rem;
+            }
+
+            .timer-value {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* 减少动画效果（尊重用户偏好） */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>健康提醒</span>
+            </a>
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span>返回主页</span>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- 统计信息 -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalExerciseCount">0</div>
+                    <div class="stat-label">今日活动次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalEyeCareCount">0</div>
+                    <div class="stat-label">今日眼保健操次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="currentStreak">0</div>
+                    <div class="stat-label">连续健康天数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="weeklyGoal">0%</div>
+                    <div class="stat-label">本周目标完成度</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 计时器仪表板 -->
+        <section class="health-dashboard">
+            <!-- 活动提醒计时器 -->
+            <div class="timer-card exercise">
+                <div class="timer-header">
+                    <div class="timer-icon exercise">
+                        <i class="fas fa-walking"></i>
+                    </div>
+                    <div class="timer-title">
+                        <h2>活动提醒</h2>
+                        <p>每小时提醒您活动身体</p>
+                    </div>
+                </div>
+                <div class="timer-display">
+                    <div class="timer-value" id="exerciseTimer">01:00:00</div>
+                    <div class="timer-label">距离下次提醒</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="exerciseProgress" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="timer-controls">
+                    <button class="control-btn primary" id="startExerciseBtn">
+                        <i class="fas fa-play"></i>
+                        <span>开始提醒</span>
+                    </button>
+                    <button class="control-btn secondary" id="resetExerciseBtn">
+                        <i class="fas fa-redo"></i>
+                        <span>重置</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 眼保健操计时器 -->
+            <div class="timer-card">
+                <div class="timer-header">
+                    <div class="timer-icon eyecare">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="timer-title">
+                        <h2>眼保健操</h2>
+                        <p>每2小时提醒保护视力</p>
+                    </div>
+                </div>
+                <div class="timer-display">
+                    <div class="timer-value" id="eyeCareTimer">02:00:00</div>
+                    <div class="timer-label">距离下次提醒</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="eyeCareProgress" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="timer-controls">
+                    <button class="control-btn primary" id="startEyeCareBtn">
+                        <i class="fas fa-play"></i>
+                        <span>开始提醒</span>
+                    </button>
+                    <button class="control-btn secondary" id="resetEyeCareBtn">
+                        <i class="fas fa-redo"></i>
+                        <span>重置</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 健康建议 -->
+        <section class="suggestions-section">
+            <div class="suggestions-header">
+                <i class="fas fa-lightbulb" style="font-size: 2rem; color: #f59e0b;"></i>
+                <h2>健康建议</h2>
+            </div>
+            <div class="suggestions-grid">
+                <div class="suggestion-card exercise">
+                    <div class="suggestion-icon exercise">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <h3 class="suggestion-title">每小时活动建议</h3>
+                    <ul class="suggestion-list">
+                        <li>站立起来，伸展腰背</li>
+                        <li>做深呼吸练习，放松身心</li>
+                        <li>走动2-3分钟，促进血液循环</li>
+                        <li>做简单的颈部和肩部拉伸</li>
+                        <li>喝一杯水，补充水分</li>
+                    </ul>
+                </div>
+                <div class="suggestion-card eyecare">
+                    <div class="suggestion-icon eyecare">
+                        <i class="fas fa-glasses"></i>
+                    </div>
+                    <h3 class="suggestion-title">眼保健操步骤</h3>
+                    <ul class="suggestion-list">
+                        <li>按揉太阳穴：顺时针8圈，逆时针8圈</li>
+                        <li>按揉四白穴：眼眶下方，按压8秒</li>
+                        <li>按揉风池穴：颈后两侧，按压8秒</li>
+                        <li>远眺调节：远看30秒，近看30秒</li>
+                        <li>闭目养神：闭眼休息1-2分钟</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 通知弹窗 -->
+    <div id="notification" class="notification">
+        <div class="notification-header">
+            <div class="notification-title" id="notificationTitle">
+                <i class="fas fa-bell"></i>
+                <span>健康提醒</span>
+            </div>
+            <button class="notification-close" id="notificationClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="notification-content" id="notificationContent">
+            <!-- 动态内容 -->
+        </div>
+        <div class="notification-actions">
+            <button class="notification-btn primary" id="confirmBtn">
+                <i class="fas fa-check"></i> 我已完成
+            </button>
+            <button class="notification-btn secondary" id="snoozeBtn">
+                <i class="fas fa-clock"></i> 稍后提醒
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 健康提醒管理器
+        class HealthReminderManager {
+            constructor() {
+                this.exerciseInterval = null;
+                this.eyeCareInterval = null;
+                this.exerciseTime = 3600; // 1小时 = 3600秒
+                this.eyeCareTime = 7200; // 2小时 = 7200秒
+                this.currentExerciseTime = this.exerciseTime;
+                this.currentEyeCareTime = this.eyeCareTime;
+                this.isExerciseRunning = false;
+                this.isEyeCareRunning = false;
+                
+                // 统计数据
+                this.stats = this.loadStats();
+                
+                this.init();
+            }
+
+            init() {
+                this.bindElements();
+                this.bindEvents();
+                this.updateDisplay();
+                this.updateStats();
+                this.requestNotificationPermission();
+            }
+
+            bindElements() {
+                // 活动提醒元素
+                this.exerciseTimer = document.getElementById('exerciseTimer');
+                this.exerciseProgress = document.getElementById('exerciseProgress');
+                this.startExerciseBtn = document.getElementById('startExerciseBtn');
+                this.resetExerciseBtn = document.getElementById('resetExerciseBtn');
+                
+                // 眼保健操元素
+                this.eyeCareTimer = document.getElementById('eyeCareTimer');
+                this.eyeCareProgress = document.getElementById('eyeCareProgress');
+                this.startEyeCareBtn = document.getElementById('startEyeCareBtn');
+                this.resetEyeCareBtn = document.getElementById('resetEyeCareBtn');
+                
+                // 通知元素
+                this.notification = document.getElementById('notification');
+                this.notificationTitle = document.getElementById('notificationTitle');
+                this.notificationContent = document.getElementById('notificationContent');
+                this.notificationClose = document.getElementById('notificationClose');
+                this.confirmBtn = document.getElementById('confirmBtn');
+                this.snoozeBtn = document.getElementById('snoozeBtn');
+                
+                // 统计元素
+                this.totalExerciseCount = document.getElementById('totalExerciseCount');
+                this.totalEyeCareCount = document.getElementById('totalEyeCareCount');
+                this.currentStreak = document.getElementById('currentStreak');
+                this.weeklyGoal = document.getElementById('weeklyGoal');
+            }
+
+            bindEvents() {
+                // 活动提醒事件
+                this.startExerciseBtn.addEventListener('click', () => this.toggleExercise());
+                this.resetExerciseBtn.addEventListener('click', () => this.resetExercise());
+                
+                // 眼保健操事件
+                this.startEyeCareBtn.addEventListener('click', () => this.toggleEyeCare());
+                this.resetEyeCareBtn.addEventListener('click', () => this.resetEyeCare());
+                
+                // 通知事件
+                this.notificationClose.addEventListener('click', () => this.hideNotification());
+                this.confirmBtn.addEventListener('click', () => this.confirmAction());
+                this.snoozeBtn.addEventListener('click', () => this.snoozeAction());
+            }
+
+            toggleExercise() {
+                if (this.isExerciseRunning) {
+                    this.stopExercise();
+                } else {
+                    this.startExercise();
+                }
+            }
+
+            startExercise() {
+                this.isExerciseRunning = true;
+                this.startExerciseBtn.innerHTML = '<i class="fas fa-pause"></i><span>暂停提醒</span>';
+                
+                this.exerciseInterval = setInterval(() => {
+                    this.currentExerciseTime--;
+                    this.updateExerciseDisplay();
+                    
+                    if (this.currentExerciseTime <= 0) {
+                        this.showExerciseNotification();
+                        this.stats.exerciseCount++;
+                        this.saveStats();
+                        this.updateStats();
+                        this.resetExercise();
+                    }
+                }, 1000);
+            }
+
+            stopExercise() {
+                this.isExerciseRunning = false;
+                this.startExerciseBtn.innerHTML = '<i class="fas fa-play"></i><span>开始提醒</span>';
+                
+                if (this.exerciseInterval) {
+                    clearInterval(this.exerciseInterval);
+                    this.exerciseInterval = null;
+                }
+            }
+
+            resetExercise() {
+                this.stopExercise();
+                this.currentExerciseTime = this.exerciseTime;
+                this.updateExerciseDisplay();
+            }
+
+            toggleEyeCare() {
+                if (this.isEyeCareRunning) {
+                    this.stopEyeCare();
+                } else {
+                    this.startEyeCare();
+                }
+            }
+
+            startEyeCare() {
+                this.isEyeCareRunning = true;
+                this.startEyeCareBtn.innerHTML = '<i class="fas fa-pause"></i><span>暂停提醒</span>';
+                
+                this.eyeCareInterval = setInterval(() => {
+                    this.currentEyeCareTime--;
+                    this.updateEyeCareDisplay();
+                    
+                    if (this.currentEyeCareTime <= 0) {
+                        this.showEyeCareNotification();
+                        this.stats.eyeCareCount++;
+                        this.saveStats();
+                        this.updateStats();
+                        this.resetEyeCare();
+                    }
+                }, 1000);
+            }
+
+            stopEyeCare() {
+                this.isEyeCareRunning = false;
+                this.startEyeCareBtn.innerHTML = '<i class="fas fa-play"></i><span>开始提醒</span>';
+                
+                if (this.eyeCareInterval) {
+                    clearInterval(this.eyeCareInterval);
+                    this.eyeCareInterval = null;
+                }
+            }
+
+            resetEyeCare() {
+                this.stopEyeCare();
+                this.currentEyeCareTime = this.eyeCareTime;
+                this.updateEyeCareDisplay();
+            }
+
+            updateDisplay() {
+                this.updateExerciseDisplay();
+                this.updateEyeCareDisplay();
+            }
+
+            updateExerciseDisplay() {
+                const hours = Math.floor(this.currentExerciseTime / 3600);
+                const minutes = Math.floor((this.currentExerciseTime % 3600) / 60);
+                const seconds = this.currentExerciseTime % 60;
+                
+                this.exerciseTimer.textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                const progress = (this.currentExerciseTime / this.exerciseTime) * 100;
+                this.exerciseProgress.style.width = `${progress}%`;
+            }
+
+            updateEyeCareDisplay() {
+                const hours = Math.floor(this.currentEyeCareTime / 3600);
+                const minutes = Math.floor((this.currentEyeCareTime % 3600) / 60);
+                const seconds = this.currentEyeCareTime % 60;
+                
+                this.eyeCareTimer.textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                const progress = (this.currentEyeCareTime / this.eyeCareTime) * 100;
+                this.eyeCareProgress.style.width = `${progress}%`;
+            }
+
+            showExerciseNotification() {
+                this.showNotification('exercise', '活动提醒', `
+                    <h3>🚶‍♂️ 该活动身体了！</h3>
+                    <p>您已经连续工作1小时了，现在是时候活动一下：</p>
+                    <ul style="text-align: left; margin: 1rem 0;">
+                        <li>站立起来，伸展腰背</li>
+                        <li>做深呼吸练习，放松身心</li>
+                        <li>走动2-3分钟</li>
+                        <li>喝一杯水补充水分</li>
+                    </ul>
+                `);
+            }
+
+            showEyeCareNotification() {
+                this.showNotification('eyecare', '眼保健操提醒', `
+                    <h3>👁️ 保护眼睛时间！</h3>
+                    <p>您已经连续用眼2小时了，请做眼保健操：</p>
+                    <ol style="text-align: left; margin: 1rem 0;">
+                        <li>按揉太阳穴：顺时针8圈，逆时针8圈</li>
+                        <li>按揉四白穴：眼眶下方，按压8秒</li>
+                        <li>按揉风池穴：颈后两侧，按压8秒</li>
+                        <li>远眺调节：远看30秒，近看30秒，重复3次</li>
+                        <li>闭目养神：闭眼休息1-2分钟</li>
+                    </ol>
+                `);
+            }
+
+            showNotification(type, title, content) {
+                this.notification.className = `notification ${type}`;
+                this.notificationTitle.innerHTML = `<i class="fas fa-${type === 'exercise' ? 'walking' : 'eye'}"></i><span>${title}</span>`;
+                this.notificationContent.innerHTML = content;
+                
+                setTimeout(() => {
+                    this.notification.classList.add('show');
+                }, 100);
+                
+                // 浏览器通知
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification(title, {
+                        body: content.replace(/<[^>]*>/g, ''),
+                        icon: 'images/favicon.ico',
+                        requireInteraction: true
+                    });
+                }
+                
+                // 播放提示音
+                this.playNotificationSound();
+            }
+
+            hideNotification() {
+                this.notification.classList.remove('show');
+            }
+
+            confirmAction() {
+                this.hideNotification();
+                // 用户确认完成，可以添加完成后的逻辑
+            }
+
+            snoozeAction() {
+                this.hideNotification();
+                // 5分钟后再次提醒
+                setTimeout(() => {
+                    if (this.notification.classList.contains('exercise')) {
+                        this.showExerciseNotification();
+                    } else {
+                        this.showEyeCareNotification();
+                    }
+                }, 5 * 60 * 1000);
+            }
+
+            playNotificationSound() {
+                // 创建简单的提示音
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+
+            requestNotificationPermission() {
+                if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission();
+                }
+            }
+
+            // 统计功能
+            loadStats() {
+                const saved = localStorage.getItem('healthStats');
+                if (saved) {
+                    const stats = JSON.parse(saved);
+                    // 检查是否是新的一天
+                    const today = new Date().toDateString();
+                    if (stats.lastDate !== today) {
+                        return {
+                            exerciseCount: 0,
+                            eyeCareCount: 0,
+                            streak: stats.lastDate === new Date(Date.now() - 86400000).toDateString() ? stats.streak : 0,
+                            lastDate: today,
+                            weeklyGoal: stats.weeklyGoal || 0
+                        };
+                    }
+                    return stats;
+                }
+                return {
+                    exerciseCount: 0,
+                    eyeCareCount: 0,
+                    streak: 0,
+                    lastDate: new Date().toDateString(),
+                    weeklyGoal: 0
+                };
+            }
+
+            saveStats() {
+                this.stats.lastDate = new Date().toDateString();
+                localStorage.setItem('healthStats', JSON.stringify(this.stats));
+            }
+
+            updateStats() {
+                this.totalExerciseCount.textContent = this.stats.exerciseCount;
+                this.totalEyeCareCount.textContent = this.stats.eyeCareCount;
+                this.currentStreak.textContent = this.stats.streak;
+                
+                // 计算本周目标完成度
+                const weeklyTarget = 35; // 每周目标：每天5次活动，7天共35次
+                const weeklyProgress = Math.min((this.stats.exerciseCount / weeklyTarget) * 100, 100);
+                this.weeklyGoal.textContent = `${Math.round(weeklyProgress)}%`;
+            }
+        }
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            const healthReminder = new HealthReminderManager();
+        });
+    </script>
+</body>
+</html>
