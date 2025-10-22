@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
      {
+        id: 38,
+        date: '2025-10-22',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '创作+网站分享+跑10公里',
+            en: 'Creative expression + sharing + running 10 kilometers'
+        },
+        content: {
+            zh: '阅读16本书+。\n早起+去图书馆+网站分享。\n学习11小时+',
+            en: 'Read 16+ books.\nEarly wake-up + visit to the library + sharing on a website.\nStudied for 11+ hours'
+        },
+        highlight: {
+            zh: '罗永浩*叶国富播客',
+            en: 'Podcast featuring Luo Yonghao and Ye Guofu'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 3,
+        coverImage: '',
+        attachments: []
+    },
+     {
         id: 37,
         date: '2025-10-21',
         categories: ['study', 'creative', 'finance'],
