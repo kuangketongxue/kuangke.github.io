@@ -221,6 +221,7 @@
                 if (this.audioPermissionBanner && !this.userInteracted) {
                     this.audioPermissionBanner.classList.add('show');
                     this.audioPermissionBanner.style.animation = 'slideInDown 0.5s ease-out';
+                    
                     setTimeout(() => {
                         this.hideAudioPermissionBanner();
                     }, 8000);
@@ -323,6 +324,7 @@
                     // 显示错误提示
                     this.allowBackgroundBtn.innerHTML = '启用失败';
                     this.allowBackgroundBtn.style.background = 'rgba(239, 68, 68, 0.2)';
+                    
                     setTimeout(() => {
                         this.allowBackgroundBtn.innerHTML = '允许';
                         this.allowBackgroundBtn.style.background = '';
@@ -429,7 +431,6 @@
                         </span>
                         <span>健康提醒(开启)</span>
                     `;
-                    
                     // 添加激活动画
                     this.healthBtn.style.animation = 'healthActivate 0.5s ease-out';
                 } else {
@@ -440,7 +441,6 @@
                         </span>
                         <span>健康提醒</span>
                     `;
-                    
                     // 添加关闭动画
                     this.healthBtn.style.animation = 'healthDeactivate 0.3s ease-in';
                 }
@@ -872,7 +872,6 @@
                     <i class="fas fa-clock"></i>
                     <span>将在5分钟后再次提醒您</span>
                 `;
-                
                 toast.style.cssText = `
                     position: fixed;
                     top: 20px;
@@ -950,7 +949,6 @@
                     this.setupWebAudioAPI();
                     this.initialized = true;
                     console.log('音频系统初始化成功');
-                    
                     // 预加载一些音频
                     this.preloadAudio();
                 } catch (error) {
@@ -1068,8 +1066,8 @@
                 if (audio) {
                     audio.currentTime = 0;
                     audio.volume = this.volumes[type] || 0.5;
-                    
                     const playPromise = audio.play();
+                    
                     if (playPromise !== undefined) {
                         playPromise.catch(error => {
                             console.log('音频播放失败:', error);
@@ -1090,6 +1088,7 @@
                 }
                 
                 const sound = this.sounds[type];
+                
                 if (Array.isArray(sound)) {
                     // 播放旋律
                     sound.forEach((note, index) => {
@@ -1567,3 +1566,69 @@
         document.head.appendChild(style);
     })();
 </script>
+
+<!-- 必需的音频元素 -->
+<audio id="startSound" preload="auto"></audio>
+<audio id="breakSound" preload="auto"></audio>
+<audio id="eyeCareSound" preload="auto"></audio>
+<audio id="completeSound" preload="auto"></audio>
+<audio id="notificationSound" preload="auto"></audio>
+
+<!-- 必需的HTML结构 -->
+<button id="healthReminderBtn" class="health-nav-button">
+    <span class="health-icon">
+        <i class="fas fa-heartbeat"></i>
+    </span>
+    <span>健康提醒</span>
+</button>
+
+<div id="healthNotification" class="health-notification">
+    <div class="notification-header" id="notificationTitle">
+        <span class="notification-icon">
+            <i class="fas fa-heartbeat"></i>
+        </span>
+        <span>健康提醒</span>
+    </div>
+    <div class="notification-content" id="notificationContent">
+        <!-- 动态内容 -->
+    </div>
+    <div class="notification-actions">
+        <button class="notification-btn" id="notificationClose">
+            <i class="fas fa-times"></i> 关闭
+        </button>
+        <button class="notification-btn" id="notificationSnooze">
+            <i class="fas fa-clock"></i> 稍后提醒
+        </button>
+        <button class="notification-btn primary" id="notificationConfirm">
+            <i class="fas fa-check"></i> 确认完成
+        </button>
+    </div>
+</div>
+
+<div id="permissionBanner" class="permission-banner">
+    <div class="permission-content">
+        <i class="fas fa-bell"></i>
+        <div>
+            <h4>启用后台健康提醒</h4>
+            <p>允许健康提醒在后台运行，即使离开页面也能收到提醒</p>
+        </div>
+    </div>
+    <div class="permission-actions">
+        <button id="allowBackgroundBtn" class="permission-btn allow">
+            <i class="fas fa-check"></i> 允许
+        </button>
+        <button id="denyBackgroundBtn" class="permission-btn deny">
+            <i class="fas fa-times"></i> 暂不
+        </button>
+    </div>
+</div>
+
+<div id="audioPermissionBanner" class="audio-permission-banner">
+    <div class="audio-permission-content">
+        <i class="fas fa-volume-up"></i>
+        <div>
+            <h4>启用音频提醒</h4>
+            <p>点击页面任意位置启用音频提醒功能</p>
+        </div>
+    </div>
+</div>
