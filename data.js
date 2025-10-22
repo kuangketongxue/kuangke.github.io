@@ -89,7 +89,7 @@ let successDiaryData = [
         },
         moodCode: 'hungry',
         achievementLevel: 3,
-        coverImage: '',
+        coverImage: 'images/31b40dbef5c21fac41704d8ad6400c4f.png',
         attachments: []
     },
      {
