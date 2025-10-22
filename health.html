@@ -10,6 +10,7 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ==================== 全局样式 ==================== */
         * {
             margin: 0;
             padding: 0;
@@ -48,14 +49,22 @@
             display: flex;
             flex-direction: column;
             line-height: 1.6;
+            /* 与index.html保持一致的背景 */
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 201, 167, 0.05) 0%, transparent 50%);
         }
 
-        /* 头部样式 */
+        /* ==================== 头部样式 ==================== */
         header {
             background: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
             padding: 1rem 0;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header-container {
@@ -109,7 +118,7 @@
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
-        /* 主要内容区域 */
+        /* ==================== 主要内容区域 ==================== */
         main {
             flex: 1;
             max-width: 1200px;
@@ -125,7 +134,7 @@
             margin-bottom: 2rem;
         }
 
-        /* 计时器卡片样式 */
+        /* ==================== 计时器卡片样式 ==================== */
         .timer-card {
             background: var(--card-bg);
             border-radius: 20px;
@@ -275,7 +284,7 @@
             transform: none;
         }
 
-        /* 建议卡片样式 */
+        /* ==================== 建议卡片样式 ==================== */
         .suggestions-section {
             background: var(--card-bg);
             border-radius: 20px;
@@ -375,7 +384,79 @@
             font-weight: bold;
         }
 
-        /* 通知样式 */
+        /* ==================== 统计卡片 ==================== */
+        .stats-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .stat-card {
+                background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ==================== 进度条 ==================== */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .progress-bar {
+                background: #334155;
+            }
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* ==================== 通知样式 ==================== */
         .notification {
             position: fixed;
             top: 20px;
@@ -476,79 +557,46 @@
             transform: translateY(-2px);
         }
 
-        /* 统计卡片 */
-        .stats-section {
-            background: var(--card-bg);
+        /* ==================== 状态指示器 ==================== */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
             border-radius: 20px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
+            font-size: 0.85rem;
+            color: #10b981;
+            margin-top: 1rem;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
+        .status-indicator.paused {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
         }
 
-        .stat-card {
-            text-align: center;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 16px;
-            transition: all 0.3s ease;
+        .status-indicator.stopped {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
         }
 
-        @media (prefers-color-scheme: dark) {
-            .stat-card {
-                background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            }
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-
-        /* 进度条 */
-        .progress-bar {
-            width: 100%;
+        .status-dot {
+            width: 8px;
             height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 1rem 0;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s infinite;
         }
 
-        @media (prefers-color-scheme: dark) {
-            .progress-bar {
-                background: #334155;
-            }
+        .status-indicator.paused .status-dot,
+        .status-indicator.stopped .status-dot {
+            animation: none;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: var(--primary-gradient);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
-        /* 响应式设计 */
+        /* ==================== 响应式设计 ==================== */
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -598,18 +646,31 @@
             }
         }
 
-        /* 动画效果 */
+        /* ==================== 动画效果 ==================== */
         @keyframes pulse {
             0%, 100% {
+                opacity: 1;
                 transform: scale(1);
             }
             50% {
-                transform: scale(1.05);
+                opacity: 0.7;
+                transform: scale(1.1);
             }
         }
 
-        .pulse {
-            animation: pulse 2s infinite;
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .animate-in {
+            animation: slideIn 0.5s ease-out;
         }
 
         /* 减少动画效果（尊重用户偏好） */
@@ -620,7 +681,7 @@
             }
         }
 
-        /* 加载动画 */
+        /* ==================== 加载动画 ==================== */
         .loading {
             display: inline-block;
             width: 20px;
@@ -633,6 +694,23 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* ==================== 持久化状态提示 ==================== */
+        .persistence-notice {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .persistence-notice i {
+            color: #667eea;
+            margin-right: 0.5rem;
         }
     </style>
 </head>
@@ -651,8 +729,14 @@
     </header>
 
     <main>
+        <!-- 持久化状态提示 -->
+        <div class="persistence-notice animate-in">
+            <i class="fas fa-info-circle"></i>
+            <span>提醒状态会自动保存，刷新页面后继续计时</span>
+        </div>
+
         <!-- 统计信息 -->
-        <section class="stats-section">
+        <section class="stats-section animate-in">
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" id="totalExerciseCount">0</div>
@@ -676,7 +760,7 @@
         <!-- 计时器仪表板 -->
         <section class="health-dashboard">
             <!-- 活动提醒计时器 -->
-            <div class="timer-card exercise">
+            <div class="timer-card exercise animate-in">
                 <div class="timer-header">
                     <div class="timer-icon exercise">
                         <i class="fas fa-walking"></i>
@@ -692,6 +776,10 @@
                     <div class="progress-bar">
                         <div class="progress-fill" id="exerciseProgress" style="width: 100%"></div>
                     </div>
+                    <div class="status-indicator" id="exerciseStatus">
+                        <span class="status-dot"></span>
+                        <span id="exerciseStatusText">已停止</span>
+                    </div>
                 </div>
                 <div class="timer-controls">
                     <button class="control-btn primary" id="startExerciseBtn">
@@ -706,7 +794,7 @@
             </div>
 
             <!-- 眼保健操计时器 -->
-            <div class="timer-card">
+            <div class="timer-card animate-in">
                 <div class="timer-header">
                     <div class="timer-icon eyecare">
                         <i class="fas fa-eye"></i>
@@ -721,6 +809,10 @@
                     <div class="timer-label">距离下次提醒</div>
                     <div class="progress-bar">
                         <div class="progress-fill" id="eyeCareProgress" style="width: 100%"></div>
+                    </div>
+                    <div class="status-indicator" id="eyeCareStatus">
+                        <span class="status-dot"></span>
+                        <span id="eyeCareStatusText">已停止</span>
                     </div>
                 </div>
                 <div class="timer-controls">
@@ -737,7 +829,7 @@
         </section>
 
         <!-- 健康建议 -->
-        <section class="suggestions-section">
+        <section class="suggestions-section animate-in">
             <div class="suggestions-header">
                 <i class="fas fa-lightbulb" style="font-size: 2rem; color: #f59e0b;"></i>
                 <h2>健康建议</h2>
@@ -798,20 +890,36 @@
     </div>
 
     <script>
-        // 健康提醒管理器
+        // 健康提醒管理器 - 支持持久化状态
         class HealthReminderManager {
             constructor() {
-                this.exerciseInterval = null;
-                this.eyeCareInterval = null;
-                this.exerciseTime = 3600; // 1小时 = 3600秒
-                this.eyeCareTime = 7200; // 2小时 = 7200秒
-                this.currentExerciseTime = this.exerciseTime;
-                this.currentEyeCareTime = this.eyeCareTime;
-                this.isExerciseRunning = false;
-                this.isEyeCareRunning = false;
+                // 计时器设置
+                this.EXERCISE_INTERVAL = 3600; // 1小时 = 3600秒
+                this.EYE_CARE_INTERVAL = 7200; // 2小时 = 7200秒
+                
+                // 状态管理
+                this.timers = {
+                    exercise: {
+                        interval: null,
+                        currentTime: this.EXERCISE_INTERVAL,
+                        isRunning: false,
+                        lastStartTime: null,
+                        totalElapsed: 0
+                    },
+                    eyeCare: {
+                        interval: null,
+                        currentTime: this.EYE_CARE_INTERVAL,
+                        isRunning: false,
+                        lastStartTime: null,
+                        totalElapsed: 0
+                    }
+                };
                 
                 // 统计数据
                 this.stats = this.loadStats();
+                
+                // 当前通知类型
+                this.currentNotificationType = null;
                 
                 this.init();
             }
@@ -819,9 +927,14 @@
             init() {
                 this.bindElements();
                 this.bindEvents();
+                this.loadTimerStates();
                 this.updateDisplay();
                 this.updateStats();
                 this.requestNotificationPermission();
+                this.startAutoSave();
+                
+                // 恢复计时器状态
+                this.restoreTimers();
             }
 
             bindElements() {
@@ -830,12 +943,16 @@
                 this.exerciseProgress = document.getElementById('exerciseProgress');
                 this.startExerciseBtn = document.getElementById('startExerciseBtn');
                 this.resetExerciseBtn = document.getElementById('resetExerciseBtn');
+                this.exerciseStatus = document.getElementById('exerciseStatus');
+                this.exerciseStatusText = document.getElementById('exerciseStatusText');
                 
                 // 眼保健操元素
                 this.eyeCareTimer = document.getElementById('eyeCareTimer');
                 this.eyeCareProgress = document.getElementById('eyeCareProgress');
                 this.startEyeCareBtn = document.getElementById('startEyeCareBtn');
                 this.resetEyeCareBtn = document.getElementById('resetEyeCareBtn');
+                this.eyeCareStatus = document.getElementById('eyeCareStatus');
+                this.eyeCareStatusText = document.getElementById('eyeCareStatusText');
                 
                 // 通知元素
                 this.notification = document.getElementById('notification');
@@ -854,133 +971,277 @@
 
             bindEvents() {
                 // 活动提醒事件
-                this.startExerciseBtn.addEventListener('click', () => this.toggleExercise());
-                this.resetExerciseBtn.addEventListener('click', () => this.resetExercise());
+                this.startExerciseBtn.addEventListener('click', () => this.toggleTimer('exercise'));
+                this.resetExerciseBtn.addEventListener('click', () => this.resetTimer('exercise'));
                 
                 // 眼保健操事件
-                this.startEyeCareBtn.addEventListener('click', () => this.toggleEyeCare());
-                this.resetEyeCareBtn.addEventListener('click', () => this.resetEyeCare());
+                this.startEyeCareBtn.addEventListener('click', () => this.toggleTimer('eyeCare'));
+                this.resetEyeCareBtn.addEventListener('click', () => this.resetTimer('eyeCare'));
                 
                 // 通知事件
                 this.notificationClose.addEventListener('click', () => this.hideNotification());
                 this.confirmBtn.addEventListener('click', () => this.confirmAction());
                 this.snoozeBtn.addEventListener('click', () => this.snoozeAction());
+                
+                // 页面卸载前保存状态
+                window.addEventListener('beforeunload', () => {
+                    this.saveTimerStates();
+                });
+                
+                // 页面可见性变化
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) {
+                        this.saveTimerStates();
+                    } else {
+                        this.syncTimers();
+                    }
+                });
             }
 
-            toggleExercise() {
-                if (this.isExerciseRunning) {
-                    this.stopExercise();
+            // ==================== 计时器核心功能 ====================
+            
+            toggleTimer(type) {
+                const timer = this.timers[type];
+                if (timer.isRunning) {
+                    this.pauseTimer(type);
                 } else {
-                    this.startExercise();
+                    this.startTimer(type);
                 }
             }
 
-            startExercise() {
-                this.isExerciseRunning = true;
-                this.startExerciseBtn.innerHTML = '<i class="fas fa-pause"></i><span>暂停提醒</span>';
+            startTimer(type) {
+                const timer = this.timers[type];
+                const now = Date.now();
                 
-                this.exerciseInterval = setInterval(() => {
-                    this.currentExerciseTime--;
-                    this.updateExerciseDisplay();
+                timer.isRunning = true;
+                timer.lastStartTime = now;
+                
+                // 更新UI
+                this.updateTimerUI(type, true);
+                
+                // 开始计时
+                timer.interval = setInterval(() => {
+                    timer.currentTime--;
+                    this.updateTimerDisplay(type);
                     
-                    if (this.currentExerciseTime <= 0) {
-                        this.showExerciseNotification();
-                        this.stats.exerciseCount++;
-                        this.saveStats();
-                        this.updateStats();
-                        this.resetExercise();
+                    if (timer.currentTime <= 0) {
+                        this.timerComplete(type);
                     }
                 }, 1000);
-            }
-
-            stopExercise() {
-                this.isExerciseRunning = false;
-                this.startExerciseBtn.innerHTML = '<i class="fas fa-play"></i><span>开始提醒</span>';
                 
-                if (this.exerciseInterval) {
-                    clearInterval(this.exerciseInterval);
-                    this.exerciseInterval = null;
+                // 保存状态
+                this.saveTimerStates();
+            }
+
+            pauseTimer(type) {
+                const timer = this.timers[type];
+                
+                if (timer.interval) {
+                    clearInterval(timer.interval);
+                    timer.interval = null;
                 }
+                
+                // 计算已经过的时间
+                if (timer.lastStartTime) {
+                    const elapsed = Math.floor((Date.now() - timer.lastStartTime) / 1000);
+                    timer.totalElapsed += elapsed;
+                }
+                
+                timer.isRunning = false;
+                timer.lastStartTime = null;
+                
+                // 更新UI
+                this.updateTimerUI(type, false);
+                
+                // 保存状态
+                this.saveTimerStates();
             }
 
-            resetExercise() {
-                this.stopExercise();
-                this.currentExerciseTime = this.exerciseTime;
-                this.updateExerciseDisplay();
+            resetTimer(type) {
+                const timer = this.timers[type];
+                
+                // 停止计时器
+                if (timer.interval) {
+                    clearInterval(timer.interval);
+                    timer.interval = null;
+                }
+                
+                // 重置状态
+                timer.currentTime = type === 'exercise' ? this.EXERCISE_INTERVAL : this.EYE_CARE_INTERVAL;
+                timer.isRunning = false;
+                timer.lastStartTime = null;
+                timer.totalElapsed = 0;
+                
+                // 更新UI
+                this.updateTimerDisplay(type);
+                this.updateTimerUI(type, false);
+                
+                // 保存状态
+                this.saveTimerStates();
             }
 
-            toggleEyeCare() {
-                if (this.isEyeCareRunning) {
-                    this.stopEyeCare();
+            timerComplete(type) {
+                const timer = this.timers[type];
+                
+                // 停止计时器
+                if (timer.interval) {
+                    clearInterval(timer.interval);
+                    timer.interval = null;
+                }
+                
+                // 显示通知
+                if (type === 'exercise') {
+                    this.showExerciseNotification();
+                    this.stats.exerciseCount++;
                 } else {
-                    this.startEyeCare();
+                    this.showEyeCareNotification();
+                    this.stats.eyeCareCount++;
                 }
+                
+                // 保存统计
+                this.saveStats();
+                this.updateStats();
+                
+                // 重置计时器
+                this.resetTimer(type);
             }
 
-            startEyeCare() {
-                this.isEyeCareRunning = true;
-                this.startEyeCareBtn.innerHTML = '<i class="fas fa-pause"></i><span>暂停提醒</span>';
+            // ==================== 状态持久化 ====================
+            
+            saveTimerStates() {
+                const state = {
+                    exercise: {
+                        currentTime: this.timers.exercise.currentTime,
+                        isRunning: this.timers.exercise.isRunning,
+                        totalElapsed: this.timers.exercise.totalElapsed,
+                        lastStartTime: this.timers.exercise.lastStartTime
+                    },
+                    eyeCare: {
+                        currentTime: this.timers.eyeCare.currentTime,
+                        isRunning: this.timers.eyeCare.isRunning,
+                        totalElapsed: this.timers.eyeCare.totalElapsed,
+                        lastStartTime: this.timers.eyeCare.lastStartTime
+                    },
+                    timestamp: Date.now()
+                };
                 
-                this.eyeCareInterval = setInterval(() => {
-                    this.currentEyeCareTime--;
-                    this.updateEyeCareDisplay();
-                    
-                    if (this.currentEyeCareTime <= 0) {
-                        this.showEyeCareNotification();
-                        this.stats.eyeCareCount++;
-                        this.saveStats();
-                        this.updateStats();
-                        this.resetEyeCare();
+                localStorage.setItem('healthTimerStates', JSON.stringify(state));
+            }
+
+            loadTimerStates() {
+                const saved = localStorage.getItem('healthTimerStates');
+                if (saved) {
+                    try {
+                        const state = JSON.parse(saved);
+                        const timeDiff = (Date.now() - state.timestamp) / 1000; // 秒数差
+                        
+                        // 恢复活动计时器状态
+                        if (state.exercise) {
+                            this.timers.exercise.currentTime = state.exercise.currentTime;
+                            this.timers.exercise.totalElapsed = state.exercise.totalElapsed || 0;
+                            
+                            // 如果之前在运行，计算当前应该剩余的时间
+                            if (state.exercise.isRunning) {
+                                this.timers.exercise.currentTime = Math.max(0, 
+                                    this.timers.exercise.currentTime - timeDiff);
+                            }
+                        }
+                        
+                        // 恢复眼保健操计时器状态
+                        if (state.eyeCare) {
+                            this.timers.eyeCare.currentTime = state.eyeCare.currentTime;
+                            this.timers.eyeCare.totalElapsed = state.eyeCare.totalElapsed || 0;
+                            
+                            // 如果之前在运行，计算当前应该剩余的时间
+                            if (state.eyeCare.isRunning) {
+                                this.timers.eyeCare.currentTime = Math.max(0, 
+                                    this.timers.eyeCare.currentTime - timeDiff);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('加载计时器状态失败:', error);
                     }
-                }, 1000);
-            }
-
-            stopEyeCare() {
-                this.isEyeCareRunning = false;
-                this.startEyeCareBtn.innerHTML = '<i class="fas fa-play"></i><span>开始提醒</span>';
-                
-                if (this.eyeCareInterval) {
-                    clearInterval(this.eyeCareInterval);
-                    this.eyeCareInterval = null;
                 }
             }
 
-            resetEyeCare() {
-                this.stopEyeCare();
-                this.currentEyeCareTime = this.eyeCareTime;
-                this.updateEyeCareDisplay();
+            restoreTimers() {
+                // 恢复计时器运行状态
+                ['exercise', 'eyeCare'].forEach(type => {
+                    const timer = this.timers[type];
+                    
+                    // 如果时间已经到了，触发完成
+                    if (timer.currentTime <= 0) {
+                        this.timerComplete(type);
+                    } 
+                    // 如果之前在运行且还有时间，继续运行
+                    else if (timer.isRunning) {
+                        this.startTimer(type);
+                    }
+                    
+                    // 更新显示
+                    this.updateTimerDisplay(type);
+                    this.updateTimerUI(type, timer.isRunning);
+                });
             }
 
+            syncTimers() {
+                // 页面重新可见时同步计时器状态
+                this.loadTimerStates();
+                this.restoreTimers();
+            }
+
+            startAutoSave() {
+                // 每30秒自动保存一次状态
+                setInterval(() => {
+                    this.saveTimerStates();
+                }, 30000);
+            }
+
+            // ==================== UI更新 ====================
+            
             updateDisplay() {
-                this.updateExerciseDisplay();
-                this.updateEyeCareDisplay();
+                this.updateTimerDisplay('exercise');
+                this.updateTimerDisplay('eyeCare');
             }
 
-            updateExerciseDisplay() {
-                const hours = Math.floor(this.currentExerciseTime / 3600);
-                const minutes = Math.floor((this.currentExerciseTime % 3600) / 60);
-                const seconds = this.currentExerciseTime % 60;
+            updateTimerDisplay(type) {
+                const timer = this.timers[type];
+                const timerElement = type === 'exercise' ? this.exerciseTimer : this.eyeCareTimer;
+                const progressElement = type === 'exercise' ? this.exerciseProgress : this.eyeCareProgress;
+                const maxTime = type === 'exercise' ? this.EXERCISE_INTERVAL : this.EYE_CARE_INTERVAL;
                 
-                this.exerciseTimer.textContent = 
+                const hours = Math.floor(timer.currentTime / 3600);
+                const minutes = Math.floor((timer.currentTime % 3600) / 60);
+                const seconds = timer.currentTime % 60;
+                
+                timerElement.textContent = 
                     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 
-                const progress = (this.currentExerciseTime / this.exerciseTime) * 100;
-                this.exerciseProgress.style.width = `${progress}%`;
+                const progress = (timer.currentTime / maxTime) * 100;
+                progressElement.style.width = `${progress}%`;
             }
 
-            updateEyeCareDisplay() {
-                const hours = Math.floor(this.currentEyeCareTime / 3600);
-                const minutes = Math.floor((this.currentEyeCareTime % 3600) / 60);
-                const seconds = this.currentEyeCareTime % 60;
+            updateTimerUI(type, isRunning) {
+                const timer = this.timers[type];
+                const btn = type === 'exercise' ? this.startExerciseBtn : this.startEyeCareBtn;
+                const status = type === 'exercise' ? this.exerciseStatus : this.eyeCareStatus;
+                const statusText = type === 'exercise' ? this.exerciseStatusText : this.eyeCareStatusText;
                 
-                this.eyeCareTimer.textContent = 
-                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                
-                const progress = (this.currentEyeCareTime / this.eyeCareTime) * 100;
-                this.eyeCareProgress.style.width = `${progress}%`;
+                if (isRunning) {
+                    btn.innerHTML = '<i class="fas fa-pause"></i><span>暂停提醒</span>';
+                    status.className = 'status-indicator';
+                    statusText.textContent = '运行中';
+                } else {
+                    btn.innerHTML = '<i class="fas fa-play"></i><span>开始提醒</span>';
+                    status.className = 'status-indicator stopped';
+                    statusText.textContent = '已停止';
+                }
             }
 
+            // ==================== 通知功能 ====================
+            
             showExerciseNotification() {
+                this.currentNotificationType = 'exercise';
                 this.showNotification('exercise', '活动提醒', `
                     <h3>🚶‍♂️ 该活动身体了！</h3>
                     <p>您已经连续工作1小时了，现在是时候活动一下：</p>
@@ -988,12 +1249,14 @@
                         <li>站立起来，伸展腰背</li>
                         <li>做深呼吸练习，放松身心</li>
                         <li>走动2-3分钟</li>
+                        <li>做简单的颈部和肩部拉伸</li>
                         <li>喝一杯水补充水分</li>
                     </ul>
                 `);
             }
 
             showEyeCareNotification() {
+                this.currentNotificationType = 'eyeCare';
                 this.showNotification('eyecare', '眼保健操提醒', `
                     <h3>👁️ 保护眼睛时间！</h3>
                     <p>您已经连续用眼2小时了，请做眼保健操：</p>
@@ -1021,7 +1284,8 @@
                     new Notification(title, {
                         body: content.replace(/<[^>]*>/g, ''),
                         icon: 'images/favicon.ico',
-                        requireInteraction: true
+                        requireInteraction: true,
+                        tag: type
                     });
                 }
                 
@@ -1031,6 +1295,7 @@
 
             hideNotification() {
                 this.notification.classList.remove('show');
+                this.currentNotificationType = null;
             }
 
             confirmAction() {
@@ -1042,9 +1307,9 @@
                 this.hideNotification();
                 // 5分钟后再次提醒
                 setTimeout(() => {
-                    if (this.notification.classList.contains('exercise')) {
+                    if (this.currentNotificationType === 'exercise') {
                         this.showExerciseNotification();
-                    } else {
+                    } else if (this.currentNotificationType === 'eyeCare') {
                         this.showEyeCareNotification();
                     }
                 }, 5 * 60 * 1000);
@@ -1075,31 +1340,47 @@
                 }
             }
 
-            // 统计功能
+            // ==================== 统计功能 ====================
+            
             loadStats() {
                 const saved = localStorage.getItem('healthStats');
                 if (saved) {
-                    const stats = JSON.parse(saved);
-                    // 检查是否是新的一天
-                    const today = new Date().toDateString();
-                    if (stats.lastDate !== today) {
-                        return {
-                            exerciseCount: 0,
-                            eyeCareCount: 0,
-                            streak: stats.lastDate === new Date(Date.now() - 86400000).toDateString() ? stats.streak : 0,
-                            lastDate: today,
-                            weeklyGoal: stats.weeklyGoal || 0
-                        };
+                    try {
+                        const stats = JSON.parse(saved);
+                        // 检查是否是新的一天
+                        const today = new Date().toDateString();
+                        if (stats.lastDate !== today) {
+                            // 如果是连续的一天，增加连续天数
+                            const yesterday = new Date(Date.now() - 86400000).toDateString();
+                            const isConsecutive = stats.lastDate === yesterday;
+                            
+                            return {
+                                exerciseCount: 0,
+                                eyeCareCount: 0,
+                                streak: isConsecutive ? (stats.streak || 0) + 1 : 1,
+                                lastDate: today,
+                                weeklyGoal: this.calculateWeeklyGoal(stats)
+                            };
+                        }
+                        return stats;
+                    } catch (error) {
+                        console.error('加载统计数据失败:', error);
                     }
-                    return stats;
                 }
+                
                 return {
                     exerciseCount: 0,
                     eyeCareCount: 0,
-                    streak: 0,
+                    streak: 1,
                     lastDate: new Date().toDateString(),
                     weeklyGoal: 0
                 };
+            }
+
+            calculateWeeklyGoal(stats) {
+                // 计算本周目标完成度
+                const weeklyTarget = 35; // 每周目标：每天5次活动，7天共35次
+                return Math.min(((stats.exerciseCount || 0) / weeklyTarget) * 100, 100);
             }
 
             saveStats() {
