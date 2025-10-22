@@ -250,7 +250,7 @@
             font-weight: 700;
             color: var(--text-primary);
             position: relative;
-            box-shadow: 
+            box-shadow:
                 inset 0 2px 4px rgba(0, 0, 0, 0.1),
                 0 1px 2px rgba(0, 0, 0, 0.1);
             border: 1px solid var(--border-color);
@@ -1090,12 +1090,10 @@
             .achievement-badge {
                 display: none !important;
             }
-            
             body {
                 background: white !important;
                 color: black !important;
             }
-            
             .timer-card {
                 break-inside: avoid;
                 box-shadow: none;
@@ -1577,10 +1575,8 @@
             setValue(value) {
                 value = Math.max(0, Math.floor(value));
                 if (this.currentValue === value) return;
-                
                 const oldValue = this.currentValue;
                 this.currentValue = value;
-                
                 // 如果差距较大，使用动画
                 if (Math.abs(oldValue - value) > 1) {
                     this.animateValue(oldValue, value);
@@ -1591,15 +1587,12 @@
             animateValue(start, end) {
                 const duration = this.animationDuration;
                 const startTime = performance.now();
-                
                 const updateValue = (currentTime) => {
                     const elapsed = currentTime - startTime;
                     const progress = Math.min(elapsed / duration, 1);
                     const easeProgress = this.easeOutQuad(progress);
                     const currentValue = Math.floor(start + (end - start) * easeProgress);
-                    
                     this.updateDisplay(currentValue);
-                    
                     if (progress < 1) {
                         requestAnimationFrame(updateValue);
                     } else {
@@ -1607,7 +1600,6 @@
                         this.updateDisplay(end);
                     }
                 };
-                
                 requestAnimationFrame(updateValue);
             }
             easeOutQuad(t) {
@@ -1616,14 +1608,12 @@
             updateDisplay(value) {
                 const valueStr = value.toString();
                 this.element.innerHTML = '';
-                
                 valueStr.split('').forEach((digit, index) => {
                     const digitSpan = document.createElement('span');
                     digitSpan.textContent = digit;
                     digitSpan.style.animationDelay = `${index * 50}ms`;
                     this.element.appendChild(digitSpan);
                 });
-                
                 if (this.suffix) {
                     const suffixElement = document.createElement('span');
                     suffixElement.className = 'stat-suffix';
@@ -1641,17 +1631,13 @@
                 // 默认计时器设置
                 this.EXERCISE_INTERVAL = 3600;
                 this.EYE_CARE_INTERVAL = 7200;
-                
                 // 性能优化：防抖
                 this.debounceTimers = {};
-                
                 // 用户设置
                 this.settings = this.loadSettings();
-                
                 // 应用用户设置
                 this.EXERCISE_INTERVAL = this.settings.exerciseInterval * 60;
                 this.EYE_CARE_INTERVAL = this.settings.eyeCareInterval * 60;
-                
                 // 状态管理
                 this.timers = {
                     exercise: {
@@ -1669,26 +1655,20 @@
                         totalElapsed: 0
                     }
                 };
-                
                 // 统计数据
                 this.stats = this.loadStats();
-                
                 // 成就系统
                 this.achievements = this.loadAchievements();
-                
                 // 当前通知类型
                 this.currentNotificationType = null;
-                
                 // 翻页式组件
                 this.flipTimers = {};
                 this.flipStats = {};
-                
                 // 性能监控
                 this.performanceMetrics = {
                     lastUpdate: Date.now(),
                     updateCount: 0
                 };
-                
                 this.init();
             }
             init() {
@@ -1727,14 +1707,12 @@
                 this.resetExerciseBtn = document.getElementById('resetExerciseBtn');
                 this.exerciseStatus = document.getElementById('exerciseStatus');
                 this.exerciseStatusText = document.getElementById('exerciseStatusText');
-                
                 // 眼保健操元素
                 this.eyeCareProgress = document.getElementById('eyeCareProgress');
                 this.startEyeCareBtn = document.getElementById('startEyeCareBtn');
                 this.resetEyeCareBtn = document.getElementById('resetEyeCareBtn');
                 this.eyeCareStatus = document.getElementById('eyeCareStatus');
                 this.eyeCareStatusText = document.getElementById('eyeCareStatusText');
-                
                 // 通知元素
                 this.notification = document.getElementById('notification');
                 this.notificationTitle = document.getElementById('notificationTitle');
@@ -1742,7 +1720,6 @@
                 this.notificationClose = document.getElementById('notificationClose');
                 this.confirmBtn = document.getElementById('confirmBtn');
                 this.snoozeBtn = document.getElementById('snoozeBtn');
-                
                 // 设置面板元素
                 this.settingsToggle = document.getElementById('settingsToggle');
                 this.settingsPanel = document.getElementById('settingsPanel');
@@ -1755,7 +1732,6 @@
                 this.eyeCareSoundToggle = document.getElementById('eyeCareSoundToggle');
                 this.desktopNotificationToggle = document.getElementById('desktopNotificationToggle');
                 this.autoSaveToggle = document.getElementById('autoSaveToggle');
-                
                 // 成就徽章元素
                 this.achievementBadge = document.getElementById('achievementBadge');
                 this.achievementTitle = document.getElementById('achievementTitle');
@@ -1769,7 +1745,6 @@
                 this.resetExerciseBtn.addEventListener('click', () => {
                     this.debounce(() => this.resetTimer('exercise'), 'exercise-reset', 100);
                 });
-                
                 // 眼保健操事件
                 this.startEyeCareBtn.addEventListener('click', () => {
                     this.debounce(() => this.toggleTimer('eyeCare'), 'eyecare-toggle', 100);
@@ -1777,36 +1752,29 @@
                 this.resetEyeCareBtn.addEventListener('click', () => {
                     this.debounce(() => this.resetTimer('eyeCare'), 'eyecare-reset', 100);
                 });
-                
                 // 通知事件
                 this.notificationClose.addEventListener('click', () => this.hideNotification());
                 this.confirmBtn.addEventListener('click', () => this.confirmAction());
                 this.snoozeBtn.addEventListener('click', () => this.snoozeAction());
-                
                 // 设置面板事件
                 this.settingsToggle.addEventListener('click', () => this.toggleSettings());
                 this.settingsClose.addEventListener('click', () => this.toggleSettings());
-                
                 // 设置滑块事件
                 this.exerciseIntervalSlider.addEventListener('input', (e) => {
                     this.debounce(() => this.handleExerciseIntervalChange(e), 'exercise-interval', 50);
                 });
-                
                 this.eyeCareIntervalSlider.addEventListener('input', (e) => {
                     this.debounce(() => this.handleEyeCareIntervalChange(e), 'eyecare-interval', 50);
                 });
-                
                 // 设置开关事件
                 this.exerciseSoundToggle.addEventListener('change', (e) => {
                     this.settings.exerciseSound = e.target.checked;
                     this.saveSettings();
                 });
-                
                 this.eyeCareSoundToggle.addEventListener('change', (e) => {
                     this.settings.eyeCareSound = e.target.checked;
                     this.saveSettings();
                 });
-                
                 this.desktopNotificationToggle.addEventListener('change', (e) => {
                     this.settings.desktopNotification = e.target.checked;
                     this.saveSettings();
@@ -1814,17 +1782,14 @@
                         this.requestNotificationPermission();
                     }
                 });
-                
                 this.autoSaveToggle.addEventListener('change', (e) => {
                     this.settings.autoSave = e.target.checked;
                     this.saveSettings();
                 });
-                
                 // 页面卸载前保存状态
                 window.addEventListener('beforeunload', () => {
                     this.saveTimerStates();
                 });
-                
                 // 页面可见性变化
                 document.addEventListener('visibilitychange', () => {
                     if (document.hidden) {
@@ -1833,7 +1798,6 @@
                         this.debounce(() => this.syncTimers(), 'sync-timers', 500);
                     }
                 });
-                
                 // 键盘快捷键
                 document.addEventListener('keydown', (e) => {
                     if (e.ctrlKey || e.metaKey) {
@@ -1860,7 +1824,6 @@
                 this.settings.exerciseInterval = parseInt(value);
                 this.EXERCISE_INTERVAL = this.settings.exerciseInterval * 60;
                 this.saveSettings();
-                
                 if (!this.timers.exercise.isRunning) {
                     this.timers.exercise.currentTime = this.EXERCISE_INTERVAL;
                     this.updateTimerDisplay('exercise');
@@ -1872,7 +1835,6 @@
                 this.settings.eyeCareInterval = parseInt(value);
                 this.EYE_CARE_INTERVAL = this.settings.eyeCareInterval * 60;
                 this.saveSettings();
-                
                 if (!this.timers.eyeCare.isRunning) {
                     this.timers.eyeCare.currentTime = this.EYE_CARE_INTERVAL;
                     this.updateTimerDisplay('eyeCare');
@@ -1887,7 +1849,7 @@
             }
             // 错误处理
             handleError(message, error) {
-                console.error(`${message}:`, error);
+                console.error(message + ':', error);
                 // 可以在这里添加用户友好的错误提示
                 this.showErrorNotification(message);
             }
@@ -1901,7 +1863,6 @@
                 errorDiv.style.transform = 'translateX(-50%)';
                 errorDiv.style.zIndex = '9999';
                 document.body.appendChild(errorDiv);
-                
                 setTimeout(() => {
                     if (errorDiv.parentNode) {
                         errorDiv.parentNode.removeChild(errorDiv);
@@ -1915,7 +1876,6 @@
                     const timeSinceLastUpdate = now - this.performanceMetrics.lastUpdate;
                     this.performanceMetrics.lastUpdate = now;
                     this.performanceMetrics.updateCount++;
-                    
                     // 如果更新频率过高，可能存在性能问题
                     if (timeSinceLastUpdate < 1000 / 60) { // 60fps
                         console.warn('High update frequency detected, potential performance issue');
@@ -1932,7 +1892,7 @@
                         this.startTimer(type);
                     }
                 } catch (error) {
-                    this.handleError(`切换${type === 'exercise' ? '活动' : '眼保健操'}计时器失败`, error);
+                    this.handleError('切换' + (type === 'exercise' ? '活动' : '眼保健操') + '计时器失败', error);
                 }
             }
             startTimer(type) {
@@ -1941,21 +1901,17 @@
                     const now = Date.now();
                     timer.isRunning = true;
                     timer.lastStartTime = now;
-                    
                     this.updateTimerUI(type, true);
-                    
                     timer.interval = setInterval(() => {
                         timer.currentTime--;
                         this.updateTimerDisplay(type);
-                        
                         if (timer.currentTime <= 0) {
                             this.timerComplete(type);
                         }
                     }, 1000);
-                    
                     this.saveTimerStates();
                 } catch (error) {
-                    this.handleError(`启动${type === 'exercise' ? '活动' : '眼保健操'}计时器失败`, error);
+                    this.handleError('启动' + (type === 'exercise' ? '活动' : '眼保健操') + '计时器失败', error);
                 }
             }
             pauseTimer(type) {
@@ -1965,51 +1921,43 @@
                         clearInterval(timer.interval);
                         timer.interval = null;
                     }
-                    
                     if (timer.lastStartTime) {
                         const elapsed = Math.floor((Date.now() - timer.lastStartTime) / 1000);
                         timer.totalElapsed += elapsed;
                     }
-                    
                     timer.isRunning = false;
                     timer.lastStartTime = null;
-                    
                     this.updateTimerUI(type, false);
                     this.saveTimerStates();
                 } catch (error) {
-                    this.handleError(`暂停${type === 'exercise' ? '活动' : '眼保健操'}计时器失败`, error);
+                    this.handleError('暂停' + (type === 'exercise' ? '活动' : '眼保健操') + '计时器失败', error);
                 }
             }
             resetTimer(type) {
                 try {
                     const timer = this.timers[type];
-                    
                     if (timer.interval) {
                         clearInterval(timer.interval);
                         timer.interval = null;
                     }
-                    
                     timer.currentTime = type === 'exercise' ? this.EXERCISE_INTERVAL : this.EYE_CARE_INTERVAL;
                     timer.isRunning = false;
                     timer.lastStartTime = null;
                     timer.totalElapsed = 0;
-                    
                     this.updateTimerDisplay(type);
                     this.updateTimerUI(type, false);
                     this.saveTimerStates();
                 } catch (error) {
-                    this.handleError(`重置${type === 'exercise' ? '活动' : '眼保健操'}计时器失败`, error);
+                    this.handleError('重置' + (type === 'exercise' ? '活动' : '眼保健操') + '计时器失败', error);
                 }
             }
             timerComplete(type) {
                 try {
                     const timer = this.timers[type];
-                    
                     if (timer.interval) {
                         clearInterval(timer.interval);
                         timer.interval = null;
                     }
-                    
                     if (type === 'exercise') {
                         this.showExerciseNotification();
                         this.stats.exerciseCount++;
@@ -2017,13 +1965,12 @@
                         this.showEyeCareNotification();
                         this.stats.eyeCareCount++;
                     }
-                    
                     this.saveStats();
                     this.updateStats();
                     this.checkAchievements();
                     this.resetTimer(type);
                 } catch (error) {
-                    this.handleError(`${type === 'exercise' ? '活动' : '眼保健操'}计时器完成处理失败`, error);
+                    this.handleError(type === 'exercise' ? '活动' : '眼保健操' + '计时器完成处理失败', error);
                 }
             }
             // ==================== 设置管理 ====================
@@ -2044,7 +1991,6 @@
                 } catch (error) {
                     console.warn('加载设置失败，使用默认设置:', error);
                 }
-                
                 return {
                     exerciseInterval: 60,
                     eyeCareInterval: 120,
@@ -2074,7 +2020,6 @@
                 } catch (error) {
                     console.warn('加载成就数据失败，使用默认数据:', error);
                 }
-                
                 return {
                     firstExercise: false,
                     firstEyeCare: false,
@@ -2099,28 +2044,24 @@
                         this.showAchievement('首次活动', '完成了第一次活动提醒！');
                         this.saveAchievements();
                     }
-                    
                     // 首次眼保健操
                     if (!this.achievements.firstEyeCare && this.stats.eyeCareCount > 0) {
                         this.achievements.firstEyeCare = true;
                         this.showAchievement('护眼行动', '完成了第一次眼保健操！');
                         this.saveAchievements();
                     }
-                    
                     // 每日目标
                     if (!this.achievements.dailyGoal && this.stats.exerciseCount >= 5) {
                         this.achievements.dailyGoal = true;
                         this.showAchievement('健康达人', '今日完成了5次活动提醒！');
                         this.saveAchievements();
                     }
-                    
                     // 连续7天
                     if (!this.achievements.streak7 && this.stats.streak >= 7) {
                         this.achievements.streak7 = true;
                         this.showAchievement('坚持不懈', '连续7天使用健康提醒！');
                         this.saveAchievements();
                     }
-                    
                     // 连续30天
                     if (!this.achievements.streak30 && this.stats.streak >= 30) {
                         this.achievements.streak30 = true;
@@ -2136,11 +2077,9 @@
                     this.achievementTitle.textContent = title;
                     this.achievementDescription.textContent = description;
                     this.achievementBadge.classList.add('show');
-                    
                     setTimeout(() => {
                         this.achievementBadge.classList.remove('show');
                     }, 5000);
-                    
                     if (this.settings.exerciseSound || this.settings.eyeCareSound) {
                         this.playAchievementSound();
                     }
@@ -2152,21 +2091,16 @@
                 try {
                     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                     const notes = [523.25, 659.25, 783.99];
-                    
                     notes.forEach((frequency, index) => {
                         setTimeout(() => {
                             const oscillator = audioContext.createOscillator();
                             const gainNode = audioContext.createGain();
-                            
                             oscillator.connect(gainNode);
                             gainNode.connect(audioContext.destination);
-                            
                             oscillator.frequency.value = frequency;
                             oscillator.type = 'sine';
-                            
                             gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
                             gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-                            
                             oscillator.start(audioContext.currentTime);
                             oscillator.stop(audioContext.currentTime + 0.3);
                         }, index * 100);
@@ -2178,7 +2112,6 @@
             // ==================== 状态持久化 ====================
             saveTimerStates() {
                 if (!this.settings.autoSave) return;
-                
                 try {
                     const state = {
                         exercise: {
@@ -2195,7 +2128,6 @@
                         },
                         timestamp: Date.now()
                     };
-                    
                     localStorage.setItem('healthTimerStates', JSON.stringify(state));
                 } catch (error) {
                     this.handleError('保存计时器状态失败', error);
@@ -2207,23 +2139,19 @@
                     if (saved) {
                         const state = JSON.parse(saved);
                         const timeDiff = (Date.now() - state.timestamp) / 1000;
-                        
                         // 恢复活动计时器状态
                         if (state.exercise) {
                             this.timers.exercise.currentTime = state.exercise.currentTime;
                             this.timers.exercise.totalElapsed = state.exercise.totalElapsed || 0;
-                            
                             if (state.exercise.isRunning) {
                                 this.timers.exercise.currentTime = Math.max(0,
                                     this.timers.exercise.currentTime - timeDiff);
                             }
                         }
-                        
                         // 恢复眼保健操计时器状态
                         if (state.eyeCare) {
                             this.timers.eyeCare.currentTime = state.eyeCare.currentTime;
                             this.timers.eyeCare.totalElapsed = state.eyeCare.totalElapsed || 0;
-                            
                             if (state.eyeCare.isRunning) {
                                 this.timers.eyeCare.currentTime = Math.max(0,
                                     this.timers.eyeCare.currentTime - timeDiff);
@@ -2238,7 +2166,6 @@
                 try {
                     ['exercise', 'eyeCare'].forEach(type => {
                         const timer = this.timers[type];
-                        
                         if (timer.currentTime <= 0) {
                             this.timerComplete(type);
                         } else if (timer.isRunning) {
@@ -2279,23 +2206,19 @@
                     const timer = this.timers[type];
                     const progressElement = type === 'exercise' ? this.exerciseProgress : this.eyeCareProgress;
                     const maxTime = type === 'exercise' ? this.EXERCISE_INTERVAL : this.EYE_CARE_INTERVAL;
-                    
                     const hours = Math.floor(timer.currentTime / 3600);
                     const minutes = Math.floor((timer.currentTime % 3600) / 60);
                     const seconds = timer.currentTime % 60;
-                    
                     // 更新翻页式计时器
                     this.flipTimers[type].setTime(hours, minutes, seconds);
-                    
                     // 更新进度条
                     const progress = (timer.currentTime / maxTime) * 100;
                     progressElement.style.width = `${progress}%`;
-                    
                     // 更新性能指标
                     this.performanceMetrics.updateCount++;
                     this.performanceMetrics.lastUpdate = Date.now();
                 } catch (error) {
-                    this.handleError(`更新${type}计时器显示失败`, error);
+                    this.handleError('更新' + type + '计时器显示失败', error);
                 }
             }
             updateTimerUI(type, isRunning) {
@@ -2303,7 +2226,6 @@
                     const btn = type === 'exercise' ? this.startExerciseBtn : this.startEyeCareBtn;
                     const status = type === 'exercise' ? this.exerciseStatus : this.eyeCareStatus;
                     const statusText = type === 'exercise' ? this.exerciseStatusText : this.eyeCareStatusText;
-                    
                     if (isRunning) {
                         btn.innerHTML = '<i class="fas fa-pause"></i><span>暂停提醒</span>';
                         status.className = 'status-indicator';
@@ -2314,7 +2236,7 @@
                         statusText.textContent = '已停止';
                     }
                 } catch (error) {
-                    this.handleError(`更新${type}计时器UI失败`, error);
+                    this.handleError('更新' + type + '计时器UI失败', error);
                 }
             }
             // ==================== 通知功能 ====================
@@ -2351,11 +2273,9 @@
                     this.notification.className = `notification ${type}`;
                     this.notificationTitle.innerHTML = `<i class="fas fa-${type === 'exercise' ? 'walking' : 'eye'}"></i><span>${title}</span>`;
                     this.notificationContent.innerHTML = content;
-                    
                     setTimeout(() => {
                         this.notification.classList.add('show');
                     }, 100);
-                    
                     if (this.settings.desktopNotification && 'Notification' in window && Notification.permission === 'granted') {
                         new Notification(title, {
                             body: content.replace(/<[^>]*>/g, ''),
@@ -2364,7 +2284,6 @@
                             tag: type
                         });
                     }
-                    
                     if ((type === 'exercise' && this.settings.exerciseSound) ||
                         (type === 'eyeCare' && this.settings.eyeCareSound)) {
                         this.playNotificationSound();
@@ -2395,16 +2314,12 @@
                     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                     const oscillator = audioContext.createOscillator();
                     const gainNode = audioContext.createGain();
-                    
                     oscillator.connect(gainNode);
                     gainNode.connect(audioContext.destination);
-                    
                     oscillator.frequency.value = 800;
                     oscillator.type = 'sine';
-                    
                     gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
                     gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-                    
                     oscillator.start(audioContext.currentTime);
                     oscillator.stop(audioContext.currentTime + 0.5);
                 } catch (error) {
@@ -2431,11 +2346,9 @@
                     if (saved) {
                         const stats = JSON.parse(saved);
                         const today = new Date().toDateString();
-                        
                         if (stats.lastDate !== today) {
                             const yesterday = new Date(Date.now() - 86400000).toDateString();
                             const isConsecutive = stats.lastDate === yesterday;
-                            
                             return {
                                 exerciseCount: 0,
                                 eyeCareCount: 0,
@@ -2444,13 +2357,11 @@
                                 weeklyGoal: this.calculateWeeklyGoal(stats)
                             };
                         }
-                        
                         return stats;
                     }
                 } catch (error) {
                     console.warn('加载统计数据失败，使用默认数据:', error);
                 }
-                
                 return {
                     exerciseCount: 0,
                     eyeCareCount: 0,
@@ -2476,7 +2387,6 @@
                     this.flipStats.exerciseCount.setValue(this.stats.exerciseCount);
                     this.flipStats.eyeCareCount.setValue(this.stats.eyeCareCount);
                     this.flipStats.streak.setValue(this.stats.streak);
-                    
                     const weeklyTarget = 35;
                     const weeklyProgress = Math.min((this.stats.exerciseCount / weeklyTarget) * 100, 100);
                     this.flipStats.weeklyGoal.setValue(weeklyProgress);
@@ -2492,19 +2402,15 @@
                 if (!window.localStorage) {
                     alert('您的浏览器不支持本地存储，部分功能可能无法正常使用。');
                 }
-                
                 // 初始化应用
                 const healthReminder = new HealthReminderManager();
-                
                 // 添加全局错误处理
                 window.addEventListener('error', (event) => {
                     console.error('Global error:', event.error);
                 });
-                
                 window.addEventListener('unhandledrejection', (event) => {
                     console.error('Unhandled promise rejection:', event.reason);
                 });
-                
             } catch (error) {
                 console.error('应用初始化失败:', error);
                 document.body.innerHTML = `
