@@ -216,12 +216,12 @@
             }
         }
 
-        /* 翻页式数字显示样式 */
+        /* 简化的数字显示样式 */
         .flip-timer {
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            gap: 0.5rem;
+            align-items: center;
+            gap: 0.25rem;
             margin-bottom: 1rem;
             font-family: 'Courier New', monospace;
         }
@@ -238,72 +238,61 @@
         }
 
         .flip-digit {
-            width: 3.5rem;
-            height: 4rem;
+            width: 3rem;
+            height: 3.5rem;
             background: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--text-primary);
             position: relative;
-            overflow: hidden;
-            box-shadow: 
-                inset 0 2px 4px rgba(0, 0, 0, 0.1),
-                0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(0, 0, 0, 0.05);
+            overflow: hidden;
         }
 
-        .flip-digit-inner {
+        .flip-digit-content {
             position: relative;
             width: 100%;
             height: 100%;
-            transform-style: preserve-3d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .flip-digit-face {
+        .flip-digit-value {
             position: absolute;
             width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            backface-visibility: hidden;
+            transition: transform 0.3s ease-in-out;
             background: var(--card-bg);
-            border-radius: 12px;
         }
 
-        .flip-digit-front {
-            z-index: 2;
+        .flip-digit-value.flip-out {
+            transform: translateY(-100%);
         }
 
-        .flip-digit-back {
-            transform: rotateX(180deg);
+        .flip-digit-value.flip-in {
+            transform: translateY(100%);
         }
 
-        .flip-digit.flipping .flip-digit-inner {
-            animation: flipDigit 0.6s ease-in-out;
-        }
-
-        @keyframes flipDigit {
-            0% {
-                transform: rotateX(0deg);
-            }
-            100% {
-                transform: rotateX(-180deg);
-            }
+        .flip-digit-value.flip-in.active {
+            transform: translateY(0);
         }
 
         .flip-separator {
             display: flex;
             align-items: center;
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--text-primary);
             margin: 0 0.25rem;
-            padding-top: 0.5rem;
         }
 
         .flip-label {
@@ -505,7 +494,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        /* 统计数字翻页样式 */
+        /* 简化的统计数字样式 */
         .stat-number {
             font-size: 2.5rem;
             font-weight: 700;
@@ -519,39 +508,6 @@
             justify-content: center;
             position: relative;
             font-family: 'Courier New', monospace;
-        }
-
-        .stat-digit {
-            display: inline-block;
-            width: 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            height: 3rem;
-            line-height: 3rem;
-        }
-
-        .stat-digit span {
-            position: absolute;
-            width: 100%;
-            left: 0;
-            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
-        }
-
-        .stat-digit .current {
-            transform: translateY(0);
-        }
-
-        .stat-digit .next {
-            transform: translateY(100%);
-        }
-
-        .stat-digit.flip .current {
-            transform: translateY(-100%);
-        }
-
-        .stat-digit.flip .next {
-            transform: translateY(0);
         }
 
         .stat-suffix {
@@ -747,11 +703,11 @@
             .flip-digit {
                 width: 2.5rem;
                 height: 3rem;
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
 
             .flip-separator {
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
 
             .suggestions-grid {
@@ -782,11 +738,11 @@
             .flip-digit {
                 width: 2rem;
                 height: 2.5rem;
-                font-size: 1.5rem;
+                font-size: 1.25rem;
             }
 
             .flip-separator {
-                font-size: 1.5rem;
+                font-size: 1.25rem;
             }
 
             .stats-grid {
@@ -923,15 +879,13 @@
                         <div class="flip-unit">
                             <div class="flip-digits">
                                 <div class="flip-digit" data-digit="hours-tens">
-                                    <div class="flip-digit-inner">
-                                        <div class="flip-digit-face flip-digit-front">0</div>
-                                        <div class="flip-digit-face flip-digit-back">0</div>
+                                    <div class="flip-digit-content">
+                                        <div class="flip-digit-value">0</div>
                                     </div>
                                 </div>
                                 <div class="flip-digit" data-digit="hours-ones">
-                                    <div class="flip-digit-inner">
-                                        <div class="flip-digit-face flip-digit-front">1</div>
-                                        <div class="flip-digit-face flip-digit-back">1</div>
+                                    <div class="flip-digit-content">
+                                        <div class="flip-digit-value">1</div>
                                     </div>
                                 </div>
                             </div>
@@ -941,15 +895,13 @@
                         <div class="flip-unit">
                             <div class="flip-digits">
                                 <div class="flip-digit" data-digit="minutes-tens">
-                                    <div class="flip-digit-inner">
-                                        <div class="flip-digit-face flip-digit-front">0</div>
-                                        <div class="flip-digit-face flip-digit-back">0</div>
+                                    <div class="flip-digit-content">
+                                        <div class="flip-digit-value">0</div>
                                     </div>
                                 </div>
                                 <div class="flip-digit" data-digit="minutes-ones">
-                                    <div class="flip-digit-inner">
-                                        <div class="flip-digit-face flip-digit-front">0</div>
-                                        <div class="flip-digit-face flip-digit-back">0</div>
+                                    <div class="flip-digit-content">
+                                        <div class="flip-digit-value">0</div>
                                     </div>
                                 </div>
                             </div>
@@ -959,15 +911,13 @@
                         <div class="flip-unit">
                             <div class="flip-digits">
                                 <div class="flip-digit" data-digit="seconds-tens">
-                                    <div class="flip-digit-inner">
-                                        <div class="flip-digit-face flip-digit-front">0</div>
-                                        <div class="flip-digit-face flip-digit-back">0</div>
+                                    <div class="flip-digit-content">
+                                        <div class="flip-digit-value">0</div>
                                     </div>
                                 </div>
                                 <div class="flip-digit" data-digit="seconds-ones">
-                                    <div class="flip-digit-inner">
-                                        <div class="flip-digit-face flip-digit-front">0</div>
-                                        <div class="flip-digit-face flip-digit-back">0</div>
+                                    <div class="flip-digit-content">
+                                        <div class="flip-digit-value">0</div>
                                     </div>
                                 </div>
                             </div>
@@ -1011,15 +961,13 @@
                         <div class="flip-unit">
                             <div class="flip-digits">
                                 <div class="flip-digit" data-digit="hours-tens">
-                                    <div class="flip-digit-inner">
-                                        <div class="flip-digit-face flip-digit-front">0</div>
-                                        <div class="flip-digit-face flip-digit-back">0</div>
+                                    <div class="flip-digit-content">
+                                        <div class="flip-digit-value">0</div>
                                     </div>
                                 </div>
                                 <div class="flip-digit" data-digit="hours-ones">
-                                    <div class="flip-digit-inner">
-                                        <div class="flip-digit-face flip-digit-front">2</div>
-                                        <div class="flip-digit-face flip-digit-back">2</div>
+                                    <div class="flip-digit-content">
+                                        <div class="flip-digit-value">2</div>
                                     </div>
                                 </div>
                             </div>
@@ -1029,15 +977,13 @@
                         <div class="flip-unit">
                             <div class="flip-digits">
                                 <div class="flip-digit" data-digit="minutes-tens">
-                                    <div class="flip-digit-inner">
-                                        <div class="flip-digit-face flip-digit-front">0</div>
-                                        <div class="flip-digit-face flip-digit-back">0</div>
+                                    <div class="flip-digit-content">
+                                        <div class="flip-digit-value">0</div>
                                     </div>
                                 </div>
                                 <div class="flip-digit" data-digit="minutes-ones">
-                                    <div class="flip-digit-inner">
-                                        <div class="flip-digit-face flip-digit-front">0</div>
-                                        <div class="flip-digit-face flip-digit-back">0</div>
+                                    <div class="flip-digit-content">
+                                        <div class="flip-digit-value">0</div>
                                     </div>
                                 </div>
                             </div>
@@ -1047,15 +993,13 @@
                         <div class="flip-unit">
                             <div class="flip-digits">
                                 <div class="flip-digit" data-digit="seconds-tens">
-                                    <div class="flip-digit-inner">
-                                        <div class="flip-digit-face flip-digit-front">0</div>
-                                        <div class="flip-digit-face flip-digit-back">0</div>
+                                    <div class="flip-digit-content">
+                                        <div class="flip-digit-value">0</div>
                                     </div>
                                 </div>
                                 <div class="flip-digit" data-digit="seconds-ones">
-                                    <div class="flip-digit-inner">
-                                        <div class="flip-digit-face flip-digit-front">0</div>
-                                        <div class="flip-digit-face flip-digit-back">0</div>
+                                    <div class="flip-digit-content">
+                                        <div class="flip-digit-value">0</div>
                                     </div>
                                 </div>
                             </div>
@@ -1146,14 +1090,13 @@
     </div>
 
     <script>
-        // 翻页式数字显示组件
+        // 简化的翻页式数字显示组件
         class FlipDigit {
             constructor(element) {
                 this.element = element;
-                this.inner = element.querySelector('.flip-digit-inner');
-                this.frontFace = element.querySelector('.flip-digit-front');
-                this.backFace = element.querySelector('.flip-digit-back');
-                this.currentValue = parseInt(this.frontFace.textContent);
+                this.content = element.querySelector('.flip-digit-content');
+                this.valueElement = element.querySelector('.flip-digit-value');
+                this.currentValue = parseInt(this.valueElement.textContent);
                 this.isFlipping = false;
             }
 
@@ -1163,17 +1106,30 @@
                 }
 
                 this.isFlipping = true;
-                this.backFace.textContent = newValue;
-
-                // 触发翻页动画
-                this.element.classList.add('flipping');
-
+                
+                // 创建新值元素
+                const newValueElement = document.createElement('div');
+                newValueElement.className = 'flip-digit-value flip-in';
+                newValueElement.textContent = newValue;
+                newValueElement.style.transform = 'translateY(100%)';
+                
+                // 添加到容器
+                this.content.appendChild(newValueElement);
+                
+                // 触发动画
                 setTimeout(() => {
-                    this.frontFace.textContent = newValue;
-                    this.element.classList.remove('flipping');
+                    newValueElement.classList.add('active');
+                    this.valueElement.classList.add('flip-out');
+                }, 10);
+                
+                // 动画完成后清理
+                setTimeout(() => {
+                    this.valueElement.remove();
+                    newValueElement.classList.remove('flip-in', 'active');
+                    this.valueElement = newValueElement;
                     this.currentValue = newValue;
                     this.isFlipping = false;
-                }, 600);
+                }, 300);
             }
 
             getValue() {
@@ -1212,11 +1168,11 @@
             }
         }
 
-        // 翻页式统计数字组件
+        // 简化的统计数字组件
         class FlipStat {
             constructor(elementId) {
                 this.element = document.getElementById(elementId);
-                this.digits = [];
+                this.currentValue = 0;
                 this.suffix = '';
                 this.initDigits();
             }
@@ -1228,30 +1184,25 @@
                 if (suffixMatch) {
                     this.suffix = suffixMatch[1];
                 }
-
+                
                 // 设置初始值
                 this.setValue(0);
             }
 
             setValue(value) {
+                this.currentValue = Math.floor(value);
+                const valueStr = this.currentValue.toString();
+                
                 // 清空现有内容
                 this.element.innerHTML = '';
-                const valueStr = Math.floor(value).toString();
-
-                // 为每个数字创建翻页效果
+                
+                // 添加数字
                 valueStr.split('').forEach(digit => {
-                    const digitContainer = document.createElement('div');
-                    digitContainer.className = 'stat-digit';
-                    
-                    const currentSpan = document.createElement('span');
-                    currentSpan.className = 'current';
-                    currentSpan.textContent = digit;
-                    
-                    digitContainer.appendChild(currentSpan);
-                    this.element.appendChild(digitContainer);
-                    this.digits.push(digitContainer);
+                    const digitSpan = document.createElement('span');
+                    digitSpan.textContent = digit;
+                    this.element.appendChild(digitSpan);
                 });
-
+                
                 // 添加后缀
                 if (this.suffix) {
                     const suffixElement = document.createElement('span');
@@ -1262,63 +1213,17 @@
             }
 
             updateValue(newValue) {
-                const currentValue = this.getCurrentValue();
-                if (currentValue === newValue) return;
-
-                const currentStr = currentValue.toString();
-                const newStr = Math.floor(newValue).toString();
-
-                // 计算需要更新的位数
-                const maxLength = Math.max(currentStr.length, newStr.length);
+                const oldValue = this.currentValue;
+                this.currentValue = Math.floor(newValue);
                 
-                // 确保有足够的数字容器
-                while (this.digits.length < maxLength) {
-                    const digitContainer = document.createElement('div');
-                    digitContainer.className = 'stat-digit';
-                    
-                    const currentSpan = document.createElement('span');
-                    currentSpan.className = 'current';
-                    currentSpan.textContent = '0';
-                    
-                    digitContainer.appendChild(currentSpan);
-                    this.element.insertBefore(digitContainer, this.element.firstChild);
-                    this.digits.unshift(digitContainer);
-                }
-
-                // 更新每个数字
-                for (let i = 0; i < maxLength; i++) {
-                    const currentDigit = i < currentStr.length ? currentStr[currentStr.length - 1 - i] : '0';
-                    const newDigit = i < newStr.length ? newStr[newStr.length - 1 - i] : '0';
-                    
-                    if (currentDigit !== newDigit) {
-                        const digitContainer = this.digits[this.digits.length - 1 - i];
-                        const currentSpan = digitContainer.querySelector('.current');
-                        
-                        // 创建新数字
-                        const nextSpan = document.createElement('span');
-                        nextSpan.className = 'next';
-                        nextSpan.textContent = newDigit;
-                        
-                        digitContainer.appendChild(nextSpan);
-                        
-                        // 触发翻页动画
-                        setTimeout(() => {
-                            digitContainer.classList.add('flip');
-                        }, i * 50);
-                        
-                        // 动画完成后清理
-                        setTimeout(() => {
-                            currentSpan.textContent = newDigit;
-                            digitContainer.classList.remove('flip');
-                            nextSpan.remove();
-                        }, 600 + i * 50);
-                    }
-                }
+                if (oldValue === this.currentValue) return;
+                
+                // 直接设置新值（简化版本）
+                this.setValue(this.currentValue);
             }
 
             getCurrentValue() {
-                const digits = this.element.querySelectorAll('.stat-digit .current');
-                return parseInt(Array.from(digits).map(d => d.textContent).join('')) || 0;
+                return this.currentValue;
             }
         }
 
