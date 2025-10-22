@@ -1,6 +1,6 @@
-<!-- 健康提醒功能脚本（优化点击交互） -->
+<!-- 健康提醒功能脚本（修复版本） -->
 <script>
-    // 健康提醒管理器 - 优化点击交互版本
+    // 健康提醒管理器 - 修复版本
     (function() {
         'use strict';
         class HealthReminderManager {
@@ -19,7 +19,7 @@
                 this.clickCooldown = false; // 点击冷却时间
                 this.init();
             }
-
+            
             init() {
                 // 等待DOM加载完成
                 if (document.readyState === 'loading') {
@@ -30,7 +30,7 @@
                 // 监听用户交互事件
                 this.setupUserInteractionListeners();
             }
-
+            
             // 设置用户交互监听器
             setupUserInteractionListeners() {
                 const interactionEvents = [
@@ -46,7 +46,7 @@
                     }, { once: false });
                 });
             }
-
+            
             setupEventListeners() {
                 // 获取DOM元素
                 this.healthBtn = document.getElementById('healthReminderBtn');
@@ -76,20 +76,20 @@
                     e.preventDefault();
                     this.handleHealthButtonClick(e);
                 });
-
+                
                 // 添加按钮悬停效果
                 this.healthBtn.addEventListener('mouseenter', () => {
                     if (!this.isActive) {
                         this.healthBtn.style.transform = 'translateY(-2px) scale(1.02)';
                     }
                 });
-
+                
                 this.healthBtn.addEventListener('mouseleave', () => {
                     if (!this.isNotificationAnimating) {
                         this.healthBtn.style.transform = '';
                     }
                 });
-
+                
                 // 通知按钮事件 - 添加反馈动画
                 this.notificationClose.addEventListener('click', (e) => {
                     this.addClickFeedback(e.target);
@@ -105,7 +105,7 @@
                     this.addClickFeedback(e.target);
                     this.handleSnooze();
                 });
-
+                
                 // 权限请求事件 - 添加反馈
                 this.allowBackgroundBtn.addEventListener('click', (e) => {
                     this.addClickFeedback(e.target);
@@ -116,7 +116,7 @@
                     this.addClickFeedback(e.target);
                     this.hidePermissionBanner();
                 });
-
+                
                 // 请求通知权限
                 this.requestNotificationPermission();
                 
@@ -133,11 +133,10 @@
                 // 从localStorage恢复状态
                 this.restoreState();
             }
-
+            
             // 添加点击反馈效果
             addClickFeedback(element) {
                 if (this.clickCooldown) return;
-                
                 this.clickCooldown = true;
                 
                 // 添加点击动画
@@ -148,11 +147,11 @@
                     element.style.transform = 'scale(1)';
                     this.clickCooldown = false;
                 }, 150);
-
+                
                 // 添加涟漪效果
                 this.createRippleEffect(element);
             }
-
+            
             // 创建涟漪效果
             createRippleEffect(element) {
                 const ripple = document.createElement('span');
@@ -177,7 +176,7 @@
                     ripple.remove();
                 }, 600);
             }
-
+            
             // 处理健康提醒按钮点击 - 优化版本
             handleHealthButtonClick(event) {
                 // 防止重复点击
@@ -189,7 +188,7 @@
                     this.audioManager.initializeAudio();
                     this.hideAudioPermissionBanner();
                 }
-
+                
                 // 添加按钮点击动画
                 this.isNotificationAnimating = true;
                 this.healthBtn.style.transform = 'scale(0.95)';
@@ -202,11 +201,11 @@
                     this.healthBtn.style.transform = '';
                     this.isNotificationAnimating = false;
                 }, 300);
-
+                
                 // 切换健康提醒状态
                 this.toggleHealthReminder();
             }
-
+            
             // 隐藏音频权限提示
             hideAudioPermissionBanner() {
                 if (this.audioPermissionBanner) {
@@ -216,19 +215,18 @@
                     }, 300);
                 }
             }
-
+            
             // 显示音频权限提示
             showAudioPermissionBanner() {
                 if (this.audioPermissionBanner && !this.userInteracted) {
                     this.audioPermissionBanner.classList.add('show');
                     this.audioPermissionBanner.style.animation = 'slideInDown 0.5s ease-out';
-                    
                     setTimeout(() => {
                         this.hideAudioPermissionBanner();
                     }, 8000);
                 }
             }
-
+            
             // 请求浏览器通知权限
             async requestNotificationPermission() {
                 if ('Notification' in window && Notification.permission === 'default') {
@@ -246,7 +244,7 @@
                     this.showAudioPermissionBanner();
                 }
             }
-
+            
             // 显示权限请求横幅 - 优化动画
             showPermissionBanner() {
                 // 检查是否已经请求过后台权限
@@ -258,7 +256,7 @@
                     }, 2000);
                 }
             }
-
+            
             // 隐藏权限请求横幅 - 优化动画
             hidePermissionBanner() {
                 this.permissionBanner.style.animation = 'slideOutDown 0.3s ease-in';
@@ -267,14 +265,14 @@
                     localStorage.setItem('healthReminderBackgroundRequested', 'true');
                 }, 300);
             }
-
+            
             // 启用后台模式 - 优化反馈
             async enableBackgroundMode() {
                 try {
                     // 添加加载状态
                     this.allowBackgroundBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 启用中...';
                     this.allowBackgroundBtn.disabled = true;
-
+                    
                     // 请求持久化通知权限
                     if ('Notification' in window && 'PersistentNotification' in window) {
                         console.log('尝试启用持久化通知');
@@ -310,11 +308,10 @@
                     setTimeout(() => {
                         this.hideNotification();
                     }, 5000);
-
+                    
                     // 恢复按钮状态
                     this.allowBackgroundBtn.innerHTML = '允许';
                     this.allowBackgroundBtn.disabled = false;
-
                 } catch (error) {
                     console.log('启用后台模式失败:', error);
                     this.hidePermissionBanner();
@@ -326,14 +323,13 @@
                     // 显示错误提示
                     this.allowBackgroundBtn.innerHTML = '启用失败';
                     this.allowBackgroundBtn.style.background = 'rgba(239, 68, 68, 0.2)';
-                    
                     setTimeout(() => {
                         this.allowBackgroundBtn.innerHTML = '允许';
                         this.allowBackgroundBtn.style.background = '';
                     }, 2000);
                 }
             }
-
+            
             // 处理页面可见性变化
             handleVisibilityChange() {
                 if (document.hidden) {
@@ -358,7 +354,7 @@
                     }
                 }
             }
-
+            
             // 处理 Service Worker 消息
             handleServiceWorkerMessage(data) {
                 switch (data.type) {
@@ -383,7 +379,7 @@
                         break;
                 }
             }
-
+            
             // 切换健康提醒状态 - 优化动画
             toggleHealthReminder() {
                 this.isActive = !this.isActive;
@@ -422,7 +418,7 @@
                     }
                 }
             }
-
+            
             // 更新按钮状态 - 优化过渡
             updateButtonState(active) {
                 if (active) {
@@ -454,7 +450,7 @@
                     this.healthBtn.style.animation = '';
                 }, 500);
             }
-
+            
             // 开始提醒
             startReminders() {
                 // 立即显示一个启动提示
@@ -465,6 +461,7 @@
                         `✅ 每1小时提醒活动身体<br>✅ 每2小时提醒做眼保健操<br>✅ 包含音频提醒功能<br>✅ 支持后台运行`,
                         false
                     );
+                    
                     if (this.userInteracted) {
                         this.audioManager.playStartSound();
                     }
@@ -476,6 +473,7 @@
                     if (this.userInteracted) {
                         this.audioManager.playBreakSound();
                     }
+                    
                     // 通知 Service Worker
                     if ('serviceWorker' in navigator && this.backgroundModeEnabled) {
                         navigator.serviceWorker.ready.then(registration => {
@@ -492,6 +490,7 @@
                     if (this.userInteracted) {
                         this.audioManager.playEyeCareSound();
                     }
+                    
                     // 通知 Service Worker
                     if ('serviceWorker' in navigator && this.backgroundModeEnabled) {
                         navigator.serviceWorker.ready.then(registration => {
@@ -502,27 +501,30 @@
                     }
                 }, 2 * 60 * 60 * 1000); // 2小时
             }
-
+            
             // 停止提醒
             stopReminders() {
                 if (this.breakInterval) {
                     clearInterval(this.breakInterval);
                     this.breakInterval = null;
                 }
+                
                 if (this.eyeCareInterval) {
                     clearInterval(this.eyeCareInterval);
                     this.eyeCareInterval = null;
                 }
+                
                 if (this.eyeCareTimer) {
                     clearTimeout(this.eyeCareTimer);
                     this.eyeCareTimer = null;
                 }
+                
                 this.isDoingEyeCare = false;
                 this.currentNotificationType = null;
                 this.audioManager.stopAll();
                 this.hideNotification();
             }
-
+            
             // 显示活动提醒
             showBreakReminder() {
                 this.showNotification(
@@ -553,11 +555,12 @@
                 // 绑定音频控制事件
                 setTimeout(() => this.bindAudioControls('break'), 100);
             }
-
+            
             // 显示眼保健操提醒
             showEyeCareReminder() {
                 this.isDoingEyeCare = true;
                 this.currentNotificationType = 'eye-care';
+                
                 this.showNotification(
                     'eye-care',
                     '眼保健操时间',
@@ -571,7 +574,7 @@
                 // 绑定音频控制事件
                 setTimeout(() => this.bindAudioControls('eye-care'), 100);
             }
-
+            
             // 获取眼保健操内容
             getEyeCareContent() {
                 return `
@@ -602,16 +605,16 @@
                         </div>
                     </div>`;
             }
-
+            
             // 绑定音频控制 - 优化交互
             bindAudioControls(type) {
-                const audioBtn = document.getElementById(`${type}AudioBtn`);
-                const volumeSlider = document.getElementById(`${type}VolumeSlider`);
+                const audioBtn = document.getElementById(type + 'AudioBtn');
+                const volumeSlider = document.getElementById(type + 'VolumeSlider');
                 
                 if (audioBtn) {
                     // 移除旧的事件监听器
                     audioBtn.replaceWith(audioBtn.cloneNode(true));
-                    const newAudioBtn = document.getElementById(`${type}AudioBtn`);
+                    const newAudioBtn = document.getElementById(type + 'AudioBtn');
                     
                     newAudioBtn.addEventListener('click', (e) => {
                         this.addClickFeedback(e.target);
@@ -646,7 +649,7 @@
                     });
                 }
             }
-
+            
             // 开始眼保健操计时器
             startEyeCareTimer() {
                 let remainingTime = this.eyeCareDuration / 1000;
@@ -661,7 +664,7 @@
                     }
                 }, 1000);
             }
-
+            
             // 更新计时器显示 - 优化动画
             updateTimerDisplay(seconds) {
                 const minutes = Math.floor(seconds / 60);
@@ -686,7 +689,7 @@
                     }
                 }
             }
-
+            
             // 完成眼保健操 - 优化反馈
             completeEyeCare() {
                 clearInterval(this.eyeCareTimer);
@@ -719,7 +722,7 @@
                     this.hideNotification();
                 }, 5000);
             }
-
+            
             // 显示通知 - 优化动画和交互
             showNotification(type, title, content, isEyeCare = false) {
                 this.currentNotificationType = type;
@@ -780,7 +783,7 @@
                 // 同时显示浏览器通知
                 this.showBrowserNotification(title, content.replace(/<[^>]*>/g, ''), type);
             }
-
+            
             // 显示浏览器通知
             showBrowserNotification(title, content, type) {
                 if ('Notification' in window && Notification.permission === 'granted') {
@@ -810,17 +813,16 @@
                     };
                 }
             }
-
+            
             // 隐藏通知 - 优化动画
             hideNotification() {
                 this.notification.style.animation = 'notificationSlideOut 0.3s ease-in';
-                
                 setTimeout(() => {
                     this.notification.classList.remove('show');
                     this.currentNotificationType = null;
                 }, 300);
             }
-
+            
             // 处理关闭按钮 - 优化反馈
             handleClose() {
                 if (!this.isDoingEyeCare) {
@@ -829,7 +831,7 @@
                     this.audioManager.stopAll();
                 }
             }
-
+            
             // 处理确认完成 - 优化反馈
             handleConfirm() {
                 this.addClickFeedback(this.notificationConfirm);
@@ -841,7 +843,7 @@
                     this.audioManager.stopAll();
                 }
             }
-
+            
             // 处理稍后提醒 - 优化反馈
             handleSnooze() {
                 if (!this.isDoingEyeCare) {
@@ -861,7 +863,7 @@
                     }, 5 * 60 * 1000);
                 }
             }
-
+            
             // 显示稍后提醒提示
             showSnoozeToast() {
                 const toast = document.createElement('div');
@@ -870,6 +872,7 @@
                     <i class="fas fa-clock"></i>
                     <span>将在5分钟后再次提醒您</span>
                 `;
+                
                 toast.style.cssText = `
                     position: fixed;
                     top: 20px;
@@ -895,13 +898,13 @@
                     }, 300);
                 }, 3000);
             }
-
+            
             // 保存状态到localStorage
             saveState() {
                 localStorage.setItem('healthReminderActive', this.isActive.toString());
                 localStorage.setItem('healthReminderBackground', this.backgroundModeEnabled.toString());
             }
-
+            
             // 从localStorage恢复状态
             restoreState() {
                 const saved = localStorage.getItem('healthReminderActive');
@@ -918,7 +921,7 @@
                 }
             }
         }
-
+        
         // 音频管理器 - 保持原有功能
         class AudioManager {
             constructor() {
@@ -935,7 +938,7 @@
                 this.audioElements = {};
                 this.initialized = false;
             }
-
+            
             // 初始化音频系统
             initializeAudio() {
                 if (this.initialized) return;
@@ -947,13 +950,14 @@
                     this.setupWebAudioAPI();
                     this.initialized = true;
                     console.log('音频系统初始化成功');
+                    
                     // 预加载一些音频
                     this.preloadAudio();
                 } catch (error) {
                     console.log('音频初始化失败:', error);
                 }
             }
-
+            
             // 设置音频元素
             setupAudioElements() {
                 // 获取预定义的音频元素
@@ -968,7 +972,7 @@
                 // 为每个音频元素设置源（使用在线音频文件或 data URL）
                 this.setupAudioSources();
             }
-
+            
             // 设置音频源
             setupAudioSources() {
                 // 使用在线免费音频资源或创建简单的音频
@@ -986,7 +990,7 @@
                     }
                 });
             }
-
+            
             // 创建简单的音频数据 URL
             createDataUrlSound(frequency, duration) {
                 // 创建一个简单的正弦波音频
@@ -1029,7 +1033,7 @@
                 const blob = new Blob([buffer], { type: 'audio/wav' });
                 return URL.createObjectURL(blob);
             }
-
+            
             // 设置 Web Audio API（备用方案）
             setupWebAudioAPI() {
                 try {
@@ -1048,7 +1052,7 @@
                     console.log('Web Audio API 初始化失败:', error);
                 }
             }
-
+            
             // 预加载音频
             preloadAudio() {
                 Object.values(this.audioElements).forEach(audio => {
@@ -1057,7 +1061,7 @@
                     }
                 });
             }
-
+            
             // 使用 HTML5 Audio 播放声音
             playAudioElement(type) {
                 const audio = this.audioElements[type];
@@ -1075,7 +1079,7 @@
                     }
                 }
             }
-
+            
             // 使用 Web Audio API 播放声音（备用）
             playWebAudio(type) {
                 if (!this.audioContext || !this.sounds[type]) return;
@@ -1098,7 +1102,7 @@
                     this.playNote(sound);
                 }
             }
-
+            
             // 播放音符（Web Audio API）
             playNote(note) {
                 if (!this.audioContext) return;
@@ -1118,7 +1122,7 @@
                 oscillator.start(this.audioContext.currentTime);
                 oscillator.stop(this.audioContext.currentTime + note.duration);
             }
-
+            
             // 创建单音（Web Audio API）
             createTone(frequency, duration) {
                 return {
@@ -1126,12 +1130,12 @@
                     duration: duration
                 };
             }
-
+            
             // 创建旋律（Web Audio API）
             createMelody(frequencies, noteDuration) {
                 return frequencies.map(frequency => this.createTone(frequency, noteDuration));
             }
-
+            
             // 创建舒缓音乐（Web Audio API）
             createRelaxingMusic() {
                 const melody = [
@@ -1140,21 +1144,21 @@
                 ];
                 return this.createMelody(melody, 0.5);
             }
-
+            
             // 播放开始音
             playStartSound() {
                 if (this.initialized) {
                     this.playAudioElement('start');
                 }
             }
-
+            
             // 播放活动提醒音
             playBreakSound() {
                 if (this.initialized) {
                     this.playAudioElement('break');
                 }
             }
-
+            
             // 播放眼保健操音乐
             playEyeCareSound() {
                 if (this.initialized) {
@@ -1169,21 +1173,21 @@
                     }
                 }
             }
-
+            
             // 播放完成音
             playCompleteSound() {
                 if (this.initialized) {
                     this.playAudioElement('complete');
                 }
             }
-
+            
             // 播放通知音
             playNotificationSound() {
                 if (this.initialized) {
                     this.playAudioElement('notification');
                 }
             }
-
+            
             // 切换音频播放
             toggleAudio(type) {
                 if (!this.initialized) {
@@ -1208,13 +1212,13 @@
                     }
                 }
             }
-
+            
             // 检查是否正在播放
             isPlaying(type) {
                 const audio = this.audioElements[type];
                 return audio && !audio.paused;
             }
-
+            
             // 设置音量
             setVolume(type, volume) {
                 this.volumes[type] = volume;
@@ -1223,7 +1227,7 @@
                     audio.volume = volume;
                 }
             }
-
+            
             // 停止指定音频
             stopAudio(type) {
                 const audio = this.audioElements[type];
@@ -1231,12 +1235,13 @@
                     audio.pause();
                     audio.currentTime = 0;
                 }
+                
                 if (this.currentAudio[type]) {
                     clearTimeout(this.currentAudio[type]);
                     this.currentAudio[type] = null;
                 }
             }
-
+            
             // 停止所有音频
             stopAll() {
                 Object.keys(this.audioElements).forEach(type => {
@@ -1244,10 +1249,10 @@
                 });
             }
         }
-
+        
         // 初始化健康提醒管理器
         window.healthReminderManager = new HealthReminderManager();
-
+        
         // 添加优化后的动画样式
         const style = document.createElement('style');
         style.textContent = `
@@ -1262,7 +1267,7 @@
                     opacity: 0;
                 }
             }
-
+            
             @keyframes notificationSlideIn {
                 0% {
                     transform: translateX(450px) scale(0.8);
@@ -1273,7 +1278,7 @@
                     opacity: 1;
                 }
             }
-
+            
             @keyframes notificationSlideOut {
                 0% {
                     transform: translateX(0) scale(1);
@@ -1284,7 +1289,7 @@
                     opacity: 0;
                 }
             }
-
+            
             @keyframes slideInDown {
                 0% {
                     transform: translateY(-100px);
@@ -1295,7 +1300,7 @@
                     opacity: 1;
                 }
             }
-
+            
             @keyframes slideOutDown {
                 0% {
                     transform: translateY(0);
@@ -1306,7 +1311,7 @@
                     opacity: 0;
                 }
             }
-
+            
             @keyframes slideInUp {
                 0% {
                     transform: translateY(100px);
@@ -1317,7 +1322,7 @@
                     opacity: 1;
                 }
             }
-
+            
             @keyframes iconBounce {
                 0%, 20%, 50%, 80%, 100% {
                     transform: translateY(0);
@@ -1329,7 +1334,7 @@
                     transform: translateY(-5px);
                 }
             }
-
+            
             @keyframes timerWarning {
                 0%, 100% {
                     transform: scale(1);
@@ -1338,7 +1343,7 @@
                     transform: scale(1.1);
                 }
             }
-
+            
             @keyframes successPulse {
                 0% {
                     transform: scale(1);
@@ -1353,7 +1358,7 @@
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
                 }
             }
-
+            
             @keyframes healthActivate {
                 0% {
                     transform: scale(1) rotate(0deg);
@@ -1365,7 +1370,7 @@
                     transform: scale(1) rotate(0deg);
                 }
             }
-
+            
             @keyframes healthDeactivate {
                 0% {
                     transform: scale(1);
@@ -1374,7 +1379,7 @@
                     transform: scale(0.95);
                 }
             }
-
+            
             @keyframes success-animation {
                 0% {
                     transform: scale(1);
@@ -1386,7 +1391,7 @@
                     transform: scale(1);
                 }
             }
-
+            
             @keyframes toastSlideIn {
                 0% {
                     transform: translateX(400px);
@@ -1397,7 +1402,7 @@
                     opacity: 1;
                 }
             }
-
+            
             @keyframes toastSlideOut {
                 0% {
                     transform: translateX(0);
@@ -1408,7 +1413,7 @@
                     opacity: 0;
                 }
             }
-
+            
             @keyframes fade-out {
                 0% {
                     opacity: 1;
@@ -1417,36 +1422,36 @@
                     opacity: 0;
                 }
             }
-
+            
             /* 成功动画类 */
             .success-animation {
                 animation: success-animation 0.6s ease-out;
             }
-
+            
             /* 稍后提醒提示样式 */
             .snooze-toast {
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 font-size: 14px;
                 font-weight: 500;
             }
-
+            
             /* 音频控制按钮优化 */
             .audio-btn {
                 transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             }
-
+            
             .audio-btn:hover {
                 transform: scale(1.1);
             }
-
+            
             .audio-btn:active {
                 transform: scale(0.95);
             }
-
+            
             .audio-btn.playing {
                 animation: audioPulse 2s infinite;
             }
-
+            
             @keyframes audioPulse {
                 0%, 100% {
                     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
@@ -1455,7 +1460,7 @@
                     box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
                 }
             }
-
+            
             /* 音量滑块优化 */
             .volume-slider {
                 -webkit-appearance: none;
@@ -1467,11 +1472,11 @@
                 border-radius: 2px;
                 height: 4px;
             }
-
+            
             .volume-slider:hover {
                 opacity: 1;
             }
-
+            
             .volume-slider::-webkit-slider-thumb {
                 -webkit-appearance: none;
                 appearance: none;
@@ -1483,12 +1488,12 @@
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                 transition: all 0.2s;
             }
-
+            
             .volume-slider::-webkit-slider-thumb:hover {
                 transform: scale(1.2);
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             }
-
+            
             .volume-slider::-moz-range-thumb {
                 width: 16px;
                 height: 16px;
@@ -1499,42 +1504,42 @@
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                 transition: all 0.2s;
             }
-
+            
             .volume-slider::-moz-range-thumb:hover {
                 transform: scale(1.2);
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             }
-
+            
             /* 通知按钮优化 */
             .notification-btn {
                 position: relative;
                 overflow: hidden;
                 transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             }
-
+            
             .notification-btn:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             }
-
+            
             .notification-btn:active {
                 transform: translateY(0);
             }
-
+            
             .notification-btn:disabled {
                 transform: none !important;
                 cursor: not-allowed !important;
             }
-
+            
             /* 优化通知图标动画 */
             .notification-icon {
                 transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             }
-
+            
             .notification-icon:hover {
                 transform: rotate(15deg) scale(1.1);
             }
-
+            
             /* 减少动画效果（尊重用户偏好） */
             @media (prefers-reduced-motion: reduce) {
                 .health-nav-button,
