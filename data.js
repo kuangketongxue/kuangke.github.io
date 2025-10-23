@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+      {
+        id: 39,
+        date: '2025-10-23',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '读完《PPT设计的艺术》',
+            en: 'After reading "The Art of PPT Design",'
+        },
+        content: {
+            zh: '阅读16本书+。\n早起+去图书馆+读完《PPT设计的艺术》。\n学习11小时+',
+            en: 'Read 16+ books.\nEarly wake-up + visit to the library + After reading "The Art of PPT Design".\nStudied for 12+ hours'
+        },
+        highlight: {
+            zh: '阅读➡️整理➡️输出➡️检验；现象➡️原因➡️解法',
+            en: 'Read➡️Arrangement➡️output➡️Inspection; phenomenon➡️Reason➡️solution'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 3,
+        coverImage: '',
+        attachments: []
+    },
      {
         id: 38,
         date: '2025-10-22',
