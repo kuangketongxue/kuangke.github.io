@@ -410,31 +410,45 @@ class EnhancedStorageManager {
 }
 
 // ==================== 数据备份管理器 ====================
+// ==================== 数据备份管理器 ====================
 class DataBackupManager {
     static BACKUP_INTERVAL = 60000; // 1分钟备份一次
     static MAX_BACKUPS = 10; // 最多保留10个备份
     
     static init() {
-        // 立即备份一次
-        this.backupData();
-        
-        // 定期备份
-        setInterval(() => {
-            this.backupData();
-        }, this.BACKUP_INTERVAL);
-        
-        // 页面卸载前备份
-        window.addEventListener('beforeunload', () => {
-            this.backupData();
-        });
+        try {
+            // 延迟初始化，确保数据已加载
+            setTimeout(() => {
+                this.backupData();
+                // 定期备份
+                this.backupInterval = setInterval(() => {
+                    this.backupData();
+                }, this.BACKUP_INTERVAL);
+            }, 1000);
+            
+            // 页面卸载前备份
+            window.addEventListener('beforeunload', () => {
+                this.backupData();
+            });
+        } catch (error) {
+            console.error('❌ 备份系统初始化失败:', error);
+            ErrorRecoverySystem.handleError(error, 'Backup System Init');
+        }
     }
     
     static backupData() {
         try {
+            // 检查数据是否存在
+            if (!MomentsPageManager.data || !Array.isArray(MomentsPageManager.data)) {
+                console.warn('⚠️ 暂无数据需要备份');
+                return false;
+            }
+            
             const backupData = {
-                moments: MomentsPageManager.data || [],
+                moments: MomentsPageManager.data,
                 timestamp: Date.now(),
-                version: '1.0'
+                version: '1.0',
+                count: MomentsPageManager.data.length
             };
             
             const backups = this.getBackups();
@@ -445,71 +459,106 @@ class DataBackupManager {
                 backups.splice(0, backups.length - this.MAX_BACKUPS);
             }
             
-            EnhancedStorageManager.saveData('moments_backups', backups);
-            console.log('✅ 数据备份成功');
+            const success = EnhancedStorageManager.saveData('moments_backups', backups);
+            if (success) {
+                console.log('✅ 数据备份成功');
+                return true;
+            } else {
+                console.error('❌ 数据备份保存失败');
+                return false;
+            }
         } catch (error) {
             console.error('❌ 数据备份失败:', error);
+            ErrorRecoverySystem.handleError(error, 'Data Backup');
+            return false;
         }
     }
     
     static getBackups() {
         try {
-            return EnhancedStorageManager.loadData('moments_backups') || [];
+            const backups = EnhancedStorageManager.loadData('moments_backups');
+            return Array.isArray(backups) ? backups : [];
         } catch (error) {
+            console.error('❌ 读取备份失败:', error);
             return [];
         }
     }
     
     static restoreFromBackup(backupIndex = -1) {
-        const backups = this.getBackups();
-        if (backups.length === 0) {
+        try {
+            const backups = this.getBackups();
+            if (backups.length === 0) {
+                NotificationManager.show('没有可用的备份', 'warning');
+                return false;
+            }
+            
+            const backup = backups[backupIndex === -1 ? backups.length - 1 : backupIndex];
+            if (backup && backup.moments && Array.isArray(backup.moments)) {
+                // 验证备份数据
+                if (DataValidator.validateMomentsData(backup.moments)) {
+                    MomentsPageManager.data = backup.moments;
+                    const success = EnhancedStorageManager.saveData(STORAGE_KEYS.moments, MomentsPageManager.data);
+                    if (success) {
+                        NotificationManager.show('数据恢复成功', 'success');
+                        MomentsPageManager.paginationManager?.render();
+                        return true;
+                    }
+                } else {
+                    NotificationManager.show('备份数据格式错误', 'error');
+                }
+            }
+            return false;
+        } catch (error) {
+            console.error('❌ 恢复备份失败:', error);
+            NotificationManager.show('恢复备份失败', 'error');
             return false;
         }
-        
-        const backup = backups[backupIndex === -1 ? backups.length - 1 : backupIndex];
-        if (backup && backup.moments) {
-            MomentsPageManager.data = backup.moments;
-            EnhancedStorageManager.saveData(STORAGE_KEYS.moments, MomentsPageManager.data);
-            NotificationManager.show('数据恢复成功', 'success');
-            return true;
-        }
-        
-        return false;
     }
     
     static showRestoreDialog() {
-        const backups = this.getBackups();
-        if (backups.length === 0) {
-            NotificationManager.show('没有可用的备份', 'warning');
-            return;
-        }
-        
-        const modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.style.display = 'block';
-        modal.innerHTML = `
-            <div class="modal-content" style="max-width: 600px;">
-                <h3>选择备份恢复</h3>
-                <div class="backup-list" style="max-height: 400px; overflow-y: auto;">
-                    ${backups.map((backup, index) => {
-                        const date = new Date(backup.timestamp).toLocaleString();
-                        return `
-                            <div class="backup-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;">
-                                <span>${date} (${backup.moments.length}条数据)</span>
-                                <button onclick="DataBackupManager.restoreFromBackup(${index}) && this.closest('.modal').remove()" style="padding: 5px 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                                    恢复此备份
-                                </button>
-                            </div>
-                        `;
-                    }).join('')}
+        try {
+            const backups = this.getBackups();
+            if (backups.length === 0) {
+                NotificationManager.show('没有可用的备份', 'warning');
+                return;
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'block';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 600px;">
+                    <h3>选择备份恢复</h3>
+                    <div class="backup-list" style="max-height: 400px; overflow-y: auto;">
+                        ${backups.map((backup, index) => {
+                            if (!backup || !backup.timestamp) return '';
+                            const date = new Date(backup.timestamp).toLocaleString();
+                            return `
+                                <div class="backup-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;">
+                                    <span>${date} (${backup.count || 0}条数据)</span>
+                                    <button onclick="DataBackupManager.restoreFromBackup(${index})" style="padding: 5px 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                        恢复此备份
+                                    </button>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    <button onclick="this.closest('.modal').remove()" style="margin-top: 10px; padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                        关闭
+                    </button>
                 </div>
-                <button onclick="this.closest('.modal').remove()" style="margin-top: 10px; padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                    关闭
-                </button>
-            </div>
-        `;
-        
-        document.body.appendChild(modal);
+            `;
+            document.body.appendChild(modal);
+        } catch (error) {
+            console.error('❌ 显示恢复对话框失败:', error);
+            NotificationManager.show('显示备份恢复对话框失败', 'error');
+        }
+    }
+    
+    static cleanup() {
+        if (this.backupInterval) {
+            clearInterval(this.backupInterval);
+        }
     }
 }
 
