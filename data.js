@@ -1112,6 +1112,16 @@ function getMomentsStats(moments) {
  * @type {Array<Object>}
  */
 let momentsData = [
+      {
+        id: 28,
+        content: '',
+        value: 0,
+        category: '幽默段子',
+        time: '2025-10-23 21:59',
+        image: 'images/laowang.jpg',
+        likes: 0,
+        comments: []
+    },     
        {
         id: 27,
         content: '用特斯拉股票计价，你是要马斯克给你打工还是去吃一个不知道老板给的甚至是预制菜',
