@@ -18,8 +18,6 @@
             position: relative;
             /* 🌟 在这里替换您的星空背景图片链接 🌟 */
             background: url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920') center/cover no-repeat fixed;
-            /* 如果不使用图片，下面的渐变背景也很美 */
-            /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
         }
 
         /* 星空粒子效果 */
@@ -133,7 +131,77 @@
         .subtitle {
             color: rgba(255, 255, 255, 0.9);
             font-size: 16px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+        }
+
+        /* 时间设置部分 */
+        .time-setting {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .time-setting-label {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .time-inputs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .time-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .time-input-group label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+        }
+
+        .time-input-group input {
+            width: 70px;
+            padding: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .time-input-group input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .time-input-group input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .time-display {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 14px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
         }
 
         /* 计时器显示 */
@@ -201,7 +269,7 @@
             margin-right: 10px;
         }
 
-        .btn-start:hover {
+        .btn-start:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
@@ -211,9 +279,23 @@
             color: white;
         }
 
-        .btn-stop:hover {
+        .btn-stop:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-reset {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 30px;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        .btn-reset:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
         }
 
         .btn:disabled {
@@ -356,6 +438,14 @@
                 padding: 12px 30px;
                 font-size: 16px;
             }
+
+            .time-inputs {
+                flex-direction: column;
+            }
+
+            .time-input-group input {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -368,7 +458,7 @@
 
     <!-- 返回按钮 -->
     <!-- 🔗 在 href 中填写您要返回的页面地址 🔗 -->
-    <a href="https://kuangketongxue.github.io/kuangke.github.io/index.html" class="back-button" id="backButton">
+    <a href="#" class="back-button" id="backButton">
         <span>←</span>
         <span>返回</span>
     </a>
@@ -377,11 +467,31 @@
     <div class="container">
         <div class="card">
             <h1>👁️ 眼保健操提醒器</h1>
-            <p class="subtitle">每小时温馨提醒，呵护您的眼睛健康</p>
+            <p class="subtitle">每隔一段时间温馨提醒，呵护您的眼睛健康</p>
             
+            <!-- 时间设置部分 -->
+            <div class="time-setting">
+                <div class="time-setting-label">⏰ 自定义提醒间隔时间</div>
+                <div class="time-inputs">
+                    <div class="time-input-group">
+                        <label for="hourInput">小时</label>
+                        <input type="number" id="hourInput" min="0" max="23" value="1" disabled>
+                    </div>
+                    <div class="time-input-group">
+                        <label for="minuteInput">分钟</label>
+                        <input type="number" id="minuteInput" min="0" max="59" value="0" disabled>
+                    </div>
+                </div>
+                <div class="time-display" id="timeDisplay">
+                    总计间隔时间：<strong>1小时 0分钟</strong>
+                </div>
+                <button class="btn btn-reset" id="editBtn" onclick="enableEdit()">编辑时间</button>
+            </div>
+
+            <!-- 计时器显示 -->
             <div class="timer-display">
                 <div class="timer-label">距离下次提醒</div>
-                <div class="timer" id="timer">60:00</div>
+                <div class="timer" id="timer">01:00:00</div>
                 <div class="status" id="status" style="display: none;">
                     <div class="status-dot"></div>
                     <span>计时运行中</span>
@@ -401,7 +511,7 @@
             <div class="modal-icon">👀✨</div>
             <h2>该做眼保健操啦！</h2>
             <p class="modal-text">
-                已经持续用眼一小时了，休息一下，做做眼保健操吧！<br>
+                已经持续用眼一段时间了，休息一下，做做眼保健操吧！<br>
                 保护视力，从现在开始 💚
             </p>
             
@@ -420,7 +530,7 @@
                 </ol>
             </div>
 
-            <button class="modal-close" onclick="closeModal()">我知道了</button>
+            <button class="modal-close" onclick="closeModal()">我知道了，继续工作</button>
         </div>
     </div>
 
@@ -428,15 +538,18 @@
     <!-- 🎵 在 src 中填写您的音乐文件地址 🎵 -->
     <audio id="alertSound" preload="auto">
         <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
-        <!-- 或者使用本地文件：<source src="alert.mp3" type="audio/mpeg"> -->
     </audio>
 
     <script>
         let countdownInterval;
         let remainingSeconds;
         let startTime;
-        const HOUR_IN_SECONDS = 3600; // 1小时 = 3600秒
+        let customHours = 1;
+        let customMinutes = 0;
+        let totalSeconds = 3600; // 默认1小时
+
         const STORAGE_KEY = 'eyeExerciseTimer';
+        const CONFIG_KEY = 'eyeExerciseConfig';
 
         // 生成星空粒子
         function createStars() {
@@ -451,12 +564,90 @@
             }
         }
 
+        // 从输入框读取时间配置
+        function getTimeFromInput() {
+            const hours = parseInt(document.getElementById('hourInput').value) || 0;
+            const minutes = parseInt(document.getElementById('minuteInput').value) || 0;
+            
+            // 验证数值
+            if (hours < 0) document.getElementById('hourInput').value = 0;
+            if (minutes < 0) document.getElementById('minuteInput').value = 0;
+            if (minutes > 59) document.getElementById('minuteInput').value = 59;
+            
+            customHours = parseInt(document.getElementById('hourInput').value) || 0;
+            customMinutes = parseInt(document.getElementById('minuteInput').value) || 0;
+            
+            // 计算总秒数
+            totalSeconds = customHours * 3600 + customMinutes * 60;
+            
+            // 至少要1分钟
+            if (totalSeconds < 60) {
+                totalSeconds = 60;
+                document.getElementById('minuteInput').value = 1;
+                customMinutes = 1;
+            }
+            
+            return totalSeconds;
+        }
+
+        // 更新时间显示
+        function updateTimeDisplay() {
+            getTimeFromInput();
+            const display = `总计间隔时间：<strong>${customHours}小时 ${customMinutes}分钟</strong>`;
+            document.getElementById('timeDisplay').innerHTML = display;
+        }
+
+        // 启用编辑
+        function enableEdit() {
+            const hourInput = document.getElementById('hourInput');
+            const minuteInput = document.getElementById('minuteInput');
+            const editBtn = document.getElementById('editBtn');
+            
+            if (hourInput.disabled) {
+                hourInput.disabled = false;
+                minuteInput.disabled = false;
+                editBtn.textContent = '保存设置';
+            } else {
+                updateTimeDisplay();
+                hourInput.disabled = true;
+                minuteInput.disabled = true;
+                editBtn.textContent = '编辑时间';
+                saveConfig();
+            }
+        }
+
+        // 保存配置
+        function saveConfig() {
+            const config = {
+                hours: customHours,
+                minutes: customMinutes,
+                totalSeconds: totalSeconds
+            };
+            localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+        }
+
+        // 加载配置
+        function loadConfig() {
+            const savedConfig = localStorage.getItem(CONFIG_KEY);
+            if (savedConfig) {
+                const config = JSON.parse(savedConfig);
+                customHours = config.hours || 1;
+                customMinutes = config.minutes || 0;
+                totalSeconds = config.totalSeconds || 3600;
+                
+                document.getElementById('hourInput').value = customHours;
+                document.getElementById('minuteInput').value = customMinutes;
+                updateTimeDisplay();
+            }
+        }
+
         // 保存计时器状态
         function saveTimerState() {
             if (startTime) {
                 const state = {
                     startTime: startTime,
-                    remainingSeconds: remainingSeconds
+                    remainingSeconds: remainingSeconds,
+                    totalSeconds: totalSeconds
                 };
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
             }
@@ -470,12 +661,16 @@
                 const now = Date.now();
                 const elapsed = Math.floor((now - state.startTime) / 1000);
                 remainingSeconds = state.remainingSeconds - elapsed;
+                totalSeconds = state.totalSeconds;
 
                 if (remainingSeconds > 0) {
                     startTime = state.startTime;
-                    startBtn.disabled = true;
-                    stopBtn.disabled = false;
+                    document.getElementById('startBtn').disabled = true;
+                    document.getElementById('stopBtn').disabled = false;
                     document.getElementById('status').style.display = 'flex';
+                    document.getElementById('editBtn').disabled = true;
+                    document.getElementById('hourInput').disabled = true;
+                    document.getElementById('minuteInput').disabled = true;
                     updateDisplay();
                     countdownInterval = setInterval(countdown, 1000);
                 } else {
@@ -494,10 +689,15 @@
 
         // 开始计时
         function startTimer() {
-            remainingSeconds = HOUR_IN_SECONDS;
+            getTimeFromInput();
+            remainingSeconds = totalSeconds;
             startTime = Date.now();
-            startBtn.disabled = true;
-            stopBtn.disabled = false;
+            
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+            document.getElementById('editBtn').disabled = true;
+            document.getElementById('hourInput').disabled = true;
+            document.getElementById('minuteInput').disabled = true;
             document.getElementById('status').style.display = 'flex';
             
             updateDisplay();
@@ -509,11 +709,14 @@
         function stopTimer() {
             clearInterval(countdownInterval);
             clearTimerState();
-            remainingSeconds = HOUR_IN_SECONDS;
+            getTimeFromInput();
+            remainingSeconds = totalSeconds;
             startTime = null;
             updateDisplay();
-            startBtn.disabled = false;
-            stopBtn.disabled = true;
+            
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('editBtn').disabled = false;
             document.getElementById('status').style.display = 'none';
         }
 
@@ -527,9 +730,13 @@
                 showReminder();
                 clearTimerState();
                 startTime = null;
-                startBtn.disabled = false;
-                stopBtn.disabled = true;
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('editBtn').disabled = false;
                 document.getElementById('status').style.display = 'none';
+                getTimeFromInput();
+                remainingSeconds = totalSeconds;
+                updateDisplay();
             } else {
                 updateDisplay();
             }
@@ -537,10 +744,12 @@
 
         // 更新显示
         function updateDisplay() {
-            const minutes = Math.floor(remainingSeconds / 60);
+            const hours = Math.floor(remainingSeconds / 3600);
+            const minutes = Math.floor((remainingSeconds % 3600) / 60);
             const seconds = remainingSeconds % 60;
+            
             document.getElementById('timer').textContent = 
-                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         }
 
         // 显示提醒
@@ -568,16 +777,14 @@
             const audio = document.getElementById('alertSound');
             audio.pause();
             audio.currentTime = 0;
-            
-            // 重置计时器显示
-            remainingSeconds = HOUR_IN_SECONDS;
-            updateDisplay();
         }
 
         // 页面加载时初始化
         window.onload = function() {
             createStars();
-            remainingSeconds = HOUR_IN_SECONDS;
+            loadConfig();
+            getTimeFromInput();
+            remainingSeconds = totalSeconds;
             updateDisplay();
             restoreTimerState();
         };
@@ -586,6 +793,15 @@
         window.onbeforeunload = function() {
             saveTimerState();
         };
+
+        // 监听输入框变化（实时更新显示）
+        document.addEventListener('DOMContentLoaded', function() {
+            const hourInput = document.getElementById('hourInput');
+            const minuteInput = document.getElementById('minuteInput');
+            
+            hourInput.addEventListener('change', updateTimeDisplay);
+            minuteInput.addEventListener('change', updateTimeDisplay);
+        });
     </script>
 </body>
 </html>
