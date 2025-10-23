@@ -1118,7 +1118,7 @@ let momentsData = [
         value: 0,
         category: '幽默段子',
         time: '2025-10-23 21:59',
-        image: 'images/laowang.jpg',
+        image: 'images/88d728fe4c308de4520527786fa68d78.png',
         likes: 0,
         comments: []
     },     
