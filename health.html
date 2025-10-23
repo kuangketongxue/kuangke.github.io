@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>眼保健操提醒器 - 爱护双眼，从现在开始</title>
+    <title>眼保健操提醒器 - 关爱您的眼睛</title>
     <style>
         * {
             margin: 0;
@@ -12,49 +12,104 @@
         }
 
         body {
-            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            overflow: hidden;
             position: relative;
+            /* 🌟 在这里替换您的星空背景图片链接 🌟 */
+            background: url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920') center/cover no-repeat fixed;
+            /* 如果不使用图片，下面的渐变背景也很美 */
+            /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
         }
 
-        .back-btn {
+        /* 星空粒子效果 */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* 毛玻璃效果覆盖层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            z-index: 1;
+        }
+
+        /* 返回按钮 */
+        .back-button {
             position: fixed;
             top: 20px;
             left: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
+            z-index: 1000;
             padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            color: white;
             font-size: 16px;
-            color: #667eea;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
             text-decoration: none;
-            display: inline-block;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            background: white;
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
+        /* 主容器 */
         .container {
-            background: rgba(255, 255, 255, 0.95);
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 卡片容器 */
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
             border-radius: 30px;
-            padding: 50px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
+            padding: 50px 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
             width: 100%;
             text-align: center;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.6s ease;
         }
 
         @keyframes fadeIn {
@@ -69,114 +124,105 @@
         }
 
         h1 {
-            color: #667eea;
-            margin-bottom: 10px;
+            color: white;
             font-size: 32px;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .subtitle {
-            color: #888;
-            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.9);
             font-size: 16px;
+            margin-bottom: 40px;
         }
 
+        /* 计时器显示 */
         .timer-display {
-            font-size: 72px;
-            font-weight: bold;
-            color: #764ba2;
-            margin: 30px 0;
-            font-family: 'Arial', sans-serif;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .status {
-            font-size: 18px;
-            color: #666;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
             margin-bottom: 30px;
-            padding: 15px;
-            background: #f0f0f0;
-            border-radius: 15px;
-            display: inline-block;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
-        .status.active {
-            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        .timer-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .timer {
+            font-size: 48px;
+            font-weight: bold;
             color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            font-family: 'Courier New', monospace;
+        }
+
+        /* 状态指示器 */
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4ade80;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
-        .controls {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        button {
+        /* 按钮 */
+        .btn {
             padding: 15px 40px;
             font-size: 18px;
             border: none;
-            border-radius: 25px;
+            border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .start-btn {
+        .btn-start {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            margin-right: 10px;
         }
 
-        .start-btn:hover {
-            transform: translateY(-3px);
+        .btn-start:hover {
+            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .pause-btn {
+        .btn-stop {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
         }
 
-        .pause-btn:hover {
-            transform: translateY(-3px);
+        .btn-stop:hover {
+            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
         }
 
-        .reset-btn {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-        }
-
-        .reset-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
-        }
-
-        button:disabled {
+        .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
         }
 
-        .info {
-            margin-top: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            border-radius: 15px;
-            color: #333;
-            line-height: 1.8;
-        }
-
+        /* 提醒弹窗 */
         .modal {
             display: none;
             position: fixed;
@@ -184,25 +230,23 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
             animation: fadeIn 0.3s ease;
         }
 
-        .modal.show {
-            display: flex;
-        }
-
         .modal-content {
-            background: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 30px;
             padding: 40px;
-            border-radius: 20px;
             max-width: 500px;
             width: 90%;
             text-align: center;
-            animation: slideUp 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s ease;
+            position: relative;
         }
 
         @keyframes slideUp {
@@ -216,364 +260,332 @@
             }
         }
 
-        .modal-content h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-
-        .modal-content p {
-            color: #666;
-            margin-bottom: 15px;
-            line-height: 1.8;
-        }
-
-        .modal-content .tips {
-            text-align: left;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-
-        .modal-content .tips li {
-            margin: 10px 0;
-            color: #555;
-        }
-
-        .modal-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .modal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .link-btn {
-            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
-        }
-
-        .eye-icon {
+        .modal-icon {
             font-size: 60px;
             margin-bottom: 20px;
         }
 
+        .modal h2 {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .modal-text {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .modal-link {
+            display: inline-block;
+            padding: 15px 40px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-close {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* 眼保健操细节 */
+        .exercise-details {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .exercise-details h3 {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .exercise-details ol {
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 2;
+            padding-left: 20px;
+        }
+
+        .exercise-details li {
+            margin-bottom: 8px;
+        }
+
+        /* 响应式设计 */
         @media (max-width: 600px) {
-            .container {
+            .card {
                 padding: 30px 20px;
             }
-
+            
             h1 {
                 font-size: 24px;
             }
-
-            .timer-display {
-                font-size: 48px;
+            
+            .timer {
+                font-size: 36px;
             }
-
-            button {
-                padding: 12px 25px;
+            
+            .btn {
+                padding: 12px 30px;
                 font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- 星空粒子效果 -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- 毛玻璃效果覆盖层 -->
+    <div class="overlay"></div>
+
     <!-- 返回按钮 -->
-    <a href="" class="back-btn">← 返回</a>
+    <!-- 🔗 在 href 中填写您要返回的页面地址 🔗 -->
+    <a href="#" class="back-button" id="backButton">
+        <span>←</span>
+        <span>返回</span>
+    </a>
 
     <!-- 主容器 -->
     <div class="container">
-        <h1>👁️ 眼保健操提醒器</h1>
-        <p class="subtitle">每小时一次，给眼睛最温柔的呵护</p>
+        <div class="card">
+            <h1>👁️ 眼保健操提醒器</h1>
+            <p class="subtitle">每小时温馨提醒，呵护您的眼睛健康</p>
+            
+            <div class="timer-display">
+                <div class="timer-label">距离下次提醒</div>
+                <div class="timer" id="timer">60:00</div>
+                <div class="status" id="status" style="display: none;">
+                    <div class="status-dot"></div>
+                    <span>计时运行中</span>
+                </div>
+            </div>
 
-        <div class="timer-display" id="timerDisplay">00:00:00</div>
-
-        <div class="status" id="status">等待开始...</div>
-
-        <div class="controls">
-            <button class="start-btn" id="startBtn">开始守护</button>
-            <button class="pause-btn" id="pauseBtn" disabled>暂停</button>
-            <button class="reset-btn" id="resetBtn">重置</button>
-        </div>
-
-        <div class="info">
-            <p>💡 <strong>温馨提示：</strong></p>
-            <p>每工作1小时，系统会自动提醒您做眼保健操</p>
-            <p>保护视力，从现在开始！即使刷新页面，计时也不会丢失哦~</p>
+            <div>
+                <button class="btn btn-start" id="startBtn" onclick="startTimer()">开始计时</button>
+                <button class="btn btn-stop" id="stopBtn" onclick="stopTimer()" disabled>停止计时</button>
+            </div>
         </div>
     </div>
 
     <!-- 提醒弹窗 -->
-    <div class="modal" id="reminderModal">
+    <div class="modal" id="modal">
         <div class="modal-content">
-            <div class="eye-icon">👀</div>
+            <div class="modal-icon">👀✨</div>
             <h2>该做眼保健操啦！</h2>
-            <p><strong>您已经连续用眼1小时了</strong></p>
-            <p>长时间用眼容易导致眼疲劳，让我们一起来放松一下吧！</p>
+            <p class="modal-text">
+                已经持续用眼一小时了，休息一下，做做眼保健操吧！<br>
+                保护视力，从现在开始 💚
+            </p>
             
-            <div class="tips">
-                <p><strong>📋 眼保健操小贴士：</strong></p>
-                <ul>
-                    <li>🧘 找个舒适的姿势坐好</li>
-                    <li>✨ 闭上眼睛，深呼吸3次</li>
-                    <li>👆 按摩眼周穴位（睛明、攒竹、太阳穴）</li>
-                    <li>👁️ 做眼球运动（上下左右转动）</li>
-                    <li>🌳 远眺窗外或绿植5分钟</li>
-                    <li>💧 滴眼药水或眨眼20次</li>
-                </ul>
+            <a href="https://www.bilibili.com/video/BV1Qx411q7yv/" target="_blank" class="modal-link">
+                🎵 点击观看眼保健操视频
+            </a>
+
+            <div class="exercise-details">
+                <h3>📋 眼保健操要点提醒</h3>
+                <ol>
+                    <li><strong>轻闭双眼</strong>：放松面部肌肉，保持呼吸平稳</li>
+                    <li><strong>按揉穴位</strong>：按揉睛明、攒竹、太阳、四白等穴位</li>
+                    <li><strong>力度适中</strong>：以感到酸胀为宜，不要用力过猛</li>
+                    <li><strong>持续时间</strong>：每个动作做8拍，完整做完约5分钟</li>
+                    <li><strong>远眺放松</strong>：做完后远眺窗外，放松眼睛</li>
+                </ol>
             </div>
 
-            <button class="modal-btn link-btn" onclick="window.open('https://www.bilibili.com/video/BV1ex411e7Yp', '_blank')">
-                🎵 跟着视频做眼保健操
-            </button>
-            <button class="modal-btn" onclick="closeModal()">
-                ✅ 知道了，稍后再做
-            </button>
+            <button class="modal-close" onclick="closeModal()">我知道了</button>
         </div>
     </div>
 
-    <!-- 音频元素 -->
-    <audio id="reminderAudio" preload="auto">
-        <!-- 使用在线音乐URL，或者可以替换为您自己的音频文件 -->
-        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTcIF2S76+qeSxUMU6/m77BdGAU7k9ryy30oBSh+zPDglkMKE1q36+yoVxgLTKXh8bhjHgU2jdXx0YU1Bxtrt+zrpFIXC02k4PK8aB8GM5DY88yBLwclfsrw3pJBCRJYtefur14cCkmh4PO1ZB4FN4/W8dGFNQcbbb3u66VUEQ1Npe" type="audio/wav">
+    <!-- 提醒音效 -->
+    <!-- 🎵 在 src 中填写您的音乐文件地址 🎵 -->
+    <audio id="alertSound" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+        <!-- 或者使用本地文件：<source src="alert.mp3" type="audio/mpeg"> -->
     </audio>
 
     <script>
-        // 全局变量
-        let timerInterval = null;
-        let startTime = null;
-        let pausedTime = 0;
-        let isPaused = false;
-        const HOUR_IN_MS = 60 * 60 * 1000; // 1小时
-        // const HOUR_IN_MS = 10 * 1000; // 测试用：10秒
+        let countdownInterval;
+        let remainingSeconds;
+        let startTime;
+        const HOUR_IN_SECONDS = 3600; // 1小时 = 3600秒
+        const STORAGE_KEY = 'eyeExerciseTimer';
 
-        // DOM元素
-        const timerDisplay = document.getElementById('timerDisplay');
-        const status = document.getElementById('status');
-        const startBtn = document.getElementById('startBtn');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const reminderModal = document.getElementById('reminderModal');
-        const reminderAudio = document.getElementById('reminderAudio');
+        // 生成星空粒子
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
 
-        // 初始化：从localStorage恢复状态
-        function init() {
-            const savedState = localStorage.getItem('eyeExerciseTimer');
+        // 保存计时器状态
+        function saveTimerState() {
+            if (startTime) {
+                const state = {
+                    startTime: startTime,
+                    remainingSeconds: remainingSeconds
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            }
+        }
+
+        // 恢复计时器状态
+        function restoreTimerState() {
+            const savedState = localStorage.getItem(STORAGE_KEY);
             if (savedState) {
                 const state = JSON.parse(savedState);
-                if (state.isRunning) {
+                const now = Date.now();
+                const elapsed = Math.floor((now - state.startTime) / 1000);
+                remainingSeconds = state.remainingSeconds - elapsed;
+
+                if (remainingSeconds > 0) {
                     startTime = state.startTime;
-                    pausedTime = state.pausedTime || 0;
-                    isPaused = state.isPaused || false;
-                    
-                    if (!isPaused) {
-                        startTimer(true);
-                    } else {
-                        updateDisplay(pausedTime);
-                        updateStatus('已暂停');
-                        pauseBtn.disabled = false;
-                        startBtn.textContent = '继续';
-                        startBtn.disabled = false;
-                    }
+                    startBtn.disabled = true;
+                    stopBtn.disabled = false;
+                    document.getElementById('status').style.display = 'flex';
+                    updateDisplay();
+                    countdownInterval = setInterval(countdown, 1000);
+                } else {
+                    // 如果时间已到，触发提醒
+                    showReminder();
+                    clearTimerState();
                 }
             }
         }
 
-        // 格式化时间显示
-        function formatTime(ms) {
-            const totalSeconds = Math.floor(ms / 1000);
-            const hours = Math.floor(totalSeconds / 3600);
-            const minutes = Math.floor((totalSeconds % 3600) / 60);
-            const seconds = totalSeconds % 60;
-            return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-        }
-
-        function pad(num) {
-            return num.toString().padStart(2, '0');
-        }
-
-        // 更新显示
-        function updateDisplay(elapsed) {
-            timerDisplay.textContent = formatTime(elapsed);
-        }
-
-        // 更新状态
-        function updateStatus(text) {
-            status.textContent = text;
-            if (text.includes('运行中')) {
-                status.classList.add('active');
-            } else {
-                status.classList.remove('active');
-            }
-        }
-
-        // 保存状态到localStorage
-        function saveState(isRunning) {
-            const state = {
-                isRunning: isRunning,
-                startTime: startTime,
-                pausedTime: pausedTime,
-                isPaused: isPaused
-            };
-            localStorage.setItem('eyeExerciseTimer', JSON.stringify(state));
+        // 清除计时器状态
+        function clearTimerState() {
+            localStorage.removeItem(STORAGE_KEY);
+            startTime = null;
         }
 
         // 开始计时
-        function startTimer(isResuming = false) {
-            if (!isResuming) {
-                startTime = Date.now() - pausedTime;
-            }
-            
-            isPaused = false;
+        function startTimer() {
+            remainingSeconds = HOUR_IN_SECONDS;
+            startTime = Date.now();
             startBtn.disabled = true;
-            pauseBtn.disabled = false;
-            resetBtn.disabled = false;
-            startBtn.textContent = '运行中...';
+            stopBtn.disabled = false;
+            document.getElementById('status').style.display = 'flex';
             
-            updateStatus('⏰ 计时运行中，请专注工作~');
-            saveState(true);
-
-            timerInterval = setInterval(() => {
-                const elapsed = Date.now() - startTime;
-                updateDisplay(elapsed);
-
-                // 检查是否到达1小时
-                if (elapsed >= HOUR_IN_MS && elapsed < HOUR_IN_MS + 1000) {
-                    showReminder();
-                    playSound();
-                    // 重置计时器，开始下一个小时
-                    startTime = Date.now();
-                    saveState(true);
-                }
-            }, 100);
+            updateDisplay();
+            saveTimerState();
+            countdownInterval = setInterval(countdown, 1000);
         }
 
-        // 暂停计时
-        function pauseTimer() {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                pausedTime = Date.now() - startTime;
-                isPaused = true;
-                
-                startBtn.disabled = false;
-                pauseBtn.disabled = true;
-                startBtn.textContent = '继续';
-                
-                updateStatus('已暂停');
-                saveState(true);
-            }
-        }
-
-        // 重置计时
-        function resetTimer() {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-            
+        // 停止计时
+        function stopTimer() {
+            clearInterval(countdownInterval);
+            clearTimerState();
+            remainingSeconds = HOUR_IN_SECONDS;
             startTime = null;
-            pausedTime = 0;
-            isPaused = false;
-            
-            updateDisplay(0);
-            updateStatus('等待开始...');
-            
+            updateDisplay();
             startBtn.disabled = false;
-            pauseBtn.disabled = true;
-            resetBtn.disabled = false;
-            startBtn.textContent = '开始守护';
-            
-            localStorage.removeItem('eyeExerciseTimer');
+            stopBtn.disabled = true;
+            document.getElementById('status').style.display = 'none';
         }
 
-        // 显示提醒弹窗
+        // 倒计时逻辑
+        function countdown() {
+            remainingSeconds--;
+            saveTimerState();
+            
+            if (remainingSeconds <= 0) {
+                clearInterval(countdownInterval);
+                showReminder();
+                clearTimerState();
+                startTime = null;
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                document.getElementById('status').style.display = 'none';
+            } else {
+                updateDisplay();
+            }
+        }
+
+        // 更新显示
+        function updateDisplay() {
+            const minutes = Math.floor(remainingSeconds / 60);
+            const seconds = remainingSeconds % 60;
+            document.getElementById('timer').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // 显示提醒
         function showReminder() {
-            reminderModal.classList.add('show');
+            document.getElementById('modal').style.display = 'flex';
+            playAlert();
+        }
+
+        // 播放提醒音效（10秒）
+        function playAlert() {
+            const audio = document.getElementById('alertSound');
+            audio.currentTime = 0;
+            audio.play();
+            
+            // 10秒后停止播放
+            setTimeout(() => {
+                audio.pause();
+                audio.currentTime = 0;
+            }, 10000);
         }
 
         // 关闭弹窗
         function closeModal() {
-            reminderModal.classList.remove('show');
-            stopSound();
+            document.getElementById('modal').style.display = 'none';
+            const audio = document.getElementById('alertSound');
+            audio.pause();
+            audio.currentTime = 0;
+            
+            // 重置计时器显示
+            remainingSeconds = HOUR_IN_SECONDS;
+            updateDisplay();
         }
-
-        // 播放提醒音
-        function playSound() {
-            // 使用Web Audio API生成简单的提示音
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            let soundDuration = 10; // 10秒
-            let currentTime = 0;
-
-            const playBeep = () => {
-                if (currentTime >= soundDuration) return;
-
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-
-                oscillator.frequency.value = 800;
-                oscillator.type = 'sine';
-
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.5);
-
-                currentTime += 1;
-                setTimeout(playBeep, 1000);
-            };
-
-            playBeep();
-        }
-
-        // 停止声音
-        function stopSound() {
-            // 声音会自动停止
-        }
-
-        // 事件监听
-        startBtn.addEventListener('click', () => {
-            if (isPaused) {
-                startTimer(true);
-            } else {
-                startTimer(false);
-            }
-        });
-
-        pauseBtn.addEventListener('click', pauseTimer);
-        resetBtn.addEventListener('click', resetTimer);
-
-        // 点击弹窗外部关闭
-        reminderModal.addEventListener('click', (e) => {
-            if (e.target === reminderModal) {
-                closeModal();
-            }
-        });
 
         // 页面加载时初始化
-        window.addEventListener('load', init);
+        window.onload = function() {
+            createStars();
+            remainingSeconds = HOUR_IN_SECONDS;
+            updateDisplay();
+            restoreTimerState();
+        };
 
-        // 页面卸载时保存状态
-        window.addEventListener('beforeunload', () => {
-            if (timerInterval) {
-                pausedTime = Date.now() - startTime;
-                saveState(true);
-            }
-        });
+        // 页面卸载前保存状态
+        window.onbeforeunload = function() {
+            saveTimerState();
+        };
     </script>
 </body>
 </html>
