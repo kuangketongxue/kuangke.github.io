@@ -8,269 +8,630 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 基础样式继承自参考页面 */
-        .header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 15px 0;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-        .logo {
-            color: white;
-            font-size: 1.8em;
-            font-weight: bold;
-            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
-        }
-        .header-left a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            padding: 8px 15px;
-            border-radius: 20px;
-        }
-        .header-left a:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .controls {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .theme-toggle {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        /* 星空背景 */
-        body {
+        /* ===== 全局样式优化 ===== */
+        * {
             margin: 0;
             padding: 0;
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-gradient: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.75);
+            --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.2);
+            --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.4);
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
             background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #2d3561 100%);
-            color: white;
-            position: relative;
+            color: var(--text-primary);
             overflow-x: hidden;
+            position: relative;
         }
-        /* 星空动画效果 */
-        .stars {
+
+        /* ===== Canvas星空背景（性能优化）===== */
+        #starfield {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
             z-index: 0;
+            pointer-events: none;
         }
-        .star {
+
+        /* ===== 头部导航优化 ===== */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 12px 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.scrolled {
+            background: rgba(26, 31, 58, 0.95);
+            box-shadow: var(--shadow-md);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .logo {
+            font-size: 1.6em;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .header-left a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95em;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-left a::before {
+            content: '';
             position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--glass-bg);
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .header-left a:hover::before {
+            left: 0;
+        }
+
+        .header-left a:hover {
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1em;
+        }
+
+        .theme-toggle:hover {
+            background: var(--glass-border);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* ===== 返回按钮优化 ===== */
+        .back-button {
+            position: fixed;
+            top: 85px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-gradient);
+            color: white;
             border-radius: 50%;
-            animation: twinkle 3s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            text-decoration: none;
         }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
+
+        .back-button:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: var(--shadow-glow);
         }
-        /* 眼保健操页面容器 */
+
+        .back-button:active {
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        /* ===== 主容器优化 ===== */
         .eye-care-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 100px auto 50px;
-            padding: 40px;
+            padding: 40px 20px;
             position: relative;
             z-index: 1;
         }
-        /* 主标题样式 */
+
+        /* ===== 页面标题优化 ===== */
         .page-title {
             text-align: center;
             margin-bottom: 50px;
-            animation: fadeInDown 1s ease;
+            animation: fadeInDown 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .page-title h1 {
-            font-size: 3em;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-size: 3.2em;
+            background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 15px;
-            text-shadow: 0 2px 20px rgba(102, 126, 234, 0.3);
+            font-weight: 800;
+            letter-spacing: 2px;
+            filter: drop-shadow(0 4px 20px rgba(102, 126, 234, 0.3));
         }
+
         .page-title p {
-            font-size: 1.2em;
-            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.3em;
+            color: var(--text-secondary);
+            font-weight: 300;
         }
-        /* 计时器显示区域 */
+
+        /* ===== 计时器显示区域优化 ===== */
         .timer-display {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
             border-radius: 30px;
-            padding: 40px;
+            padding: 50px 40px;
             margin-bottom: 40px;
             text-align: center;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 1.5s ease;
+            box-shadow: var(--shadow-lg);
+            animation: fadeIn 1s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
+
+        .timer-display::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         .timer-screen {
-            font-size: 4em;
-            font-weight: bold;
-            color: #667eea;
-            text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            font-size: 5em;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 30px;
             font-family: 'Courier New', monospace;
-            letter-spacing: 5px;
+            letter-spacing: 8px;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 0 25px rgba(102, 126, 234, 0.6));
+            transition: all 0.3s ease;
         }
+
+        .timer-screen.pulse {
+            animation: pulse 1s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* 进度环 */
+        .progress-ring {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke: var(--glass-border);
+            stroke-width: 8;
+        }
+
+        .progress-ring-progress {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .progress-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
         .next-reminder {
-            font-size: 1.2em;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 20px;
+            font-size: 1.3em;
+            color: var(--text-primary);
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 500;
         }
-        /* 控制按钮区域 */
+
+        .next-reminder i {
+            animation: ring 2s ease-in-out infinite;
+        }
+
+        @keyframes ring {
+            0%, 100% { transform: rotate(0deg); }
+            10%, 30% { transform: rotate(-10deg); }
+            20%, 40% { transform: rotate(10deg); }
+        }
+
+        /* ===== 控制按钮优化 ===== */
         .control-panel {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
         }
+
         .control-btn {
-            padding: 15px 30px;
+            padding: 16px 35px;
             border: none;
-            border-radius: 25px;
+            border-radius: 30px;
             font-size: 1.1em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
         }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .control-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
         .start-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             color: white;
         }
+
         .start-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: var(--shadow-glow);
         }
+
         .pause-btn {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: var(--secondary-gradient);
             color: white;
         }
+
         .pause-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 30px rgba(240, 147, 251, 0.4);
         }
+
         .reset-btn {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: var(--accent-gradient);
             color: white;
         }
+
         .reset-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 30px rgba(79, 172, 254, 0.4);
         }
-        /* 设置区域 */
+
+        /* ===== 设置面板优化 ===== */
         .settings-panel {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 35px;
             margin-bottom: 40px;
-            animation: fadeInUp 2s ease;
+            animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-md);
         }
+
         .settings-title {
-            font-size: 1.5em;
-            margin-bottom: 20px;
+            font-size: 1.6em;
+            margin-bottom: 25px;
             text-align: center;
-            color: #667eea;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
+
         .setting-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
         }
+
+        .setting-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--glass-border);
+            transform: translateX(5px);
+        }
+
         .setting-label {
             font-size: 1.1em;
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
         }
+
+        .setting-label i {
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
         .setting-input {
-            width: 80px;
-            padding: 8px 15px;
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
+            width: 90px;
+            padding: 10px 18px;
+            border: 2px solid var(--glass-border);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
             color: white;
-            font-size: 1em;
+            font-size: 1.1em;
             text-align: center;
+            transition: all 0.3s ease;
+            font-weight: 600;
         }
+
         .setting-input:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
         }
-        /* 音频设置 */
+
+        /* 音量控制 */
         .audio-settings {
             display: flex;
             align-items: center;
             gap: 15px;
+            flex-wrap: wrap;
         }
-        .test-audio-btn {
-            padding: 8px 15px;
-            background: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%);
-            border: none;
-            border-radius: 15px;
-            color: white;
-            font-size: 0.9em;
-            cursor: pointer;
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 120px;
+            height: 6px;
+            border-radius: 5px;
+            background: var(--glass-border);
+            outline: none;
             transition: all 0.3s ease;
+        }
+
+        input[type="range"]:hover {
+            background: rgba(102, 126, 234, 0.3);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+        }
+
+        .test-audio-btn {
+            padding: 10px 18px;
+            background: var(--success-gradient);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
         }
+
         .test-audio-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 201, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 201, 255, 0.4);
         }
+
         .audio-status {
             font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.7);
-            padding: 5px 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
-        /* 提醒弹窗 */
+
+        .audio-error {
+            color: #ff6b6b;
+            font-size: 0.9em;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 10px;
+            display: none;
+            border-left: 3px solid #ff6b6b;
+        }
+
+        /* ===== 统计面板 ===== */
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            animation: fadeInUp 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .stat-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* ===== 提醒弹窗优化 ===== */
         .reminder-modal {
             display: none;
             position: fixed;
@@ -278,148 +639,167 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
             z-index: 2000;
             animation: fadeIn 0.3s ease;
         }
+
         .reminder-content {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 30px;
-            padding: 40px;
-            max-width: 600px;
+            border-radius: 35px;
+            padding: 45px;
+            max-width: 700px;
             width: 90%;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            animation: slideInUp 0.5s ease;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+            animation: slideInUp 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
+
         .reminder-title {
-            font-size: 2.5em;
+            font-size: 2.8em;
             margin-bottom: 20px;
             color: white;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            font-weight: 800;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+            animation: bounceIn 0.8s ease;
         }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         .reminder-message {
-            font-size: 1.2em;
+            font-size: 1.25em;
             color: rgba(255, 255, 255, 0.95);
             margin-bottom: 30px;
-            line-height: 1.6;
+            line-height: 1.7;
+            font-weight: 400;
         }
+
         .eye-exercise-steps {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 30px;
             margin-bottom: 30px;
             text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .eye-exercise-steps h3 {
             color: white;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-align: center;
+            font-size: 1.5em;
+            font-weight: 700;
         }
+
         .eye-exercise-steps ol {
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.8;
-            padding-left: 20px;
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 2;
+            padding-left: 25px;
+            font-size: 1.05em;
         }
+
+        .eye-exercise-steps li {
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            padding-left: 10px;
+        }
+
+        .eye-exercise-steps li:hover {
+            transform: translateX(5px);
+            color: white;
+        }
+
         .reminder-links {
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
         }
+
         .reminder-link {
-            padding: 12px 25px;
+            padding: 14px 28px;
             background: rgba(255, 255, 255, 0.2);
             border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
+            border-radius: 20px;
             color: white;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             gap: 8px;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
         }
+
         .reminder-link:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-        .close-modal {
-            padding: 12px 30px;
-            background: rgba(255, 255, 255, 0.3);
-            border: none;
-            border-radius: 20px;
-            color: white;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .close-modal:hover {
-            background: rgba(255, 255, 255, 0.4);
-            transform: translateY(-2px);
-        }
-        /* 返回按钮 */
-        .back-button {
-            position: fixed;
-            top: 80px;
-            left: 30px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            text-decoration: none;
-        }
-        .back-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+            box-shadow: var(--shadow-md);
         }
-        /* 音频加载失败提示 */
-        .audio-error {
-            color: #ff6b6b;
-            font-size: 0.9em;
-            margin-top: 5px;
-            display: none;
+
+        .close-modal {
+            padding: 14px 35px;
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 1.15em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+            box-shadow: var(--shadow-sm);
         }
-        /* 动画效果 */
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ===== 动画效果 ===== */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
         @keyframes fadeInDown {
             from {
                 opacity: 0;
-                transform: translateY(-30px);
+                transform: translateY(-40px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
+
         @keyframes slideInUp {
             from {
-                transform: translate(-50%, -40%);
+                transform: translate(-50%, -30%);
                 opacity: 0;
             }
             to {
@@ -427,68 +807,200 @@
                 opacity: 1;
             }
         }
-        /* 响应式设计 */
+
+        /* ===== 响应式设计优化 ===== */
         @media (max-width: 768px) {
             .eye-care-container {
-                padding: 20px;
+                padding: 20px 15px;
                 margin: 80px auto 30px;
             }
-            .timer-screen {
-                font-size: 3em;
-            }
+
             .page-title h1 {
-                font-size: 2.2em;
+                font-size: 2.5em;
             }
+
+            .page-title p {
+                font-size: 1.1em;
+            }
+
+            .timer-display {
+                padding: 40px 25px;
+            }
+
+            .timer-screen {
+                font-size: 3.5em;
+                letter-spacing: 4px;
+            }
+
+            .progress-ring {
+                width: 150px;
+                height: 150px;
+            }
+
+            .progress-percentage {
+                font-size: 1.5em;
+            }
+
             .control-panel {
                 flex-direction: column;
-                align-items: center;
+                align-items: stretch;
             }
+
             .control-btn {
-                width: 200px;
+                width: 100%;
                 justify-content: center;
+                padding: 18px 30px;
             }
-            .back-button {
-                top: 70px;
-                left: 20px;
+
+            .settings-panel {
+                padding: 25px 20px;
             }
-            .audio-settings {
+
+            .setting-item {
                 flex-direction: column;
+                gap: 15px;
                 align-items: flex-start;
             }
+
+            .audio-settings {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .stats-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .back-button {
+                top: 75px;
+                left: 20px;
+                width: 45px;
+                height: 45px;
+            }
+
+            .reminder-content {
+                padding: 35px 25px;
+                border-radius: 25px;
+            }
+
+            .reminder-title {
+                font-size: 2.2em;
+            }
+
+            .eye-exercise-steps {
+                padding: 20px;
+            }
+
+            .reminder-links {
+                flex-direction: column;
+            }
+
+            .reminder-link {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .header-left {
+                gap: 15px;
+            }
+
+            .header-left a {
+                font-size: 0.85em;
+                padding: 6px 12px;
+            }
+
+            .logo {
+                font-size: 1.3em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .timer-screen {
+                font-size: 2.8em;
+            }
+
+            .page-title h1 {
+                font-size: 2em;
+            }
+
+            .control-btn {
+                font-size: 1em;
+                padding: 15px 25px;
+            }
+        }
+
+        /* ===== 深色模式优化 ===== */
+        body.dark-mode {
+            background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
+        }
+
+        body.dark-mode .header {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode .timer-display,
+        body.dark-mode .settings-panel,
+        body.dark-mode .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ===== 加载动画 ===== */
+        .loader {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3000;
+        }
+
+        .loader.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--glass-border);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <!-- 星空背景 -->
-    <div class="stars" id="stars"></div>
+    <!-- Canvas星空背景 -->
+    <canvas id="starfield"></canvas>
+
+    <!-- 加载动画 -->
+    <div class="loader">
+        <div class="spinner"></div>
+    </div>
+
     <!-- 头部导航 -->
     <header class="header">
         <div class="container">
             <div class="header-left">
                 <h1 class="logo">狂客·银河</h1>
                 <a class="success-link" href="success.html">
-                    <span class="success-icon">
-                        <i class="fas fa-meteor"></i>
-                    </span>
-                    <span class="success-text">成功日记</span>
+                    <i class="fas fa-meteor"></i>
+                    <span>成功日记</span>
                 </a>
                 <a class="sky-link" href="reading.html">
-                    <span class="sky-icon">
-                        <i class="fas fa-star"></i>
-                    </span>
-                    <span class="sky-text">星空</span>
+                    <i class="fas fa-star"></i>
+                    <span>星空</span>
                 </a>
                 <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/">
-                    <span class="exam-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </span>
-                    <span class="exam-text">冬之街小店</span>
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>冬之街小店</span>
                 </a>
                 <a class="video-link" href="video.html">
-                    <span class="video-icon">
-                        <i class="fas fa-video"></i>
-                    </span>
-                    <span class="video-text">视频矩阵</span>
+                    <i class="fas fa-video"></i>
+                    <span>视频矩阵</span>
                 </a>
             </div>
             <div class="controls">
@@ -498,64 +1010,111 @@
             </div>
         </div>
     </header>
+
     <!-- 返回按钮 -->
-    <a href="https://kuangketongxue.github.io/kuangke.github.io/index.html" class="back-button" title="返回">
+    <a href="https://kuangketongxue.github.io/kuangke.github.io/index.html" class="back-button" title="返回首页">
         <i class="fas fa-arrow-left"></i>
     </a>
+
     <!-- 主内容区域 -->
     <div class="eye-care-container">
         <!-- 页面标题 -->
         <div class="page-title">
             <h1>👁️ 眼保健操提醒</h1>
-            <p>保护视力，从定时休息开始</p>
+            <p>科学护眼，从每一次休息开始</p>
         </div>
+
+        <!-- 统计面板 -->
+        <div class="stats-panel">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-value" id="totalTime">0</div>
+                <div class="stat-label">今日总时长（分钟）</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-bell"></i></div>
+                <div class="stat-value" id="reminderCount">0</div>
+                <div class="stat-label">今日提醒次数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-value" id="completedCount">0</div>
+                <div class="stat-label">完成眼保健操</div>
+            </div>
+        </div>
+
         <!-- 设置面板 -->
         <div class="settings-panel">
             <h2 class="settings-title">
-                <i class="fas fa-cog"></i> 提醒设置
+                <i class="fas fa-cog"></i>
+                <span>智能提醒设置</span>
             </h2>
             <div class="setting-item">
                 <label class="setting-label">
-                    <i class="fas fa-clock"></i> 提醒间隔（分钟）
+                    <i class="fas fa-clock"></i>
+                    <span>提醒间隔（分钟）</span>
                 </label>
                 <input type="number" id="intervalInput" class="setting-input" value="30" min="1" max="180">
             </div>
             <div class="setting-item">
                 <label class="setting-label">
-                    <i class="fas fa-volume-up"></i> 音频设置
+                    <i class="fas fa-volume-up"></i>
+                    <span>音量控制</span>
                 </label>
                 <div class="audio-settings">
-                    <input type="range" id="volumeInput" min="0" max="100" value="50" style="width: 100px;">
+                    <input type="range" id="volumeInput" min="0" max="100" value="70">
                     <button id="testAudioBtn" class="test-audio-btn">
-                        <i class="fas fa-play"></i> 测试音频
+                        <i class="fas fa-play"></i>
+                        <span>测试</span>
                     </button>
                     <span id="audioStatus" class="audio-status">未测试</span>
                 </div>
             </div>
             <div id="audioError" class="audio-error">
-                <i class="fas fa-exclamation-triangle"></i> 音频加载失败，将使用浏览器默认提示音
+                <i class="fas fa-exclamation-triangle"></i> 音频加载失败，将使用系统默认提示音
             </div>
         </div>
+
         <!-- 计时器显示 -->
         <div class="timer-display">
+            <!-- 进度环 -->
+            <div class="progress-ring">
+                <svg width="200" height="200">
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle class="progress-ring-circle" cx="100" cy="100" r="90"></circle>
+                    <circle class="progress-ring-progress" cx="100" cy="100" r="90" 
+                            stroke-dasharray="565.48" stroke-dashoffset="565.48"></circle>
+                </svg>
+                <div class="progress-percentage">0%</div>
+            </div>
+
             <div class="timer-screen" id="timerDisplay">00:00:00</div>
             <div class="next-reminder">
                 <i class="fas fa-bell"></i>
-                下次提醒：<span id="nextReminder">30分00秒</span>
+                <span>下次提醒：<span id="nextReminder">30分00秒</span></span>
             </div>
             <div class="control-panel">
                 <button id="startBtn" class="control-btn start-btn">
-                    <i class="fas fa-play"></i> 开始
+                    <i class="fas fa-play"></i>
+                    <span>开始</span>
                 </button>
                 <button id="pauseBtn" class="control-btn pause-btn" style="display: none;">
-                    <i class="fas fa-pause"></i> 暂停
+                    <i class="fas fa-pause"></i>
+                    <span>暂停</span>
                 </button>
                 <button id="resetBtn" class="control-btn reset-btn">
-                    <i class="fas fa-redo"></i> 重置
+                    <i class="fas fa-redo"></i>
+                    <span>重置</span>
                 </button>
             </div>
         </div>
     </div>
+
     <!-- 提醒弹窗 -->
     <div id="reminderModal" class="reminder-modal">
         <div class="reminder-content">
@@ -563,395 +1122,538 @@
                 <i class="fas fa-eye"></i> 眼保健操时间到！
             </h2>
             <p class="reminder-message">
-                亲爱的朋友，你已经连续使用了30分钟电脑，是时候让眼睛休息一下了！
+                您已经连续用眼<span id="workTime">30</span>分钟，让我们一起做个眼保健操，给眼睛放个假吧！
             </p>
             <div class="eye-exercise-steps">
-                <h3>🎯 眼保健操步骤</h3>
+                <h3>🎯 标准眼保健操流程</h3>
                 <ol>
-                    <li>远近调节：注视远处20秒，然后注视近处20秒，重复3次</li>
-                    <li>左右转动：眼球慢慢向左看5秒，然后向右看5秒，重复3次</li>
-                    <li>上下转动：眼球慢慢向上看5秒，然后向下看5秒，重复3次</li>
-                    <li>顺时针转动：眼球顺时针转动3圈，然后逆时针转动3圈</li>
-                    <li>闭目养神：轻轻闭上眼睛，用手指按摩眼眶周围30秒</li>
-                    <li>热敷眼睛：用温热的手掌轻轻敷在眼睛上20秒</li>
+                    <li><strong>远眺放松</strong> - 向窗外远处眺望20秒，放松睫状肌</li>
+                    <li><strong>左右转动</strong> - 眼球缓慢向左5秒，向右5秒，重复3次</li>
+                    <li><strong>上下转动</strong> - 眼球缓慢向上5秒，向下5秒，重复3次</li>
+                    <li><strong>顺逆旋转</strong> - 顺时针转动眼球3圈，逆时针3圈</li>
+                    <li><strong>按摩穴位</strong> - 轻轻按摩眼眶周围穴位30秒</li>
+                    <li><strong>温敷休息</strong> - 双手搓热轻敷眼睛20秒</li>
                 </ol>
             </div>
             <div class="reminder-links">
                 <a href="https://b23.tv/7rEyRe1" target="_blank" class="reminder-link">
-                    <i class="fas fa-play-circle"></i> 视频教程
+                    <i class="fas fa-play-circle"></i>
+                    <span>视频教程</span>
                 </a>
                 <a href="https://b23.tv/ep2082696" target="_blank" class="reminder-link">
-                    <i class="fas fa-book"></i> 更多知识
+                    <i class="fas fa-book"></i>
+                    <span>护眼知识</span>
                 </a>
             </div>
             <button class="close-modal" onclick="closeReminder()">
-                <i class="fas fa-check"></i> 我知道了
+                <i class="fas fa-check"></i> 完成练习
             </button>
         </div>
     </div>
-    <!-- 音频元素 - 使用多个可靠的音频源 -->
+
+    <!-- 音频元素 -->
     <audio id="reminderAudio" preload="auto">
-        <!-- 主要音频源 - 可靠的提醒音 -->
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" type="audio/mpeg">
-        <!-- 备用音频源1 - 铃声 -->
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-happy-bells-notification-937.mp3" type="audio/mpeg">
-        <!-- 备用音频源2 - 轻柔提示音 -->
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-positive-notification-951.mp3" type="audio/mpeg">
-        <!-- 备用音频源3 - 叮声 -->
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-magic-coin-win-1936.mp3" type="audio/mpeg">
     </audio>
+
     <script>
-        // 生成星空背景
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            const starCount = 150;
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                // 随机星星大小
-                const size = Math.random() * 3 + 1;
-                star.style.width = size + 'px';
-                star.style.height = size + 'px';
-                starsContainer.appendChild(star);
+        // ========== Canvas星空背景（性能优化）==========
+        class Starfield {
+            constructor() {
+                this.canvas = document.getElementById('starfield');
+                this.ctx = this.canvas.getContext('2d');
+                this.stars = [];
+                this.shootingStars = [];
+                this.resize();
+                this.init();
+                window.addEventListener('resize', () => this.resize());
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            init() {
+                // 创建星星
+                const starCount = Math.floor((this.canvas.width * this.canvas.height) / 3000);
+                for (let i = 0; i < starCount; i++) {
+                    this.stars.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        radius: Math.random() * 2,
+                        opacity: Math.random(),
+                        twinkleSpeed: Math.random() * 0.05
+                    });
+                }
+                this.animate();
+            }
+
+            createShootingStar() {
+                if (Math.random() < 0.003) { // 降低流星出现频率
+                    this.shootingStars.push({
+                        x: Math.random() * this.canvas.width,
+                        y: 0,
+                        length: Math.random() * 80 + 20,
+                        speed: Math.random() * 10 + 5,
+                        opacity: 1
+                    });
+                }
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // 绘制星星
+                this.stars.forEach(star => {
+                    star.opacity += star.twinkleSpeed;
+                    if (star.opacity > 1 || star.opacity < 0) {
+                        star.twinkleSpeed = -star.twinkleSpeed;
+                    }
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                    this.ctx.fill();
+                });
+
+                // 创建和绘制流星
+                this.createShootingStar();
+                this.shootingStars = this.shootingStars.filter(star => {
+                    star.x += star.speed;
+                    star.y += star.speed;
+                    star.opacity -= 0.01;
+
+                    if (star.opacity > 0) {
+                        const gradient = this.ctx.createLinearGradient(
+                            star.x, star.y,
+                            star.x - star.length, star.y - star.length
+                        );
+                        gradient.addColorStop(0, `rgba(255, 255, 255, ${star.opacity})`);
+                        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+                        this.ctx.beginPath();
+                        this.ctx.strokeStyle = gradient;
+                        this.ctx.lineWidth = 2;
+                        this.ctx.moveTo(star.x, star.y);
+                        this.ctx.lineTo(star.x - star.length, star.y - star.length);
+                        this.ctx.stroke();
+                        return true;
+                    }
+                    return false;
+                });
+
+                requestAnimationFrame(() => this.animate());
             }
         }
-        
-        // 计时器相关变量
-        let timer = null;
-        let seconds = 0;
-        let reminderInterval = 30; // 默认30分钟
-        let isRunning = false;
-        let reminderTimer = null;
-        let audioLoaded = false;
-        
-        // DOM 元素
-        const timerDisplay = document.getElementById('timerDisplay');
-        const nextReminderDisplay = document.getElementById('nextReminder');
-        const startBtn = document.getElementById('startBtn');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const intervalInput = document.getElementById('intervalInput');
-        const volumeInput = document.getElementById('volumeInput');
-        const reminderModal = document.getElementById('reminderModal');
-        const reminderAudio = document.getElementById('reminderAudio');
-        const testAudioBtn = document.getElementById('testAudioBtn');
-        const audioStatus = document.getElementById('audioStatus');
-        const audioError = document.getElementById('audioError');
-        
-        // 检查音频是否可用
-        function checkAudioAvailability() {
-            return new Promise((resolve) => {
-                reminderAudio.addEventListener('canplaythrough', () => {
-                    audioLoaded = true;
-                    resolve(true);
-                }, { once: true });
-                
-                reminderAudio.addEventListener('error', () => {
-                    audioLoaded = false;
-                    audioError.style.display = 'block';
-                    resolve(false);
-                }, { once: true });
-                
-                // 设置超时以防止长时间等待
-                setTimeout(() => {
-                    if (!audioLoaded) {
-                        audioError.style.display = 'block';
+
+        // ========== 计时器逻辑优化 ==========
+        class EyeCareTimer {
+            constructor() {
+                this.timer = null;
+                this.seconds = 0;
+                this.reminderInterval = 30;
+                this.isRunning = false;
+                this.audioLoaded = false;
+                this.stats = {
+                    totalTime: 0,
+                    reminderCount: 0,
+                    completedCount: 0
+                };
+
+                this.initElements();
+                this.loadState();
+                this.checkAudioAvailability();
+                this.requestNotificationPermission();
+                this.updateProgress();
+            }
+
+            initElements() {
+                this.timerDisplay = document.getElementById('timerDisplay');
+                this.nextReminderDisplay = document.getElementById('nextReminder');
+                this.startBtn = document.getElementById('startBtn');
+                this.pauseBtn = document.getElementById('pauseBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.intervalInput = document.getElementById('intervalInput');
+                this.volumeInput = document.getElementById('volumeInput');
+                this.reminderModal = document.getElementById('reminderModal');
+                this.reminderAudio = document.getElementById('reminderAudio');
+                this.testAudioBtn = document.getElementById('testAudioBtn');
+                this.audioStatus = document.getElementById('audioStatus');
+                this.audioError = document.getElementById('audioError');
+                this.progressCircle = document.querySelector('.progress-ring-progress');
+                this.progressPercentage = document.querySelector('.progress-percentage');
+
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                this.startBtn.addEventListener('click', () => this.start());
+                this.pauseBtn.addEventListener('click', () => this.pause());
+                this.resetBtn.addEventListener('click', () => this.reset());
+                this.intervalInput.addEventListener('change', (e) => this.updateInterval(e));
+                this.volumeInput.addEventListener('input', (e) => this.updateVolume(e));
+                this.testAudioBtn.addEventListener('click', () => this.testAudio());
+                this.reminderModal.addEventListener('click', (e) => {
+                    if (e.target === this.reminderModal) this.closeReminder();
+                });
+
+                // 页面可见性变化处理
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden && this.isRunning) {
+                        this.loadState();
+                    }
+                });
+            }
+
+            async checkAudioAvailability() {
+                return new Promise((resolve) => {
+                    const timeout = setTimeout(() => {
+                        this.audioLoaded = false;
+                        this.audioError.style.display = 'block';
                         resolve(false);
+                    }, 3000);
+
+                    this.reminderAudio.addEventListener('canplaythrough', () => {
+                        clearTimeout(timeout);
+                        this.audioLoaded = true;
+                        this.audioError.style.display = 'none';
+                        resolve(true);
+                    }, { once: true });
+
+                    this.reminderAudio.addEventListener('error', () => {
+                        clearTimeout(timeout);
+                        this.audioLoaded = false;
+                        this.audioError.style.display = 'block';
+                        resolve(false);
+                    }, { once: true });
+                });
+            }
+
+            loadState() {
+                const savedState = localStorage.getItem('eyeCareState');
+                const savedStats = localStorage.getItem('eyeCareStats');
+                const today = new Date().toDateString();
+                const lastDate = localStorage.getItem('eyeCareDate');
+
+                if (savedState) {
+                    const state = JSON.parse(savedState);
+                    this.seconds = state.seconds || 0;
+                    this.isRunning = state.isRunning || false;
+                    this.reminderInterval = state.reminderInterval || 30;
+                    this.intervalInput.value = this.reminderInterval;
+                    this.volumeInput.value = state.volume || 70;
+
+                    if (this.isRunning) {
+                        // 计算离开期间的时间
+                        const elapsed = Math.floor((Date.now() - state.timestamp) / 1000);
+                        this.seconds += elapsed;
+                        this.start();
                     }
-                }, 3000);
-            });
-        }
-        
-        // 测试音频
-        async function testAudio() {
-            audioStatus.textContent = '测试中...';
-            audioStatus.style.color = '#ffc107';
-            
-            try {
-                // 检查音频是否可用
-                const isAvailable = await checkAudioAvailability();
-                
-                if (isAvailable) {
-                    reminderAudio.volume = volumeInput.value / 100;
-                    await reminderAudio.play();
-                    audioStatus.textContent = '正常';
-                    audioStatus.style.color = '#4caf50';
-                    audioError.style.display = 'none';
-                } else {
-                    // 如果音频不可用，使用浏览器默认通知
-                    if ('Notification' in window) {
-                        if (Notification.permission === 'granted') {
-                            new Notification('眼保健操提醒测试', {
-                                body: '这是测试通知，音频将使用系统默认提示音',
-                                icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>'
-                            });
-                        } else if (Notification.permission !== 'denied') {
-                            Notification.requestPermission().then(permission => {
-                                if (permission === 'granted') {
-                                    new Notification('眼保健操提醒测试', {
-                                        body: '这是测试通知，音频将使用系统默认提示音',
-                                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>'
-                                    });
-                                }
-                            });
-                        }
+
+                    this.updateDisplay();
+                }
+
+                // 加载统计数据（如果是新的一天则重置）
+                if (lastDate !== today) {
+                    this.stats = { totalTime: 0, reminderCount: 0, completedCount: 0 };
+                    localStorage.setItem('eyeCareDate', today);
+                } else if (savedStats) {
+                    this.stats = JSON.parse(savedStats);
+                }
+
+                this.updateStats();
+            }
+
+            saveState() {
+                const state = {
+                    seconds: this.seconds,
+                    isRunning: this.isRunning,
+                    reminderInterval: this.reminderInterval,
+                    volume: this.volumeInput.value,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('eyeCareState', JSON.stringify(state));
+                localStorage.setItem('eyeCareStats', JSON.stringify(this.stats));
+            }
+
+            updateDisplay() {
+                const hours = Math.floor(this.seconds / 3600);
+                const minutes = Math.floor((this.seconds % 3600) / 60);
+                const secs = this.seconds % 60;
+                this.timerDisplay.textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+                const remainingTime = this.reminderInterval * 60 - (this.seconds % (this.reminderInterval * 60));
+                const remMinutes = Math.floor(remainingTime / 60);
+                const remSecs = remainingTime % 60;
+                this.nextReminderDisplay.textContent = `${remMinutes}分${remSecs.toString().padStart(2, '0')}秒`;
+
+                // 更新进度环
+                this.updateProgress();
+
+                // 添加脉冲效果
+                if (this.seconds % 60 === 0) {
+                    this.timerDisplay.classList.add('pulse');
+                    setTimeout(() => this.timerDisplay.classList.remove('pulse'), 1000);
+                }
+            }
+
+            updateProgress() {
+                const totalSeconds = this.reminderInterval * 60;
+                const currentSeconds = this.seconds % totalSeconds;
+                const percentage = (currentSeconds / totalSeconds) * 100;
+                const circumference = 2 * Math.PI * 90;
+                const offset = circumference - (percentage / 100) * circumference;
+
+                this.progressCircle.style.strokeDashoffset = offset;
+                this.progressPercentage.textContent = `${Math.round(percentage)}%`;
+            }
+
+            updateStats() {
+                document.getElementById('totalTime').textContent = Math.floor(this.stats.totalTime / 60);
+                document.getElementById('reminderCount').textContent = this.stats.reminderCount;
+                document.getElementById('completedCount').textContent = this.stats.completedCount;
+            }
+
+            start() {
+                if (this.isRunning) return;
+
+                this.reminderInterval = parseInt(this.intervalInput.value) || 30;
+                const startTime = Date.now() - (this.seconds * 1000);
+
+                this.timer = setInterval(() => {
+                    this.seconds = Math.floor((Date.now() - startTime) / 1000);
+                    this.stats.totalTime = this.seconds;
+                    this.updateDisplay();
+                    this.saveState();
+
+                    if (this.seconds % (this.reminderInterval * 60) === 0 && this.seconds > 0) {
+                        this.showReminder();
                     }
-                    
-                    // 使用Web Audio API创建简单的提示音
+                }, 1000);
+
+                this.isRunning = true;
+                this.startBtn.style.display = 'none';
+                this.pauseBtn.style.display = 'flex';
+                this.saveState();
+                this.requestNotificationPermission();
+
+                // 振动反馈
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+            }
+
+            pause() {
+                clearInterval(this.timer);
+                this.isRunning = false;
+                this.pauseBtn.style.display = 'none';
+                this.startBtn.style.display = 'flex';
+                this.saveState();
+
+                if (navigator.vibrate) {
+                    navigator.vibrate([50, 50, 50]);
+                }
+            }
+
+            reset() {
+                this.pause();
+                this.seconds = 0;
+                this.stats = { totalTime: 0, reminderCount: 0, completedCount: 0 };
+                this.updateDisplay();
+                this.updateStats();
+                localStorage.removeItem('eyeCareState');
+                localStorage.removeItem('eyeCareStats');
+
+                if (navigator.vibrate) {
+                    navigator.vibrate(100);
+                }
+            }
+
+            updateInterval(e) {
+                this.reminderInterval = parseInt(e.target.value) || 30;
+                this.updateDisplay();
+                this.saveState();
+            }
+
+            updateVolume(e) {
+                this.reminderAudio.volume = e.target.value / 100;
+                this.saveState();
+            }
+
+            async testAudio() {
+                this.audioStatus.textContent = '测试中...';
+                this.audioStatus.style.color = '#ffc107';
+
+                try {
+                    const isAvailable = await this.checkAudioAvailability();
+                    if (isAvailable) {
+                        this.reminderAudio.volume = this.volumeInput.value / 100;
+                        await this.reminderAudio.play();
+                        this.audioStatus.textContent = '正常';
+                        this.audioStatus.style.color = '#4caf50';
+                    } else {
+                        this.playBeepSound();
+                        this.audioStatus.textContent = '使用备用';
+                        this.audioStatus.style.color = '#ff9800';
+                    }
+                } catch (error) {
+                    console.error('音频测试失败:', error);
+                    this.audioStatus.textContent = '失败';
+                    this.audioStatus.style.color = '#f44336';
+                }
+            }
+
+            playBeepSound() {
+                try {
                     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.frequency.value = 800;
-                    oscillator.type = 'sine';
-                    gainNode.gain.value = volumeInput.value / 200;
-                    
-                    oscillator.start();
-                    oscillator.stop(audioContext.currentTime + 0.3);
-                    
-                    audioStatus.textContent = '使用备用音频';
-                    audioStatus.style.color = '#ff9800';
-                }
-            } catch (error) {
-                console.error('音频测试失败:', error);
-                audioStatus.textContent = '测试失败';
-                audioStatus.style.color = '#f44336';
-                audioError.style.display = 'block';
-            }
-        }
-        
-        // 创建备用提示音
-        function playBeepSound() {
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 1000;
-                oscillator.type = 'sine';
-                gainNode.gain.value = volumeInput.value / 200;
-                
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.5);
-                
-                // 播放两次
-                setTimeout(() => {
-                    const osc2 = audioContext.createOscillator();
-                    const gain2 = audioContext.createGain();
-                    osc2.connect(gain2);
-                    gain2.connect(audioContext.destination);
-                    osc2.frequency.value = 1000;
-                    osc2.type = 'sine';
-                    gain2.gain.value = volumeInput.value / 200;
-                    osc2.start();
-                    osc2.stop(audioContext.currentTime + 0.5);
-                }, 600);
-            } catch (error) {
-                console.error('备用音频播放失败:', error);
-            }
-        }
-        
-        // 从本地存储恢复状态
-        function loadState() {
-            const savedState = localStorage.getItem('eyeCareState');
-            if (savedState) {
-                const state = JSON.parse(savedState);
-                seconds = state.seconds || 0;
-                isRunning = state.isRunning || false;
-                reminderInterval = state.reminderInterval || 30;
-                intervalInput.value = reminderInterval;
-                volumeInput.value = state.volume || 50;
-                updateTimerDisplay();
-                updateNextReminder();
-                if (isRunning) {
-                    startTimer();
-                    startBtn.style.display = 'none';
-                    pauseBtn.style.display = 'flex';
+                    const createBeep = (delay = 0) => {
+                        setTimeout(() => {
+                            const oscillator = audioContext.createOscillator();
+                            const gainNode = audioContext.createGain();
+                            
+                            oscillator.connect(gainNode);
+                            gainNode.connect(audioContext.destination);
+                            
+                            oscillator.frequency.value = 1000;
+                            oscillator.type = 'sine';
+                            gainNode.gain.setValueAtTime(this.volumeInput.value / 200, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.5);
+                            
+                            oscillator.start();
+                            oscillator.stop(audioContext.currentTime + 0.5);
+                        }, delay);
+                    };
+
+                    createBeep(0);
+                    createBeep(600);
+                } catch (error) {
+                    console.error('备用音频播放失败:', error);
                 }
             }
-        }
-        
-        // 保存状态到本地存储
-        function saveState() {
-            const state = {
-                seconds: seconds,
-                isRunning: isRunning,
-                reminderInterval: reminderInterval,
-                volume: volumeInput.value
-            };
-            localStorage.setItem('eyeCareState', JSON.stringify(state));
-        }
-        
-        // 更新计时器显示
-        function updateTimerDisplay() {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = seconds % 60;
-            timerDisplay.textContent =
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
-        
-        // 更新下次提醒显示
-        function updateNextReminder() {
-            const remainingTime = reminderInterval * 60 - (seconds % (reminderInterval * 60));
-            const minutes = Math.floor(remainingTime / 60);
-            const secs = remainingTime % 60;
-            nextReminderDisplay.textContent = `${minutes}分${secs.toString().padStart(2, '0')}秒`;
-        }
-        
-        // 开始计时
-        function startTimer() {
-            const lastSavedTime = Date.now() - (seconds * 1000);
-            timer = setInterval(() => {
-                const now = Date.now();
-                seconds = Math.floor((now - lastSavedTime) / 1000);
-                updateTimerDisplay();
-                updateNextReminder();
-                saveState();
-                // 检查是否到了提醒时间
-                if (seconds % (reminderInterval * 60) === 0 && seconds > 0) {
-                    showReminder();
-                }
-            }, 1000);
-            isRunning = true;
-            saveState();
-        }
-        
-        // 停止计时
-        function stopTimer() {
-            clearInterval(timer);
-            isRunning = false;
-            saveState();
-        }
-        
-        // 显示提醒
-        function showReminder() {
-            // 播放提醒音
-            if (audioLoaded) {
-                reminderAudio.volume = volumeInput.value / 100;
-                reminderAudio.play().catch(e => {
-                    console.log('音频播放失败，使用备用音频:', e);
-                    playBeepSound();
-                });
-            } else {
-                playBeepSound();
-            }
-            
-            // 显示浏览器通知
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification('眼保健操提醒', {
-                    body: '您已经工作了一段时间，该休息一下眼睛了！',
-                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>'
-                });
-            }
-            
-            // 显示弹窗
-            reminderModal.style.display = 'block';
-            
-            // 10秒后自动关闭提醒
-            setTimeout(() => {
-                if (reminderModal.style.display === 'block') {
-                    closeReminder();
-                }
-            }, 10000);
-        }
-        
-        // 关闭提醒
-        function closeReminder() {
-            reminderModal.style.display = 'none';
-        }
-        
-        // 请求通知权限
-        function requestNotificationPermission() {
-            if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        console.log('通知权限已授予');
+
+            async showReminder() {
+                this.stats.reminderCount++;
+                this.updateStats();
+                this.saveState();
+
+                // 播放提醒音
+                if (this.audioLoaded) {
+                    try {
+                        this.reminderAudio.volume = this.volumeInput.value / 100;
+                        await this.reminderAudio.play();
+                    } catch (e) {
+                        console.log('音频播放失败，使用备用:', e);
+                        this.playBeepSound();
                     }
-                });
+                } else {
+                    this.playBeepSound();
+                }
+
+                // 振动提醒
+                if (navigator.vibrate) {
+                    navigator.vibrate([200, 100, 200, 100, 200]);
+                }
+
+                // 浏览器通知
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('眼保健操提醒', {
+                        body: '您已经工作了一段时间，该休息一下眼睛了！',
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>',
+                        requireInteraction: true
+                    });
+                }
+
+                // 显示弹窗
+                document.getElementById('workTime').textContent = this.reminderInterval;
+                this.reminderModal.style.display = 'block';
+
+                // 自动关闭（15秒后）
+                setTimeout(() => {
+                    if (this.reminderModal.style.display === 'block') {
+                        this.closeReminder();
+                    }
+                }, 15000);
+            }
+
+            closeReminder() {
+                this.stats.completedCount++;
+                this.updateStats();
+                this.saveState();
+                this.reminderModal.style.display = 'none';
+
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+            }
+
+            requestNotificationPermission() {
+                if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission();
+                }
             }
         }
-        
-        // 事件监听器
-        startBtn.addEventListener('click', () => {
-            reminderInterval = parseInt(intervalInput.value) || 30;
-            startTimer();
-            startBtn.style.display = 'none';
-            pauseBtn.style.display = 'flex';
-            requestNotificationPermission();
-        });
-        
-        pauseBtn.addEventListener('click', () => {
-            stopTimer();
-            pauseBtn.style.display = 'none';
-            startBtn.style.display = 'flex';
-        });
-        
-        resetBtn.addEventListener('click', () => {
-            stopTimer();
-            seconds = 0;
-            updateTimerDisplay();
-            updateNextReminder();
-            pauseBtn.style.display = 'none';
-            startBtn.style.display = 'flex';
-            localStorage.removeItem('eyeCareState');
-        });
-        
-        intervalInput.addEventListener('change', (e) => {
-            reminderInterval = parseInt(e.target.value) || 30;
-            updateNextReminder();
-            saveState();
-        });
-        
-        volumeInput.addEventListener('input', (e) => {
-            reminderAudio.volume = e.target.value / 100;
-            saveState();
-        });
-        
-        testAudioBtn.addEventListener('click', testAudio);
-        
-        // 点击弹窗外部关闭
-        reminderModal.addEventListener('click', (e) => {
-            if (e.target === reminderModal) {
-                closeReminder();
-            }
-        });
-        
-        // 主题切换
-        const themeToggle = document.getElementById('themeToggle');
-        const icon = themeToggle.querySelector('i');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
+
+        // ========== 初始化 ==========
+        let starfield;
+        let eyeCareTimer;
+
+        window.addEventListener('load', () => {
+            starfield = new Starfield();
+            eyeCareTimer = new EyeCareTimer();
+
+            // 头部滚动效果
+            let lastScroll = 0;
+            const header = document.querySelector('.header');
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                if (currentScroll > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+                lastScroll = currentScroll;
+            }, { passive: true });
+
+            // 主题切换
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+            const savedTheme = localStorage.getItem('theme');
+
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'light');
             }
+
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                if (document.body.classList.contains('dark-mode')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
         });
-        
-        // 初始化
-        createStars();
-        loadState();
-        
-        // 页面加载时检查音频可用性
-        window.addEventListener('load', () => {
-            checkAudioAvailability();
-            requestNotificationPermission();
-        });
+
+        // 全局关闭提醒函数
+        function closeReminder() {
+            if (eyeCareTimer) {
+                eyeCareTimer.closeReminder();
+            }
+        }
+
+        // 性能优化：使用 Passive Event Listeners
+        document.addEventListener('touchstart', () => {}, { passive: true });
+        document.addEventListener('touchmove', () => {}, { passive: true });
     </script>
 </body>
 </html>
