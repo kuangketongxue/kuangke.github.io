@@ -1,1 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI助手矩阵 - 狂客·银河</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* AI矩阵专属样式 */
+        .ai-matrix-container {
+            max-width: 1200px;
+            margin: 80px auto 60px;
+            padding: 40px 20px;
+        }
+        
+        .matrix-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .matrix-title h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+        
+        .matrix-title p {
+            font-size: 1.1em;
+            color: #666;
+            opacity: 0.8;
+        }
+        
+        /* 矩阵网格布局 */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .matrix-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode .matrix-section {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        }
+        
+        .matrix-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+        }
+        
+        .section-header h2 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        body.dark-mode .section-header h2 {
+            color: #fff;
+        }
+        
+        .section-header .subtitle {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: normal;
+        }
+        
+        body.dark-mode .section-header .subtitle {
+            color: #aaa;
+        }
+        
+        /* AI助手卡片样式 */
+        .ai-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .ai-card {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        body.dark-mode .ai-card {
+            background: #2d3748;
+        }
+        
+        .ai-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .ai-card:hover::before {
+            left: 100%;
+        }
+        
+        .ai-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .ai-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .ai-info {
+            flex: 1;
+        }
+        
+        .ai-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        body.dark-mode .ai-name {
+            color: #fff;
+        }
+        
+        .ai-desc {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        body.dark-mode .ai-desc {
+            color: #aaa;
+        }
+        
+        .ai-arrow {
+            font-size: 20px;
+            color: #667eea;
+            transition: transform 0.3s ease;
+        }
+        
+        .ai-card:hover .ai-arrow {
+            transform: translateX(5px);
+        }
+        
+        /* 各AI助手专属颜色 */
+        .text-bg {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .logic-bg {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .language-bg {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .science-bg {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        
+        .experiment-bg {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+        
+        .thinking-bg {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .matrix-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .matrix-title h1 {
+                font-size: 2em;
+            }
+            
+            .ai-card {
+                padding: 15px;
+            }
+            
+            .ai-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+                margin-right: 15px;
+            }
+            
+            .ai-name {
+                font-size: 1.1em;
+            }
+        }
+        
+        /* 返回按钮 */
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+        }
+        
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
 
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        body.dark-mode .modal-content {
+            background: #2d3748;
+            color: #fff;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 30px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #667eea;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-header h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        body.dark-mode .modal-header h2 {
+            color: #fff;
+        }
+
+        .modal-tools {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .tool-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .tool-item {
+            background: #1a202c;
+        }
+
+        .tool-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .tool-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-right: 15px;
+        }
+
+        .tool-info h3 {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        body.dark-mode .tool-info h3 {
+            color: #fff;
+        }
+
+        .tool-info p {
+            font-size: 0.9em;
+            color: #666;
+            margin: 0;
+        }
+
+        body.dark-mode .tool-info p {
+            color: #aaa;
+        }
+    </style>
+</head>
+<body data-page="ai">
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <h1 class="logo">狂客·银河</h1>
+                <a class="success-link" href="success.html">
+                    <span class="success-icon">
+                        <i class="fas fa-meteor"></i>
+                    </span>
+                    <span class="success-text">成功日记</span>
+                </a>
+                <a class="sky-link" href="reading.html">
+                    <span class="sky-icon">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span class="sky-text">星空</span>
+                </a>
+                <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/">
+                    <span class="exam-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </span>
+                    <span class="exam-text">冬之街小店</span>
+                </a>
+                <a class="video-link" href="video.html">
+                    <span class="video-icon">
+                        <i class="fas fa-video"></i>
+                    </span>
+                    <span class="video-text">视频矩阵</span>
+                </a>
+            </div>
+            <div class="controls">
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="ai-matrix-container">
+        <div class="matrix-title">
+            <h1>🤖 AI助手矩阵</h1>
+            <p>智能工具赋能，助力个人成长与能力提升</p>
+        </div>
+
+        <div class="matrix-grid">
+            <!-- 文本理解助手 -->
+            <div class="matrix-section">
+                <div class="section-header">
+                    <h2>📖 文本理解助手</h2>
+                    <p class="subtitle">阅读分析 · 写作优化</p>
+                </div>
+                <div class="ai-cards">
+                    <div class="ai-card" onclick="openModal('text')">
+                        <div class="ai-icon text-bg">
+                            <i class="fas fa-book-reader"></i>
+                        </div>
+                        <div class="ai-info">
+                            <div class="ai-name">智能阅读分析</div>
+                            <div class="ai-desc">深度理解文本、提炼核心要点、优化表达能力</div>
+                        </div>
+                        <i class="fas fa-arrow-right ai-arrow"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 逻辑推理助手 -->
+            <div class="matrix-section">
+                <div class="section-header">
+                    <h2>🧮 逻辑推理助手</h2>
+                    <p class="subtitle">问题解决 · 思维训练</p>
+                </div>
+                <div class="ai-cards">
+                    <div class="ai-card" onclick="openModal('logic')">
+                        <div class="ai-icon logic-bg">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="ai-info">
+                            <div class="ai-name">智能解题助手</div>
+                            <div class="ai-desc">逻辑分析、问题拆解、解决方案推导</div>
+                        </div>
+                        <i class="fas fa-arrow-right ai-arrow"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 语言学习助手 -->
+            <div class="matrix-section">
+                <div class="section-header">
+                    <h2>🌐 语言学习助手</h2>
+                    <p class="subtitle">国际交流 · 语言提升</p>
+                </div>
+                <div class="ai-cards">
+                    <div class="ai-card" onclick="openModal('language')">
+                        <div class="ai-icon language-bg">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <div class="ai-info">
+                            <div class="ai-name">智能语言训练</div>
+                            <div class="ai-desc">听说读写、语法纠错、表达优化</div>
+                        </div>
+                        <i class="fas fa-arrow-right ai-arrow"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 科学思维助手 -->
+            <div class="matrix-section">
+                <div class="section-header">
+                    <h2>🔬 科学思维助手</h2>
+                    <p class="subtitle">自然探索 · 原理解析</p>
+                </div>
+                <div class="ai-cards">
+                    <div class="ai-card" onclick="openModal('science')">
+                        <div class="ai-icon science-bg">
+                            <i class="fas fa-atom"></i>
+                        </div>
+                        <div class="ai-info">
+                            <div class="ai-name">智能科学导师</div>
+                            <div class="ai-desc">现象解析、原理推导、规律总结</div>
+                        </div>
+                        <i class="fas fa-arrow-right ai-arrow"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 实验分析助手 -->
+            <div class="matrix-section">
+                <div class="section-header">
+                    <h2>⚗️ 实验分析助手</h2>
+                    <p class="subtitle">物质研究 · 反应解析</p>
+                </div>
+                <div class="ai-cards">
+                    <div class="ai-card" onclick="openModal('experiment')">
+                        <div class="ai-icon experiment-bg">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <div class="ai-info">
+                            <div class="ai-name">智能实验顾问</div>
+                            <div class="ai-desc">反应分析、过程推导、结果预测</div>
+                        </div>
+                        <i class="fas fa-arrow-right ai-arrow"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 社会认知助手 -->
+            <div class="matrix-section">
+                <div class="section-header">
+                    <h2>🏛️ 社会认知助手</h2>
+                    <p class="subtitle">思想研究 · 观点分析</p>
+                </div>
+                <div class="ai-cards">
+                    <div class="ai-card" onclick="openModal('thinking')">
+                        <div class="ai-icon thinking-bg">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div class="ai-info">
+                            <div class="ai-name">智能思维导师</div>
+                            <div class="ai-desc">观点梳理、逻辑分析、深度思考</div>
+                        </div>
+                        <i class="fas fa-arrow-right ai-arrow"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框 -->
+    <div id="aiModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-header">
+                <h2 id="modalTitle">AI工具选择</h2>
+            </div>
+            <div class="modal-tools" id="modalTools">
+                <!-- 动态加载工具列表 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <a href="index.html" class="back-button" title="返回首页">
+        <i class="fas fa-home"></i>
+    </a>
+
+    <script>
+        // AI工具配置 - 请在此处填写您的AI工具
+        const aiTools = {
+            text: {
+                title: '📖 文本理解助手',
+                tools: [
+                    // 请按以下格式添加工具：
+                    // { name: '工具名称', desc: '工具描述', url: '工具链接', icon: '图标emoji', color: '背景颜色' }
+                    // 示例：
+                    // { name: 'ChatGPT', desc: '文本分析与写作辅助', url: 'https://chat.openai.com', icon: '💬', color: '#10a37f' },
+                ]
+            },
+            logic: {
+                title: '🧮 逻辑推理助手',
+                tools: [
+                    // 请在此处添加数学相关的AI工具
+                ]
+            },
+            language: {
+                title: '🌐 语言学习助手',
+                tools: [
+                    // 请在此处添加英语学习相关的AI工具
+                ]
+            },
+            science: {
+                title: '🔬 科学思维助手',
+                tools: [
+                    // 请在此处添加物理相关的AI工具
+                ]
+            },
+            experiment: {
+                title: '⚗️ 实验分析助手',
+                tools: [
+                    // 请在此处添加化学相关的AI工具
+                ]
+            },
+            thinking: {
+                title: '🏛️ 社会认知助手',
+                tools: [
+                    // 请在此处添加政治相关的AI工具
+                ]
+            }
+        };
+
+        // 打开模态框
+        function openModal(category) {
+            const modal = document.getElementById('aiModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalTools = document.getElementById('modalTools');
+            
+            const categoryData = aiTools[category];
+            modalTitle.textContent = categoryData.title;
+            
+            // 如果该类别没有工具，显示提示信息
+            if (categoryData.tools.length === 0) {
+                modalTools.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">暂无工具，请在代码中添加</p>';
+            } else {
+                modalTools.innerHTML = categoryData.tools.map(tool => `
+                    <a href="${tool.url}" target="_blank" class="tool-item">
+                        <div class="tool-icon" style="background: ${tool.color}">
+                            ${tool.icon}
+                        </div>
+                        <div class="tool-info">
+                            <h3>${tool.name}</h3>
+                            <p>${tool.desc}</p>
+                        </div>
+                    </a>
+                `).join('');
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('aiModal').style.display = 'none';
+        }
+
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('aiModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        
+        // 检查本地存储的主题设置
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>
