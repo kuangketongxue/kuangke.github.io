@@ -7,15 +7,12 @@
   <meta name="description" content="星空书柜 - 探索认知边界，记录思考轨迹">
   <meta name="keywords" content="读书笔记,书籍推荐,知识管理">
   <title>星空书柜 | 探索认知边界</title>
-  
   <!-- 资源预加载 -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="preconnect" href="https://picsum.photos">
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-  
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-  
   <style>
     :root {
       --bg-primary: #0f172a;
@@ -35,13 +32,11 @@
       --border-color: rgba(255, 255, 255, 0.1);
       --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     }
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       background-color: var(--bg-primary);
       background-image:
@@ -54,7 +49,6 @@
       line-height: 1.6;
       overflow-x: hidden;
     }
-
     /* 页面容器 */
     .page-wrapper {
       min-height: 100vh;
@@ -62,7 +56,6 @@
       flex-direction: column;
       position: relative;
     }
-
     /* 背景装饰 */
     .bg-decoration {
       position: fixed;
@@ -75,7 +68,6 @@
       will-change: transform;
       contain: layout style paint;
     }
-
     .star {
       position: absolute;
       width: 2px;
@@ -85,12 +77,10 @@
       animation: twinkle 4s infinite;
       will-change: opacity;
     }
-
     @keyframes twinkle {
       0%, 100% { opacity: 0.3; }
       50% { opacity: 0.8; }
     }
-
     /* 导航栏 */
     .navbar {
       position: fixed;
@@ -105,12 +95,10 @@
       transition: all 0.3s var(--transition-smooth);
       will-change: transform;
     }
-
     .navbar.scrolled {
       background: rgba(15, 23, 42, 0.98);
       box-shadow: var(--shadow-md);
     }
-
     .nav-container {
       max-width: 1400px;
       margin: 0 auto;
@@ -118,7 +106,6 @@
       justify-content: space-between;
       align-items: center;
     }
-
     .nav-brand {
       display: flex;
       align-items: center;
@@ -131,18 +118,15 @@
       color: transparent;
       text-decoration: none;
     }
-
     .nav-brand i {
       font-size: 1.5rem;
       color: var(--accent-1);
     }
-
     .nav-actions {
       display: flex;
       gap: 1rem;
       align-items: center;
     }
-
     .back-btn {
       display: flex;
       align-items: center;
@@ -159,17 +143,14 @@
       border: none;
       cursor: pointer;
     }
-
     .back-btn:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-md);
     }
-
     .back-btn:focus {
       outline: 2px solid var(--accent-1);
       outline-offset: 2px;
     }
-
     /* 主内容区 */
     .main-content {
       flex: 1;
@@ -178,7 +159,6 @@
       position: relative;
       z-index: 1;
     }
-
     /* 页面头部 */
     .page-header {
       text-align: center;
@@ -186,7 +166,6 @@
       padding: 2rem 1rem;
       position: relative;
     }
-
     .header-badge {
       display: inline-block;
       padding: 0.4rem 1rem;
@@ -197,7 +176,6 @@
       color: var(--accent-2);
       margin-bottom: 1rem;
     }
-
     .page-header h1 {
       font-size: 3rem;
       font-weight: 800;
@@ -208,45 +186,38 @@
       margin-bottom: 1rem;
       letter-spacing: -0.02em;
     }
-
     .page-subtitle {
       font-size: 1.2rem;
       color: var(--text-secondary);
       margin-bottom: 2rem;
     }
-
     .header-stats {
       display: flex;
       justify-content: center;
       gap: 3rem;
       margin-top: 2rem;
     }
-
     .stat-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.3rem;
     }
-
     .stat-value {
       font-size: 1.8rem;
       font-weight: 700;
       color: var(--accent-1);
     }
-
     .stat-label {
       font-size: 0.9rem;
       color: var(--text-muted);
     }
-
     /* 筛选栏 */
     .filter-section {
       max-width: 1400px;
       margin: 0 auto 3rem;
       padding: 0 1rem;
     }
-
     .filter-bar {
       display: flex;
       justify-content: center;
@@ -254,7 +225,6 @@
       flex-wrap: wrap;
       margin-bottom: 1rem;
     }
-
     .filter-btn {
       padding: 0.6rem 1.2rem;
       background: rgba(255, 255, 255, 0.05);
@@ -269,7 +239,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .filter-btn::before {
       content: '';
       position: absolute;
@@ -282,18 +251,15 @@
       transform: translate(-50%, -50%);
       transition: width 0.4s, height 0.4s;
     }
-
     .filter-btn:hover::before,
     .filter-btn.active::before {
       width: 200%;
       height: 200%;
     }
-
     .filter-btn span {
       position: relative;
       z-index: 1;
     }
-
     .filter-btn:hover,
     .filter-btn.active {
       background: rgba(139, 92, 246, 0.2);
@@ -301,12 +267,10 @@
       color: var(--accent-2);
       transform: translateY(-2px);
     }
-
     .filter-btn:focus {
       outline: 2px solid var(--accent-2);
       outline-offset: 2px;
     }
-
     .filter-count {
       display: inline-block;
       margin-left: 0.4rem;
@@ -316,14 +280,12 @@
       font-size: 0.75rem;
       font-weight: 600;
     }
-
     .filter-result-info {
       text-align: center;
       color: var(--text-muted);
       font-size: 0.9rem;
       margin-top: 1rem;
     }
-
     /* 书籍容器 */
     .books-container {
       max-width: 1400px;
@@ -336,7 +298,6 @@
       position: relative;
       min-height: 400px;
     }
-
     /* 无结果提示 */
     .no-results {
       grid-column: 1 / -1;
@@ -345,29 +306,24 @@
       color: var(--text-muted);
       display: none;
     }
-
     .no-results.show {
       display: block;
       animation: fadeIn 0.5s ease;
     }
-
     .no-results i {
       font-size: 4rem;
       color: var(--accent-2);
       opacity: 0.3;
       margin-bottom: 1rem;
     }
-
     .no-results p {
       font-size: 1.1rem;
       margin-bottom: 0.5rem;
     }
-
     .no-results small {
       font-size: 0.9rem;
       color: var(--text-muted);
     }
-
     /* 书籍卡片 */
     .book-card {
       position: relative;
@@ -380,17 +336,21 @@
       will-change: transform;
       contain: layout style paint;
     }
-
     .book-card:hover {
       transform: translateY(-8px) scale(1.02);
       box-shadow: var(--shadow-xl);
       border-color: rgba(139, 92, 246, 0.3);
     }
-
-    .book-card.locked {
-      opacity: 0.8;
+    .book-card.placeholder {
+      opacity: 0.3;
+      cursor: not-allowed;
+      background: rgba(30, 41, 59, 0.2);
+      border-style: dashed;
     }
-
+    .book-card.placeholder:hover {
+      transform: none;
+      box-shadow: none;
+    }
     .book-cover {
       position: relative;
       width: 100%;
@@ -398,7 +358,6 @@
       overflow: hidden;
       background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
     }
-
     .book-cover img {
       width: 100%;
       height: 100%;
@@ -406,12 +365,10 @@
       transition: all 0.4s ease;
       will-change: transform;
     }
-
     .book-card:hover .book-cover img {
       transform: scale(1.05);
       filter: brightness(1.1);
     }
-
     .book-overlay {
       position: absolute;
       top: 0;
@@ -422,11 +379,9 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-
     .book-card:hover .book-overlay {
       opacity: 1;
     }
-
     /* 书籍标签 */
     .book-badge {
       position: absolute;
@@ -441,20 +396,16 @@
       font-weight: 600;
       z-index: 10;
     }
-
-    .book-badge.locked {
-      background: rgba(249, 115, 22, 0.9);
-    }
-
     .book-badge.recent {
       background: var(--accent-success);
     }
-
+    .book-badge.placeholder {
+      background: rgba(100, 116, 139, 0.5);
+    }
     .book-info {
       padding: 1.5rem;
       position: relative;
     }
-
     .book-title {
       font-size: 1.3rem;
       font-weight: 700;
@@ -466,7 +417,6 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-
     .book-author {
       font-size: 0.95rem;
       color: var(--text-secondary);
@@ -475,19 +425,16 @@
       align-items: center;
       gap: 0.4rem;
     }
-
     .book-author i {
       font-size: 0.8rem;
       color: var(--accent-1);
     }
-
     .book-meta {
       display: flex;
       gap: 1rem;
       margin-bottom: 1rem;
       flex-wrap: wrap;
     }
-
     .meta-item {
       display: flex;
       align-items: center;
@@ -495,18 +442,15 @@
       font-size: 0.85rem;
       color: var(--text-muted);
     }
-
     .meta-item i {
       font-size: 0.75rem;
       color: var(--accent-1);
     }
-
     .book-actions {
       display: flex;
       gap: 0.8rem;
       margin-top: 1rem;
     }
-
     .book-btn {
       flex: 1;
       display: flex;
@@ -524,38 +468,31 @@
       will-change: transform;
       font-family: inherit;
     }
-
     .btn-pdf {
       background: linear-gradient(135deg, var(--accent-1), #0ea5e9);
       color: white;
     }
-
     .btn-pdf:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
     }
-
     .btn-notes {
       background: linear-gradient(135deg, var(--accent-2), #a855f7);
       color: white;
     }
-
     .btn-notes:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
     }
-
     .book-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
       filter: grayscale(0.5);
     }
-
     .book-btn:focus {
       outline: 2px solid currentColor;
       outline-offset: 2px;
     }
-
     /* 底部 */
     .footer {
       background: linear-gradient(to top, rgba(30, 41, 59, 0.8), transparent);
@@ -565,7 +502,6 @@
       position: relative;
       z-index: 1;
     }
-
     .footer-container {
       max-width: 1400px;
       margin: 0 auto;
@@ -575,12 +511,10 @@
       flex-wrap: wrap;
       gap: 2rem;
     }
-
     .social-links {
       display: flex;
       gap: 1.5rem;
     }
-
     .social-link {
       display: flex;
       align-items: center;
@@ -595,110 +529,88 @@
       transition: all 0.3s var(--transition-smooth);
       will-change: transform;
     }
-
     .social-link:hover {
       background: rgba(139, 92, 246, 0.2);
       border-color: var(--accent-2);
       color: var(--accent-2);
       transform: translateY(-2px);
     }
-
     .social-link:focus {
       outline: 2px solid var(--accent-2);
       outline-offset: 2px;
     }
-
     .copyright {
       color: var(--text-muted);
       font-size: 0.9rem;
     }
-
     /* 响应式设计 */
     @media (max-width: 1024px) {
       .books-container {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 1.5rem;
       }
-
       .page-header h1 {
         font-size: 2.5rem;
       }
     }
-
     @media (max-width: 768px) {
       .navbar {
         padding: 0.8rem 1rem;
       }
-
       .main-content {
         margin-top: 70px;
         padding: 1rem 0.5rem;
       }
-
       .page-header {
         margin-bottom: 2rem;
         padding: 1.5rem 1rem;
       }
-
       .page-header h1 {
         font-size: 2rem;
       }
-
       .header-stats {
         gap: 2rem;
       }
-
       .books-container {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 1rem;
       }
-
       .book-cover {
         height: 280px;
       }
-
       .book-info {
         padding: 1rem;
       }
-
       .book-title {
         font-size: 1.1rem;
       }
-
       .book-actions {
         flex-direction: column;
       }
-
       .footer-container {
         flex-direction: column;
         text-align: center;
       }
     }
-
     @media (max-width: 480px) {
       .books-container {
         grid-template-columns: 1fr;
       }
-
       .book-cover {
         height: 240px;
       }
-
       .back-btn {
         padding: 0.5rem 0.8rem;
         font-size: 0.85rem;
       }
-
       .filter-bar {
         gap: 0.5rem;
       }
-
       .filter-btn {
         font-size: 0.85rem;
         padding: 0.5rem 1rem;
       }
     }
-
     /* 加载动画 */
     @keyframes fadeIn {
       from {
@@ -710,12 +622,10 @@
         transform: translateY(0);
       }
     }
-
     .book-card {
       opacity: 0;
       animation: fadeIn 0.6s ease-out forwards;
     }
-
     .book-card:nth-child(1) { animation-delay: 0.05s; }
     .book-card:nth-child(2) { animation-delay: 0.1s; }
     .book-card:nth-child(3) { animation-delay: 0.15s; }
@@ -726,28 +636,23 @@
     .book-card:nth-child(8) { animation-delay: 0.4s; }
     .book-card:nth-child(9) { animation-delay: 0.45s; }
     .book-card:nth-child(10) { animation-delay: 0.5s; }
-
     /* 图片懒加载 */
     .lazy-image {
       opacity: 0;
       transition: opacity 0.5s ease;
     }
-
     .lazy-image.loaded {
       opacity: 1;
     }
-
     /* 工具类 */
     .hidden {
       display: none !important;
     }
-
     .fade-out {
       opacity: 0 !important;
       transform: translateY(20px) !important;
       pointer-events: none;
     }
-
     .fade-in {
       opacity: 1 !important;
       transform: translateY(0) !important;
@@ -758,7 +663,6 @@
   <div class="page-wrapper">
     <!-- 背景装饰 -->
     <div class="bg-decoration" id="stars" aria-hidden="true"></div>
-
     <!-- 导航栏 -->
     <nav class="navbar" id="navbar" role="navigation">
       <div class="nav-container">
@@ -774,7 +678,6 @@
         </div>
       </div>
     </nav>
-
     <!-- 主内容 -->
     <main class="main-content" role="main">
       <!-- 页面头部 -->
@@ -797,7 +700,6 @@
           </div>
         </div>
       </header>
-
       <!-- 筛选栏 -->
       <section class="filter-section" aria-label="书籍筛选">
         <div class="filter-bar" role="tablist">
@@ -805,13 +707,16 @@
             <span>全部<span class="filter-count" id="count-all">15</span></span>
           </button>
           <button class="filter-btn" data-filter="wealth" role="tab" aria-selected="false">
-            <span>财富思维<span class="filter-count" id="count-wealth">8</span></span>
+            <span>财富思维<span class="filter-count" id="count-wealth">6</span></span>
           </button>
-          <button class="filter-btn" data-filter="focus" role="tab" aria-selected="false">
-            <span>专注力<span class="filter-count" id="count-focus">3</span></span>
+          <button class="filter-btn" data-filter="growth" role="tab" aria-selected="false">
+            <span>个人成长<span class="filter-count" id="count-growth">3</span></span>
           </button>
-          <button class="filter-btn" data-filter="philosophy" role="tab" aria-selected="false">
-            <span>哲学思考<span class="filter-count" id="count-philosophy">2</span></span>
+          <button class="filter-btn" data-filter="skill" role="tab" aria-selected="false">
+            <span>技能提升<span class="filter-count" id="count-skill">3</span></span>
+          </button>
+          <button class="filter-btn" data-filter="tech" role="tab" aria-selected="false">
+            <span>前沿科技<span class="filter-count" id="count-tech">2</span></span>
           </button>
           <button class="filter-btn" data-filter="recent" role="tab" aria-selected="false">
             <span>最近阅读<span class="filter-count" id="count-recent">3</span></span>
@@ -821,7 +726,6 @@
           正在显示全部 <strong id="displayCount">15</strong> 本书籍
         </div>
       </section>
-
       <!-- 书籍容器 -->
       <section class="books-container" id="booksContainer" aria-label="书籍列表">
         <!-- 无结果提示 -->
@@ -833,29 +737,28 @@
         <!-- 书籍卡片将通过JS动态生成 -->
       </section>
     </main>
-
     <!-- 底部 -->
     <footer class="footer" role="contentinfo">
       <div class="footer-container">
         <nav class="social-links" aria-label="社交媒体链接">
-          <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxNzcyMjAzNQ==&scene=124#wechat_redirect" 
-             target="_blank" 
-             class="social-link" 
-             aria-label="访问微信公众号" 
+          <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxNzcyMjAzNQ==&scene=124#wechat_redirect"
+             target="_blank"
+             class="social-link"
+             aria-label="访问微信公众号"
              rel="noopener noreferrer">
             <i class="fab fa-weixin" aria-hidden="true"></i>
           </a>
-          <a href="https://github.com/kuangketongxue" 
-             target="_blank" 
-             class="social-link" 
-             aria-label="访问GitHub主页" 
+          <a href="https://github.com/kuangketongxue"
+             target="_blank"
+             class="social-link"
+             aria-label="访问GitHub主页"
              rel="noopener noreferrer">
             <i class="fab fa-github" aria-hidden="true"></i>
           </a>
-          <a href="https://x.com/kuangketongxue" 
-             target="_blank" 
-             class="social-link" 
-             aria-label="访问X（Twitter）主页" 
+          <a href="https://x.com/kuangketongxue"
+             target="_blank"
+             class="social-link"
+             aria-label="访问X（Twitter）主页"
              rel="noopener noreferrer">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -866,10 +769,8 @@
       </div>
     </footer>
   </div>
-
   <script>
     // ==================== 工具函数 ====================
-    
     // 防抖函数
     function debounce(func, wait) {
       let timeout;
@@ -882,7 +783,6 @@
         timeout = setTimeout(later, wait);
       };
     }
-
     // 节流函数
     function throttle(func, limit) {
       let inThrottle;
@@ -896,9 +796,7 @@
         }
       };
     }
-
     // ==================== 数据定义 ====================
-    
     const booksData = [
       {
         id: 1,
@@ -918,7 +816,7 @@
         id: 2,
         title: "专注的真相",
         author: "李笑来",
-        category: ["focus", "recent"],
+        category: ["skill", "recent"],
         tag: "专注力",
         time: "2024",
         cover: "images/focus-truth.jpg",
@@ -932,8 +830,8 @@
         id: 3,
         title: "请辩",
         author: "蔡磊垒",
-        category: ["philosophy", "recent"],
-        tag: "哲学思考",
+        category: ["growth", "recent"],
+        tag: "思维方法",
         time: "持续更新",
         cover: "images/qingbian.jpg",
         pdfUrl: "https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI0MDg5ODA2NQ==&scene=124#wechat_redirect",
@@ -953,201 +851,341 @@
         pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
         notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnXAMuqLdMgyxkvatE44LdVc",
         pdfLabel: "PDF下载",
-        notesLabel: "阅读笔记"
+        notesLabel: "阅读笔记",
+        status: "available"
       },
       {
         id: 5,
         title: "小狗钱钱1+2",
         author: "博多·舍费尔",
         category: ["wealth"],
-        tag: "财富思维",
+        tag: "理财入门",
         time: "经典",
         cover: "images/Puppy-Money.jpg",
         pdfUrl: "https://zh.101run.ru/book/11930655/c7206e/%E5%B0%8F%E7%8B%97%E9%92%B1%E9%92%B1.html",
         notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnvH5qfel6H6X2E83DHcXCk6",
         pdfLabel: "在线阅读",
         notesLabel: "阅读笔记",
-        locked: true,
-        status: "locked"
+        status: "available"
       },
       {
         id: 6,
         title: "思考的真相",
         author: "李笑来",
-        category: ["focus"],
-        tag: "专注力",
+        category: ["skill"],
+        tag: "思维方法",
         time: "经典",
         cover: "images/The-Truth-About-Thinking.jpg",
         pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
-        notesUrl: "",
-        pdfLabel: "即将开放",
+        notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnYILA6u4iOZGjw3j4Q1P9ob",
+        pdfLabel: "PDF下载",
         notesLabel: "阅读笔记",
-        locked: true,
-        status: "locked"
+        status: "available"
       },
       {
         id: 7,
         title: "把时间当朋友",
         author: "李笑来",
-        category: ["wealth"],
-        tag: "财富思维",
+        category: ["growth"],
+        tag: "时间管理",
         time: "经典",
         cover: "images/717c41e16090ab180ace053fd8534b1c.png",
         pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
         notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcndO2Ug2Hpr1F7u2Necygyrf",
-        pdfLabel: "即将开放",
+        pdfLabel: "PDF下载",
         notesLabel: "阅读笔记",
-        locked: true,
-        status: "locked"
+        status: "available"
       },
       {
         id: 8,
         title: "个体崛起",
         author: "陈立飞",
-        category: ["philosophy"],
-        tag: "哲学思考",
+        category: ["growth"],
+        tag: "个人成长",
         time: "经典",
         cover: "images/a69fb72cdd767055408195aa0537a900.png",
         pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnYILA6u4iOZGjw3j4Q1P9ob",
-        notesUrl: "",
-        pdfLabel: "即将开放",
-        notesLabel: "阅读笔记"
+        notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnYILA6u4iOZGjw3j4Q1P9ob",
+        pdfLabel: "PDF下载",
+        notesLabel: "阅读笔记",
+        status: "available"
       },
       {
         id: 9,
         title: "七年就是一辈子",
         author: "李笑来",
-        category: ["focus"],
-        tag: "专注力",
+        category: ["skill"],
+        tag: "人生规划",
         time: "经典",
         cover: "images/d174e73e1af948b47dbc778aa5588af2.png",
         pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
         notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnawm7Jj8DBtvH4q0bNcZcTI",
-        pdfLabel: "即将开放",
+        pdfLabel: "PDF下载",
         notesLabel: "阅读笔记",
-        locked: true,
-        status: "locked"
+        status: "available"
       },
       {
         id: 10,
         title: "每周工作四小时",
         author: "蒂莫西·费里斯",
         category: ["wealth"],
-        tag: "财富思维",
+        tag: "效率提升",
         time: "经典",
         cover: "images/63435355ec6ae49a2c3ce60a16f8ce11.png",
         pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
         notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnQecykV6QzcAlA2kM5qeueb",
-        pdfLabel: "即将开放",
+        pdfLabel: "PDF下载",
         notesLabel: "阅读笔记",
-        locked: true,
-        status: "locked"
+        status: "available"
       },
       {
         id: 11,
         title: "真需求",
         author: "梁宁",
         category: ["wealth"],
-        tag: "财富思维",
+        tag: "产品思维",
         time: "经典",
         cover: "images/dea6823008845477a87a3157ba998fa7.png",
         pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
         notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnQpepGnnPUrX2YEpmQnGSzg",
-        pdfLabel: "即将开放",
+        pdfLabel: "PDF下载",
         notesLabel: "阅读笔记",
-        locked: true,
-        status: "locked"
+        status: "available"
       },
       {
         id: 12,
         title: "区块链革命",
         author: "唐·塔普斯科特",
-        category: ["wealth"],
-        tag: "财富思维",
+        category: ["tech"],
+        tag: "区块链",
         time: "经典",
         cover: "images/55640e28cc0649093acff1df582185d2.png",
         pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
         notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnpk4lB1lVHIUqwXGyou5wDf",
-        pdfLabel: "即将开放",
+        pdfLabel: "PDF下载",
         notesLabel: "阅读笔记",
-        locked: true,
-        status: "locked"
+        status: "available"
       },
       {
         id: 13,
         title: "AI时代",
         author: "李尚龙",
-        category: ["wealth"],
-        tag: "财富思维",
+        category: ["tech"],
+        tag: "人工智能",
         time: "经典",
         cover: "images/32b54cf8f960ce54b6db73fa85a732dc.png",
         pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
         notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnZi2dfOqY7yeBEbOVdo8Wne",
-        pdfLabel: "即将开放",
+        pdfLabel: "PDF下载",
         notesLabel: "阅读笔记",
-        locked: true,
-        status: "locked"
+        status: "available"
       },
       {
         id: 14,
         title: "PPT设计的艺术",
         author: "林屹",
-        category: ["wealth"],
-        tag: "财富思维",
-        time: "计划中",
-        cover: "1951fdfc6aabfa9dd518912b4edfd89e.png",
+        category: ["skill"],
+        tag: "职场技能",
+        time: "经典",
+        cover: "images/1951fdfc6aabfa9dd518912b4edfd89e.png",
         pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
         notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn5qrqztBgcB6H8hO9vMYCrg",
-        pdfLabel: "即将上架",
-        notesLabel: "敬请期待",
-        locked: true,
-        status: "locked"
+        pdfLabel: "PDF下载",
+        notesLabel: "阅读笔记",
+        status: "available"
       },
       {
         id: 15,
         title: "富爸爸穷爸爸",
         author: "罗伯特·清崎",
         category: ["wealth"],
-        tag: "财富思维",
-        time: "计划中",
+        tag: "理财入门",
+        time: "经典",
         cover: "https://picsum.photos/seed/book15/280/380.jpg",
+        pdfUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
+        notesUrl: "https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcn7mhhSgSppuEeXbTMCGudwc",
+        pdfLabel: "PDF下载",
+        notesLabel: "阅读笔记",
+        status: "available"
+      },
+      // 预留10个书位
+      {
+        id: 16,
+        title: "待添加书籍",
+        author: "作者待定",
+        category: ["placeholder"],
+        tag: "敬请期待",
+        time: "即将上架",
+        cover: "https://picsum.photos/seed/placeholder16/280/380?blur=5",
         pdfUrl: "#",
         notesUrl: "#",
         pdfLabel: "即将上架",
         notesLabel: "敬请期待",
-        locked: true,
-        status: "locked"
+        status: "placeholder",
+        isPlaceholder: true
+      },
+      {
+        id: 17,
+        title: "待添加书籍",
+        author: "作者待定",
+        category: ["placeholder"],
+        tag: "敬请期待",
+        time: "即将上架",
+        cover: "https://picsum.photos/seed/placeholder17/280/380?blur=5",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "敬请期待",
+        status: "placeholder",
+        isPlaceholder: true
+      },
+      {
+        id: 18,
+        title: "待添加书籍",
+        author: "作者待定",
+        category: ["placeholder"],
+        tag: "敬请期待",
+        time: "即将上架",
+        cover: "https://picsum.photos/seed/placeholder18/280/380?blur=5",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "敬请期待",
+        status: "placeholder",
+        isPlaceholder: true
+      },
+      {
+        id: 19,
+        title: "待添加书籍",
+        author: "作者待定",
+        category: ["placeholder"],
+        tag: "敬请期待",
+        time: "即将上架",
+        cover: "https://picsum.photos/seed/placeholder19/280/380?blur=5",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "敬请期待",
+        status: "placeholder",
+        isPlaceholder: true
+      },
+      {
+        id: 20,
+        title: "待添加书籍",
+        author: "作者待定",
+        category: ["placeholder"],
+        tag: "敬请期待",
+        time: "即将上架",
+        cover: "https://picsum.photos/seed/placeholder20/280/380?blur=5",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "敬请期待",
+        status: "placeholder",
+        isPlaceholder: true
+      },
+      {
+        id: 21,
+        title: "待添加书籍",
+        author: "作者待定",
+        category: ["placeholder"],
+        tag: "敬请期待",
+        time: "即将上架",
+        cover: "https://picsum.photos/seed/placeholder21/280/380?blur=5",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "敬请期待",
+        status: "placeholder",
+        isPlaceholder: true
+      },
+      {
+        id: 22,
+        title: "待添加书籍",
+        author: "作者待定",
+        category: ["placeholder"],
+        tag: "敬请期待",
+        time: "即将上架",
+        cover: "https://picsum.photos/seed/placeholder22/280/380?blur=5",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "敬请期待",
+        status: "placeholder",
+        isPlaceholder: true
+      },
+      {
+        id: 23,
+        title: "待添加书籍",
+        author: "作者待定",
+        category: ["placeholder"],
+        tag: "敬请期待",
+        time: "即将上架",
+        cover: "https://picsum.photos/seed/placeholder23/280/380?blur=5",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "敬请期待",
+        status: "placeholder",
+        isPlaceholder: true
+      },
+      {
+        id: 24,
+        title: "待添加书籍",
+        author: "作者待定",
+        category: ["placeholder"],
+        tag: "敬请期待",
+        time: "即将上架",
+        cover: "https://picsum.photos/seed/placeholder24/280/380?blur=5",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "敬请期待",
+        status: "placeholder",
+        isPlaceholder: true
+      },
+      {
+        id: 25,
+        title: "待添加书籍",
+        author: "作者待定",
+        category: ["placeholder"],
+        tag: "敬请期待",
+        time: "即将上架",
+        cover: "https://picsum.photos/seed/placeholder25/280/380?blur=5",
+        pdfUrl: "#",
+        notesUrl: "#",
+        pdfLabel: "即将上架",
+        notesLabel: "敬请期待",
+        status: "placeholder",
+        isPlaceholder: true
       }
     ];
-
     // ==================== 核心功能 ====================
-
     // 创建书籍卡片
     function createBookCard(book, index) {
       const card = document.createElement('article');
-      card.className = `book-card ${book.locked ? 'locked' : ''}`;
+      card.className = `book-card ${book.isPlaceholder ? 'placeholder' : ''}`;
       card.dataset.category = book.category.join(' ');
       card.dataset.index = index;
       card.setAttribute('aria-label', `${book.title} - ${book.author}`);
-
-      const badgeHTML = book.status === 'recent' 
-        ? '<span class="book-badge recent">最新</span>'
-        : book.status === 'locked'
-        ? '<span class="book-badge locked"><i class="fas fa-lock"></i> 即将开放</span>'
-        : '';
-
-      const pdfIcon = book.locked ? '<i class="fas fa-lock"></i>' : '<i class="fas fa-file-pdf"></i>';
-      const notesIcon = book.locked ? '<i class="fas fa-lock"></i>' : '<i class="fas fa-book-open"></i>';
       
+      const badgeHTML = book.status === 'recent'
+        ? '<span class="book-badge recent">✨ 最新</span>'
+        : book.status === 'placeholder'
+        ? '<span class="book-badge placeholder">📖 预留</span>'
+        : '';
+      
+      const pdfIcon = book.isPlaceholder ? '<i class="fas fa-hourglass-half"></i>' : '<i class="fas fa-file-pdf"></i>';
+      const notesIcon = book.isPlaceholder ? '<i class="fas fa-hourglass-half"></i>' : '<i class="fas fa-book-open"></i>';
       const pdfDisabled = book.pdfUrl === '#' ? 'disabled' : '';
       const notesDisabled = book.notesUrl === '#' ? 'disabled' : '';
-
+      
       card.innerHTML = `
         ${badgeHTML}
         <div class="book-cover">
-          <img class="lazy-image" 
-               data-src="${book.cover}" 
-               alt="${book.title}封面" 
+          <img class="lazy-image"
+               data-src="${book.cover}"
+               alt="${book.title}封面"
                loading="lazy">
           <div class="book-overlay"></div>
         </div>
@@ -1168,8 +1206,8 @@
             </span>
           </div>
           <div class="book-actions">
-            <a href="${book.pdfUrl}" 
-               class="book-btn btn-pdf" 
+            <a href="${book.pdfUrl}"
+               class="book-btn btn-pdf"
                target="_blank"
                rel="noopener noreferrer"
                ${pdfDisabled}
@@ -1177,8 +1215,8 @@
               ${pdfIcon}
               <span>${book.pdfLabel}</span>
             </a>
-            <a href="${book.notesUrl}" 
-               class="book-btn btn-notes" 
+            <a href="${book.notesUrl}"
+               class="book-btn btn-notes"
                target="_blank"
                rel="noopener noreferrer"
                ${notesDisabled}
@@ -1189,10 +1227,8 @@
           </div>
         </div>
       `;
-
       return card;
     }
-
     // 批量渲染书籍
     function renderBooks(books = booksData) {
       const container = document.getElementById('booksContainer');
@@ -1204,32 +1240,31 @@
           child.remove();
         }
       });
-
+      
       if (books.length === 0) {
         noResults.classList.add('show');
         return;
       }
-
-      noResults.classList.remove('show');
-      const fragment = document.createDocumentFragment();
       
+      noResults.classList.remove('show');
+      
+      const fragment = document.createDocumentFragment();
       books.forEach((book, index) => {
         const card = createBookCard(book, index);
         fragment.appendChild(card);
       });
-
+      
       container.appendChild(fragment);
       
       // 重新初始化懒加载
       setTimeout(() => initializeLazyLoading(), 100);
     }
-
     // 生成星星背景
     function createStars() {
       const starsContainer = document.getElementById('stars');
       const starCount = window.innerWidth < 768 ? 20 : 30;
       const fragment = document.createDocumentFragment();
-
+      
       for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
         star.className = 'star';
@@ -1239,22 +1274,19 @@
         star.style.opacity = Math.random() * 0.8 + 0.2;
         fragment.appendChild(star);
       }
-
+      
       starsContainer.appendChild(fragment);
     }
-
     // 导航栏滚动效果
     function handleNavbarScroll() {
       const navbar = document.getElementById('navbar');
-      
       const throttledScroll = throttle(() => {
         const currentScrollY = window.scrollY;
         navbar.classList.toggle('scrolled', currentScrollY > 50);
       }, 16);
-
+      
       window.addEventListener('scroll', throttledScroll, { passive: true });
     }
-
     // 更新统计信息
     function updateStats(filter = 'all') {
       const displayCount = document.getElementById('displayCount');
@@ -1262,60 +1294,65 @@
       
       let count;
       let filterName;
-
+      
+      // 只统计非占位符书籍
+      const realBooks = booksData.filter(book => !book.isPlaceholder);
+      
       if (filter === 'all') {
-        count = booksData.length;
+        count = realBooks.length;
         filterName = '全部';
       } else {
-        count = booksData.filter(book => book.category.includes(filter)).length;
+        count = realBooks.filter(book => book.category.includes(filter)).length;
         const filterMap = {
           'wealth': '财富思维',
-          'focus': '专注力',
-          'philosophy': '哲学思考',
+          'growth': '个人成长',
+          'skill': '技能提升',
+          'tech': '前沿科技',
           'recent': '最近阅读'
         };
         filterName = filterMap[filter];
       }
-
+      
       displayCount.textContent = count;
       filterInfo.innerHTML = `正在显示<strong>${filterName}</strong>分类的 <strong>${count}</strong> 本书籍`;
     }
-
     // 初始化分类计数
     function initializeCategoryCounts() {
+      // 只统计非占位符书籍
+      const realBooks = booksData.filter(book => !book.isPlaceholder);
+      
       const counts = {
-        all: booksData.length,
-        wealth: booksData.filter(b => b.category.includes('wealth')).length,
-        focus: booksData.filter(b => b.category.includes('focus')).length,
-        philosophy: booksData.filter(b => b.category.includes('philosophy')).length,
-        recent: booksData.filter(b => b.category.includes('recent')).length
+        all: realBooks.length,
+        wealth: realBooks.filter(b => b.category.includes('wealth')).length,
+        growth: realBooks.filter(b => b.category.includes('growth')).length,
+        skill: realBooks.filter(b => b.category.includes('skill')).length,
+        tech: realBooks.filter(b => b.category.includes('tech')).length,
+        recent: realBooks.filter(b => b.category.includes('recent')).length
       };
-
+      
       Object.keys(counts).forEach(key => {
         const countElement = document.getElementById(`count-${key}`);
         if (countElement) {
           countElement.textContent = counts[key];
         }
       });
-
+      
       // 更新总数
       const totalBooks = document.getElementById('totalBooks');
       if (totalBooks) {
         totalBooks.textContent = counts.all;
       }
     }
-
     // 筛选功能
     function initializeFilter() {
       const filterBtns = document.querySelectorAll('.filter-btn');
       let currentFilter = 'all';
-
+      
       filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           const newFilter = btn.dataset.filter;
-          
           if (newFilter === currentFilter) return;
-
+          
           // 更新按钮状态
           filterBtns.forEach(b => {
             b.classList.remove('active');
@@ -1323,20 +1360,20 @@
           });
           btn.classList.add('active');
           btn.setAttribute('aria-selected', 'true');
-
+          
           currentFilter = newFilter;
-
-          // 筛选并重新渲染
-          const filteredBooks = newFilter === 'all' 
-            ? booksData 
-            : booksData.filter(book => book.category.includes(newFilter));
-
+          
+          // 筛选并重新渲染（排除占位符）
+          const realBooks = booksData.filter(book => !book.isPlaceholder);
+          const filteredBooks = newFilter === 'all'
+            ? booksData // 显示全部包括占位符
+            : realBooks.filter(book => book.category.includes(newFilter));
+          
           renderBooks(filteredBooks);
           updateStats(newFilter);
         });
       });
     }
-
     // 图片懒加载
     function initializeLazyLoading() {
       const imageObserver = new IntersectionObserver((entries, observer) => {
@@ -1366,14 +1403,13 @@
         rootMargin: '50px 0px',
         threshold: 0.1
       });
-
+      
       const lazyImages = document.querySelectorAll('.lazy-image:not(.loaded)');
       lazyImages.forEach(img => imageObserver.observe(img));
       
       // 保存观察器实例以便清理
       window.imageObserver = imageObserver;
     }
-
     // 预加载关键资源
     function preloadCriticalResources() {
       // 预加载字体
@@ -1386,16 +1422,13 @@
       };
       document.head.appendChild(fontLink);
     }
-
     // 内存清理
     function cleanup() {
       if (window.imageObserver) {
         window.imageObserver.disconnect();
       }
     }
-
     // ==================== 应用初始化 ====================
-    
     function initApp() {
       console.log('🚀 初始化星空书柜...');
       
@@ -1426,7 +1459,6 @@
       
       console.log('✅ 星空书柜初始化完成！');
     }
-
     // 使用最佳实践初始化
     if ('requestIdleCallback' in window) {
       requestIdleCallback(initApp, { timeout: 1000 });
@@ -1437,7 +1469,6 @@
         initApp();
       }
     }
-
     // 开发环境调试
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       window.booksData = booksData;
