@@ -1114,7 +1114,7 @@ function getMomentsStats(moments) {
 let momentsData = [
       {
         id: 28,
-        content: '',
+        content: 'i personally could have a gallon of Alan',
         value: 0,
         category: '幽默段子',
         time: '2025-10-23 21:59',
