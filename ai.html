@@ -4,7 +4,7 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI助手矩阵 - 狂客·银河</title>
+    <title>高考AI助手 - 狂客·银河</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -180,28 +180,28 @@
             transform: translateX(5px);
         }
         
-        /* 各AI助手专属颜色 */
-        .text-bg {
+        /* 各科目专属颜色 */
+        .chinese-bg {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
         
-        .logic-bg {
+        .math-bg {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         }
         
-        .language-bg {
+        .english-bg {
             background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
         }
         
-        .science-bg {
+        .physics-bg {
             background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
         }
         
-        .experiment-bg {
+        .chemistry-bg {
             background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
         }
         
-        .thinking-bg {
+        .politics-bg {
             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
         }
         
@@ -282,7 +282,7 @@
             padding: 40px;
             border-radius: 20px;
             width: 90%;
-            max-width: 600px;
+            max-width: 700px;
             max-height: 80vh;
             overflow-y: auto;
             position: relative;
@@ -391,6 +391,65 @@
         body.dark-mode .tool-info p {
             color: #aaa;
         }
+
+        /* 子题目网格 */
+        .subtopic-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .subtopic-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        body.dark-mode .subtopic-card {
+            background: #2d3748;
+        }
+
+        .subtopic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .subtopic-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtopic-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        body.dark-mode .subtopic-name {
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .subtopic-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 空状态提示 */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body data-page="ai">
@@ -433,129 +492,151 @@
 
     <div class="ai-matrix-container">
         <div class="matrix-title">
-            <h1>🤖 AI助手矩阵</h1>
-            <p>智能工具赋能，助力个人成长与能力提升</p>
+            <h1>🎯 高考AI助手</h1>
+            <p>精准覆盖各科目知识点，助力高考提分</p>
         </div>
 
-        <div class="matrix-grid">
-            <!-- 文本理解助手 -->
+        <!-- 主科目页面 -->
+        <div id="mainView" class="matrix-grid">
+            <!-- 语文 -->
             <div class="matrix-section">
                 <div class="section-header">
-                    <h2>📖 文本理解助手</h2>
-                    <p class="subtitle">阅读分析 · 写作优化</p>
+                    <h2>📖 语文</h2>
+                    <p class="subtitle">阅读、写作、文化传承</p>
                 </div>
                 <div class="ai-cards">
-                    <div class="ai-card" onclick="openModal('text')">
-                        <div class="ai-icon text-bg">
-                            <i class="fas fa-book-reader"></i>
+                    <div class="ai-card" onclick="showSubjects('chinese')">
+                        <div class="ai-icon chinese-bg">
+                            <i class="fas fa-book"></i>
                         </div>
                         <div class="ai-info">
-                            <div class="ai-name">智能阅读分析</div>
-                            <div class="ai-desc">深度理解文本、提炼核心要点、优化表达能力</div>
+                            <div class="ai-name">语文学习辅助</div>
+                            <div class="ai-desc">7大考点精准突破</div>
                         </div>
                         <i class="fas fa-arrow-right ai-arrow"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- 逻辑推理助手 -->
+            <!-- 数学 -->
             <div class="matrix-section">
                 <div class="section-header">
-                    <h2>🧮 逻辑推理助手</h2>
-                    <p class="subtitle">问题解决 · 思维训练</p>
+                    <h2>🧮 数学</h2>
+                    <p class="subtitle">函数、几何、概率</p>
                 </div>
                 <div class="ai-cards">
-                    <div class="ai-card" onclick="openModal('logic')">
-                        <div class="ai-icon logic-bg">
-                            <i class="fas fa-brain"></i>
+                    <div class="ai-card" onclick="showSubjects('math')">
+                        <div class="ai-icon math-bg">
+                            <i class="fas fa-calculator"></i>
                         </div>
                         <div class="ai-info">
-                            <div class="ai-name">智能解题助手</div>
-                            <div class="ai-desc">逻辑分析、问题拆解、解决方案推导</div>
+                            <div class="ai-name">数学解题工坊</div>
+                            <div class="ai-desc">10大知识模块</div>
                         </div>
                         <i class="fas fa-arrow-right ai-arrow"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- 语言学习助手 -->
+            <!-- 英语 -->
             <div class="matrix-section">
                 <div class="section-header">
-                    <h2>🌐 语言学习助手</h2>
-                    <p class="subtitle">国际交流 · 语言提升</p>
+                    <h2>🌍 英语</h2>
+                    <p class="subtitle">听说读写综合能力</p>
                 </div>
                 <div class="ai-cards">
-                    <div class="ai-card" onclick="openModal('language')">
-                        <div class="ai-icon language-bg">
-                            <i class="fas fa-language"></i>
+                    <div class="ai-card" onclick="showSubjects('english')">
+                        <div class="ai-icon english-bg">
+                            <i class="fas fa-globe"></i>
                         </div>
                         <div class="ai-info">
-                            <div class="ai-name">智能语言训练</div>
-                            <div class="ai-desc">听说读写、语法纠错、表达优化</div>
+                            <div class="ai-name">英语学习中心</div>
+                            <div class="ai-desc">6大题型精讲</div>
                         </div>
                         <i class="fas fa-arrow-right ai-arrow"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- 科学思维助手 -->
+            <!-- 物理 -->
             <div class="matrix-section">
                 <div class="section-header">
-                    <h2>🔬 科学思维助手</h2>
-                    <p class="subtitle">自然探索 · 原理解析</p>
+                    <h2>⚡ 物理</h2>
+                    <p class="subtitle">力、电、热、光、现代</p>
                 </div>
                 <div class="ai-cards">
-                    <div class="ai-card" onclick="openModal('science')">
-                        <div class="ai-icon science-bg">
-                            <i class="fas fa-atom"></i>
+                    <div class="ai-card" onclick="showSubjects('physics')">
+                        <div class="ai-icon physics-bg">
+                            <i class="fas fa-bolt"></i>
                         </div>
                         <div class="ai-info">
-                            <div class="ai-name">智能科学导师</div>
-                            <div class="ai-desc">现象解析、原理推导、规律总结</div>
+                            <div class="ai-name">物理实验室</div>
+                            <div class="ai-desc">7大知识体系</div>
                         </div>
                         <i class="fas fa-arrow-right ai-arrow"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- 实验分析助手 -->
+            <!-- 化学 -->
             <div class="matrix-section">
                 <div class="section-header">
-                    <h2>⚗️ 实验分析助手</h2>
-                    <p class="subtitle">物质研究 · 反应解析</p>
+                    <h2>⚗️ 化学</h2>
+                    <p class="subtitle">物质、反应、平衡</p>
                 </div>
                 <div class="ai-cards">
-                    <div class="ai-card" onclick="openModal('experiment')">
-                        <div class="ai-icon experiment-bg">
+                    <div class="ai-card" onclick="showSubjects('chemistry')">
+                        <div class="ai-icon chemistry-bg">
                             <i class="fas fa-flask"></i>
                         </div>
                         <div class="ai-info">
-                            <div class="ai-name">智能实验顾问</div>
-                            <div class="ai-desc">反应分析、过程推导、结果预测</div>
+                            <div class="ai-name">化学研究中心</div>
+                            <div class="ai-desc">10大专题</div>
                         </div>
                         <i class="fas fa-arrow-right ai-arrow"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- 社会认知助手 -->
+            <!-- 政治 -->
             <div class="matrix-section">
                 <div class="section-header">
-                    <h2>🏛️ 社会认知助手</h2>
-                    <p class="subtitle">思想研究 · 观点分析</p>
+                    <h2>🏛️ 政治</h2>
+                    <p class="subtitle">经济、政治、文化、哲学</p>
                 </div>
                 <div class="ai-cards">
-                    <div class="ai-card" onclick="openModal('thinking')">
-                        <div class="ai-icon thinking-bg">
+                    <div class="ai-card" onclick="showSubjects('politics')">
+                        <div class="ai-icon politics-bg">
                             <i class="fas fa-balance-scale"></i>
                         </div>
                         <div class="ai-info">
-                            <div class="ai-name">智能思维导师</div>
-                            <div class="ai-desc">观点梳理、逻辑分析、深度思考</div>
+                            <div class="ai-name">思想政治学堂</div>
+                            <div class="ai-desc">7大思想体系</div>
                         </div>
                         <i class="fas fa-arrow-right ai-arrow"></i>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- 子题目页面 -->
+        <div id="subtopicView" style="display: none;">
+            <div style="margin-bottom: 30px;">
+                <button onclick="backToMain()" style="
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    font-size: 1em;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                ">
+                    <i class="fas fa-arrow-left"></i> 返回科目列表
+                </button>
+            </div>
+            <div class="subtopic-grid" id="subtopicGrid">
+                <!-- 动态加载子题目 -->
             </div>
         </div>
     </div>
@@ -579,63 +660,351 @@
     </a>
 
     <script>
-        // AI工具配置 - 请在此处填写您的AI工具
-        const aiTools = {
-            text: {
-                title: '📖 文本理解助手',
-                tools: [
-                    // 请按以下格式添加工具：
-                    // { name: '工具名称', desc: '工具描述', url: '工具链接', icon: '图标emoji', color: '背景颜色' }
-                    // 示例：
-                    // { name: 'ChatGPT', desc: '文本分析与写作辅助', url: 'https://chat.openai.com', icon: '💬', color: '#10a37f' },
+        // 高考考点数据库
+        const subjects = {
+            chinese: {
+                title: '📖 语文',
+                icon: '📚',
+                color: '#f5576c',
+                topics: [
+                    { name: '论述类文本', icon: '📄', key: 'chinese_lunsu' },
+                    { name: '文学类文本', icon: '📖', key: 'chinese_wenxue' },
+                    { name: '古文阅读', icon: '🖋️', key: 'chinese_guwen' },
+                    { name: '古诗词', icon: '✍️', key: 'chinese_shici' },
+                    { name: '默写填空', icon: '📝', key: 'chinese_mosxie' },
+                    { name: '语言应用', icon: '🗣️', key: 'chinese_yingyang' },
+                    { name: '作文写作', icon: '📑', key: 'chinese_zuowen' }
                 ]
             },
-            logic: {
-                title: '🧮 逻辑推理助手',
-                tools: [
-                    // 请在此处添加数学相关的AI工具
+            math: {
+                title: '🧮 数学',
+                icon: '🔢',
+                color: '#00f2fe',
+                topics: [
+                    { name: '集合与逻辑', icon: '∅', key: 'math_jihe' },
+                    { name: '函数', icon: 'ƒ', key: 'math_function' },
+                    { name: '数列', icon: '1,2,3', key: 'math_shuslie' },
+                    { name: '三角函数', icon: '∠', key: 'math_trigonometry' },
+                    { name: '平面向量', icon: '⃗', key: 'math_vector' },
+                    { name: '不等式', icon: '≥', key: 'math_inequality' },
+                    { name: '立体几何', icon: '🎲', key: 'math_lititi' },
+                    { name: '解析几何', icon: '📊', key: 'math_jiexijihesong' },
+                    { name: '概率统计', icon: '📈', key: 'math_probability' },
+                    { name: '导数应用', icon: '∫', key: 'math_derivative' }
                 ]
             },
-            language: {
-                title: '🌐 语言学习助手',
-                tools: [
-                    // 请在此处添加英语学习相关的AI工具
+            english: {
+                title: '🌍 英语',
+                icon: '🌐',
+                color: '#38f9d7',
+                topics: [
+                    { name: '阅读理解', icon: '📚', key: 'english_reading' },
+                    { name: '七选五', icon: '5️⃣', key: 'english_sevenfive' },
+                    { name: '完形填空', icon: '🔤', key: 'english_cloze' },
+                    { name: '语法填空', icon: '📝', key: 'english_grammar' },
+                    { name: '应用文写作', icon: '💌', key: 'english_writing' },
+                    { name: '读后续写', icon: '📖', key: 'english_continuation' }
                 ]
             },
-            science: {
-                title: '🔬 科学思维助手',
-                tools: [
-                    // 请在此处添加物理相关的AI工具
+            physics: {
+                title: '⚡ 物理',
+                icon: '⚛️',
+                color: '#fee140',
+                topics: [
+                    { name: '力学', icon: '💪', key: 'physics_mechanics' },
+                    { name: '电磁学', icon: '🧲', key: 'physics_electromagnetism' },
+                    { name: '热学', icon: '🔥', key: 'physics_thermology' },
+                    { name: '振动和波', icon: '〰️', key: 'physics_wave' },
+                    { name: '光学', icon: '💡', key: 'physics_optics' },
+                    { name: '近代物理', icon: '☢️', key: 'physics_modern' },
+                    { name: '实验题', icon: '🔬', key: 'physics_experiment' }
                 ]
             },
-            experiment: {
-                title: '⚗️ 实验分析助手',
-                tools: [
-                    // 请在此处添加化学相关的AI工具
+            chemistry: {
+                title: '⚗️ 化学',
+                icon: '🧪',
+                color: '#330867',
+                topics: [
+                    { name: '物质变化', icon: '⚛️', key: 'chem_substance' },
+                    { name: '化学计量', icon: '⚖️', key: 'chem_stoichiometry' },
+                    { name: '金属及化合物', icon: '🔩', key: 'chem_metal' },
+                    { name: '非金属及化合物', icon: '💎', key: 'chem_nonmetal' },
+                    { name: '物质结构', icon: '🧬', key: 'chem_structure' },
+                    { name: '化学能量', icon: '⚡', key: 'chem_energy' },
+                    { name: '反应速率平衡', icon: '⚔️', key: 'chem_equilibrium' },
+                    { name: '离子平衡', icon: '💧', key: 'chem_ionbalance' },
+                    { name: '有机化学', icon: '🌿', key: 'chem_organic' },
+                    { name: '实验探究', icon: '🔭', key: 'chem_experiment' }
                 ]
             },
-            thinking: {
-                title: '🏛️ 社会认知助手',
-                tools: [
-                    // 请在此处添加政治相关的AI工具
+            politics: {
+                title: '🏛️ 政治',
+                icon: '⚖️',
+                color: '#fed6e3',
+                topics: [
+                    { name: '中国特色社会主义', icon: '🇨🇳', key: 'poli_socialism' },
+                    { name: '经济与社会', icon: '💰', key: 'poli_economy' },
+                    { name: '政治与法治', icon: '⚖️', key: 'poli_politics' },
+                    { name: '哲学与文化', icon: '🧠', key: 'poli_philosophy' },
+                    { name: '国际经济', icon: '🌍', key: 'poli_international' },
+                    { name: '法律生活', icon: '📜', key: 'poli_law' },
+                    { name: '逻辑思维', icon: '🔗', key: 'poli_logic' }
                 ]
             }
         };
 
+        // AI工具配置 - 请在下面填写各个考点的AI工具
+        const aiTools = {
+            // 语文考点
+            'chinese_lunsu': {
+                title: '论述类文本',
+                tools: [] // 请在此添加AI工具
+            },
+            'chinese_wenxue': {
+                title: '文学类文本',
+                tools: []
+            },
+            'chinese_guwen': {
+                title: '古文阅读',
+                tools: []
+            },
+            'chinese_shici': {
+                title: '古诗词鉴赏',
+                tools: []
+            },
+            'chinese_mosxie': {
+                title: '默写填空',
+                tools: []
+            },
+            'chinese_yingyang': {
+                title: '语言文字应用',
+                tools: []
+            },
+            'chinese_zuowen': {
+                title: '作文写作',
+                tools: []
+            },
+
+            // 数学考点
+            'math_jihe': {
+                title: '集合与简易逻辑',
+                tools: []
+            },
+            'math_function': {
+                title: '函数',
+                tools: []
+            },
+            'math_shuslie': {
+                title: '数列',
+                tools: []
+            },
+            'math_trigonometry': {
+                title: '三角函数',
+                tools: []
+            },
+            'math_vector': {
+                title: '平面向量',
+                tools: []
+            },
+            'math_inequality': {
+                title: '不等式',
+                tools: []
+            },
+            'math_lititi': {
+                title: '立体几何',
+                tools: []
+            },
+            'math_jiexijihesong': {
+                title: '解析几何',
+                tools: []
+            },
+            'math_probability': {
+                title: '概率与统计',
+                tools: []
+            },
+            'math_derivative': {
+                title: '导数及其应用',
+                tools: []
+            },
+
+            // 英语考点
+            'english_reading': {
+                title: '阅读理解',
+                tools: []
+            },
+            'english_sevenfive': {
+                title: '七选五',
+                tools: []
+            },
+            'english_cloze': {
+                title: '完形填空',
+                tools: []
+            },
+            'english_grammar': {
+                title: '语法填空',
+                tools: []
+            },
+            'english_writing': {
+                title: '应用文写作',
+                tools: []
+            },
+            'english_continuation': {
+                title: '读后续写',
+                tools: []
+            },
+
+            // 物理考点
+            'physics_mechanics': {
+                title: '力学',
+                tools: []
+            },
+            'physics_electromagnetism': {
+                title: '电磁学',
+                tools: []
+            },
+            'physics_thermology': {
+                title: '热学',
+                tools: []
+            },
+            'physics_wave': {
+                title: '振动和波',
+                tools: []
+            },
+            'physics_optics': {
+                title: '光学',
+                tools: []
+            },
+            'physics_modern': {
+                title: '近代物理',
+                tools: []
+            },
+            'physics_experiment': {
+                title: '物理实验',
+                tools: []
+            },
+
+            // 化学考点
+            'chem_substance': {
+                title: '化学物质及其变化',
+                tools: []
+            },
+            'chem_stoichiometry': {
+                title: '化学计量',
+                tools: []
+            },
+            'chem_metal': {
+                title: '金属及其化合物',
+                tools: []
+            },
+            'chem_nonmetal': {
+                title: '非金属及其化合物',
+                tools: []
+            },
+            'chem_structure': {
+                title: '物质结构与性质',
+                tools: []
+            },
+            'chem_energy': {
+                title: '化学反应与能量',
+                tools: []
+            },
+            'chem_equilibrium': {
+                title: '化学反应速率与平衡',
+                tools: []
+            },
+            'chem_ionbalance': {
+                title: '水溶液中的离子平衡',
+                tools: []
+            },
+            'chem_organic': {
+                title: '有机化学基础',
+                tools: []
+            },
+            'chem_experiment': {
+                title: '化学实验基础与探究',
+                tools: []
+            },
+
+            // 政治考点
+            'poli_socialism': {
+                title: '中国特色社会主义',
+                tools: []
+            },
+            'poli_economy': {
+                title: '经济与社会',
+                tools: []
+            },
+            'poli_politics': {
+                title: '政治与法治',
+                tools: []
+            },
+            'poli_philosophy': {
+                title: '哲学与文化',
+                tools: []
+            },
+            'poli_international': {
+                title: '国际经济与发展',
+                tools: []
+            },
+            'poli_law': {
+                title: '法律与生活',
+                tools: []
+            },
+            'poli_logic': {
+                title: '逻辑与思维',
+                tools: []
+            }
+        };
+
+        // 显示子题目
+        function showSubjects(subject) {
+            const subjectData = subjects[subject];
+            const subtopicGrid = document.getElementById('subtopicGrid');
+            
+            subtopicGrid.innerHTML = subjectData.topics.map(topic => `
+                <div class="subtopic-card" onclick="openModal('${topic.key}')">
+                    <div class="subtopic-icon">${topic.icon}</div>
+                    <div class="subtopic-name">${topic.name}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('mainView').style.display = 'none';
+            document.getElementById('subtopicView').style.display = 'block';
+            
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 返回主菜单
+        function backToMain() {
+            document.getElementById('mainView').style.display = 'grid';
+            document.getElementById('subtopicView').style.display = 'none';
+        }
+
         // 打开模态框
-        function openModal(category) {
+        function openModal(topicKey) {
             const modal = document.getElementById('aiModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalTools = document.getElementById('modalTools');
             
-            const categoryData = aiTools[category];
-            modalTitle.textContent = categoryData.title;
+            const toolData = aiTools[topicKey];
+            if (!toolData) {
+                alert('该考点数据配置出错');
+                return;
+            }
             
-            // 如果该类别没有工具，显示提示信息
-            if (categoryData.tools.length === 0) {
-                modalTools.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">暂无工具，请在代码中添加</p>';
+            modalTitle.textContent = toolData.title + ' - AI工具';
+            
+            if (toolData.tools.length === 0) {
+                modalTools.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🛠️</div>
+                        <p>暂无工具配置</p>
+                        <p style="font-size: 0.9em;">请在代码中为此考点添加AI工具</p>
+                    </div>
+                `;
             } else {
-                modalTools.innerHTML = categoryData.tools.map(tool => `
+                modalTools.innerHTML = toolData.tools.map(tool => `
                     <a href="${tool.url}" target="_blank" class="tool-item">
                         <div class="tool-icon" style="background: ${tool.color}">
                             ${tool.icon}
@@ -669,7 +1038,6 @@
         const body = document.body;
         const icon = themeToggle.querySelector('i');
         
-        // 检查本地存储的主题设置
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
