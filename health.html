@@ -1152,11 +1152,98 @@
     </div>
 
     <!-- 音频元素 -->
-    <audio id="reminderAudio" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" type="audio/mpeg">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-happy-bells-notification-937.mp3" type="audio/mpeg">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-positive-notification-951.mp3" type="audio/mpeg">
-    </audio>
+   <!-- 删除原来的 <audio> 标签，改用 Web Audio API -->
+<script>
+    // 在 EyeCareTimer 类中添加以下方法
+    
+    // 改进的音频播放方法
+    playReminderSound() {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const volume = this.volumeInput.value / 100;
+            
+            // 创建悦耳的提示音序列
+            const playTone = (frequency, startTime, duration) => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(volume * 0.3, startTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+                
+                oscillator.start(startTime);
+                oscillator.stop(startTime + duration);
+            };
+            
+            // 播放和弦提示音（更悦耳）
+            const now = audioContext.currentTime;
+            playTone(523.25, now, 0.2);        // C5
+            playTone(659.25, now + 0.15, 0.2); // E5
+            playTone(783.99, now + 0.3, 0.3);  // G5
+            
+            // 第二组
+            setTimeout(() => {
+                const now2 = audioContext.currentTime;
+                playTone(523.25, now2, 0.2);
+                playTone(659.25, now2 + 0.15, 0.2);
+                playTone(783.99, now2 + 0.3, 0.3);
+            }, 600);
+            
+        } catch (error) {
+            console.error('音频播放失败:', error);
+            // 降级方案：使用原生alert
+            if (this.isRunning) {
+                this.showVisualAlert();
+            }
+        }
+    }
+    
+    // 视觉提醒（无声音降级方案）
+    showVisualAlert() {
+        document.body.style.animation = 'flash 0.5s ease 3';
+    }
+    
+    // 在 testAudio() 方法中调用
+    async testAudio() {
+        this.audioStatus.textContent = '测试中...';
+        this.audioStatus.style.color = '#ffc107';
+        
+        try {
+            this.playReminderSound();
+            this.audioStatus.textContent = '正常';
+            this.audioStatus.style.color = '#4caf50';
+            this.audioError.style.display = 'none';
+        } catch (error) {
+            console.error('音频测试失败:', error);
+            this.audioStatus.textContent = '失败';
+            this.audioStatus.style.color = '#f44336';
+            this.audioError.style.display = 'block';
+        }
+    }
+    
+    // 在 showReminder() 方法中替换音频播放部分
+    async showReminder() {
+        this.stats.reminderCount++;
+        this.updateStats();
+        this.saveState();
+
+        // 播放提醒音 - 使用新方法
+        this.playReminderSound();
+
+        // 振动提醒
+        if (navigator.vibrate) {
+            navigator.vibrate([200, 100, 200, 100, 200]);
+        }
+
+        // ... 其余代码保持不变
+    }
+</script>
+
 
     <script>
         // ========== Canvas星空背景（性能优化）==========
