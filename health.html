@@ -14,7 +14,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
@@ -29,7 +28,6 @@
             --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.2);
             --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.4);
         }
-
         body {
             font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
@@ -38,7 +36,6 @@
             overflow-x: hidden;
             position: relative;
         }
-
         /* ===== Canvas星空背景（性能优化）===== */
         #starfield {
             position: fixed;
@@ -49,7 +46,6 @@
             z-index: 0;
             pointer-events: none;
         }
-
         /* ===== 头部导航优化 ===== */
         .header {
             background: var(--glass-bg);
@@ -64,12 +60,10 @@
             padding: 12px 0;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .header.scrolled {
             background: rgba(26, 31, 58, 0.95);
             box-shadow: var(--shadow-md);
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -78,13 +72,11 @@
             align-items: center;
             justify-content: space-between;
         }
-
         .header-left {
             display: flex;
             align-items: center;
             gap: 25px;
         }
-
         .logo {
             font-size: 1.6em;
             font-weight: 700;
@@ -95,7 +87,6 @@
             text-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
             letter-spacing: 1px;
         }
-
         .header-left a {
             color: var(--text-secondary);
             text-decoration: none;
@@ -110,7 +101,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .header-left a::before {
             content: '';
             position: absolute;
@@ -122,16 +112,13 @@
             transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: -1;
         }
-
         .header-left a:hover::before {
             left: 0;
         }
-
         .header-left a:hover {
             color: var(--text-primary);
             transform: translateY(-2px);
         }
-
         .theme-toggle {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -142,13 +129,11 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 1em;
         }
-
         .theme-toggle:hover {
             background: var(--glass-border);
             transform: translateY(-2px);
             box-shadow: var(--shadow-sm);
         }
-
         /* ===== 返回按钮优化 ===== */
         .back-button {
             position: fixed;
@@ -169,16 +154,13 @@
             z-index: 1000;
             text-decoration: none;
         }
-
         .back-button:hover {
             transform: translateY(-5px) scale(1.1);
             box-shadow: var(--shadow-glow);
         }
-
         .back-button:active {
             transform: translateY(-2px) scale(1.05);
         }
-
         /* ===== 主容器优化 ===== */
         .eye-care-container {
             max-width: 900px;
@@ -187,14 +169,12 @@
             position: relative;
             z-index: 1;
         }
-
         /* ===== 页面标题优化 ===== */
         .page-title {
             text-align: center;
             margin-bottom: 50px;
             animation: fadeInDown 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .page-title h1 {
             font-size: 3.2em;
             background: var(--primary-gradient);
@@ -206,13 +186,11 @@
             letter-spacing: 2px;
             filter: drop-shadow(0 4px 20px rgba(102, 126, 234, 0.3));
         }
-
         .page-title p {
             font-size: 1.3em;
             color: var(--text-secondary);
             font-weight: 300;
         }
-
         /* ===== 计时器显示区域优化 ===== */
         .timer-display {
             background: var(--glass-bg);
@@ -228,7 +206,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .timer-display::before {
             content: '';
             position: absolute;
@@ -239,12 +216,10 @@
             background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
             animation: rotate 20s linear infinite;
         }
-
         @keyframes rotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
         .timer-screen {
             font-size: 5em;
             font-weight: 700;
@@ -260,16 +235,13 @@
             filter: drop-shadow(0 0 25px rgba(102, 126, 234, 0.6));
             transition: all 0.3s ease;
         }
-
         .timer-screen.pulse {
             animation: pulse 1s ease-in-out;
         }
-
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
-
         /* 进度环 */
         .progress-ring {
             position: relative;
@@ -277,17 +249,14 @@
             height: 200px;
             margin: 0 auto 30px;
         }
-
         .progress-ring svg {
             transform: rotate(-90deg);
         }
-
         .progress-ring-circle {
             fill: none;
             stroke: var(--glass-border);
             stroke-width: 8;
         }
-
         .progress-ring-progress {
             fill: none;
             stroke: url(#gradient);
@@ -295,7 +264,6 @@
             stroke-linecap: round;
             transition: stroke-dashoffset 0.5s ease;
         }
-
         .progress-percentage {
             position: absolute;
             top: 50%;
@@ -308,7 +276,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .next-reminder {
             font-size: 1.3em;
             color: var(--text-primary);
@@ -321,17 +288,14 @@
             gap: 10px;
             font-weight: 500;
         }
-
         .next-reminder i {
             animation: ring 2s ease-in-out infinite;
         }
-
         @keyframes ring {
             0%, 100% { transform: rotate(0deg); }
             10%, 30% { transform: rotate(-10deg); }
             20%, 40% { transform: rotate(10deg); }
         }
-
         /* ===== 控制按钮优化 ===== */
         .control-panel {
             display: flex;
@@ -341,7 +305,6 @@
             position: relative;
             z-index: 1;
         }
-
         .control-btn {
             padding: 16px 35px;
             border: none;
@@ -357,7 +320,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .control-btn::before {
             content: '';
             position: absolute;
@@ -370,42 +332,34 @@
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
-
         .control-btn:active::before {
             width: 300px;
             height: 300px;
         }
-
         .start-btn {
             background: var(--primary-gradient);
             color: white;
         }
-
         .start-btn:hover {
             transform: translateY(-5px) scale(1.05);
             box-shadow: var(--shadow-glow);
         }
-
         .pause-btn {
             background: var(--secondary-gradient);
             color: white;
         }
-
         .pause-btn:hover {
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 0 30px rgba(240, 147, 251, 0.4);
         }
-
         .reset-btn {
             background: var(--accent-gradient);
             color: white;
         }
-
         .reset-btn:hover {
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 0 30px rgba(79, 172, 254, 0.4);
         }
-
         /* ===== 设置面板优化 ===== */
         .settings-panel {
             background: var(--glass-bg);
@@ -418,7 +372,6 @@
             animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: var(--shadow-md);
         }
-
         .settings-title {
             font-size: 1.6em;
             margin-bottom: 25px;
@@ -433,7 +386,6 @@
             justify-content: center;
             gap: 10px;
         }
-
         .setting-item {
             display: flex;
             justify-content: space-between;
@@ -445,13 +397,11 @@
             transition: all 0.3s ease;
             border: 1px solid transparent;
         }
-
         .setting-item:hover {
             background: rgba(255, 255, 255, 0.06);
             border-color: var(--glass-border);
             transform: translateX(5px);
         }
-
         .setting-label {
             font-size: 1.1em;
             color: var(--text-primary);
@@ -460,12 +410,10 @@
             gap: 10px;
             font-weight: 500;
         }
-
         .setting-label i {
             color: #667eea;
             font-size: 1.2em;
         }
-
         .setting-input {
             width: 90px;
             padding: 10px 18px;
@@ -478,14 +426,12 @@
             transition: all 0.3s ease;
             font-weight: 600;
         }
-
         .setting-input:focus {
             outline: none;
             border-color: #667eea;
             background: rgba(255, 255, 255, 0.08);
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
         }
-
         /* 音量控制 */
         .audio-settings {
             display: flex;
@@ -493,7 +439,6 @@
             gap: 15px;
             flex-wrap: wrap;
         }
-
         input[type="range"] {
             -webkit-appearance: none;
             appearance: none;
@@ -504,11 +449,9 @@
             outline: none;
             transition: all 0.3s ease;
         }
-
         input[type="range"]:hover {
             background: rgba(102, 126, 234, 0.3);
         }
-
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
@@ -520,12 +463,10 @@
             box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
             transition: all 0.3s ease;
         }
-
         input[type="range"]::-webkit-slider-thumb:hover {
             transform: scale(1.2);
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
         }
-
         input[type="range"]::-moz-range-thumb {
             width: 18px;
             height: 18px;
@@ -536,12 +477,10 @@
             box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
             transition: all 0.3s ease;
         }
-
         input[type="range"]::-moz-range-thumb:hover {
             transform: scale(1.2);
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
         }
-
         .test-audio-btn {
             padding: 10px 18px;
             background: var(--success-gradient);
@@ -557,12 +496,10 @@
             font-weight: 600;
             box-shadow: var(--shadow-sm);
         }
-
         .test-audio-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0, 201, 255, 0.4);
         }
-
         .audio-status {
             font-size: 0.9em;
             padding: 6px 12px;
@@ -571,7 +508,6 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
-
         .audio-error {
             color: #ff6b6b;
             font-size: 0.9em;
@@ -582,7 +518,6 @@
             display: none;
             border-left: 3px solid #ff6b6b;
         }
-
         /* ===== 统计面板 ===== */
         .stats-panel {
             display: grid;
@@ -591,7 +526,6 @@
             margin-bottom: 40px;
             animation: fadeInUp 1.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .stat-card {
             background: var(--glass-bg);
             backdrop-filter: blur(20px) saturate(180%);
@@ -602,13 +536,11 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: var(--shadow-sm);
         }
-
         .stat-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-md);
             border-color: rgba(102, 126, 234, 0.5);
         }
-
         .stat-icon {
             font-size: 2.5em;
             margin-bottom: 10px;
@@ -617,20 +549,17 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .stat-value {
             font-size: 2em;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 5px;
         }
-
         .stat-label {
             font-size: 0.95em;
             color: var(--text-secondary);
             font-weight: 500;
         }
-
         /* ===== 提醒弹窗优化 ===== */
         .reminder-modal {
             display: none;
@@ -644,7 +573,6 @@
             z-index: 2000;
             animation: fadeIn 0.3s ease;
         }
-
         .reminder-content {
             position: absolute;
             top: 50%;
@@ -660,7 +588,6 @@
             animation: slideInUp 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             border: 2px solid rgba(255, 255, 255, 0.2);
         }
-
         .reminder-title {
             font-size: 2.8em;
             margin-bottom: 20px;
@@ -669,14 +596,12 @@
             text-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
             animation: bounceIn 0.8s ease;
         }
-
         @keyframes bounceIn {
             0% { transform: scale(0.3); opacity: 0; }
             50% { transform: scale(1.05); }
             70% { transform: scale(0.9); }
             100% { transform: scale(1); opacity: 1; }
         }
-
         .reminder-message {
             font-size: 1.25em;
             color: rgba(255, 255, 255, 0.95);
@@ -684,7 +609,6 @@
             line-height: 1.7;
             font-weight: 400;
         }
-
         .eye-exercise-steps {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
@@ -694,7 +618,6 @@
             text-align: left;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
         .eye-exercise-steps h3 {
             color: white;
             margin-bottom: 20px;
@@ -702,25 +625,21 @@
             font-size: 1.5em;
             font-weight: 700;
         }
-
         .eye-exercise-steps ol {
             color: rgba(255, 255, 255, 0.95);
             line-height: 2;
             padding-left: 25px;
             font-size: 1.05em;
         }
-
         .eye-exercise-steps li {
             margin-bottom: 10px;
             transition: all 0.3s ease;
             padding-left: 10px;
         }
-
         .eye-exercise-steps li:hover {
             transform: translateX(5px);
             color: white;
         }
-
         .reminder-links {
             display: flex;
             justify-content: center;
@@ -728,7 +647,6 @@
             margin-bottom: 25px;
             flex-wrap: wrap;
         }
-
         .reminder-link {
             padding: 14px 28px;
             background: rgba(255, 255, 255, 0.2);
@@ -743,13 +661,11 @@
             font-weight: 600;
             box-shadow: var(--shadow-sm);
         }
-
         .reminder-link:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-3px);
             box-shadow: var(--shadow-md);
         }
-
         .close-modal {
             padding: 14px 35px;
             background: rgba(255, 255, 255, 0.25);
@@ -762,19 +678,16 @@
             font-weight: 700;
             box-shadow: var(--shadow-sm);
         }
-
         .close-modal:hover {
             background: rgba(255, 255, 255, 0.35);
             transform: translateY(-3px);
             box-shadow: var(--shadow-md);
         }
-
         /* ===== 动画效果 ===== */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -785,7 +698,6 @@
                 transform: translateY(0);
             }
         }
-
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -796,7 +708,6 @@
                 transform: translateY(0);
             }
         }
-
         @keyframes slideInUp {
             from {
                 transform: translate(-50%, -30%);
@@ -807,143 +718,114 @@
                 opacity: 1;
             }
         }
-
         /* ===== 响应式设计优化 ===== */
         @media (max-width: 768px) {
             .eye-care-container {
                 padding: 20px 15px;
                 margin: 80px auto 30px;
             }
-
             .page-title h1 {
                 font-size: 2.5em;
             }
-
             .page-title p {
                 font-size: 1.1em;
             }
-
             .timer-display {
                 padding: 40px 25px;
             }
-
             .timer-screen {
                 font-size: 3.5em;
                 letter-spacing: 4px;
             }
-
             .progress-ring {
                 width: 150px;
                 height: 150px;
             }
-
             .progress-percentage {
                 font-size: 1.5em;
             }
-
             .control-panel {
                 flex-direction: column;
                 align-items: stretch;
             }
-
             .control-btn {
                 width: 100%;
                 justify-content: center;
                 padding: 18px 30px;
             }
-
             .settings-panel {
                 padding: 25px 20px;
             }
-
             .setting-item {
                 flex-direction: column;
                 gap: 15px;
                 align-items: flex-start;
             }
-
             .audio-settings {
                 width: 100%;
                 justify-content: space-between;
             }
-
             .stats-panel {
                 grid-template-columns: 1fr;
             }
-
             .back-button {
                 top: 75px;
                 left: 20px;
                 width: 45px;
                 height: 45px;
             }
-
             .reminder-content {
                 padding: 35px 25px;
                 border-radius: 25px;
             }
-
             .reminder-title {
                 font-size: 2.2em;
             }
-
             .eye-exercise-steps {
                 padding: 20px;
             }
-
             .reminder-links {
                 flex-direction: column;
             }
-
             .reminder-link {
                 width: 100%;
                 justify-content: center;
             }
-
             .header-left {
                 gap: 15px;
             }
-
             .header-left a {
                 font-size: 0.85em;
                 padding: 6px 12px;
             }
-
             .logo {
                 font-size: 1.3em;
             }
         }
-
         @media (max-width: 480px) {
             .timer-screen {
                 font-size: 2.8em;
             }
-
             .page-title h1 {
                 font-size: 2em;
             }
-
             .control-btn {
                 font-size: 1em;
                 padding: 15px 25px;
             }
         }
-
         /* ===== 深色模式优化 ===== */
         body.dark-mode {
             background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
         }
-
         body.dark-mode .header {
             background: rgba(0, 0, 0, 0.5);
         }
-
         body.dark-mode .timer-display,
         body.dark-mode .settings-panel,
         body.dark-mode .stat-card {
             background: rgba(255, 255, 255, 0.05);
         }
-
         /* ===== 加载动画 ===== */
         .loader {
             display: none;
@@ -953,11 +835,9 @@
             transform: translate(-50%, -50%);
             z-index: 3000;
         }
-
         .loader.active {
             display: block;
         }
-
         .spinner {
             width: 60px;
             height: 60px;
@@ -966,7 +846,6 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
@@ -1151,100 +1030,6 @@
         </div>
     </div>
 
-    <!-- 音频元素 -->
-   <!-- 删除原来的 <audio> 标签，改用 Web Audio API -->
-<script>
-    // 在 EyeCareTimer 类中添加以下方法
-    
-    // 改进的音频播放方法
-    playReminderSound() {
-        try {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const volume = this.volumeInput.value / 100;
-            
-            // 创建悦耳的提示音序列
-            const playTone = (frequency, startTime, duration) => {
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = frequency;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(volume * 0.3, startTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-                
-                oscillator.start(startTime);
-                oscillator.stop(startTime + duration);
-            };
-            
-            // 播放和弦提示音（更悦耳）
-            const now = audioContext.currentTime;
-            playTone(523.25, now, 0.2);        // C5
-            playTone(659.25, now + 0.15, 0.2); // E5
-            playTone(783.99, now + 0.3, 0.3);  // G5
-            
-            // 第二组
-            setTimeout(() => {
-                const now2 = audioContext.currentTime;
-                playTone(523.25, now2, 0.2);
-                playTone(659.25, now2 + 0.15, 0.2);
-                playTone(783.99, now2 + 0.3, 0.3);
-            }, 600);
-            
-        } catch (error) {
-            console.error('音频播放失败:', error);
-            // 降级方案：使用原生alert
-            if (this.isRunning) {
-                this.showVisualAlert();
-            }
-        }
-    }
-    
-    // 视觉提醒（无声音降级方案）
-    showVisualAlert() {
-        document.body.style.animation = 'flash 0.5s ease 3';
-    }
-    
-    // 在 testAudio() 方法中调用
-    async testAudio() {
-        this.audioStatus.textContent = '测试中...';
-        this.audioStatus.style.color = '#ffc107';
-        
-        try {
-            this.playReminderSound();
-            this.audioStatus.textContent = '正常';
-            this.audioStatus.style.color = '#4caf50';
-            this.audioError.style.display = 'none';
-        } catch (error) {
-            console.error('音频测试失败:', error);
-            this.audioStatus.textContent = '失败';
-            this.audioStatus.style.color = '#f44336';
-            this.audioError.style.display = 'block';
-        }
-    }
-    
-    // 在 showReminder() 方法中替换音频播放部分
-    async showReminder() {
-        this.stats.reminderCount++;
-        this.updateStats();
-        this.saveState();
-
-        // 播放提醒音 - 使用新方法
-        this.playReminderSound();
-
-        // 振动提醒
-        if (navigator.vibrate) {
-            navigator.vibrate([200, 100, 200, 100, 200]);
-        }
-
-        // ... 其余代码保持不变
-    }
-</script>
-
-
     <script>
         // ========== Canvas星空背景（性能优化）==========
         class Starfield {
@@ -1343,7 +1128,6 @@
                 this.seconds = 0;
                 this.reminderInterval = 30;
                 this.isRunning = false;
-                this.audioLoaded = false;
                 this.stats = {
                     totalTime: 0,
                     reminderCount: 0,
@@ -1352,7 +1136,6 @@
 
                 this.initElements();
                 this.loadState();
-                this.checkAudioAvailability();
                 this.requestNotificationPermission();
                 this.updateProgress();
             }
@@ -1366,7 +1149,6 @@
                 this.intervalInput = document.getElementById('intervalInput');
                 this.volumeInput = document.getElementById('volumeInput');
                 this.reminderModal = document.getElementById('reminderModal');
-                this.reminderAudio = document.getElementById('reminderAudio');
                 this.testAudioBtn = document.getElementById('testAudioBtn');
                 this.audioStatus = document.getElementById('audioStatus');
                 this.audioError = document.getElementById('audioError');
@@ -1395,28 +1177,44 @@
                 });
             }
 
-            async checkAudioAvailability() {
-                return new Promise((resolve) => {
-                    const timeout = setTimeout(() => {
-                        this.audioLoaded = false;
-                        this.audioError.style.display = 'block';
-                        resolve(false);
-                    }, 3000);
+            playReminderSound() {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const volume = this.volumeInput.value / 100;
 
-                    this.reminderAudio.addEventListener('canplaythrough', () => {
-                        clearTimeout(timeout);
-                        this.audioLoaded = true;
-                        this.audioError.style.display = 'none';
-                        resolve(true);
-                    }, { once: true });
+                    // 创建悦耳的提示音序列
+                    const playTone = (frequency, startTime, duration) => {
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        oscillator.frequency.value = frequency;
+                        oscillator.type = 'sine';
+                        gainNode.gain.setValueAtTime(volume * 0.3, startTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+                        oscillator.start(startTime);
+                        oscillator.stop(startTime + duration);
+                    };
 
-                    this.reminderAudio.addEventListener('error', () => {
-                        clearTimeout(timeout);
-                        this.audioLoaded = false;
-                        this.audioError.style.display = 'block';
-                        resolve(false);
-                    }, { once: true });
-                });
+                    // 播放和弦提示音（更悦耳）
+                    const now = audioContext.currentTime;
+                    playTone(523.25, now, 0.2);        // C5
+                    playTone(659.25, now + 0.15, 0.2); // E5
+                    playTone(783.99, now + 0.3, 0.3);  // G5
+
+                    // 第二组
+                    setTimeout(() => {
+                        const now2 = audioContext.currentTime;
+                        playTone(523.25, now2, 0.2);
+                        playTone(659.25, now2 + 0.15, 0.2);
+                        playTone(783.99, now2 + 0.3, 0.3);
+                    }, 600);
+
+                    return true;
+                } catch (error) {
+                    console.error('音频播放失败:', error);
+                    return false;
+                }
             }
 
             loadState() {
@@ -1470,7 +1268,7 @@
                 const hours = Math.floor(this.seconds / 3600);
                 const minutes = Math.floor((this.seconds % 3600) / 60);
                 const secs = this.seconds % 60;
-                this.timerDisplay.textContent = 
+                this.timerDisplay.textContent =
                     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 
                 const remainingTime = this.reminderInterval * 60 - (this.seconds % (this.reminderInterval * 60));
@@ -1567,7 +1365,6 @@
             }
 
             updateVolume(e) {
-                this.reminderAudio.volume = e.target.value / 100;
                 this.saveState();
             }
 
@@ -1576,49 +1373,19 @@
                 this.audioStatus.style.color = '#ffc107';
 
                 try {
-                    const isAvailable = await this.checkAudioAvailability();
-                    if (isAvailable) {
-                        this.reminderAudio.volume = this.volumeInput.value / 100;
-                        await this.reminderAudio.play();
-                        this.audioStatus.textContent = '正常';
+                    const success = this.playReminderSound();
+                    if (success) {
+                        this.audioStatus.textContent = '✓ 正常';
                         this.audioStatus.style.color = '#4caf50';
+                        this.audioError.style.display = 'none';
                     } else {
-                        this.playBeepSound();
-                        this.audioStatus.textContent = '使用备用';
-                        this.audioStatus.style.color = '#ff9800';
+                        throw new Error('播放失败');
                     }
                 } catch (error) {
                     console.error('音频测试失败:', error);
-                    this.audioStatus.textContent = '失败';
+                    this.audioStatus.textContent = '✗ 失败';
                     this.audioStatus.style.color = '#f44336';
-                }
-            }
-
-            playBeepSound() {
-                try {
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    const createBeep = (delay = 0) => {
-                        setTimeout(() => {
-                            const oscillator = audioContext.createOscillator();
-                            const gainNode = audioContext.createGain();
-                            
-                            oscillator.connect(gainNode);
-                            gainNode.connect(audioContext.destination);
-                            
-                            oscillator.frequency.value = 1000;
-                            oscillator.type = 'sine';
-                            gainNode.gain.setValueAtTime(this.volumeInput.value / 200, audioContext.currentTime);
-                            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.5);
-                            
-                            oscillator.start();
-                            oscillator.stop(audioContext.currentTime + 0.5);
-                        }, delay);
-                    };
-
-                    createBeep(0);
-                    createBeep(600);
-                } catch (error) {
-                    console.error('备用音频播放失败:', error);
+                    this.audioError.style.display = 'block';
                 }
             }
 
@@ -1627,18 +1394,8 @@
                 this.updateStats();
                 this.saveState();
 
-                // 播放提醒音
-                if (this.audioLoaded) {
-                    try {
-                        this.reminderAudio.volume = this.volumeInput.value / 100;
-                        await this.reminderAudio.play();
-                    } catch (e) {
-                        console.log('音频播放失败，使用备用:', e);
-                        this.playBeepSound();
-                    }
-                } else {
-                    this.playBeepSound();
-                }
+                // 播放提示音
+                this.playReminderSound();
 
                 // 振动提醒
                 if (navigator.vibrate) {
@@ -1647,10 +1404,11 @@
 
                 // 浏览器通知
                 if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification('眼保健操提醒', {
-                        body: '您已经工作了一段时间，该休息一下眼睛了！',
+                    new Notification('眼保健操提醒 👁️', {
+                        body: `您已经工作了${this.reminderInterval}分钟，该休息一下眼睛了！`,
                         icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>',
-                        requireInteraction: true
+                        requireInteraction: true,
+                        tag: 'eye-care-reminder'
                     });
                 }
 
@@ -1658,7 +1416,7 @@
                 document.getElementById('workTime').textContent = this.reminderInterval;
                 this.reminderModal.style.display = 'block';
 
-                // 自动关闭（15秒后）
+                // 自动关闭
                 setTimeout(() => {
                     if (this.reminderModal.style.display === 'block') {
                         this.closeReminder();
@@ -1695,7 +1453,7 @@
             // 头部滚动效果
             let lastScroll = 0;
             const header = document.querySelector('.header');
-            
+
             window.addEventListener('scroll', () => {
                 const currentScroll = window.pageYOffset;
                 if (currentScroll > 50) {
