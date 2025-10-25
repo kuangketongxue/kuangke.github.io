@@ -67,6 +67,18 @@
       text-rendering: optimizeLegibility;
       font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
       letter-spacing: 0.02em;
+      /* 🎯 新增：提升清晰度 */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+  font-kerning: auto;
+  font-variant-ligatures: common-ligatures;
+  
+  /* 防止模糊 */
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
     }
     /* ==================== 页面容器 ==================== */
     .page-wrapper {
