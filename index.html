@@ -26,26 +26,33 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
     <style>
-        /* ==================== AI前沿按钮专属样式 ==================== */
-        .ai-nav-button {
+        /* ==================== 通用按钮基础样式 ==================== */
+        .nav-button-base {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             padding: 10px 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
             text-decoration: none;
+            border: none;
             border-radius: 12px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
             position: relative;
             overflow: hidden;
             font-weight: 600;
             font-size: 14px;
             letter-spacing: 0.5px;
             will-change: transform, box-shadow;
+            cursor: pointer;
+            white-space: nowrap;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
         }
-        /* 光泽效果 */
-        .ai-nav-button::before {
+
+        /* 光泽效果（通用） */
+        .nav-button-base::before {
             content: '';
             position: absolute;
             top: 0;
@@ -59,37 +66,53 @@
             );
             transition: left 0.5s ease;
         }
-        .ai-nav-button:hover::before {
+
+        .nav-button-base:hover::before {
             left: 100%;
         }
-        /* 悬停效果 */
-        .ai-nav-button:hover {
+
+        /* 通用悬停和点击效果 */
+        .nav-button-base:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
-        /* 点击效果 */
-        .ai-nav-button:active {
+
+        .nav-button-base:active {
             transform: translateY(0);
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
-        /* 图标样式 */
-        .ai-icon {
+
+        /* 通用图标样式 */
+        .button-icon {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             margin-right: 8px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 6px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .ai-nav-button:hover .ai-icon {
+
+        .nav-button-base:hover .button-icon {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1) rotate(5deg);
         }
-        /* 呼吸光晕动画 */
+
+        /* ==================== AI前沿按钮 ==================== */
+        .ai-nav-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .ai-nav-button:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .ai-nav-button:active {
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
         @keyframes ai-glow {
             0%, 100% {
                 box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
@@ -99,76 +122,26 @@
                             0 0 30px rgba(102, 126, 234, 0.2);
             }
         }
+
         .ai-nav-button {
             animation: ai-glow 3s ease-in-out infinite;
         }
-        /* ==================== 健康提醒按钮专属样式 ==================== */
+
+        /* ==================== 健康提醒按钮 ==================== */
         .health-nav-button {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 16px;
             background: linear-gradient(135deg, #00c9a7 0%, #8b5cf6 100%);
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(0, 201, 167, 0.3);
-            position: relative;
-            overflow: hidden;
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: 0.5px;
-            will-change: transform, box-shadow;
-            margin-left: 10px;
-            cursor: pointer;
         }
-        /* 健康提醒按钮光泽效果 */
-        .health-nav-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-            );
-            transition: left 0.5s ease;
-        }
-        .health-nav-button:hover::before {
-            left: 100%;
-        }
-        /* 健康提醒按钮悬停效果 */
+
         .health-nav-button:hover {
-            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 201, 167, 0.4);
             background: linear-gradient(135deg, #8b5cf6 0%, #00c9a7 100%);
         }
-        /* 健康提醒按钮点击效果 */
+
         .health-nav-button:active {
-            transform: translateY(0);
             box-shadow: 0 2px 8px rgba(0, 201, 167, 0.3);
         }
-        /* 健康提醒图标样式 */
-        .health-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            margin-right: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .health-nav-button:hover .health-icon {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1) rotate(5deg);
-        }
-        /* 健康提醒呼吸光晕动画 */
+
         @keyframes health-glow {
             0%, 100% {
                 box-shadow: 0 4px 12px rgba(0, 201, 167, 0.3);
@@ -178,74 +151,26 @@
                             0 0 30px rgba(0, 201, 167, 0.2);
             }
         }
+
         .health-nav-button {
             animation: health-glow 3s ease-in-out infinite;
         }
-        /* ==================== 美食聚餐按钮专属样式 ==================== */
+
+        /* ==================== 美食聚餐按钮 ==================== */
         .meal-nav-button {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 16px;
             background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-            position: relative;
-            overflow: hidden;
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: 0.5px;
-            will-change: transform, box-shadow;
-            margin-left: 10px;
         }
-        /* 美食按钮光泽效果 */
-        .meal-nav-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-            );
-            transition: left 0.5s ease;
-        }
-        .meal-nav-button:hover::before {
-            left: 100%;
-        }
-        /* 美食按钮悬停效果 */
+
         .meal-nav-button:hover {
-            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
             background: linear-gradient(135deg, #ffa500 0%, #ff6b6b 100%);
         }
-        /* 美食按钮点击效果 */
+
         .meal-nav-button:active {
-            transform: translateY(0);
             box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
         }
-        /* 美食图标样式 */
-        .meal-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            margin-right: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .meal-nav-button:hover .meal-icon {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1) rotate(5deg);
-        }
-        /* 美食按钮呼吸光晕动画 */
+
         @keyframes meal-glow {
             0%, 100% {
                 box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
@@ -255,31 +180,162 @@
                             0 0 30px rgba(255, 107, 107, 0.2);
             }
         }
+
         .meal-nav-button {
             animation: meal-glow 3s ease-in-out infinite;
         }
-        /* 响应式优化 */
-        @media (max-width: 768px) {
-            .ai-nav-button, .health-nav-button, .meal-nav-button {
-                padding: 8px 12px;
+
+        /* ==================== 控制区布局优化 ==================== */
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* 功能按钮容器 */
+        .function-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: nowrap;
+        }
+
+        /* ==================== 响应式优化 ==================== */
+        /* 大屏幕 */
+        @media (min-width: 1200px) {
+            .controls {
+                gap: 16px;
+            }
+            
+            .function-buttons {
+                gap: 12px;
+            }
+        }
+
+        /* 平板设备 */
+        @media (max-width: 992px) {
+            .controls {
+                gap: 10px;
+            }
+            
+            .nav-button-base {
+                padding: 8px 14px;
                 font-size: 13px;
             }
-            .ai-icon, .health-icon, .meal-icon {
-                width: 20px;
-                height: 20px;
+            
+            .button-icon {
+                width: 18px;
+                height: 18px;
                 margin-right: 6px;
             }
         }
-        /* 减少动画效果（尊重用户偏好） */
+
+        /* 小屏幕设备 */
+        @media (max-width: 768px) {
+            .controls {
+                gap: 8px;
+                justify-content: flex-end;
+            }
+            
+            .function-buttons {
+                gap: 8px;
+            }
+            
+            .nav-button-base {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            
+            .nav-button-base span:not(.button-icon) {
+                display: none; /* 小屏隐藏文字，只显示图标 */
+            }
+            
+            .button-icon {
+                margin-right: 0;
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+        /* 超小屏幕 */
+        @media (max-width: 576px) {
+            .controls {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+            
+            .function-buttons {
+                order: 2;
+                flex: 0 0 auto;
+            }
+            
+            .search-box {
+                order: 1;
+                flex: 1 1 auto;
+                max-width: 200px;
+            }
+            
+            .theme-toggle {
+                order: 3;
+            }
+        }
+
+        /* ==================== 减少动画效果 ==================== */
         @media (prefers-reduced-motion: reduce) {
-            .ai-nav-button, .health-nav-button, .meal-nav-button {
+            .nav-button-base,
+            .ai-nav-button,
+            .health-nav-button,
+            .meal-nav-button {
                 animation: none;
                 transition: none;
             }
-            .ai-nav-button::before, .health-nav-button::before, .meal-nav-button::before {
+            
+            .nav-button-base::before {
                 transition: none;
             }
         }
+
+        /* ==================== 深色模式适配 ==================== */
+        @media (prefers-color-scheme: dark) {
+            .nav-button-base {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        /* ==================== 可访问性增强 ==================== */
+        .nav-button-base:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+
+        /* 工具提示 */
+        .nav-button-base[title]:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 6px;
+            white-space: nowrap;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            animation: tooltipFade 0.3s ease forwards;
+        }
+
+        @keyframes tooltipFade {
+            to {
+                opacity: 1;
+            }
+        }
+
         /* ==================== 页面加载优化 ==================== */
         /* 骨架屏样式 */
         .skeleton {
@@ -356,30 +412,41 @@
             </div>
             <!-- 右侧控制区 -->
             <div class="controls">
-                <!-- AI前沿按钮 -->
-                <a href="ai.html" class="ai-nav-button">
-                    <span class="ai-icon">
-                        <i class="fas fa-brain"></i>
-                    </span>
-                    <span>AI赋能</span>
-                </a>
-                <!-- 健康提醒按钮（修改为跳转链接） -->
-                <a href="health.html" class="health-nav-button">
-                    <span class="health-icon">
-                        <i class="fas fa-heartbeat"></i>
-                    </span>
-                    <span>健康提醒</span>
-                </a>
-                <!-- 美食聚餐选择按钮 -->
-                <a href="https://kuangketongxue.github.io/meal-planner/" 
-                   class="meal-nav-button"
-                   target="_blank"
-                   rel="noopener noreferrer">
-                    <span class="meal-icon">
-                        <i class="fas fa-utensils"></i>
-                    </span>
-                    <span>美食聚餐</span>
-                </a>
+                <!-- 功能按钮组 -->
+                <div class="function-buttons">
+                    <!-- AI前沿按钮 -->
+                    <a href="ai.html" 
+                       class="nav-button-base ai-nav-button"
+                       title="探索AI赋能工具">
+                        <span class="button-icon">
+                            <i class="fas fa-brain"></i>
+                        </span>
+                        <span>AI赋能</span>
+                    </a>
+                    
+                    <!-- 健康提醒按钮 -->
+                    <a href="health.html" 
+                       class="nav-button-base health-nav-button"
+                       title="查看健康提醒">
+                        <span class="button-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </span>
+                        <span>健康提醒</span>
+                    </a>
+                    
+                    <!-- 美食聚餐选择按钮 -->
+                    <a href="https://kuangketongxue.github.io/meal-planner/"
+                       class="nav-button-base meal-nav-button"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       title="美食聚餐计划">
+                        <span class="button-icon">
+                            <i class="fas fa-utensils"></i>
+                        </span>
+                        <span>美食聚餐</span>
+                    </a>
+                </div>
+                
                 <!-- 搜索框 -->
                 <div class="search-box" role="search">
                     <label for="searchInput" class="sr-only">搜索内容</label>
