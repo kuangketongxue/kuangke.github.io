@@ -1138,6 +1138,16 @@ function getMomentsStats(moments) {
  */
 let momentsData = [
       {
+        id: 29,
+        content: '凡事在明规则的外表下都有另一套隐规则的黑箱；我自己决定干什么和怎么干，而不是随大流；理解原理，推崇技术，不急不躁不上情绪，想方设法解决问题；不断刺激和试探系统的边界线，探索背后那套规则；把一切事物、包括自己的身体，都看成系统。系统是模块化的，你可以把各个部分拆开再重组。系统是按照算法运行的，你可以理解这个算法。系统是可以优化的........ 而且是可以破解的；',
+        value: 5,
+        category: '工作相关',
+        time: '2025-10-25 12:55',
+        image: '',
+        likes: 0,
+        comments: []
+    },     
+      {
         id: 28,
         content: 'i personally could have a gallon of Alan',
         value: 0,
