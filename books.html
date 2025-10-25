@@ -7,15 +7,16 @@
   <meta name="description" content="星空书柜 - 探索认知边界，记录思考轨迹">
   <meta name="keywords" content="读书笔记,书籍推荐,知识管理">
   <title>星空书柜 | 探索认知边界</title>
-  
+  <!-- 预加载艺术字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
   <!-- 资源预加载 -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="preconnect" href="https://picsum.photos">
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-  
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-  
   <style>
     /* ==================== CSS变量定义 ==================== */
     :root {
@@ -36,14 +37,12 @@
       --border-color: rgba(255, 255, 255, 0.1);
       --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     }
-
     /* ==================== 全局重置 ==================== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
     /* ==================== Body样式 ==================== */
     body {
       background-color: var(--bg-primary);
@@ -59,11 +58,16 @@
       background-attachment: fixed;
       color: var(--text-primary);
       min-height: 100vh;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'Noto Serif SC', 'Microsoft YaHei', 'SimHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       line-height: 1.6;
       overflow-x: hidden;
+      /* 提升字体渲染质量 */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+      letter-spacing: 0.02em;
     }
-
     /* ==================== 页面容器 ==================== */
     .page-wrapper {
       min-height: 100vh;
@@ -71,7 +75,6 @@
       flex-direction: column;
       position: relative;
     }
-
     /* ==================== 背景装饰 ==================== */
     .bg-decoration {
       position: fixed;
@@ -84,7 +87,6 @@
       will-change: transform;
       contain: layout style paint;
     }
-
     .star {
       position: absolute;
       width: 2px;
@@ -94,12 +96,10 @@
       animation: twinkle 4s infinite;
       will-change: opacity;
     }
-
     @keyframes twinkle {
       0%, 100% { opacity: 0.3; }
       50% { opacity: 0.8; }
     }
-
     /* ==================== 导航栏 ==================== */
     .navbar {
       position: fixed;
@@ -114,12 +114,10 @@
       transition: all 0.3s var(--transition-smooth);
       will-change: transform;
     }
-
     .navbar.scrolled {
       background: rgba(15, 23, 42, 0.98);
       box-shadow: var(--shadow-md);
     }
-
     .nav-container {
       max-width: 1400px;
       margin: 0 auto;
@@ -127,31 +125,31 @@
       justify-content: space-between;
       align-items: center;
     }
-
     .nav-brand {
       display: flex;
       align-items: center;
       gap: 0.8rem;
       font-size: 1.3rem;
       font-weight: 700;
+      /* 艺术字体 - 品牌名使用马善政书法体 */
+      font-family: 'Ma Shan Zheng', 'Noto Serif SC', cursive;
       background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       text-decoration: none;
+      text-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
+      letter-spacing: 0.05em;
     }
-
     .nav-brand i {
       font-size: 1.5rem;
       color: var(--accent-1);
     }
-
     .nav-actions {
       display: flex;
       gap: 1rem;
       align-items: center;
     }
-
     .back-btn {
       display: flex;
       align-items: center;
@@ -167,18 +165,17 @@
       transition: all 0.3s var(--transition-smooth);
       border: none;
       cursor: pointer;
+      /* 提升字体清晰度 */
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
-
     .back-btn:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-md);
     }
-
     .back-btn:focus {
       outline: 2px solid var(--accent-1);
       outline-offset: 2px;
     }
-
     /* ==================== 主内容区 ==================== */
     .main-content {
       flex: 1;
@@ -187,7 +184,6 @@
       position: relative;
       z-index: 1;
     }
-
     /* ==================== 页面头部 ==================== */
     .page-header {
       text-align: center;
@@ -195,7 +191,6 @@
       padding: 2rem 1rem;
       position: relative;
     }
-
     .header-badge {
       display: inline-block;
       padding: 0.4rem 1rem;
@@ -205,57 +200,63 @@
       font-size: 0.85rem;
       color: var(--accent-2);
       margin-bottom: 1rem;
+      font-weight: 500;
     }
-
     .page-header h1 {
       font-size: 3rem;
-      font-weight: 800;
+      font-weight: 900;
+      /* 艺术字体 - 标题使用马善政书法体 */
+      font-family: 'Ma Shan Zheng', 'Noto Serif SC', cursive;
       background: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-3));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       margin-bottom: 1rem;
-      letter-spacing: -0.02em;
+      letter-spacing: 0.05em;
+      /* 增强视觉效果 */
+      text-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+      filter: drop-shadow(0 2px 4px rgba(56, 189, 248, 0.2));
     }
-
     .page-subtitle {
       font-size: 1.2rem;
       color: var(--text-secondary);
       margin-bottom: 2rem;
+      /* 艺术字体 - 副标题使用站酷小薇体 */
+      font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
+      letter-spacing: 0.1em;
+      font-weight: 400;
     }
-
     .header-stats {
       display: flex;
       justify-content: center;
       gap: 3rem;
       margin-top: 2rem;
     }
-
     .stat-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.3rem;
     }
-
     .stat-value {
       font-size: 1.8rem;
       font-weight: 700;
       color: var(--accent-1);
+      /* 艺术字体 - 数字使用站酷快乐体 */
+      font-family: 'ZCOOL KuaiLe', 'Noto Serif SC', cursive;
+      text-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
     }
-
     .stat-label {
       font-size: 0.9rem;
       color: var(--text-muted);
+      font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
     }
-
     /* ==================== 筛选栏 ==================== */
     .filter-section {
       max-width: 1400px;
       margin: 0 auto 3rem;
       padding: 0 1rem;
     }
-
     .filter-bar {
       display: flex;
       justify-content: center;
@@ -263,7 +264,6 @@
       flex-wrap: wrap;
       margin-bottom: 1rem;
     }
-
     .filter-btn {
       padding: 0.6rem 1.2rem;
       background: rgba(255, 255, 255, 0.05);
@@ -273,12 +273,14 @@
       cursor: pointer;
       transition: all 0.3s var(--transition-smooth);
       font-size: 0.9rem;
-      font-family: inherit;
+      font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
+      font-weight: 400;
       will-change: transform;
       position: relative;
       overflow: hidden;
+      /* 提升字体清晰度 */
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
-
     .filter-btn::before {
       content: '';
       position: absolute;
@@ -291,18 +293,15 @@
       transform: translate(-50%, -50%);
       transition: width 0.4s, height 0.4s;
     }
-
     .filter-btn:hover::before,
     .filter-btn.active::before {
       width: 200%;
       height: 200%;
     }
-
     .filter-btn span {
       position: relative;
       z-index: 1;
     }
-
     .filter-btn:hover,
     .filter-btn.active {
       background: rgba(139, 92, 246, 0.2);
@@ -310,12 +309,10 @@
       color: var(--accent-2);
       transform: translateY(-2px);
     }
-
     .filter-btn:focus {
       outline: 2px solid var(--accent-2);
       outline-offset: 2px;
     }
-
     .filter-count {
       display: inline-block;
       margin-left: 0.4rem;
@@ -325,14 +322,13 @@
       font-size: 0.75rem;
       font-weight: 600;
     }
-
     .filter-result-info {
       text-align: center;
       color: var(--text-muted);
       font-size: 0.9rem;
       margin-top: 1rem;
+      font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
     }
-
     /* ==================== 书籍容器 ==================== */
     .books-container {
       max-width: 1400px;
@@ -345,7 +341,6 @@
       position: relative;
       min-height: 400px;
     }
-
     /* ==================== 无结果提示 ==================== */
     .no-results {
       grid-column: 1 / -1;
@@ -354,29 +349,25 @@
       color: var(--text-muted);
       display: none;
     }
-
     .no-results.show {
       display: block;
       animation: fadeIn 0.5s ease;
     }
-
     .no-results i {
       font-size: 4rem;
       color: var(--accent-2);
       opacity: 0.3;
       margin-bottom: 1rem;
     }
-
     .no-results p {
       font-size: 1.1rem;
       margin-bottom: 0.5rem;
+      font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
     }
-
     .no-results small {
       font-size: 0.9rem;
       color: var(--text-muted);
     }
-
     /* ==================== 书籍卡片 ==================== */
     .book-card {
       position: relative;
@@ -389,25 +380,21 @@
       will-change: transform;
       contain: layout style paint;
     }
-
     .book-card:hover {
       transform: translateY(-8px) scale(1.02);
       box-shadow: var(--shadow-xl);
       border-color: rgba(139, 92, 246, 0.3);
     }
-
     .book-card.placeholder {
       opacity: 0.3;
       cursor: not-allowed;
       background: rgba(30, 41, 59, 0.2);
       border-style: dashed;
     }
-
     .book-card.placeholder:hover {
       transform: none;
       box-shadow: none;
     }
-
     .book-cover {
       position: relative;
       width: 100%;
@@ -415,7 +402,6 @@
       overflow: hidden;
       background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
     }
-
     .book-cover img {
       width: 100%;
       height: 100%;
@@ -423,12 +409,10 @@
       transition: all 0.4s ease;
       will-change: transform;
     }
-
     .book-card:hover .book-cover img {
       transform: scale(1.05);
       filter: brightness(1.1);
     }
-
     .book-overlay {
       position: absolute;
       top: 0;
@@ -439,11 +423,9 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-
     .book-card:hover .book-overlay {
       opacity: 1;
     }
-
     /* ==================== 书籍标签 ==================== */
     .book-badge {
       position: absolute;
@@ -457,21 +439,18 @@
       color: white;
       font-weight: 600;
       z-index: 10;
+      font-family: 'ZCOOL KuaiLe', 'Noto Serif SC', cursive;
     }
-
     .book-badge.recent {
       background: var(--accent-success);
     }
-
     .book-badge.placeholder {
       background: rgba(100, 116, 139, 0.5);
     }
-
     .book-info {
       padding: 1.5rem;
       position: relative;
     }
-
     .book-title {
       font-size: 1.3rem;
       font-weight: 700;
@@ -482,8 +461,10 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      /* 艺术字体 - 书名使用站酷小薇体 */
+      font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
-
     .book-author {
       font-size: 0.95rem;
       color: var(--text-secondary);
@@ -491,39 +472,35 @@
       display: flex;
       align-items: center;
       gap: 0.4rem;
+      font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
     }
-
     .book-author i {
       font-size: 0.8rem;
       color: var(--accent-1);
     }
-
     .book-meta {
       display: flex;
       gap: 1rem;
       margin-bottom: 1rem;
       flex-wrap: wrap;
     }
-
     .meta-item {
       display: flex;
       align-items: center;
       gap: 0.3rem;
       font-size: 0.85rem;
       color: var(--text-muted);
+      font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
     }
-
     .meta-item i {
       font-size: 0.75rem;
       color: var(--accent-1);
     }
-
     .book-actions {
       display: flex;
       gap: 0.8rem;
       margin-top: 1rem;
     }
-
     .book-btn {
       flex: 1;
       display: flex;
@@ -539,40 +516,35 @@
       transition: all 0.3s var(--transition-smooth);
       cursor: pointer;
       will-change: transform;
-      font-family: inherit;
+      font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
+      /* 提升字体清晰度 */
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
-
     .btn-pdf {
       background: linear-gradient(135deg, var(--accent-1), #0ea5e9);
       color: white;
     }
-
     .btn-pdf:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
     }
-
     .btn-notes {
       background: linear-gradient(135deg, var(--accent-2), #a855f7);
       color: white;
     }
-
     .btn-notes:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
     }
-
     .book-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
       filter: grayscale(0.5);
     }
-
     .book-btn:focus {
       outline: 2px solid currentColor;
       outline-offset: 2px;
     }
-
     /* ==================== 底部 ==================== */
     .footer {
       background: linear-gradient(to top, rgba(30, 41, 59, 0.8), transparent);
@@ -582,7 +554,6 @@
       position: relative;
       z-index: 1;
     }
-
     .footer-container {
       max-width: 1400px;
       margin: 0 auto;
@@ -592,12 +563,10 @@
       flex-wrap: wrap;
       gap: 2rem;
     }
-
     .social-links {
       display: flex;
       gap: 1.5rem;
     }
-
     .social-link {
       display: flex;
       align-items: center;
@@ -612,24 +581,21 @@
       transition: all 0.3s var(--transition-smooth);
       will-change: transform;
     }
-
     .social-link:hover {
       background: rgba(139, 92, 246, 0.2);
       border-color: var(--accent-2);
       color: var(--accent-2);
       transform: translateY(-2px);
     }
-
     .social-link:focus {
       outline: 2px solid var(--accent-2);
       outline-offset: 2px;
     }
-
     .copyright {
       color: var(--text-muted);
       font-size: 0.9rem;
+      font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
     }
-
     /* ==================== 响应式设计 ==================== */
     @media (max-width: 1024px) {
       .books-container {
@@ -640,7 +606,6 @@
         font-size: 2.5rem;
       }
     }
-
     @media (max-width: 768px) {
       .navbar {
         padding: 0.8rem 1rem;
@@ -680,7 +645,6 @@
         text-align: center;
       }
     }
-
     @media (max-width: 480px) {
       .books-container {
         grid-template-columns: 1fr;
@@ -700,7 +664,6 @@
         padding: 0.5rem 1rem;
       }
     }
-
     /* ==================== 动画效果 ==================== */
     @keyframes fadeIn {
       from {
@@ -712,12 +675,10 @@
         transform: translateY(0);
       }
     }
-
     .book-card {
       opacity: 0;
       animation: fadeIn 0.6s ease-out forwards;
     }
-
     .book-card:nth-child(1) { animation-delay: 0.05s; }
     .book-card:nth-child(2) { animation-delay: 0.1s; }
     .book-card:nth-child(3) { animation-delay: 0.15s; }
@@ -728,40 +689,33 @@
     .book-card:nth-child(8) { animation-delay: 0.4s; }
     .book-card:nth-child(9) { animation-delay: 0.45s; }
     .book-card:nth-child(10) { animation-delay: 0.5s; }
-
     /* ==================== 图片懒加载 ==================== */
     .lazy-image {
       opacity: 0;
       transition: opacity 0.5s ease;
     }
-
     .lazy-image.loaded {
       opacity: 1;
     }
-
     /* ==================== 工具类 ==================== */
     .hidden {
       display: none !important;
     }
-
     .fade-out {
       opacity: 0 !important;
       transform: translateY(20px) !important;
       pointer-events: none;
     }
-
     .fade-in {
       opacity: 1 !important;
       transform: translateY(0) !important;
     }
   </style>
 </head>
-
 <body>
   <div class="page-wrapper">
     <!-- 背景装饰 -->
     <div class="bg-decoration" id="stars" aria-hidden="true"></div>
-
     <!-- 导航栏 -->
     <nav class="navbar" id="navbar" role="navigation">
       <div class="nav-container">
@@ -777,7 +731,6 @@
         </div>
       </div>
     </nav>
-
     <!-- 主内容 -->
     <main class="main-content" role="main">
       <!-- 页面头部 -->
@@ -800,7 +753,6 @@
           </div>
         </div>
       </header>
-
       <!-- 筛选栏 -->
       <section class="filter-section" aria-label="书籍筛选">
         <div class="filter-bar" role="tablist">
@@ -827,7 +779,6 @@
           正在显示全部 <strong id="displayCount">15</strong> 本书籍
         </div>
       </section>
-
       <!-- 书籍容器 -->
       <section class="books-container" id="booksContainer" aria-label="书籍列表">
         <!-- 无结果提示 -->
@@ -839,7 +790,6 @@
         <!-- 书籍卡片将通过JS动态生成 -->
       </section>
     </main>
-
     <!-- 底部 -->
     <footer class="footer" role="contentinfo">
       <div class="footer-container">
@@ -872,10 +822,8 @@
       </div>
     </footer>
   </div>
-
   <script>
     /* ==================== 工具函数 ==================== */
-    
     /**
      * 防抖函数 - 延迟执行函数直到停止调用
      * @param {Function} func - 要防抖的函数
@@ -893,7 +841,6 @@
         timeout = setTimeout(later, wait);
       };
     }
-
     /**
      * 节流函数 - 限制函数执行频率
      * @param {Function} func - 要节流的函数
@@ -912,7 +859,6 @@
         }
       };
     }
-
     /* ==================== 书籍数据定义 ==================== */
     const booksData = [
       {
@@ -1142,9 +1088,7 @@
         isPlaceholder: true
       }))
     ];
-
     /* ==================== 核心功能函数 ==================== */
-
     /**
      * 创建书籍卡片DOM元素
      * @param {Object} book - 书籍数据对象
@@ -1157,26 +1101,22 @@
       card.dataset.category = book.category.join(' ');
       card.dataset.index = index;
       card.setAttribute('aria-label', `${book.title} - ${book.author}`);
-
       // 徽章HTML
       const badgeHTML = book.status === 'recent'
         ? '<span class="book-badge recent">✨ 最新</span>'
         : book.status === 'placeholder'
         ? '<span class="book-badge placeholder">📖 预留</span>'
         : '';
-
       // 按钮图标
-      const pdfIcon = book.isPlaceholder 
-        ? '<i class="fas fa-hourglass-half"></i>' 
+      const pdfIcon = book.isPlaceholder
+        ? '<i class="fas fa-hourglass-half"></i>'
         : '<i class="fas fa-file-pdf"></i>';
-      const notesIcon = book.isPlaceholder 
-        ? '<i class="fas fa-hourglass-half"></i>' 
+      const notesIcon = book.isPlaceholder
+        ? '<i class="fas fa-hourglass-half"></i>'
         : '<i class="fas fa-book-open"></i>';
-
       // 按钮状态
       const pdfDisabled = book.pdfUrl === '#' ? 'disabled' : '';
       const notesDisabled = book.notesUrl === '#' ? 'disabled' : '';
-
       card.innerHTML = `
         ${badgeHTML}
         <div class="book-cover">
@@ -1224,10 +1164,8 @@
           </div>
         </div>
       `;
-
       return card;
     }
-
     /**
      * 批量渲染书籍列表
      * @param {Array} books - 书籍数据数组，默认为全部书籍
@@ -1235,35 +1173,28 @@
     function renderBooks(books = booksData) {
       const container = document.getElementById('booksContainer');
       const noResults = document.getElementById('noResults');
-
       // 清空容器（保留无结果提示）
       Array.from(container.children).forEach(child => {
         if (child.id !== 'noResults') {
           child.remove();
         }
       });
-
       // 显示无结果提示
       if (books.length === 0) {
         noResults.classList.add('show');
         return;
       }
-
       noResults.classList.remove('show');
-
       // 使用文档片段优化性能
       const fragment = document.createDocumentFragment();
       books.forEach((book, index) => {
         const card = createBookCard(book, index);
         fragment.appendChild(card);
       });
-
       container.appendChild(fragment);
-
       // 延迟初始化懒加载
       setTimeout(() => initializeLazyLoading(), 100);
     }
-
     /**
      * 生成星星背景装饰
      */
@@ -1271,7 +1202,6 @@
       const starsContainer = document.getElementById('stars');
       const starCount = window.innerWidth < 768 ? 20 : 30;
       const fragment = document.createDocumentFragment();
-
       for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
         star.className = 'star';
@@ -1281,10 +1211,8 @@
         star.style.opacity = Math.random() * 0.8 + 0.2;
         fragment.appendChild(star);
       }
-
       starsContainer.appendChild(fragment);
     }
-
     /**
      * 处理导航栏滚动效果
      */
@@ -1294,10 +1222,8 @@
         const currentScrollY = window.scrollY;
         navbar.classList.toggle('scrolled', currentScrollY > 50);
       }, 16);
-
       window.addEventListener('scroll', throttledScroll, { passive: true });
     }
-
     /**
      * 更新统计信息显示
      * @param {String} filter - 当前筛选类别
@@ -1305,13 +1231,10 @@
     function updateStats(filter = 'all') {
       const displayCount = document.getElementById('displayCount');
       const filterInfo = document.getElementById('filterInfo');
-
       // 只统计非占位符书籍
       const realBooks = booksData.filter(book => !book.isPlaceholder);
-
       let count;
       let filterName;
-
       if (filter === 'all') {
         count = realBooks.length;
         filterName = '全部';
@@ -1326,18 +1249,15 @@
         };
         filterName = filterMap[filter];
       }
-
       displayCount.textContent = count;
       filterInfo.innerHTML = `正在显示<strong>${filterName}</strong>分类的 <strong>${count}</strong> 本书籍`;
     }
-
     /**
      * 初始化分类计数 - 修复关键BUG
      */
     function initializeCategoryCounts() {
       // 只统计非占位符书籍
       const realBooks = booksData.filter(book => !book.isPlaceholder);
-
       const counts = {
         all: realBooks.length,
         wealth: realBooks.filter(b => b.category.includes('wealth')).length,
@@ -1346,7 +1266,6 @@
         tech: realBooks.filter(b => b.category.includes('tech')).length,
         recent: realBooks.filter(b => b.category.includes('recent')).length
       };
-
       // 🔧 修复：正确使用 getElementById
       Object.keys(counts).forEach(key => {
         const countElement = document.getElementById(`count-${key}`);
@@ -1354,26 +1273,22 @@
           countElement.textContent = counts[key];
         }
       });
-
       // 更新总数
       const totalBooks = document.getElementById('totalBooks');
       if (totalBooks) {
         totalBooks.textContent = counts.all;
       }
     }
-
     /**
      * 初始化筛选功能
      */
     function initializeFilter() {
       const filterBtns = document.querySelectorAll('.filter-btn');
       let currentFilter = 'all';
-
       filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           const newFilter = btn.dataset.filter;
           if (newFilter === currentFilter) return;
-
           // 更新按钮状态
           filterBtns.forEach(b => {
             b.classList.remove('active');
@@ -1381,21 +1296,17 @@
           });
           btn.classList.add('active');
           btn.setAttribute('aria-selected', 'true');
-
           currentFilter = newFilter;
-
           // 筛选并重新渲染
           const realBooks = booksData.filter(book => !book.isPlaceholder);
           const filteredBooks = newFilter === 'all'
             ? booksData // 显示全部（包括占位符）
             : realBooks.filter(book => book.category.includes(newFilter));
-
           renderBooks(filteredBooks);
           updateStats(newFilter);
         });
       });
     }
-
     /**
      * 初始化图片懒加载
      */
@@ -1405,7 +1316,6 @@
           if (entry.isIntersecting) {
             const img = entry.target;
             const src = img.dataset.src;
-
             if (src) {
               const newImg = new Image();
               newImg.onload = () => {
@@ -1427,14 +1337,11 @@
         rootMargin: '50px 0px',
         threshold: 0.1
       });
-
       const lazyImages = document.querySelectorAll('.lazy-image:not(.loaded)');
       lazyImages.forEach(img => imageObserver.observe(img));
-
       // 保存观察器实例以便清理
       window.imageObserver = imageObserver;
     }
-
     /**
      * 预加载关键资源
      */
@@ -1449,7 +1356,6 @@
       };
       document.head.appendChild(fontLink);
     }
-
     /**
      * 内存清理函数
      */
@@ -1458,43 +1364,32 @@
         window.imageObserver.disconnect();
       }
     }
-
     /* ==================== 应用初始化 ==================== */
-
     /**
      * 应用主初始化函数
      */
     function initApp() {
       console.log('🚀 初始化星空书柜...');
-
       // 1. 创建背景装饰
       createStars();
-
       // 2. 渲染书籍列表
       renderBooks();
-
       // 3. 初始化统计数据
       initializeCategoryCounts();
       updateStats('all');
-
       // 4. 初始化交互功能
       handleNavbarScroll();
       initializeFilter();
-
       // 5. 延迟初始化懒加载（优化性能）
       setTimeout(() => {
         initializeLazyLoading();
       }, 200);
-
       // 6. 预加载关键资源
       preloadCriticalResources();
-
       // 7. 注册清理函数
       window.addEventListener('beforeunload', cleanup);
-
       console.log('✅ 星空书柜初始化完成！');
     }
-
     // 使用最佳实践进行初始化
     if ('requestIdleCallback' in window) {
       // 现代浏览器：在空闲时初始化
@@ -1507,7 +1402,6 @@
         initApp();
       }
     }
-
     // 开发环境调试辅助
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       window.booksData = booksData;
