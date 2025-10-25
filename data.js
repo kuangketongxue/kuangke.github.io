@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+     {
+        id: 41,
+        date: '2025-10-25',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '图书馆学习，高专注比',
+            en: 'Studying in the library with high levels of focus.'
+        },
+        content: {
+            zh: '阅读16本书+。\n网站优化，新增美食选择聚餐功能。\n学习13小时+\n早起+早到图书馆',
+            en: 'Read 16+ books.\nWebsite optimization.A new feature for group dining with diverse food options has been added.\nStudied for 13+ hours.\nGetting up early and arriving at the library early.'
+        },
+        highlight: {
+            zh: '省下了1/10特斯拉股票的钱约400人民币',
+            en: 'The equivalent of approximately 400 RMB was saved by avoiding the purchase of 1/10 shares of Tesla stock.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 3,
+        coverImage: '',
+        attachments: []
+    },
       {
         id: 40,
         date: '2025-10-24',
