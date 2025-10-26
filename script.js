@@ -389,7 +389,7 @@ class EnhancedStorageManager {
             return {
                 used: total,
                 usedMB: (total / 1024 / 1024).toFixed(2),
-                available: (assumedLimit - total), 
+                available: (assumedLimit - total),
                 availableMB: ((assumedLimit - total) / 1024 / 1024).toFixed(2)
             };
         } catch (error) {
@@ -1232,23 +1232,35 @@ class MomentsPageManager {
         this.updateStats();
     }
     static updateStats() {
-        if (!this.paginationManager) return;
-        const filteredData = this.paginationManager.filteredItems;
+        // 修正 #1：不再依赖 paginationManager，因为我们需要的是全局统计
+        // 确保 this.data 已经加载
+        if (!this.data) return;
+
+        // 修正 #2：直接使用未经筛选的完整数据集 this.data 进行计算
+        const allMomentsData = this.data;
         const today = new Date().toISOString().split('T')[0];
+
         let highValue = 0;
         let todayCount = 0;
-        filteredData.forEach(moment => {
+
+        // 基于完整数据进行循环统计
+        allMomentsData.forEach(moment => {
             const value = parseInt(moment.value) || 0;
-            if (value >= 5) highValue++;
+            if (value >= 5) {
+                highValue++;
+            }
             if (moment.time && moment.time.split('T')[0] === today) {
                 todayCount++;
             }
         });
+
         // 使用动画更新统计
         const totalEl = document.getElementById('totalMoments');
         const highValueEl = document.getElementById('highValueMoments');
         const todayEl = document.getElementById('todayMoments');
-        if (totalEl) this.animateCounter(totalEl, parseInt(totalEl.textContent) || 0, filteredData.length, 800);
+
+        // 修正 #3：总数使用 allMomentsData.length
+        if (totalEl) this.animateCounter(totalEl, parseInt(totalEl.textContent) || 0, allMomentsData.length, 800);
         if (highValueEl) this.animateCounter(highValueEl, parseInt(highValueEl.textContent) || 0, highValue, 1000);
         if (todayEl) this.animateCounter(todayEl, parseInt(todayEl.textContent) || 0, todayCount, 600);
     }
@@ -1493,10 +1505,8 @@ class SuccessPageManager {
         const tagsHtml = this.renderTags(entry.categories);
         const attachmentsHtml = this.renderAttachments(entry.attachments);
         const coverHtml = this.renderCover(entry.coverImage);
-        
         // 确保成就值是数字
         const achievementLevel = entry.achievementLevel !== undefined ? entry.achievementLevel : 0;
-
         return `
             <div class="timeline-item">
                 <div class="timeline-marker"></div>
