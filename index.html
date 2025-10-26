@@ -103,114 +103,6 @@
         .ai-nav-button:active {
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
-        @keyframes ai-g# 完整的 index.html（添加内容折叠功能）
-
-```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <!-- 基础Meta标签 -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- SEO优化 -->
-    <meta name="description" content="狂客·银河 - 记录生活精彩瞬间，分享美好时刻">
-    <meta name="keywords" content="狂客,银河,朋友圈,生活分享,成功日记">
-    <meta name="author" content="狂客">
-    <meta name="robots" content="index, follow">
-    <!-- Open Graph / 社交媒体分享 -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="狂客·银河">
-    <meta property="og:description" content="记录生活精彩瞬间，分享美好时刻">
-    <meta property="og:site_name" content="狂客·银河">
-    <!-- 网站图标 -->
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon.ico">
-    <!-- 预连接外部资源 -->
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <title>狂客·银河 - 记录生活精彩瞬间</title>
-    <!-- 样式表 -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
-    <style>
-        /* ==================== 通用按钮基础样式 ==================== */
-        .nav-button-base {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 16px;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: 0.5px;
-            will-change: transform, box-shadow;
-            cursor: pointer;
-            white-space: nowrap;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
-        }
-        /* 光泽效果（通用） */
-        .nav-button-base::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg,
-                transparent,
-                rgba(255, 255, 255, 0.2),
-                transparent
-            );
-            transition: left 0.5s ease;
-        }
-        .nav-button-base:hover::before {
-            left: 100%;
-        }
-        /* 通用悬停和点击效果 */
-        .nav-button-base:hover {
-            transform: translateY(-2px);
-        }
-        .nav-button-base:active {
-            transform: translateY(0);
-        }
-        /* 通用图标样式 */
-        .button-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .nav-button-base:hover .button-icon {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1) rotate(5deg);
-        }
-        /* ==================== AI前沿按钮 ==================== */
-        .ai-nav-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-        .ai-nav-button:hover {
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-        }
-        .ai-nav-button:active {
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
         @keyframes ai-glow {
             0%, 100% {
                 box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
@@ -428,31 +320,47 @@
             }
         }
         
-        /* ==================== 内容折叠样式 ==================== */
-        /* 朋友圈内容容器 */
+        /* ==================== 朋友圈内容折叠样式 ==================== */
+        /* 内容容器 */
         .moment-content {
             position: relative;
-            max-height: 300px;
+            max-height: 180px; /* 约6-7行文字 */
             overflow: hidden;
-            transition: max-height 0.3s ease;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* 折叠状态下的渐变遮罩 */
+        /* 折叠状态的渐变遮罩 */
         .moment-content.collapsed::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 60px;
-            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.9));
+            height: 50px;
+            background: linear-gradient(
+                to bottom,
+                transparent,
+                rgba(255, 255, 255, 0.95)
+            );
             pointer-events: none;
         }
 
-        /* 深色模式适配 */
+        /* 深色模式遮罩适配 */
+        [data-theme="dark"] .moment-content.collapsed::after {
+            background: linear-gradient(
+                to bottom,
+                transparent,
+                rgba(30, 30, 30, 0.95)
+            );
+        }
+        
         @media (prefers-color-scheme: dark) {
             .moment-content.collapsed::after {
-                background: linear-gradient(to bottom, transparent, rgba(30, 30, 30, 0.95));
+                background: linear-gradient(
+                    to bottom,
+                    transparent,
+                    rgba(30, 30, 30, 0.95)
+                );
             }
         }
 
@@ -466,37 +374,57 @@
         }
 
         /* 展开/收起按钮 */
-        .expand-btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 6px 12px;
+        .expand-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            padding: 4px 12px;
             color: #667eea;
             background: transparent;
-            border: 1px solid #667eea;
-            border-radius: 6px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 8px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
 
-        .expand-btn:hover {
-            background: #667eea;
-            color: #fff;
+        .expand-toggle-btn:hover {
+            background: rgba(102, 126, 234, 0.08);
+            border-color: #667eea;
+            color: #5568d3;
         }
 
-        .expand-btn.hidden {
-            display: none;
+        .expand-toggle-btn:active {
+            transform: scale(0.98);
+        }
+
+        .expand-toggle-btn .toggle-icon {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .expand-toggle-btn.expanded .toggle-icon {
+            transform: rotate(180deg);
         }
 
         /* 响应式优化 */
         @media (max-width: 768px) {
             .moment-content {
-                max-height: 250px;
+                max-height: 150px;
             }
             
             .moment-content.collapsed::after {
-                height: 50px;
+                height: 40px;
+            }
+        }
+
+        /* 减少动画（无障碍） */
+        @media (prefers-reduced-motion: reduce) {
+            .moment-content,
+            .expand-toggle-btn .toggle-icon {
+                transition: none;
             }
         }
     </style>
@@ -786,185 +714,6 @@
     <!-- 数据文件优先加载 -->
     <script src="data.js"></script>
     <!-- 主逻辑文件延迟加载 -->
-    <script>
-        /**
-         * 内容折叠功能
-         */
-        class ContentCollapseManager {
-            constructor() {
-                this.contentLengthThreshold = 200; // 触发折叠的字符数
-                this.init();
-            }
-
-            init() {
-                this.setupMutationObserver();
-                this.setupEventListeners();
-            }
-
-            /**
-             * 设置DOM变化监听
-             */
-            setupMutationObserver() {
-                const momentsContainer = document.getElementById('momentsContainer');
-                if (!momentsContainer) return;
-
-                const observer = new MutationObserver(() => {
-                    this.setupCollapseButtons();
-                });
-
-                observer.observe(momentsContainer, {
-                    childList: true,
-                    subtree: true
-                });
-            }
-
-            /**
-             * 设置事件监听
-             */
-            setupEventListeners() {
-                // 页面加载完成后初始化
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', () => {
-                        this.setupCollapseButtons();
-                    });
-                } else {
-                    this.setupCollapseButtons();
-                }
-            }
-
-            /**
-             * 为内容设置折叠按钮
-             */
-            setupCollapseButtons() {
-                const momentItems = document.querySelectorAll('.moment-item');
-                
-                momentItems.forEach(item => {
-                    // 跳过已处理的元素
-                    if (item.dataset.collapseInitialized) return;
-                    
-                    // 查找文本内容元素
-                    const contentEl = item.querySelector('.moment-text');
-                    if (!contentEl) return;
-                    
-                    // 处理折叠逻辑
-                    this.processContentCollapse(item, contentEl);
-                    item.dataset.collapseInitialized = 'true';
-                });
-            }
-
-            /**
-             * 处理单个内容的折叠逻辑
-             */
-            processContentCollapse(item, contentEl) {
-                // 获取纯文本内容
-                const textContent = this.extractTextContent(contentEl);
-                
-                // 判断是否需要折叠
-                if (textContent.length > this.contentLengthThreshold) {
-                    this.createCollapsedContent(contentEl);
-                }
-            }
-
-            /**
-             * 提取文本内容
-             */
-            extractTextContent(element) {
-                // 克隆元素以避免修改原DOM
-                const clone = element.cloneNode(true);
-                
-                // 移除不需要的元素（如图片、视频等）
-                const unwantedTags = ['img', 'video', 'iframe', 'svg', 'button', 'a'];
-                unwantedTags.forEach(tag => {
-                    const elements = clone.querySelectorAll(tag);
-                    elements.forEach(el => el.remove());
-                });
-                
-                return clone.textContent.trim();
-            }
-
-            /**
-             * 创建折叠内容结构
-             */
-            createCollapsedContent(contentEl) {
-                // 保存原始HTML
-                const originalHTML = contentEl.innerHTML;
-                
-                // 创建内容容器
-                const contentWrapper = document.createElement('div');
-                contentWrapper.className = 'moment-content collapsed';
-                contentWrapper.innerHTML = originalHTML;
-                
-                // 清空原内容并添加新结构
-                contentEl.innerHTML = '';
-                contentEl.appendChild(contentWrapper);
-                
-                // 创建展开/收起按钮
-                const expandBtn = document.createElement('button');
-                expandBtn.className = 'expand-btn';
-                expandBtn.textContent = '展开全文';
-                expandBtn.setAttribute('aria-expanded', 'false');
-                expandBtn.setAttribute('aria-label', '展开长文本内容');
-                expandBtn.setAttribute('tabindex', '0');
-                
-                contentEl.appendChild(expandBtn);
-                
-                // 绑定点击事件
-                expandBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.toggleContent(contentWrapper, expandBtn);
-                });
-
-                // 键盘支持
-                expandBtn.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        this.toggleContent(contentWrapper, expandBtn);
-                    }
-                });
-            }
-
-            /**
-             * 切换内容展开/折叠
-             */
-            toggleContent(contentWrapper, button) {
-                const isExpanded = contentWrapper.classList.contains('expanded');
-                
-                if (isExpanded) {
-                    // 收起
-                    contentWrapper.classList.remove('expanded');
-                    contentWrapper.classList.add('collapsed');
-                    button.textContent = '展开全文';
-                    button.setAttribute('aria-expanded', 'false');
-                    this.announceToScreenReader('已收起内容');
-                } else {
-                    // 展开
-                    contentWrapper.classList.remove('collapsed');
-                    contentWrapper.classList.add('expanded');
-                    button.textContent = '收起';
-                    button.setAttribute('aria-expanded', 'true');
-                    this.announceToScreenReader('已展开全文');
-                }
-            }
-
-            /**
-             * 屏幕阅读器提示
-             */
-            announceToScreenReader(message) {
-                const announcer = document.getElementById('announcer');
-                if (announcer) {
-                    announcer.textContent = message;
-                    
-                    // 清空提示，避免重复
-                    setTimeout(() => {
-                        announcer.textContent = '';
-                    }, 1000);
-                }
-            }
-        }
-
-        // 初始化内容折叠管理器
-        const contentCollapseManager = new ContentCollapseManager();
-    </script>
     <script src="script.js" defer></script>
     <!-- 性能监控（可选） -->
     <script>
