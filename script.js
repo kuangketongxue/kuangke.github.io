@@ -1996,3 +1996,109 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, true);
 });
+/**
+ * 初始化内容折叠功能
+ */
+function initializeContentCollapse() {
+    const momentsContainer = document.getElementById('momentsContainer');
+    const contentLengthThreshold = 200; // 超过200字符折叠
+    
+    // 使用MutationObserver监听DOM变化（动态加载内容）
+    const observer = new MutationObserver(() => {
+        setupCollapseButtons();
+    });
+    
+    observer.observe(momentsContainer, {
+        childList: true,
+        subtree: true
+    });
+    
+    // 初始化已有内容
+    setupCollapseButtons();
+}
+
+/**
+ * 为内容设置折叠按钮
+ */
+function setupCollapseButtons() {
+    const momentItems = document.querySelectorAll('.moment-item');
+    
+    momentItems.forEach(item => {
+        // 找到内容元素
+        const contentEl = item.querySelector('.moment-text');
+        if (!contentEl) return;
+        
+        const textContent = contentEl.textContent.trim();
+        
+        // 检查是否已处理
+        if (item.dataset.collapseInitialized) return;
+        item.dataset.collapseInitialized = true;
+        
+        // 判断是否需要折叠
+        if (textContent.length > 200) {
+            // 创建内容容器
+            const contentWrapper = document.createElement('div');
+            contentWrapper.className = 'moment-content collapsed';
+            contentWrapper.innerHTML = contentEl.innerHTML;
+            
+            // 替换原内容
+            contentEl.innerHTML = '';
+            contentEl.appendChild(contentWrapper);
+            
+            // 创建展开/收起按钮
+            const expandBtn = document.createElement('button');
+            expandBtn.className = 'expand-btn';
+            expandBtn.textContent = '展开全文';
+            expandBtn.setAttribute('aria-expanded', 'false');
+            expandBtn.setAttribute('aria-label', '展开长文本内容');
+            
+            contentEl.appendChild(expandBtn);
+            
+            // 按钮点击事件
+            expandBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleContent(contentWrapper, expandBtn);
+            });
+        }
+    });
+}
+
+/**
+ * 切换内容展开/折叠
+ */
+function toggleContent(contentWrapper, button) {
+    const isExpanded = contentWrapper.classList.contains('expanded');
+    
+    if (isExpanded) {
+        // 收起
+        contentWrapper.classList.remove('expanded');
+        contentWrapper.classList.add('collapsed');
+        button.textContent = '展开全文';
+        button.setAttribute('aria-expanded', 'false');
+    } else {
+        // 展开
+        contentWrapper.classList.remove('collapsed');
+        contentWrapper.classList.add('expanded');
+        button.textContent = '收起';
+        button.setAttribute('aria-expanded', 'true');
+    }
+    
+    // 无障碍提示
+    const announcement = isExpanded ? '已收起内容' : '已展开全文';
+    announceToScreenReader(announcement);
+}
+
+/**
+ * 屏幕阅读器提示
+ */
+function announceToScreenReader(message) {
+    const announcer = document.getElementById('announcer');
+    if (announcer) {
+        announcer.textContent = message;
+    }
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', () => {
+    initializeContentCollapse();
+});
