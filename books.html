@@ -178,7 +178,9 @@
       border: none;
       cursor: pointer;
       /* 提升字体清晰度 */
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+     text-shadow: 
+  0 1px 0 rgba(255, 255, 255, 0.5),    /* 上方亮色高光 */
+  0 2px 3px rgba(0, 0, 0, 0.3);        /* 下方深色阴影 */
     }
     .back-btn:hover {
       transform: translateY(-2px);
@@ -1322,66 +1324,137 @@
     /**
      * 初始化图片懒加载
      */
-    function initializeLazyLoading() {
-      const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const img = entry.target;
-            const src = img.dataset.src;
-            if (src) {
-              const newImg = new Image();
-              newImg.onload = () => {
-                img.src = src;
-                img.classList.add('loaded');
-                observer.unobserve(img);
-              };
-              newImg.onerror = () => {
-                // 加载失败时使用占位图
-                img.src = 'https://picsum.photos/280/380?blur=5';
-                img.classList.add('loaded');
-                observer.unobserve(img);
-              };
-              newImg.src = src;
-            }
-          }
-        });
-      }, {
-        rootMargin: '50px 0px',
-        threshold: 0.1
-      });
-      const lazyImages = document.querySelectorAll('.lazy-image:not(.loaded)');
-      lazyImages.forEach(img => imageObserver.observe(img));
-      // 保存观察器实例以便清理
-      window.imageObserver = imageObserver;
+ /**
+ * 初始化分类计数 - 【修复版】
+ */
+function initializeCategoryCounts() {
+  const realBooks = booksData.filter(book => !book.isPlaceholder);
+  const counts = {
+    all: realBooks.length,
+    wealth: realBooks.filter(b => b.category.includes('wealth')).length,
+    growth: realBooks.filter(b => b.category.includes('growth')).length,
+    skill: realBooks.filter(b => b.category.includes('skill')).length,
+    tech: realBooks.filter(b => b.category.includes('tech')).length,
+    recent: realBooks.filter(b => b.category.includes('recent')).length
+  };
+  
+  // ✅ 修复：正确的模板字符串用法
+  Object.keys(counts).forEach(key => {
+    const countElement = document.getElementById(`count-${key}`);
+    if (countElement) {
+      countElement.textContent = counts[key];
     }
-    /**
-     * 预加载关键资源
-     */
-    function preloadCriticalResources() {
-      // 预加载字体
-      const fontLink = document.createElement('link');
-      fontLink.rel = 'preload';
-      fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap';
-      fontLink.as = 'style';
-      fontLink.onload = function() {
-        this.rel = 'stylesheet';
-      };
-      document.head.appendChild(fontLink);
-    }
-    /**
-     * 内存清理函数
-     */
-    function cleanup() {
-      if (window.imageObserver) {
-        window.imageObserver.disconnect();
+  });
+  
+  const totalBooks = document.getElementById('totalBooks');
+  if (totalBooks) {
+    totalBooks.textContent = counts.all;
+  }
+}
+
+/**
+ * 【新增】改进的图片懒加载 - 支持更好的错误处理
+ */
+function initializeLazyLoading() {
+  const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        const src = img.dataset.src;
+        
+        if (src) {
+          const newImg = new Image();
+          
+          newImg.onload = () => {
+            // 平滑过渡效果
+            img.style.opacity = '0';
+            img.src = src;
+            setTimeout(() => {
+              img.classList.add('loaded');
+              img.style.opacity = '1';
+            }, 50);
+            observer.unobserve(img);
+          };
+          
+          newImg.onerror = () => {
+            // 失败降级方案：使用本地占位图或纯色背景
+            img.style.backgroundColor = '#2d3748';
+            img.style.backgroundImage = 'linear-gradient(135deg, #8b5cf6, #38bdf8)';
+            img.classList.add('loaded');
+            observer.unobserve(img);
+            console.warn(`⚠️ 图片加载失败: ${src}`);
+          };
+          
+          newImg.src = src;
+        }
       }
+    });
+  }, {
+    rootMargin: '100px 0px',
+    threshold: 0.1
+  });
+  
+  const lazyImages = document.querySelectorAll('.lazy-image:not(.loaded)');
+  lazyImages.forEach(img => imageObserver.observe(img));
+  window.imageObserver = imageObserver;
+}
+
+/**
+ * 【新增】搜索功能
+ */
+function initializeSearch() {
+  const searchInput = document.getElementById('searchInput');
+  if (!searchInput) return;
+  
+  const debouncedSearch = debounce(() => {
+    const query = searchInput.value.toLowerCase().trim();
+    
+    let results = booksData;
+    
+    if (query) {
+      results = booksData.filter(book =>
+        book.title.toLowerCase().includes(query) ||
+        book.author.toLowerCase().includes(query) ||
+        book.tag.toLowerCase().includes(query)
+      );
     }
-    /* ==================== 应用初始化 ==================== */
-    /**
-     * 应用主初始化函数
-     */
-    function initApp() {
-      console.log('🚀 初始化星空书柜...');
+    
+    renderBooks(results);
+    updateStats('all');
+  }, 300);
+  
+  searchInput.addEventListener('input', debouncedSearch);
+}
+
+/**
+ * 【改进】更健壮的初始化
+ */
+function initApp() {
+  try {
+    console.log('🚀 初始化星空书柜...');
+    
+    createStars();
+    renderBooks();
+    initializeCategoryCounts();
+    updateStats('all');
+    
+    handleNavbarScroll();
+    initializeFilter();
+    initializeSearch?.();
+    
+    setTimeout(() => {
+      initializeLazyLoading();
+    }, 200);
+    
+    preloadCriticalResources();
+    window.addEventListener('beforeunload', cleanup);
+    
+    console.log('✅ 星空书柜初始化完成！');
+  } catch (error) {
+    console.error('❌ 初始化失败:', error);
+    // 降级处理：至少显示静态内容
+  }
+}
       // 1. 创建背景装饰
       createStars();
       // 2. 渲染书籍列表
