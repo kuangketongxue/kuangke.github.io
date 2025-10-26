@@ -1,4 +1,4 @@
-"// ==================== 常量定义 ====================
+// ==================== 常量定义 ====================
 const STORAGE_KEYS = Object.freeze({
     moments: 'momentsData',
     diary: 'successDiaryData',
@@ -1878,4 +1878,4 @@ document.addEventListener('DOMContentLoaded', function() {
             handleImageError(e.target);
         }
     }, true);
-});"
+});
