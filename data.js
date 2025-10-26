@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+      {
+        id: 42,
+        date: '2025-10-26',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '一天写作1万字+',
+            en: 'Writing 10,000 words or more in a single day'
+        },
+        content: {
+            zh: '阅读16本书+。\n网站优化，新增折叠功能。\n学习13小时+\n早起+早到图书馆+直播',
+            en: 'Read 16+ books.\nWebsite optimization.New foldable functionality added.\nStudied for 13+ hours.\nEarly wake-up, early arrival at the library, and live streaming activities.'
+        },
+        highlight: {
+            zh: '云吞不错；前哨战关于信息量的启发：信息量等于你克服的不确定性的大小。我们都在做空/做多',
+            en: 'The wontons are quite good; Insights from the Pre-Battle Phase regarding the Volume of Information: The volume of information is directly proportional to the degree of uncertainty that needs to be overcome. We are all either shorting or long positions.'
+        },
+        notes: {
+            zh: '1',
+            en: '1'
+        },
+        moodCode: 'hungry',
+        achievementLevel: 3,
+        coverImage: '',
+        attachments: []
+    },
      {
         id: 41,
         date: '2025-10-25',
