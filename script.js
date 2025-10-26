@@ -29,7 +29,8 @@ class AppState {
         try {
             return localStorage.getItem(key);
         } catch (error) {
-            console.warn`Failed to load from storage: ${key}`, error);
+            // ✅ 正确行
+               console.warn(`Failed to load from storage: ${key}`, error);
             return null;
         }
     }
