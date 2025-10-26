@@ -67,18 +67,16 @@
       text-rendering: optimizeLegibility;
       font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
       letter-spacing: 0.02em;
-      /* 🎯 新增：提升清晰度 */
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-  -webkit-font-feature-settings: "kern" 1;
-  font-kerning: auto;
-  font-variant-ligatures: common-ligatures;
-  
-  /* 防止模糊 */
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  perspective: 1000px;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-font-feature-settings: "kern" 1;
+      font-kerning: auto;
+      font-variant-ligatures: common-ligatures;
+      /* 防止模糊 */
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      perspective: 1000px;
     }
     /* ==================== 页面容器 ==================== */
     .page-wrapper {
@@ -178,9 +176,7 @@
       border: none;
       cursor: pointer;
       /* 提升字体清晰度 */
-     text-shadow: 
-  0 1px 0 rgba(255, 255, 255, 0.5),    /* 上方亮色高光 */
-  0 2px 3px rgba(0, 0, 0, 0.3);        /* 下方深色阴影 */
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
     .back-btn:hover {
       transform: translateY(-2px);
@@ -201,7 +197,7 @@
     /* ==================== 页面头部 ==================== */
     .page-header {
       text-align: center;
-      margin-bottom: 4rem;
+      margin-bottom: 3rem;
       padding: 2rem 1rem;
       position: relative;
     }
@@ -264,6 +260,33 @@
       font-size: 0.9rem;
       color: var(--text-muted);
       font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
+    }
+    /* ==================== 搜索栏 ==================== */
+    .search-section {
+      max-width: 1400px;
+      margin: 0 auto 2rem;
+      padding: 0 1rem;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.9rem 1.5rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
+      font-size: 1rem;
+      transition: all 0.3s var(--transition-smooth);
+      backdrop-filter: blur(10px);
+    }
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+    .search-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--accent-1);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
     }
     /* ==================== 筛选栏 ==================== */
     .filter-section {
@@ -658,6 +681,9 @@
         flex-direction: column;
         text-align: center;
       }
+      .search-input {
+        font-size: 16px; /* 防止iOS自动放大 */
+      }
     }
     @media (max-width: 480px) {
       .books-container {
@@ -767,6 +793,15 @@
           </div>
         </div>
       </header>
+      <!-- 搜索栏 -->
+      <section class="search-section" aria-label="搜索书籍">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="🔍 搜索书名、作者或标签..."
+          aria-label="搜索书籍">
+      </section>
       <!-- 筛选栏 -->
       <section class="filter-section" aria-label="书籍筛选">
         <div class="filter-bar" role="tablist">
@@ -799,7 +834,7 @@
         <div class="no-results" id="noResults">
           <i class="fas fa-search" aria-hidden="true"></i>
           <p>没有找到相关书籍</p>
-          <small>试试其他分类吧～</small>
+          <small>试试其他分类或关键词吧～</small>
         </div>
         <!-- 书籍卡片将通过JS动态生成 -->
       </section>
@@ -855,6 +890,7 @@
         timeout = setTimeout(later, wait);
       };
     }
+
     /**
      * 节流函数 - 限制函数执行频率
      * @param {Function} func - 要节流的函数
@@ -873,6 +909,7 @@
         }
       };
     }
+
     /* ==================== 书籍数据定义 ==================== */
     const booksData = [
       {
@@ -1102,6 +1139,7 @@
         isPlaceholder: true
       }))
     ];
+
     /* ==================== 核心功能函数 ==================== */
     /**
      * 创建书籍卡片DOM元素
@@ -1115,12 +1153,14 @@
       card.dataset.category = book.category.join(' ');
       card.dataset.index = index;
       card.setAttribute('aria-label', `${book.title} - ${book.author}`);
+
       // 徽章HTML
       const badgeHTML = book.status === 'recent'
         ? '<span class="book-badge recent">✨ 最新</span>'
         : book.status === 'placeholder'
         ? '<span class="book-badge placeholder">📖 预留</span>'
         : '';
+
       // 按钮图标
       const pdfIcon = book.isPlaceholder
         ? '<i class="fas fa-hourglass-half"></i>'
@@ -1128,9 +1168,11 @@
       const notesIcon = book.isPlaceholder
         ? '<i class="fas fa-hourglass-half"></i>'
         : '<i class="fas fa-book-open"></i>';
+
       // 按钮状态
       const pdfDisabled = book.pdfUrl === '#' ? 'disabled' : '';
       const notesDisabled = book.notesUrl === '#' ? 'disabled' : '';
+
       card.innerHTML = `
         ${badgeHTML}
         <div class="book-cover">
@@ -1178,8 +1220,10 @@
           </div>
         </div>
       `;
+
       return card;
     }
+
     /**
      * 批量渲染书籍列表
      * @param {Array} books - 书籍数据数组，默认为全部书籍
@@ -1187,28 +1231,35 @@
     function renderBooks(books = booksData) {
       const container = document.getElementById('booksContainer');
       const noResults = document.getElementById('noResults');
+
       // 清空容器（保留无结果提示）
       Array.from(container.children).forEach(child => {
         if (child.id !== 'noResults') {
           child.remove();
         }
       });
+
       // 显示无结果提示
       if (books.length === 0) {
         noResults.classList.add('show');
         return;
       }
+
       noResults.classList.remove('show');
+
       // 使用文档片段优化性能
       const fragment = document.createDocumentFragment();
       books.forEach((book, index) => {
         const card = createBookCard(book, index);
         fragment.appendChild(card);
       });
+
       container.appendChild(fragment);
+
       // 延迟初始化懒加载
       setTimeout(() => initializeLazyLoading(), 100);
     }
+
     /**
      * 生成星星背景装饰
      */
@@ -1216,6 +1267,7 @@
       const starsContainer = document.getElementById('stars');
       const starCount = window.innerWidth < 768 ? 20 : 30;
       const fragment = document.createDocumentFragment();
+
       for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
         star.className = 'star';
@@ -1225,8 +1277,10 @@
         star.style.opacity = Math.random() * 0.8 + 0.2;
         fragment.appendChild(star);
       }
+
       starsContainer.appendChild(fragment);
     }
+
     /**
      * 处理导航栏滚动效果
      */
@@ -1236,8 +1290,10 @@
         const currentScrollY = window.scrollY;
         navbar.classList.toggle('scrolled', currentScrollY > 50);
       }, 16);
+
       window.addEventListener('scroll', throttledScroll, { passive: true });
     }
+
     /**
      * 更新统计信息显示
      * @param {String} filter - 当前筛选类别
@@ -1245,10 +1301,13 @@
     function updateStats(filter = 'all') {
       const displayCount = document.getElementById('displayCount');
       const filterInfo = document.getElementById('filterInfo');
+
       // 只统计非占位符书籍
       const realBooks = booksData.filter(book => !book.isPlaceholder);
+
       let count;
       let filterName;
+
       if (filter === 'all') {
         count = realBooks.length;
         filterName = '全部';
@@ -1263,11 +1322,13 @@
         };
         filterName = filterMap[filter];
       }
+
       displayCount.textContent = count;
       filterInfo.innerHTML = `正在显示<strong>${filterName}</strong>分类的 <strong>${count}</strong> 本书籍`;
     }
+
     /**
-     * 初始化分类计数 - 修复关键BUG
+     * 初始化分类计数 - 【修复版本】
      */
     function initializeCategoryCounts() {
       // 只统计非占位符书籍
@@ -1280,29 +1341,34 @@
         tech: realBooks.filter(b => b.category.includes('tech')).length,
         recent: realBooks.filter(b => b.category.includes('recent')).length
       };
-      // 🔧 修复：正确使用 getElementById
+
+      // ✅ 修复：正确使用模板字符串
       Object.keys(counts).forEach(key => {
         const countElement = document.getElementById(`count-${key}`);
         if (countElement) {
           countElement.textContent = counts[key];
         }
       });
+
       // 更新总数
       const totalBooks = document.getElementById('totalBooks');
       if (totalBooks) {
         totalBooks.textContent = counts.all;
       }
     }
+
     /**
      * 初始化筛选功能
      */
     function initializeFilter() {
       const filterBtns = document.querySelectorAll('.filter-btn');
       let currentFilter = 'all';
+
       filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           const newFilter = btn.dataset.filter;
           if (newFilter === currentFilter) return;
+
           // 更新按钮状态
           filterBtns.forEach(b => {
             b.classList.remove('active');
@@ -1310,171 +1376,181 @@
           });
           btn.classList.add('active');
           btn.setAttribute('aria-selected', 'true');
+
           currentFilter = newFilter;
+
           // 筛选并重新渲染
           const realBooks = booksData.filter(book => !book.isPlaceholder);
           const filteredBooks = newFilter === 'all'
             ? booksData // 显示全部（包括占位符）
             : realBooks.filter(book => book.category.includes(newFilter));
+
           renderBooks(filteredBooks);
           updateStats(newFilter);
+
+          // 清除搜索框
+          const searchInput = document.getElementById('searchInput');
+          if (searchInput) {
+            searchInput.value = '';
+          }
         });
       });
     }
+
     /**
-     * 初始化图片懒加载
+     * 【新增】搜索功能
      */
- /**
- * 初始化分类计数 - 【修复版】
- */
-function initializeCategoryCounts() {
-  const realBooks = booksData.filter(book => !book.isPlaceholder);
-  const counts = {
-    all: realBooks.length,
-    wealth: realBooks.filter(b => b.category.includes('wealth')).length,
-    growth: realBooks.filter(b => b.category.includes('growth')).length,
-    skill: realBooks.filter(b => b.category.includes('skill')).length,
-    tech: realBooks.filter(b => b.category.includes('tech')).length,
-    recent: realBooks.filter(b => b.category.includes('recent')).length
-  };
-  
-  // ✅ 修复：正确的模板字符串用法
-  Object.keys(counts).forEach(key => {
-    const countElement = document.getElementById(`count-${key}`);
-    if (countElement) {
-      countElement.textContent = counts[key];
-    }
-  });
-  
-  const totalBooks = document.getElementById('totalBooks');
-  if (totalBooks) {
-    totalBooks.textContent = counts.all;
-  }
-}
+    function initializeSearch() {
+      const searchInput = document.getElementById('searchInput');
+      if (!searchInput) return;
 
-/**
- * 【新增】改进的图片懒加载 - 支持更好的错误处理
- */
-function initializeLazyLoading() {
-  const imageObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const img = entry.target;
-        const src = img.dataset.src;
-        
-        if (src) {
-          const newImg = new Image();
-          
-          newImg.onload = () => {
-            // 平滑过渡效果
-            img.style.opacity = '0';
-            img.src = src;
-            setTimeout(() => {
-              img.classList.add('loaded');
-              img.style.opacity = '1';
-            }, 50);
-            observer.unobserve(img);
-          };
-          
-          newImg.onerror = () => {
-            // 失败降级方案：使用本地占位图或纯色背景
-            img.style.backgroundColor = '#2d3748';
-            img.style.backgroundImage = 'linear-gradient(135deg, #8b5cf6, #38bdf8)';
-            img.classList.add('loaded');
-            observer.unobserve(img);
-            console.warn(`⚠️ 图片加载失败: ${src}`);
-          };
-          
-          newImg.src = src;
+      const debouncedSearch = debounce(() => {
+        const query = searchInput.value.toLowerCase().trim();
+
+        let results = booksData;
+
+        if (query) {
+          results = booksData.filter(book =>
+            !book.isPlaceholder && (
+              book.title.toLowerCase().includes(query) ||
+              book.author.toLowerCase().includes(query) ||
+              book.tag.toLowerCase().includes(query)
+            )
+          );
+        } else {
+          results = booksData;
         }
+
+        renderBooks(results);
+
+        // 更新统计信息
+        if (query) {
+          const displayCount = document.getElementById('displayCount');
+          const filterInfo = document.getElementById('filterInfo');
+          displayCount.textContent = results.filter(b => !b.isPlaceholder).length;
+          filterInfo.innerHTML = `搜索关键词：<strong>"${query}"</strong> 找到 <strong>${results.filter(b => !b.isPlaceholder).length}</strong> 本书籍`;
+        } else {
+          updateStats('all');
+        }
+      }, 300);
+
+      searchInput.addEventListener('input', debouncedSearch);
+    }
+
+    /**
+     * 初始化图片懒加载 - 【改进版本】
+     */
+    function initializeLazyLoading() {
+      const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            const src = img.dataset.src;
+
+            if (src) {
+              const newImg = new Image();
+
+              newImg.onload = () => {
+                // 平滑过渡效果
+                img.style.opacity = '0';
+                img.src = src;
+                setTimeout(() => {
+                  img.classList.add('loaded');
+                  img.style.opacity = '1';
+                }, 50);
+                observer.unobserve(img);
+              };
+
+              newImg.onerror = () => {
+                // 失败降级方案：使用渐变背景
+                img.style.backgroundColor = '#2d3748';
+                img.style.backgroundImage = 'linear-gradient(135deg, #8b5cf6, #38bdf8)';
+                img.classList.add('loaded');
+                observer.unobserve(img);
+                console.warn(`⚠️ 图片加载失败: ${src}`);
+              };
+
+              newImg.src = src;
+            }
+          }
+        });
+      }, {
+        rootMargin: '100px 0px',
+        threshold: 0.1
+      });
+
+      const lazyImages = document.querySelectorAll('.lazy-image:not(.loaded)');
+      lazyImages.forEach(img => imageObserver.observe(img));
+
+      // 保存观察器实例以便清理
+      window.imageObserver = imageObserver;
+    }
+
+    /**
+     * 预加载关键资源
+     */
+    function preloadCriticalResources() {
+      // 预加载字体
+      const fontLink = document.createElement('link');
+      fontLink.rel = 'preload';
+      fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap';
+      fontLink.as = 'style';
+      fontLink.onload = function() {
+        this.rel = 'stylesheet';
+      };
+      document.head.appendChild(fontLink);
+    }
+
+    /**
+     * 内存清理函数
+     */
+    function cleanup() {
+      if (window.imageObserver) {
+        window.imageObserver.disconnect();
       }
-    });
-  }, {
-    rootMargin: '100px 0px',
-    threshold: 0.1
-  });
-  
-  const lazyImages = document.querySelectorAll('.lazy-image:not(.loaded)');
-  lazyImages.forEach(img => imageObserver.observe(img));
-  window.imageObserver = imageObserver;
-}
-
-/**
- * 【新增】搜索功能
- */
-function initializeSearch() {
-  const searchInput = document.getElementById('searchInput');
-  if (!searchInput) return;
-  
-  const debouncedSearch = debounce(() => {
-    const query = searchInput.value.toLowerCase().trim();
-    
-    let results = booksData;
-    
-    if (query) {
-      results = booksData.filter(book =>
-        book.title.toLowerCase().includes(query) ||
-        book.author.toLowerCase().includes(query) ||
-        book.tag.toLowerCase().includes(query)
-      );
     }
-    
-    renderBooks(results);
-    updateStats('all');
-  }, 300);
-  
-  searchInput.addEventListener('input', debouncedSearch);
-}
 
-/**
- * 【改进】更健壮的初始化
- */
-function initApp() {
-  try {
-    console.log('🚀 初始化星空书柜...');
-    
-    createStars();
-    renderBooks();
-    initializeCategoryCounts();
-    updateStats('all');
-    
-    handleNavbarScroll();
-    initializeFilter();
-    initializeSearch?.();
-    
-    setTimeout(() => {
-      initializeLazyLoading();
-    }, 200);
-    
-    preloadCriticalResources();
-    window.addEventListener('beforeunload', cleanup);
-    
-    console.log('✅ 星空书柜初始化完成！');
-  } catch (error) {
-    console.error('❌ 初始化失败:', error);
-    // 降级处理：至少显示静态内容
-  }
-}
-      // 1. 创建背景装饰
-      createStars();
-      // 2. 渲染书籍列表
-      renderBooks();
-      // 3. 初始化统计数据
-      initializeCategoryCounts();
-      updateStats('all');
-      // 4. 初始化交互功能
-      handleNavbarScroll();
-      initializeFilter();
-      // 5. 延迟初始化懒加载（优化性能）
-      setTimeout(() => {
-        initializeLazyLoading();
-      }, 200);
-      // 6. 预加载关键资源
-      preloadCriticalResources();
-      // 7. 注册清理函数
-      window.addEventListener('beforeunload', cleanup);
-      console.log('✅ 星空书柜初始化完成！');
+    /* ==================== 应用初始化 ==================== */
+    /**
+     * 应用主初始化函数 - 【改进版本】
+     */
+    function initApp() {
+      try {
+        console.log('🚀 初始化星空书柜...');
+
+        // 1. 创建背景装饰
+        createStars();
+
+        // 2. 渲染书籍列表
+        renderBooks();
+
+        // 3. 初始化统计数据
+        initializeCategoryCounts();
+        updateStats('all');
+
+        // 4. 初始化交互功能
+        handleNavbarScroll();
+        initializeFilter();
+        initializeSearch();
+
+        // 5. 延迟初始化懒加载（优化性能）
+        setTimeout(() => {
+          initializeLazyLoading();
+        }, 200);
+
+        // 6. 预加载关键资源
+        preloadCriticalResources();
+
+        // 7. 注册清理函数
+        window.addEventListener('beforeunload', cleanup);
+
+        console.log('✅ 星空书柜初始化完成！');
+      } catch (error) {
+        console.error('❌ 初始化失败:', error);
+        // 降级处理：至少显示静态内容
+      }
     }
+
     // 使用最佳实践进行初始化
     if ('requestIdleCallback' in window) {
       // 现代浏览器：在空闲时初始化
@@ -1487,6 +1563,7 @@ function initApp() {
         initApp();
       }
     }
+
     // 开发环境调试辅助
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       window.booksData = booksData;
