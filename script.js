@@ -1996,16 +1996,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, true);
 });
+// ==================== 朋友圈内容折叠功能 ====================
+/**
+ * 内容折叠配置
+ */
+const COLLAPSE_CONFIG = {
+    maxLength: 150,        // 超过150字符折叠
+    maxHeight: 180,        // 最大高度（像素）
+    buttonText: {
+        expand: '展开全文',
+        collapse: '收起'
+    }
+};
+
 /**
  * 初始化内容折叠功能
  */
 function initializeContentCollapse() {
     const momentsContainer = document.getElementById('momentsContainer');
-    const contentLengthThreshold = 200; // 超过200字符折叠
     
-    // 使用MutationObserver监听DOM变化（动态加载内容）
-    const observer = new MutationObserver(() => {
-        setupCollapseButtons();
+    if (!momentsContainer) {
+        console.warn('⚠️ 未找到朋友圈容器元素');
+        return;
+    }
+    
+    // 使用MutationObserver监听DOM变化
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.addedNodes.length > 0) {
+                setupCollapseButtons();
+            }
+        });
     });
     
     observer.observe(momentsContainer, {
@@ -2015,56 +2036,71 @@ function initializeContentCollapse() {
     
     // 初始化已有内容
     setupCollapseButtons();
+    
+    console.log('✅ 内容折叠功能已初始化');
 }
 
 /**
- * 为内容设置折叠按钮
+ * 为长内容设置折叠按钮
  */
 function setupCollapseButtons() {
+    // 查找所有朋友圈项目
     const momentItems = document.querySelectorAll('.moment-item');
     
     momentItems.forEach(item => {
-        // 找到内容元素
-        const contentEl = item.querySelector('.moment-text');
+        // 避免重复处理
+        if (item.dataset.collapseInitialized === 'true') {
+            return;
+        }
+        
+        // 查找内容元素（根据你的HTML结构调整选择器）
+        const contentEl = item.querySelector('.moment-text, .content, p');
+        
         if (!contentEl) return;
         
         const textContent = contentEl.textContent.trim();
-        
-        // 检查是否已处理
-        if (item.dataset.collapseInitialized) return;
-        item.dataset.collapseInitialized = true;
+        const contentLength = textContent.length;
         
         // 判断是否需要折叠
-        if (textContent.length > 200) {
-            // 创建内容容器
+        if (contentLength > COLLAPSE_CONFIG.maxLength || 
+            contentEl.scrollHeight > COLLAPSE_CONFIG.maxHeight) {
+            
+            // 创建内容包装器
             const contentWrapper = document.createElement('div');
             contentWrapper.className = 'moment-content collapsed';
             contentWrapper.innerHTML = contentEl.innerHTML;
             
+            // 创建展开按钮
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'expand-toggle-btn';
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.innerHTML = `
+                <span>${COLLAPSE_CONFIG.buttonText.expand}</span>
+                <span class="toggle-icon" aria-hidden="true">▼</span>
+            `;
+            
             // 替换原内容
             contentEl.innerHTML = '';
             contentEl.appendChild(contentWrapper);
+            contentEl.appendChild(toggleBtn);
             
-            // 创建展开/收起按钮
-            const expandBtn = document.createElement('button');
-            expandBtn.className = 'expand-btn';
-            expandBtn.textContent = '展开全文';
-            expandBtn.setAttribute('aria-expanded', 'false');
-            expandBtn.setAttribute('aria-label', '展开长文本内容');
-            
-            contentEl.appendChild(expandBtn);
-            
-            // 按钮点击事件
-            expandBtn.addEventListener('click', (e) => {
+            // 绑定点击事件
+            toggleBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                toggleContent(contentWrapper, expandBtn);
+                e.stopPropagation();
+                toggleContent(contentWrapper, toggleBtn);
             });
+            
+            // 标记已处理
+            item.dataset.collapseInitialized = 'true';
         }
     });
 }
 
 /**
- * 切换内容展开/折叠
+ * 切换内容展开/折叠状态
+ * @param {HTMLElement} contentWrapper - 内容包装器
+ * @param {HTMLElement} button - 切换按钮
  */
 function toggleContent(contentWrapper, button) {
     const isExpanded = contentWrapper.classList.contains('expanded');
@@ -2073,32 +2109,51 @@ function toggleContent(contentWrapper, button) {
         // 收起
         contentWrapper.classList.remove('expanded');
         contentWrapper.classList.add('collapsed');
-        button.textContent = '展开全文';
+        button.classList.remove('expanded');
+        button.querySelector('span:first-child').textContent = 
+            COLLAPSE_CONFIG.buttonText.expand;
         button.setAttribute('aria-expanded', 'false');
+        
+        // 平滑滚动到内容顶部
+        contentWrapper.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest'
+        });
     } else {
         // 展开
         contentWrapper.classList.remove('collapsed');
         contentWrapper.classList.add('expanded');
-        button.textContent = '收起';
+        button.classList.add('expanded');
+        button.querySelector('span:first-child').textContent = 
+            COLLAPSE_CONFIG.buttonText.collapse;
         button.setAttribute('aria-expanded', 'true');
     }
     
     // 无障碍提示
-    const announcement = isExpanded ? '已收起内容' : '已展开全文';
-    announceToScreenReader(announcement);
+    announceToScreenReader(
+        isExpanded ? '内容已收起' : '内容已展开'
+    );
 }
 
 /**
  * 屏幕阅读器提示
+ * @param {string} message - 提示信息
  */
 function announceToScreenReader(message) {
     const announcer = document.getElementById('announcer');
     if (announcer) {
-        announcer.textContent = message;
+        announcer.textContent = '';
+        // 延迟确保屏幕阅读器读取
+        setTimeout(() => {
+            announcer.textContent = message;
+        }, 100);
     }
 }
 
-// 页面加载完成后初始化
-document.addEventListener('DOMContentLoaded', () => {
+// ==================== 页面加载完成后初始化 ====================
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeContentCollapse);
+} else {
+    // DOM已加载完成，直接初始化
     initializeContentCollapse();
-});
+}
