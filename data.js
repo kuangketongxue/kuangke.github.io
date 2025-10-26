@@ -1168,7 +1168,7 @@ let momentsData = [
         value: 5,
         category: '工作相关',
         time: '2025-10-26 16:11',
-        image: '',
+        image: 'images/4d590198a4b3d2ec92ec88c5b2b06deb.jpg',
         likes: 0,
         comments: []
     },     
