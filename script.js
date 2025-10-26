@@ -1,4 +1,4 @@
-// ==================== 常量定义 ====================
+"// ==================== 常量定义 ====================
 const STORAGE_KEYS = Object.freeze({
     moments: 'momentsData',
     diary: 'successDiaryData',
@@ -30,7 +30,7 @@ class AppState {
             return localStorage.getItem(key);
         } catch (error) {
             // ✅ 正确行
-               console.warn`Failed to load from storage: ${key}`, error;
+               console.warn(`Failed to load from storage: ${key}`, error); // 修复: console.war -> console.warn, 添加反引号
             return null;
         }
     }
@@ -38,7 +38,7 @@ class AppState {
         try {
             localStorage.setItem(key, value);
         } catch (error) {
-            console.warn`Failed to save to storage: ${key}`, error);
+            console.warn(`Failed to save to storage: ${key}`, error); // 修复: console.wa -> console.warn, 添加反引号
         }
     }
     resetDiaryFilters() {
@@ -293,7 +293,7 @@ class EnhancedStorageManager {
             const serialized = JSON.stringify(data);
             // 检查数据大小
             if (serialized.length > this.COMPRESS_THRESHOLD) {
-                console.warn`数据较大 (${(serialized.length/1024/1024).toFixed(2)}MB)，建议定期清理`);
+                console.warn(`数据较大 (${(serialized.length/1024/1024).toFixed(2)}MB)，建议定期清理`); // 修复: console.wa -> console.warn, 添加反引号
             }
             localStorage.setItem(storageKey, serialized);
             return true;
@@ -355,8 +355,8 @@ class EnhancedStorageManager {
                         const data = JSON.parse(localStorage.getItem(key));
                         // 清理超过30天的备份
                         if (key.includes('backup') && data && data.timestamp) {
-                            const age = Date.now() - data.timestamp;
-                            if (age > 30 _24_ 60 _60_ 1000) { // 30天
+                            // 修复: 移除数字字面量中的下划线
+                            if (Date.now() - data.timestamp > 30 * 24 * 60 * 60 * 1000) { // 30天
                                 keysToRemove.push(key);
                             }
                         }
@@ -370,7 +370,7 @@ class EnhancedStorageManager {
                 console.log('清理旧数据:', key);
             });
             if (keysToRemove.length > 0) {
-                NotificationManager.show`清理了${keysToRemove.length}个旧数据`, 'info');
+                NotificationManager.show(`清理了${keysToRemove.length}个旧数据`, 'info'); // 修复: NotificationManager.sh -> NotificationManager.show, 添加反引号
             }
         } catch (error) {
             console.error('清理存储失败:', error);
@@ -384,11 +384,13 @@ class EnhancedStorageManager {
                     total += localStorage[key].length + key.length;
                 }
             }
+            // 修复: 移除数字字面量中的下划线
+            const assumedLimit = 5 * 1024 * 1024; // 假设总限制5MB
             return {
                 used: total,
                 usedMB: (total / 1024 / 1024).toFixed(2),
-                available: (5 _1024_ 1024 - total), // 假设总限制5MB
-                availableMB: ((5 _1024_ 1024 - total) / 1024 / 1024).toFixed(2)
+                available: (assumedLimit - total), 
+                availableMB: ((assumedLimit - total) / 1024 / 1024).toFixed(2)
             };
         } catch (error) {
             console.error('获取存储使用情况失败:', error);
@@ -551,7 +553,7 @@ class DataValidator {
             if (!item.category) errors.push('缺少category');
             if (!item.time) errors.push('缺少time');
             if (errors.length > 0) {
-                console.error`朋友圈数据[${index}]验证失败:`, errors);
+                console.error(`朋友圈数据[${index}]验证失败:`, errors); // 修复: console.err -> console.error, 添加反引号
                 return false;
             }
             return true;
@@ -563,27 +565,27 @@ class DataValidator {
             // 修复缺失的id
             if (!repaired.id) {
                 repaired.id = Date.now() + index;
-                console.warn`修复缺失的id: ${repaired.id}`);
+                console.warn(`修复缺失的id: ${repaired.id}`); // 修复: console.wa -> console.warn, 添加反引号
             }
             // 修复缺失的content
             if (!repaired.content) {
                 repaired.content = '无内容';
-                console.warn`修复缺失的content: ${repaired.id}`);
+                console.warn(`修复缺失的content: ${repaired.id}`); // 修复: console.wa -> console.warn, 添加反引号
             }
             // 修复缺失的category
             if (!repaired.category) {
                 repaired.category = 'other';
-                console.warn`修复缺失的category: ${repaired.id}`);
+                console.warn(`修复缺失的category: ${repaired.id}`); // 修复: console.wa -> console.warn, 添加反引号
             }
             // 修复缺失的时间
             if (!repaired.time) {
                 repaired.time = new Date().toISOString();
-                console.warn`修复缺失的时间: ${repaired.id}`);
+                console.warn(`修复缺失的时间: ${repaired.id}`); // 修复: console.wa -> console.warn, 添加反引号
             }
             // 修复缺失的值
             if (repaired.value === undefined) {
                 repaired.value = 1;
-                console.warn`修复缺失的value: ${repaired.id}`);
+                console.warn(`修复缺失的value: ${repaired.id}`); // 修复: console.wa -> console.warn, 添加反引号
             }
             // 确保comments是数组
             if (!Array.isArray(repaired.comments)) {
@@ -640,7 +642,7 @@ class ErrorRecoverySystem {
         });
     }
     static handleError(error, type) {
-        console.error`${type}:`, error);
+        console.error(`${type}:`, error); // 修复: console.err -> console.error, 添加反引号
         // 记录错误
         this.logError(error, type);
         // 根据错误类型提供恢复建议
@@ -743,7 +745,7 @@ class PaginationManager {
         this.currentPage = page;
         this.render();
         this.scrollToTop();
-        this.announce`已跳转到第 ${page} 页`);
+        this.announce(`已跳转到第 ${page} 页`); // 修复: this.announ -> this.announce, 添加反引号
     }
     render() {
         this.renderItems();
@@ -926,7 +928,7 @@ class MomentsPageManager {
                 this.filterByCategory();
             };
             btn.addEventListener('click', handler);
-            this.eventListeners.set`category-${btn.dataset.category}`, { element: btn, handler });
+            this.eventListeners.set(`category-${btn.dataset.category}`, { element: btn, handler }); // 修复: this.eventListeners.s -> this.eventListeners.set, 添加反引号
         });
         this.initCommentModal();
     }
@@ -935,6 +937,10 @@ class MomentsPageManager {
             if (element && handler) {
                 element.removeEventListener('click', handler);
                 element.removeEventListener('input', handler);
+                // 确保移除的是正确的事件类型
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    element.removeEventListener('keypress', handler);
+                }
             }
         });
         this.eventListeners.clear();
@@ -1010,25 +1016,22 @@ class MomentsPageManager {
         const hasImage = moment.image && moment.image.trim();
         const hasComments = moment.comments && moment.comments.length > 0;
         const hasLikes = moment.likes > 0;
-        
         // ⭐ 判断内容是否需要折叠
         const content = moment.content || '';
         const needsCollapse = content.length > 150; // 超过150字符折叠
-        
         return `
             <article class="moment-card" style="animation-delay: ${index * ANIMATION_DELAY}s" data-moment-id="${moment.id}">
                 <div class="moment-header">
                     <span class="category-tag">${Utils.escapeHtml(moment.category)}</span>
                     <span class="value-badge">⭐ ${moment.value}</span>
                 </div>
-                
                 <!-- ⭐ 修改内容区域，添加折叠逻辑 -->
                 <div class="moment-content-wrapper">
                     <div class="moment-content ${needsCollapse ? 'collapsed' : ''}">
                         ${Utils.formatMultiline(content)}
                     </div>
                     ${needsCollapse ? `
-                        <button class="expand-toggle-btn" 
+                        <button class="expand-toggle-btn"
                                 aria-expanded="false"
                                 onclick="MomentsPageManager.toggleContentExpand(this, ${moment.id})">
                             <span class="toggle-text">展开全文</span>
@@ -1036,7 +1039,6 @@ class MomentsPageManager {
                         </button>
                     ` : ''}
                 </div>
-                
                 ${hasImage ? `
                     <img src="${Utils.escapeHtml(moment.image)}"
                          alt="朋友圈图片"
@@ -1044,7 +1046,6 @@ class MomentsPageManager {
                          onerror="this.style.display='none'"
                          loading="lazy">
                 ` : ''}
-                
                 <div class="moment-footer">
                     <span class="moment-time">
                         <i class="far fa-clock"></i> ${Utils.formatTime(moment.time)}
@@ -1069,7 +1070,6 @@ class MomentsPageManager {
             </article>
         `;
     }
-    
     /**
      * 切换内容展开/收起
      */
@@ -1077,16 +1077,12 @@ class MomentsPageManager {
         try {
             const card = button.closest('.moment-card');
             if (!card) return;
-            
             const contentWrapper = card.querySelector('.moment-content');
             const toggleText = button.querySelector('.toggle-text');
             const toggleIcon = button.querySelector('.toggle-icon');
-            
             if (!contentWrapper || !toggleText) return;
-            
             // 切换状态
             const isExpanded = contentWrapper.classList.contains('expanded');
-            
             if (isExpanded) {
                 // 收起
                 contentWrapper.classList.remove('expanded');
@@ -1094,7 +1090,6 @@ class MomentsPageManager {
                 button.classList.remove('expanded');
                 toggleText.textContent = '展开全文';
                 button.setAttribute('aria-expanded', 'false');
-                
                 // 平滑滚动到卡片顶部
                 card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } else {
@@ -1105,7 +1100,6 @@ class MomentsPageManager {
                 toggleText.textContent = '收起';
                 button.setAttribute('aria-expanded', 'true');
             }
-            
             // 无障碍提示
             const announcer = document.getElementById('announcer');
             if (announcer) {
@@ -1115,7 +1109,6 @@ class MomentsPageManager {
             console.error('切换内容展开失败:', error);
         }
     }
-    
     static handleLike(id) {
         try {
             const moment = this.data.find(m => m.id === id);
@@ -1126,7 +1119,7 @@ class MomentsPageManager {
                 // 重新渲染当前页
                 this.paginationManager.render();
                 if (!hasLiked) {
-                    const btn = document.querySelector`button[data-like-id="${id}"]`);
+                    const btn = document.querySelector(`button[data-like-id="${id}"]`); // 修复: document.querySelect, 使用正确模板字符串
                     if (btn) {
                         btn.style.transform = 'scale(1.2)';
                         setTimeout(() => {
@@ -1192,7 +1185,7 @@ class MomentsPageManager {
                 return;
             }
             if (content.length > MAX_COMMENT_LENGTH) {
-                NotificationManager.show`评论内容不能超过${MAX_COMMENT_LENGTH}字`, 'warning');
+                NotificationManager.show(`评论内容不能超过${MAX_COMMENT_LENGTH}字`, 'warning'); // 修复: NotificationManager.sh, 添加反引号
                 return;
             }
             const moment = this.data.find(m => m.id === appState.currentMomentId);
@@ -1247,7 +1240,7 @@ class MomentsPageManager {
         filteredData.forEach(moment => {
             const value = parseInt(moment.value) || 0;
             if (value >= 5) highValue++;
-            if (moment.time && moment.time.split(' ')[0] === today) {
+            if (moment.time && moment.time.split('T')[0] === today) {
                 todayCount++;
             }
         });
@@ -1436,12 +1429,15 @@ class SuccessPageManager {
         this.updateCounter(filtered.length);
     }
     static getFilteredData() {
-        const diaryData = window.successDiaryData || [];
+        // 使用全局变量中存储的数据
+        const diaryData = window.successDiaryData || EnhancedStorageManager.loadData(STORAGE_KEYS.diary) || [];
         let data = [...diaryData];
         if (appState.selectedDiaryTags.size > 0) {
             data = data.filter(entry => {
+                // 确保 entry.categories 是数组，如果不存在则默认为空数组
+                const entryCategories = Array.isArray(entry.categories) ? entry.categories : [];
                 return Array.from(appState.selectedDiaryTags).every(tag =>
-                    entry.categories.includes(tag)
+                    entryCategories.includes(tag)
                 );
             });
         }
@@ -1456,15 +1452,19 @@ class SuccessPageManager {
     }
     static matchSearch(entry, keyword) {
         const fields = [
-            entry.headline?.zh,
-            entry.headline?.en,
+            entry.headline?.[appState.currentLanguage], // 搜索当前语言的标题
+            entry.headline?.zh, // 搜索中文标题作为兜底
+            entry.headline?.en, // 搜索英文标题作为兜底
+            entry.content?.[appState.currentLanguage],
             entry.content?.zh,
             entry.content?.en,
+            entry.highlight?.[appState.currentLanguage],
             entry.highlight?.zh,
             entry.highlight?.en,
+            entry.notes?.[appState.currentLanguage],
             entry.notes?.zh,
             entry.notes?.en,
-            ...entry.categories.map(code => this.getTagLabel(code)),
+            ...(Array.isArray(entry.categories) ? entry.categories.map(code => this.getTagLabel(code)) : []),
             this.getMoodLabel(entry.moodCode)
         ];
         return fields.some(field => field && Utils.normalize(field).includes(keyword));
@@ -1474,9 +1474,9 @@ class SuccessPageManager {
             case 'dateAsc':
                 return new Date(a.date) - new Date(b.date);
             case 'achievementDesc':
-                return b.achievementLevel - a.achievementLevel;
+                return (b.achievementLevel || 0) - (a.achievementLevel || 0);
             case 'achievementAsc':
-                return a.achievementLevel - b.achievementLevel;
+                return (a.achievementLevel || 0) - (b.achievementLevel || 0);
             case 'dateDesc':
             default:
                 return new Date(b.date) - new Date(a.date);
@@ -1484,13 +1484,19 @@ class SuccessPageManager {
     }
     static renderDiaryCard(entry) {
         const lang = appState.currentLanguage;
-        const headline = entry.headline?.[lang] || '';
-        const content = entry.content?.[lang] || '';
-        const highlight = entry.highlight?.[lang] || '';
+        // 使用可选链和空值合并确保数据安全
+        const headline = entry.headline?.[lang] || entry.headline?.zh || entry.headline?.en || '';
+        const content = entry.content?.[lang] || entry.content?.zh || entry.content?.en || '';
+        const highlight = entry.highlight?.[lang] || entry.highlight?.zh || entry.highlight?.en || '';
+        const notes = entry.notes?.[lang] || entry.notes?.zh || entry.notes?.en || '';
         const mood = this.getMood(entry.moodCode);
         const tagsHtml = this.renderTags(entry.categories);
         const attachmentsHtml = this.renderAttachments(entry.attachments);
         const coverHtml = this.renderCover(entry.coverImage);
+        
+        // 确保成就值是数字
+        const achievementLevel = entry.achievementLevel !== undefined ? entry.achievementLevel : 0;
+
         return `
             <div class="timeline-item">
                 <div class="timeline-marker"></div>
@@ -1519,6 +1525,12 @@ class SuccessPageManager {
                                     <span>${Utils.formatMultiline(highlight)}</span>
                                 </div>
                             ` : ''}
+                            ${notes ? `
+                                <div class="diary-notes">
+                                    <strong>${LanguageManager.t('timelineNotes')}（额外）：</strong>
+                                    <span>${Utils.formatMultiline(notes)}</span>
+                                </div>
+                            ` : ''}
                             <div class="diary-meta">
                                 <div>
                                     <span class="meta-title">${LanguageManager.t('timelineTags')}：</span>
@@ -1527,12 +1539,12 @@ class SuccessPageManager {
                                 <div>
                                     <span class="meta-title">${LanguageManager.t('timelineMood')}：</span>
                                     <span class="meta-content">
-                                        ${mood ? `<span class="mood-badge" style="border-color:${mood.color}; color:${mood.color};">${Utils.escapeHtml(mood[lang] || mood.zh)}</span>` : '—'}
+                                        ${mood ? `<span class="mood-badge" style="border-color:${mood.color}; color:${mood.color};">${Utils.escapeHtml(mood[lang] || mood.zh || mood.en)}</span>` : '—'}
                                     </span>
                                 </div>
                                 <div>
                                     <span class="meta-title">${LanguageManager.t('timelineAchievement')}：</span>
-                                    <span class="achievement-badge">⭐ ${entry.achievementLevel}</span>
+                                    <span class="achievement-badge">⭐ ${achievementLevel}</span>
                                 </div>
                             </div>
                             ${attachmentsHtml}
@@ -1584,13 +1596,13 @@ class SuccessPageManager {
     static getMoodLabel(code) {
         const mood = this.getMood(code);
         if (!mood) return code || '';
-        return mood[appState.currentLanguage] || mood.zh || code;
+        return mood[appState.currentLanguage] || mood.zh || mood.en || code;
     }
     static getTagLabel(code) {
         const tagLibrary = window.diaryTagLibrary || [];
         const tag = tagLibrary.find(item => item.code === code);
         if (!tag) return code || '';
-        return tag[appState.currentLanguage] || tag.zh || code;
+        return tag[appState.currentLanguage] || tag.zh || tag.en || code;
     }
     static updateCounter(count) {
         const counter = document.getElementById('diaryCounter');
@@ -1631,7 +1643,8 @@ class AppController {
             NotificationManager.show('应用初始化失败，请刷新重试', 'error');
             // 尝试恢复
             setTimeout(() => {
-                if (confirm('初始化失败，是否尝试从备份恢复？')) {
+                // 确保 DataBackupManager.showRestoreDialog 在全局可用
+                if (window.DataBackupManager && confirm('初始化失败，是否尝试从备份恢复？')) {
                     DataBackupManager.showRestoreDialog();
                 }
             }, 1000);
@@ -1667,8 +1680,8 @@ class AppController {
     }
     static showStorageInfo() {
         const usage = EnhancedStorageManager.getStorageUsage();
-        if (usage.usedMB > 4) { // 超过4MB时提醒
-            console.warn`存储使用量较高: ${usage.usedMB}MB`);
+        if (parseFloat(usage.usedMB) > 4) { // 超过4MB时提醒
+            console.warn(`存储使用量较高: ${usage.usedMB}MB`); // 修复: console.wa, 添加反引号
         }
     }
 }
@@ -1755,12 +1768,10 @@ style.textContent = `
         max-width: 80%;
         box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
-    
     /* 内容包装器 */
     .moment-content-wrapper {
         position: relative;
     }
-
     /* 内容区域 */
     .moment-content {
         position: relative;
@@ -1770,12 +1781,10 @@ style.textContent = `
         word-break: break-word;
         line-height: 1.6;
     }
-
     /* 折叠状态 */
     .moment-content.collapsed {
         max-height: 180px;
     }
-
     /* 折叠遮罩 */
     .moment-content.collapsed::after {
         content: '';
@@ -1791,7 +1800,6 @@ style.textContent = `
         );
         pointer-events: none;
     }
-
     /* 深色模式遮罩 */
     [data-theme="dark"] .moment-content.collapsed::after,
     body:not(.light-mode) .moment-content.collapsed::after {
@@ -1801,16 +1809,13 @@ style.textContent = `
             rgba(30, 30, 30, 0.95)
         );
     }
-
     /* 展开状态 */
     .moment-content.expanded {
         max-height: none;
     }
-
     .moment-content.expanded::after {
         display: none;
     }
-
     /* 展开按钮样式 */
     .expand-toggle-btn {
         display: inline-flex;
@@ -1827,38 +1832,31 @@ style.textContent = `
         cursor: pointer;
         transition: all 0.25s ease;
     }
-
     .expand-toggle-btn:hover {
         background: rgba(102, 126, 234, 0.08);
         border-color: #667eea;
         color: #5568d3;
     }
-
     .expand-toggle-btn:active {
         transform: scale(0.98);
     }
-
     .expand-toggle-btn .toggle-icon {
         display: inline-block;
         transition: transform 0.3s ease;
         font-size: 10px;
     }
-
     .expand-toggle-btn.expanded .toggle-icon {
         transform: rotate(180deg);
     }
-
     /* 响应式 */
     @media (max-width: 768px) {
         .moment-content.collapsed {
             max-height: 150px;
         }
-        
         .moment-content.collapsed::after {
             height: 40px;
         }
     }
-
     /* 无障碍：减少动画 */
     @media (prefers-reduced-motion: reduce) {
         .moment-content,
@@ -1880,4 +1878,4 @@ document.addEventListener('DOMContentLoaded', function() {
             handleImageError(e.target);
         }
     }, true);
-});
+});"
