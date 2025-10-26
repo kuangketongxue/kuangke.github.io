@@ -187,12 +187,10 @@
             top: 60px;
             z-index: 100;
         }
-
         [data-theme="dark"] .sort-nav {
             background: rgba(30, 30, 30, 0.95);
             border-bottom-color: rgba(255, 255, 255, 0.08);
         }
-
         .sort-controls {
             display: flex;
             align-items: center;
@@ -200,24 +198,20 @@
             flex-wrap: wrap;
             gap: 16px;
         }
-
         .sort-group {
             display: flex;
             align-items: center;
             gap: 8px;
         }
-
         .sort-label {
             font-size: 14px;
             font-weight: 500;
             color: #666;
             white-space: nowrap;
         }
-
         [data-theme="dark"] .sort-label {
             color: #aaa;
         }
-
         .sort-select {
             padding: 6px 12px;
             border: 1px solid rgba(0, 0, 0, 0.15);
@@ -229,29 +223,24 @@
             transition: all 0.3s ease;
             min-width: 140px;
         }
-
         [data-theme="dark"] .sort-select {
             background: #2a2a2a;
             border-color: rgba(255, 255, 255, 0.15);
             color: #fff;
         }
-
         .sort-select:hover {
             border-color: #667eea;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
         }
-
         .sort-select:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
         }
-
         .view-options {
             display: flex;
             gap: 4px;
         }
-
         .view-btn {
             display: flex;
             align-items: center;
@@ -265,43 +254,36 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         [data-theme="dark"] .view-btn {
             background: #2a2a2a;
             border-color: rgba(255, 255, 255, 0.15);
             color: #aaa;
         }
-
         .view-btn:hover {
             border-color: #667eea;
             color: #667eea;
             background: rgba(102, 126, 234, 0.05);
         }
-
         .view-btn.active {
             background: #667eea;
             border-color: #667eea;
             color: white;
         }
-
         /* 列表视图样式 */
         .moments-grid.list-view {
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
-
         .moments-grid.list-view .moment-card {
             width: 100%;
             max-width: none;
             display: flex;
             flex-direction: column;
         }
-
         .moments-grid.list-view .moment-content {
             flex: 1;
         }
-
         .moments-grid.list-view .moment-images {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -309,30 +291,24 @@
             max-height: 300px;
             overflow: hidden;
         }
-
         .moments-grid.list-view .moment-images.single {
             grid-template-columns: 1fr;
             max-height: 400px;
         }
-
         .moments-grid.list-view .moment-images.double {
             grid-template-columns: repeat(2, 1fr);
         }
-
         .moments-grid.list-view .moment-images.multiple {
             grid-template-columns: repeat(3, 1fr);
         }
-
         .moments-grid.list-view .moment-images img {
             width: 100%;
             height: 120px;
             object-fit: cover;
         }
-
         .moments-grid.list-view .moment-images.single img {
             height: 300px;
         }
-
         /* 排序提示样式 */
         .sort-hint {
             font-size: 12px;
@@ -342,16 +318,13 @@
             font-style: italic;
             transition: opacity 0.3s ease;
         }
-
         [data-theme="dark"] .sort-hint {
             color: #aaa;
         }
-
         /* 排序变更时的动画 */
         .sort-nav.sorting {
             animation: pulse 0.3s ease;
         }
-
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.02); }
@@ -402,17 +375,14 @@
                 width: 20px;
                 height: 20px;
             }
-
             .sort-controls {
                 flex-direction: column;
                 align-items: stretch;
                 gap: 12px;
             }
-            
             .sort-group {
                 justify-content: space-between;
             }
-            
             .view-options {
                 justify-content: center;
             }
@@ -436,7 +406,6 @@
             .theme-toggle {
                 order: 3;
             }
-
             .sort-select {
                 min-width: 120px;
                 font-size: 13px;
@@ -923,7 +892,7 @@
     <script src="data.js"></script>
     <!-- 主逻辑文件延迟加载 -->
     <script>
-        // ==================== 排序功能相关变量 ====================
+        // ==================== 排序、视图、分页相关全局变量 ====================
         let currentSortMethod = 'date-desc'; // 默认按日期降序
         let currentViewMode = 'grid'; // 默认网格视图
         let currentPage = 1;
@@ -934,11 +903,12 @@
             // 初始化事件监听器
             initializeSortControls();
             initializeViewControls();
-            
+            initPaginationControls();
+
             // 恢复用户的偏好设置
             restoreUserPreferences();
-            
-            // 初始化页面
+
+            // 初始化页面（等数据）
             setTimeout(() => {
                 initializePage();
             }, 100);
@@ -946,7 +916,7 @@
 
         function initializePage() {
             // 确保数据已加载
-            if (typeof momentsData !== 'undefined' && momentsData.length > 0) {
+            if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
                 window.momentsData = momentsData;
                 sortAndRenderMoments();
                 updateViewMode();
@@ -959,7 +929,6 @@
         // ==================== 排序控件初始化 ====================
         function initializeSortControls() {
             const sortBySelect = document.getElementById('sortBy');
-            
             if (sortBySelect) {
                 sortBySelect.addEventListener('change', function(e) {
                     currentSortMethod = e.target.value;
@@ -973,13 +942,11 @@
         function initializeViewControls() {
             const gridViewBtn = document.getElementById('gridView');
             const listViewBtn = document.getElementById('listView');
-            
             if (gridViewBtn && listViewBtn) {
                 gridViewBtn.addEventListener('click', function() {
                     currentViewMode = 'grid';
                     updateViewMode();
                 });
-                
                 listViewBtn.addEventListener('click', function() {
                     currentViewMode = 'list';
                     updateViewMode();
@@ -998,7 +965,6 @@
                     sortBySelect.value = savedSortMethod;
                 }
             }
-            
             // 恢复视图偏好
             const savedViewMode = localStorage.getItem('preferredViewMode');
             if (savedViewMode) {
@@ -1011,21 +977,20 @@
             const momentsContainer = document.getElementById('momentsContainer');
             const gridViewBtn = document.getElementById('gridView');
             const listViewBtn = document.getElementById('listView');
-            
+
             if (momentsContainer) {
                 if (currentViewMode === 'list') {
                     momentsContainer.classList.add('list-view');
                     momentsContainer.classList.remove('moments-grid');
-                    listViewBtn?.classList.add('active');
-                    gridViewBtn?.classList.remove('active');
+                    listViewBtn && listViewBtn.classList.add('active');
+                    gridViewBtn && gridViewBtn.classList.remove('active');
                 } else {
                     momentsContainer.classList.add('moments-grid');
                     momentsContainer.classList.remove('list-view');
-                    gridViewBtn?.classList.add('active');
-                    listViewBtn?.classList.remove('active');
+                    gridViewBtn && gridViewBtn.classList.add('active');
+                    listViewBtn && listViewBtn.classList.remove('active');
                 }
             }
-            
             // 保存视图模式偏好
             localStorage.setItem('preferredViewMode', currentViewMode);
         }
@@ -1033,7 +998,6 @@
         // ==================== 排序功能 ====================
         function sortMoments(moments, sortMethod) {
             const sortedMoments = [...moments];
-            
             switch (sortMethod) {
                 case 'date-desc':
                     // 最新发布（日期降序）
@@ -1055,7 +1019,6 @@
                     // 默认按日期降序
                     sortedMoments.sort((a, b) => new Date(b.date) - new Date(a.date));
             }
-            
             return sortedMoments;
         }
 
@@ -1063,42 +1026,39 @@
         function sortAndRenderMoments() {
             // 获取当前筛选后的朋友圈数据
             let currentMoments = window.currentFilteredMoments || window.momentsData;
-            
+
             // 如果没有筛选数据，使用全部数据
             if (!currentMoments || currentMoments.length === 0) {
                 currentMoments = window.momentsData || [];
             }
-            
+
             // 执行排序
             const sortedMoments = sortMoments(currentMoments, currentSortMethod);
-            
+
             // 更新全局筛选数据
             window.currentFilteredMoments = sortedMoments;
-            
+
             // 重置分页并重新渲染
             window.currentPage = 1;
             renderMoments();
             updatePagination();
-            
+
             // 更新统计信息
             updateStats(sortedMoments);
-            
+
             // 保存排序偏好
             localStorage.setItem('preferredSortMethod', currentSortMethod);
-            
+
             // 添加排序动画效果
             animateSortChange();
         }
 
         // ==================== 更新排序UI ====================
         function updateSortUI() {
-            // 更新排序选择器的显示状态
             const sortBySelect = document.getElementById('sortBy');
             if (sortBySelect) {
                 sortBySelect.value = currentSortMethod;
             }
-            
-            // 添加视觉反馈
             const sortNav = document.querySelector('.sort-nav');
             if (sortNav) {
                 sortNav.classList.add('sorting');
@@ -1112,12 +1072,9 @@
         function animateSortChange() {
             const momentsContainer = document.getElementById('momentsContainer');
             if (!momentsContainer) return;
-            
-            // 添加淡出效果
+
             momentsContainer.style.opacity = '0.5';
             momentsContainer.style.transform = 'scale(0.98)';
-            
-            // 动画结束后恢复
             setTimeout(() => {
                 momentsContainer.style.opacity = '1';
                 momentsContainer.style.transform = 'scale(1)';
@@ -1128,38 +1085,36 @@
         function renderMoments() {
             const momentsContainer = document.getElementById('momentsContainer');
             if (!momentsContainer) return;
-            
+
             // 使用已排序的筛选数据
             let momentsToRender = window.currentFilteredMoments || window.momentsData || [];
-            
+
             // 分页处理
-            const itemsPerPage = parseInt(document.getElementById('itemsPerPage')?.value || '12');
+            const itemsPerPage = parseInt(document.getElementById('itemsPerPage')?.value || '12', 10);
             const startIndex = (window.currentPage - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
             const pageMoments = momentsToRender.slice(startIndex, endIndex);
-            
+
             // 清空容器
             momentsContainer.innerHTML = '';
-            
-            // 添加加载状态
+            // 加载状态
             momentsContainer.setAttribute('aria-busy', 'true');
-            
+
             // 渲染朋友圈卡片
             pageMoments.forEach((moment, index) => {
                 const card = createMomentCard(moment, startIndex + index);
                 momentsContainer.appendChild(card);
-                
-                // 添加渐进显示动画
+                // 渐进显示动画
                 setTimeout(() => {
                     card.classList.add('fade-in');
                 }, index * 50);
             });
-            
+
             // 移除加载状态
             setTimeout(() => {
                 momentsContainer.setAttribute('aria-busy', 'false');
             }, pageMoments.length * 50);
-            
+
             // 更新分页信息
             updatePaginationInfo();
         }
@@ -1170,18 +1125,19 @@
             card.className = 'moment-card';
             card.setAttribute('role', 'article');
             card.setAttribute('aria-label', `朋友圈内容 ${index + 1}`);
-            
-            // 格式化日期
-            const date = new Date(moment.date);
-            const formattedDate = formatDate(date);
-            
+
+            // 格式化日期（容错无效日期）
+            const rawDate = new Date(moment.date);
+            const hasValidDate = rawDate instanceof Date && !isNaN(rawDate);
+            const formattedDate = hasValidDate ? formatDate(rawDate) : (moment.date || '未知时间');
+
             // 价值标签
             const valueLabel = moment.value ? `
                 <span class="value-badge" style="background: ${getValueColor(moment.value)}">
                     价值 ${moment.value}
                 </span>
             ` : '';
-            
+
             card.innerHTML = `
                 <div class="moment-header">
                     <div class="moment-meta">
@@ -1192,6 +1148,11 @@
                 </div>
                 <div class="moment-content ${moment.content && moment.content.length > 200 ? 'collapsed' : ''}">
                     <p>${moment.content || ''}</p>
+                    ${moment.content && moment.content.length > 200 ? `
+                        <button class="expand-toggle-btn" aria-expanded="false" type="button">
+                            展开 <i class="fas fa-chevron-down toggle-icon" aria-hidden="true"></i>
+                        </button>` : ''
+                    }
                 </div>
                 ${moment.images && moment.images.length > 0 ? `
                     <div class="moment-images ${getImageClass(moment.images.length)}">
@@ -1214,20 +1175,47 @@
                     </button>
                 </div>
             `;
-            
+
+            // 折叠/展开事件
+            const toggleBtn = card.querySelector('.expand-toggle-btn');
+            const contentBox = card.querySelector('.moment-content');
+            if (toggleBtn && contentBox) {
+                toggleBtn.addEventListener('click', () => {
+                    const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+                    if (expanded) {
+                        contentBox.classList.add('collapsed');
+                        contentBox.classList.remove('expanded');
+                        toggleBtn.setAttribute('aria-expanded', 'false');
+                        toggleBtn.innerHTML = `展开 <i class="fas fa-chevron-down toggle-icon" aria-hidden="true"></i>`;
+                        toggleBtn.classList.remove('expanded');
+                    } else {
+                        contentBox.classList.remove('collapsed');
+                        contentBox.classList.add('expanded');
+                        toggleBtn.setAttribute('aria-expanded', 'true');
+                        toggleBtn.innerHTML = `收起 <i class="fas fa-chevron-up toggle-icon" aria-hidden="true"></i>`;
+                        toggleBtn.classList.add('expanded');
+                    }
+                });
+            }
+
             return card;
         }
 
         // ==================== 辅助函数 ====================
+        // 修复：正确的毫秒换算，避免 _60_ 错误
         function formatDate(date) {
             const now = new Date();
             const diffTime = Math.abs(now - date);
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            
+
+            const minute = 60 * 1000;
+            const hour = 60 * minute;
+            const day = 24 * hour;
+
+            const diffDays = Math.floor(diffTime / day);
             if (diffDays === 0) {
-                const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+                const diffHours = Math.floor(diffTime / hour);
                 if (diffHours === 0) {
-                    const diffMinutes = Math.floor(diffTime / (1000 * 60));
+                    const diffMinutes = Math.floor(diffTime / minute);
                     return diffMinutes === 0 ? '刚刚' : `${diffMinutes}分钟前`;
                 }
                 return `${diffHours}小时前`;
@@ -1257,27 +1245,24 @@
         function updateStats(moments) {
             const totalMoments = moments.length;
             const highValueMoments = moments.filter(m => (m.value || 0) >= 8).length;
-            
             const today = new Date().toISOString().split('T')[0];
-            const todayMoments = moments.filter(m => m.date && m.date.startsWith(today)).length;
-            
+            const todayMoments = moments.filter(m => m.date && String(m.date).startsWith(today)).length;
+
             // 更新DOM
             animateNumber('totalMoments', totalMoments);
             animateNumber('highValueMoments', highValueMoments);
             animateNumber('todayMoments', todayMoments);
-            
+
             // 添加排序信息提示
             const statsSection = document.querySelector('.moments-stats');
             if (statsSection) {
                 const sortInfo = getSortDescription(currentSortMethod);
                 let hintElement = statsSection.querySelector('.sort-hint');
-                
                 if (!hintElement) {
                     hintElement = document.createElement('div');
                     hintElement.className = 'sort-hint';
                     statsSection.appendChild(hintElement);
                 }
-                
                 hintElement.textContent = sortInfo;
             }
         }
@@ -1289,7 +1274,6 @@
                 'value-desc': '按内容价值从高到低排序',
                 'value-asc': '按内容价值从低到高排序'
             };
-            
             return descriptions[sortMethod] || '按最新发布时间排序';
         }
 
@@ -1297,39 +1281,124 @@
         function animateNumber(elementId, targetValue) {
             const element = document.getElementById(elementId);
             if (!element) return;
-            
-            const currentValue = parseInt(element.textContent) || 0;
-            const increment = (targetValue - currentValue) / 20;
+
+            const currentValue = parseInt(element.textContent, 10) || 0;
+            const steps = 20;
+            const increment = (targetValue - currentValue) / steps;
+
             let current = currentValue;
             let step = 0;
-            
             const timer = setInterval(() => {
                 step++;
                 current += increment;
-                
-                if (step >= 20) {
-                    element.textContent = targetValue;
+                if (step >= steps) {
+                    element.textContent = String(targetValue);
                     clearInterval(timer);
                 } else {
-                    element.textContent = Math.round(current);
+                    element.textContent = String(Math.round(current));
                 }
             }, 30);
         }
 
-        // ==================== 分页功能 ====================
+        // ==================== 分页功能（完整实现） ====================
+        function initPaginationControls() {
+            document.getElementById('firstPage')?.addEventListener('click', () => {
+                window.currentPage = 1;
+                renderMoments();
+                updatePagination();
+            });
+            document.getElementById('prevPage')?.addEventListener('click', () => {
+                window.currentPage = Math.max(1, (window.currentPage || 1) - 1);
+                renderMoments();
+                updatePagination();
+            });
+            document.getElementById('nextPage')?.addEventListener('click', () => {
+                const perPage = parseInt(document.getElementById('itemsPerPage')?.value || '12', 10);
+                const totalPages = Math.max(1, Math.ceil((window.currentFilteredMoments || []).length / perPage));
+                window.currentPage = Math.min(totalPages, (window.currentPage || 1) + 1);
+                renderMoments();
+                updatePagination();
+            });
+            document.getElementById('lastPage')?.addEventListener('click', () => {
+                const perPage = parseInt(document.getElementById('itemsPerPage')?.value || '12', 10);
+                const totalPages = Math.max(1, Math.ceil((window.currentFilteredMoments || []).length / perPage));
+                window.currentPage = totalPages;
+                renderMoments();
+                updatePagination();
+            });
+            document.getElementById('itemsPerPage')?.addEventListener('change', () => {
+                window.currentPage = 1;
+                renderMoments();
+                updatePagination();
+            });
+        }
+
         function updatePagination() {
-            const momentsToRender = window.currentFilteredMoments || [];
-            const totalPages = Math.ceil(momentsToRender.length / parseInt(document.getElementById('itemsPerPage')?.value || '12'));
-            
+            const list = window.currentFilteredMoments || [];
+            const perPageEl = document.getElementById('itemsPerPage');
+            const perPage = parseInt(perPageEl?.value || '12', 10);
+            const totalPages = Math.max(1, Math.ceil(list.length / perPage));
+
+            // 纠正当前页范围
+            window.currentPage = Math.min(Math.max(1, window.currentPage || 1), totalPages);
+
             // 更新分页按钮状态
             const firstPageBtn = document.getElementById('firstPage');
             const prevPageBtn = document.getElementById('prevPage');
             const nextPageBtn = document.getElementById('nextPage');
             const lastPageBtn = document.getElementById('lastPage');
-            
+
             if (firstPageBtn) firstPageBtn.disabled = window.currentPage === 1;
             if (prevPageBtn) prevPageBtn.disabled = window.currentPage === 1;
             if (nextPageBtn) nextPageBtn.disabled = window.currentPage === totalPages;
             if (lastPageBtn) lastPageBtn.disabled = window.currentPage === totalPages;
-            
-            // 生
+
+            // 生成页码按钮
+            const pageNumbers = document.getElementById('pageNumbers');
+            if (pageNumbers) {
+                pageNumbers.innerHTML = '';
+                const maxButtons = 5;
+
+                let start = Math.max(1, window.currentPage - Math.floor(maxButtons / 2));
+                let end = Math.min(totalPages, start + maxButtons - 1);
+                start = Math.max(1, end - maxButtons + 1);
+
+                for (let i = start; i <= end; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = `page-number ${i === window.currentPage ? 'active' : ''}`;
+                    btn.textContent = String(i);
+                    if (i === window.currentPage) {
+                        btn.setAttribute('aria-current', 'page');
+                    }
+                    btn.addEventListener('click', () => {
+                        window.currentPage = i;
+                        renderMoments();
+                        updatePagination();
+                    });
+                    pageNumbers.appendChild(btn);
+                }
+            }
+
+            // 更新文本信息
+            updatePaginationInfo();
+        }
+
+        function updatePaginationInfo() {
+            const perPage = parseInt(document.getElementById('itemsPerPage')?.value || '12', 10);
+            const list = window.currentFilteredMoments || [];
+            const total = list.length;
+
+            const start = total === 0 ? 0 : (window.currentPage - 1) * perPage + 1;
+            const end = Math.min(total, window.currentPage * perPage);
+
+            const startEl = document.getElementById('showingStart');
+            const endEl = document.getElementById('showingEnd');
+            const totalEl = document.getElementById('totalItems');
+
+            if (startEl) startEl.textContent = String(start);
+            if (endEl) endEl.textContent = String(end);
+            if (totalEl) totalEl.textContent = String(total);
+        }
+    </script>
+</body>
+</html>
