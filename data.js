@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
       {
+        id: 41,
+        date: '2025-10-27',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '反刍收拾整理电脑收藏工具',
+            en: 'Organize and tidy up the computer's collection tools using a specialized tool for this purpose.'
+        },
+        content: {
+            zh: '阅读16本书+。\n网站优化\n学习9小时+\n创作1000字',
+            en: 'Read 16+ books.\nWebsite optimization.\nStudied for 9+ hours\nWrite a piece of content totaling 1000 words.'
+        },
+        highlight: {
+            zh: '收拾整理柜子电脑，n8n开发，前哨战复习',
+            en: 'Organize and tidy up the cabinets and computer, work on n8n development, review material for the preliminary phase.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
+      {
         id: 42,
         date: '2025-10-26',
         categories: ['study', 'creative'],
