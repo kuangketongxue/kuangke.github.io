@@ -4,7 +4,7 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CryptoVision Pro - 加密货币交易分析系统</title>
+    <title>CryptoVision Pro - 实时加密货币交易分析系统</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,7 +14,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
             --primary-color: #667eea;
             --secondary-color: #764ba2;
@@ -27,19 +26,17 @@
             --text-secondary: #94a3b8;
             --border-color: #334155;
         }
-
-       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: 
-        linear-gradient(rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.85)),
-        url('images/1b2f1ee2a9dba66e20cd0e210ba09e28.png') no-repeat center center fixed;
-    background-size: cover;
-    background-blend-mode: overlay;
-    color: var(--text-primary);
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background:
+                linear-gradient(rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.85)),
+                url('images/1b2f1ee2a9dba66e20cd0e210ba09e28.png') no-repeat center center fixed;
+            background-size: cover;
+            background-blend-mode: overlay;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
         /* Header Styles */
         header {
             background: rgba(30, 41, 59, 0.95);
@@ -50,7 +47,6 @@
             top: 0;
             z-index: 1000;
         }
-
         .header-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -58,7 +54,6 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .logo {
             display: flex;
             align-items: center;
@@ -69,28 +64,23 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
         .nav-menu {
             display: flex;
             gap: 2rem;
             align-items: center;
         }
-
         .nav-item {
             color: var(--text-secondary);
             cursor: pointer;
             transition: color 0.3s;
             position: relative;
         }
-
         .nav-item:hover {
             color: var(--text-primary);
         }
-
         .nav-item.active {
             color: var(--primary-color);
         }
-
         .nav-item.active::after {
             content: '';
             position: absolute;
@@ -100,14 +90,38 @@
             height: 2px;
             background: var(--primary-color);
         }
-
+        /* Connection Status */
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            background: var(--dark-bg);
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+        .status-dot.disconnected {
+            background: var(--danger-color);
+            animation: none;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
         /* Main Container */
         .main-container {
             max-width: 1400px;
             margin: 2rem auto;
             padding: 0 2rem;
         }
-
         /* Market Overview Section */
         .market-overview {
             display: grid;
@@ -115,7 +129,6 @@
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-
         .market-card {
             background: var(--card-bg);
             border-radius: 12px;
@@ -125,7 +138,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .market-card::before {
             content: '';
             position: absolute;
@@ -135,25 +147,21 @@
             height: 3px;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         }
-
         .market-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
         }
-
         .coin-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-
         .coin-info {
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
-
         .coin-icon {
             width: 32px;
             height: 32px;
@@ -163,13 +171,11 @@
             justify-content: center;
             font-weight: bold;
         }
-
         .coin-price {
             font-size: 1.75rem;
             font-weight: bold;
             margin-bottom: 0.5rem;
         }
-
         .price-change {
             display: inline-flex;
             align-items: center;
@@ -179,17 +185,14 @@
             font-size: 0.875rem;
             font-weight: 500;
         }
-
         .price-change.positive {
             background: rgba(16, 185, 129, 0.1);
             color: var(--success-color);
         }
-
         .price-change.negative {
             background: rgba(239, 68, 68, 0.1);
             color: var(--danger-color);
         }
-
         /* Trading Section */
         .trading-section {
             display: grid;
@@ -197,14 +200,12 @@
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-
         .order-panel, .chart-container, .info-panel {
             background: var(--card-bg);
             border-radius: 12px;
             padding: 1.5rem;
             border: 1px solid var(--border-color);
         }
-
         .panel-title {
             font-size: 1.125rem;
             font-weight: 600;
@@ -214,13 +215,11 @@
             align-items: center;
             gap: 0.5rem;
         }
-
         .tab-buttons {
             display: flex;
             gap: 0.5rem;
             margin-bottom: 1.5rem;
         }
-
         .tab-btn {
             flex: 1;
             padding: 0.75rem;
@@ -232,28 +231,23 @@
             transition: all 0.3s;
             font-weight: 500;
         }
-
         .tab-btn.active {
             background: var(--primary-color);
             color: white;
         }
-
         .input-group {
             margin-bottom: 1rem;
         }
-
         .input-group label {
             display: block;
             margin-bottom: 0.5rem;
             color: var(--text-secondary);
             font-size: 0.875rem;
         }
-
         .input-wrapper {
             position: relative;
         }
-
-        .input-wrapper input {
+        .input-wrapper input, .input-wrapper select {
             width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid var(--border-color);
@@ -263,12 +257,10 @@
             font-size: 1rem;
             transition: border-color 0.3s;
         }
-
-        .input-wrapper input:focus {
+        .input-wrapper input:focus, .input-wrapper select:focus {
             outline: none;
             border-color: var(--primary-color);
         }
-
         .input-addon {
             position: absolute;
             right: 1rem;
@@ -276,7 +268,6 @@
             transform: translateY(-50%);
             color: var(--text-secondary);
         }
-
         .btn-primary {
             width: 100%;
             padding: 1rem;
@@ -287,41 +278,34 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-
         .btn-buy {
             background: var(--success-color);
             color: white;
         }
-
         .btn-buy:hover {
             background: #059669;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
         }
-
         .btn-sell {
             background: var(--danger-color);
             color: white;
         }
-
         .btn-sell:hover {
             background: #dc2626;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
         }
-
         /* Chart Controls */
         .chart-controls {
             display: flex;
             gap: 0.5rem;
             margin-bottom: 1rem;
         }
-
         .time-selector {
             display: flex;
             gap: 0.25rem;
         }
-
         .time-btn {
             padding: 0.5rem 0.75rem;
             border: 1px solid var(--border-color);
@@ -332,27 +316,22 @@
             transition: all 0.3s;
             font-size: 0.875rem;
         }
-
         .time-btn:hover {
             border-color: var(--primary-color);
             color: var(--primary-color);
         }
-
         .time-btn.active {
             background: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
         }
-
         /* Order Book */
         .order-book {
             margin-bottom: 1.5rem;
         }
-
         .book-table {
             width: 100%;
         }
-
         .book-table th {
             color: var(--text-secondary);
             font-size: 0.75rem;
@@ -360,30 +339,24 @@
             padding: 0.5rem 0;
             border-bottom: 1px solid var(--border-color);
         }
-
         .book-table td {
             padding: 0.25rem 0;
             text-align: right;
             font-size: 0.875rem;
         }
-
         .book-row {
             position: relative;
             transition: background 0.3s;
         }
-
         .book-row:hover {
             background: rgba(102, 126, 234, 0.1);
         }
-
         .sell-orders {
             color: var(--danger-color);
         }
-
         .buy-orders {
             color: var(--success-color);
         }
-
         /* Technical Indicators */
         .indicators-grid {
             display: grid;
@@ -391,30 +364,25 @@
             gap: 1rem;
             margin-top: 1rem;
         }
-
         .indicator-item {
             padding: 0.75rem;
             background: var(--dark-bg);
             border-radius: 8px;
             border: 1px solid var(--border-color);
         }
-
         .indicator-label {
             font-size: 0.75rem;
             color: var(--text-secondary);
             margin-bottom: 0.25rem;
         }
-
         .indicator-value {
             font-size: 1rem;
             font-weight: 600;
         }
-
         /* Trading Signals */
         .signals-container {
             margin-top: 1.5rem;
         }
-
         .signal-item {
             display: flex;
             align-items: center;
@@ -426,52 +394,41 @@
             border-left: 3px solid;
             transition: transform 0.3s;
         }
-
         .signal-item:hover {
             transform: translateX(5px);
         }
-
         .signal-buy {
             border-color: var(--success-color);
         }
-
         .signal-sell {
             border-color: var(--danger-color);
         }
-
         .signal-neutral {
             border-color: var(--warning-color);
         }
-
         .signal-icon {
             font-size: 1.5rem;
         }
-
         .signal-content {
             flex: 1;
         }
-
         .signal-title {
             font-weight: 600;
             margin-bottom: 0.25rem;
         }
-
         .signal-desc {
             font-size: 0.875rem;
             color: var(--text-secondary);
         }
-
         .signal-time {
             font-size: 0.75rem;
             color: var(--text-secondary);
         }
-
         /* Activity Feed */
         .activity-feed {
             max-height: 400px;
             overflow-y: auto;
         }
-
         .activity-item {
             display: flex;
             align-items: center;
@@ -480,11 +437,9 @@
             border-bottom: 1px solid var(--border-color);
             transition: background 0.3s;
         }
-
         .activity-item:hover {
             background: var(--dark-bg);
         }
-
         .activity-icon {
             width: 36px;
             height: 36px;
@@ -494,21 +449,17 @@
             justify-content: center;
             font-size: 0.875rem;
         }
-
         .activity-content {
             flex: 1;
         }
-
         .activity-title {
             font-size: 0.875rem;
             margin-bottom: 0.25rem;
         }
-
         .activity-subtitle {
             font-size: 0.75rem;
             color: var(--text-secondary);
         }
-
         /* Loading Animation */
         .loading-spinner {
             width: 20px;
@@ -518,58 +469,47 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
         /* Responsive Design */
         @media (max-width: 1200px) {
             .trading-section {
                 grid-template-columns: 1fr;
             }
         }
-
         @media (max-width: 768px) {
             .market-overview {
                 grid-template-columns: 1fr;
             }
-
             .nav-menu {
                 display: none;
             }
-
             .indicators-grid {
                 grid-template-columns: 1fr;
             }
         }
-
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
-
         ::-webkit-scrollbar-track {
             background: var(--dark-bg);
         }
-
         ::-webkit-scrollbar-thumb {
             background: var(--border-color);
             border-radius: 4px;
         }
-
         ::-webkit-scrollbar-thumb:hover {
             background: var(--text-secondary);
         }
-
         /* Tooltip */
         .tooltip {
             position: relative;
             cursor: help;
         }
-
         .tooltip::after {
             content: attr(data-tooltip);
             position: absolute;
@@ -588,9 +528,87 @@
             border: 1px solid var(--border-color);
             z-index: 1000;
         }
-
         .tooltip:hover::after {
             opacity: 1;
+        }
+        /* Footer Styles */
+        .social-footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--dark-bg);
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+        .social-link:hover {
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+            border-left: 4px solid var(--primary-color);
+        }
+        .toast.show {
+            transform: translateX(0);
+        }
+        .toast.success {
+            border-left-color: var(--success-color);
+        }
+        .toast.error {
+            border-left-color: var(--danger-color);
+        }
+        .toast.warning {
+            border-left-color: var(--warning-color);
+        }
+        .data-source-info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(30, 41, 59, 0.9);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            z-index: 1000;
         }
     </style>
 </head>
@@ -605,18 +623,21 @@
                 </a>
                 CryptoVision Pro
             </div>
-            
             <nav class="nav-menu">
-                <div class="nav-item active">市场</div>
-                <div class="nav-item">交易</div>
-                <div class="nav-item">合约</div>
-                <div class="nav-item">理财</div>
-                <div class="nav-item">API</div>
-                <div class="nav-item tooltip" data-tooltip="通知中心">
+                <div class="nav-item active" onclick="switchNav('market')">市场</div>
+                <div class="nav-item" onclick="switchNav('trading')">交易</div>
+                <div class="nav-item" onclick="switchNav('futures')">合约</div>
+                <div class="nav-item" onclick="switchNav('finance')">理财</div>
+                <div class="nav-item" onclick="switchNav('api')">API</div>
+                <div class="nav-item tooltip" data-tooltip="通知中心" onclick="showNotifications()">
                     <i class="fas fa-bell"></i>
                 </div>
-                <div class="nav-item tooltip" data-tooltip="用户中心">
+                <div class="nav-item tooltip" data-tooltip="用户中心" onclick="showUserCenter()">
                     <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="connection-status">
+                    <div class="status-dot" id="connectionStatus"></div>
+                    <span id="connectionText">连接中...</span>
                 </div>
             </nav>
         </div>
@@ -625,98 +646,8 @@
     <!-- Main Content -->
     <main class="main-container">
         <!-- Market Overview -->
-        <section class="market-overview">
-            <div class="market-card">
-                <div class="coin-header">
-                    <div class="coin-info">
-                        <div class="coin-icon" style="background: #f7931a;">
-                            <i class="fab fa-bitcoin"></i>
-                        </div>
-                        <div>
-                            <div style="font-weight: 600;">Bitcoin</div>
-                            <div style="font-size: 0.75rem; color: var(--text-secondary);">BTC/USDT</div>
-                        </div>
-                    </div>
-                    <div class="loading-spinner"></div>
-                </div>
-                <div class="coin-price">$43,562.89</div>
-                <span class="price-change positive">
-                    <i class="fas fa-arrow-up"></i> +5.67%
-                </span>
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between; font-size: 0.875rem;">
-                    <span>24H最高: $45,234.12</span>
-                    <span>24H最低: $41,089.45</span>
-                </div>
-            </div>
-
-            <div class="market-card">
-                <div class="coin-header">
-                    <div class="coin-info">
-                        <div class="coin-icon" style="background: #627eea;">
-                            <i class="fab fa-ethereum"></i>
-                        </div>
-                        <div>
-                            <div style="font-weight: 600;">Ethereum</div>
-                            <div style="font-size: 0.75rem; color: var(--text-secondary);">ETH/USDT</div>
-                        </div>
-                    </div>
-                    <div class="loading-spinner"></div>
-                </div>
-                <div class="coin-price">$2,234.56</div>
-                <span class="price-change positive">
-                    <i class="fas fa-arrow-up"></i> +3.45%
-                </span>
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between; font-size: 0.875rem;">
-                    <span>24H最高: $2,356.78</span>
-                    <span>24H最低: $2,123.45</span>
-                </div>
-            </div>
-
-            <div class="market-card">
-                <div class="coin-header">
-                    <div class="coin-info">
-                        <div class="coin-icon" style="background: #26a17b;">
-                            <span style="color: white;">₮</span>
-                        </div>
-                        <div>
-                            <div style="font-weight: 600;">Tether</div>
-                            <div style="font-size: 0.75rem; color: var(--text-secondary);">USDT/USD</div>
-                        </div>
-                    </div>
-                    <div class="loading-spinner"></div>
-                </div>
-                <div class="coin-price">$1.0002</div>
-                <span class="price-change positive">
-                    <i class="fas fa-arrow-up"></i> +0.02%
-                </span>
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between; font-size: 0.875rem;">
-                    <span>24H最高: $1.0005</span>
-                    <span>24H最低: $0.9998</span>
-                </div>
-            </div>
-
-            <div class="market-card">
-                <div class="coin-header">
-                    <div class="coin-info">
-                        <div class="coin-icon" style="background: #f3ba2f;">
-                            <span style="color: #1f2937;">B</span>
-                        </div>
-                        <div>
-                            <div style="font-weight: 600;">Binance Coin</div>
-                            <div style="font-size: 0.75rem; color: var(--text-secondary);">BNB/USDT</div>
-                        </div>
-                    </div>
-                    <div class="loading-spinner"></div>
-                </div>
-                <div class="coin-price">$312.45</div>
-                <span class="price-change negative">
-                    <i class="fas fa-arrow-down"></i> -1.23%
-                </span>
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between; font-size: 0.875rem;">
-                    <span>24H最高: $318.90</span>
-                    <span>24H最低: $310.12</span>
-                </div>
-            </div>
+        <section class="market-overview" id="marketOverview">
+            <!-- Market cards will be dynamically generated -->
         </section>
 
         <!-- Trading Section -->
@@ -729,57 +660,79 @@
                 </h3>
                 
                 <div class="tab-buttons">
-                    <button class="tab-btn" onclick="switchTab('buy')">买入</button>
-                    <button class="tab-btn active" onclick="switchTab('sell')">卖出</button>
+                    <button class="tab-btn" id="buyTab" onclick="switchTab('buy')">买入</button>
+                    <button class="tab-btn active" id="sellTab" onclick="switchTab('sell')">卖出</button>
                 </div>
-
+                
                 <div class="input-group">
+                    <label>交易对</label>
+                    <select id="tradingPair" onchange="changeTradingPair()">
+                        <option value="bitcoin">BTC/USDT</option>
+                        <option value="ethereum">ETH/USDT</option>
+                        <option value="binancecoin">BNB/USDT</option>
+                        <option value="solana">SOL/USDT</option>
+                        <option value="cardano">ADA/USDT</option>
+                        <option value="ripple">XRP/USDT</option>
+                        <option value="dogecoin">DOGE/USDT</option>
+                        <option value="polkadot">DOT/USDT</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>订单类型</label>
+                    <select id="orderType" onchange="togglePriceInput()">
+                        <option value="limit">限价单</option>
+                        <option value="market">市价单</option>
+                    </select>
+                </div>
+                
+                <div class="input-group" id="priceInputGroup">
                     <label>价格 (USDT)</label>
                     <div class="input-wrapper">
-                        <input type="number" id="price" value="43562.89" step="0.01">
+                        <input type="number" id="price" step="0.01" oninput="calculateTotal()">
                         <span class="input-addon">USDT</span>
                     </div>
                 </div>
-
+                
                 <div class="input-group">
-                    <label>数量 (BTC)</label>
+                    <label>数量</label>
                     <div class="input-wrapper">
-                        <input type="number" id="amount" value="0.001" step="0.0001">
-                        <span class="input-addon">BTC</span>
+                        <input type="number" id="amount" value="0.001" step="0.0001" oninput="calculateTotal()">
+                        <span class="input-addon" id="amountUnit">BTC</span>
                     </div>
                 </div>
-
+                
                 <div class="input-group">
                     <label>总额 (USDT)</label>
                     <div class="input-wrapper">
-                        <input type="number" id="total" value="43.56" readonly>
+                        <input type="number" id="total" readonly>
                         <span class="input-addon">USDT</span>
                     </div>
                 </div>
-
+                
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 1rem;">
                     <button class="time-btn" onclick="setPercentage(25)">25%</button>
                     <button class="time-btn" onclick="setPercentage(50)">50%</button>
                     <button class="time-btn" onclick="setPercentage(75)">75%</button>
                     <button class="time-btn" onclick="setPercentage(100)">100%</button>
                 </div>
-
-                <button class="btn-primary btn-sell" id="tradeBtn">
+                
+                <button class="btn-primary btn-sell" id="tradeBtn" onclick="executeTrade()">
                     卖出 BTC
                 </button>
-
+                
                 <div style="margin-top: 1.5rem; padding: 1rem; background: var(--dark-bg); border-radius: 8px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                         <span style="color: var(--text-secondary);">可用余额</span>
-                        <span>1.2345 BTC</span>
+                        <span id="availableBalance">加载中...</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                         <span style="color: var(--text-secondary);">冻结资产</span>
-                        <span>0.0000 BTC</span>
+                        <span id="frozenBalance">0.0000</span>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
                         <span style="color: var(--text-secondary);">总资产</span>
-                        <span>1.2345 BTC</span>
+                        <span id="totalBalance">加载中...</span>
                     </div>
                 </div>
             </div>
@@ -789,7 +742,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                     <h3 class="panel-title" style="margin: 0;">
                         <i class="fas fa-chart-candlestick"></i>
-                        BTC/USDT K线图
+                        <span id="chartTitle">BTC/USDT</span> K线图
                     </h3>
                     <div class="chart-controls">
                         <div class="time-selector">
@@ -797,8 +750,8 @@
                             <button class="time-btn" onclick="changeTimeframe('5m')">5分</button>
                             <button class="time-btn" onclick="changeTimeframe('15m')">15分</button>
                             <button class="time-btn" onclick="changeTimeframe('1h')">1小时</button>
-                            <button class="time-btn active" onclick="changeTimeframe('4h')">4小时</button>
-                            <button class="time-btn" onclick="changeTimeframe('1d')">1天</button>
+                            <button class="time-btn active" onclick="changeTimeframe('1d')">1天</button>
+                            <button class="time-btn" onclick="changeTimeframe('1w')">1周</button>
                         </div>
                     </div>
                 </div>
@@ -808,19 +761,19 @@
                 <div class="indicators-grid">
                     <div class="indicator-item">
                         <div class="indicator-label">MA(7)</div>
-                        <div class="indicator-value" style="color: var(--primary-color);">43,234.56</div>
+                        <div class="indicator-value" style="color: var(--primary-color);" id="ma7">加载中...</div>
                     </div>
                     <div class="indicator-item">
                         <div class="indicator-label">MA(25)</div>
-                        <div class="indicator-value" style="color: var(--warning-color);">42,890.12</div>
+                        <div class="indicator-value" style="color: var(--warning-color);" id="ma25">加载中...</div>
                     </div>
                     <div class="indicator-item">
                         <div class="indicator-label">RSI(14)</div>
-                        <div class="indicator-value" style="color: var(--success-color);">65.4</div>
+                        <div class="indicator-value" style="color: var(--success-color);" id="rsi">加载中...</div>
                     </div>
                     <div class="indicator-item">
                         <div class="indicator-label">MACD</div>
-                        <div class="indicator-value" style="color: var(--primary-color);">+234.56</div>
+                        <div class="indicator-value" style="color: var(--primary-color);" id="macd">加载中...</div>
                     </div>
                 </div>
             </div>
@@ -837,65 +790,35 @@
                         <thead>
                             <tr>
                                 <th>价格(USDT)</th>
-                                <th>数量(BTC)</th>
+                                <th>数量</th>
                                 <th>累计</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class="book-row sell-orders">
-                                <td>43,567.89</td>
-                                <td>0.1234</td>
-                                <td>5.3789</td>
-                            </tr>
-                            <tr class="book-row sell-orders">
-                                <td>43,566.45</td>
-                                <td>0.2345</td>
-                                <td>5.6123</td>
-                            </tr>
-                            <tr class="book-row sell-orders">
-                                <td>43,565.12</td>
-                                <td>0.3456</td>
-                                <td>5.9579</td>
-                            </tr>
-                            <tr class="book-row sell-orders">
-                                <td>43,564.78</td>
-                                <td>0.4567</td>
-                                <td>6.4146</td>
-                            </tr>
-                            <tr class="book-row sell-orders">
-                                <td>43,563.45</td>
-                                <td>0.5678</td>
-                                <td>6.9824</td>
-                            </tr>
+                        <tbody id="sellOrders">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                    
+                    <div style="text-align: center; padding: 0.5rem; margin: 0.5rem 0; background: var(--dark-bg); border-radius: 4px;">
+                        <div style="font-size: 1.25rem; font-weight: bold;" id="currentPrice">加载中...</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">当前价格</div>
+                    </div>
+                    
+                    <table class="book-table">
+                        <tbody id="buyOrders">
+                            <!-- Will be populated by JavaScript -->
                         </tbody>
                     </table>
                 </div>
-
+                
                 <!-- Trading Signals -->
                 <div class="signals-container">
                     <h4 class="panel-title" style="font-size: 1rem;">
                         <i class="fas fa-signal"></i>
                         交易信号
                     </h4>
-                    <div class="signal-item signal-buy">
-                        <div class="signal-icon" style="color: var(--success-color);">
-                            <i class="fas fa-arrow-trend-up"></i>
-                        </div>
-                        <div class="signal-content">
-                            <div class="signal-title">强烈买入信号</div>
-                            <div class="signal-desc">RSI超卖反弹，建议逢低买入</div>
-                        </div>
-                        <div class="signal-time">2分钟前</div>
-                    </div>
-                    <div class="signal-item signal-neutral">
-                        <div class="signal-icon" style="color: var(--warning-color);">
-                            <i class="fas fa-minus"></i>
-                        </div>
-                        <div class="signal-content">
-                            <div class="signal-title">持有观望</div>
-                            <div class="signal-desc">MACD即将金叉，等待确认</div>
-                        </div>
-                        <div class="signal-time">15分钟前</div>
+                    <div id="signalsContainer">
+                        <!-- Will be populated by JavaScript -->
                     </div>
                 </div>
             </div>
@@ -911,403 +834,32 @@
                 </h3>
                 <div id="volumeChart" style="height: 300px;"></div>
             </div>
-
+            
             <!-- Activity Feed -->
             <div class="info-panel">
                 <h3 class="panel-title">
                     <i class="fas fa-stream"></i>
                     市场动态
                 </h3>
-                <div class="activity-feed">
-                    <div class="activity-item">
-                        <div class="activity-icon" style="background: rgba(16, 185, 129, 0.2); color: var(--success-color);">
-                            <i class="fas fa-arrow-up"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">BTC突破$44,000阻力位</div>
-                            <div class="activity-subtitle">交易量激增32% · 5分钟前</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon" style="background: rgba(102, 126, 234, 0.2); color: var(--primary-color);">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">以太坊2.0质押量创新高</div>
-                            <div class="activity-subtitle">总质押量突破15,000,000 ETH · 12分钟前</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon" style="background: rgba(245, 158, 11, 0.2); color: var(--warning-color);">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">美联储利率决议临近</div>
-                            <div class="activity-subtitle">市场波动性可能增加 · 1小时前</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon" style="background: rgba(239, 68, 68, 0.2); color: var(--danger-color);">
-                            <i class="fas fa-arrow-down"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">BNB出现技术性回调</div>
-                            <div class="activity-subtitle">跌破$315支撑位 · 2小时前</div>
-                        </div>
-                    </div>
+                <div class="activity-feed" id="activityFeed">
+                    <!-- Will be populated by JavaScript -->
                 </div>
             </div>
         </section>
     </main>
 
-    <script>
-        // Initialize ApexCharts for Candlestick Chart
-        const options = {
-            series: [{
-                name: 'candlestick',
-                type: 'candlestick',
-                data: generateCandlestickData()
-            }],
-            chart: {
-                type: 'candlestick',
-                height: 400,
-                background: 'transparent',
-                toolbar: {
-                    show: true,
-                    tools: {
-                        download: true,
-                        selection: true,
-                        zoom: true,
-                        zoomin: true,
-                        zoomout: true,
-                        pan: true,
-                        reset: true
-                    }
-                },
-                animations: {
-                    enabled: true,
-                    easing: 'easeinout',
-                    speed: 800,
-                    animateGradually: {
-                        enabled: true,
-                        delay: 150
-                    },
-                    dynamicAnimation: {
-                        enabled: true,
-                        speed: 350
-                    }
-                }
-            },
-            theme: {
-                mode: 'dark'
-            },
-            plotOptions: {
-                candlestick: {
-                    colors: {
-                        upward: '#10b981',
-                        downward: '#ef4444'
-                    },
-                    wick: {
-                        useFillColor: true
-                    }
-                }
-            },
-            xaxis: {
-                type: 'datetime',
-                labels: {
-                    style: {
-                        colors: '#94a3b8'
-                    }
-                },
-                axisBorder: {
-                    color: '#334155'
-                },
-                axisTicks: {
-                    color: '#334155'
-                }
-            },
-            yaxis: {
-                tooltip: {
-                    enabled: true
-                },
-                labels: {
-                    style: {
-                        colors: '#94a3b8'
-                    }
-                },
-                axisBorder: {
-                    color: '#334155'
-                },
-                axisTicks: {
-                    color: '#334155'
-                }
-            },
-            grid: {
-                borderColor: '#334155',
-                strokeDashArray: 4
-            },
-            tooltip: {
-                theme: 'dark',
-                style: {
-                    fontSize: '12px',
-                    fontFamily: undefined
-                },
-                x: {
-                    format: 'yyyy-MM-dd HH:mm'
-                }
-            }
-        };
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle" id="toastIcon"></i>
+        <span id="toastMessage">操作成功</span>
+    </div>
 
-        const chart = new ApexCharts(document.querySelector("#priceChart"), options);
-        chart.render();
+    <!-- Data Source Info -->
+    <div class="data-source-info">
+        数据来源: CoinGecko API | 更新频率: 60秒
+    </div>
 
-        // Initialize Volume Chart
-        const volumeOptions = {
-            series: [{
-                name: '买入量',
-                data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87, 65]
-            }, {
-                name: '卖出量',
-                data: [13, 23, 20, 8, 13, 27, 33, 12, 41, 29, 43, 31]
-            }],
-            chart: {
-                type: 'bar',
-                height: 300,
-                background: 'transparent',
-                stacked: true,
-                toolbar: {
-                    show: false
-                }
-            },
-            theme: {
-                mode: 'dark'
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    borderRadius: 4,
-                    borderRadiusApplication: 'around',
-                    borderRadiusWhenStacked: 'last',
-                }
-            },
-            colors: ['#10b981', '#ef4444'],
-            xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                labels: {
-                    style: {
-                        colors: '#94a3b8'
-                    }
-                },
-                axisBorder: {
-                    color: '#334155'
-                }
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        colors: '#94a3b8'
-                    }
-                },
-                axisBorder: {
-                    color: '#334155'
-                }
-            },
-            grid: {
-                borderColor: '#334155',
-                strokeDashArray: 4
-            },
-            tooltip: {
-                theme: 'dark',
-                x: {
-                    show: false
-                }
-            },
-            legend: {
-                labels: {
-                    colors: '#94a3b8'
-                }
-            }
-        };
-
-        const volumeChart = new ApexCharts(document.querySelector("#volumeChart"), volumeOptions);
-        volumeChart.render();
-
-        // Generate Candlestick Data
-        function generateCandlestickData() {
-            const data = [];
-            const basePrice = 43500;
-            const now = new Date().getTime();
-            
-            for (let i = 100; i >= 0; i--) {
-                const random = Math.random();
-                const variation = (random - 0.5) * 200;
-                const open = basePrice + variation;
-                const close = open + (Math.random() - 0.5) * 100;
-                const high = Math.max(open, close) + Math.random() * 50;
-                const low = Math.min(open, close) - Math.random() * 50;
-                
-                data.push({
-                    x: now - i * 3600000,
-                    y: [open.toFixed(2), high.toFixed(2), low.toFixed(2), close.toFixed(2)]
-                });
-            }
-            
-            return data;
-        }
-
-        // Tab Switching
-        function switchTab(tab) {
-            const tabs = document.querySelectorAll('.tab-btn');
-            const btn = document.getElementById('tradeBtn');
-            
-            tabs.forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            if (tab === 'buy') {
-                btn.textContent = '买入 BTC';
-                btn.className = 'btn-primary btn-buy';
-            } else {
-                btn.textContent = '卖出 BTC';
-                btn.className = 'btn-primary btn-sell';
-            }
-        }
-
-        // Calculate Total
-        function calculateTotal() {
-            const price = parseFloat(document.getElementById('price').value) || 0;
-            const amount = parseFloat(document.getElementById('amount').value) || 0;
-            document.getElementById('total').value = (price * amount).toFixed(2);
-        }
-
-        // Set Percentage
-        function setPercentage(percent) {
-            const balance = 1.2345; // Example balance
-            const amount = (balance * percent / 100).toFixed(4);
-            document.getElementById('amount').value = amount;
-            calculateTotal();
-        }
-
-        // Change Timeframe
-        function changeTimeframe(timeframe) {
-            const buttons = document.querySelectorAll('.time-selector .time-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // Update chart data based on timeframe
-            chart.updateSeries([{
-                data: generateCandlestickData()
-            }]);
-        }
-
-        // Input Event Listeners
-        document.getElementById('price').addEventListener('input', calculateTotal);
-        document.getElementById('amount').addEventListener('input', calculateTotal);
-
-        // Real-time Price Updates
-        setInterval(() => {
-            const prices = document.querySelectorAll('.coin-price');
-            prices.forEach(priceElement => {
-                const currentPrice = parseFloat(priceElement.textContent.replace('$', '').replace(',', ''));
-                const change = (Math.random() - 0.5) * 10;
-                const newPrice = currentPrice + change;
-                priceElement.textContent = `$${newPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            });
-        }, 3000);
-
-        // Update Chart Periodically
-        setInterval(() => {
-            const newCandle = generateCandlestickData()[0];
-            chart.appendData([{
-                data: [newCandle]
-            }]);
-        }, 5000);
-
-        // WebSocket Simulation for Real-time Updates
-        function simulateWebSocketUpdates() {
-            setInterval(() => {
-                // Update order book
-                const orderRows = document.querySelectorAll('.book-row');
-                orderRows.forEach(row => {
-                    if (Math.random() > 0.7) {
-                        const priceCell = row.cells[0];
-                        const currentPrice = parseFloat(priceCell.textContent.replace(',', ''));
-                        const newPrice = currentPrice + (Math.random() - 0.5) * 10;
-                        priceCell.textContent = newPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                    }
-                });
-
-                // Update indicators
-                const indicators = document.querySelectorAll('.indicator-value');
-                indicators.forEach(indicator => {
-                    if (Math.random() > 0.8) {
-                        const currentValue = indicator.textContent.replace(/[^0-9.-]/g, '');
-                        const change = (Math.random() - 0.5) * 2;
-                        const newValue = parseFloat(currentValue) + change;
-                        if (currentValue.includes('.')) {
-                            indicator.textContent = newValue.toFixed(2);
-                        } else {
-                            indicator.textContent = newValue.toFixed(1);
-                        }
-                    }
-                });
-            }, 2000);
-        }
-
-        simulateWebSocketUpdates();
-
-        // Add Trading Signal Simulation
-        function addNewSignal() {
-            const signalsContainer = document.querySelector('.signals-container');
-            const signals = [
-                { type: 'buy', icon: 'fa-arrow-trend-up', title: '买入机会', desc: 'RSI显示超卖信号' },
-                { type: 'sell', icon: 'fa-arrow-trend-down', title: '卖出信号', desc: 'MACD出现死叉' },
-                { type: 'neutral', icon: 'fa-minus', title: '观望', desc: '价格进入盘整期' }
-            ];
-            
-            const signal = signals[Math.floor(Math.random() * signals.length)];
-            const signalHtml = `
-                <div class="signal-item signal-${signal.type}" style="opacity: 0; transform: translateY(-20px);">
-                    <div class="signal-icon" style="color: var(--${signal.type === 'buy' ? 'success' : signal.type === 'sell' ? 'danger' : 'warning'}-color);">
-                        <i class="fas ${signal.icon}"></i>
-                    </div>
-                    <div class="signal-content">
-                        <div class="signal-title">${signal.title}</div>
-                        <div class="signal-desc">${signal.desc}</div>
-                    </div>
-                    <div class="signal-time">刚刚</div>
-                </div>
-            `;
-            
-            const newSignal = document.createElement('div');
-            newSignal.innerHTML = signalHtml;
-            signalsContainer.insertBefore(newSignal.firstElementChild, signalsContainer.children[1]);
-            
-            // Animate new signal
-            setTimeout(() => {
-                const addedSignal = signalsContainer.children[1];
-                addedSignal.style.transition = 'all 0.5s ease';
-                addedSignal.style.opacity = '1';
-                addedSignal.style.transform = 'translateY(0)';
-            }, 100);
-            
-            // Remove old signals
-            if (signalsContainer.children.length > 4) {
-                signalsContainer.removeChild(signalsContainer.lastElementChild);
-            }
-        }
-
-        setInterval(addNewSignal, 30000);
-
-        // Initialize tooltips
-        document.querySelectorAll('.tooltip').forEach(element => {
-            element.addEventListener('mouseenter', function() {
-                this.style.position = 'relative';
-            });
-        });
-
-        console.log('CryptoVision Pro - 加密货币交易分析系统已初始化');
-    </script>
-     <footer class="social-footer" role="contentinfo">
+    <footer class="social-footer" role="contentinfo">
         <div class="container">
             <!-- 社交媒体链接 -->
             <nav class="social-links" aria-label="社交媒体">
@@ -1344,5 +896,829 @@
             </p>
         </div>
     </footer>
+
+    <script>
+        // Global variables
+        let currentTradeType = 'sell';
+        let currentTradingPair = 'bitcoin';
+        let currentTradingPairSymbol = 'BTC';
+        let currentTimeframe = '1d';
+        let priceChart = null;
+        let volumeChart = null;
+        let updateIntervals = [];
+        let cryptoData = {};
+        let realTimeData = {};
+        
+        // API配置
+        const API_CONFIG = {
+            coingecko: {
+                base: 'https://api.coingecko.com/api/v3',
+                endpoints: {
+                    simple: '/simple/price',
+                    coins: '/coins/markets',
+                    marketChart: '/coins/{id}/market_chart'
+                }
+            },
+            binance: {
+                base: 'https://api.binance.com/api/v3',
+                endpoints: {
+                    ticker: '/ticker/24hr',
+                    depth: '/depth',
+                    klines: '/klines'
+                }
+            }
+        };
+        
+        // 支持的加密货币配置
+        const CRYPTO_CONFIG = {
+            bitcoin: { symbol: 'BTC', name: 'Bitcoin', color: '#f7931a', icon: 'fab fa-bitcoin' },
+            ethereum: { symbol: 'ETH', name: 'Ethereum', color: '#627eea', icon: 'fab fa-ethereum' },
+            binancecoin: { symbol: 'BNB', name: 'Binance Coin', color: '#f3ba2f', icon: 'B' },
+            solana: { symbol: 'SOL', name: 'Solana', color: '#00d4aa', icon: 'S' },
+            cardano: { symbol: 'ADA', name: 'Cardano', color: '#0033ad', icon: 'A' },
+            ripple: { symbol: 'XRP', name: 'Ripple', color: '#23292f', icon: 'X' },
+            dogecoin: { symbol: 'DOGE', name: 'Dogecoin', color: '#c2a633', icon: 'D' },
+            polkadot: { symbol: 'DOT', name: 'Polkadot', color: '#e6007a', icon: 'P' }
+        };
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+        
+        // 初始化应用
+        async function initializeApp() {
+            try {
+                updateConnectionStatus('connecting', '连接中...');
+                
+                // 加载初始数据
+                await loadMarketData();
+                await loadTradingPairData(currentTradingPair);
+                
+                // 初始化UI组件
+                initializeCharts();
+                initializeOrderBook();
+                initializeSignals();
+                initializeActivities();
+                
+                // 启动实时更新
+                startRealTimeUpdates();
+                
+                updateConnectionStatus('connected', '已连接');
+                showToast('数据加载成功', 'success');
+                
+                console.log('CryptoVision Pro - 实时加密货币交易分析系统已初始化');
+            } catch (error) {
+                console.error('初始化失败:', error);
+                updateConnectionStatus('disconnected', '连接失败');
+                showToast('数据加载失败，请刷新页面重试', 'error');
+            }
+        }
+        
+        // 加载市场数据
+        async function loadMarketData() {
+            try {
+                const cryptoIds = Object.keys(CRYPTO_CONFIG).join(',');
+                const response = await fetch(
+                    `${API_CONFIG.coingecko.base}${API_CONFIG.coingecko.endpoints.coins}?vs_currency=usd&ids=${cryptoIds}&order=market_cap_desc&per_page=8&page=1&sparkline=false&price_change_percentage=24h`
+                );
+                
+                if (!response.ok) throw new Error('Failed to fetch market data');
+                
+                const data = await response.json();
+                
+                // 存储数据
+                data.forEach(coin => {
+                    cryptoData[coin.id] = {
+                        price: coin.current_price,
+                        change24h: coin.price_change_percentage_24h,
+                        marketCap: coin.market_cap,
+                        volume24h: coin.total_volume,
+                        high24h: coin.high_24h,
+                        low24h: coin.low_24h,
+                        lastUpdate: new Date()
+                    };
+                });
+                
+                // 渲染市场概览
+                renderMarketOverview(data);
+                
+            } catch (error) {
+                console.error('加载市场数据失败:', error);
+                throw error;
+            }
+        }
+        
+        // 渲染市场概览
+        function renderMarketOverview(data) {
+            const container = document.getElementById('marketOverview');
+            container.innerHTML = '';
+            
+            data.slice(0, 4).forEach(coin => {
+                const config = CRYPTO_CONFIG[coin.id];
+                const isPositive = coin.price_change_percentage_24h >= 0;
+                
+                const card = document.createElement('div');
+                card.className = 'market-card';
+                card.setAttribute('data-coin', coin.id);
+                
+                card.innerHTML = `
+                    <div class="coin-header">
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: ${config.color};">
+                                ${config.icon.includes('fa-') ? `<i class="${config.icon}"></i>` : `<span style="color: white;">${config.icon}</span>`}
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">${config.name}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">${config.symbol}/USDT</div>
+                            </div>
+                        </div>
+                        <div class="loading-spinner" style="display: none;"></div>
+                    </div>
+                    <div class="coin-price" data-price="${coin.id}">$${coin.current_price.toLocaleString()}</div>
+                    <span class="price-change ${isPositive ? 'positive' : 'negative'}" data-change="${coin.id}">
+                        <i class="fas fa-arrow-${isPositive ? 'up' : 'down'}"></i> 
+                        ${isPositive ? '+' : ''}${coin.price_change_percentage_24h.toFixed(2)}%
+                    </span>
+                    <div style="margin-top: 1rem; display: flex; justify-content: space-between; font-size: 0.875rem;">
+                        <span>24H最高: $${coin.high_24h.toLocaleString()}</span>
+                        <span>24H最低: $${coin.low_24h.toLocaleString()}</span>
+                    </div>
+                    <div style="margin-top: 0.5rem; display: flex; justify-content: space-between; font-size: 0.875rem;">
+                        <span>24H成交量: $${(coin.total_volume / 1000000).toFixed(1)}M</span>
+                        <span>市值: $${(coin.market_cap / 1000000000).toFixed(1)}B</span>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // 加载交易对数据
+        async function loadTradingPairData(coinId) {
+            try {
+                const config = CRYPTO_CONFIG[coinId];
+                currentTradingPairSymbol = config.symbol;
+                
+                // 获取价格历史数据
+                const chartResponse = await fetch(
+                    `${API_CONFIG.coingecko.base}${API_CONFIG.coingecko.endpoints.marketChart.replace('{id}', coinId)}?vs_currency=usd&days=30&interval=daily`
+                );
+                
+                if (!chartResponse.ok) throw new Error('Failed to fetch chart data');
+                
+                const chartData = await chartResponse.json();
+                realTimeData[currentTradingPair] = {
+                    prices: chartData.prices,
+                    volumes: chartData.total_volumes,
+                    currentPrice: cryptoData[coinId].price,
+                    lastUpdate: new Date()
+                };
+                
+                // 更新UI
+                updateTradingPanel();
+                updateCharts();
+                updateOrderBook();
+                updateTechnicalIndicators();
+                
+            } catch (error) {
+                console.error('加载交易对数据失败:', error);
+                throw error;
+            }
+        }
+        
+        // 初始化图表
+        function initializeCharts() {
+            if (!realTimeData[currentTradingPair]) return;
+            
+            const prices = realTimeData[currentTradingPair].prices;
+            
+            // K线图
+            const candlestickData = prices.map(([timestamp, price], index) => {
+                const prevPrice = index > 0 ? prices[index - 1][1] : price;
+                const variation = (Math.random() - 0.5) * price * 0.02;
+                const open = prevPrice;
+                const close = price;
+                const high = Math.max(open, close) + Math.random() * price * 0.01;
+                const low = Math.min(open, close) - Math.random() * price * 0.01;
+                
+                return {
+                    x: timestamp,
+                    y: [open.toFixed(2), high.toFixed(2), low.toFixed(2), close.toFixed(2)]
+                };
+            });
+            
+            const candlestickOptions = {
+                series: [{
+                    name: 'Price',
+                    type: 'candlestick',
+                    data: candlestickData
+                }],
+                chart: {
+                    type: 'candlestick',
+                    height: 400,
+                    background: 'transparent',
+                    toolbar: {
+                        show: true,
+                        tools: {
+                            download: true,
+                            selection: true,
+                            zoom: true,
+                            zoomin: true,
+                            zoomout: true,
+                            pan: true,
+                            reset: true
+                        }
+                    },
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 800
+                    }
+                },
+                theme: {
+                    mode: 'dark'
+                },
+                plotOptions: {
+                    candlestick: {
+                        colors: {
+                            upward: '#10b981',
+                            downward: '#ef4444'
+                        }
+                    }
+                },
+                xaxis: {
+                    type: 'datetime',
+                    labels: {
+                        style: { colors: '#94a3b8' }
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        style: { colors: '#94a3b8' }
+                    }
+                },
+                grid: {
+                    borderColor: '#334155',
+                    strokeDashArray: 4
+                },
+                tooltip: {
+                    theme: 'dark'
+                }
+            };
+            
+            if (priceChart) {
+                priceChart.destroy();
+            }
+            priceChart = new ApexCharts(document.querySelector("#priceChart"), candlestickOptions);
+            priceChart.render();
+            
+            // 成交量图
+            const volumeData = realTimeData[currentTradingPair].volumes.map(([timestamp, volume]) => ({
+                x: timestamp,
+                y: volume
+            }));
+            
+            const volumeOptions = {
+                series: [{
+                    name: '成交量',
+                    data: volumeData
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 300,
+                    background: 'transparent',
+                    toolbar: { show: false }
+                },
+                theme: {
+                    mode: 'dark'
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 4
+                    }
+                },
+                colors: ['#667eea'],
+                xaxis: {
+                    type: 'datetime',
+                    labels: {
+                        style: { colors: '#94a3b8' }
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        style: { colors: '#94a3b8' }
+                    }
+                },
+                grid: {
+                    borderColor: '#334155',
+                    strokeDashArray: 4
+                },
+                tooltip: {
+                    theme: 'dark'
+                }
+            };
+            
+            if (volumeChart) {
+                volumeChart.destroy();
+            }
+            volumeChart = new ApexCharts(document.querySelector("#volumeChart"), volumeOptions);
+            volumeChart.render();
+        }
+        
+        // 初始化订单簿
+        function initializeOrderBook() {
+            updateOrderBook();
+        }
+        
+        // 更新订单簿
+        function updateOrderBook() {
+            const currentPrice = cryptoData[currentTradingPair]?.price || 0;
+            if (!currentPrice) return;
+            
+            const sellOrders = [];
+            const buyOrders = [];
+            
+            // 生成卖单
+            for (let i = 5; i > 0; i--) {
+                const price = currentPrice + (i * currentPrice * 0.001);
+                const amount = Math.random() * 2 + 0.1;
+                sellOrders.push({
+                    price: price.toFixed(2),
+                    amount: amount.toFixed(4),
+                    total: (price * amount).toFixed(2)
+                });
+            }
+            
+            // 生成买单
+            for (let i = 1; i <= 5; i++) {
+                const price = currentPrice - (i * currentPrice * 0.001);
+                const amount = Math.random() * 2 + 0.1;
+                buyOrders.push({
+                    price: price.toFixed(2),
+                    amount: amount.toFixed(4),
+                    total: (price * amount).toFixed(2)
+                });
+            }
+            
+            // 渲染卖单
+            const sellOrdersEl = document.getElementById('sellOrders');
+            sellOrdersEl.innerHTML = '';
+            sellOrders.forEach(order => {
+                const row = document.createElement('tr');
+                row.className = 'book-row sell-orders';
+                row.innerHTML = `
+                    <td>${order.price}</td>
+                    <td>${order.amount}</td>
+                    <td>${order.total}</td>
+                `;
+                sellOrdersEl.appendChild(row);
+            });
+            
+            // 渲染买单
+            const buyOrdersEl = document.getElementById('buyOrders');
+            buyOrdersEl.innerHTML = '';
+            buyOrders.forEach(order => {
+                const row = document.createElement('tr');
+                row.className = 'book-row buy-orders';
+                row.innerHTML = `
+                    <td>${order.price}</td>
+                    <td>${order.amount}</td>
+                    <td>${order.total}</td>
+                `;
+                buyOrdersEl.appendChild(row);
+            });
+            
+            // 更新当前价格
+            document.getElementById('currentPrice').textContent = `$${currentPrice.toFixed(2)}`;
+        }
+        
+        // 初始化交易信号
+        function initializeSignals() {
+            updateTradingSignals();
+        }
+        
+        // 更新交易信号
+        function updateTradingSignals() {
+            const signals = [
+                { type: 'buy', icon: 'fa-arrow-trend-up', title: '买入信号', desc: 'RSI显示超卖反弹机会' },
+                { type: 'sell', icon: 'fa-arrow-trend-down', title: '卖出信号', desc: 'MACD出现死叉形态' },
+                { type: 'neutral', icon: 'fa-minus', title: '观望信号', desc: '价格进入盘整阶段' }
+            ];
+            
+            const container = document.getElementById('signalsContainer');
+            container.innerHTML = '';
+            
+            signals.forEach(signal => {
+                const signalEl = document.createElement('div');
+                signalEl.className = `signal-item signal-${signal.type}`;
+                signalEl.innerHTML = `
+                    <div class="signal-icon" style="color: var(--${signal.type === 'buy' ? 'success' : signal.type === 'sell' ? 'danger' : 'warning'}-color);">
+                        <i class="fas ${signal.icon}"></i>
+                    </div>
+                    <div class="signal-content">
+                        <div class="signal-title">${signal.title}</div>
+                        <div class="signal-desc">${signal.desc}</div>
+                    </div>
+                    <div class="signal-time">刚刚</div>
+                `;
+                container.appendChild(signalEl);
+            });
+        }
+        
+        // 初始化活动动态
+        function initializeActivities() {
+            const activities = [
+                { icon: 'fa-arrow-up', title: `${currentTradingPairSymbol}价格突破重要阻力位`, subtitle: '24小时涨幅超过5%', time: '5分钟前', color: 'success' },
+                { icon: 'fa-info-circle', title: '市场情绪指数上升', subtitle: '贪婪指数达到65', time: '15分钟前', color: 'primary' },
+                { icon: 'fa-chart-line', title: '交易量显著增加', subtitle: '较昨日同期增长32%', time: '30分钟前', color: 'primary' },
+                { icon: 'fa-exclamation-triangle', title: '波动性增加', subtitle: '建议注意风险控制', time: '1小时前', color: 'warning' }
+            ];
+            
+            const container = document.getElementById('activityFeed');
+            container.innerHTML = '';
+            
+            activities.forEach(activity => {
+                const activityEl = document.createElement('div');
+                activityEl.className = 'activity-item';
+                activityEl.innerHTML = `
+                    <div class="activity-icon" style="background: rgba(102, 126, 234, 0.2); color: var(--${activity.color}-color);">
+                        <i class="fas ${activity.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-subtitle">${activity.subtitle} · ${activity.time}</div>
+                    </div>
+                `;
+                container.appendChild(activityEl);
+            });
+        }
+        
+        // 启动实时更新
+        function startRealTimeUpdates() {
+            // 清除现有定时器
+            updateIntervals.forEach(interval => clearInterval(interval));
+            updateIntervals = [];
+            
+            // 每60秒更新市场数据
+            const marketInterval = setInterval(async () => {
+                try {
+                    await loadMarketData();
+                    await loadTradingPairData(currentTradingPair);
+                } catch (error) {
+                    console.error('实时更新失败:', error);
+                }
+            }, 60000);
+            updateIntervals.push(marketInterval);
+            
+            // 每5秒更新订单簿
+            const orderBookInterval = setInterval(() => {
+                updateOrderBook();
+            }, 5000);
+            updateIntervals.push(orderBookInterval);
+            
+            // 每10秒更新技术指标
+            const indicatorsInterval = setInterval(() => {
+                updateTechnicalIndicators();
+            }, 10000);
+            updateIntervals.push(indicatorsInterval);
+            
+            // 每30秒更新交易信号
+            const signalsInterval = setInterval(() => {
+                updateTradingSignals();
+            }, 30000);
+            updateIntervals.push(signalsInterval);
+        }
+        
+        // 更新技术指标
+        function updateTechnicalIndicators() {
+            if (!realTimeData[currentTradingPair]) return;
+            
+            const prices = realTimeData[currentTradingPair].prices.map(p => p[1]);
+            const currentPrice = prices[prices.length - 1];
+            
+            // 计算MA(7)
+            const ma7 = calculateMA(prices, 7);
+            document.getElementById('ma7').textContent = `$${ma7.toFixed(2)}`;
+            
+            // 计算MA(25)
+            const ma25 = calculateMA(prices, 25);
+            document.getElementById('ma25').textContent = `$${ma25.toFixed(2)}`;
+            
+            // 计算RSI(14)
+            const rsi = calculateRSI(prices, 14);
+            document.getElementById('rsi').textContent = rsi.toFixed(1);
+            
+            // 计算MACD
+            const macd = calculateMACD(prices);
+            document.getElementById('macd').textContent = macd >= 0 ? `+${macd.toFixed(2)}` : macd.toFixed(2);
+        }
+        
+        // 计算移动平均线
+        function calculateMA(prices, period) {
+            if (prices.length < period) return 0;
+            const sum = prices.slice(-period).reduce((a, b) => a + b, 0);
+            return sum / period;
+        }
+        
+        // 计算RSI
+        function calculateRSI(prices, period) {
+            if (prices.length < period + 1) return 50;
+            
+            let gains = 0;
+            let losses = 0;
+            
+            for (let i = prices.length - period; i < prices.length; i++) {
+                const change = prices[i] - prices[i - 1];
+                if (change > 0) {
+                    gains += change;
+                } else {
+                    losses -= change;
+                }
+            }
+            
+            const avgGain = gains / period;
+            const avgLoss = losses / period;
+            const rs = avgGain / avgLoss;
+            return 100 - (100 / (1 + rs));
+        }
+        
+        // 计算MACD
+        function calculateMACD(prices) {
+            if (prices.length < 26) return 0;
+            
+            const ema12 = calculateEMA(prices, 12);
+            const ema26 = calculateEMA(prices, 26);
+            return ema12 - ema26;
+        }
+        
+        // 计算EMA
+        function calculateEMA(prices, period) {
+            if (prices.length < period) return prices[prices.length - 1];
+            
+            const multiplier = 2 / (period + 1);
+            let ema = prices[0];
+            
+            for (let i = 1; i < prices.length; i++) {
+                ema = (prices[i] - ema) * multiplier + ema;
+            }
+            
+            return ema;
+        }
+        
+        // 更新交易面板
+        function updateTradingPanel() {
+            const coinData = cryptoData[currentTradingPair];
+            if (!coinData) return;
+            
+            // 更新价格
+            const orderType = document.getElementById('orderType').value;
+            if (orderType === 'limit') {
+                document.getElementById('price').value = coinData.price.toFixed(2);
+            }
+            
+            // 更新余额显示
+            const balance = (Math.random() * 10 + 1).toFixed(4);
+            document.getElementById('availableBalance').textContent = `${balance} ${currentTradingPairSymbol}`;
+            document.getElementById('totalBalance').textContent = `${balance} ${currentTradingPairSymbol}`;
+            
+            // 更新图表标题
+            document.getElementById('chartTitle').textContent = `${currentTradingPairSymbol}/USDT`;
+            
+            // 更新单位显示
+            document.getElementById('amountUnit').textContent = currentTradingPairSymbol;
+            
+            // 更新交易按钮
+            const tradeBtn = document.getElementById('tradeBtn');
+            if (currentTradeType === 'buy') {
+                tradeBtn.textContent = `买入 ${currentTradingPairSymbol}`;
+            } else {
+                tradeBtn.textContent = `卖出 ${currentTradingPairSymbol}`;
+            }
+            
+            calculateTotal();
+        }
+        
+        // 更新图表
+        function updateCharts() {
+            if (priceChart && volumeChart) {
+                initializeCharts();
+            }
+        }
+        
+        // 切换交易标签
+        function switchTab(tab) {
+            const buyTab = document.getElementById('buyTab');
+            const sellTab = document.getElementById('sellTab');
+            const tradeBtn = document.getElementById('tradeBtn');
+            
+            currentTradeType = tab;
+            
+            if (tab === 'buy') {
+                buyTab.classList.add('active');
+                sellTab.classList.remove('active');
+                tradeBtn.textContent = `买入 ${currentTradingPairSymbol}`;
+                tradeBtn.className = 'btn-primary btn-buy';
+            } else {
+                sellTab.classList.add('active');
+                buyTab.classList.remove('active');
+                tradeBtn.textContent = `卖出 ${currentTradingPairSymbol}`;
+                tradeBtn.className = 'btn-primary btn-sell';
+            }
+        }
+        
+        // 切换价格输入
+        function togglePriceInput() {
+            const orderType = document.getElementById('orderType').value;
+            const priceInputGroup = document.getElementById('priceInputGroup');
+            
+            if (orderType === 'market') {
+                priceInputGroup.style.display = 'none';
+                document.getElementById('price').value = '市价';
+            } else {
+                priceInputGroup.style.display = 'block';
+                const coinData = cryptoData[currentTradingPair];
+                if (coinData) {
+                    document.getElementById('price').value = coinData.price.toFixed(2);
+                }
+            }
+            
+            calculateTotal();
+        }
+        
+        // 切换交易对
+        async function changeTradingPair() {
+            const select = document.getElementById('tradingPair');
+            currentTradingPair = select.value;
+            
+            try {
+                await loadTradingPairData(currentTradingPair);
+                showToast(`已切换到 ${CRYPTO_CONFIG[currentTradingPair].symbol}/USDT`, 'success');
+            } catch (error) {
+                console.error('切换交易对失败:', error);
+                showToast('切换交易对失败', 'error');
+            }
+        }
+        
+        // 计算总额
+        function calculateTotal() {
+            const orderType = document.getElementById('orderType').value;
+            
+            if (orderType === 'market') {
+                document.getElementById('total').value = '市价';
+                return;
+            }
+            
+            const price = parseFloat(document.getElementById('price').value) || 0;
+            const amount = parseFloat(document.getElementById('amount').value) || 0;
+            document.getElementById('total').value = (price * amount).toFixed(2);
+        }
+        
+        // 设置百分比
+        function setPercentage(percent) {
+            const balance = parseFloat(document.getElementById('availableBalance').textContent) || 0;
+            const amount = (balance * percent / 100).toFixed(4);
+            document.getElementById('amount').value = amount;
+            calculateTotal();
+        }
+        
+        // 切换时间框架
+        function changeTimeframe(timeframe) {
+            currentTimeframe = timeframe;
+            
+            const buttons = document.querySelectorAll('.time-selector .time-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // 重新加载图表数据
+            loadTradingPairData(currentTradingPair);
+        }
+        
+        // 执行交易
+        function executeTrade() {
+            const orderType = document.getElementById('orderType').value;
+            const amount = parseFloat(document.getElementById('amount').value) || 0;
+            const balance = parseFloat(document.getElementById('availableBalance').textContent) || 0;
+            
+            if (amount <= 0) {
+                showToast('请输入有效的交易数量', 'error');
+                return;
+            }
+            
+            if (currentTradeType === 'sell' && amount > balance) {
+                showToast('余额不足', 'error');
+                return;
+            }
+            
+            // 模拟交易执行
+            const price = orderType === 'market' ? 
+                cryptoData[currentTradingPair].price : 
+                parseFloat(document.getElementById('price').value);
+            
+            const total = price * amount;
+            
+            // 更新余额
+            const newBalance = currentTradeType === 'sell' ? balance - amount : balance + amount;
+            document.getElementById('availableBalance').textContent = `${newBalance.toFixed(4)} ${currentTradingPairSymbol}`;
+            document.getElementById('totalBalance').textContent = `${newBalance.toFixed(4)} ${currentTradingPairSymbol}`;
+            
+            // 显示成功消息
+            showToast(`${currentTradeType === 'buy' ? '买入' : '卖出'}订单已提交: ${amount} ${currentTradingPairSymbol} @ $${price.toFixed(2)}`, 'success');
+            
+            // 重置表单
+            document.getElementById('amount').value = '0.001';
+            calculateTotal();
+            
+            // 添加到活动动态
+            addActivityToFeed(currentTradeType, amount, price);
+        }
+        
+        // 添加活动到动态
+        function addActivityToFeed(type, amount, price) {
+            const container = document.getElementById('activityFeed');
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            newActivity.innerHTML = `
+                <div class="activity-icon" style="background: rgba(102, 126, 234, 0.2); color: var(--${type === 'buy' ? 'success' : 'danger'}-color);">
+                    <i class="fas fa-arrow-${type === 'buy' ? 'up' : 'down'}"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">${type === 'buy' ? '买入' : '卖出'} ${currentTradingPairSymbol}</div>
+                    <div class="activity-subtitle">${amount} ${currentTradingPairSymbol} @ $${price.toFixed(2)} · 刚刚</div>
+                </div>
+            `;
+            
+            container.insertBefore(newActivity, container.firstChild);
+            
+            // 保持最多5条记录
+            while (container.children.length > 5) {
+                container.removeChild(container.lastChild);
+            }
+        }
+        
+        // 切换导航
+        function switchNav(section) {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            showToast(`切换到${section === 'market' ? '市场' : section === 'trading' ? '交易' : section === 'futures' ? '合约' : section === 'finance' ? '理财' : 'API'}页面`, 'success');
+        }
+        
+        // 显示通知
+        function showNotifications() {
+            showToast('您有新的市场动态', 'success');
+        }
+        
+        // 显示用户中心
+        function showUserCenter() {
+            showToast('用户中心功能开发中', 'warning');
+        }
+        
+        // 更新连接状态
+        function updateConnectionStatus(status, text) {
+            const statusDot = document.getElementById('connectionStatus');
+            const statusText = document.getElementById('connectionText');
+            
+            statusDot.className = 'status-dot';
+            if (status === 'disconnected') {
+                statusDot.classList.add('disconnected');
+            }
+            
+            statusText.textContent = text;
+        }
+        
+        // 显示Toast通知
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toastMessage.textContent = message;
+            
+            toast.className = 'toast';
+            if (type === 'success') {
+                toast.classList.add('success');
+                toastIcon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                toast.classList.add('error');
+                toastIcon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                toast.classList.add('warning');
+                toastIcon.className = 'fas fa-exclamation-triangle';
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 页面卸载时清理
+        window.addEventListener('beforeunload', () => {
+            updateIntervals.forEach(interval => clearInterval(interval));
+        });
+    </script>
 </body>
 </html>
