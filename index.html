@@ -163,6 +163,30 @@
         .meal-nav-button {
             animation: meal-glow 3s ease-in-out infinite;
         }
+        /* ==================== 加密货币交易分析系统按钮 ==================== */
+        .crypto-nav-button {
+            background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%);
+            box-shadow: 0 4px 12px rgba(247, 147, 26, 0.3);
+        }
+        .crypto-nav-button:hover {
+            box-shadow: 0 6px 20px rgba(247, 147, 26, 0.4);
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931a 100%);
+        }
+        .crypto-nav-button:active {
+            box-shadow: 0 2px 8px rgba(247, 147, 26, 0.3);
+        }
+        @keyframes crypto-glow {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(247, 147, 26, 0.3);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(247, 147, 26, 0.6),
+                            0 0 30px rgba(247, 147, 26, 0.2);
+            }
+        }
+        .crypto-nav-button {
+            animation: crypto-glow 3s ease-in-out infinite;
+        }
         /* ==================== 控制区布局优化 ==================== */
         .controls {
             display: flex;
@@ -416,7 +440,8 @@
             .nav-button-base,
             .ai-nav-button,
             .health-nav-button,
-            .meal-nav-button {
+            .meal-nav-button,
+            .crypto-nav-button {
                 animation: none;
                 transition: none;
             }
@@ -659,6 +684,15 @@
                             <i class="fas fa-utensils"></i>
                         </span>
                         <span>美食聚餐</span>
+                    </a>
+                    <!-- 加密货币交易分析系统按钮 -->
+                    <a href="YOUR_LINK_HERE"
+                       class="nav-button-base crypto-nav-button"
+                       title="进入加密货币交易分析系统">
+                        <span class="button-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </span>
+                        <span>加密货币分析</span>
                     </a>
                 </div>
                 <!-- 搜索框 -->
@@ -1119,7 +1153,7 @@
             updatePaginationInfo();
         }
 
-        // ==================== 创建朋友圈卡片 ====================
+        // ==================== 创建朋友圈卡片 ==================== */
         function createMomentCard(moment, index) {
             const card = document.createElement('article');
             card.className = 'moment-card';
@@ -1201,7 +1235,7 @@
             return card;
         }
 
-        // ==================== 辅助函数 ====================
+        // ==================== 辅助函数 ==================== */
         // 修复：正确的毫秒换算，避免 _60_ 错误
         function formatDate(date) {
             const now = new Date();
@@ -1241,7 +1275,7 @@
             return 'linear-gradient(135deg, #868e96, #495057)';
         }
 
-        // ==================== 统计信息更新 ====================
+        // ==================== 统计信息更新 ==================== */
         function updateStats(moments) {
             const totalMoments = moments.length;
             const highValueMoments = moments.filter(m => (m.value || 0) >= 8).length;
@@ -1277,7 +1311,7 @@
             return descriptions[sortMethod] || '按最新发布时间排序';
         }
 
-        // ==================== 数字动画 ====================
+        // ==================== 数字动画 ==================== */
         function animateNumber(elementId, targetValue) {
             const element = document.getElementById(elementId);
             if (!element) return;
@@ -1300,7 +1334,7 @@
             }, 30);
         }
 
-        // ==================== 分页功能（完整实现） ====================
+        // ==================== 分页功能（完整实现） ==================== */
         function initPaginationControls() {
             document.getElementById('firstPage')?.addEventListener('click', () => {
                 window.currentPage = 1;
