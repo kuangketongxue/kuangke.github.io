@@ -73,7 +73,7 @@ let successDiaryData = [
         categories: ['study', 'creative'],
         headline: {
             zh: '反刍收拾整理电脑收藏工具',
-            en: 'Organize and tidy up the computer's collection tools using a specialized tool for this purpose.'
+            en: 'Organize and tidy up the computer is collection tools using a specialized tool for this purpose.'
         },
         content: {
             zh: '阅读16本书+。\n网站优化\n学习9小时+\n创作1000字',
