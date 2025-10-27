@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- SEO优化 -->
-    <meta name="description" content="狂客·银河 - 探索无限星空，记录生活精彩瞬间">
-    <meta name="keywords" content="狂客,银河,星空,朋友圈,宇宙,生活分享,成功日记">
+    <meta name="description" content="狂客·银河 - 记录生活精彩瞬间，分享美好时刻">
+    <meta name="keywords" content="狂客,银河,朋友圈,生活分享,成功日记">
     <meta name="author" content="狂客">
     <meta name="robots" content="index, follow">
     <!-- Open Graph / 社交媒体分享 -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="狂客·银河 - 探索无限星空">
-    <meta property="og:description" content="在浩瀚星空下，记录每一个闪光的瞬间">
+    <meta property="og:title" content="狂客·银河">
+    <meta property="og:description" content="记录生活精彩瞬间，分享美好时刻">
     <meta property="og:site_name" content="狂客·银河">
     <!-- 网站图标 -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
@@ -21,121 +21,86 @@
     <!-- 预连接外部资源 -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <title>狂客·银河 - 探索无限星空</title>
+    <title>狂客·银河 - 记录生活精彩瞬间</title>
     <!-- 样式表 -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
     <style>
+        /* ==================== 星空主题背景 ==================== */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            /* 保留原来的背景图 */
+            background: url('https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/65b0c87d-d0db-4d9a-8b56-3b00a790ea02/ee8ec3fe481fc3bc0d8667c0d3655fe1.png?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1761550032&Signature=Yr6YT9hp+9S7GpWpkONu4VtEglU=') center center/cover fixed;
+            min-height: 100vh;
+            padding-top: 60px; /* 为固定导航栏留出空间 */
+            position: relative;
+        }
+
+        /* 星空遮罩层 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(10, 10, 35, 0.85) 0%,
+                rgba(25, 25, 60, 0.75) 50%,
+                rgba(15, 15, 45, 0.85) 100%
+            );
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* 动态星星效果 */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(1px 1px at 50px 50px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 80px 80px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(2px 2px at 130px 40px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 200px 150px, rgba(255, 255, 255, 0.6), transparent);
+            background-repeat: repeat;
+            background-size: 250px 250px;
+            animation: stars 120s linear infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes stars {
+            from { transform: translateX(0); }
+            to { transform: translateX(-250px); }
+        }
+
         /* ==================== 重置和基础样式 ==================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            background: #000428;
-            background: linear-gradient(to bottom, #000428, #004e92);
-            min-height: 100vh;
-            padding-top: 70px;
-            position: relative;
-            overflow-x: hidden;
-        }
 
-        /* 星空背景动画 */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, white, transparent),
-                radial-gradient(2px 2px at 40px 70px, white, transparent),
-                radial-gradient(1px 1px at 50px 20px, white, transparent),
-                radial-gradient(1px 1px at 80px 10px, white, transparent),
-                radial-gradient(2px 2px at 130px 80px, white, transparent),
-                radial-gradient(1px 1px at 110px 50px, white, transparent);
-            background-size: 200px 200px;
-            animation: stars 120s linear infinite;
-            z-index: -1;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 4, 40, 0.4) 50%, rgba(0, 4, 40, 0.8) 100%);
-            z-index: -1;
-        }
-
-        @keyframes stars {
-            from { transform: translateY(0); }
-            to { transform: translateY(-200px); }
-        }
-
-        /* 流星效果 */
-        .meteor {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 2px;
-            height: 2px;
-            background: white;
-            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
-            animation: meteor 3s linear infinite;
-            z-index: -1;
-        }
-
-        .meteor::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100px;
-            height: 2px;
-            background: linear-gradient(to left, transparent, rgba(255, 255, 255, 0.8));
-            transform: translateX(-100px);
-        }
-
-        @keyframes meteor {
-            0% {
-                transform: translate(0, 0);
-                opacity: 1;
-            }
-            70% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-500px, 500px);
-                opacity: 0;
-            }
-        }
-
-        /* ==================== 顶部导航栏星空主题 ==================== */
+        /* ==================== 顶部导航栏优化 ==================== */
         .header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 70px;
-            background: rgba(0, 4, 40, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(100, 150, 255, 0.3);
+            height: 60px;
+            background: rgba(15, 15, 45, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1000;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 78, 146, 0.3);
-        }
-
-        [data-theme="light"] .header {
-            background: rgba(255, 255, 255, 0.95);
-            border-bottom-color: rgba(0, 0, 0, 0.1);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .container {
@@ -158,7 +123,7 @@
         }
 
         .logo {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             color: #fff;
             text-decoration: none;
@@ -167,19 +132,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from { filter: brightness(1); }
-            to { filter: brightness(1.2); }
-        }
-
-        [data-theme="light"] .logo {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .primary-nav {
@@ -192,54 +144,25 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 16px;
-            color: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
-            border-radius: 25px;
+            border-radius: 8px;
             transition: all 0.3s ease;
             font-size: 14px;
             font-weight: 500;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .primary-nav a::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(102, 126, 234, 0.3), transparent);
-            transform: translate(-50%, -50%);
-            transition: all 0.5s ease;
-        }
-
-        .primary-nav a:hover::before {
-            width: 100%;
-            height: 100%;
         }
 
         .primary-nav a:hover {
             background: rgba(102, 126, 234, 0.2);
-            color: #fff;
+            color: #a8b2ff;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        [data-theme="light"] .primary-nav a {
-            color: #666;
-        }
-
-        [data-theme="light"] .primary-nav a:hover {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
         }
 
         .controls {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .search-box {
@@ -250,93 +173,66 @@
 
         .search-box i {
             position: absolute;
-            left: 14px;
-            color: rgba(255, 255, 255, 0.7);
+            left: 12px;
+            color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
         }
 
         .search-box input {
-            padding: 10px 14px 10px 40px;
-            border: 1px solid rgba(100, 150, 255, 0.3);
-            border-radius: 25px;
+            padding: 8px 12px 8px 36px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
             font-size: 14px;
-            width: 220px;
+            width: 200px;
             transition: all 0.3s ease;
-            color: #fff;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .search-box input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .search-box input:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3), 0 4px 20px rgba(102, 126, 234, 0.2);
-            width: 280px;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            width: 250px;
             background: rgba(255, 255, 255, 0.15);
         }
 
-        [data-theme="light"] .search-box i {
-            color: #999;
-        }
-
-        [data-theme="light"] .search-box input {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(0, 0, 0, 0.1);
-            color: #333;
-        }
-
-        [data-theme="light"] .search-box input::placeholder {
-            color: #999;
-        }
-
         .theme-toggle {
-            padding: 10px;
-            border: 1px solid rgba(100, 150, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.9);
+            padding: 8px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.8);
             cursor: pointer;
-            border-radius: 50%;
+            border-radius: 8px;
             transition: all 0.3s ease;
             font-size: 16px;
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .theme-toggle:hover {
             background: rgba(102, 126, 234, 0.2);
-            transform: rotate(180deg);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            color: #a8b2ff;
         }
 
-        [data-theme="light"] .theme-toggle {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(0, 0, 0, 0.1);
-            color: #666;
-        }
-
-        /* ==================== 星空主题功能按钮 ==================== */
+        /* ==================== 功能按钮样式优化 ==================== */
         .function-buttons {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .nav-button-base {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 10px 14px;
+            padding: 8px 12px;
             color: #fff;
             text-decoration: none;
-            border: 1px solid rgba(100, 150, 255, 0.3);
-            border-radius: 25px;
+            border: none;
+            border-radius: 10px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
@@ -345,147 +241,115 @@
             letter-spacing: 0.5px;
             cursor: pointer;
             white-space: nowrap;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .nav-button-base::before {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
-            transform: translate(-50%, -50%);
-            transition: all 0.5s ease;
-            z-index: 0;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transition: left 0.5s ease;
         }
 
         .nav-button-base:hover::before {
-            width: 120%;
-            height: 120%;
+            left: 100%;
         }
 
         .nav-button-base:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
         }
 
         .nav-button-base:active {
-            transform: translateY(-1px);
-        }
-
-        .nav-button-base span {
-            position: relative;
-            z-index: 1;
+            transform: translateY(0);
         }
 
         .button-icon {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            margin-right: 6px;
             background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
+            border-radius: 6px;
             transition: all 0.3s ease;
         }
 
         .nav-button-base:hover .button-icon {
             background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1) rotate(10deg);
+            transform: scale(1.1) rotate(5deg);
         }
 
-        /* AI前沿按钮 - 紫色星云 */
+        /* AI前沿按钮 */
         .ai-nav-button {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.6), rgba(118, 75, 162, 0.6));
-            border-color: rgba(102, 126, 234, 0.5);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
         .ai-nav-button:hover {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
-            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
 
-        /* 健康提醒按钮 - 绿色极光 */
+        /* 健康提醒按钮 */
         .health-nav-button {
-            background: linear-gradient(135deg, rgba(0, 201, 167, 0.6), rgba(139, 92, 246, 0.6));
-            border-color: rgba(0, 201, 167, 0.5);
-            box-shadow: 0 4px 15px rgba(0, 201, 167, 0.3);
+            background: linear-gradient(135deg, #00c9a7 0%, #8b5cf6 100%);
+            box-shadow: 0 4px 15px rgba(0, 201, 167, 0.4);
         }
 
         .health-nav-button:hover {
-            background: linear-gradient(135deg, rgba(0, 201, 167, 0.8), rgba(139, 92, 246, 0.8));
-            box-shadow: 0 8px 30px rgba(0, 201, 167, 0.5);
+            box-shadow: 0 8px 25px rgba(0, 201, 167, 0.6);
+            background: linear-gradient(135deg, #8b5cf6 0%, #00c9a7 100%);
         }
 
-        /* 美食聚餐按钮 - 橙色星系 */
+        /* 美食聚餐按钮 */
         .meal-nav-button {
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.6), rgba(255, 165, 0, 0.6));
-            border-color: rgba(255, 107, 107, 0.5);
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
 
         .meal-nav-button:hover {
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.8), rgba(255, 165, 0, 0.8));
-            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.5);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+            background: linear-gradient(135deg, #ffa500 0%, #ff6b6b 100%);
         }
 
-        /* 加密货币按钮 - 金色恒星 */
+        /* 加密货币按钮 */
         .crypto-nav-button {
-            background: linear-gradient(135deg, rgba(247, 147, 26, 0.6), rgba(255, 107, 53, 0.6));
-            border-color: rgba(247, 147, 26, 0.5);
-            box-shadow: 0 4px 15px rgba(247, 147, 26, 0.3);
+            background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%);
+            box-shadow: 0 4px 15px rgba(247, 147, 26, 0.4);
         }
 
         .crypto-nav-button:hover {
-            background: linear-gradient(135deg, rgba(247, 147, 26, 0.8), rgba(255, 107, 53, 0.8));
-            box-shadow: 0 8px 30px rgba(247, 147, 26, 0.5);
+            box-shadow: 0 8px 25px rgba(247, 147, 26, 0.6);
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931a 100%);
         }
 
-        /* ==================== 分类导航星空主题 ==================== */
+        /* ==================== 分类导航优化 ==================== */
         .category-nav {
-            background: rgba(0, 4, 40, 0.6);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(100, 150, 255, 0.2);
-            padding: 20px 0;
+            background: rgba(20, 20, 50, 0.9);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 0;
             margin-top: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .category-nav::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(100, 150, 255, 0.5), transparent);
-            animation: scan 3s linear infinite;
-        }
-
-        @keyframes scan {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        [data-theme="light"] .category-nav {
-            background: rgba(255, 255, 255, 0.9);
-            border-bottom-color: rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .category-scroll {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             overflow-x: auto;
             padding: 4px 0;
             scrollbar-width: thin;
-            scrollbar-color: rgba(100, 150, 255, 0.5) transparent;
+            scrollbar-color: rgba(102, 126, 234, 0.5) transparent;
         }
 
         .category-scroll::-webkit-scrollbar {
@@ -497,84 +361,48 @@
         }
 
         .category-scroll::-webkit-scrollbar-thumb {
-            background: rgba(100, 150, 255, 0.5);
+            background: rgba(102, 126, 234, 0.5);
             border-radius: 2px;
         }
 
         .category-btn {
-            padding: 10px 18px;
-            border: 1px solid rgba(100, 150, 255, 0.3);
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.9);
-            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 14px;
             font-weight: 500;
             white-space: nowrap;
             flex-shrink: 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .category-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(100, 150, 255, 0.3), transparent);
-            transform: translate(-50%, -50%);
-            transition: all 0.5s ease;
-        }
-
-        .category-btn:hover::before {
-            width: 100%;
-            height: 100%;
         }
 
         .category-btn:hover {
-            border-color: rgba(100, 150, 255, 0.6);
-            color: #fff;
-            background: rgba(100, 150, 255, 0.2);
+            border-color: #667eea;
+            color: #a8b2ff;
+            background: rgba(102, 126, 234, 0.2);
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(100, 150, 255, 0.3);
         }
 
         .category-btn.active {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.6), rgba(118, 75, 162, 0.6));
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border-color: transparent;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
-        [data-theme="light"] .category-btn {
-            background: rgba(255, 255, 255, 0.8);
-            border-color: rgba(0, 0, 0, 0.1);
-            color: #666;
-        }
-
-        [data-theme="light"] .category-btn:hover {
-            border-color: #667eea;
-            color: #667eea;
-            background: rgba(102, 126, 234, 0.1);
-        }
-
-        /* ==================== 排序控件星空主题 ==================== */
+        /* ==================== 排序控件优化 ==================== */
         .sort-nav {
-            background: rgba(0, 4, 40, 0.6);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(100, 150, 255, 0.2);
-            padding: 20px 0;
+            background: rgba(20, 20, 50, 0.9);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 0;
             position: sticky;
-            top: 70px;
+            top: 60px;
             z-index: 100;
-        }
-
-        [data-theme="light"] .sort-nav {
-            background: rgba(255, 255, 255, 0.9);
-            border-bottom-color: rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .sort-controls {
@@ -582,225 +410,160 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 16px;
         }
 
         .sort-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .sort-label {
             font-size: 14px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.8);
             white-space: nowrap;
         }
 
-        [data-theme="light"] .sort-label {
-            color: #666;
-        }
-
         .sort-select {
-            padding: 10px 16px;
-            border: 1px solid rgba(100, 150, 255, 0.3);
-            border-radius: 25px;
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
             font-size: 14px;
-            color: #fff;
+            color: rgba(255, 255, 255, 0.9);
             cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 180px;
+            min-width: 160px;
+        }
+
+        .sort-select option {
+            background: #1a1a3e;
+            color: #fff;
+        }
+
+        .sort-select:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .sort-select:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
-        }
-
-        [data-theme="light"] .sort-select {
-            background: white;
-            border-color: rgba(0, 0, 0, 0.15);
-            color: #333;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
         }
 
         .view-options {
             display: flex;
-            gap: 8px;
+            gap: 4px;
         }
 
         .view-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            border: 1px solid rgba(100, 150, 255, 0.3);
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .view-btn:hover {
-            border-color: rgba(100, 150, 255, 0.6);
-            color: #fff;
-            background: rgba(100, 150, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(100, 150, 255, 0.3);
+            border-color: #667eea;
+            color: #a8b2ff;
+            background: rgba(102, 126, 234, 0.2);
         }
 
         .view-btn.active {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.6), rgba(118, 75, 162, 0.6));
-            border-color: transparent;
-            color: white;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        [data-theme="light"] .view-btn {
-            background: white;
-            border-color: rgba(0, 0, 0, 0.15);
-            color: #666;
-        }
-
-        [data-theme="light"] .view-btn:hover {
+            background: #667eea;
             border-color: #667eea;
-            color: #667eea;
-            background: rgba(102, 126, 234, 0.05);
+            color: white;
         }
 
-        /* ==================== 主要内容区域星空主题 ==================== */
+        /* ==================== 主要内容区域优化 ==================== */
         .main-content {
-            padding: 40px 0;
+            padding: 30px 0;
             min-height: calc(100vh - 300px);
-            position: relative;
         }
 
         /* 统计卡片 */
         .moments-stats {
-            margin-bottom: 40px;
-            position: relative;
+            margin-bottom: 30px;
         }
 
         .stat-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
         }
 
         .stat-card {
-            background: rgba(0, 4, 40, 0.6);
-            backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 30px;
+            background: rgba(20, 20, 50, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 24px;
             text-align: center;
-            border: 1px solid rgba(100, 150, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(100, 150, 255, 0.1), transparent);
-            animation: rotate 10s linear infinite;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         .stat-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 35px rgba(0, 78, 146, 0.3);
-            border-color: rgba(100, 150, 255, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.3);
         }
 
         .stat-card.highlight {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
             border-color: rgba(102, 126, 234, 0.4);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
-        }
-
-        [data-theme="light"] .stat-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(0, 0, 0, 0.06);
-        }
-
-        [data-theme="light"] .stat-card.highlight {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            border-color: rgba(102, 126, 234, 0.2);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
         }
 
         .stat-number {
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 700;
-            color: #667eea;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            color: #a8b2ff;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(168, 178, 255, 0.5);
         }
 
         .stat-label {
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
             font-weight: 500;
-        }
-
-        [data-theme="light"] .stat-label {
-            color: #666;
         }
 
         /* 朋友圈网格 */
         .moments-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
         }
 
         .moment-card {
-            background: rgba(0, 4, 40, 0.6);
-            backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 25px;
-            border: 1px solid rgba(100, 150, 255, 0.2);
+            background: rgba(20, 20, 50, 0.85);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
-            animation: fadeInUp 0.6s ease forwards;
+            animation: fadeInUp 0.5s ease forwards;
             opacity: 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .moment-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(100, 150, 255, 0.6), transparent);
-            animation: scanCard 3s linear infinite;
-        }
-
-        @keyframes scanCard {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -809,65 +572,56 @@
         }
 
         .moment-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 78, 146, 0.4);
-            border-color: rgba(100, 150, 255, 0.4);
-        }
-
-        [data-theme="light"] .moment-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(0, 0, 0, 0.06);
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.3);
         }
 
         .moment-header {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .moment-meta {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         .moment-date {
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.7);
             font-weight: 500;
         }
 
         .moment-category {
             font-size: 12px;
-            padding: 6px 12px;
+            padding: 4px 8px;
             background: rgba(102, 126, 234, 0.2);
             color: #a8b2ff;
-            border-radius: 20px;
+            border-radius: 12px;
             font-weight: 500;
             border: 1px solid rgba(102, 126, 234, 0.3);
         }
 
         .value-badge {
             font-size: 12px;
-            padding: 6px 12px;
-            border-radius: 20px;
+            padding: 4px 8px;
+            border-radius: 12px;
             font-weight: 600;
             color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .moment-content {
-            margin-bottom: 20px;
-            line-height: 1.7;
+            margin-bottom: 16px;
+            line-height: 1.6;
             color: rgba(255, 255, 255, 0.9);
-            font-size: 15px;
-        }
-
-        [data-theme="light"] .moment-content {
-            color: #333;
+            font-size: 14px;
         }
 
         .moment-content.collapsed {
-            max-height: 120px;
+            max-height: 100px;
             overflow: hidden;
             position: relative;
         }
@@ -878,36 +632,31 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 40px;
-            background: linear-gradient(to bottom, transparent, rgba(0, 4, 40, 0.9));
+            height: 30px;
+            background: linear-gradient(to bottom, transparent, rgba(20, 20, 50, 0.95));
             pointer-events: none;
-        }
-
-        [data-theme="light"] .moment-content.collapsed::after {
-            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.95));
         }
 
         .expand-toggle-btn {
             background: none;
             border: none;
-            color: #667eea;
+            color: #a8b2ff;
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
-            padding: 6px 0;
+            padding: 4px 0;
             transition: all 0.3s ease;
         }
 
         .expand-toggle-btn:hover {
-            color: #a8b2ff;
-            text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+            color: #c8d2ff;
         }
 
         .moment-images {
             display: grid;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-radius: 15px;
+            gap: 8px;
+            margin-bottom: 16px;
+            border-radius: 12px;
             overflow: hidden;
         }
 
@@ -925,55 +674,45 @@
 
         .moment-images img {
             width: 100%;
-            height: 140px;
+            height: 120px;
             object-fit: cover;
-            transition: all 0.3s ease;
-            border-radius: 10px;
+            transition: transform 0.3s ease;
+            border-radius: 8px;
         }
 
         .moment-images.single img {
-            height: 240px;
+            height: 200px;
         }
 
         .moment-images img:hover {
             transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(0, 78, 146, 0.4);
         }
 
         .moment-actions {
             display: flex;
             align-items: center;
-            gap: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(100, 150, 255, 0.2);
-        }
-
-        [data-theme="light"] .moment-actions {
-            border-top-color: rgba(0, 0, 0, 0.06);
+            gap: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .action-btn {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: none;
             border: none;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
             font-size: 14px;
             transition: all 0.3s ease;
-            padding: 8px 12px;
-            border-radius: 20px;
+            padding: 6px 8px;
+            border-radius: 8px;
         }
 
         .action-btn:hover {
             background: rgba(102, 126, 234, 0.2);
-            color: #667eea;
-            transform: translateY(-2px);
-        }
-
-        [data-theme="light"] .action-btn {
-            color: #666;
+            color: #a8b2ff;
         }
 
         .action-count {
@@ -981,60 +720,50 @@
             font-weight: 500;
         }
 
-        /* ==================== 分页控件星空主题 ==================== */
+        /* ==================== 分页控件优化 ==================== */
         .pagination-container {
-            background: rgba(0, 4, 40, 0.6);
-            backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(100, 150, 255, 0.2);
+            background: rgba(20, 20, 50, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 25px;
-        }
-
-        [data-theme="light"] .pagination-container {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(0, 0, 0, 0.06);
+            gap: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         .pagination-info {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        [data-theme="light"] .pagination-info {
-            color: #666;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .pagination-controls {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .pagination-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            border: 1px solid rgba(100, 150, 255, 0.3);
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .pagination-btn:hover:not(:disabled) {
-            border-color: rgba(100, 150, 255, 0.6);
-            color: #fff;
-            background: rgba(100, 150, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(100, 150, 255, 0.3);
+            border-color: #667eea;
+            color: #a8b2ff;
+            background: rgba(102, 126, 234, 0.2);
         }
 
         .pagination-btn:disabled {
@@ -1042,27 +771,21 @@
             cursor: not-allowed;
         }
 
-        [data-theme="light"] .pagination-btn {
-            background: white;
-            border-color: rgba(0, 0, 0, 0.15);
-            color: #666;
-        }
-
         .page-numbers {
             display: flex;
-            gap: 6px;
+            gap: 4px;
         }
 
         .page-number {
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 40px;
-            height: 40px;
-            border: 1px solid rgba(100, 150, 255, 0.3);
+            min-width: 36px;
+            height: 36px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 14px;
@@ -1070,80 +793,52 @@
         }
 
         .page-number:hover {
-            border-color: rgba(100, 150, 255, 0.6);
-            color: #fff;
-            background: rgba(100, 150, 255, 0.2);
-            transform: translateY(-2px);
+            border-color: #667eea;
+            color: #a8b2ff;
+            background: rgba(102, 126, 234, 0.2);
         }
 
         .page-number.active {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.6), rgba(118, 75, 162, 0.6));
-            border-color: transparent;
+            background: #667eea;
+            border-color: #667eea;
             color: white;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        [data-theme="light"] .page-number {
-            background: white;
-            border-color: rgba(0, 0, 0, 0.15);
-            color: #666;
         }
 
         .pagination-settings {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .pagination-settings label {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.7);
             font-weight: 500;
         }
 
-        [data-theme="light"] .pagination-settings label {
-            color: #666;
-        }
-
         .pagination-settings select {
-            padding: 8px 14px;
-            border: 1px solid rgba(100, 150, 255, 0.3);
-            border-radius: 20px;
+            padding: 6px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
             font-size: 14px;
-            color: #fff;
+            color: rgba(255, 255, 255, 0.9);
             cursor: pointer;
         }
 
-        [data-theme="light"] .pagination-settings select {
-            background: white;
-            border-color: rgba(0, 0, 0, 0.15);
-            color: #333;
+        .pagination-settings select option {
+            background: #1a1a3e;
+            color: #fff;
         }
 
-        /* ==================== 底部星空主题 ==================== */
+        /* ==================== 底部优化 ==================== */
         .social-footer {
-            background: rgba(0, 4, 40, 0.8);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid rgba(100, 150, 255, 0.2);
-            padding: 40px 0;
-            margin-top: 80px;
-            position: relative;
-        }
-
-        .social-footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(100, 150, 255, 0.6), transparent);
-        }
-
-        [data-theme="light"] .social-footer {
-            background: rgba(255, 255, 255, 0.9);
-            border-top-color: rgba(0, 0, 0, 0.06);
+            background: rgba(20, 20, 50, 0.9);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 0;
+            margin-top: 60px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .social-footer .container {
@@ -1151,38 +846,39 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 25px;
+            gap: 20px;
         }
 
         .social-links {
             display: flex;
-            gap: 20px;
+            gap: 16px;
         }
 
         .social-link {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 45px;
-            height: 45px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             transition: all 0.3s ease;
-            border: 1px solid rgba(100, 150, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.1);
         }
 
         .social-link:hover {
-            transform: translateY(-4px) rotate(10deg);
-            box-shadow: 0 8px 25px rgba(0, 78, 146, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            border-color: #667eea;
+            color: #a8b2ff;
         }
 
         .social-link.wechat:hover {
             background: #07c160;
             color: white;
             border-color: #07c160;
-            box-shadow: 0 8px 25px rgba(7, 193, 96, 0.4);
         }
 
         .social-link.github:hover {
@@ -1197,26 +893,16 @@
             border-color: #000;
         }
 
-        [data-theme="light"] .social-link {
-            color: #666;
-            border-color: rgba(0, 0, 0, 0.1);
-            background: white;
-        }
-
         .copyright {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        [data-theme="light"] .copyright {
-            color: #666;
+            color: rgba(255, 255, 255, 0.6);
         }
 
         /* ==================== 列表视图样式 ==================== */
         .moments-grid.list-view {
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
         }
 
         .moments-grid.list-view .moment-card {
@@ -1227,7 +913,7 @@
         /* ==================== 响应式设计 ==================== */
         @media (max-width: 1200px) {
             .moments-grid {
-                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             }
         }
 
@@ -1241,7 +927,7 @@
             }
             
             .controls {
-                gap: 10px;
+                gap: 8px;
             }
             
             .nav-button-base span:not(.button-icon) {
@@ -1259,13 +945,13 @@
             }
             
             body {
-                padding-top: 70px;
+                padding-top: 60px;
             }
             
             .sort-controls {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 15px;
+                gap: 12px;
             }
             
             .sort-group {
@@ -1278,12 +964,12 @@
             
             .moments-grid {
                 grid-template-columns: 1fr;
-                gap: 20px;
+                gap: 16px;
             }
             
             .stat-cards {
                 grid-template-columns: 1fr;
-                gap: 15px;
+                gap: 12px;
             }
             
             .pagination-container {
@@ -1306,26 +992,26 @@
 
         @media (max-width: 576px) {
             .function-buttons {
-                gap: 6px;
+                gap: 4px;
             }
             
             .nav-button-base {
-                padding: 8px 10px;
+                padding: 6px 8px;
             }
             
             .button-icon {
-                width: 18px;
-                height: 18px;
+                width: 16px;
+                height: 16px;
             }
             
             .moment-card {
-                padding: 20px;
+                padding: 16px;
             }
             
             .moment-meta {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 10px;
+                gap: 8px;
             }
         }
 
@@ -1355,9 +1041,9 @@
         .skeleton {
             background: linear-gradient(
                 90deg,
-                rgba(100, 150, 255, 0.1) 25%,
-                rgba(100, 150, 255, 0.2) 50%,
-                rgba(100, 150, 255, 0.1) 75%
+                rgba(255, 255, 255, 0.1) 25%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.1) 75%
             );
             background-size: 200% 100%;
             animation: loading 1.5s ease-in-out infinite;
@@ -1369,22 +1055,28 @@
             100% { background-position: -200% 0; }
         }
 
-        [data-theme="light"] .skeleton {
+        /* 深色模式适配（保持星空主题） */
+        [data-theme="light"] body::before {
             background: linear-gradient(
-                90deg,
-                #f0f0f0 25%,
-                #e0e0e0 50%,
-                #f0f0f0 75%
+                135deg,
+                rgba(10, 10, 35, 0.6) 0%,
+                rgba(25, 25, 60, 0.5) 50%,
+                rgba(15, 15, 45, 0.6) 100%
             );
+        }
+
+        /* 排序动画 */
+        .sort-nav.sorting {
+            animation: pulse 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
     </style>
 </head>
 <body data-page="moments">
-    <!-- 流星效果 -->
-    <div class="meteor" style="top: 10%; left: 80%; animation-delay: 0s;"></div>
-    <div class="meteor" style="top: 30%; left: 20%; animation-delay: 1s;"></div>
-    <div class="meteor" style="top: 60%; left: 60%; animation-delay: 2s;"></div>
-    
     <!-- ==================== 顶部导航栏 ==================== -->
     <header class="header" role="banner">
         <div class="container">
@@ -1500,53 +1192,23 @@
         <div class="container">
             <div class="category-scroll" role="tablist">
                 <button class="category-btn active" data-category="all" role="tab" aria-selected="true">
-                    <i class="fas fa-globe" style="margin-right: 6px;"></i>全部
+                    全部
                 </button>
-                <button class="category-btn" data-category="生活日常" role="tab">
-                    <i class="fas fa-home" style="margin-right: 6px;"></i>生活日常
-                </button>
-                <button class="category-btn" data-category="美食分享" role="tab">
-                    <i class="fas fa-utensils" style="margin-right: 6px;"></i>美食分享
-                </button>
-                <button class="category-btn" data-category="旅行见闻" role="tab">
-                    <i class="fas fa-plane" style="margin-right: 6px;"></i>旅行见闻
-                </button>
-                <button class="category-btn" data-category="工作相关" role="tab">
-                    <i class="fas fa-briefcase" style="margin-right: 6px;"></i>工作相关
-                </button>
-                <button class="category-btn" data-category="学习成长" role="tab">
-                    <i class="fas fa-book" style="margin-right: 6px;"></i>学习成长
-                </button>
-                <button class="category-btn" data-category="健身运动" role="tab">
-                    <i class="fas fa-dumbbell" style="margin-right: 6px;"></i>健身运动
-                </button>
-                <button class="category-btn" data-category="时尚穿搭" role="tab">
-                    <i class="fas fa-tshirt" style="margin-right: 6px;"></i>时尚穿搭
-                </button>
-                <button class="category-btn" data-category="艺术文化" role="tab">
-                    <i class="fas fa-palette" style="margin-right: 6px;"></i>艺术文化
-                </button>
-                <button class="category-btn" data-category="情感表达" role="tab">
-                    <i class="fas fa-heart" style="margin-right: 6px;"></i>情感表达
-                </button>
-                <button class="category-btn" data-category="节日纪念" role="tab">
-                    <i class="fas fa-gift" style="margin-right: 6px;"></i>节日纪念
-                </button>
-                <button class="category-btn" data-category="公益环保" role="tab">
-                    <i class="fas fa-leaf" style="margin-right: 6px;"></i>公益环保
-                </button>
-                <button class="category-btn" data-category="科技数码" role="tab">
-                    <i class="fas fa-microchip" style="margin-right: 6px;"></i>科技数码
-                </button>
-                <button class="category-btn" data-category="财经理财" role="tab">
-                    <i class="fas fa-coins" style="margin-right: 6px;"></i>财经理财
-                </button>
-                <button class="category-btn" data-category="幽默段子" role="tab">
-                    <i class="fas fa-laugh" style="margin-right: 6px;"></i>幽默段子
-                </button>
-                <button class="category-btn" data-category="问答互动" role="tab">
-                    <i class="fas fa-comments" style="margin-right: 6px;"></i>问答互动
-                </button>
+                <button class="category-btn" data-category="生活日常" role="tab">生活日常</button>
+                <button class="category-btn" data-category="美食分享" role="tab">美食分享</button>
+                <button class="category-btn" data-category="旅行见闻" role="tab">旅行见闻</button>
+                <button class="category-btn" data-category="工作相关" role="tab">工作相关</button>
+                <button class="category-btn" data-category="学习成长" role="tab">学习成长</button>
+                <button class="category-btn" data-category="健身运动" role="tab">健身运动</button>
+                <button class="category-btn" data-category="时尚穿搭" role="tab">时尚穿搭</button>
+                <button class="category-btn" data-category="艺术文化" role="tab">艺术文化</button>
+                <button class="category-btn" data-category="情感表达" role="tab">情感表达</button>
+                <button class="category-btn" data-category="节日纪念" role="tab">节日纪念</button>
+                <button class="category-btn" data-category="公益环保" role="tab">公益环保</button>
+                <button class="category-btn" data-category="科技数码" role="tab">科技数码</button>
+                <button class="category-btn" data-category="财经理财" role="tab">财经理财</button>
+                <button class="category-btn" data-category="幽默段子" role="tab">幽默段子</button>
+                <button class="category-btn" data-category="问答互动" role="tab">问答互动</button>
             </div>
         </div>
     </nav>
@@ -1556,22 +1218,12 @@
         <div class="container">
             <div class="sort-controls">
                 <div class="sort-group">
-                    <label for="sortBy" class="sort-label">
-                        <i class="fas fa-sort" style="margin-right: 6px;"></i>排序方式：
-                    </label>
+                    <label for="sortBy" class="sort-label">排序方式：</label>
                     <select id="sortBy" class="sort-select" aria-label="选择排序方式">
-                        <option value="date-desc">
-                            <i class="fas fa-clock"></i>最新发布
-                        </option>
-                        <option value="date-asc">
-                            <i class="fas fa-history"></i>最早发布
-                        </option>
-                        <option value="value-desc">
-                            <i class="fas fa-star"></i>价值最高
-                        </option>
-                        <option value="value-asc">
-                            <i class="fas fa-star-half-alt"></i>价值最低
-                        </option>
+                        <option value="date-desc">最新发布</option>
+                        <option value="date-asc">最早发布</option>
+                        <option value="value-desc">价值最高</option>
+                        <option value="value-asc">价值最低</option>
                     </select>
                 </div>
                 <div class="view-options">
@@ -1594,21 +1246,15 @@
                 <div class="stat-cards">
                     <article class="stat-card">
                         <div class="stat-number" id="totalMoments" aria-live="polite">0</div>
-                        <div class="stat-label">
-                            <i class="fas fa-satellite" style="margin-right: 6px;"></i>朋友圈总数
-                        </div>
+                        <div class="stat-label">朋友圈总数</div>
                     </article>
                     <article class="stat-card highlight">
                         <div class="stat-number" id="highValueMoments" aria-live="polite">0</div>
-                        <div class="stat-label">
-                            <i class="fas fa-crown" style="margin-right: 6px;"></i>高价值内容
-                        </div>
+                        <div class="stat-label">高价值内容</div>
                     </article>
                     <article class="stat-card">
                         <div class="stat-number" id="todayMoments" aria-live="polite">0</div>
-                        <div class="stat-label">
-                            <i class="fas fa-sun" style="margin-right: 6px;"></i>今日发布
-                        </div>
+                        <div class="stat-label">今日发布</div>
                     </article>
                 </div>
             </section>
@@ -1628,7 +1274,6 @@
             <nav class="pagination-container" role="navigation" aria-label="分页导航">
                 <div class="pagination-info">
                     <span id="paginationText" aria-live="polite">
-                        <i class="fas fa-info-circle" style="margin-right: 6px;"></i>
                         显示 <strong id="showingStart">0</strong> - <strong id="showingEnd">0</strong>
                         共 <strong id="totalItems">0</strong> 条
                     </span>
@@ -1667,9 +1312,7 @@
                     </button>
                 </div>
                 <div class="pagination-settings">
-                    <label for="itemsPerPage">
-                        <i class="fas fa-eye" style="margin-right: 6px;"></i>每页显示：
-                    </label>
+                    <label for="itemsPerPage">每页显示：</label>
                     <select id="itemsPerPage" aria-label="选择每页显示条数">
                         <option value="6">6条</option>
                         <option value="12" selected>12条</option>
@@ -1715,10 +1358,7 @@
             </nav>
             <!-- 版权信息 -->
             <p class="copyright">
-                <small>
-                    <i class="fas fa-rocket" style="margin-right: 6px;"></i>
-                    © 2025 狂客·银河 版权所有 | 探索无限星空
-                </small>
+                <small>© 2025 狂客·银河 版权所有</small>
             </p>
         </div>
     </footer>
@@ -1734,42 +1374,10 @@
         let currentPage = 1;
         let currentFilteredMoments = [];
 
-        // ==================== 主题切换功能 ====================
-        function initThemeToggle() {
-            const themeToggle = document.getElementById('themeToggle');
-            const body = document.body;
-            const icon = themeToggle.querySelector('i');
-            
-            // 从localStorage恢复主题设置
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            if (savedTheme === 'light') {
-                body.setAttribute('data-theme', 'light');
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            }
-            
-            themeToggle.addEventListener('click', () => {
-                const currentTheme = body.getAttribute('data-theme');
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                
-                body.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                
-                // 切换图标
-                if (newTheme === 'light') {
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                } else {
-                    icon.classList.remove('fa-sun');
-                    icon.classList.add('fa-moon');
-                }
-            });
-        }
-
         // ==================== 初始化功能 ====================
         document.addEventListener('DOMContentLoaded', function() {
-            // 初始化主题切换
-            initThemeToggle();
+            // 初始化主题
+            initializeTheme();
             
             // 初始化事件监听器
             initializeSortControls();
@@ -1784,6 +1392,33 @@
                 initializePage();
             }, 100);
         });
+
+        function initializeTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i>';
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                if (newTheme === 'light') {
+                    themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
+                } else {
+                    themeToggle.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i>';
+                }
+            });
+        }
 
         function initializePage() {
             // 确保数据已加载
@@ -2005,16 +1640,14 @@
             // 价值标签
             const valueLabel = moment.value ? `
                 <span class="value-badge" style="background: ${getValueColor(moment.value)}">
-                    <i class="fas fa-star" style="margin-right: 4px;"></i>价值 ${moment.value}
+                    价值 ${moment.value}
                 </span>
             ` : '';
 
             card.innerHTML = `
                 <div class="moment-header">
                     <div class="moment-meta">
-                        <span class="moment-date">
-                            <i class="far fa-clock" style="margin-right: 4px;"></i>${formattedDate}
-                        </span>
+                        <span class="moment-date">${formattedDate}</span>
                         <span class="moment-category">${moment.category || '未分类'}</span>
                         ${valueLabel}
                     </div>
@@ -2141,12 +1774,12 @@
 
         function getSortDescription(sortMethod) {
             const descriptions = {
-                'date-desc': '✨ 按最新发布时间排序',
-                'date-asc': '🕐 按最早发布时间排序',
-                'value-desc': '⭐ 按内容价值从高到低排序',
-                'value-asc': '💫 按内容价值从低到高排序'
+                'date-desc': '按最新发布时间排序',
+                'date-asc': '按最早发布时间排序',
+                'value-desc': '按内容价值从高到低排序',
+                'value-asc': '按内容价值从低到高排序'
             };
-            return descriptions[sortMethod] || '✨ 按最新发布时间排序';
+            return descriptions[sortMethod] || '按最新发布时间排序';
         }
 
         // ==================== 数字动画 ====================
