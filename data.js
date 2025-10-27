@@ -1187,7 +1187,6 @@ function getMomentsStats(moments) {
  * @type {Array<Object>}
  */
 let momentsData = [
-     let momentsData = [
   {
     id: 30,
     content: '这个时代最精妙的骗局是让大多数人相信自己没在赌桌上，当所有人都在被动参与资产轮盘的时候，清醒的投机者至少知道自己在冒险在赌什么，而蒙眼的群众却把枷锁当作护身，命运当作确定性。',
