@@ -88,124 +88,88 @@
             box-sizing: border-box;
         }
         /* ==================== 顶部导航栏优化 ==================== */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background: rgba(15, 15, 45, 0.95);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 1000;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        .header .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 100%;
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-        .logo {
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
-            text-decoration: none;
-            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
-        }
-        .primary-nav {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .primary-nav a {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .primary-nav a:hover {
-            background: rgba(102, 126, 234, 0.2);
-            color: #a8b2ff;
-            transform: translateY(-2px);
-        }
-        .controls {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .search-box {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .search-box i {
-            position: absolute;
-            left: 12px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-        }
-        .search-box input {
-            padding: 8px 12px 8px 36px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            font-size: 14px;
-            width: 200px;
-            transition: all 0.3s ease;
-            color: rgba(255, 255, 255, 0.9);
-        }
-        .search-box input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        .search-box input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-            width: 250px;
-            background: rgba(255, 255, 255, 0.15);
-        }
-        .theme-toggle {
-            padding: 8px;
-            border: none;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.8);
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-size: 16px;
-        }
-        .theme-toggle:hover {
-            background: rgba(102, 126, 234, 0.2);
-            color: #a8b2ff;
-        }
-        /* ==================== 功能按钮样式优化 ==================== */
-        .function-buttons {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+       /* ==================== 顶部导航栏重新布局 ==================== */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(15, 15, 45, 0.95);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+}
+
+.primary-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+    justify-content: center;
+}
+
+.primary-nav a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.primary-nav a:hover {
+    background: rgba(102, 126, 234, 0.2);
+    color: #a8b2ff;
+    transform: translateY(-2px);
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.function-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 其他样式保持不变 */
         .nav-button-base {
             display: inline-flex;
             align-items: center;
@@ -1059,114 +1023,114 @@
 </head>
 <body data-page="moments">
     <!-- ==================== 顶部导航栏 ==================== -->
-    <header class="header" role="banner">
-        <div class="container">
-            <div class="header-left">
-                <!-- Logo -->
-                <h1 class="logo">
-                    <a href="index.html" aria-label="返回首页">狂客·银河</a>
-                </h1>
-                <!-- 导航链接 -->
-                <nav class="primary-nav" role="navigation" aria-label="主导航">
-                    <!-- 成功日记 -->
-                    <a class="success-link" href="success.html" title="查看成功日记">
-                        <span class="success-icon" aria-hidden="true">
-                            <i class="fas fa-meteor"></i>
-                        </span>
-                        <span class="success-text">成功日记</span>
-                    </a>
-                    <!-- 星空 -->
-                    <a class="sky-link" href="reading.html" title="探索星空">
-                        <span class="sky-icon" aria-hidden="true">
-                            <i class="fas fa-star"></i>
-                        </span>
-                        <span class="sky-text">星空</span>
-                    </a>
-                    <!-- 冬之街小店 -->
-                    <a class="exam-link"
-                       href="https://kuangketongxue.github.io/tongxuekuangke/"
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       title="访问冬之街小店">
-                        <span class="exam-icon" aria-hidden="true">
-                            <i class="fas fa-graduation-cap"></i>
-                        </span>
-                        <span class="exam-text">冬之街小店</span>
-                    </a>
-                    <!-- 视频矩阵 -->
-                    <a class="video-link" href="video.html" title="观看视频内容">
-                        <span class="video-icon" aria-hidden="true">
-                            <i class="fas fa-video"></i>
-                        </span>
-                        <span class="video-text">视频矩阵</span>
-                    </a>
-                </nav>
-            </div>
-            <!-- 右侧控制区 -->
-            <div class="controls">
-                <!-- 功能按钮组 -->
-                <div class="function-buttons">
-                    <!-- AI前沿按钮 -->
-                    <a href="ai.html"
-                       class="nav-button-base ai-nav-button"
-                       title="探索AI赋能工具">
-                        <span class="button-icon">
-                            <i class="fas fa-brain"></i>
-                        </span>
-                        <span>AI赋能</span>
-                    </a>
-                    <!-- 健康提醒按钮 -->
-                    <a href="health.html"
-                       class="nav-button-base health-nav-button"
-                       title="查看健康提醒">
-                        <span class="button-icon">
-                            <i class="fas fa-heartbeat"></i>
-                        </span>
-                        <span>健康提醒</span>
-                    </a>
-                    <!-- 美食聚餐选择按钮 -->
-                    <a href="https://kuangketongxue.github.io/meal-planner/"
-                       class="nav-button-base meal-nav-button"
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       title="美食聚餐计划">
-                        <span class="button-icon">
-                            <i class="fas fa-utensils"></i>
-                        </span>
-                        <span>美食聚餐</span>
-                    </a>
-                    <!-- 加密货币交易分析系统按钮 -->
-                    <a href="CryptoVision.html"
-                       class="nav-button-base crypto-nav-button"
-                       title="进入加密货币交易分析系统">
-                        <span class="button-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </span>
-                        <span>加密货币分析</span>
-                    </a>
-                </div>
-                <!-- 搜索框 -->
-                <div class="search-box" role="search">
-                    <label for="searchInput" class="sr-only">搜索内容</label>
-                    <i class="fas fa-search" aria-hidden="true"></i>
-                    <input
-                        type="search"
-                        id="searchInput"
-                        placeholder="搜索银河中..."
-                        autocomplete="off"
-                        aria-label="搜索朋友圈内容">
-                </div>
-                <!-- 主题切换 -->
-                <button
-                    id="themeToggle"
-                    class="theme-toggle"
-                    aria-label="切换深色/浅色主题"
-                    title="切换主题">
-                    <i class="fas fa-moon" aria-hidden="true"></i>
-                </button>
-            </div>
+    <!-- 修改后的导航结构 -->
+<header class="header" role="banner">
+    <div class="container">
+        <!-- 左侧图标区域 -->
+        <div class="header-left">
+            <h1 class="logo">
+                <a href="index.html" aria-label="返回首页">狂客·银河</a>
+            </h1>
         </div>
-    </header>
+        
+        <!-- 中央导航区域 -->
+        <nav class="primary-nav" role="navigation" aria-label="主导航">
+            <!-- 成功日记 -->
+            <a class="success-link" href="success.html" title="查看成功日记">
+                <span class="success-icon" aria-hidden="true">
+                    <i class="fas fa-meteor"></i>
+                </span>
+                <span class="success-text">成功日记</span>
+            </a>
+            <!-- 星空 -->
+            <a class="sky-link" href="reading.html" title="探索星空">
+                <span class="sky-icon" aria-hidden="true">
+                    <i class="fas fa-star"></i>
+                </span>
+                <span class="sky-text">星空</span>
+            </a>
+            <!-- 冬之街小店 -->
+            <a class="exam-link"
+               href="https://kuangketongxue.github.io/tongxuekuangke/"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="访问冬之街小店">
+                <span class="exam-icon" aria-hidden="true">
+                    <i class="fas fa-graduation-cap"></i>
+                </span>
+                <span class="exam-text">冬之街小店</span>
+            </a>
+            <!-- 视频矩阵 -->
+            <a class="video-link" href="video.html" title="观看视频内容">
+                <span class="video-icon" aria-hidden="true">
+                    <i class="fas fa-video"></i>
+                </span>
+                <span class="video-text">视频矩阵</span>
+            </a>
+        </nav>
+        
+        <!-- 右侧功能按钮区域 -->
+        <div class="controls">
+            <!-- AI前沿按钮 -->
+            <a href="ai.html"
+               class="nav-button-base ai-nav-button"
+               title="探索AI赋能工具">
+                <span class="button-icon">
+                    <i class="fas fa-brain"></i>
+                </span>
+                <span>AI赋能</span>
+            </a>
+            <!-- 健康提醒按钮 -->
+            <a href="health.html"
+               class="nav-button-base health-nav-button"
+               title="查看健康提醒">
+                <span class="button-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </span>
+                <span>健康提醒</span>
+            </a>
+            <!-- 美食聚餐选择按钮 -->
+            <a href="https://kuangketongxue.github.io/meal-planner/"
+               class="nav-button-base meal-nav-button"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="美食聚餐计划">
+                <span class="button-icon">
+                    <i class="fas fa-utensils"></i>
+                </span>
+                <span>美食聚餐</span>
+            </a>
+            <!-- 加密货币交易分析系统按钮 -->
+            <a href="CryptoVision.html"
+               class="nav-button-base crypto-nav-button"
+               title="进入加密货币交易分析系统">
+                <span class="button-icon">
+                    <i class="fas fa-chart-line"></i>
+                </span>
+                <span>加密货币分析</span>
+            </a>
+            <!-- 搜索框 -->
+            <div class="search-box" role="search">
+                <label for="searchInput" class="sr-only">搜索内容</label>
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="搜索银河中..."
+                    autocomplete="off"
+                    aria-label="搜索朋友圈内容">
+            </div>
+            <!-- 主题切换 -->
+            <button
+                id="themeToggle"
+                class="theme-toggle"
+                aria-label="切换深色/浅色主题"
+                title="切换主题">
+                <i class="fas fa-moon" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</header>
     <!-- ==================== 分类导航 ==================== -->
     <nav class="category-nav" role="navigation" aria-label="内容分类">
         <div class="container">
