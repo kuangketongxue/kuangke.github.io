@@ -1263,7 +1263,7 @@ let momentsData = [
     value: 5,
     category: '问答互动',
     date: '2025-10-19T13:05:00+08:00',
-    images: ['images/Elon-Musk-launches-rocket-for-the-third.jpg'],
+    images: [],
     likes: 0,
     comments: []
   },
