@@ -2128,3 +2128,196 @@ body.light-mode .digest-col--rating {
         transform: none;
     }
 }
+/* ==================== 功能按钮容器响应式优化 ==================== */
+/* 控制区布局优化 */
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* 功能按钮容器 */
+.function-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+/* 大屏幕 - 4个按钮水平排列 */
+@media (min-width: 1200px) {
+    .function-buttons {
+        gap: 10px;
+    }
+    .nav-button-base {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+}
+
+/* 中等屏幕 - 可能需要调整间距 */
+@media (max-width: 1199px) and (min-width: 993px) {
+    .function-buttons {
+        gap: 6px;
+    }
+    .nav-button-base {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    .button-icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 6px;
+    }
+}
+
+/* 平板设备 - 4个按钮可能需要换行 */
+@media (max-width: 992px) {
+    .controls {
+        gap: 8px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .function-buttons {
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+        order: 2;
+    }
+    
+    .search-box {
+        order: 1;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    
+    .theme-toggle {
+        order: 3;
+        align-self: center;
+    }
+    
+    .nav-button-base {
+        padding: 8px 14px;
+        font-size: 13px;
+        min-width: 120px;
+    }
+    
+    .button-icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 6px;
+    }
+}
+
+/* 小屏幕设备 - 按钮换行显示 */
+@media (max-width: 768px) {
+    .controls {
+        gap: 8px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .function-buttons {
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+        order: 2;
+    }
+    
+    .nav-button-base {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-width: 100px;
+        flex: 0 0 calc(50% - 4px);
+        max-width: calc(50% - 4px);
+    }
+    
+    .nav-button-base span:not(.button-icon) {
+        display: inline; /* 小屏保持显示文字 */
+    }
+    
+    .button-icon {
+        margin-right: 4px;
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* 超小屏幕 - 垂直排列 */
+@media (max-width: 480px) {
+    .nav-button-base {
+        flex: 1 1 100%;
+        max-width: 100%;
+        min-width: auto;
+        padding: 10px 12px;
+    }
+    
+    .function-buttons {
+        gap: 6px;
+    }
+    
+    .nav-button-base span:not(.button-icon) {
+        display: inline;
+        font-size: 13px;
+    }
+}
+
+/* 搜索框响应式优化 */
+.search-box {
+    flex-shrink: 1;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+@media (max-width: 992px) {
+    .search-box {
+        max-width: 250px;
+        margin: 0 auto 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-box {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-box {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+/* 主题切换按钮优化 */
+.theme-toggle {
+    flex-shrink: 0;
+}
+
+@media (max-width: 992px) {
+    .theme-toggle {
+        margin-top: 8px;
+    }
+}
+
+/* 按钮hover状态优化 */
+.nav-button-base:hover {
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .nav-button-base:hover {
+        transform: scale(1.02);
+    }
+}
+
+/* 防止按钮文字换行 */
+.nav-button-base {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
