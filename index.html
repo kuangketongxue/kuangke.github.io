@@ -1335,44 +1335,130 @@
                 initializePage();
             }, 100);
         });
-       function initializeTheme() {
+      function initializeTheme() {
     const themeToggle = document.getElementById('themeToggle');
-    let backgroundOnlyMode = false; // 新增背景图模式状态
+    let isPureBackgroundMode = localStorage.getItem('pureBackgroundMode') === 'true';
     
-    // 保存原始主题切换逻辑
+    // 初始化按钮图标
+    updateThemeToggleIcon(isPureBackgroundMode);
+    
+    // 如果之前是纯背景模式，则应用该模式
+    if (isPureBackgroundMode) {
+        applyPureBackgroundMode(true);
+    }
+    
+    // 点击事件：切换纯背景模式
     themeToggle.addEventListener('click', function() {
-        if (!backgroundOnlyMode) {
-            // 切换到只显示背景图模式
-            backgroundOnlyMode = true;
-            document.body.classList.add('background-only');
-            themeToggle.innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i>';
-            themeToggle.title = '显示全部内容';
-            
-            // 隐藏所有内容元素
-            hideAllContent();
-        } else {
-            // 切换回正常显示模式
-            backgroundOnlyMode = false;
-            document.body.classList.remove('background-only');
-            
-            // 恢复原来的主题切换逻辑
-            const currentTheme = document.body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            if (newTheme === 'light') {
-                themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
-                themeToggle.title = '切换主题';
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i>';
-                themeToggle.title = '切换主题';
-            }
-            
-            // 显示所有内容
-            showAllContent();
-        }
+        isPureBackgroundMode = !isPureBackgroundMode;
+        
+        // 保存状态
+        localStorage.setItem('pureBackgroundMode', isPureBackgroundMode);
+        
+        // 更新图标
+        updateThemeToggleIcon(isPureBackgroundMode);
+        
+        // 应用或取消纯背景模式
+        applyPureBackgroundMode(isPureBackgroundMode);
     });
+    
+    // 更新按钮图标的辅助函数
+    function updateThemeToggleIcon(isPure) {
+        if (isPure) {
+            themeToggle.innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i>';
+            themeToggle.setAttribute('aria-label', '退出纯背景模式');
+            themeToggle.setAttribute('title', '显示内容');
+        } else {
+            themeToggle.innerHTML = '<i class="fas fa-image" aria-hidden="true"></i>';
+            themeToggle.setAttribute('aria-label', '进入纯背景模式');
+            themeToggle.setAttribute('title', '纯背景欣赏');
+        }
+    }
+    
+    // 应用或取消纯背景模式的辅助函数
+    function applyPureBackgroundMode(enable) {
+        const elementsToHide = [
+            '.header',
+            '.category-nav',
+            '.sort-nav',
+            '.main-content',
+            '.social-footer'
+        ];
+        
+        elementsToHide.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                if (enable) {
+                    element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(-20px)';
+                    element.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        element.style.display = 'none';
+                    }, 500);
+                } else {
+                    element.style.display = '';
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                        element.style.pointerEvents = '';
+                    }, 10);
+                }
+            }
+        });
+        
+        // 特殊处理：保持主题切换按钮可见
+        if (enable) {
+            themeToggle.style.position = 'fixed';
+            themeToggle.style.top = '20px';
+            themeToggle.style.right = '20px';
+            themeToggle.style.zIndex = '99999';
+            themeToggle.style.opacity = '1';
+            themeToggle.style.transform = 'scale(1.2)';
+            themeToggle.style.background = 'rgba(102, 126, 234, 0.8)';
+            themeToggle.style.boxShadow = '0 4px 20px rgba(102, 126, 234, 0.6)';
+        } else {
+            themeToggle.style.transform = 'scale(1)';
+            themeToggle.style.background = '';
+            themeToggle.style.boxShadow = '';
+        }
+        
+        // 显示提示信息
+        if (enable) {
+            showBackgroundNotification('纯背景欣赏模式 · 再次点击恢复');
+        } else {
+            showBackgroundNotification('已恢复正常模式');
+        }
+    }
+    
+    // 纯背景模式专用通知
+    function showBackgroundNotification(message) {
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 50, 0.9);
+            backdrop-filter: blur(15px);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 100000;
+            font-size: 16px;
+            font-weight: 500;
+            animation: fadeInOut 2s ease;
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 2000);
+    }
 }
 
 // 新增：隐藏所有内容的函数
