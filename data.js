@@ -1288,7 +1288,7 @@ let momentsData = [
     value: 8,
     category: '问答互动',
     date: '2025-10-19T13:05:00+08:00',
-    images: [],
+    images: ['images/msk.jpg'],
     likes: 0,
     comments: []
   },
