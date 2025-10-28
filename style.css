@@ -2321,3 +2321,27 @@ body.light-mode .digest-col--rating {
     text-overflow: ellipsis;
     overflow: hidden;
 }
+/* 背景图模式样式 */
+.background-only {
+    overflow: hidden;
+}
+
+.background-only body::before {
+    opacity: 1 !important;
+}
+
+.background-only body::after {
+    opacity: 1 !important;
+    animation-duration: 60s;
+}
+
+/* 过渡动画 */
+.header, .category-nav, .sort-nav, .main-content, .social-footer {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.hidden-content {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+}
