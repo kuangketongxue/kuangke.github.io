@@ -102,7 +102,6 @@
     transition: all 0.3s ease;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
-
 .container {
     max-width: 1400px;
     margin: 0 auto;
@@ -112,12 +111,10 @@
     justify-content: space-between;
     height: 100%;
 }
-
 .header-left {
     display: flex;
     align-items: center;
 }
-
 .logo {
     font-size: 20px;
     font-weight: 700;
@@ -129,7 +126,6 @@
     background-clip: text;
     text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
 }
-
 .primary-nav {
     display: flex;
     align-items: center;
@@ -137,7 +133,6 @@
     flex: 1;
     justify-content: center;
 }
-
 .primary-nav a {
     display: flex;
     align-items: center;
@@ -150,25 +145,21 @@
     font-size: 14px;
     font-weight: 500;
 }
-
 .primary-nav a:hover {
     background: rgba(102, 126, 234, 0.2);
     color: #a8b2ff;
     transform: translateY(-2px);
 }
-
 .controls {
     display: flex;
     align-items: center;
     gap: 8px;
 }
-
 .function-buttons {
     display: flex;
     align-items: center;
     gap: 8px;
 }
-
 /* 其他样式保持不变 */
         .nav-button-base {
             display: inline-flex;
@@ -1032,7 +1023,6 @@
                 <a href="index.html" aria-label="返回首页">狂客·银河</a>
             </h1>
         </div>
-        
         <!-- 中央导航区域 -->
         <nav class="primary-nav" role="navigation" aria-label="主导航">
             <!-- 成功日记 -->
@@ -1068,7 +1058,6 @@
                 <span class="video-text">视频矩阵</span>
             </a>
         </nav>
-        
         <!-- 右侧功能按钮区域 -->
         <div class="controls">
             <!-- AI前沿按钮 -->
@@ -1754,6 +1743,16 @@
             const rawDate = new Date(moment.date);
             const hasValidDate = rawDate instanceof Date && !isNaN(rawDate);
             const formattedDate = hasValidDate ? formatDate(rawDate) : (moment.date || '未知时间');
+            
+            // 价值标签颜色判断逻辑
+            function getValueColor(value) {
+                if (value >= 9) return 'linear-gradient(135deg, #ff6b6b, #ff8e53)';  // 高价值（红色）
+                if (value >= 7) return 'linear-gradient(135deg, #667eea, #764ba2)';  // 中高价值（紫色）
+                if (value >= 5) return 'linear-gradient(135deg, #00c9a7, #8b5cf6)';  // 中等价值（蓝绿色）
+                if (value >= 3) return 'linear-gradient(135deg, #ffc107, #ff9800)';  // 中低价值（橙色）
+                return 'linear-gradient(135deg, #868e96, #495057)';                 // 低价值（灰色）
+            }
+            
             // 价值标签
             const valueLabel = moment.value ? `
                 <span class="value-badge" style="background: ${getValueColor(moment.value)}">
@@ -1761,10 +1760,10 @@
                 </span>
             ` : '';
             
-            // 处理内容长度和折叠状态
+            // 处理内容长度和折叠状态 - 修改折叠阈值
             const content = moment.content || '';
-            const shouldCollapse = content.length > 150;
-            const truncatedContent = shouldCollapse ? content.substring(0, 150) : content;
+            const shouldCollapse = content.length > 300;  // 提高折叠阈值从150到300
+            const truncatedContent = shouldCollapse ? content.substring(0, 300) : content;  // 相应调整截取长度
             
             card.innerHTML = `
                 <div class="moment-header">
@@ -1814,7 +1813,6 @@
                 toggleBtn.addEventListener('click', () => {
                     const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
                     const fullContent = contentBox.dataset.fullContent;
-                    
                     if (expanded) {
                         // 收起内容
                         contentBox.classList.add('collapsed');
@@ -1822,7 +1820,7 @@
                         toggleBtn.classList.remove('expanded');
                         toggleBtn.innerHTML = `展开 <i class="fas fa-chevron-down toggle-icon" aria-hidden="true"></i>`;
                         // 恢复截断内容
-                        contentBox.querySelector('p').textContent = fullContent.substring(0, 150);
+                        contentBox.querySelector('p').textContent = fullContent.substring(0, 300);  // 相应调整
                     } else {
                         // 展开内容
                         contentBox.classList.remove('collapsed');
@@ -1865,22 +1863,19 @@
             if (count === 2) return 'double';
             return 'multiple';
         }
-        function getValueColor(value) {
-            if (value >= 8) return 'linear-gradient(135deg, #ff6b6b, #ff8e53)';
-            if (value >= 6) return 'linear-gradient(135deg, #667eea, #764ba2)';
-            if (value >= 4) return 'linear-gradient(135deg, #00c9a7, #8b5cf6)';
-            return 'linear-gradient(135deg, #868e96, #495057)';
-        }
         // ==================== 统计信息更新 ====================
         function updateStats(moments) {
             const totalMoments = moments.length;
-            const highValueMoments = moments.filter(m => (m.value || 0) >= 8).length;
+            // 修改高价值内容判断标准从 >=8 改为 >=9
+            const highValueMoments = moments.filter(m => (m.value || 0) >= 9).length;
             const today = new Date().toISOString().split('T')[0];
             const todayMoments = moments.filter(m => m.date && String(m.date).startsWith(today)).length;
+            
             // 更新DOM
             animateNumber('totalMoments', totalMoments);
             animateNumber('highValueMoments', highValueMoments);
             animateNumber('todayMoments', todayMoments);
+            
             // 添加排序信息提示
             const sortHint = document.getElementById('sortHint');
             if (sortHint) {
