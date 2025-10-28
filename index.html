@@ -1384,48 +1384,56 @@
             '.social-footer'
         ];
         
-        elementsToHide.forEach(selector => {
-            const element = document.querySelector(selector);
-            if (element) {
-                if (enable) {
+        if (enable) {
+            // 隐藏内容
+            elementsToHide.forEach(selector => {
+                const element = document.querySelector(selector);
+                if (element) {
                     element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
                     element.style.opacity = '0';
                     element.style.transform = 'translateY(-20px)';
-                    element.style.pointerEvents = 'none';
                     setTimeout(() => {
-                        element.style.display = 'none';
+                        element.style.visibility = 'hidden';
+                        element.style.pointerEvents = 'none';
                     }, 500);
-                } else {
-                    element.style.display = '';
-                    setTimeout(() => {
-                        element.style.opacity = '1';
-                        element.style.transform = 'translateY(0)';
-                        element.style.pointerEvents = '';
-                    }, 10);
                 }
-            }
-        });
-        
-        // 特殊处理：保持主题切换按钮可见
-        if (enable) {
+            });
+            
+            // 美化切换按钮
             themeToggle.style.position = 'fixed';
             themeToggle.style.top = '20px';
             themeToggle.style.right = '20px';
             themeToggle.style.zIndex = '99999';
-            themeToggle.style.opacity = '1';
             themeToggle.style.transform = 'scale(1.2)';
             themeToggle.style.background = 'rgba(102, 126, 234, 0.8)';
             themeToggle.style.boxShadow = '0 4px 20px rgba(102, 126, 234, 0.6)';
+            
+            showBackgroundNotification('纯背景欣赏模式 · 再次点击恢复');
         } else {
+            // 显示内容
+            elementsToHide.forEach(selector => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    element.style.visibility = 'visible';
+                    element.style.pointerEvents = 'auto';
+                    // 立即设置为可见但透明
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(-20px)';
+                    // 触发重排
+                    element.offsetHeight;
+                    // 然后淡入
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }, 10);
+                }
+            });
+            
+            // 恢复切换按钮样式
             themeToggle.style.transform = 'scale(1)';
             themeToggle.style.background = '';
             themeToggle.style.boxShadow = '';
-        }
-        
-        // 显示提示信息
-        if (enable) {
-            showBackgroundNotification('纯背景欣赏模式 · 再次点击恢复');
-        } else {
+            
             showBackgroundNotification('已恢复正常模式');
         }
     }
