@@ -6,12 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>成功日记 | 狂客·银河</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome with fallback -->
-    
-          
-    
+    <!-- 内联SVG图标定义 -->
     <style>
-        /* 回到顶部按钮 - 修复版 */
+        /* SVG图标样式 */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            fill: currentColor;
+            vertical-align: middle;
+        }
+        
+        /* 回到顶部按钮 - 优化版 */
         #backToTop {
             position: fixed;
             bottom: 30px;
@@ -19,7 +25,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            background: linear-gradient(135deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
             color: white;
             border: none;
             cursor: pointer;
@@ -33,17 +39,32 @@
             box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
             z-index: 10000;
             transform: translateY(100px);
+            will-change: transform, opacity;
+            contain: layout style paint;
         }
-
+        
         #backToTop.show {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
-
+        
         #backToTop:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 28px rgba(99, 102, 241, 0.45);
+        }
+        
+        #backToTop:active {
+            transform: translateY(-1px);
+        }
+        
+        /* 性能优化：使用GPU加速 */
+        .timeline-item,
+        .diary-card,
+        .filter-chip {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
         }
         
         /* 响应式调整 */
@@ -66,70 +87,191 @@
                 font-size: 1rem;
             }
         }
+        
+        /* 加载动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        /* 骨架屏加载 */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
     </style>
 </head>
 <body data-page="success">
+    <!-- SVG图标定义 -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <!-- 箭头左 -->
+        <symbol id="icon-arrow-left" viewBox="0 0 24 24">
+            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        
+        <!-- 书本打开 -->
+        <symbol id="icon-book-open" viewBox="0 0 24 24">
+            <path d="M12 7V14M12 7L4 3V10M12 7L20 3V10M4 10L12 14M4 10V17L12 21M12 14L20 10M12 14V21M20 10V17L12 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        
+        <!-- 引号左 -->
+        <symbol id="icon-quote-left" viewBox="0 0 24 24">
+            <path d="M10 11C10 9.93913 9.57857 8.92172 8.82843 8.17157C8.07828 7.42143 7.06087 7 6 7C7.06087 7 8.07828 6.57857 8.82843 5.82843C9.57857 5.07828 10 4.06087 10 3M18 11C18 9.93913 17.5786 8.92172 16.8284 8.17157C16.0783 7.42143 15.0609 7 14 7C15.0609 7 16.0783 6.57857 16.8284 5.82843C17.5786 5.07828 18 4.06087 18 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        
+        <!-- 引号右 -->
+        <symbol id="icon-quote-right" viewBox="0 0 24 24">
+            <path d="M14 13C14 14.0609 14.4214 15.0783 15.1716 15.8284C15.9217 16.5786 16.9391 17 18 17C16.9391 17 15.9217 17.4214 15.1716 18.1716C14.4214 18.9217 14 19.9391 14 21M6 13C6 14.0609 6.42143 15.0783 7.17157 15.8284C7.92172 16.5786 8.93913 17 10 17C8.93913 17 7.92172 17.4214 7.17157 18.1716C6.42143 18.9217 6 19.9391 6 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        
+        <!-- 搜索 -->
+        <symbol id="icon-search" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        
+        <!-- 关闭 -->
+        <symbol id="icon-times" viewBox="0 0 24 24">
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        
+        <!-- 语言 -->
+        <symbol id="icon-language" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M2 12H22M12 2C15.5 5.5 17.5 10.5 17.5 12C17.5 13.5 15.5 18.5 12 22C8.5 18.5 6.5 13.5 6.5 12C6.5 10.5 8.5 5.5 12 2Z" stroke="currentColor" stroke-width="2"/>
+        </symbol>
+        
+        <!-- 月亮 -->
+        <symbol id="icon-moon" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+        </symbol>
+        
+        <!-- 太阳 -->
+        <symbol id="icon-sun" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 1V6M12 18V23M4.22 4.22L7.05 7.05M16.95 16.95L19.78 19.78M1 12H6M18 12H23M4.22 19.78L7.05 16.95M16.95 7.05L19.78 4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </symbol>
+        
+        <!-- 标签 -->
+        <symbol id="icon-tags" viewBox="0 0 24 24">
+            <path d="M8.5 8.5L3 14L10 21L15.5 15.5C16 15 16 14.5 16 14V8C16 7.5 15.5 7 15 7H9C8.5 7 8 7.5 7.5 8L8.5 8.5ZM13 11L15 13M18 10L21 7C21.5 6.5 21.5 6 21 5.5L18.5 3C18 2.5 17.5 2.5 17 3L14 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        
+        <!-- 笑脸 -->
+        <symbol id="icon-smile" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 14C8.5 16 10 17 12 17C14 17 15.5 16 16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="9" cy="9" r="1" fill="currentColor"/>
+            <circle cx="15" cy="9" r="1" fill="currentColor"/>
+        </symbol>
+        
+        <!-- 排序 -->
+        <symbol id="icon-sort" viewBox="0 0 24 24">
+            <path d="M3 6H21M3 12H15M3 18H9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </symbol>
+        
+        <!-- 重置 -->
+        <symbol id="icon-redo" viewBox="0 0 24 24">
+            <path d="M1 4V10H7M23 20V14H17M20.49 9C19.8 6.1 17.3 4 14.3 4C11.8 4 9.6 5.5 8.5 7.5L1 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        
+        <!-- 图表 -->
+        <symbol id="icon-chart" viewBox="0 0 24 24">
+            <path d="M18 20V10M12 20V4M6 20V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </symbol>
+        
+        <!-- 流 -->
+        <symbol id="icon-stream" viewBox="0 0 24 24">
+            <path d="M4 4H20M4 12H20M4 20H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </symbol>
+        
+        <!-- 网格 -->
+        <symbol id="icon-th" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+            <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+            <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+            <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+        </symbol>
+        
+        <!-- 箭头上 -->
+        <symbol id="icon-arrow-up" viewBox="0 0 24 24">
+            <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+    </svg>
+
     <!-- 背景装饰 -->
     <div class="bg-decoration">
         <div class="circle circle-1"></div>
         <div class="circle circle-2"></div>
         <div class="circle circle-3"></div>
     </div>
+    
     <header class="header">
         <div class="container success-header">
             <div class="header-left">
                 <a class="back-link" href="index.html" aria-label="返回首页">
-                    <i class="fas fa-arrow-left"></i>
+                    <svg class="icon"><use href="#icon-arrow-left"></use></svg>
                 </a>
                 <div class="header-text">
                     <div class="title-wrapper">
-                        <i class="fas fa-book-open title-icon"></i>
+                        <svg class="icon title-icon"><use href="#icon-book-open"></use></svg>
                         <h1 class="logo" data-i18n="successTitle">成功日记时间轴</h1>
                     </div>
                     <p class="success-subtitle" data-i18n="successSubtitle">
-                        <i class="fas fa-quote-left quote-icon"></i>
+                        <svg class="icon quote-icon"><use href="#icon-quote-left"></use></svg>
                         当你写成功日记的时候，你会对自己，对世界，还有对成功的规律作更深入的思考，会越来越多地了解自己和自己的愿望，这样你才会有能力去理解别人。彻底了解自己和世界上的所有秘密，是我们无法完全实现的一种理想，但我们可以一步一步地慢慢接近这种理想。一个人挣钱的多少是和他的自信心联系在一起的。另外,他的精力究竟是集中在自己的能力范围之内,还是放到了他力所不能及的事情上,这也是很重要的一点。没有我的成功日记本,我就不会去思考自己适合在哪些方面赚钱。
-                        <i class="fas fa-quote-right quote-icon"></i>
+                        <svg class="icon quote-icon"><use href="#icon-quote-right"></use></svg>
                     </p>
                 </div>
             </div>
             <div class="controls success-controls">
                 <div class="search-box diary-search">
-                    <i class="fas fa-search"></i>
+                    <svg class="icon"><use href="#icon-search"></use></svg>
                     <input type="text" id="diarySearchInput" placeholder="搜索标题、标签、心情..." aria-label="搜索日记">
                     <button class="search-clear" id="searchClear" style="display: none;" aria-label="清除搜索">
-                        <i class="fas fa-times"></i>
+                        <svg class="icon"><use href="#icon-times"></use></svg>
                     </button>
                 </div>
                 <button id="languageToggle" class="language-toggle" aria-label="切换语言">
-                    <i class="fas fa-language"></i>
+                    <svg class="icon"><use href="#icon-language"></use></svg>
                     <span>中 → EN</span>
                 </button>
                 <button id="themeToggle" class="theme-toggle" aria-label="切换主题">
-                    <i class="fas fa-moon"></i>
+                    <svg class="icon theme-icon"><use href="#icon-moon"></use></svg>
                 </button>
             </div>
         </div>
     </header>
+    
     <section class="diary-toolbar" role="region" aria-label="日记筛选工具栏">
         <div class="container diary-toolbar-inner">
             <div class="filter-group">
                 <div class="filter-header">
-                    <i class="fas fa-tags"></i>
+                    <svg class="icon"><use href="#icon-tags"></use></svg>
                     <span class="filter-title" data-i18n="tagLabel">分类标签</span>
                 </div>
                 <div id="diaryTagFilter" class="filter-chips" role="group" aria-label="标签筛选"></div>
             </div>
             <div class="filter-row">
                 <div class="filter-item">
-                    <i class="fas fa-smile"></i>
+                    <svg class="icon"><use href="#icon-smile"></use></svg>
                     <label class="filter-label" data-i18n="moodLabel" for="diaryMoodSelect">心情</label>
                     <select id="diaryMoodSelect" class="filter-select" aria-label="选择心情筛选">
                         <option value="all">全部心情</option>
                     </select>
                 </div>
                 <div class="filter-item">
-                    <i class="fas fa-sort"></i>
+                    <svg class="icon"><use href="#icon-sort"></use></svg>
                     <label class="filter-label" data-i18n="sortLabel" for="diarySortSelect">排序</label>
                     <select id="diarySortSelect" class="filter-select" aria-label="选择排序方式">
                         <option value="dateDesc">🆕日期：最新优先</option>
@@ -139,92 +281,257 @@
                     </select>
                 </div>
                 <button id="diaryResetFilters" class="ghost-btn reset-btn" data-i18n="resetFilters" aria-label="重置所有筛选条件">
-                    <i class="fas fa-redo"></i>
+                    <svg class="icon"><use href="#icon-redo"></use></svg>
                     <span>重置筛选</span>
                 </button>
             </div>
         </div>
     </section>
+    
     <main class="main-content success-main">
         <div class="container">
             <div class="stats-bar">
                 <div class="diary-counter" id="diaryCounter">
-                    <i class="fas fa-chart-line"></i>
+                    <svg class="icon"><use href="#icon-chart"></use></svg>
                     <span>共 <strong>0</strong> 条记录</span>
                 </div>
                 <div class="view-toggle" role="group" aria-label="切换视图">
                     <button class="view-btn active" data-view="timeline" aria-label="时间轴视图" aria-pressed="true">
-                        <i class="fas fa-stream"></i>
+                        <svg class="icon"><use href="#icon-stream"></use></svg>
                     </button>
                     <button class="view-btn" data-view="grid" aria-label="网格视图" aria-pressed="false">
-                        <i class="fas fa-th"></i>
+                        <svg class="icon"><use href="#icon-th"></use></svg>
                     </button>
                 </div>
             </div>
             <div id="diaryTimeline" class="timeline"></div>
             <!-- 空状态 -->
             <div class="empty-state hidden">
-                <i class="fas fa-search empty-icon"></i>
+                <svg class="icon empty-icon"><use href="#icon-search"></use></svg>
                 <h3>未找到匹配的记录</h3>
                 <p>试试调整筛选条件或搜索关键词</p>
             </div>
         </div>
     </main>
+    
     <!-- 返回顶部按钮 -->
     <button id="backToTop" class="back-to-top" aria-label="返回顶部">
-        <i class="fas fa-arrow-up"></i>
+        <svg class="icon"><use href="#icon-arrow-up"></use></svg>
     </button>
+    
     <script src="data.js" ></script>
     <script src="script.js" ></script>
     <script>
-        // ==================== 回到顶部功能 - 最终修复版 ====================
+        // ==================== 回到顶部功能 - 性能优化版 ====================
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 初始化回到顶部功能...');
-            
             const backToTopBtn = document.getElementById('backToTop');
             
             if (!backToTopBtn) {
                 console.error('❌ 错误：找不到回到顶部按钮！');
                 return;
             }
-            
             console.log('✅ 找到回到顶部按钮');
             
-            // 显示/隐藏按钮
-            function toggleBackToTop() {
-                const scrollY = window.scrollY || document.documentElement.scrollTop;
-                
-                if (scrollY > 300) {
+            // 使用 requestAnimationFrame 优化滚动监听
+            let ticking = false;
+            let lastKnownScrollPosition = 0;
+            
+            function updateBackToTopButton(scrollPos) {
+                if (scrollPos > 300) {
                     backToTopBtn.classList.add('show');
                 } else {
                     backToTopBtn.classList.remove('show');
                 }
             }
             
-            // 使用防抖优化性能
-            let scrollTimeout;
-            window.addEventListener('scroll', function() {
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(toggleBackToTop, 10);
-            });
+            // 节流滚动事件
+            function onScroll() {
+                lastKnownScrollPosition = window.scrollY || document.documentElement.scrollTop;
+                
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        updateBackToTopButton(lastKnownScrollPosition);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }
             
-            // 点击回到顶部
-            backToTopBtn.addEventListener('click', function() {
+            // 优化的滚动监听器
+            window.addEventListener('scroll', onScroll, { passive: true });
+            
+            // 点击回到顶部 - 优化版
+            backToTopBtn.addEventListener('click', function(e) {
+                e.preventDefault();
                 console.log('🎯 点击回到顶部');
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+                
+                // 检查是否支持 smooth behavior
+                const supportsNativeSmooth = 'scrollBehavior' in document.documentElement.style;
+                
+                if (supportsNativeSmooth) {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    // 兼容性回退
+                    const startScroll = window.pageYOffset;
+                    const startTime = performance.now();
+                    const duration = 500; // 500ms 动画时长
+                    
+                    function easeInOutCubic(t) {
+                        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                    }
+                    
+                    function animateScroll(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const easeProgress = easeInOutCubic(progress);
+                        const scrollPosition = startScroll * (1 - easeProgress);
+                        
+                        window.scrollTo(0, scrollPosition);
+                        
+                        if (progress < 1) {
+                            window.requestAnimationFrame(animateScroll);
+                        }
+                    }
+                    
+                    window.requestAnimationFrame(animateScroll);
+                }
             });
             
             // 初始检查
-            toggleBackToTop();
+            updateBackToTopButton(window.scrollY || document.documentElement.scrollTop);
             
-            // 强制测试：3秒后显示按钮
-            setTimeout(function() {
-                console.log('🧪 测试：强制显示按钮');
-                backToTopBtn.classList.add('show');
-            }, 3000);
+            // 键盘导航支持
+            backToTopBtn.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    backToTopBtn.click();
+                }
+            });
+            
+            // 移除测试代码（生产环境）
+            console.log('✅ 回到顶部功能初始化完成');
+        });
+        
+        // ==================== 性能优化工具 ====================
+        
+        // 懒加载观察器
+        const lazyLoadObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    lazyLoadObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            rootMargin: '50px'
+        });
+        
+        // 监听需要懒加载的元素
+        function observeLazyElements() {
+            const lazyElements = document.querySelectorAll('.timeline-item, .diary-card');
+            lazyElements.forEach(el => lazyLoadObserver.observe(el));
+        }
+        
+        // 防抖函数
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        // 节流函数
+        function throttle(func, limit) {
+            let inThrottle;
+            return function() {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            };
+        }
+        
+        // 监听DOM变化以初始化懒加载
+        const mutationObserver = new MutationObserver(debounce(() => {
+            observeLazyElements();
+        }, 100));
+        
+        mutationObserver.observe(document.getElementById('diaryTimeline'), {
+            childList: true,
+            subtree: true
+        });
+        
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('.theme-icon');
+        
+        // 检查本地存储的主题设置
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeIcon.querySelector('use').setAttribute('href', '#icon-sun');
+        }
+        
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            
+            // 更新图标
+            if (isDark) {
+                themeIcon.querySelector('use').setAttribute('href', '#icon-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.querySelector('use').setAttribute('href', '#icon-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // 语言切换功能
+        const languageToggle = document.getElementById('languageToggle');
+        const currentLang = localStorage.getItem('language') || 'zh';
+        
+        function updateLanguage(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                // 这里需要根据实际的翻译数据来更新内容
+                // 假设有一个 translations 对象
+                if (window.translations && window.translations[lang] && window.translations[lang][key]) {
+                    el.textContent = window.translations[lang][key];
+                }
+            });
+            
+            // 更新按钮文本
+            const span = languageToggle.querySelector('span');
+            span.textContent = lang === 'zh' ? '中 → EN' : 'EN → 中';
+            
+            localStorage.setItem('language', lang);
+        }
+        
+        languageToggle.addEventListener('click', function() {
+            const newLang = currentLang === 'zh' ? 'en' : 'zh';
+            updateLanguage(newLang);
+        });
+        
+        // 初始化语言
+        updateLanguage(currentLang);
+        
+        // 页面卸载时清理
+        window.addEventListener('beforeunload', function() {
+            lazyLoadObserver.disconnect();
+            mutationObserver.disconnect();
         });
     </script>
 </body>
