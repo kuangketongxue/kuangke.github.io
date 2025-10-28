@@ -838,6 +838,41 @@
             width: 100%;
             max-width: none;
         }
+        /* ==================== 背景模式返回按钮 ==================== */
+        .background-mode-return {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10001;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        .background-mode-return:hover {
+            background: rgba(102, 126, 234, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        .background-mode-return:active {
+            transform: translateY(0);
+        }
+        .background-mode-return i {
+            transition: transform 0.3s ease;
+        }
+        .background-mode-return:hover i {
+            transform: translateX(-3px);
+        }
         /* ==================== 响应式设计 ==================== */
         @media (max-width: 1200px) {
             .moments-grid {
@@ -903,6 +938,12 @@
             .export-btn {
                 width: 100%;
                 justify-content: center;
+            }
+            .background-mode-return {
+                top: 10px;
+                left: 10px;
+                padding: 10px 14px;
+                font-size: 13px;
             }
         }
         @media (max-width: 576px) {
@@ -1013,6 +1054,12 @@
     </style>
 </head>
 <body data-page="moments">
+    <!-- ==================== 背景模式返回按钮 ==================== -->
+    <button id="backgroundModeReturn" class="background-mode-return" aria-label="退出背景模式">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        <span>返回正常视图</span>
+    </button>
+    
     <!-- ==================== 顶部导航栏 ==================== -->
     <!-- 修改后的导航结构 -->
 <header class="header" role="banner">
@@ -1313,12 +1360,16 @@
         let isLoading = false;
         let userLikes = {};
         let userBookmarks = {};
+        let backgroundOnlyMode = false; // 背景模式状态
+        
         // ==================== 初始化功能 ====================
         document.addEventListener('DOMContentLoaded', function() {
             // 恢复用户数据
             restoreUserData();
             // 初始化主题
             initializeTheme();
+            // 初始化背景模式返回按钮
+            initializeBackgroundModeReturn();
             // 初始化事件监听器
             initializeSortControls();
             initializeViewControls();
@@ -1335,23 +1386,50 @@
                 initializePage();
             }, 100);
         });
-       function initializeTheme() {
-    const themeToggle = document.getElementById('themeToggle');
-    let backgroundOnlyMode = false; // 新增背景图模式状态
-    
-    // 保存原始主题切换逻辑
-    themeToggle.addEventListener('click', function() {
-        if (!backgroundOnlyMode) {
-            // 切换到只显示背景图模式
+        
+        // ==================== 背景模式返回按钮初始化 ====================
+        function initializeBackgroundModeReturn() {
+            const returnBtn = document.getElementById('backgroundModeReturn');
+            returnBtn.addEventListener('click', function() {
+                exitBackgroundMode();
+            });
+        }
+        
+        // ==================== 主题初始化 ====================
+        function initializeTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            
+            themeToggle.addEventListener('click', function() {
+                if (!backgroundOnlyMode) {
+                    // 切换到只显示背景图模式
+                    enterBackgroundMode();
+                } else {
+                    // 切换回正常显示模式
+                    exitBackgroundMode();
+                }
+            });
+        }
+        
+        // ==================== 进入背景模式 ====================
+        function enterBackgroundMode() {
             backgroundOnlyMode = true;
             document.body.classList.add('background-only');
+            
+            // 更新主题切换按钮
+            const themeToggle = document.getElementById('themeToggle');
             themeToggle.innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i>';
             themeToggle.title = '显示全部内容';
             
             // 隐藏所有内容元素
             hideAllContent();
-        } else {
-            // 切换回正常显示模式
+            
+            // 显示返回按钮
+            const returnBtn = document.getElementById('backgroundModeReturn');
+            returnBtn.style.display = 'flex';
+        }
+        
+        // ==================== 退出背景模式 ====================
+        function exitBackgroundMode() {
             backgroundOnlyMode = false;
             document.body.classList.remove('background-only');
             
@@ -1361,6 +1439,8 @@
             document.body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             
+            // 更新主题切换按钮
+            const themeToggle = document.getElementById('themeToggle');
             if (newTheme === 'light') {
                 themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
                 themeToggle.title = '切换主题';
@@ -1371,45 +1451,49 @@
             
             // 显示所有内容
             showAllContent();
+            
+            // 隐藏返回按钮
+            const returnBtn = document.getElementById('backgroundModeReturn');
+            returnBtn.style.display = 'none';
         }
-    });
-}
-
-// 新增：隐藏所有内容的函数
-function hideAllContent() {
-    const elementsToHide = [
-        '.header',
-        '.category-nav', 
-        '.sort-nav',
-        '.main-content',
-        '.social-footer'
-    ];
-    
-    elementsToHide.forEach(selector => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(el => {
-            el.style.display = 'none';
-        });
-    });
-}
-
-// 新增：显示所有内容的函数
-function showAllContent() {
-    const elementsToShow = [
-        '.header',
-        '.category-nav',
-        '.sort-nav', 
-        '.main-content',
-        '.social-footer'
-    ];
-    
-    elementsToShow.forEach(selector => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(el => {
-            el.style.display = '';
-        });
-    });
-}
+        
+        // ==================== 隐藏所有内容 ====================
+        function hideAllContent() {
+            const elementsToHide = [
+                '.header',
+                '.category-nav', 
+                '.sort-nav',
+                '.main-content',
+                '.social-footer'
+            ];
+            
+            elementsToHide.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    el.style.display = 'none';
+                });
+            });
+        }
+        
+        // ==================== 显示所有内容 ====================
+        function showAllContent() {
+            const elementsToShow = [
+                '.header',
+                '.category-nav',
+                '.sort-nav', 
+                '.main-content',
+                '.social-footer'
+            ];
+            
+            elementsToShow.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    el.style.display = '';
+                });
+            });
+        }
+        
+        // ==================== 页面初始化 ====================
         function initializePage() {
             // 确保数据已加载
             if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
@@ -1423,6 +1507,7 @@ function showAllContent() {
                 setTimeout(initializePage, 500);
             }
         }
+        
         // ==================== 虚拟滚动优化 ====================
         function initVirtualScroll() {
             const observer = new IntersectionObserver((entries) => {
@@ -1442,6 +1527,7 @@ function showAllContent() {
                 observer.observe(card);
             });
         }
+        
         // ==================== 分类筛选初始化 ====================
         function initializeCategoryFilters() {
             const categoryBtns = document.querySelectorAll('.category-btn');
@@ -1466,6 +1552,7 @@ function showAllContent() {
                 });
             });
         }
+        
         // ==================== 搜索功能初始化 ====================
         function initializeSearchBox() {
             const searchInput = document.getElementById('searchInput');
@@ -1501,6 +1588,7 @@ function showAllContent() {
                 }, 300);
             });
         }
+        
         // ==================== 点赞功能初始化 ====================
         function initializeLikeButtons() {
             document.addEventListener('click', function(e) {
@@ -1541,6 +1629,7 @@ function showAllContent() {
                 }
             });
         }
+        
         // ==================== 导出功能初始化 ====================
         function initializeExportButton() {
             const exportBtn = document.getElementById('exportBtn');
@@ -1550,6 +1639,7 @@ function showAllContent() {
                 });
             }
         }
+        
         // ==================== 无限滚动初始化 ====================
         function initializeInfiniteScroll() {
             let lastScrollY = window.scrollY;
@@ -1573,6 +1663,7 @@ function showAllContent() {
                 }, 100);
             });
         }
+        
         // ==================== 加载更多内容 ====================
         function loadMoreContent() {
             if (isLoading) return;
@@ -1591,6 +1682,7 @@ function showAllContent() {
                 isLoading = false;
             }, 800);
         }
+        
         // ==================== 渲染更多朋友圈 ====================
         function renderMoreMoments() {
             const momentsContainer = document.getElementById('momentsContainer');
@@ -1614,6 +1706,7 @@ function showAllContent() {
             // 更新虚拟滚动观察器
             initVirtualScroll();
         }
+        
         // ==================== 排序控件初始化 ====================
         function initializeSortControls() {
             const sortBySelect = document.getElementById('sortBy');
@@ -1625,6 +1718,7 @@ function showAllContent() {
                 });
             }
         }
+        
         // ==================== 视图控件初始化 ====================
         function initializeViewControls() {
             const gridViewBtn = document.getElementById('gridView');
@@ -1640,6 +1734,7 @@ function showAllContent() {
                 });
             }
         }
+        
         // ==================== 恢复用户偏好设置 ====================
         function restoreUserPreferences() {
             // 恢复排序偏好
@@ -1657,6 +1752,7 @@ function showAllContent() {
                 currentViewMode = savedViewMode;
             }
         }
+        
         // ==================== 视图模式更新 ====================
         function updateViewMode() {
             const momentsContainer = document.getElementById('momentsContainer');
@@ -1678,6 +1774,7 @@ function showAllContent() {
             // 保存视图模式偏好
             localStorage.setItem('preferredViewMode', currentViewMode);
         }
+        
         // ==================== 排序功能 ====================
         function sortMoments(moments, sortMethod) {
             const sortedMoments = [...moments];
@@ -1704,6 +1801,7 @@ function showAllContent() {
             }
             return sortedMoments;
         }
+        
         // ==================== 排序并渲染朋友圈 ====================
         function sortAndRenderMoments() {
             // 获取当前筛选后的朋友圈数据
@@ -1727,6 +1825,7 @@ function showAllContent() {
             // 添加排序动画效果
             animateSortChange();
         }
+        
         // ==================== 更新排序UI ====================
         function updateSortUI() {
             const sortBySelect = document.getElementById('sortBy');
@@ -1741,6 +1840,7 @@ function showAllContent() {
                 }, 300);
             }
         }
+        
         // ==================== 排序动画效果 ====================
         function animateSortChange() {
             const momentsContainer = document.getElementById('momentsContainer');
@@ -1752,6 +1852,7 @@ function showAllContent() {
                 momentsContainer.style.transform = 'scale(1)';
             }, 200);
         }
+        
         // ==================== 渲染朋友圈 ====================
         function renderMoments() {
             const momentsContainer = document.getElementById('momentsContainer');
@@ -1783,6 +1884,7 @@ function showAllContent() {
             // 更新分页信息
             updatePaginationInfo();
         }
+        
         // ==================== 创建朋友圈卡片 ====================
         function createMomentCard(moment, index) {
             const card = document.createElement('article');
@@ -1888,6 +1990,7 @@ function showAllContent() {
             
             return card;
         }
+        
         // ==================== 辅助函数 ====================
         function formatDate(date) {
             const now = new Date();
@@ -1911,11 +2014,13 @@ function showAllContent() {
                 return date.toLocaleDateString('zh-CN');
             }
         }
+        
         function getImageClass(count) {
             if (count === 1) return 'single';
             if (count === 2) return 'double';
             return 'multiple';
         }
+        
         // ==================== 统计信息更新 ====================
         function updateStats(moments) {
             const totalMoments = moments.length;
@@ -1936,6 +2041,7 @@ function showAllContent() {
                 sortHint.textContent = sortInfo;
             }
         }
+        
         function getSortDescription(sortMethod) {
             const descriptions = {
                 'date-desc': '按最新发布时间排序',
@@ -1945,6 +2051,7 @@ function showAllContent() {
             };
             return descriptions[sortMethod] || '按最新发布时间排序';
         }
+        
         // ==================== 数字动画 ====================
         function animateNumber(elementId, targetValue) {
             const element = document.getElementById(elementId);
@@ -1965,6 +2072,7 @@ function showAllContent() {
                 }
             }, 30);
         }
+        
         // ==================== 分页功能（完整实现） ====================
         function initPaginationControls() {
             document.getElementById('firstPage')?.addEventListener('click', () => {
@@ -1997,6 +2105,7 @@ function showAllContent() {
                 updatePagination();
             });
         }
+        
         function updatePagination() {
             const list = window.currentFilteredMoments || [];
             const perPageEl = document.getElementById('itemsPerPage');
@@ -2039,6 +2148,7 @@ function showAllContent() {
             // 更新文本信息
             updatePaginationInfo();
         }
+        
         function updatePaginationInfo() {
             const perPage = parseInt(document.getElementById('itemsPerPage').value, 10);
             const list = window.currentFilteredMoments || [];
@@ -2052,6 +2162,7 @@ function showAllContent() {
             if (endEl) endEl.textContent = String(end);
             if (totalEl) totalEl.textContent = String(total);
         }
+        
         // ==================== 数据持久化功能 ====================
         function saveUserData() {
             const userData = {
@@ -2065,6 +2176,7 @@ function showAllContent() {
             };
             localStorage.setItem('userData', JSON.stringify(userData));
         }
+        
         function restoreUserData() {
             const savedData = localStorage.getItem('userData');
             if (savedData) {
@@ -2091,6 +2203,7 @@ function showAllContent() {
                 }
             }
         }
+        
         // ==================== 导出功能 ====================
         function exportMomentsData() {
             const dataToExport = {
@@ -2117,6 +2230,7 @@ function showAllContent() {
             // 显示成功提示
             showNotification('数据导出成功！');
         }
+        
         // ==================== 通知功能 ====================
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
@@ -2144,6 +2258,7 @@ function showAllContent() {
                 }, 300);
             }, 3000);
         }
+        
         // 添加通知动画样式
         const style = document.createElement('style');
         style.textContent = `
