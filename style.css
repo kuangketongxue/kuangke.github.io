@@ -2345,3 +2345,23 @@ body.light-mode .digest-col--rating {
     transform: translateY(-20px);
     pointer-events: none;
 }
+/* 纯背景模式淡入淡出动画 */
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    20%, 80% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+}
+
+/* 主题切换按钮在纯背景模式下的样式 */
+.theme-toggle {
+    transition: all 0.3s ease;
+}
