@@ -1335,28 +1335,81 @@
                 initializePage();
             }, 100);
         });
-        function initializeTheme() {
-            const themeToggle = document.getElementById('themeToggle');
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            if (savedTheme === 'light') {
-                document.body.setAttribute('data-theme', 'light');
+       function initializeTheme() {
+    const themeToggle = document.getElementById('themeToggle');
+    let backgroundOnlyMode = false; // 新增背景图模式状态
+    
+    // 保存原始主题切换逻辑
+    themeToggle.addEventListener('click', function() {
+        if (!backgroundOnlyMode) {
+            // 切换到只显示背景图模式
+            backgroundOnlyMode = true;
+            document.body.classList.add('background-only');
+            themeToggle.innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i>';
+            themeToggle.title = '显示全部内容';
+            
+            // 隐藏所有内容元素
+            hideAllContent();
+        } else {
+            // 切换回正常显示模式
+            backgroundOnlyMode = false;
+            document.body.classList.remove('background-only');
+            
+            // 恢复原来的主题切换逻辑
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            if (newTheme === 'light') {
                 themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
+                themeToggle.title = '切换主题';
             } else {
-                document.body.setAttribute('data-theme', 'dark');
                 themeToggle.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i>';
+                themeToggle.title = '切换主题';
             }
-            themeToggle.addEventListener('click', function() {
-                const currentTheme = document.body.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                document.body.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                if (newTheme === 'light') {
-                    themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
-                } else {
-                    themeToggle.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i>';
-                }
-            });
+            
+            // 显示所有内容
+            showAllContent();
         }
+    });
+}
+
+// 新增：隐藏所有内容的函数
+function hideAllContent() {
+    const elementsToHide = [
+        '.header',
+        '.category-nav', 
+        '.sort-nav',
+        '.main-content',
+        '.social-footer'
+    ];
+    
+    elementsToHide.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+            el.style.display = 'none';
+        });
+    });
+}
+
+// 新增：显示所有内容的函数
+function showAllContent() {
+    const elementsToShow = [
+        '.header',
+        '.category-nav',
+        '.sort-nav', 
+        '.main-content',
+        '.social-footer'
+    ];
+    
+    elementsToShow.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+            el.style.display = '';
+        });
+    });
+}
         function initializePage() {
             // 确保数据已加载
             if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
