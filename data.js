@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+    {
+        id: 43,
+        date: '2025-10-29',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '死记硬背概念',
+            en: 'Rote memorization of concepts'
+        },
+        content: {
+            zh: '阅读16本书+。\n网站优化，新增英语阅读\n学习8小时+\n创作10000字',
+            en: 'Read 16+ books.\nWebsite optimization.New addition of English reading materials.\nStudied for 8+ hours\nWrite a piece of content totaling 10000 words.'
+        },
+        highlight: {
+            zh: '精力极其极其充足',
+            en: 'Extremely abundant energy levels'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
      {
         id: 42,
         date: '2025-10-28',
