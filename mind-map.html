@@ -3,480 +3,591 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>可编辑思维导图</title>
+    <title>狂客·星空 - 阅读思维导图</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:;">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader"></script>
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0f28;
+            --bg-card: rgba(17, 24, 54, 0.85);
+            --text-primary: #f5f7ff;
+            --text-secondary: rgba(245, 247, 255, 0.7);
+            --accent-color: #8b5cf6;
+            --accent-hover: #6366f1;
+            --border-color: rgba(139, 92, 246, 0.2);
         }
 
         body {
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: url("images/reading-bg.jpg") center/cover no-repeat fixed;
+            color: var(--text-primary);
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(25, 51, 120, 0.45), rgba(15, 18, 60, 0.65));
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        body.light-mode {
+            --bg-primary: #f8f9fa;
+            --bg-card: rgba(255, 255, 255, 0.95);
+            --text-primary: #1a202c;
+            --text-secondary: #718096;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            overflow: hidden;
         }
 
-        .container {
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+        /* 头部样式 */
+        .mindmap-header {
+            background: rgba(10, 15, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .header {
+        body.light-mode .mindmap-header {
             background: rgba(255, 255, 255, 0.95);
-            padding: 15px 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
             display: flex;
+            align-items: center;
             justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.7rem 1.4rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.45);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+        }
+
+        .title-group h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin: 0;
+        }
+
+        .title-group p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0.3rem 0 0 0;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 0.8rem;
             align-items: center;
         }
 
-        .header h1 {
-            color: #667eea;
-            font-size: 24px;
-        }
-
-        .toolbar {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 10px 20px;
+        .control-btn {
+            padding: 0.7rem 1.2rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
+            color: #fff;
             cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
         }
 
-        .btn-primary {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #5568d3;
+        .control-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
         }
 
-        .btn-danger {
-            background: #f56565;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #e53e3e;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(245, 101, 101, 0.4);
-        }
-
-        .btn-success {
-            background: #48bb78;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #38a169;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
-        }
-
-        .canvas-area {
-            flex: 1;
-            position: relative;
-            overflow: auto;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .mindmap {
-            position: relative;
-            width: 100%;
-            min-height: 100%;
-            padding: 50px;
-        }
-
-        svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .node {
-            position: absolute;
-            min-width: 150px;
-            padding: 15px 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-            cursor: move;
-            user-select: none;
-            z-index: 10;
-            transition: all 0.3s;
-        }
-
-        .node:hover {
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .node.root {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            min-width: 200px;
-        }
-
-        .node.level-1 {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-        }
-
-        .node.level-2 {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-        }
-
-        .node.selected {
-            outline: 3px solid #ffd700;
-            outline-offset: 2px;
-        }
-
-        .node-content {
-            outline: none;
-            border: none;
-            background: transparent;
-            color: inherit;
-            font-size: inherit;
-            width: 100%;
-            min-width: 100px;
-        }
-
-        .node-actions {
-            display: none;
-            position: absolute;
-            top: -35px;
-            right: 0;
-            gap: 5px;
-        }
-
-        .node:hover .node-actions {
-            display: flex;
-        }
-
-        .node-btn {
-            width: 28px;
-            height: 28px;
-            border: none;
+        .theme-toggle {
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            color: var(--text-primary);
             cursor: pointer;
-            font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
         }
 
-        .node-btn:hover {
-            transform: scale(1.1);
+        .theme-toggle:hover {
+            background: rgba(139, 92, 246, 0.25);
+            transform: rotate(20deg);
         }
 
-        .add-btn {
-            background: #48bb78;
-            color: white;
+        /* 主内容区域 */
+        .mindmap-container {
+            padding: 2rem 1.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
         }
 
-        .delete-btn {
-            background: #f56565;
-            color: white;
+        .mindmap-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            min-height: calc(100vh - 200px);
         }
 
-        .instructions {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            max-width: 300px;
-            z-index: 1000;
+        .mindmap-toolbar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(139, 92, 246, 0.08);
+            border-radius: 16px;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
-        .instructions h3 {
-            color: #667eea;
-            margin-bottom: 10px;
+        .view-mode-btn {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .instructions ul {
-            list-style: none;
-            padding-left: 0;
+        .view-mode-btn:hover,
+        .view-mode-btn.active {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: #fff;
+            border-color: transparent;
+            transform: translateY(-2px);
         }
 
-        .instructions li {
-            padding: 5px 0;
-            color: #555;
-            font-size: 14px;
+        /* 思维导图容器 */
+        #mindmap-svg {
+            width: 100%;
+            min-height: 600px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(139, 92, 246, 0.15);
         }
 
-        .instructions li::before {
-            content: "• ";
-            color: #667eea;
-            font-weight: bold;
+        body.light-mode #mindmap-svg {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        /* Markdown视图 */
+        #markdown-view {
+            display: none;
+            padding: 2rem;
+            background: rgba(17, 24, 54, 0.5);
+            border-radius: 16px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        body.light-mode #markdown-view {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        #markdown-view pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        body.light-mode #markdown-view pre {
+            background: rgba(0, 0, 0, 0.05);
+            color: #2d3748;
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            gap: 1rem;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            .back-btn span {
+                display: none;
+            }
+
+            .back-btn::after {
+                content: '返回';
+            }
+
+            .title-group h1 {
+                font-size: 1.3rem;
+            }
+
+            .control-btn span {
+                display: none;
+            }
+
+            .mindmap-container {
+                padding: 1.5rem 1rem;
+            }
+
+            .mindmap-card {
+                padding: 1.5rem;
+            }
+
+            #mindmap-svg {
+                min-height: 400px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🧠 智能思维导图</h1>
-            <div class="toolbar">
-                <button class="btn btn-primary" onclick="addRootNode()">添加根节点</button>
-                <button class="btn btn-success" onclick="exportData()">导出数据</button>
-                <button class="btn btn-danger" onclick="clearAll()">清空画布</button>
+    <!-- 头部 -->
+    <header class="mindmap-header">
+        <div class="header-container">
+            <div class="header-left">
+                <a href="reading.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>返回书摘页</span>
+                </a>
+                <div class="title-group">
+                    <h1>🧠 阅读思维导图</h1>
+                    <p>可视化梳理您的知识体系</p>
+                </div>
+            </div>
+            <div class="header-controls">
+                <button class="control-btn" id="exportBtn">
+                    <i class="fas fa-download"></i>
+                    <span>导出图片</span>
+                </button>
+                <button class="control-btn" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>刷新</span>
+                </button>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
             </div>
         </div>
-        <div class="canvas-area">
-            <div class="mindmap" id="mindmap">
-                <svg id="connections"></svg>
+    </header>
+
+    <!-- 主内容 -->
+    <main class="mindmap-container">
+        <div class="mindmap-card">
+            <!-- 工具栏 -->
+            <div class="mindmap-toolbar">
+                <button class="view-mode-btn active" data-view="mindmap">
+                    <i class="fas fa-project-diagram"></i>
+                    思维导图视图
+                </button>
+                <button class="view-mode-btn" data-view="markdown">
+                    <i class="fab fa-markdown"></i>
+                    Markdown源码
+                </button>
+                <button class="view-mode-btn" data-view="stats">
+                    <i class="fas fa-chart-bar"></i>
+                    统计分析
+                </button>
+            </div>
+
+            <!-- 思维导图SVG容器 -->
+            <svg id="mindmap-svg"></svg>
+
+            <!-- Markdown视图 -->
+            <div id="markdown-view">
+                <pre id="markdown-content"></pre>
+            </div>
+
+            <!-- 统计视图 -->
+            <div id="stats-view" style="display: none;">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>统计功能开发中...</p>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <div class="instructions">
-        <h3>📝 使用说明</h3>
-        <ul>
-            <li>点击节点可以编辑文本</li>
-            <li>拖拽节点可以移动位置</li>
-            <li>点击 + 按钮添加子节点</li>
-            <li>点击 × 按钮删除节点</li>
-            <li>自动绘制连接线</li>
-        </ul>
-    </div>
+    <script type="module">
+        import { Markmap } from 'https://cdn.jsdelivr.net/npm/markmap-view@0.15.4/+esm';
+        import { Transformer } from 'https://cdn.jsdelivr.net/npm/markmap-lib@0.15.4/+esm';
 
-    <script>
-        let nodes = [];
-        let selectedNode = null;
-        let isDragging = false;
-        let dragOffset = { x: 0, y: 0 };
-        let nodeIdCounter = 0;
+        let mm = null;
+        let transformer = new Transformer();
+        let digestData = [];
+        let currentView = 'mindmap';
 
-        // 初始化根节点
-        window.onload = function() {
-            addNode('我的思维导图', null, 'root', window.innerWidth / 2 - 100, 100);
-        };
+        // 初始化
+        document.addEventListener('DOMContentLoaded', async function() {
+            initTheme();
+            await loadDigestData();
+            renderMindmap();
+            bindEvents();
+        });
 
-        // 添加根节点
-        function addRootNode() {
-            const x = Math.random() * (window.innerWidth - 400) + 200;
-            const y = Math.random() * (window.innerHeight - 400) + 150;
-            addNode('新的主题', null, 'root', x, y);
+        // 加载书摘数据
+        async function loadDigestData() {
+            try {
+                const response = await fetch('data/digests.json');
+                digestData = await response.json();
+                console.log(`✅ 成功加载 ${digestData.length} 条书摘数据`);
+            } catch (error) {
+                console.error('❌ 数据加载失败:', error);
+                digestData = [];
+            }
         }
 
-        // 添加节点
-        function addNode(text, parentId, level, x, y) {
-            const nodeId = 'node-' + (nodeIdCounter++);
-            const node = {
-                id: nodeId,
-                text: text,
-                parentId: parentId,
-                level: level,
-                x: x || 0,
-                y: y || 0,
-                children: []
+        // 生成Markdown内容
+        function generateMarkdown() {
+            if (digestData.length === 0) {
+                return '# 📚 阅读知识体系\n\n暂无数据';
+            }
+
+            // 按书名分组
+            const bookGroups = digestData.reduce((acc, digest) => {
+                if (!acc[digest.book]) {
+                    acc[digest.book] = [];
+                }
+                acc[digest.book].push(digest);
+                return acc;
+            }, {});
+
+            let markdown = '# 📚 我的阅读知识体系\n\n';
+
+            // 按书名排序
+            const sortedBooks = Object.keys(bookGroups).sort();
+
+            sortedBooks.forEach(book => {
+                const digests = bookGroups[book];
+                const avgRating = digests
+                    .filter(d => d.rating > 0)
+                    .reduce((sum, d) => sum + d.rating, 0) / digests.length || 0;
+
+                markdown += `## 📖 ${book}\n\n`;
+                markdown += `- **摘录数量**: ${digests.length} 条\n`;
+                markdown += `- **平均启发值**: ${avgRating.toFixed(1)}\n\n`;
+
+                // 按评分分类摘录
+                const highValue = digests.filter(d => d.rating >= 7);
+                const mediumValue = digests.filter(d => d.rating >= 4 && d.rating < 7);
+                const lowValue = digests.filter(d => d.rating < 4 && d.rating > 0);
+
+                if (highValue.length > 0) {
+                    markdown += `### ⭐ 高价值摘录 (${highValue.length})\n\n`;
+                    highValue.forEach((d, i) => {
+                        markdown += `${i + 1}. ${d.content.substring(0, 100)}${d.content.length > 100 ? '...' : ''}\n`;
+                        markdown += `   - 启发值: ${d.rating} | ${d.date}\n\n`;
+                    });
+                }
+
+                if (mediumValue.length > 0) {
+                    markdown += `### 📝 中等价值摘录 (${mediumValue.length})\n\n`;
+                    mediumValue.slice(0, 3).forEach((d, i) => {
+                        markdown += `${i + 1}. ${d.content.substring(0, 80)}...\n`;
+                    });
+                    markdown += '\n';
+                }
+            });
+
+            return markdown;
+        }
+
+        // 渲染思维导图
+        function renderMindmap() {
+            const svg = document.getElementById('mindmap-svg');
+            const markdown = generateMarkdown();
+            
+            // 更新Markdown视图
+            document.getElementById('markdown-content').textContent = markdown;
+
+            try {
+                const { root } = transformer.transform(markdown);
+                
+                if (mm) {
+                    mm.setData(root);
+                    mm.fit();
+                } else {
+                    mm = Markmap.create(svg, {
+                        colorFreezeLevel: 2,
+                        duration: 500,
+                        maxWidth: 300,
+                        initialExpandLevel: 2,
+                        zoom: true,
+                        pan: true
+                    }, root);
+                }
+            } catch (error) {
+                console.error('思维导图渲染失败:', error);
+            }
+        }
+
+        // 绑定事件
+        function bindEvents() {
+            // 主题切换
+            document.getElementById('themeToggle')?.addEventListener('click', function() {
+                const isLight = document.body.classList.toggle('light-mode');
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                updateThemeIcon(isLight ? 'light' : 'dark');
+            });
+
+            // 刷新按钮
+            document.getElementById('refreshBtn')?.addEventListener('click', async function() {
+                await loadDigestData();
+                renderMindmap();
+            });
+
+            // 导出按钮
+            document.getElementById('exportBtn')?.addEventListener('click', function() {
+                exportMindmapImage();
+            });
+
+            // 视图切换
+            document.querySelectorAll('.view-mode-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const view = this.dataset.view;
+                    switchView(view);
+                });
+            });
+        }
+
+        // 切换视图
+        function switchView(view) {
+            currentView = view;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.view-mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === view);
+            });
+
+            // 显示/隐藏视图
+            document.getElementById('mindmap-svg').style.display = view === 'mindmap' ? 'block' : 'none';
+            document.getElementById('markdown-view').style.display = view === 'markdown' ? 'block' : 'none';
+            document.getElementById('stats-view').style.display = view === 'stats' ? 'block' : 'none';
+        }
+
+        // 导出图片
+        function exportMindmapImage() {
+            const svg = document.getElementById('mindmap-svg');
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
+
+            img.onload = function() {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.fillStyle = '#0a0f28';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+
+                canvas.toBlob(function(blob) {
+                    const link = document.createElement('a');
+                    link.download = `阅读思维导图_${new Date().getTime()}.png`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                });
+
+                URL.revokeObjectURL(url);
             };
 
-            if (parentId) {
-                const parent = nodes.find(n => n.id === parentId);
-                if (parent) {
-                    parent.children.push(nodeId);
-                    // 计算子节点位置
-                    const childCount = parent.children.length;
-                    node.x = parent.x + 250;
-                    node.y = parent.y + (childCount - 1) * 100 - ((childCount - 1) * 50);
-                }
-            }
-
-            nodes.push(node);
-            renderNode(node);
-            drawConnections();
+            img.src = url;
         }
 
-        // 渲染节点
-        function renderNode(node) {
-            const nodeEl = document.createElement('div');
-            nodeEl.className = `node ${node.level}`;
-            nodeEl.id = node.id;
-            nodeEl.style.left = node.x + 'px';
-            nodeEl.style.top = node.y + 'px';
-
-            nodeEl.innerHTML = `
-                <div class="node-actions">
-                    <button class="node-btn add-btn" onclick="addChildNode('${node.id}')">+</button>
-                    <button class="node-btn delete-btn" onclick="deleteNode('${node.id}')">×</button>
-                </div>
-                <input type="text" class="node-content" value="${node.text}" 
-                       onchange="updateNodeText('${node.id}', this.value)"
-                       onclick="selectNode('${node.id}')">
-            `;
-
-            // 拖拽事件
-            nodeEl.addEventListener('mousedown', function(e) {
-                if (e.target.classList.contains('node-content')) return;
-                isDragging = true;
-                selectedNode = node.id;
-                dragOffset.x = e.clientX - node.x;
-                dragOffset.y = e.clientY - node.y;
-                nodeEl.style.cursor = 'grabbing';
-            });
-
-            document.getElementById('mindmap').appendChild(nodeEl);
+        // 初始化主题
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.classList.toggle('light-mode', savedTheme === 'light');
+            updateThemeIcon(savedTheme);
         }
 
-        // 添加子节点
-        function addChildNode(parentId) {
-            const parent = nodes.find(n => n.id === parentId);
-            if (parent) {
-                const newLevel = parent.level === 'root' ? 'level-1' : 
-                                parent.level === 'level-1' ? 'level-2' : 'level-2';
-                addNode('新节点', parentId, newLevel);
+        // 更新主题图标
+        function updateThemeIcon(theme) {
+            const icon = document.querySelector('#themeToggle i');
+            if (icon) {
+                icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
             }
         }
-
-        // 删除节点
-        function deleteNode(nodeId) {
-            if (!confirm('确定要删除这个节点及其所有子节点吗？')) return;
-
-            function removeNodeAndChildren(id) {
-                const node = nodes.find(n => n.id === id);
-                if (node) {
-                    // 递归删除子节点
-                    node.children.forEach(childId => removeNodeAndChildren(childId));
-                    // 从DOM中移除
-                    const nodeEl = document.getElementById(id);
-                    if (nodeEl) nodeEl.remove();
-                    // 从数组中移除
-                    nodes = nodes.filter(n => n.id !== id);
-                    // 从父节点的children中移除
-                    if (node.parentId) {
-                        const parent = nodes.find(n => n.id === node.parentId);
-                        if (parent) {
-                            parent.children = parent.children.filter(c => c !== id);
-                        }
-                    }
-                }
-            }
-
-            removeNodeAndChildren(nodeId);
-            drawConnections();
-        }
-
-        // 更新节点文本
-        function updateNodeText(nodeId, newText) {
-            const node = nodes.find(n => n.id === nodeId);
-            if (node) {
-                node.text = newText;
-            }
-        }
-
-        // 选择节点
-        function selectNode(nodeId) {
-            document.querySelectorAll('.node').forEach(n => n.classList.remove('selected'));
-            document.getElementById(nodeId).classList.add('selected');
-            selectedNode = nodeId;
-        }
-
-        // 鼠标移动事件
-        document.addEventListener('mousemove', function(e) {
-            if (isDragging && selectedNode) {
-                const node = nodes.find(n => n.id === selectedNode);
-                if (node) {
-                    node.x = e.clientX - dragOffset.x;
-                    node.y = e.clientY - dragOffset.y;
-                    const nodeEl = document.getElementById(selectedNode);
-                    nodeEl.style.left = node.x + 'px';
-                    nodeEl.style.top = node.y + 'px';
-                    drawConnections();
-                }
-            }
-        });
-
-        // 鼠标释放事件
-        document.addEventListener('mouseup', function() {
-            isDragging = false;
-            document.querySelectorAll('.node').forEach(n => n.style.cursor = 'move');
-        });
-
-        // 绘制连接线
-        function drawConnections() {
-            const svg = document.getElementById('connections');
-            svg.innerHTML = '';
-
-            nodes.forEach(node => {
-                if (node.parentId) {
-                    const parent = nodes.find(n => n.id === node.parentId);
-                    if (parent) {
-                        const parentEl = document.getElementById(parent.id);
-                        const childEl = document.getElementById(node.id);
-                        
-                        if (parentEl && childEl) {
-                            const x1 = parent.x + parentEl.offsetWidth;
-                            const y1 = parent.y + parentEl.offsetHeight / 2;
-                            const x2 = node.x;
-                            const y2 = node.y + childEl.offsetHeight / 2;
-
-                            // 使用贝塞尔曲线
-                            const cx = (x1 + x2) / 2;
-                            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                            path.setAttribute('d', `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`);
-                            path.setAttribute('stroke', 'rgba(255, 255, 255, 0.6)');
-                            path.setAttribute('stroke-width', '3');
-                            path.setAttribute('fill', 'none');
-                            path.setAttribute('stroke-linecap', 'round');
-
-                            svg.appendChild(path);
-                        }
-                    }
-                }
-            });
-        }
-
-        // 导出数据
-        function exportData() {
-            const data = JSON.stringify(nodes, null, 2);
-            const blob = new Blob([data], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'mindmap_' + new Date().getTime() + '.json';
-            a.click();
-            alert('思维导图数据已导出！');
-        }
-
-        // 清空画布
-        function clearAll() {
-            if (confirm('确定要清空所有内容吗？此操作不可恢复！')) {
-                nodes = [];
-                nodeIdCounter = 0;
-                document.getElementById('mindmap').innerHTML = '<svg id="connections"></svg>';
-                addNode('我的思维导图', null, 'root', window.innerWidth / 2 - 100, 100);
-            }
-        }
-
-        // 调整SVG大小
-        window.addEventListener('resize', function() {
-            drawConnections();
-        });
     </script>
 </body>
 </html>
