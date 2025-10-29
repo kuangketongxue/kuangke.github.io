@@ -531,54 +531,87 @@
             color: white;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
+
+        /* ==================== 内容折叠/展开样式优化 ==================== */
         .moment-content {
             margin-bottom: 16px;
             line-height: 1.6;
             color: rgba(255, 255, 255, 0.9);
             font-size: 14px;
             position: relative;
-            transition: all 0.3s ease;
-        }
-        .moment-content.collapsed {
-            max-height: 120px;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
             overflow: hidden;
         }
+
+        .moment-content.collapsed {
+            max-height: 120px;
+            position: relative;
+        }
+
         .moment-content.collapsed::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 30px;
+            height: 40px;
             background: linear-gradient(to bottom, transparent, rgba(20, 20, 50, 0.95));
             pointer-events: none;
         }
+
+        /* 展开按钮样式 */
         .expand-toggle-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: none;
-            border: none;
+            background: rgba(102, 126, 234, 0.15);
+            border: 1px solid rgba(102, 126, 234, 0.3);
             color: #667eea;
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
-            padding: 8px 12px;
+            padding: 8px 16px;
             margin-top: 8px;
-            border-radius: 6px;
+            border-radius: 8px;
             transition: all 0.3s ease;
         }
+
         .expand-toggle-btn:hover {
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(102, 126, 234, 0.25);
+            border-color: rgba(102, 126, 234, 0.5);
             color: #a8b2ff;
             transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
+
+        .expand-toggle-btn:active {
+            transform: translateY(0);
+        }
+
         .expand-toggle-btn .toggle-icon {
             transition: transform 0.3s ease;
+            font-size: 12px;
         }
+
         .expand-toggle-btn.expanded .toggle-icon {
             transform: rotate(180deg);
         }
+
+        /* 展开状态的内容 */
+        .moment-content.expanded {
+            max-height: none;
+        }
+
+        .moment-content.expanded::after {
+            display: none;
+        }
+
+        /* 添加平滑的高度过渡效果 */
+        .moment-content p {
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+
         .moment-images {
             display: grid;
             gap: 8px;
@@ -1059,7 +1092,6 @@
         <i class="fas fa-arrow-left" aria-hidden="true"></i>
         <span>返回正常视图</span>
     </button>
-    
     <!-- ==================== 顶部导航栏 ==================== -->
     <!-- 修改后的导航结构 -->
 <header class="header" role="banner">
@@ -1386,7 +1418,7 @@
                 initializePage();
             }, 100);
         });
-        
+
         // ==================== 背景模式返回按钮初始化 ====================
         function initializeBackgroundModeReturn() {
             const returnBtn = document.getElementById('backgroundModeReturn');
@@ -1394,11 +1426,10 @@
                 exitBackgroundMode();
             });
         }
-        
+
         // ==================== 主题初始化 ====================
         function initializeTheme() {
             const themeToggle = document.getElementById('themeToggle');
-            
             themeToggle.addEventListener('click', function() {
                 if (!backgroundOnlyMode) {
                     // 切换到只显示背景图模式
@@ -1409,36 +1440,31 @@
                 }
             });
         }
-        
+
         // ==================== 进入背景模式 ====================
         function enterBackgroundMode() {
             backgroundOnlyMode = true;
             document.body.classList.add('background-only');
-            
             // 更新主题切换按钮
             const themeToggle = document.getElementById('themeToggle');
             themeToggle.innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i>';
             themeToggle.title = '显示全部内容';
-            
             // 隐藏所有内容元素
             hideAllContent();
-            
             // 显示返回按钮
             const returnBtn = document.getElementById('backgroundModeReturn');
             returnBtn.style.display = 'flex';
         }
-        
+
         // ==================== 退出背景模式 ====================
         function exitBackgroundMode() {
             backgroundOnlyMode = false;
             document.body.classList.remove('background-only');
-            
             // 恢复原来的主题切换逻辑
             const currentTheme = document.body.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             document.body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            
             // 更新主题切换按钮
             const themeToggle = document.getElementById('themeToggle');
             if (newTheme === 'light') {
@@ -1448,25 +1474,22 @@
                 themeToggle.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i>';
                 themeToggle.title = '切换主题';
             }
-            
             // 显示所有内容
             showAllContent();
-            
             // 隐藏返回按钮
             const returnBtn = document.getElementById('backgroundModeReturn');
             returnBtn.style.display = 'none';
         }
-        
+
         // ==================== 隐藏所有内容 ====================
         function hideAllContent() {
             const elementsToHide = [
                 '.header',
-                '.category-nav', 
+                '.category-nav',
                 '.sort-nav',
                 '.main-content',
                 '.social-footer'
             ];
-            
             elementsToHide.forEach(selector => {
                 const elements = document.querySelectorAll(selector);
                 elements.forEach(el => {
@@ -1474,17 +1497,16 @@
                 });
             });
         }
-        
+
         // ==================== 显示所有内容 ====================
         function showAllContent() {
             const elementsToShow = [
                 '.header',
                 '.category-nav',
-                '.sort-nav', 
+                '.sort-nav',
                 '.main-content',
                 '.social-footer'
             ];
-            
             elementsToShow.forEach(selector => {
                 const elements = document.querySelectorAll(selector);
                 elements.forEach(el => {
@@ -1492,7 +1514,7 @@
                 });
             });
         }
-        
+
         // ==================== 页面初始化 ====================
         function initializePage() {
             // 确保数据已加载
@@ -1507,7 +1529,7 @@
                 setTimeout(initializePage, 500);
             }
         }
-        
+
         // ==================== 虚拟滚动优化 ====================
         function initVirtualScroll() {
             const observer = new IntersectionObserver((entries) => {
@@ -1527,7 +1549,7 @@
                 observer.observe(card);
             });
         }
-        
+
         // ==================== 分类筛选初始化 ====================
         function initializeCategoryFilters() {
             const categoryBtns = document.querySelectorAll('.category-btn');
@@ -1552,7 +1574,7 @@
                 });
             });
         }
-        
+
         // ==================== 搜索功能初始化 ====================
         function initializeSearchBox() {
             const searchInput = document.getElementById('searchInput');
@@ -1588,7 +1610,7 @@
                 }, 300);
             });
         }
-        
+
         // ==================== 点赞功能初始化 ====================
         function initializeLikeButtons() {
             document.addEventListener('click', function(e) {
@@ -1629,7 +1651,7 @@
                 }
             });
         }
-        
+
         // ==================== 导出功能初始化 ====================
         function initializeExportButton() {
             const exportBtn = document.getElementById('exportBtn');
@@ -1639,7 +1661,7 @@
                 });
             }
         }
-        
+
         // ==================== 无限滚动初始化 ====================
         function initializeInfiniteScroll() {
             let lastScrollY = window.scrollY;
@@ -1663,7 +1685,7 @@
                 }, 100);
             });
         }
-        
+
         // ==================== 加载更多内容 ====================
         function loadMoreContent() {
             if (isLoading) return;
@@ -1682,7 +1704,7 @@
                 isLoading = false;
             }, 800);
         }
-        
+
         // ==================== 渲染更多朋友圈 ====================
         function renderMoreMoments() {
             const momentsContainer = document.getElementById('momentsContainer');
@@ -1706,7 +1728,7 @@
             // 更新虚拟滚动观察器
             initVirtualScroll();
         }
-        
+
         // ==================== 排序控件初始化 ====================
         function initializeSortControls() {
             const sortBySelect = document.getElementById('sortBy');
@@ -1718,7 +1740,7 @@
                 });
             }
         }
-        
+
         // ==================== 视图控件初始化 ====================
         function initializeViewControls() {
             const gridViewBtn = document.getElementById('gridView');
@@ -1734,7 +1756,7 @@
                 });
             }
         }
-        
+
         // ==================== 恢复用户偏好设置 ====================
         function restoreUserPreferences() {
             // 恢复排序偏好
@@ -1752,7 +1774,7 @@
                 currentViewMode = savedViewMode;
             }
         }
-        
+
         // ==================== 视图模式更新 ====================
         function updateViewMode() {
             const momentsContainer = document.getElementById('momentsContainer');
@@ -1774,7 +1796,7 @@
             // 保存视图模式偏好
             localStorage.setItem('preferredViewMode', currentViewMode);
         }
-        
+
         // ==================== 排序功能 ====================
         function sortMoments(moments, sortMethod) {
             const sortedMoments = [...moments];
@@ -1801,7 +1823,7 @@
             }
             return sortedMoments;
         }
-        
+
         // ==================== 排序并渲染朋友圈 ====================
         function sortAndRenderMoments() {
             // 获取当前筛选后的朋友圈数据
@@ -1825,7 +1847,7 @@
             // 添加排序动画效果
             animateSortChange();
         }
-        
+
         // ==================== 更新排序UI ====================
         function updateSortUI() {
             const sortBySelect = document.getElementById('sortBy');
@@ -1840,7 +1862,7 @@
                 }, 300);
             }
         }
-        
+
         // ==================== 排序动画效果 ====================
         function animateSortChange() {
             const momentsContainer = document.getElementById('momentsContainer');
@@ -1852,7 +1874,7 @@
                 momentsContainer.style.transform = 'scale(1)';
             }, 200);
         }
-        
+
         // ==================== 渲染朋友圈 ====================
         function renderMoments() {
             const momentsContainer = document.getElementById('momentsContainer');
@@ -1884,42 +1906,45 @@
             // 更新分页信息
             updatePaginationInfo();
         }
-        
-        // ==================== 创建朋友圈卡片 ====================
+
+        // ==================== 创建朋友圈卡片（优化版） ====================
         function createMomentCard(moment, index) {
             const card = document.createElement('article');
             card.className = 'moment-card';
             card.setAttribute('role', 'article');
             card.setAttribute('aria-label', `朋友圈内容 ${index + 1}`);
             card.dataset.id = moment.id || `moment-${index}`;
+
             // 检查用户是否已点赞
             const isLiked = userLikes[card.dataset.id];
-            // 格式化日期（容错无效日期）
+
+            // 格式化日期
             const rawDate = new Date(moment.date);
             const hasValidDate = rawDate instanceof Date && !isNaN(rawDate);
             const formattedDate = hasValidDate ? formatDate(rawDate) : (moment.date || '未知时间');
-            
+
             // 价值标签颜色判断逻辑
             function getValueColor(value) {
-                if (value >= 9) return 'linear-gradient(135deg, #ff6b6b, #ff8e53)';  // 高价值（红色）
-                if (value >= 7) return 'linear-gradient(135deg, #667eea, #764ba2)';  // 中高价值（紫色）
-                if (value >= 5) return 'linear-gradient(135deg, #00c9a7, #8b5cf6)';  // 中等价值（蓝绿色）
-                if (value >= 3) return 'linear-gradient(135deg, #ffc107, #ff9800)';  // 中低价值（橙色）
-                return 'linear-gradient(135deg, #868e96, #495057)';                 // 低价值（灰色）
+                if (value >= 9) return 'linear-gradient(135deg, #ff6b6b, #ff8e53)';
+                if (value >= 7) return 'linear-gradient(135deg, #667eea, #764ba2)';
+                if (value >= 5) return 'linear-gradient(135deg, #00c9a7, #8b5cf6)';
+                if (value >= 3) return 'linear-gradient(135deg, #ffc107, #ff9800)';
+                return 'linear-gradient(135deg, #868e96, #495057)';
             }
-            
+
             // 价值标签
             const valueLabel = moment.value ? `
                 <span class="value-badge" style="background: ${getValueColor(moment.value)}">
                     价值 ${moment.value}
                 </span>
             ` : '';
-            
-            // 处理内容长度和折叠状态 - 修改折叠阈值
+
+            // 处理内容长度和折叠状态
             const content = moment.content || '';
-            const shouldCollapse = content.length > 300;  // 提高折叠阈值从150到300
-            const truncatedContent = shouldCollapse ? content.substring(0, 300) : content;  // 相应调整截取长度
-            
+            const COLLAPSE_THRESHOLD = 300;
+            const shouldCollapse = content.length > COLLAPSE_THRESHOLD;
+            const previewContent = shouldCollapse ? content.substring(0, COLLAPSE_THRESHOLD) + '...' : content;
+
             card.innerHTML = `
                 <div class="moment-header">
                     <div class="moment-meta">
@@ -1928,21 +1953,22 @@
                         ${valueLabel}
                     </div>
                 </div>
-                <div class="moment-content ${shouldCollapse ? 'collapsed' : ''}" data-full-content="${content}">
-                    <p>${truncatedContent}</p>
-                    ${shouldCollapse ? `
-                        <button class="expand-toggle-btn" aria-expanded="false" type="button">
-                            展开 <i class="fas fa-chevron-down toggle-icon" aria-hidden="true"></i>
-                        </button>
-                    `: ''}
+                <div class="moment-content ${shouldCollapse ? 'collapsed' : ''}" data-full-content="${escapeHtml(content)}">
+                    <p>${escapeHtml(previewContent)}</p>
                 </div>
+                ${shouldCollapse ? `
+                    <button class="expand-toggle-btn" aria-expanded="false" type="button" title="展开查看完整内容">
+                        <span class="toggle-text">展开全文</span>
+                        <i class="fas fa-chevron-down toggle-icon" aria-hidden="true"></i>
+                    </button>
+                ` : ''}
                 ${moment.images && moment.images.length > 0 ? `
                     <div class="moment-images ${getImageClass(moment.images.length)}">
                         ${moment.images.map((img, imgIndex) => `
                             <img src="${img}" alt="朋友圈图片 ${imgIndex + 1}" loading="lazy">
                         `).join('')}
                     </div>
-                `: ''}
+                ` : ''}
                 <div class="moment-actions">
                     <div class="action-group">
                         <button class="action-btn ${isLiked ? 'liked' : ''}" aria-label="点赞">
@@ -1960,37 +1986,69 @@
                     </button>
                 </div>
             `;
-            
-            // 折叠/展开事件
+
+            // 折叠/展开事件处理（优化版）
             const toggleBtn = card.querySelector('.expand-toggle-btn');
             const contentBox = card.querySelector('.moment-content');
-            if (toggleBtn && contentBox) {
-                toggleBtn.addEventListener('click', () => {
-                    const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+            const contentPara = contentBox?.querySelector('p');
+            
+            if (toggleBtn && contentBox && contentPara) {
+                toggleBtn.addEventListener('click', function() {
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
                     const fullContent = contentBox.dataset.fullContent;
-                    if (expanded) {
+                    
+                    if (isExpanded) {
                         // 收起内容
                         contentBox.classList.add('collapsed');
-                        toggleBtn.setAttribute('aria-expanded', 'false');
-                        toggleBtn.classList.remove('expanded');
-                        toggleBtn.innerHTML = `展开 <i class="fas fa-chevron-down toggle-icon" aria-hidden="true"></i>`;
-                        // 恢复截断内容
-                        contentBox.querySelector('p').textContent = fullContent.substring(0, 300);  // 相应调整
+                        contentBox.classList.remove('expanded');
+                        this.setAttribute('aria-expanded', 'false');
+                        this.classList.remove('expanded');
+                        this.title = '展开查看完整内容';
+                        
+                        // 更新按钮文本和图标
+                        this.querySelector('.toggle-text').textContent = '展开全文';
+                        this.querySelector('.toggle-icon').className = 'fas fa-chevron-down toggle-icon';
+                        
+                        // 恢复预览内容
+                        contentPara.textContent = previewContent;
+                        
+                        // 平滑滚动到卡片顶部
+                        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     } else {
                         // 展开内容
                         contentBox.classList.remove('collapsed');
-                        toggleBtn.setAttribute('aria-expanded', 'true');
-                        toggleBtn.classList.add('expanded');
-                        toggleBtn.innerHTML = `收起 <i class="fas fa-chevron-up toggle-icon" aria-hidden="true"></i>`;
+                        contentBox.classList.add('expanded');
+                        this.setAttribute('aria-expanded', 'true');
+                        this.classList.add('expanded');
+                        this.title = '收起内容';
+                        
+                        // 更新按钮文本和图标
+                        this.querySelector('.toggle-text').textContent = '收起';
+                        this.querySelector('.toggle-icon').className = 'fas fa-chevron-up toggle-icon';
+                        
                         // 显示完整内容
-                        contentBox.querySelector('p').textContent = fullContent;
+                        contentPara.textContent = decodeHtml(fullContent);
                     }
                 });
             }
-            
+
             return card;
         }
-        
+
+        // HTML转义函数（防止XSS）
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // HTML解码函数
+        function decodeHtml(html) {
+            const txt = document.createElement('textarea');
+            txt.innerHTML = html;
+            return txt.value;
+        }
+
         // ==================== 辅助函数 ====================
         function formatDate(date) {
             const now = new Date();
@@ -2020,7 +2078,7 @@
             if (count === 2) return 'double';
             return 'multiple';
         }
-        
+
         // ==================== 统计信息更新 ====================
         function updateStats(moments) {
             const totalMoments = moments.length;
@@ -2028,12 +2086,10 @@
             const highValueMoments = moments.filter(m => (m.value || 0) >= 9).length;
             const today = new Date().toISOString().split('T')[0];
             const todayMoments = moments.filter(m => m.date && String(m.date).startsWith(today)).length;
-            
             // 更新DOM
             animateNumber('totalMoments', totalMoments);
             animateNumber('highValueMoments', highValueMoments);
             animateNumber('todayMoments', todayMoments);
-            
             // 添加排序信息提示
             const sortHint = document.getElementById('sortHint');
             if (sortHint) {
@@ -2051,7 +2107,7 @@
             };
             return descriptions[sortMethod] || '按最新发布时间排序';
         }
-        
+
         // ==================== 数字动画 ====================
         function animateNumber(elementId, targetValue) {
             const element = document.getElementById(elementId);
@@ -2072,7 +2128,7 @@
                 }
             }, 30);
         }
-        
+
         // ==================== 分页功能（完整实现） ====================
         function initPaginationControls() {
             document.getElementById('firstPage')?.addEventListener('click', () => {
@@ -2105,7 +2161,7 @@
                 updatePagination();
             });
         }
-        
+
         function updatePagination() {
             const list = window.currentFilteredMoments || [];
             const perPageEl = document.getElementById('itemsPerPage');
@@ -2148,7 +2204,7 @@
             // 更新文本信息
             updatePaginationInfo();
         }
-        
+
         function updatePaginationInfo() {
             const perPage = parseInt(document.getElementById('itemsPerPage').value, 10);
             const list = window.currentFilteredMoments || [];
@@ -2162,7 +2218,7 @@
             if (endEl) endEl.textContent = String(end);
             if (totalEl) totalEl.textContent = String(total);
         }
-        
+
         // ==================== 数据持久化功能 ====================
         function saveUserData() {
             const userData = {
@@ -2176,7 +2232,7 @@
             };
             localStorage.setItem('userData', JSON.stringify(userData));
         }
-        
+
         function restoreUserData() {
             const savedData = localStorage.getItem('userData');
             if (savedData) {
@@ -2203,7 +2259,7 @@
                 }
             }
         }
-        
+
         // ==================== 导出功能 ====================
         function exportMomentsData() {
             const dataToExport = {
@@ -2230,7 +2286,7 @@
             // 显示成功提示
             showNotification('数据导出成功！');
         }
-        
+
         // ==================== 通知功能 ====================
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
@@ -2258,7 +2314,7 @@
                 }, 300);
             }, 3000);
         }
-        
+
         // 添加通知动画样式
         const style = document.createElement('style');
         style.textContent = `
