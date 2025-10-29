@@ -14,18 +14,15 @@
         * {
             box-sizing: border-box;
         }
-
         html {
             scroll-behavior: smooth;
             font-size: 16px;
         }
-
         @media (max-width: 768px) {
             html {
                 font-size: 14px;
             }
         }
-
         body[data-page="reading"] {
             background: url("images/reading-bg.jpg") center/cover no-repeat fixed;
             color: #f5f7ff;
@@ -35,7 +32,6 @@
             margin: 0;
             padding: 0;
         }
-
         body[data-page="reading"]::before,
         body[data-page="reading"]::after {
             content: "";
@@ -44,19 +40,16 @@
             pointer-events: none;
             z-index: -1;
         }
-
         body[data-page="reading"]::before {
             background: linear-gradient(135deg, rgba(25, 51, 120, 0.45), rgba(15, 18, 60, 0.65));
             mix-blend-mode: screen;
         }
-
         body[data-page="reading"]::after {
             background:
                 radial-gradient(circle at 20% 15%, rgba(120, 160, 255, 0.27), transparent 55%),
                 radial-gradient(circle at 78% 10%, rgba(255, 150, 255, 0.2), transparent 60%),
                 rgba(6, 10, 42, 0.35);
         }
-
         /* ========== 头部样式 ========== */
         .reading-header {
             background: rgba(10, 15, 40, 0.8);
@@ -67,7 +60,6 @@
             top: 0;
             z-index: 100;
         }
-
         .reading-header .container {
             display: flex;
             align-items: center;
@@ -78,7 +70,6 @@
             margin: 0 auto;
             padding: 0 1.5rem;
         }
-
         .reading-header-left {
             display: flex;
             align-items: center;
@@ -87,7 +78,6 @@
             flex: 1;
             min-width: 250px;
         }
-
         .reading-return {
             display: inline-flex;
             align-items: center;
@@ -104,13 +94,11 @@
             box-shadow: 0 10px 22px rgba(99, 102, 241, 0.28);
             white-space: nowrap;
         }
-
         body.light-mode .reading-return {
             background: rgba(99, 102, 241, 0.08);
             color: var(--accent-hover);
             box-shadow: none;
         }
-
         .reading-return:hover {
             transform: translateY(-3px);
             background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
@@ -118,42 +106,66 @@
             border-color: transparent;
             box-shadow: 0 16px 32px rgba(99, 102, 241, 0.35);
         }
-
         .reading-title-group {
             display: flex;
             flex-direction: column;
             gap: 0.3rem;
         }
-
         .reading-title-group .logo {
             font-size: 1.8rem;
             font-weight: 700;
             margin: 0;
             letter-spacing: 0.05em;
         }
-
         .reading-subtitle {
             color: var(--text-secondary);
             font-size: 0.9rem;
             letter-spacing: 0.05em;
             margin: 0;
         }
-
         .controls {
             display: flex;
             gap: 1rem;
+            align-items: center;
         }
-
+        /* ========== 思维导图按钮样式 ========== */
+        .mindmap-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.4rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
+            border: 1px solid rgba(139, 92, 246, 0.45);
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 22px rgba(99, 102, 241, 0.28);
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        body.light-mode .mindmap-btn {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.95), rgba(56, 189, 248, 0.9));
+            box-shadow: 0 8px 18px rgba(99, 102, 241, 0.25);
+        }
+        .mindmap-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 32px rgba(99, 102, 241, 0.35);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(56, 189, 248, 0.98));
+        }
+        .mindmap-btn i {
+            font-size: 1.1rem;
+        }
         /* ========== 主内容区域 ========== */
         .reading-main {
             padding: 3rem 1.5rem 5rem;
         }
-
         .reading-container {
             max-width: 1400px;
             margin: 0 auto;
         }
-
         /* ========== 书摘精选区域 ========== */
         .reading-digest {
             position: relative;
@@ -165,7 +177,6 @@
             animation: fadeIn 0.6s ease-out;
             z-index: 1;
         }
-
         .reading-digest::before {
             content: "";
             position: absolute;
@@ -175,7 +186,6 @@
             pointer-events: none;
             border-radius: 24px;
         }
-
         .reading-digest::after {
             content: "";
             position: absolute;
@@ -188,7 +198,6 @@
             animation: float 16s ease-in-out infinite;
             pointer-events: none;
         }
-
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -199,7 +208,6 @@
                 transform: translateY(0);
             }
         }
-
         @keyframes float {
             0%, 100% {
                 transform: translateY(0) rotate(0deg);
@@ -208,7 +216,6 @@
                 transform: translateY(25px) rotate(6deg);
             }
         }
-
         .reading-digest-header {
             position: relative;
             z-index: 1;
@@ -218,7 +225,6 @@
             margin-bottom: 2.5rem;
             flex-wrap: wrap;
         }
-
         .digest-icon {
             display: inline-flex;
             align-items: center;
@@ -232,12 +238,10 @@
             color: #fff;
             font-size: 1.5rem;
         }
-
         .reading-digest-header > div {
             flex: 1;
             min-width: 280px;
         }
-
         .reading-digest-header h2 {
             font-size: 1.8rem;
             font-weight: 700;
@@ -245,14 +249,12 @@
             letter-spacing: 0.05em;
             margin: 0 0 0.5rem 0;
         }
-
         .reading-digest-header p {
             color: var(--text-secondary);
             font-size: 1rem;
             line-height: 1.6;
             margin: 0;
         }
-
         .bookcase-btn {
             color: var(--accent-color);
             text-decoration: none;
@@ -260,11 +262,9 @@
             transition: all 0.3s ease;
             border-bottom: 2px solid transparent;
         }
-
         .bookcase-btn:hover {
             border-bottom-color: var(--accent-color);
         }
-
         /* ========== 书摘统计信息 ========== */
         .digest-stats {
             display: grid;
@@ -276,12 +276,10 @@
             border-radius: 16px;
             border: 1px solid rgba(255, 193, 7, 0.25);
         }
-
         .digest-stat {
             text-align: center;
             padding: 0.5rem 0;
         }
-
         .digest-stat-number {
             font-size: 1.8rem;
             font-weight: 700;
@@ -290,14 +288,12 @@
             line-height: 1.2;
             margin-bottom: 0.5rem;
         }
-
         .digest-stat-label {
             color: var(--text-secondary);
             font-size: 0.85rem;
             letter-spacing: 0.05em;
             white-space: nowrap;
         }
-
         /* ========== 搜索栏 ========== */
         .digest-search {
             margin: 1.5rem 0 0;
@@ -306,7 +302,6 @@
             flex-wrap: wrap;
             align-items: stretch;
         }
-
         .digest-search-wrapper {
             display: flex;
             gap: 0.8rem;
@@ -314,7 +309,6 @@
             min-width: 280px;
             flex-wrap: wrap;
         }
-
         .digest-search input {
             flex: 1;
             min-width: 200px;
@@ -327,26 +321,21 @@
             transition: all 0.3s ease;
             font-size: 0.95rem;
         }
-
         body.light-mode .digest-search input {
             background: rgba(255, 255, 255, 0.92);
             color: var(--text-primary);
             border-color: rgba(139, 92, 246, 0.25);
         }
-
         .digest-search input:focus {
             border-color: rgba(99, 102, 241, 0.7);
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
         }
-
         .digest-search input::placeholder {
             color: rgba(245, 247, 255, 0.5);
         }
-
         body.light-mode .digest-search input::placeholder {
             color: rgba(0, 0, 0, 0.4);
         }
-
         .digest-search button {
             padding: 0.8rem 1.6rem;
             border: none;
@@ -363,24 +352,19 @@
             white-space: nowrap;
             font-weight: 500;
         }
-
         .digest-search button:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 28px rgba(99, 102, 241, 0.4);
         }
-
         .digest-search button:active {
             transform: translateY(0);
         }
-
         body.light-mode .digest-search button {
             box-shadow: 0 8px 18px rgba(99, 102, 241, 0.25);
         }
-
         body.light-mode .digest-search button:hover {
             box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
         }
-
         /* ========== 书摘表格 ========== */
         .reading-digest-table {
             position: relative;
@@ -393,26 +377,21 @@
             overflow-y: auto;
             padding-right: 0.5rem;
         }
-
         /* 自定义滚动条 */
         .reading-digest-table::-webkit-scrollbar {
             width: 8px;
         }
-
         .reading-digest-table::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
         }
-
         .reading-digest-table::-webkit-scrollbar-thumb {
             background: rgba(139, 92, 246, 0.3);
             border-radius: 4px;
         }
-
         .reading-digest-table::-webkit-scrollbar-thumb:hover {
             background: rgba(139, 92, 246, 0.5);
         }
-
         .digest-row {
             display: grid;
             grid-template-columns: 1.2fr 2fr 0.9fr 0.7fr;
@@ -424,7 +403,6 @@
             border-radius: 16px;
             transition: all 0.3s ease;
         }
-
         .digest-row--head {
             background: linear-gradient(135deg, rgba(255, 193, 7, 0.18), rgba(255, 152, 0, 0.12));
             font-weight: 700;
@@ -437,13 +415,11 @@
             padding: 1.2rem 1.6rem;
             font-size: 0.95rem;
         }
-
         .digest-row:hover:not(.digest-row--head) {
             transform: translateY(-3px);
             box-shadow: 0 10px 24px rgba(99, 102, 241, 0.18);
             border-color: rgba(139, 92, 246, 0.3);
         }
-
         .digest-col {
             word-wrap: break-word;
             word-break: break-word;
@@ -451,28 +427,23 @@
             line-height: 1.6;
             font-size: 0.95rem;
         }
-
         .digest-col--book {
             color: var(--accent-color);
             font-weight: 600;
         }
-
         .digest-col--content {
             color: var(--text-primary);
             font-size: 0.95rem;
         }
-
         .digest-col--date {
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
-
         .digest-col--rating {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
         /* ========== 评分徽章 ========== */
         .rating-badge {
             display: flex;
@@ -488,7 +459,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .rating-badge::before {
             content: '';
             position: absolute;
@@ -499,67 +469,56 @@
             background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.12));
             pointer-events: none;
         }
-
         /* 10-9分：金色 */
         .rating-value-10, .rating-value-9 {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #fff;
             box-shadow: 0 4px 14px rgba(255, 215, 0, 0.45);
         }
-
         .rating-value-10:hover, .rating-value-9:hover {
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(255, 215, 0, 0.55);
         }
-
         /* 8-7分：绿色 */
         .rating-value-8, .rating-value-7 {
             background: linear-gradient(135deg, #4CAF50, #45a049);
             color: #fff;
             box-shadow: 0 4px 14px rgba(76, 175, 80, 0.35);
         }
-
         .rating-value-8:hover, .rating-value-7:hover {
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(76, 175, 80, 0.45);
         }
-
         /* 6-5分：蓝色 */
         .rating-value-6, .rating-value-5 {
             background: linear-gradient(135deg, #2196F3, #1976D2);
             color: #fff;
             box-shadow: 0 4px 14px rgba(33, 150, 243, 0.35);
         }
-
         .rating-value-6:hover, .rating-value-5:hover {
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(33, 150, 243, 0.45);
         }
-
         /* 4-3分：橙色 */
         .rating-value-4, .rating-value-3 {
             background: linear-gradient(135deg, #FF9800, #F57C00);
             color: #fff;
             box-shadow: 0 4px 14px rgba(255, 152, 0, 0.35);
         }
-
         .rating-value-4:hover, .rating-value-3:hover {
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(255, 152, 0, 0.45);
         }
-
         /* 2-1分：红色 */
         .rating-value-2, .rating-value-1 {
             background: linear-gradient(135deg, #F44336, #D32F2F);
             color: #fff;
             box-shadow: 0 4px 14px rgba(244, 67, 54, 0.35);
         }
-
         .rating-value-2:hover, .rating-value-1:hover {
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(244, 67, 54, 0.45);
         }
-
         /* 空评分 */
         .rating-empty {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
@@ -568,7 +527,6 @@
             font-style: italic;
             font-size: 0.85rem;
         }
-
         /* ========== 返回顶部按钮 ========== */
         .back-to-top {
             position: fixed;
@@ -593,27 +551,22 @@
             z-index: 9999;
             backdrop-filter: blur(10px);
         }
-
         .back-to-top:hover {
             transform: translateY(-6px) scale(1.05);
             box-shadow: 0 16px 40px rgba(139, 92, 246, 0.65);
             background: linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(56, 189, 248, 0.98));
         }
-
         .back-to-top:active {
             transform: translateY(-2px) scale(0.95);
         }
-
         .back-to-top.visible {
             opacity: 1;
             visibility: visible;
             transform: scale(1);
         }
-
         .back-to-top i {
             animation: bounce 2s infinite;
         }
-
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% {
                 transform: translateY(0);
@@ -625,16 +578,13 @@
                 transform: translateY(-4px);
             }
         }
-
         body.light-mode .back-to-top {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.95), rgba(56, 189, 248, 0.9));
             box-shadow: 0 8px 28px rgba(99, 102, 241, 0.45);
         }
-
         body.light-mode .back-to-top:hover {
             box-shadow: 0 16px 40px rgba(99, 102, 241, 0.55);
         }
-
         /* ========== 社交页脚样式 ========== */
         .social-footer {
             background: var(--bg-card);
@@ -642,7 +592,6 @@
             padding: 2.5rem 1.5rem;
             margin-top: 4rem;
         }
-
         .social-footer .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -651,14 +600,12 @@
             align-items: center;
             gap: 1.5rem;
         }
-
         .social-links {
             display: flex;
             gap: 1.2rem;
             align-items: center;
             flex-wrap: wrap;
         }
-
         .social-link {
             display: inline-flex;
             align-items: center;
@@ -671,20 +618,17 @@
             transition: all 0.3s ease;
             background: rgba(255, 255, 255, 0.08);
         }
-
         .social-link:hover {
             transform: translateY(-4px);
             color: var(--accent-color);
             background: rgba(99, 102, 241, 0.15);
         }
-
         .copyright {
             color: var(--text-secondary);
             font-size: 0.9rem;
             margin: 0;
             text-align: center;
         }
-
         /* ========== 加载动画 ========== */
         .loading {
             text-align: center;
@@ -692,7 +636,6 @@
             color: var(--text-secondary);
             grid-column: 1/-1;
         }
-
         .loading-spinner {
             display: inline-block;
             width: 32px;
@@ -703,145 +646,126 @@
             animation: spin 1s ease-in-out infinite;
             margin-right: 0.8rem;
         }
-
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
         /* ========== 响应式设计 ========== */
         @media (max-width: 1024px) {
             .reading-header .container {
                 padding: 0 1rem;
                 gap: 1rem;
             }
-
             .reading-main {
                 padding: 2.5rem 1rem 4rem;
             }
-
             .reading-digest {
                 padding: 2rem;
             }
-
             .digest-row {
                 grid-template-columns: 1.1fr 1.8fr 0.8fr 0.6fr;
                 gap: 1.2rem;
                 padding: 1.2rem 1.4rem;
             }
-
             .reading-digest-header h2 {
                 font-size: 1.6rem;
             }
         }
-
         @media (max-width: 768px) {
             .reading-header {
                 padding: 1rem 0;
             }
-
             .reading-header .container {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 1rem;
             }
-
             .reading-header-left {
                 gap: 1rem;
                 width: 100%;
             }
-
             .reading-return {
                 width: 100%;
                 justify-content: center;
                 font-size: 0.9rem;
                 padding: 0.65rem 1.2rem;
             }
-
             .reading-title-group .logo {
                 font-size: 1.5rem;
             }
-
             .controls {
                 width: 100%;
+                flex-wrap: wrap;
             }
-
+            .mindmap-btn {
+                flex: 1;
+                justify-content: center;
+                min-width: 150px;
+            }
+            .mindmap-btn .btn-text {
+                display: inline;
+            }
             .reading-main {
                 padding: 2rem 1rem 3.5rem;
             }
-
             .reading-digest {
                 padding: 1.5rem;
                 border-radius: 20px;
             }
-
             .reading-digest-header {
                 gap: 1rem;
                 margin-bottom: 1.8rem;
             }
-
             .reading-digest-header h2 {
                 font-size: 1.4rem;
                 margin-bottom: 0.3rem;
             }
-
             .digest-icon {
                 width: 48px;
                 height: 48px;
                 font-size: 1.2rem;
             }
-
             .digest-stats {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1rem;
                 padding: 1.2rem;
                 margin: 1.5rem 0;
             }
-
             .digest-stat-number {
                 font-size: 1.5rem;
                 margin-bottom: 0.3rem;
             }
-
             .digest-stat-label {
                 font-size: 0.8rem;
             }
-
             .digest-search {
                 flex-direction: column;
                 gap: 0.8rem;
             }
-
             .digest-search-wrapper {
                 min-width: unset;
                 width: 100%;
             }
-
             .digest-search input,
             .digest-search button {
                 width: 100%;
             }
-
             .digest-search button {
                 justify-content: center;
                 padding: 0.75rem 1.2rem;
             }
-
             .digest-row {
                 grid-template-columns: 1fr;
                 gap: 0.8rem;
                 padding: 1.2rem;
                 margin-bottom: 0.4rem;
             }
-
             .digest-row--head {
                 display: none;
             }
-
             .digest-col {
                 width: 100%;
                 font-size: 0.9rem;
             }
-
             .digest-col::before {
                 content: attr(data-label);
                 font-weight: 700;
@@ -850,23 +774,19 @@
                 margin-bottom: 0.3rem;
                 font-size: 0.85rem;
             }
-
             .digest-col--rating {
                 justify-content: flex-start;
             }
-
             .rating-badge {
                 min-width: 40px;
                 height: 40px;
                 font-size: 0.9rem;
             }
-
             .reading-digest-table {
                 max-height: none;
                 gap: 0.6rem;
                 margin-top: 1.5rem;
             }
-
             .back-to-top {
                 bottom: 20px;
                 right: 20px;
@@ -874,80 +794,74 @@
                 height: 50px;
                 font-size: 1.1rem;
             }
-
             .social-footer {
                 padding: 2rem 1rem;
             }
         }
-
         @media (max-width: 480px) {
             html {
                 font-size: 13px;
             }
-
             .reading-header .container {
                 padding: 0 0.8rem;
             }
-
             .reading-return {
                 font-size: 0.85rem;
                 padding: 0.6rem 1rem;
             }
-
             .reading-return span {
                 display: none;
             }
-
             .reading-return::after {
                 content: '返回';
             }
-
             .reading-title-group .logo {
                 font-size: 1.3rem;
             }
-
+            .mindmap-btn .btn-text {
+                display: none;
+            }
+            .mindmap-btn {
+                padding: 0.7rem;
+                width: 44px;
+                height: 44px;
+                justify-content: center;
+                min-width: unset;
+                flex: unset;
+            }
             .reading-main {
                 padding: 1.5rem 0.8rem 3rem;
             }
-
             .reading-digest {
                 padding: 1.2rem;
             }
-
             .reading-digest-header {
                 gap: 0.8rem;
             }
-
             .reading-digest-header h2 {
                 font-size: 1.2rem;
             }
-
             .reading-digest-header > div {
                 min-width: 100%;
             }
-
             .digest-stats {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.8rem;
                 padding: 1rem;
                 margin: 1rem 0;
             }
-
             .digest-stat-number {
                 font-size: 1.3rem;
             }
-
             .digest-col {
                 font-size: 0.85rem;
             }
-
             .rating-badge {
                 min-width: 36px;
                 height: 36px;
                 font-size: 0.8rem;
                 padding: 0 6px;
             }
-
             .back-to-top {
                 bottom: 15px;
                 right: 15px;
@@ -955,11 +869,9 @@
                 height: 45px;
                 font-size: 1rem;
             }
-
             .social-links {
                 gap: 0.8rem;
             }
-
             .social-link {
                 width: 40px;
                 height: 40px;
@@ -983,13 +895,17 @@
                 </div>
             </div>
             <div class="controls">
+                <!-- 新增：思维导图按钮 -->
+                <a href="mindmap.html" class="mindmap-btn" aria-label="打开思维导图" title="思维导图梳理">
+                    <i class="fas fa-project-diagram"></i>
+                    <span class="btn-text">思维导图</span>
+                </a>
                 <button id="themeToggle" class="theme-toggle" aria-label="切换主题">
                     <i class="fas fa-moon" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
     </header>
-
     <!-- 主内容区 -->
     <main class="reading-main">
         <div class="reading-container">
@@ -1002,7 +918,6 @@
                     <div>
                         <h2>书摘精选集</h2>
                         <p>访问 <a href="books.html" class="bookcase-btn" target="_blank">星空书柜</a> 了解更多书籍</p>
-                        
                         <!-- 书摘统计信息 -->
                         <div class="digest-stats">
                             <div class="digest-stat">
@@ -1022,7 +937,6 @@
                                 <span class="digest-stat-label">高启发摘录</span>
                             </div>
                         </div>
-
                         <!-- 搜索和排序工具栏 -->
                         <div class="digest-search">
                             <input type="search" id="digestSearchInput" placeholder="搜索书名或摘录关键词..." aria-label="搜索书摘">
@@ -1043,7 +957,6 @@
                         </div>
                     </div>
                 </header>
-
                 <!-- 书摘表格 -->
                 <div class="reading-digest-table" role="table" aria-label="书摘列表">
                     <!-- 表头 -->
@@ -1057,12 +970,10 @@
             </section>
         </div>
     </main>
-
     <!-- 返回顶部按钮 -->
     <button id="backToTop" class="back-to-top" aria-label="返回顶部" title="返回顶部">
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
-
     <!-- 页脚 -->
     <footer class="social-footer">
         <div class="container">
@@ -1083,59 +994,36 @@
             <p class="copyright">© 2025 狂客·银河 版权所有 | 精选书摘 · 启迪人生</p>
         </div>
     </footer>
-
     <script>
-        // [JavaScript 代码保持不变，只需更新表格渲染部分]
-// ✅ 修改后的代码
-let digestData = [];
-let currentDigestData = [];
-let sortOrder = 'default';
+        let digestData = [];
+        let currentDigestData = [];
+        let sortOrder = 'default';
 
-// 加载数据的函数
-async function loadDigestData() {
-    try {
-        const response = await fetch('data/digests.json');
-        if (!response.ok) {
-            throw new Error(`HTTP错误: ${response.status}`);
+        // 加载数据的函数
+        async function loadDigestData() {
+            try {
+                const response = await fetch('data/digests.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP错误: ${response.status}`);
+                }
+                digestData = await response.json();
+                console.log(`✅ 成功加载 ${digestData.length} 条书摘数据`);
+            } catch (error) {
+                console.error('加载失败:', error);
+                showLoadingError();
+            }
         }
-        digestData = await response.json();
-        console.log(`✅ 成功加载 ${digestData.length} 条书摘数据`);
-    } catch (error) {
-        console.error('加载失败:', error);
-        // 如果加载失败，显示错误提示
-        showLoadingError();
-    }
-}
-
-// 初始化页面
-document.addEventListener('DOMContentLoaded', async function() {
-    document.body.setAttribute('data-page', 'reading');
-    initializeTheme();
-    
-    // 🔥 加载数据
-    await loadDigestData();
-    
-    if (digestData.length > 0) {
-        currentDigestData = [...digestData];
-        renderDigestTable();
-        updateDigestStats();
-    }
-    
-    bindSearchEvents();
-    bindSortEvents();
-    initBackToTop();
-});
-// ... 保留其他所有函数不变
-
-        // 当前显示的数据
-       
 
         // 初始化页面
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             document.body.setAttribute('data-page', 'reading');
             initializeTheme();
-            renderDigestTable();
-            updateDigestStats();
+            await loadDigestData();
+            if (digestData.length > 0) {
+                currentDigestData = [...digestData];
+                renderDigestTable();
+                updateDigestStats();
+            }
             bindSearchEvents();
             bindSortEvents();
             initBackToTop();
@@ -1174,83 +1062,89 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
 
         // 渲染书摘表格
-       // 渲染书摘表格（修复版）
-function renderDigestTable() {
-    const tableBody = document.querySelector('.reading-digest-table');
-    if (!tableBody) {
-        console.error('未找到表格容器');
-        return;
-    }
+        function renderDigestTable() {
+            const tableBody = document.querySelector('.reading-digest-table');
+            if (!tableBody) {
+                console.error('未找到表格容器');
+                return;
+            }
 
-    // 1. 克隆表头（避免DOM引用问题）
-    const headerRow = tableBody.querySelector('.digest-row--head');
-    const headerClone = headerRow ? headerRow.cloneNode(true) : null;
+            const headerRow = tableBody.querySelector('.digest-row--head');
+            const headerClone = headerRow ? headerRow.cloneNode(true) : null;
 
-    // 2. 清空表格
-    tableBody.innerHTML = '';
+            tableBody.innerHTML = '';
 
-    // 3. 重新添加表头
-    if (headerClone) {
-        tableBody.appendChild(headerClone);
-    }
+            if (headerClone) {
+                tableBody.appendChild(headerClone);
+            }
 
-    // 4. 显示加载状态
-    const loadingDiv = document.createElement('div');
-    loadingDiv.className = 'loading';
-    loadingDiv.innerHTML = '<div class="loading-spinner"></div>正在加载书摘数据...';
-    tableBody.appendChild(loadingDiv);
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'loading';
+            loadingDiv.innerHTML = '<div class="loading-spinner"></div>正在加载书摘数据...';
+            tableBody.appendChild(loadingDiv);
 
-    // 5. 延迟渲染数据
-    setTimeout(() => {
-        // 安全移除加载提示
-        if (loadingDiv.parentNode === tableBody) {
-            tableBody.removeChild(loadingDiv);
+            setTimeout(() => {
+                if (loadingDiv.parentNode === tableBody) {
+                    tableBody.removeChild(loadingDiv);
+                }
+
+                if (currentDigestData.length === 0) {
+                    const emptyRow = document.createElement('div');
+                    emptyRow.className = 'digest-row';
+                    emptyRow.style.cssText = 'text-align: center; padding: 3rem 1.5rem; grid-column: 1/-1;';
+                    emptyRow.innerHTML = `
+                        <div class="digest-col" style="color: var(--text-secondary);">
+                            😢 没有找到匹配的书摘内容
+                        </div>
+                    `;
+                    tableBody.appendChild(emptyRow);
+                } else {
+                    currentDigestData.forEach(digest => {
+                        const row = document.createElement('div');
+                        row.className = 'digest-row';
+                        row.setAttribute('role', 'row');
+                        row.innerHTML = `
+                            <div class="digest-col digest-col--book" role="cell" data-label="📖 书名">
+                                ${escapeHtml(digest.book)}
+                            </div>
+                            <div class="digest-col digest-col--content" role="cell" data-label="📝 摘录">
+                                ${escapeHtml(digest.content)}
+                            </div>
+                            <div class="digest-col digest-col--date" role="cell" data-label="📅 日期">
+                                ${escapeHtml(digest.date)}
+                            </div>
+                            <div class="digest-col digest-col--rating" role="cell" data-label="⭐ 启发值">
+                                ${createRatingBadge(digest.rating)}
+                            </div>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+            }, 300);
         }
 
-        // 渲染数据行
-        if (currentDigestData.length === 0) {
-            // 空状态
-            const emptyRow = document.createElement('div');
-            emptyRow.className = 'digest-row';
-            emptyRow.style.cssText = 'text-align: center; padding: 3rem 1.5rem; grid-column: 1/-1;';
-            emptyRow.innerHTML = `
+        // HTML转义函数
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 显示加载错误
+        function showLoadingError() {
+            const tableBody = document.querySelector('.reading-digest-table');
+            if (!tableBody) return;
+
+            const errorRow = document.createElement('div');
+            errorRow.className = 'digest-row';
+            errorRow.style.cssText = 'text-align: center; padding: 3rem 1.5rem; grid-column: 1/-1;';
+            errorRow.innerHTML = `
                 <div class="digest-col" style="color: var(--text-secondary);">
-                    😢 没有找到匹配的书摘内容
+                    ❌ 数据加载失败，请刷新页面重试
                 </div>
             `;
-            tableBody.appendChild(emptyRow);
-        } else {
-            // 渲染每一行数据
-            currentDigestData.forEach(digest => {
-                const row = document.createElement('div');
-                row.className = 'digest-row';
-                row.setAttribute('role', 'row');
-                row.innerHTML = `
-                    <div class="digest-col digest-col--book" role="cell" data-label="📖 书名">
-                        ${escapeHtml(digest.book)}
-                    </div>
-                    <div class="digest-col digest-col--content" role="cell" data-label="📝 摘录">
-                        ${escapeHtml(digest.content)}
-                    </div>
-                    <div class="digest-col digest-col--date" role="cell" data-label="📅 日期">
-                        ${escapeHtml(digest.date)}
-                    </div>
-                    <div class="digest-col digest-col--rating" role="cell" data-label="⭐ 启发值">
-                        ${createRatingBadge(digest.rating)}
-                    </div>
-                `;
-                tableBody.appendChild(row);
-            });
+            tableBody.appendChild(errorRow);
         }
-    }, 300);
-}
-
-// 添加HTML转义函数（防止XSS）
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
 
         // 更新书摘统计信息
         function updateDigestStats() {
@@ -1343,6 +1237,7 @@ function escapeHtml(text) {
         function updateSortButton() {
             const sortButton = document.getElementById('digestSortToggle');
             if (!sortButton) return;
+
             const icon = sortButton.querySelector('i');
             const text = sortButton.querySelector('span');
             const labels = {
@@ -1352,6 +1247,7 @@ function escapeHtml(text) {
                 'date-desc': { icon: 'fas fa-calendar-alt', text: '日期↓' },
                 'date-asc': { icon: 'fas fa-calendar', text: '日期↑' }
             };
+
             const label = labels[sortOrder] || labels['default'];
             icon.className = label.icon;
             text.textContent = label.text;
@@ -1361,9 +1257,11 @@ function escapeHtml(text) {
         function initBackToTop() {
             const backToTopButton = document.getElementById('backToTop');
             if (!backToTopButton) return;
+
             window.addEventListener('scroll', () => {
                 backToTopButton.classList.toggle('visible', window.pageYOffset > 300);
             });
+
             backToTopButton.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
