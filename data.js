@@ -80,8 +80,8 @@ let successDiaryData = [
             en: 'Read 16+ books.\nWebsite optimization.New addition of English reading materials.\nStudied for 8+ hours\nWrite a piece of content totaling 10000 words.'
         },
         highlight: {
-            zh: '精力极其极其充足',
-            en: 'Extremely abundant energy levels'
+            zh: '罗永浩*贾樟柯播客',
+            en: 'Podcast featuring Luo Hongbo and Jia Zhangke'
         },
         notes: {
             zh: '',
