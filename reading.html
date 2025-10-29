@@ -1086,61 +1086,45 @@
 
     <script>
         // [JavaScript 代码保持不变，只需更新表格渲染部分]
-// 书摘数据变量（从 JSON 文件加载）
+// ✅ 修改后的代码
 let digestData = [];
 let currentDigestData = [];
 let sortOrder = 'default';
+
+// 加载数据的函数
+async function loadDigestData() {
+    try {
+        const response = await fetch('data/digests.json');
+        if (!response.ok) {
+            throw new Error(`HTTP错误: ${response.status}`);
+        }
+        digestData = await response.json();
+        console.log(`✅ 成功加载 ${digestData.length} 条书摘数据`);
+    } catch (error) {
+        console.error('加载失败:', error);
+        // 如果加载失败，显示错误提示
+        showLoadingError();
+    }
+}
 
 // 初始化页面
 document.addEventListener('DOMContentLoaded', async function() {
     document.body.setAttribute('data-page', 'reading');
     initializeTheme();
     
-    // 🔥 从 JSON 文件加载数据
-    try {
-        await loadDigestData();
+    // 🔥 加载数据
+    await loadDigestData();
+    
+    if (digestData.length > 0) {
         currentDigestData = [...digestData];
         renderDigestTable();
         updateDigestStats();
-    } catch (error) {
-        console.error('加载书摘数据失败:', error);
-        showLoadingError();
     }
     
     bindSearchEvents();
     bindSortEvents();
     initBackToTop();
 });
-
-// 🔥 新增：加载书摘数据函数
-async function loadDigestData() {
-    const response = await fetch('data/digests.json');
-    if (!response.ok) {
-        throw new Error(`HTTP错误: ${response.status}`);
-    }
-    digestData = await response.json();
-    console.log(`✅ 成功加载 ${digestData.length} 条书摘数据`);
-}
-
-// 🔥 新增：显示加载错误
-function showLoadingError() {
-    const tableBody = document.querySelector('.reading-digest-table');
-    if (!tableBody) return;
-    
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'digest-row';
-    errorDiv.style.cssText = 'text-align: center; padding: 3rem 1.5rem; grid-column: 1/-1; color: #f44336;';
-    errorDiv.innerHTML = `
-        <div class="digest-col">
-            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-            <p style="margin: 0;">❌ 加载书摘数据失败</p>
-            <p style="margin-top: 0.5rem; font-size: 0.9rem;">请检查 data/digests.json 文件是否存在</p>
-        </div>
-    `;
-    tableBody.innerHTML = '';
-    tableBody.appendChild(errorDiv);
-}
-
 // ... 保留其他所有函数不变
 
         // 当前显示的数据
