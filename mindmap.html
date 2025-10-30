@@ -7,7 +7,10 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:;">
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader"></script>
+    <!-- 改用 unpkg CDN -->
+    <script src="https://unpkg.com/d3@7"></script>
+    <script src="https://unpkg.com/markmap-view@0.15.4"></script>
+    <script src="https://unpkg.com/markmap-lib@0.15.4"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -396,6 +399,21 @@
             to { transform: rotate(360deg); }
         }
 
+        /* 错误提示 */
+        .error-message {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            color: #ff6b6b;
+        }
+
+        .error-message h3 {
+            margin-bottom: 0.5rem;
+            color: #ff6b6b;
+        }
+
         /* 响应式设计 */
         @media (max-width: 768px) {
             .header-container {
@@ -537,47 +555,53 @@
         </div>
     </main>
 
-    <script type="module">
-        import { Markmap } from 'https://cdn.jsdelivr.net/npm/markmap-view@0.15.4/+esm';
-        import { Transformer } from 'https://cdn.jsdelivr.net/npm/markmap-lib@0.15.4/+esm';
+    <script>
+        // 等待库加载完成
+        window.addEventListener('load', function() {
+            if (typeof markmap === 'undefined') {
+                console.error('Markmap库加载失败');
+                document.getElementById('mindmap-svg').innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#ff6b6b">思维导图库加载失败，请刷新页面重试</text>';
+                return;
+            }
 
-        let mm = null;
-        let transformer = new Transformer();
-        let mindmapData = '';
-        let currentView = 'mindmap';
-
-        // 初始化
-        document.addEventListener('DOMContentLoaded', async function() {
-            initTheme();
-            await loadMindmapData();
-            renderMindmap();
-            bindEvents();
+            initApp();
         });
 
-        // 加载思维导图数据
-        async function loadMindmapData() {
-            try {
-                const response = await fetch('data/mindmap.md');
-                if (!response.ok) {
-                    throw new Error(`HTTP错误: ${response.status}`);
-                }
-                mindmapData = await response.text();
-                console.log('✅ 成功加载思维导图数据');
-                
-                // 同时加载书摘数据用于统计
+        function initApp() {
+            let mm = null;
+            let mindmapData = '';
+            let currentView = 'mindmap';
+
+            // 初始化
+            initTheme();
+            loadMindmapData();
+            bindEvents();
+
+            // 加载思维导图数据
+            async function loadMindmapData() {
                 try {
-                    const digestResponse = await fetch('data/digests.json');
-                    if (digestResponse.ok) {
-                        const digestData = await digestResponse.json();
-                        updateStatistics(digestData);
+                    const response = await fetch('data/mindmap.md');
+                    if (!response.ok) {
+                        throw new Error(`HTTP错误: ${response.status}`);
+                    }
+                    mindmapData = await response.text();
+                    console.log('✅ 成功加载思维导图数据');
+                    renderMindmap();
+                    
+                    // 同时加载书摘数据用于统计
+                    try {
+                        const digestResponse = await fetch('data/digests.json');
+                        if (digestResponse.ok) {
+                            const digestData = await digestResponse.json();
+                            updateStatistics(digestData);
+                        }
+                    } catch (error) {
+                        console.warn('警告: 无法加载书摘数据进行统计:', error);
                     }
                 } catch (error) {
-                    console.warn('警告: 无法加载书摘数据进行统计:', error);
-                }
-            } catch (error) {
-                console.error('❌ 思维导图数据加载失败:', error);
-                // 使用默认数据
-                mindmapData = `# 📚 阅读知识体系
+                    console.error('❌ 思维导图数据加载失败:', error);
+                    // 使用默认数据
+                    mindmapData = `# 📚 阅读知识体系
 
 ## 📖 书籍分类
 
@@ -607,165 +631,170 @@
 - 速读方法
 - 精读策略
 - 笔记系统`;
-            }
-        }
-
-        // 更新统计信息
-        function updateStatistics(digestData) {
-            const books = [...new Set(digestData.map(d => d.book))];
-            const chapters = Math.ceil(digestData.length / 3); // 估算章节数
-            const nodes = digestData.length;
-            const lastUpdated = new Date().toLocaleDateString('zh-CN');
-
-            document.getElementById('totalBooks').textContent = books.length;
-            document.getElementById('totalChapters').textContent = chapters;
-            document.getElementById('totalNodes').textContent = nodes;
-            document.getElementById('lastUpdated').textContent = lastUpdated;
-
-            // 生成书籍列表
-            const bookList = document.getElementById('bookList');
-            const bookGroups = digestData.reduce((acc, digest) => {
-                if (!acc[digest.book]) {
-                    acc[digest.book] = [];
+                    renderMindmap();
                 }
-                acc[digest.book].push(digest);
-                return acc;
-            }, {});
+            }
 
-            bookList.innerHTML = '';
-            Object.entries(bookGroups).forEach(([book, digests]) => {
-                const avgRating = digests
-                    .filter(d => d.rating > 0)
-                    .reduce((sum, d) => sum + d.rating, 0) / digests.length || 0;
+            // 更新统计信息
+            function updateStatistics(digestData) {
+                const books = [...new Set(digestData.map(d => d.book))];
+                const chapters = Math.ceil(digestData.length / 3);
+                const nodes = digestData.length;
+                const lastUpdated = new Date().toLocaleDateString('zh-CN');
 
-                const bookItem = document.createElement('div');
-                bookItem.className = 'book-item';
-                bookItem.innerHTML = `
-                    <div class="book-title">${book}</div>
-                    <div class="book-stats">
-                        <span>📝 ${digests.length} 条摘录</span>
-                        <span>⭐ ${avgRating.toFixed(1)} 平均启发值</span>
-                    </div>
-                `;
-                bookList.appendChild(bookItem);
-            });
-        }
+                document.getElementById('totalBooks').textContent = books.length;
+                document.getElementById('totalChapters').textContent = chapters;
+                document.getElementById('totalNodes').textContent = nodes;
+                document.getElementById('lastUpdated').textContent = lastUpdated;
 
-        // 渲染思维导图
-        function renderMindmap() {
-            const svg = document.getElementById('mindmap-svg');
-            
-            // 更新Markdown视图
-            document.getElementById('markdown-content').textContent = mindmapData;
+                // 生成书籍列表
+                const bookList = document.getElementById('bookList');
+                const bookGroups = digestData.reduce((acc, digest) => {
+                    if (!acc[digest.book]) {
+                        acc[digest.book] = [];
+                    }
+                    acc[digest.book].push(digest);
+                    return acc;
+                }, {});
 
-            try {
-                const { root } = transformer.transform(mindmapData);
+                bookList.innerHTML = '';
+                Object.entries(bookGroups).forEach(([book, digests]) => {
+                    const avgRating = digests
+                        .filter(d => d.rating > 0)
+                        .reduce((sum, d) => sum + d.rating, 0) / digests.length || 0;
+
+                    const bookItem = document.createElement('div');
+                    bookItem.className = 'book-item';
+                    bookItem.innerHTML = `
+                        <div class="book-title">${book}</div>
+                        <div class="book-stats">
+                            <span>📝 ${digests.length} 条摘录</span>
+                            <span>⭐ ${avgRating.toFixed(1)} 平均启发值</span>
+                        </div>
+                    `;
+                    bookList.appendChild(bookItem);
+                });
+            }
+
+            // 渲染思维导图
+            function renderMindmap() {
+                const svg = document.getElementById('mindmap-svg');
                 
-                if (mm) {
-                    mm.setData(root);
-                    mm.fit();
-                } else {
-                    mm = Markmap.create(svg, {
-                        colorFreezeLevel: 2,
-                        duration: 500,
-                        maxWidth: 300,
-                        initialExpandLevel: 2,
-                        zoom: true,
-                        pan: true
-                    }, root);
+                // 更新Markdown视图
+                document.getElementById('markdown-content').textContent = mindmapData;
+
+                try {
+                    const { Transformer } = markmap;
+                    const transformer = new Transformer();
+                    const { root } = transformer.transform(mindmapData);
+                    
+                    if (mm) {
+                        mm.setData(root);
+                        mm.fit();
+                    } else {
+                        const { Markmap } = markmap;
+                        mm = Markmap.create(svg, {
+                            colorFreezeLevel: 2,
+                            duration: 500,
+                            maxWidth: 300,
+                            initialExpandLevel: 2,
+                            zoom: true,
+                            pan: true
+                        }, root);
+                    }
+                } catch (error) {
+                    console.error('思维导图渲染失败:', error);
+                    svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#ff6b6b">渲染失败: ' + error.message + '</text>';
                 }
-            } catch (error) {
-                console.error('思维导图渲染失败:', error);
             }
-        }
 
-        // 绑定事件
-        function bindEvents() {
-            // 主题切换
-            document.getElementById('themeToggle')?.addEventListener('click', function() {
-                const isLight = document.body.classList.toggle('light-mode');
-                localStorage.setItem('theme', isLight ? 'light' : 'dark');
-                updateThemeIcon(isLight ? 'light' : 'dark');
-            });
-
-            // 刷新按钮
-            document.getElementById('refreshBtn')?.addEventListener('click', async function() {
-                await loadMindmapData();
-                renderMindmap();
-            });
-
-            // 导出按钮
-            document.getElementById('exportBtn')?.addEventListener('click', function() {
-                exportMindmapImage();
-            });
-
-            // 视图切换
-            document.querySelectorAll('.view-mode-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const view = this.dataset.view;
-                    switchView(view);
-                });
-            });
-        }
-
-        // 切换视图
-        function switchView(view) {
-            currentView = view;
-            
-            // 更新按钮状态
-            document.querySelectorAll('.view-mode-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.view === view);
-            });
-
-            // 显示/隐藏视图
-            document.getElementById('mindmap-svg').style.display = view === 'mindmap' ? 'block' : 'none';
-            document.getElementById('markdown-view').style.display = view === 'markdown' ? 'block' : 'none';
-            document.getElementById('stats-view').style.display = view === 'stats' ? 'block' : 'none';
-        }
-
-        // 导出图片
-        function exportMindmapImage() {
-            const svg = document.getElementById('mindmap-svg');
-            const svgData = new XMLSerializer().serializeToString(svg);
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const img = new Image();
-
-            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-            const url = URL.createObjectURL(svgBlob);
-
-            img.onload = function() {
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.fillStyle = '#0a0f28';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0);
-
-                canvas.toBlob(function(blob) {
-                    const link = document.createElement('a');
-                    link.download = `阅读思维导图_${new Date().getTime()}.png`;
-                    link.href = URL.createObjectURL(blob);
-                    link.click();
+            // 绑定事件
+            function bindEvents() {
+                // 主题切换
+                document.getElementById('themeToggle')?.addEventListener('click', function() {
+                    const isLight = document.body.classList.toggle('light-mode');
+                    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                    updateThemeIcon(isLight ? 'light' : 'dark');
                 });
 
-                URL.revokeObjectURL(url);
-            };
+                // 刷新按钮
+                document.getElementById('refreshBtn')?.addEventListener('click', async function() {
+                    await loadMindmapData();
+                });
 
-            img.src = url;
-        }
+                // 导出按钮
+                document.getElementById('exportBtn')?.addEventListener('click', function() {
+                    exportMindmapImage();
+                });
 
-        // 初始化主题
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            document.body.classList.toggle('light-mode', savedTheme === 'light');
-            updateThemeIcon(savedTheme);
-        }
+                // 视图切换
+                document.querySelectorAll('.view-mode-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const view = this.dataset.view;
+                        switchView(view);
+                    });
+                });
+            }
 
-        // 更新主题图标
-        function updateThemeIcon(theme) {
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) {
-                icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+            // 切换视图
+            function switchView(view) {
+                currentView = view;
+                
+                // 更新按钮状态
+                document.querySelectorAll('.view-mode-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.view === view);
+                });
+
+                // 显示/隐藏视图
+                document.getElementById('mindmap-svg').style.display = view === 'mindmap' ? 'block' : 'none';
+                document.getElementById('markdown-view').style.display = view === 'markdown' ? 'block' : 'none';
+                document.getElementById('stats-view').style.display = view === 'stats' ? 'block' : 'none';
+            }
+
+            // 导出图片
+            function exportMindmapImage() {
+                const svg = document.getElementById('mindmap-svg');
+                const svgData = new XMLSerializer().serializeToString(svg);
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(svgBlob);
+
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.fillStyle = '#0a0f28';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+
+                    canvas.toBlob(function(blob) {
+                        const link = document.createElement('a');
+                        link.download = `阅读思维导图_${new Date().getTime()}.png`;
+                        link.href = URL.createObjectURL(blob);
+                        link.click();
+                    });
+
+                    URL.revokeObjectURL(url);
+                };
+
+                img.src = url;
+            }
+
+            // 初始化主题
+            function initTheme() {
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                document.body.classList.toggle('light-mode', savedTheme === 'light');
+                updateThemeIcon(savedTheme);
+            }
+
+            // 更新主题图标
+            function updateThemeIcon(theme) {
+                const icon = document.querySelector('#themeToggle i');
+                if (icon) {
+                    icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+                }
             }
         }
     </script>
