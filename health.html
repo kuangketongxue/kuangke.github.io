@@ -23,22 +23,20 @@
             --shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
 
-        body {
-            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: var(--text-primary);
-            padding-bottom: 50px;
-            transition: all 0.3s ease;
-        }
+    body {
+    /* 原有样式... */
+    background: linear-gradient(135deg, rgba(245, 247, 250, 0.9), rgba(195, 207, 226, 0.9)),
+                url('your-background-pattern.jpg');
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+}
 
-        body.dark-mode {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --bg-card: #2d3748;
-            --border-color: #4a5568;
-        }
+body.dark-mode {
+    /* 暗色模式也可以用不同的图片 */
+    background-image: url('your-dark-background.jpg');
+}
+      
 
         /* Header样式 */
         .header {
