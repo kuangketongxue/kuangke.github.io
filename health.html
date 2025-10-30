@@ -13,7 +13,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --accent-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
@@ -26,9 +25,16 @@
             --shadow-hover: 0 12px 40px rgba(31, 38, 135, 0.25);
             --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
+        
+        /* 字体清晰度优化 */
         body {
-            /* 预留背景图片位置 */
+            /* 字体抗锯齿优化 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-smooth: always;
+            
+            /* 原有背景样式 */
             background: linear-gradient(135deg, rgba(245, 247, 250, 0.85), rgba(195, 207, 226, 0.85)),
                         url('images/starry-sky.jpg');
             background-size: cover, cover;
@@ -40,14 +46,58 @@
             color: var(--text-primary);
             line-height: 1.6;
         }
-
         body.dark-mode {
             background: linear-gradient(135deg, rgba(26, 32, 44, 0.9), rgba(45, 55, 72, 0.9)),
                         url('images/starry-sky.jpg');
             color: #e2e8f0;
         }
-
-        /* 顶部导航栏 */
+        
+        /* 优化字体渲染 */
+        .logo, .page-title h1, .stat-value, .panel-title, .metric-value {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 优化小字体清晰度 */
+        .stat-label, .metric-label, .data-table th, .data-table td, .nav-btn span {
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            font-size: clamp(0.875rem, 2vw, 1rem);
+        }
+        
+        /* 优化导航链接字体 */
+        .nav-link {
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+        
+        /* 优化按钮字体 */
+        .nav-btn {
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+        
+        /* 优化表格字体 */
+        .data-table th {
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+        
+        .data-table td {
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+        
+        /* 优化代码块字体 */
+        .code-block {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            -webkit-font-smoothing: subpixel-antialiased;
+        }
+        
+        /* 其余原有样式保持不变 */
         .header {
             position: fixed;
             top: 0;
@@ -61,47 +111,37 @@
             padding: 16px 0;
             transition: var(--transition-smooth);
         }
-
         body.dark-mode .header {
             background: rgba(45, 55, 72, 0.25);
             border-bottom-color: rgba(255, 255, 255, 0.1);
         }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 24px;
         }
-
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .header-left {
             display: flex;
             align-items: center;
             gap: 32px;
         }
-
         .logo {
             font-size: 1.75rem;
-            font-weight: 800;
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             cursor: pointer;
             transition: transform 0.3s ease;
-            letter-spacing: -0.5px;
         }
-
         .logo:hover {
             transform: scale(1.05);
         }
-
-        /* 导航链接 */
         .nav-link {
             display: flex;
             align-items: center;
@@ -113,13 +153,10 @@
             transition: var(--transition-smooth);
             position: relative;
             overflow: hidden;
-            font-weight: 500;
         }
-
         body.dark-mode .nav-link {
             color: #e2e8f0;
         }
-
         .nav-link::before {
             content: '';
             position: absolute;
@@ -130,22 +167,17 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
             transition: left 0.5s ease;
         }
-
         .nav-link:hover::before {
             left: 100%;
         }
-
         .nav-link:hover {
             transform: translateY(-2px);
             background: rgba(255, 255, 255, 0.1);
         }
-
         .health-link {
             background: rgba(102, 126, 234, 0.15);
             color: #667eea;
         }
-
-        /* 主题切换按钮 */
         .theme-toggle {
             width: 48px;
             height: 48px;
@@ -161,18 +193,14 @@
             justify-content: center;
             box-shadow: var(--shadow-soft);
         }
-
         body.dark-mode .theme-toggle {
             background: rgba(45, 55, 72, 0.25);
             color: #fbbf24;
         }
-
         .theme-toggle:hover {
             transform: rotate(180deg) scale(1.1);
             box-shadow: var(--shadow-hover);
         }
-
-        /* 主容器 */
         .main-container {
             max-width: 1200px;
             margin: 100px auto 60px;
@@ -180,38 +208,29 @@
             position: relative;
             z-index: 1;
         }
-
-        /* 页面标题 */
         .page-title {
             text-align: center;
             margin-bottom: 48px;
         }
-
         .page-title h1 {
             font-size: 3rem;
-            font-weight: 800;
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 12px;
-            letter-spacing: -1px;
         }
-
         .page-title p {
             font-size: 1.125rem;
             color: var(--text-secondary);
             opacity: 0.8;
         }
-
-        /* 导航按钮 */
         .nav-buttons {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 20px;
             margin-bottom: 48px;
         }
-
         .nav-btn {
             padding: 24px;
             background: var(--bg-glass);
@@ -222,7 +241,6 @@
             border-radius: 24px;
             cursor: pointer;
             transition: var(--transition-smooth);
-            font-weight: 600;
             font-size: 1rem;
             display: flex;
             flex-direction: column;
@@ -232,13 +250,11 @@
             position: relative;
             overflow: hidden;
         }
-
         body.dark-mode .nav-btn {
             background: rgba(45, 55, 72, 0.25);
             border-color: rgba(255, 255, 255, 0.1);
             color: #e2e8f0;
         }
-
         .nav-btn::before {
             content: '';
             position: absolute;
@@ -249,38 +265,30 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s ease;
         }
-
         .nav-btn:hover::before {
             left: 100%;
         }
-
         .nav-btn:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: var(--shadow-hover);
             border-color: rgba(102, 126, 234, 0.3);
         }
-
         .nav-btn.active {
             background: var(--primary-gradient);
             color: white;
             transform: scale(1.05);
             box-shadow: 0 12px 48px rgba(102, 126, 234, 0.4);
         }
-
         .nav-btn i {
             font-size: 1.75rem;
         }
-
-        /* 视图容器 */
         .view {
             display: none;
             animation: fadeIn 0.5s ease;
         }
-
         .view.active {
             display: block;
         }
-
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -291,15 +299,12 @@
                 transform: translateY(0);
             }
         }
-
-        /* 统计卡片网格 */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
             margin-bottom: 48px;
         }
-
         .stat-card {
             background: var(--bg-glass);
             backdrop-filter: blur(16px);
@@ -313,12 +318,10 @@
             position: relative;
             overflow: hidden;
         }
-
         body.dark-mode .stat-card {
             background: rgba(45, 55, 72, 0.25);
             border-color: rgba(255, 255, 255, 0.1);
         }
-
         .stat-card::before {
             content: '';
             position: absolute;
@@ -330,42 +333,32 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-
         .stat-card:hover::before {
             opacity: 1;
         }
-
         .stat-card:hover {
             transform: translateY(-12px) scale(1.02);
             box-shadow: var(--shadow-hover);
             border-color: rgba(102, 126, 234, 0.3);
         }
-
         .stat-icon {
             font-size: 2.5rem;
             margin-bottom: 16px;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
         }
-
         .stat-value {
             font-size: 2.25rem;
-            font-weight: 800;
+            margin: 12px 0;
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin: 12px 0;
-            letter-spacing: -1px;
         }
-
         .stat-label {
             font-size: 1rem;
             color: var(--text-secondary);
-            font-weight: 600;
             opacity: 0.8;
-            letter-spacing: 0.5px;
         }
-
         .stat-trend {
             margin-top: 16px;
             font-size: 0.875rem;
@@ -377,16 +370,12 @@
             background: rgba(255, 255, 255, 0.3);
             font-weight: 600;
         }
-
         .trend-up {
             color: #10b981;
         }
-
         .trend-down {
             color: #ef4444;
         }
-
-        /* 图表面板 */
         .chart-panel {
             background: var(--bg-glass);
             backdrop-filter: blur(16px);
@@ -398,46 +387,36 @@
             box-shadow: var(--shadow-soft);
             transition: var(--transition-smooth);
         }
-
         body.dark-mode .chart-panel {
             background: rgba(45, 55, 72, 0.25);
             border-color: rgba(255, 255, 255, 0.1);
         }
-
         .chart-panel:hover {
             transform: translateY(-8px);
             box-shadow: var(--shadow-hover);
             border-color: rgba(102, 126, 234, 0.3);
         }
-
         .panel-title {
             font-size: 1.5rem;
             margin-bottom: 32px;
             color: var(--text-primary);
-            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 12px;
-            letter-spacing: -0.5px;
         }
-
         body.dark-mode .panel-title {
             color: #e2e8f0;
         }
-
         .chart-container {
             position: relative;
             height: 380px;
             margin-top: 24px;
         }
-
-        /* 今日报告 */
         .today-report {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 28px;
         }
-
         .report-card {
             background: var(--bg-glass);
             backdrop-filter: blur(16px);
@@ -448,18 +427,15 @@
             box-shadow: var(--shadow-soft);
             transition: var(--transition-smooth);
         }
-
         body.dark-mode .report-card {
             background: rgba(45, 55, 72, 0.25);
             border-color: rgba(255, 255, 255, 0.1);
         }
-
         .report-card:hover {
             transform: translateY(-8px);
             box-shadow: var(--shadow-hover);
             border-color: rgba(102, 126, 234, 0.3);
         }
-
         .report-card h3 {
             font-size: 1.25rem;
             margin-bottom: 24px;
@@ -467,14 +443,10 @@
             align-items: center;
             gap: 12px;
             color: var(--text-primary);
-            font-weight: 700;
-            letter-spacing: -0.5px;
         }
-
         body.dark-mode .report-card h3 {
             color: #e2e8f0;
         }
-
         .metric-item {
             display: flex;
             justify-content: space-between;
@@ -483,35 +455,26 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
-
         .metric-item:last-child {
             border-bottom: none;
         }
-
         .metric-item:hover {
             padding-left: 8px;
         }
-
         .metric-label {
             color: var(--text-secondary);
-            font-weight: 500;
         }
-
         body.dark-mode .metric-label {
             color: #94a3b8;
         }
-
         .metric-value {
             font-weight: 700;
             color: var(--text-primary);
             font-size: 1.125rem;
         }
-
         body.dark-mode .metric-value {
             color: #e2e8f0;
         }
-
-        /* 数据表格 */
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -522,46 +485,34 @@
             border-radius: 16px;
             overflow: hidden;
         }
-
         .data-table th,
         .data-table td {
             padding: 16px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         .data-table th {
             background: rgba(102, 126, 234, 0.1);
-            font-weight: 700;
             color: var(--text-primary);
             font-size: 0.875rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
-
         body.dark-mode .data-table th {
             background: rgba(102, 126, 234, 0.2);
             color: #e2e8f0;
         }
-
         .data-table tr:hover {
             background: rgba(102, 126, 234, 0.05);
         }
-
         body.dark-mode .data-table tr:hover {
             background: rgba(102, 126, 234, 0.1);
         }
-
         .data-table td {
             color: var(--text-secondary);
-            font-weight: 500;
         }
-
         body.dark-mode .data-table td {
             color: #94a3b8;
         }
-
-        /* 信息框 */
         .info-box {
             background: var(--bg-glass);
             backdrop-filter: blur(16px);
@@ -574,31 +525,24 @@
             color: var(--text-primary);
             box-shadow: var(--shadow-soft);
         }
-
         body.dark-mode .info-box {
             background: rgba(45, 55, 72, 0.25);
             border-color: rgba(102, 126, 234, 0.4);
             color: #e2e8f0;
         }
-
         .code-block {
             background: rgba(0, 0, 0, 0.05);
             padding: 16px;
             border-radius: 12px;
             margin: 12px 0;
             overflow-x: auto;
-            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
             font-size: 0.875rem;
             color: #667eea;
-            font-weight: 600;
         }
-
         body.dark-mode .code-block {
             background: rgba(0, 0, 0, 0.3);
             color: #a5b4fc;
         }
-
-        /* 状态消息 */
         .loading,
         .error {
             text-align: center;
@@ -607,20 +551,16 @@
             border-radius: 20px;
             margin: 32px 0;
         }
-
         .loading {
             color: var(--text-secondary);
             background: var(--bg-glass);
             backdrop-filter: blur(10px);
         }
-
         .error {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.3);
             color: #ef4444;
         }
-
-        /* 返回按钮 */
         .back-button {
             position: fixed;
             bottom: 32px;
@@ -640,81 +580,62 @@
             z-index: 1000;
             text-decoration: none;
         }
-
         .back-button:hover {
             transform: translateY(-8px) scale(1.1);
             box-shadow: 0 12px 48px rgba(102, 126, 234, 0.6);
         }
-
-        /* 响应式设计 */
         @media (max-width: 768px) {
             .main-container {
                 padding: 24px 16px;
                 margin: 90px auto 40px;
             }
-
             .page-title h1 {
                 font-size: 2rem;
             }
-
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-
             .chart-container {
                 height: 280px;
             }
-
             .today-report {
                 grid-template-columns: 1fr;
             }
-
             .nav-buttons {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 12px;
             }
-
             .header-left {
                 gap: 16px;
                 flex-wrap: wrap;
             }
-
             .back-button {
                 width: 56px;
                 height: 56px;
                 bottom: 24px;
                 right: 24px;
             }
-
             .chart-panel {
                 padding: 24px;
             }
-
             .report-card {
                 padding: 24px;
             }
         }
-
         @media (max-width: 480px) {
             .nav-buttons {
                 grid-template-columns: 1fr;
             }
-
             .page-title h1 {
                 font-size: 1.75rem;
             }
-
             .container {
                 padding: 0 12px;
             }
         }
-
-        /* 性能优化 */
         .will-change-transform {
             will-change: transform;
         }
-
-        /* 无障碍支持 */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -726,31 +647,24 @@
             white-space: nowrap;
             border: 0;
         }
-
-        /* 滚动条样式 */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
-
         ::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
         }
-
         ::-webkit-scrollbar-thumb {
             background: rgba(102, 126, 234, 0.5);
             border-radius: 4px;
         }
-
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(102, 126, 234, 0.7);
         }
-
         body.dark-mode ::-webkit-scrollbar-track {
             background: rgba(0, 0, 0, 0.2);
         }
-
         body.dark-mode ::-webkit-scrollbar-thumb {
             background: rgba(102, 126, 234, 0.6);
         }
@@ -791,14 +705,12 @@
             </div>
         </div>
     </header>
-
     <main class="main-container">
         <!-- 视图导航 -->
         <div class="page-title">
             <h1>📊 健康自检系统</h1>
             <p>全面监测您的健康状态，记录生活中的每一个健康数据</p>
         </div>
-
         <nav class="nav-buttons" role="tablist">
             <button class="nav-btn active" onclick="switchView('overview')" role="tab" aria-selected="true">
                 <i class="fas fa-home"></i>
@@ -821,7 +733,6 @@
                 <span>使用说明</span>
             </button>
         </nav>
-
         <!-- 总览视图 -->
         <section id="overviewView" class="view active" role="tabpanel">
             <div class="page-title">
@@ -839,7 +750,6 @@
                 </div>
             </div>
         </section>
-
         <!-- 今日报告视图 -->
         <section id="todayView" class="view" role="tabpanel">
             <div class="page-title">
@@ -848,7 +758,6 @@
             </div>
             <div id="todayContent"></div>
         </section>
-
         <!-- 趋势分析视图 -->
         <section id="trendsView" class="view" role="tabpanel">
             <div class="page-title">
@@ -892,7 +801,6 @@
                 </div>
             </div>
         </section>
-
         <!-- 历史记录视图 -->
         <section id="historyView" class="view" role="tabpanel">
             <div class="page-title">
@@ -923,7 +831,6 @@
                 </div>
             </div>
         </section>
-
         <!-- 使用说明视图 -->
         <section id="guideView" class="view" role="tabpanel">
             <div class="page-title">
@@ -950,12 +857,10 @@
             </div>
         </section>
     </main>
-
     <!-- 返回按钮 -->
     <a href="index.html" class="back-button will-change-transform" title="返回首页" aria-label="返回首页">
         <i class="fas fa-home"></i>
     </a>
-
     <script>
         // 性能优化：使用防抖函数
         function debounce(func, wait) {
@@ -969,12 +874,10 @@
                 timeout = setTimeout(later, wait);
             };
         }
-
         // 主题切换功能
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
-
         // 初始化主题
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
@@ -982,11 +885,9 @@
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
-
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
             const isDark = body.classList.contains('dark-mode');
-            
             if (isDark) {
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
@@ -996,7 +897,6 @@
                 icon.classList.add('fa-moon');
                 localStorage.setItem('theme', 'light');
             }
-
             // 重新渲染图表以适应主题变化
             if (window.uiRenderer) {
                 Object.values(window.uiRenderer.dm.charts).forEach(chart => {
@@ -1009,7 +909,6 @@
                 });
             }
         });
-
         // 健康数据管理类
         class HealthDataManager {
             constructor() {
@@ -1017,7 +916,6 @@
                 this.charts = {};
                 this.cache = new Map();
             }
-
             async loadData() {
                 // 检查缓存
                 const cacheKey = 'health-data';
@@ -1025,12 +923,10 @@
                     this.data = this.cache.get(cacheKey);
                     return this.data;
                 }
-
                 try {
                     const response = await fetch('health-data.json');
                     if (!response.ok) throw new Error('无法加载数据文件');
                     this.data = await response.json();
-                    
                     // 缓存数据
                     this.cache.set(cacheKey, this.data);
                     return this.data;
@@ -1039,21 +935,17 @@
                     throw error;
                 }
             }
-
             getLatestRecord() {
                 if (!this.data?.records?.length) return null;
                 return this.data.records[this.data.records.length - 1];
             }
-
             getRecentRecords(days = 30) {
                 if (!this.data?.records) return [];
                 return this.data.records.slice(-days);
             }
-
             calculateStats() {
                 const records = this.getRecentRecords();
                 if (!records.length) return null;
-
                 const stats = {
                     avgSleep: 0,
                     avgExercise: 0,
@@ -1063,7 +955,6 @@
                     avgEnergy: 0,
                     totalRecords: records.length
                 };
-
                 const sums = records.reduce((acc, record) => {
                     acc.sleep += record.sleep?.hours || 0;
                     acc.exercise += record.exercise?.minutes || 0;
@@ -1073,7 +964,6 @@
                     acc.energy += record.physical?.energy || 0;
                     return acc;
                 }, { sleep: 0, exercise: 0, steps: 0, water: 0, mood: 0, energy: 0 });
-
                 const count = records.length;
                 stats.avgSleep = (sums.sleep / count).toFixed(1);
                 stats.avgExercise = Math.round(sums.exercise / count);
@@ -1081,25 +971,18 @@
                 stats.avgWater = Math.round(sums.water / count);
                 stats.avgMood = (sums.mood / count).toFixed(1);
                 stats.avgEnergy = (sums.energy / count).toFixed(1);
-
                 return stats;
             }
-
             calculateTrend(field, subfield, days = 7) {
                 const records = this.getRecentRecords(days);
                 if (records.length < 2) return 0;
-
                 const recent = records.slice(-3);
                 const previous = records.slice(0, 3);
-                
                 const getAvg = (arr) => arr.reduce((sum, r) => sum + (r[field]?.[subfield] || 0), 0) / arr.length;
-                
                 const recentAvg = getAvg(recent);
                 const previousAvg = getAvg(previous);
-                
                 return previousAvg ? ((recentAvg - previousAvg) / previousAvg * 100).toFixed(1) : 0;
             }
-
             // 清理图表实例以释放内存
             destroyCharts() {
                 Object.values(this.charts).forEach(chart => {
@@ -1108,7 +991,6 @@
                 this.charts = {};
             }
         }
-
         // UI渲染类
         class UIRenderer {
             constructor(dataManager) {
@@ -1116,7 +998,6 @@
                 this.renderQueue = [];
                 this.isRendering = false;
             }
-
             // 批量渲染优化
             queueRender(renderFunction) {
                 this.renderQueue.push(renderFunction);
@@ -1124,7 +1005,6 @@
                     this.processRenderQueue();
                 }
             }
-
             async processRenderQueue() {
                 this.isRendering = true;
                 while (this.renderQueue.length > 0) {
@@ -1135,7 +1015,6 @@
                 }
                 this.isRendering = false;
             }
-
             renderOverview() {
                 this.queueRender(() => {
                     const stats = this.dm.calculateStats();
@@ -1143,13 +1022,11 @@
                         document.getElementById('statsGrid').innerHTML = '<p class="loading">暂无数据</p>';
                         return;
                     }
-
                     const statsHTML = this.createStatsHTML(stats);
                     document.getElementById('statsGrid').innerHTML = statsHTML;
                     this.renderOverviewChart();
                 });
             }
-
             createStatsHTML(stats) {
                 return `
                     <div class="stat-card will-change-transform">
@@ -1194,13 +1071,11 @@
                     </div>
                 `;
             }
-
             createTrendHTML(trend) {
                 const isUp = parseFloat(trend) > 0;
                 const trendClass = isUp ? 'trend-up' : 'trend-down';
                 const arrowClass = isUp ? 'up' : 'down';
                 const arrowIcon = isUp ? 'fa-arrow-up' : 'fa-arrow-down';
-                
                 return `
                     <div class="stat-trend ${trendClass}">
                         <i class="fas ${arrowIcon}"></i>
@@ -1208,15 +1083,12 @@
                     </div>
                 `;
             }
-
             renderOverviewChart() {
                 const records = this.dm.getRecentRecords(14);
                 const ctx = document.getElementById('overviewChart');
-                
                 if (this.dm.charts.overview) {
                     this.dm.charts.overview.destroy();
                 }
-
                 this.dm.charts.overview = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -1257,10 +1129,8 @@
                     options: this.getChartOptions()
                 });
             }
-
             getChartOptions() {
                 const textColor = getComputedStyle(document.body).color;
-                
                 return {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -1325,7 +1195,6 @@
                     }
                 };
             }
-
             renderToday() {
                 this.queueRender(() => {
                     const latest = this.dm.getLatestRecord();
@@ -1333,13 +1202,11 @@
                         document.getElementById('todayContent').innerHTML = '<p class="loading">暂无今日数据</p>';
                         return;
                     }
-
                     document.getElementById('todayDate').textContent = latest.date;
                     const html = this.createTodayHTML(latest);
                     document.getElementById('todayContent').innerHTML = html;
                 });
             }
-
             createTodayHTML(latest) {
                 return `
                     <div class="today-report">
@@ -1376,7 +1243,6 @@
                     </div>
                 `;
             }
-
             createReportCard(title, icon, metrics) {
                 const metricsHTML = metrics.map(metric => `
                     <div class="metric-item">
@@ -1384,7 +1250,6 @@
                         <span class="metric-value">${metric.value}</span>
                     </div>
                 `).join('');
-
                 return `
                     <div class="report-card will-change-transform">
                         <h3><i class="fas ${icon}"></i>${title}</h3>
@@ -1392,30 +1257,25 @@
                     </div>
                 `;
             }
-
             renderTrends() {
                 this.queueRender(() => {
                     const records = this.dm.getRecentRecords(30);
-                    
                     const chartConfigs = [
                         { id: 'sleepChart', label: '睡眠时长(h)', field: 'sleep', subfield: 'hours', color: 'rgb(102, 126, 234)' },
                         { id: 'exerciseChart', label: '运动时长(min)', field: 'exercise', subfield: 'minutes', color: 'rgb(75, 192, 192)' },
                         { id: 'dietChart', label: '饮水量(ml)', field: 'diet', subfield: 'waterIntake', color: 'rgb(54, 162, 235)' },
                         { id: 'moodChart', label: '心情评分', field: 'mood', subfield: 'score', color: 'rgb(255, 159, 64)' }
                     ];
-
                     chartConfigs.forEach(config => {
                         this.renderSingleChart(config, records);
                     });
                 });
             }
-
             renderSingleChart(config, records) {
                 const ctx = document.getElementById(config.id);
                 if (this.dm.charts[config.id]) {
                     this.dm.charts[config.id].destroy();
                 }
-
                 const data = {
                     labels: records.map(r => r.date),
                     datasets: [
@@ -1432,19 +1292,16 @@
                         }
                     ]
                 };
-
                 this.dm.charts[config.id] = new Chart(ctx, {
                     type: 'line',
                     data: data,
                     options: this.getChartOptions()
                 });
             }
-
             renderHistory() {
                 this.queueRender(() => {
                     const records = this.dm.data.records || [];
                     const tbody = document.getElementById('historyTableBody');
-                    
                     const html = records.map(record => `
                         <tr>
                             <td>${record.date}</td>
@@ -1457,11 +1314,9 @@
                             <td>${record.notes || '-'}</td>
                         </tr>
                     `).reverse().join('');
-                    
                     tbody.innerHTML = html;
                 });
             }
-
             translateIntensity(intensity) {
                 const intensityMap = {
                     'light': '轻度',
@@ -1471,7 +1326,6 @@
                 return intensityMap[intensity] || intensity || '-';
             }
         }
-
         // 视图切换函数
         function switchView(view) {
             // 更新按钮状态
@@ -1479,15 +1333,12 @@
                 btn.classList.remove('active');
                 btn.setAttribute('aria-selected', 'false');
             });
-            
             event.target.classList.add('active');
             event.target.setAttribute('aria-selected', 'true');
-
             // 切换视图
             document.querySelectorAll('.view').forEach(v => {
                 v.classList.remove('active');
             });
-
             const viewMap = {
                 'overview': 'overviewView',
                 'today': 'todayView',
@@ -1495,15 +1346,12 @@
                 'history': 'historyView',
                 'guide': 'guideView'
             };
-
             const targetView = document.getElementById(viewMap[view]);
             if (targetView) {
                 targetView.classList.add('active');
-                
                 // 滚动到视图顶部
                 targetView.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-
             // 渲染对应视图的内容
             if (window.uiRenderer && window.dataManager?.data) {
                 switch(view) {
@@ -1522,7 +1370,6 @@
                 }
             }
         }
-
         // 初始化应用
         async function init() {
             try {
@@ -1540,7 +1387,6 @@
                 `;
             }
         }
-
         // 优化滚动性能
         let scrollTimeout;
         window.addEventListener('scroll', debounce(() => {
@@ -1551,21 +1397,18 @@
                 header.style.background = 'var(--bg-glass)';
             }
         }, 16));
-
         // 页面加载完成后初始化
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
         } else {
             init();
         }
-
         // 清理资源
         window.addEventListener('beforeunload', () => {
             if (window.dataManager) {
                 window.dataManager.destroyCharts();
             }
         });
-
         // 响应式处理
         const handleResize = debounce(() => {
             if (window.uiRenderer) {
@@ -1574,16 +1417,13 @@
                 });
             }
         }, 250);
-
         window.addEventListener('resize', handleResize);
-
         // 添加键盘导航支持
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Tab') {
                 document.body.classList.add('keyboard-navigation');
             }
         });
-
         document.addEventListener('mousedown', () => {
             document.body.classList.remove('keyboard-navigation');
         });
