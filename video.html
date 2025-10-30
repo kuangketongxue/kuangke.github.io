@@ -4,289 +4,98 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>健康自检系统 - 数据统计</title>
+    <title>视频矩阵 - 狂客·银河</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --text-primary: #333;
-            --text-secondary: #666;
-            --bg-light: #f5f7fa;
-            --bg-card: #ffffff;
-            --border-color: #e0e0e0;
-            --shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-        
-        body {
-            /* 使用与视频矩阵页面相同的背景样式 */
-            background: linear-gradient(135deg, rgba(245, 247, 250, 0.9), rgba(195, 207, 226, 0.9)),
-                        url('images/d36952ba36d78b9e19ee6ac7f8e244c2.png');
-            background-size: cover, cover;
-            background-position: center, center;
-            background-repeat: no-repeat, no-repeat;
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body.dark-mode {
-            /* 暗色模式使用不同的图片 */
-            background: linear-gradient(135deg, rgba(45, 55, 72, 0.95), rgba(26, 32, 44, 0.95)),
-                        url('images/93a80f8ce0f92cca81a73491ad75616d.png');
-            background-size: cover, cover;
-            background-position: center, center;
-            background-repeat: no-repeat, no-repeat;
-            color: #ffffff;
-        }
-
-        /* Header样式 - 完全采用视频矩阵页面的样式 */
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 15px 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-        
-        body.dark-mode .header {
-            background: rgba(45, 55, 72, 0.95);
-            border-bottom-color: #4a5568;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-        
-        .logo {
-            font-size: 1.8em;
-            font-weight: 700;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        
-        .logo:hover {
-            transform: scale(1.05);
-        }
-        
-        /* 导航链接样式 - 采用视频矩阵页面的样式 */
-        .header-left a {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            padding: 10px 15px;
-            border-radius: 25px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .header-left a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .header-left a:hover::before {
-            left: 100%;
-        }
-        
-        .header-left a:hover {
-            transform: translateY(-2px);
-        }
-        
-        .success-link:hover {
-            background: rgba(255, 107, 107, 0.1);
-            color: #ff6b6b;
-        }
-        
-        .sky-link:hover {
-            background: rgba(255, 193, 7, 0.1);
-            color: #ffc107;
-        }
-        
-        .exam-link:hover {
-            background: rgba(76, 175, 80, 0.1);
-            color: #4caf50;
-        }
-        
-        .video-link:hover {
-            background: rgba(33, 150, 243, 0.1);
-            color: #2196f3;
-        }
-        
-        .health-link {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-        }
-        
-        .health-link:hover {
-            background: rgba(102, 126, 234, 0.2);
-        }
-        
-        .health-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--primary-gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-        }
-        
-        /* 图标样式 */
-        .success-icon {
-            color: #ff6b6b;
-        }
-        
-        .sky-icon {
-            color: #ffc107;
-        }
-        
-        .exam-icon {
-            color: #4caf50;
-        }
-        
-        .video-icon {
-            color: #2196f3;
-        }
-        
-        /* 控制按钮 */
-        .controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        .theme-toggle {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            background: white;
-            color: #667eea;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        body.dark-mode .theme-toggle {
-            background: #2d3748;
-            border-color: #4a5568;
-            color: #ffd700;
-        }
-        
-        .theme-toggle:hover {
-            transform: rotate(20deg);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-        
-        /* 主容器 - 采用视频矩阵页面的样式 */
-        .main-container {
+        /* 视频矩阵专属样式 */
+        .video-matrix-container {
             max-width: 1200px;
             margin: 80px auto 60px;
             padding: 40px 20px;
-            position: relative;
-            z-index: 1;
         }
-        
-        .page-title {
+        .matrix-title {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
-        
-        .page-title h1 {
+        .matrix-title h1 {
             font-size: 2.5em;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 15px;
-            font-weight: 700;
         }
-        
-        .page-title p {
+        .matrix-title p {
             font-size: 1.1em;
-            color: var(--text-secondary);
+            color: #666;
             opacity: 0.8;
         }
-        
-        /* 视图导航按钮 - 采用视频矩阵页面的卡片样式 */
-        .nav-buttons {
+        /* 矩阵网格布局 */
+        .matrix-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
             margin-bottom: 40px;
         }
-        
-        .nav-btn {
-            padding: 20px;
+        .matrix-section {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border: none;
-            color: var(--text-primary);
             border-radius: 20px;
-            cursor: pointer;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
-            font-weight: 600;
-            font-size: 1em;
+        }
+        body.dark-mode .matrix-section {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        }
+        .matrix-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+        }
+        .section-header h2 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        body.dark-mode .section-header h2 {
+            color: #fff;
+        }
+        .section-header .subtitle {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: normal;
+        }
+        body.dark-mode .section-header .subtitle {
+            color: #aaa;
+        }
+        /* 平台卡片样式 */
+        .platform-cards {
             display: flex;
             flex-direction: column;
+            gap: 15px;
+        }
+        .platform-card {
+            display: flex;
             align-items: center;
-            gap: 10px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             position: relative;
             overflow: hidden;
         }
-        
-        body.dark-mode .nav-btn {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-            color: #ffffff;
+        body.dark-mode .platform-card {
+            background: #2d3748;
         }
-        
-        .nav-btn::before {
+        .platform-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -296,376 +105,96 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
             transition: left 0.5s ease;
         }
-        
-        .nav-btn:hover::before {
+        .platform-card:hover::before {
             left: 100%;
         }
-        
-        .nav-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        .platform-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
         }
-        
-        .nav-btn.active {
-            background: var(--primary-gradient);
-            color: white;
-            transform: scale(1.05);
-        }
-        
-        .nav-btn i {
-            font-size: 1.5em;
-        }
-        
-        .view {
-            display: none;
-        }
-        
-        .view.active {
-            display: block;
-        }
-        
-        /* 统计卡片 - 采用视频矩阵页面的卡片样式 */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-        
-        .stat-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        body.dark-mode .stat-card {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-        }
-        
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .stat-card:hover::before {
-            left: 100%;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .stat-icon {
-            font-size: 2.5em;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-        }
-        
-        .stat-value {
-            font-size: 2.2em;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 10px 0;
-        }
-        
-        .stat-label {
-            font-size: 1em;
-            color: var(--text-secondary);
-            font-weight: 600;
-            opacity: 0.8;
-        }
-        
-        body.dark-mode .stat-label {
-            color: #aaa;
-        }
-        
-        .stat-trend {
-            margin-top: 15px;
-            font-size: 0.9em;
+        .platform-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            padding: 8px 15px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.2);
+            font-size: 28px;
+            color: white;
+            margin-right: 20px;
+            flex-shrink: 0;
         }
-        
-        body.dark-mode .stat-trend {
-            background: rgba(255,255,255,0.1);
+        .platform-info {
+            flex: 1;
         }
-        
-        .trend-up {
-            color: #4caf50;
+        .platform-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
         }
-        
-        .trend-down {
-            color: #ff6b6b;
+        body.dark-mode .platform-name {
+            color: #fff;
         }
-        
-        /* 图表容器 - 采用视频矩阵页面的卡片样式 */
-        .chart-panel {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 25px;
-            padding: 35px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+        .platform-desc {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.5;
         }
-        
-        body.dark-mode .chart-panel {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-        }
-        
-        .chart-panel:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .panel-title {
-            font-size: 1.6em;
-            margin-bottom: 25px;
-            color: var(--text-primary);
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        body.dark-mode .panel-title {
-            color: #ffffff;
-        }
-        
-        .chart-container {
-            position: relative;
-            height: 350px;
-            margin-top: 20px;
-        }
-        
-        /* 数据表格 */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        .data-table th,
-        .data-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .data-table th {
-            background: rgba(102, 126, 234, 0.08);
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-        
-        body.dark-mode .data-table th {
-            background: rgba(102, 126, 234, 0.15);
-            color: #ffffff;
-        }
-        
-        .data-table tr:hover {
-            background: rgba(102, 126, 234, 0.05);
-        }
-        
-        body.dark-mode .data-table tr:hover {
-            background: rgba(102, 126, 234, 0.1);
-        }
-        
-        .data-table td {
-            color: var(--text-secondary);
-        }
-        
-        body.dark-mode .data-table td {
+        body.dark-mode .platform-desc {
             color: #aaa;
         }
-        
-        /* 今日报告 - 采用视频矩阵页面的卡片样式 */
-        .today-report {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+        .platform-arrow {
+            font-size: 20px;
+            color: #667eea;
+            transition: transform 0.3s ease;
         }
-        
-        .report-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        body.dark-mode .report-card {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-        }
-        
-        .report-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .report-card h3 {
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-primary);
-        }
-        
-        body.dark-mode .report-card h3 {
-            color: #ffffff;
-        }
-        
-        .metric-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .metric-item:last-child {
-            border-bottom: none;
-        }
-        
-        .metric-label {
-            color: var(--text-secondary);
-        }
-        
-        body.dark-mode .metric-label {
-            color: #aaa;
-        }
-        
-        .metric-value {
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-        
-        body.dark-mode .metric-value {
-            color: #ffffff;
-        }
-        
-        /* 建议面板 - 采用视频矩阵页面的卡片样式 */
-        .suggestions-panel {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 25px;
-            padding: 35px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        body.dark-mode .suggestions-panel {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-        }
-        
-        .suggestion-item {
-            background: rgba(102, 126, 234, 0.08);
-            border-left: 4px solid #667eea;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 12px;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
-        
-        body.dark-mode .suggestion-item {
-            background: rgba(102, 126, 234, 0.15);
-        }
-        
-        .suggestion-item:hover {
+        .platform-card:hover .platform-arrow {
             transform: translateX(5px);
         }
-        
-        .suggestion-item.priority {
-            background: rgba(255, 107, 107, 0.08);
-            border-left-color: #ff6b6b;
+        /* 各平台专属颜色 */
+        .bilibili-bg {
+            background: linear-gradient(135deg, #00a1d6 0%, #0084c7 100%);
         }
-        
-        body.dark-mode .suggestion-item.priority {
-            background: rgba(255, 107, 107, 0.15);
+        .youtube-bg {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
         }
-        
-        .suggestion-item.good {
-            background: rgba(76, 175, 80, 0.08);
-            border-left-color: #4caf50;
+        .wechat-bg {
+            background: linear-gradient(135deg, #07c160 0%, #06ad56 100%);
         }
-        
-        body.dark-mode .suggestion-item.good {
-            background: rgba(76, 175, 80, 0.15);
+        .x-bg {
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
         }
-        
-        /* 信息框 - 采用视频矩阵页面的卡片样式 */
-        .info-box {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            line-height: 1.8;
-            color: var(--text-primary);
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .matrix-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .matrix-title h1 {
+                font-size: 2em;
+            }
+            .platform-card {
+                padding: 15px;
+            }
+            .platform-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+                margin-right: 15px;
+            }
+            .platform-name {
+                font-size: 1.1em;
+            }
         }
-        
-        body.dark-mode .info-box {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 50px;
-            font-size: 1.2em;
-            color: var(--text-secondary);
-        }
-        
-        .error {
-            background: rgba(255, 107, 107, 0.15);
-            border: 1px solid rgba(255, 107, 107, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            color: #ff6b6b;
-        }
-        
-        .code-block {
-            background: rgba(0, 0, 0, 0.05);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-            overflow-x: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: #667eea;
-        }
-        
-        body.dark-mode .code-block {
-            background: rgba(0, 0, 0, 0.3);
-            color: #a0d8ff;
-        }
-        
-        /* 返回按钮 - 采用视频矩阵页面的样式 */
+        /* 返回按钮 */
         .back-button {
             position: fixed;
             bottom: 30px;
             right: 30px;
             width: 60px;
             height: 60px;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -676,246 +205,146 @@
             cursor: pointer;
             transition: all 0.3s ease;
             z-index: 1000;
-            text-decoration: none;
         }
-        
         .back-button:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
         }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .main-container {
-                padding: 20px 15px;
-                margin: 80px auto 30px;
-            }
-            
-            .page-title h1 {
-                font-size: 2em;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .chart-container {
-                height: 250px;
-            }
-            
-            .today-report {
-                grid-template-columns: 1fr;
-            }
-            
-            .header-left {
-                gap: 15px;
-            }
-            
-            .nav-buttons {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .back-button {
-                width: 50px;
-                height: 50px;
-                bottom: 20px;
-                right: 20px;
-            }
-        }
     </style>
 </head>
-<body>
+<body data-page="video">
     <header class="header">
         <div class="container">
-            <div class="header-content">
-                <div class="header-left">
-                    <h1 class="logo">狂客·银河</h1>
-                    <a class="success-link" href="success.html">
-                        <span class="success-icon">
-                            <i class="fas fa-meteor"></i>
-                        </span>
-                        <span class="success-text">成功日记</span>
-                    </a>
-                    <a class="sky-link" href="reading.html">
-                        <span class="sky-icon">
-                            <i class="fas fa-star"></i>
-                        </span>
-                        <span class="sky-text">星空</span>
-                    </a>
-                    <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/">
-                        <span class="exam-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </span>
-                        <span class="exam-text">冬之街小店</span>
-                    </a>
-                    <a class="video-link" href="video.html">
-                        <span class="video-icon">
-                            <i class="fas fa-video"></i>
-                        </span>
-                        <span class="video-text">视频矩阵</span>
-                    </a>
-                    <a class="health-link" href="health.html">
-                        <span class="health-icon">
-                            <i class="fas fa-heartbeat"></i>
-                        </span>
-                        <span class="health-text">健康自检</span>
-                    </a>
-                </div>
-                <div class="controls">
-                    <button id="themeToggle" class="theme-toggle">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                </div>
+            <div class="header-left">
+                <h1 class="logo">狂客·银河</h1>
+                <a class="success-link" href="success.html">
+                    <span class="success-icon">
+                        <i class="fas fa-meteor"></i>
+                    </span>
+                    <span class="success-text">成功日记</span>
+                </a>
+                <a class="sky-link" href="reading.html">
+                    <span class="sky-icon">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span class="sky-text">星空</span>
+                </a>
+                <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/">
+                    <span class="exam-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </span>
+                    <span class="exam-text">冬之街小店</span>
+                </a>
+                <a class="video-link" href="video.html">
+                    <span class="video-icon">
+                        <i class="fas fa-video"></i>
+                    </span>
+                    <span class="video-text">视频矩阵</span>
+                </a>
+            </div>
+            <div class="controls">
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
             </div>
         </div>
     </header>
-    
-    <div class="main-container">
-        <!-- 视图导航 -->
-        <div class="page-title">
-            <h1>📊 健康自检系统</h1>
-            <p>全面监测您的健康状态，记录生活中的每一个健康数据</p>
+    <div class="video-matrix-container">
+        <div class="matrix-title">
+            <h1>🎬 视频矩阵</h1>
+            <p>多平台内容分发，精准触达不同受众群体</p>
         </div>
-        
-        <div class="nav-buttons">
-            <button class="nav-btn active" onclick="switchView('overview')">
-                <i class="fas fa-home"></i>
-                <span>总览</span>
-            </button>
-            <button class="nav-btn" onclick="switchView('today')">
-                <i class="fas fa-calendar-day"></i>
-                <span>今日报告</span>
-            </button>
-            <button class="nav-btn" onclick="switchView('trends')">
-                <i class="fas fa-chart-line"></i>
-                <span>趋势分析</span>
-            </button>
-            <button class="nav-btn" onclick="switchView('history')">
-                <i class="fas fa-history"></i>
-                <span>历史记录</span>
-            </button>
-            <button class="nav-btn" onclick="switchView('guide')">
-                <i class="fas fa-question-circle"></i>
-                <span>使用说明</span>
-            </button>
-        </div>
-        
-        <!-- 总览视图 -->
-        <div id="overviewView" class="view active">
-            <div class="page-title">
-                <h1>健康数据总览</h1>
-                <p>过去30天的健康统计</p>
-            </div>
-            <div id="statsGrid" class="stats-grid"></div>
-            <div class="chart-panel">
-                <h3 class="panel-title"><i class="fas fa-chart-area"></i> 综合健康趋势</h3>
-                <div class="chart-container">
-                    <canvas id="overviewChart"></canvas>
+        <div class="matrix-grid">
+            <!-- 长视频 + 专业人群 -->
+            <div class="matrix-section">
+                <div class="section-header">
+                    <h2>📹 长视频 · 专业人群</h2>
+                    <p class="subtitle">深度内容 · 专业见解</p>
+                </div>
+                <div class="platform-cards">
+                    <a href="https://youtube.com/@YourChannel" target="_blank" class="platform-card">
+                        <div class="platform-icon youtube-bg">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">YouTube</div>
+                            <div class="platform-desc">深度技术讲解、专业教程、行业分析</div>
+                        </div>
+                        <i class="fas fa-arrow-right platform-arrow"></i>
+                    </a>
                 </div>
             </div>
-        </div>
-        
-        <!-- 今日报告视图 -->
-        <div id="todayView" class="view">
-            <div class="page-title">
-                <h1>今日健康报告</h1>
-                <p id="todayDate"></p>
-            </div>
-            <div id="todayContent"></div>
-        </div>
-        
-        <!-- 趋势分析视图 -->
-        <div id="trendsView" class="view">
-            <div class="page-title">
-                <h1>趋势分析</h1>
-                <p>查看各项指标的变化趋势</p>
-            </div>
-            <div class="chart-panel">
-                <h3 class="panel-title"><i class="fas fa-bed"></i> 睡眠趋势</h3>
-                <div class="chart-container">
-                    <canvas id="sleepChart"></canvas>
+            <!-- 长视频 + 大众人群 -->
+            <div class="matrix-section">
+                <div class="section-header">
+                    <h2>🎥 长视频 · 大众人群</h2>
+                    <p class="subtitle">娱乐科普 · 生活分享</p>
+                </div>
+                <div class="platform-cards">
+                    <a href="https://space.bilibili.com/529362421?spm_id_from=333.1007.0.0" target="_blank" class="platform-card">
+                        <div class="platform-icon bilibili-bg">
+                            <i class="fab fa-bilibili"></i>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">哔哩哔哩</div>
+                            <div class="platform-desc">知识分享、Vlog、生活记录、趣味内容</div>
+                        </div>
+                        <i class="fas fa-arrow-right platform-arrow"></i>
+                    </a>
                 </div>
             </div>
-            <div class="chart-panel">
-                <h3 class="panel-title"><i class="fas fa-running"></i> 运动趋势</h3>
-                <div class="chart-container">
-                    <canvas id="exerciseChart"></canvas>
+            <!-- 短视频 + 专业人群 -->
+            <div class="matrix-section">
+                <div class="section-header">
+                    <h2>⚡ 短视频 · 专业人群</h2>
+                    <p class="subtitle">快速观点 · 专业洞察</p>
+                </div>
+                <div class="platform-cards">
+                    <a href="https://x.com/kuangketongxue" target="_blank" class="platform-card">
+                        <div class="platform-icon x-bg">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">X (Twitter)</div>
+                            <div class="platform-desc">行业动态、专业观点、快速分享</div>
+                        </div>
+                        <i class="fas fa-arrow-right platform-arrow"></i>
+                    </a>
                 </div>
             </div>
-            <div class="chart-panel">
-                <h3 class="panel-title"><i class="fas fa-utensils"></i> 饮食趋势</h3>
-                <div class="chart-container">
-                    <canvas id="dietChart"></canvas>
+            <!-- 短视频 + 大众人群 -->
+            <div class="matrix-section">
+                <div class="section-header">
+                    <h2>📱 短视频 · 大众人群</h2>
+                    <p class="subtitle">日常分享 · 轻松阅读</p>
                 </div>
-            </div>
-            <div class="chart-panel">
-                <h3 class="panel-title"><i class="fas fa-brain"></i> 心理状态趋势</h3>
-                <div class="chart-container">
-                    <canvas id="moodChart"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 历史记录视图 -->
-        <div id="historyView" class="view">
-            <div class="page-title">
-                <h1>历史记录</h1>
-                <p>所有健康数据记录</p>
-            </div>
-            <div class="chart-panel">
-                <h3 class="panel-title"><i class="fas fa-table"></i> 数据列表</h3>
-                <div style="overflow-x: auto;">
-                    <table class="data-table" id="historyTable">
-                        <thead>
-                            <tr>
-                                <th>日期</th>
-                                <th>睡眠(h)</th>
-                                <th>运动(min)</th>
-                                <th>步数</th>
-                                <th>饮水(ml)</th>
-                                <th>心情</th>
-                                <th>精力</th>
-                                <th>备注</th>
-                            </tr>
-                        </thead>
-                        <tbody id="historyTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 使用说明视图 -->
-        <div id="guideView" class="view">
-            <div class="page-title">
-                <h1>使用说明</h1>
-                <p>如何在GitHub上管理您的健康数据</p>
-            </div>
-            <div class="chart-panel">
-                <h3 class="panel-title"><i class="fas fa-info-circle"></i> 快速开始</h3>
-                <div class="info-box">
-                    <h4 style="margin-bottom: 15px;"><i class="fas fa-rocket"></i> 部署步骤</h4>
-                    <ol style="margin-left: 20px; line-height: 2;">
-                        <li>在GitHub上创建一个新仓库（例如：health-tracker）</li>
-                        <li>将 <code>index.html</code> 和 <code>health-data.json</code> 上传到仓库</li>
-                        <li>在仓库设置中启用 GitHub Pages</li>
-                        <li>访问 <code>https://your-username.github.io/health-tracker/</code></li>
-                    </ol>
+                <div class="platform-cards">
+                    <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" target="_blank" class="platform-card">
+                        <div class="platform-icon wechat-bg">
+                            <i class="fab fa-weixin"></i>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">微信公众号</div>
+                            <div class="platform-desc">图文并茂、生活感悟、日常记录</div>
+                        </div>
+                        <i class="fas fa-arrow-right platform-arrow"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    
     <!-- 返回按钮 -->
     <a href="index.html" class="back-button" title="返回首页">
         <i class="fas fa-home"></i>
     </a>
-    
     <script>
         // 主题切换功能
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
+        // 检查本地存储的主题设置
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
@@ -934,539 +363,6 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-        
-        // 健康数据管理代码
-        class HealthDataManager {
-            constructor() {
-                this.data = null;
-                this.charts = {};
-            }
-            
-            async loadData() {
-                try {
-                    const response = await fetch('health-data.json');
-                    if (!response.ok) throw new Error('无法加载数据文件');
-                    this.data = await response.json();
-                    return this.data;
-                } catch (error) {
-                    console.error('加载数据失败:', error);
-                    throw error;
-                }
-            }
-            
-            getLatestRecord() {
-                if (!this.data || !this.data.records || this.data.records.length === 0) {
-                    return null;
-                }
-                return this.data.records[this.data.records.length - 1];
-            }
-            
-            getRecentRecords(days = 30) {
-                if (!this.data || !this.data.records) return [];
-                return this.data.records.slice(-days);
-            }
-            
-            calculateStats() {
-                const records = this.getRecentRecords();
-                if (records.length === 0) return null;
-                
-                const stats = {
-                    avgSleep: 0,
-                    avgExercise: 0,
-                    avgSteps: 0,
-                    avgWater: 0,
-                    avgMood: 0,
-                    avgEnergy: 0,
-                    totalRecords: records.length
-                };
-                
-                records.forEach(record => {
-                    stats.avgSleep += record.sleep?.hours || 0;
-                    stats.avgExercise += record.exercise?.minutes || 0;
-                    stats.avgSteps += record.exercise?.steps || 0;
-                    stats.avgWater += record.diet?.waterIntake || 0;
-                    stats.avgMood += record.mood?.score || 0;
-                    stats.avgEnergy += record.physical?.energy || 0;
-                });
-                
-                const count = records.length;
-                stats.avgSleep = (stats.avgSleep / count).toFixed(1);
-                stats.avgExercise = Math.round(stats.avgExercise / count);
-                stats.avgSteps = Math.round(stats.avgSteps / count);
-                stats.avgWater = Math.round(stats.avgWater / count);
-                stats.avgMood = (stats.avgMood / count).toFixed(1);
-                stats.avgEnergy = (stats.avgEnergy / count).toFixed(1);
-                
-                return stats;
-            }
-            
-            calculateTrend(field, subfield, days = 7) {
-                const records = this.getRecentRecords(days);
-                if (records.length < 2) return 0;
-                
-                const recent = records.slice(-3);
-                const previous = records.slice(0, 3);
-                
-                const recentAvg = recent.reduce((sum, r) => sum + (r[field]?.[subfield] || 0), 0) / recent.length;
-                const previousAvg = previous.reduce((sum, r) => sum + (r[field]?.[subfield] || 0), 0) / previous.length;
-                
-                return ((recentAvg - previousAvg) / previousAvg * 100).toFixed(1);
-            }
-        }
-        
-        class UIRenderer {
-            constructor(dataManager) {
-                this.dm = dataManager;
-            }
-            
-            renderOverview() {
-                const stats = this.dm.calculateStats();
-                if (!stats) {
-                    document.getElementById('statsGrid').innerHTML = '<p class="loading">暂无数据</p>';
-                    return;
-                }
-                
-                const statsHTML = `
-                    <div class="stat-card">
-                        <div class="stat-icon">📊</div>
-                        <div class="stat-value">${stats.totalRecords}</div>
-                        <div class="stat-label">记录天数</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">😴</div>
-                        <div class="stat-value">${stats.avgSleep}h</div>
-                        <div class="stat-label">平均睡眠</div>
-                        <div class="stat-trend ${this.dm.calculateTrend('sleep', 'hours') > 0 ? 'trend-up' : 'trend-down'}">
-                            <i class="fas fa-arrow-${this.dm.calculateTrend('sleep', 'hours') > 0 ? 'up' : 'down'}"></i>
-                            ${Math.abs(this.dm.calculateTrend('sleep', 'hours'))}%
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🏃</div>
-                        <div class="stat-value">${stats.avgExercise}min</div>
-                        <div class="stat-label">平均运动</div>
-                        <div class="stat-trend ${this.dm.calculateTrend('exercise', 'minutes') > 0 ? 'trend-up' : 'trend-down'}">
-                            <i class="fas fa-arrow-${this.dm.calculateTrend('exercise', 'minutes') > 0 ? 'up' : 'down'}"></i>
-                            ${Math.abs(this.dm.calculateTrend('exercise', 'minutes'))}%
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">👟</div>
-                        <div class="stat-value">${stats.avgSteps}</div>
-                        <div class="stat-label">平均步数</div>
-                        <div class="stat-trend ${this.dm.calculateTrend('exercise', 'steps') > 0 ? 'trend-up' : 'trend-down'}">
-                            <i class="fas fa-arrow-${this.dm.calculateTrend('exercise', 'steps') > 0 ? 'up' : 'down'}"></i>
-                            ${Math.abs(this.dm.calculateTrend('exercise', 'steps'))}%
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">💧</div>
-                        <div class="stat-value">${stats.avgWater}ml</div>
-                        <div class="stat-label">平均饮水</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">😊</div>
-                        <div class="stat-value">${stats.avgMood}/10</div>
-                        <div class="stat-label">平均心情</div>
-                        <div class="stat-trend ${this.dm.calculateTrend('mood', 'score') > 0 ? 'trend-up' : 'trend-down'}">
-                            <i class="fas fa-arrow-${this.dm.calculateTrend('mood', 'score') > 0 ? 'up' : 'down'}"></i>
-                            ${Math.abs(this.dm.calculateTrend('mood', 'score'))}%
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">⚡</div>
-                        <div class="stat-value">${stats.avgEnergy}/10</div>
-                        <div class="stat-label">平均精力</div>
-                        <div class="stat-trend ${this.dm.calculateTrend('physical', 'energy') > 0 ? 'trend-up' : 'trend-down'}">
-                            <i class="fas fa-arrow-${this.dm.calculateTrend('physical', 'energy') > 0 ? 'up' : 'down'}"></i>
-                            ${Math.abs(this.dm.calculateTrend('physical', 'energy'))}%
-                        </div>
-                    </div>
-                `;
-                
-                document.getElementById('statsGrid').innerHTML = statsHTML;
-                this.renderOverviewChart();
-            }
-            
-            renderOverviewChart() {
-                const records = this.dm.getRecentRecords(14);
-                const ctx = document.getElementById('overviewChart');
-                
-                if (this.dm.charts.overview) {
-                    this.dm.charts.overview.destroy();
-                }
-                
-                this.dm.charts.overview = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: records.map(r => r.date),
-                        datasets: [
-                            {
-                                label: '睡眠质量',
-                                data: records.map(r => r.sleep?.quality || 0),
-                                borderColor: 'rgb(102, 126, 234)',
-                                backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                                tension: 0.4
-                            },
-                            {
-                                label: '心情评分',
-                                data: records.map(r => r.mood?.score || 0),
-                                borderColor: 'rgb(255, 159, 64)',
-                                backgroundColor: 'rgba(255, 159, 64, 0.1)',
-                                tension: 0.4
-                            },
-                            {
-                                label: '精力水平',
-                                data: records.map(r => r.physical?.energy || 0),
-                                borderColor: 'rgb(75, 192, 192)',
-                                backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                                tension: 0.4
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                labels: { 
-                                    color: getComputedStyle(document.body).color,
-                                    font: {
-                                        size: 14
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 10,
-                                ticks: { 
-                                    color: getComputedStyle(document.body).color,
-                                    font: {
-                                        size: 12
-                                    }
-                                },
-                                grid: { 
-                                    color: 'rgba(0, 0, 0, 0.1)' 
-                                }
-                            },
-                            x: {
-                                ticks: { 
-                                    color: getComputedStyle(document.body).color,
-                                    font: {
-                                        size: 12
-                                    }
-                                },
-                                grid: { 
-                                    color: 'rgba(0, 0, 0, 0.1)' 
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            renderToday() {
-                const latest = this.dm.getLatestRecord();
-                if (!latest) {
-                    document.getElementById('todayContent').innerHTML = '<p class="loading">暂无今日数据</p>';
-                    return;
-                }
-                
-                document.getElementById('todayDate').textContent = latest.date;
-                
-                const html = `
-                    <div class="today-report">
-                        <div class="report-card">
-                            <h3><i class="fas fa-bed"></i> 睡眠</h3>
-                            <div class="metric-item">
-                                <span class="metric-label">睡眠时长</span>
-                                <span class="metric-value">${latest.sleep?.hours || 0}小时</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">睡眠质量</span>
-                                <span class="metric-value">${latest.sleep?.quality || 0}/10</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">夜间醒来</span>
-                                <span class="metric-value">${latest.sleep?.nightWakeups || 0}次</span>
-                            </div>
-                        </div>
-                        <div class="report-card">
-                            <h3><i class="fas fa-running"></i> 运动</h3>
-                            <div class="metric-item">
-                                <span class="metric-label">运动时长</span>
-                                <span class="metric-value">${latest.exercise?.minutes || 0}分钟</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">步数</span>
-                                <span class="metric-value">${latest.exercise?.steps || 0}步</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">运动强度</span>
-                                <span class="metric-value">${this.translateIntensity(latest.exercise?.intensity)}</span>
-                            </div>
-                        </div>
-                        <div class="report-card">
-                            <h3><i class="fas fa-utensils"></i> 饮食</h3>
-                            <div class="metric-item">
-                                <span class="metric-label">饮水量</span>
-                                <span class="metric-value">${latest.diet?.waterIntake || 0}ml</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">蔬菜</span>
-                                <span class="metric-value">${latest.diet?.vegetables || 0}g</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">水果</span>
-                                <span class="metric-value">${latest.diet?.fruits || 0}g</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">垃圾食品</span>
-                                <span class="metric-value">${latest.diet?.junkFood || 0}次</span>
-                            </div>
-                        </div>
-                        <div class="report-card">
-                            <h3><i class="fas fa-brain"></i> 心理</h3>
-                            <div class="metric-item">
-                                <span class="metric-label">心情</span>
-                                <span class="metric-value">${latest.mood?.score || 0}/10</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">压力</span>
-                                <span class="metric-value">${latest.mood?.stress || 0}/10</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">焦虑</span>
-                                <span class="metric-value">${latest.mood?.anxiety || 0}/10</span>
-                            </div>
-                        </div>
-                        <div class="report-card">
-                            <h3><i class="fas fa-heartbeat"></i> 身体</h3>
-                            <div class="metric-item">
-                                <span class="metric-label">精力</span>
-                                <span class="metric-value">${latest.physical?.energy || 0}/10</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">疲劳</span>
-                                <span class="metric-value">${latest.physical?.fatigue || 0}/10</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">疼痛</span>
-                                <span class="metric-value">${latest.physical?.pain || 0}/10</span>
-                            </div>
-                        </div>
-                        <div class="report-card">
-                            <h3><i class="fas fa-eye"></i> 眼睛</h3>
-                            <div class="metric-item">
-                                <span class="metric-label">眼睛疲劳</span>
-                                <span class="metric-value">${latest.vision?.eyeFatigue || 0}/10</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">屏幕时间</span>
-                                <span class="metric-value">${latest.vision?.screenTime || 0}分钟</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                document.getElementById('todayContent').innerHTML = html;
-            }
-            
-            renderTrends() {
-                const records = this.dm.getRecentRecords(30);
-                
-                this.renderChart('sleepChart', {
-                    labels: records.map(r => r.date),
-                    datasets: [
-                        {
-                            label: '睡眠时长(h)',
-                            data: records.map(r => r.sleep?.hours || 0),
-                            borderColor: 'rgb(102, 126, 234)',
-                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                        }
-                    ]
-                });
-                
-                this.renderChart('exerciseChart', {
-                    labels: records.map(r => r.date),
-                    datasets: [
-                        {
-                            label: '运动时长(min)',
-                            data: records.map(r => r.exercise?.minutes || 0),
-                            borderColor: 'rgb(75, 192, 192)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                        }
-                    ]
-                });
-                
-                this.renderChart('dietChart', {
-                    labels: records.map(r => r.date),
-                    datasets: [
-                        {
-                            label: '饮水量(ml)',
-                            data: records.map(r => r.diet?.waterIntake || 0),
-                            borderColor: 'rgb(54, 162, 235)',
-                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
-                        }
-                    ]
-                });
-                
-                this.renderChart('moodChart', {
-                    labels: records.map(r => r.date),
-                    datasets: [
-                        {
-                            label: '心情评分',
-                            data: records.map(r => r.mood?.score || 0),
-                            borderColor: 'rgb(255, 159, 64)',
-                            backgroundColor: 'rgba(255, 159, 64, 0.1)',
-                        }
-                    ]
-                });
-            }
-            
-            renderChart(canvasId, data) {
-                const ctx = document.getElementById(canvasId);
-                if (this.dm.charts[canvasId]) {
-                    this.dm.charts[canvasId].destroy();
-                }
-                
-                this.dm.charts[canvasId] = new Chart(ctx, {
-                    type: 'line',
-                    data: data,
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                labels: { 
-                                    color: getComputedStyle(document.body).color,
-                                    font: {
-                                        size: 14
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                ticks: { 
-                                    color: getComputedStyle(document.body).color,
-                                    font: {
-                                        size: 12
-                                    }
-                                },
-                                grid: { 
-                                    color: 'rgba(0, 0, 0, 0.1)' 
-                                }
-                            },
-                            x: {
-                                ticks: { 
-                                    color: getComputedStyle(document.body).color,
-                                    font: {
-                                        size: 12
-                                    }
-                                },
-                                grid: { 
-                                    color: 'rgba(0, 0, 0, 0.1)' 
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            renderHistory() {
-                const records = this.dm.data.records;
-                const tbody = document.getElementById('historyTableBody');
-                
-                const html = records.map(record => `
-                    <tr>
-                        <td>${record.date}</td>
-                        <td>${record.sleep?.hours || '-'}</td>
-                        <td>${record.exercise?.minutes || '-'}</td>
-                        <td>${record.exercise?.steps || '-'}</td>
-                        <td>${record.diet?.waterIntake || '-'}</td>
-                        <td>${record.mood?.score || '-'}/10</td>
-                        <td>${record.physical?.energy || '-'}/10</td>
-                        <td>${record.notes || '-'}</td>
-                    </tr>
-                `).reverse().join('');
-                
-                tbody.innerHTML = html;
-            }
-            
-            translateIntensity(intensity) {
-                const map = {
-                    'light': '轻度',
-                    'moderate': '中等',
-                    'intense': '高强度'
-                };
-                return map[intensity] || intensity || '-';
-            }
-        }
-        
-        let dataManager, uiRenderer;
-        
-        async function init() {
-            try {
-                dataManager = new HealthDataManager();
-                await dataManager.loadData();
-                uiRenderer = new UIRenderer(dataManager);
-                uiRenderer.renderOverview();
-            } catch (error) {
-                document.getElementById('statsGrid').innerHTML = `
-                    <div class="error">
-                        <h3><i class="fas fa-exclamation-triangle"></i> 加载失败</h3>
-                        <p>无法加载 health-data.json 文件</p>
-                    </div>
-                `;
-            }
-        }
-        
-        function switchView(view) {
-            // 更新按钮状态
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // 切换视图
-            document.querySelectorAll('.view').forEach(v => {
-                v.classList.remove('active');
-            });
-            
-            const viewMap = {
-                'overview': 'overviewView',
-                'today': 'todayView',
-                'trends': 'trendsView',
-                'history': 'historyView',
-                'guide': 'guideView'
-            };
-            
-            document.getElementById(viewMap[view]).classList.add('active');
-            
-            // 渲染对应视图的内容
-            if (uiRenderer && dataManager.data) {
-                switch(view) {
-                    case 'overview':
-                        uiRenderer.renderOverview();
-                        break;
-                    case 'today':
-                        uiRenderer.renderToday();
-                        break;
-                    case 'trends':
-                        uiRenderer.renderTrends();
-                        break;
-                    case 'history':
-                        uiRenderer.renderHistory();
-                        break;
-                }
-            }
-        }
-        
-        // 页面加载完成后初始化
-        window.addEventListener('load', init);
     </script>
 </body>
 </html>
