@@ -260,6 +260,119 @@
             color: #2d3748;
         }
 
+        /* 统计视图 */
+        #stats-view {
+            display: none;
+            padding: 2rem;
+            background: rgba(17, 24, 54, 0.5);
+            border-radius: 16px;
+        }
+
+        body.light-mode #stats-view {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .book-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .book-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .book-stats {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* 提示信息 */
+        .info-banner {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(56, 189, 248, 0.12));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(139, 92, 246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .info-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+            color: var(--accent-color);
+        }
+
+        .info-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .info-content code {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
         /* 加载动画 */
         .loading {
             display: flex;
@@ -316,6 +429,11 @@
             #mindmap-svg {
                 min-height: 400px;
             }
+
+            .info-banner {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -352,6 +470,17 @@
     <!-- 主内容 -->
     <main class="mindmap-container">
         <div class="mindmap-card">
+            <!-- 信息提示 -->
+            <div class="info-banner">
+                <div class="info-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="info-content">
+                    <h3>思维导图编辑说明</h3>
+                    <p>思维导图内容通过 <code>data/mindmap.md</code> 文件进行编辑。请直接在 GitHub 仓库中修改该文件，修改完成后自动生效。</p>
+                </div>
+            </div>
+
             <!-- 工具栏 -->
             <div class="mindmap-toolbar">
                 <button class="view-mode-btn active" data-view="mindmap">
@@ -377,10 +506,32 @@
             </div>
 
             <!-- 统计视图 -->
-            <div id="stats-view" style="display: none;">
-                <div class="loading">
-                    <div class="loading-spinner"></div>
-                    <p>统计功能开发中...</p>
+            <div id="stats-view">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalBooks">0</span>
+                        <span class="stat-label">书籍总数</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalChapters">0</span>
+                        <span class="stat-label">章节数量</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalNodes">0</span>
+                        <span class="stat-label">知识点数量</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="lastUpdated">-</span>
+                        <span class="stat-label">最后更新</span>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 1rem; color: var(--accent-color);">📚 书籍详情</h3>
+                <div class="book-list" id="bookList">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>加载统计数据中...</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -392,36 +543,87 @@
 
         let mm = null;
         let transformer = new Transformer();
-        let digestData = [];
+        let mindmapData = '';
         let currentView = 'mindmap';
 
         // 初始化
         document.addEventListener('DOMContentLoaded', async function() {
             initTheme();
-            await loadDigestData();
+            await loadMindmapData();
             renderMindmap();
             bindEvents();
         });
 
-        // 加载书摘数据
-        async function loadDigestData() {
+        // 加载思维导图数据
+        async function loadMindmapData() {
             try {
-                const response = await fetch('data/digests.json');
-                digestData = await response.json();
-                console.log(`✅ 成功加载 ${digestData.length} 条书摘数据`);
+                const response = await fetch('data/mindmap.md');
+                if (!response.ok) {
+                    throw new Error(`HTTP错误: ${response.status}`);
+                }
+                mindmapData = await response.text();
+                console.log('✅ 成功加载思维导图数据');
+                
+                // 同时加载书摘数据用于统计
+                try {
+                    const digestResponse = await fetch('data/digests.json');
+                    if (digestResponse.ok) {
+                        const digestData = await digestResponse.json();
+                        updateStatistics(digestData);
+                    }
+                } catch (error) {
+                    console.warn('警告: 无法加载书摘数据进行统计:', error);
+                }
             } catch (error) {
-                console.error('❌ 数据加载失败:', error);
-                digestData = [];
+                console.error('❌ 思维导图数据加载失败:', error);
+                // 使用默认数据
+                mindmapData = `# 📚 阅读知识体系
+
+## 📖 书籍分类
+
+### 技术类
+- 前端开发
+- 后端架构
+- 数据库设计
+
+### 哲学类
+- 西方哲学
+- 东方哲学
+- 逻辑学
+
+### 文学类
+- 古典文学
+- 现代文学
+- 诗歌鉴赏
+
+## 🧠 知识网络
+
+### 编程思维
+- 算法设计
+- 系统架构
+- 代码优化
+
+### 阅读技巧
+- 速读方法
+- 精读策略
+- 笔记系统`;
             }
         }
 
-        // 生成Markdown内容
-        function generateMarkdown() {
-            if (digestData.length === 0) {
-                return '# 📚 阅读知识体系\n\n暂无数据';
-            }
+        // 更新统计信息
+        function updateStatistics(digestData) {
+            const books = [...new Set(digestData.map(d => d.book))];
+            const chapters = Math.ceil(digestData.length / 3); // 估算章节数
+            const nodes = digestData.length;
+            const lastUpdated = new Date().toLocaleDateString('zh-CN');
 
-            // 按书名分组
+            document.getElementById('totalBooks').textContent = books.length;
+            document.getElementById('totalChapters').textContent = chapters;
+            document.getElementById('totalNodes').textContent = nodes;
+            document.getElementById('lastUpdated').textContent = lastUpdated;
+
+            // 生成书籍列表
+            const bookList = document.getElementById('bookList');
             const bookGroups = digestData.reduce((acc, digest) => {
                 if (!acc[digest.book]) {
                     acc[digest.book] = [];
@@ -430,56 +632,34 @@
                 return acc;
             }, {});
 
-            let markdown = '# 📚 我的阅读知识体系\n\n';
-
-            // 按书名排序
-            const sortedBooks = Object.keys(bookGroups).sort();
-
-            sortedBooks.forEach(book => {
-                const digests = bookGroups[book];
+            bookList.innerHTML = '';
+            Object.entries(bookGroups).forEach(([book, digests]) => {
                 const avgRating = digests
                     .filter(d => d.rating > 0)
                     .reduce((sum, d) => sum + d.rating, 0) / digests.length || 0;
 
-                markdown += `## 📖 ${book}\n\n`;
-                markdown += `- **摘录数量**: ${digests.length} 条\n`;
-                markdown += `- **平均启发值**: ${avgRating.toFixed(1)}\n\n`;
-
-                // 按评分分类摘录
-                const highValue = digests.filter(d => d.rating >= 7);
-                const mediumValue = digests.filter(d => d.rating >= 4 && d.rating < 7);
-                const lowValue = digests.filter(d => d.rating < 4 && d.rating > 0);
-
-                if (highValue.length > 0) {
-                    markdown += `### ⭐ 高价值摘录 (${highValue.length})\n\n`;
-                    highValue.forEach((d, i) => {
-                        markdown += `${i + 1}. ${d.content.substring(0, 100)}${d.content.length > 100 ? '...' : ''}\n`;
-                        markdown += `   - 启发值: ${d.rating} | ${d.date}\n\n`;
-                    });
-                }
-
-                if (mediumValue.length > 0) {
-                    markdown += `### 📝 中等价值摘录 (${mediumValue.length})\n\n`;
-                    mediumValue.slice(0, 3).forEach((d, i) => {
-                        markdown += `${i + 1}. ${d.content.substring(0, 80)}...\n`;
-                    });
-                    markdown += '\n';
-                }
+                const bookItem = document.createElement('div');
+                bookItem.className = 'book-item';
+                bookItem.innerHTML = `
+                    <div class="book-title">${book}</div>
+                    <div class="book-stats">
+                        <span>📝 ${digests.length} 条摘录</span>
+                        <span>⭐ ${avgRating.toFixed(1)} 平均启发值</span>
+                    </div>
+                `;
+                bookList.appendChild(bookItem);
             });
-
-            return markdown;
         }
 
         // 渲染思维导图
         function renderMindmap() {
             const svg = document.getElementById('mindmap-svg');
-            const markdown = generateMarkdown();
             
             // 更新Markdown视图
-            document.getElementById('markdown-content').textContent = markdown;
+            document.getElementById('markdown-content').textContent = mindmapData;
 
             try {
-                const { root } = transformer.transform(markdown);
+                const { root } = transformer.transform(mindmapData);
                 
                 if (mm) {
                     mm.setData(root);
@@ -510,7 +690,7 @@
 
             // 刷新按钮
             document.getElementById('refreshBtn')?.addEventListener('click', async function() {
-                await loadDigestData();
+                await loadMindmapData();
                 renderMindmap();
             });
 
