@@ -11,7 +11,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --success-gradient: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%);
@@ -23,14 +22,12 @@
             --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.15);
             --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.2);
         }
-
         body {
             font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
             min-height: 100vh;
             background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #2d3561 100%);
             color: var(--text-primary);
         }
-
         #starfield {
             position: fixed;
             top: 0;
@@ -40,7 +37,6 @@
             z-index: 0;
             pointer-events: none;
         }
-
         .header {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -52,13 +48,11 @@
             z-index: 1000;
             padding: 15px 0;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-
         .logo {
             font-size: 1.6em;
             font-weight: 700;
@@ -67,7 +61,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .health-container {
             max-width: 1100px;
             margin: 100px auto 50px;
@@ -75,12 +68,10 @@
             position: relative;
             z-index: 1;
         }
-
         .page-title {
             text-align: center;
             margin-bottom: 50px;
         }
-
         .page-title h1 {
             font-size: 2.8em;
             background: var(--primary-gradient);
@@ -90,15 +81,12 @@
             margin-bottom: 15px;
             font-weight: 800;
         }
-
-        /* ===== 评分展示 ===== */
         .score-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 40px;
         }
-
         .score-card {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -108,12 +96,10 @@
             text-align: center;
             transition: all 0.3s ease;
         }
-
         .score-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-md);
         }
-
         .score-value {
             font-size: 2.5em;
             font-weight: 800;
@@ -123,14 +109,11 @@
             background-clip: text;
             margin: 15px 0;
         }
-
         .score-label {
             font-size: 1em;
             color: var(--text-secondary);
             font-weight: 600;
         }
-
-        /* ===== 类别选项卡 ===== */
         .category-tabs {
             display: flex;
             gap: 10px;
@@ -138,7 +121,6 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-
         .tab {
             padding: 10px 20px;
             border: 2px solid var(--glass-border);
@@ -150,17 +132,13 @@
             font-weight: 600;
             font-size: 0.95em;
         }
-
         .tab.active {
             background: var(--primary-gradient);
             border-color: var(--primary-gradient);
         }
-
         .tab:hover {
             border-color: #667eea;
         }
-
-        /* ===== 内容面板 ===== */
         .content-panel {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -170,7 +148,6 @@
             margin-bottom: 30px;
             box-shadow: var(--shadow-md);
         }
-
         .panel-title {
             font-size: 1.6em;
             margin-bottom: 25px;
@@ -180,14 +157,12 @@
             align-items: center;
             gap: 12px;
         }
-
         .metric-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 20px;
         }
-
         .metric-item {
             background: rgba(255, 255, 255, 0.03);
             padding: 20px;
@@ -195,25 +170,20 @@
             border-left: 3px solid #667eea;
             transition: all 0.3s ease;
         }
-
         .metric-item:hover {
             background: rgba(255, 255, 255, 0.06);
         }
-
         .metric-label {
             font-size: 0.95em;
             color: var(--text-secondary);
             margin-bottom: 8px;
             font-weight: 500;
         }
-
         .metric-value {
             font-size: 1.5em;
             font-weight: 700;
             color: var(--text-primary);
         }
-
-        /* ===== 建议区域 ===== */
         .suggestions-panel {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -222,7 +192,6 @@
             padding: 35px;
             box-shadow: var(--shadow-md);
         }
-
         .suggestions-title {
             font-size: 1.8em;
             margin-bottom: 25px;
@@ -235,7 +204,6 @@
             align-items: center;
             gap: 12px;
         }
-
         .suggestion-item {
             background: rgba(255, 255, 255, 0.03);
             border-left: 4px solid #667eea;
@@ -244,23 +212,19 @@
             border-radius: 12px;
             transition: all 0.3s ease;
         }
-
         .suggestion-item.priority {
             border-left-color: #ff6b6b;
             background: rgba(255, 107, 107, 0.05);
         }
-
         .suggestion-item.tip {
             border-left-color: #4caf50;
             background: rgba(76, 175, 80, 0.05);
         }
-
         .suggestion-text {
             font-size: 1.05em;
             line-height: 1.6;
             color: var(--text-primary);
         }
-
         @media (max-width: 768px) {
             .health-container {
                 padding: 20px 15px;
@@ -276,53 +240,103 @@
                 grid-template-columns: 1fr;
             }
         }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 1.2em;
-            color: var(--text-secondary);
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--glass-border);
-            border-top-color: #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
     <canvas id="starfield"></canvas>
-
     <header class="header">
         <div class="container">
             <h1 class="logo">📋 每日健康自检</h1>
         </div>
     </header>
-
     <div class="health-container">
         <div class="page-title">
             <h1>健康自检报告</h1>
             <p>无需任何仪器，在家就能自我评估健康状况</p>
         </div>
-
-        <div id="mainContent">
-            <div class="loading">
-                <div class="spinner"></div>
-                正在加载健康数据...
-            </div>
-        </div>
+        <div id="mainContent"></div>
     </div>
 
     <script>
+        // ===== 内嵌健康数据 =====
+        const HEALTH_DATA = {
+            "metadata": {
+                "lastUpdate": "2024-01-15",
+                "age": 25,
+                "gender": "M"
+            },
+            "today": {
+                "date": "2024-01-15",
+                "sleep": {
+                    "hours": 7.5,
+                    "quality": 8,
+                    "fallAsleepTime": "23:30",
+                    "wakeUpTime": "07:00",
+                    "nightWakeups": 1,
+                    "notes": "睡眠较好"
+                },
+                "exercise": {
+                    "minutes": 45,
+                    "intensity": "moderate",
+                    "type": "跑步、瑜伽",
+                    "steps": 8500
+                },
+                "diet": {
+                    "meals": 3,
+                    "waterIntake": 2000,
+                    "vegetables": 300,
+                    "fruits": 200,
+                    "mainCereals": 250,
+                    "protein": "鸡蛋、鱼、豆制品",
+                    "junkFood": 0,
+                    "caffeine": 2,
+                    "alcohol": 0
+                },
+                "mood": {
+                    "score": 8,
+                    "stress": 4,
+                    "anxiety": 3,
+                    "mood": "放松"
+                },
+                "physical": {
+                    "energy": 8,
+                    "fatigue": 3,
+                    "headache": 0,
+                    "neckPain": 2,
+                    "backPain": 1,
+                    "jointPain": 0
+                },
+                "digestion": {
+                    "appetite": 8,
+                    "bloating": 1,
+                    "constipation": 0,
+                    "diarrhea": 0,
+                    "bowelMovements": 1,
+                    "bowelColor": "brown",
+                    "bowelTexture": "normal"
+                },
+                "vision": {
+                    "eyeFatigue": 5,
+                    "dryEyes": 3,
+                    "blurredVision": 0,
+                    "screenTime": 480,
+                    "eyeBreaks": 8
+                },
+                "oral": {
+                    "teethBrushing": 2,
+                    "gumBleeding": 0,
+                    "mouthUlcer": 0,
+                    "toothache": 0
+                },
+                "skin": {
+                    "acne": 2,
+                    "dryness": 3,
+                    "oiliness": 2,
+                    "rash": 0
+                }
+            }
+        };
+
         // ===== Canvas 星空 =====
         class Starfield {
             constructor() {
@@ -333,12 +347,10 @@
                 this.init();
                 window.addEventListener('resize', () => this.resize());
             }
-
             resize() {
                 this.canvas.width = window.innerWidth;
                 this.canvas.height = window.innerHeight;
             }
-
             init() {
                 const starCount = Math.floor((this.canvas.width * this.canvas.height) / 3000);
                 for (let i = 0; i < starCount; i++) {
@@ -352,7 +364,6 @@
                 }
                 this.animate();
             }
-
             animate() {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 this.stars.forEach(star => {
@@ -392,220 +403,131 @@
             assessSleep() {
                 let score = 100;
                 const { hours, quality, nightWakeups } = this.data.sleep;
-
-                // 睡眠时长（7-9小时最优）
                 if (hours < 6 || hours > 10) score -= 20;
                 else if (hours < 7 || hours > 9) score -= 10;
-
-                // 睡眠质量（1-10）
                 if (quality < 6) score -= 15;
                 else if (quality < 8) score -= 5;
-
-                // 夜间醒来次数（0-1次最优）
                 if (nightWakeups > 3) score -= 15;
                 else if (nightWakeups > 1) score -= 5;
-
                 return Math.max(0, score);
             }
 
             assessExercise() {
                 let score = 100;
                 const { minutes, intensity, steps } = this.data.exercise;
-
-                // 运动时长（建议30分钟以上）
                 if (minutes < 15) score -= 20;
                 else if (minutes < 30) score -= 10;
-                else if (minutes > 120) score -= 5; // 过度运动
-
-                // 步数（8000-10000最优）
+                else if (minutes > 120) score -= 5;
                 if (steps < 5000) score -= 15;
                 else if (steps < 8000) score -= 8;
                 else if (steps > 15000) score -= 5;
-
-                // 强度评分
                 if (intensity === 'light') score -= 10;
                 else if (intensity === 'intense') score -= 5;
-
                 return Math.max(0, score);
             }
 
             assessDiet() {
                 let score = 100;
                 const { waterIntake, vegetables, fruits, junkFood, caffeine, alcohol } = this.data.diet;
-
-                // 饮水（1500-2500ml最优）
                 if (waterIntake < 1000 || waterIntake > 3000) score -= 15;
-
-                // 蔬菜（建议300g+）
                 if (vegetables < 200) score -= 15;
                 else if (vegetables < 300) score -= 8;
-
-                // 水果（建议200g+）
                 if (fruits < 100) score -= 10;
                 else if (fruits < 200) score -= 5;
-
-                // 垃圾食品
                 if (junkFood > 2) score -= 20;
                 else if (junkFood > 0) score -= 10;
-
-                // 咖啡因（每天不超过3杯）
                 if (caffeine > 5) score -= 15;
                 else if (caffeine > 3) score -= 10;
-
-                // 酒精（最好为0）
                 if (alcohol > 0) score -= (alcohol > 2 ? 20 : 10);
-
                 return Math.max(0, score);
             }
 
             assessMood() {
                 let score = 100;
                 const { score: moodScore, stress, anxiety } = this.data.mood;
-
-                // 心情评分（1-10）
                 if (moodScore < 5) score -= 20;
                 else if (moodScore < 7) score -= 10;
-
-                // 压力程度（1-10，越低越好）
                 if (stress > 7) score -= 20;
                 else if (stress > 5) score -= 10;
-
-                // 焦虑程度
                 if (anxiety > 7) score -= 20;
                 else if (anxiety > 5) score -= 10;
-
                 return Math.max(0, score);
             }
 
             assessPhysical() {
                 let score = 100;
                 const { energy, fatigue, headache, neckPain, backPain, jointPain } = this.data.physical;
-
-                // 能量水平（1-10，越高越好）
                 if (energy < 5) score -= 15;
                 else if (energy < 7) score -= 8;
-
-                // 疲劳（1-10，越低越好）
                 if (fatigue > 7) score -= 15;
                 else if (fatigue > 5) score -= 8;
-
-                // 各种疼痛
                 if (headache > 5) score -= 15;
                 else if (headache > 0) score -= 5;
-
                 if (neckPain > 5) score -= 12;
                 else if (neckPain > 0) score -= 3;
-
                 if (backPain > 5) score -= 12;
                 else if (backPain > 0) score -= 3;
-
                 if (jointPain > 0) score -= 8;
-
                 return Math.max(0, score);
             }
 
             assessDigestion() {
                 let score = 100;
                 const { appetite, bloating, constipation, diarrhea, bowelMovements } = this.data.digestion;
-
-                // 食欲（1-10）
                 if (appetite < 6) score -= 15;
                 else if (appetite < 8) score -= 5;
-
-                // 腹胀
                 if (bloating > 5) score -= 15;
                 else if (bloating > 2) score -= 8;
-
-                // 便秘
                 if (constipation > 5) score -= 15;
                 else if (constipation > 0) score -= 10;
-
-                // 腹泻
                 if (diarrhea > 5) score -= 15;
                 else if (diarrhea > 0) score -= 10;
-
-                // 排便次数（1-3次最优）
                 if (bowelMovements < 1 || bowelMovements > 3) score -= 10;
-
                 return Math.max(0, score);
             }
 
             assessVision() {
                 let score = 100;
                 const { eyeFatigue, dryEyes, screenTime, eyeBreaks } = this.data.vision;
-
-                // 眼睛疲劳（1-10）
                 if (eyeFatigue > 7) score -= 20;
                 else if (eyeFatigue > 5) score -= 12;
                 else if (eyeFatigue > 3) score -= 8;
-
-                // 干眼程度
                 if (dryEyes > 5) score -= 15;
                 else if (dryEyes > 2) score -= 8;
-
-                // 屏幕时间（建议<360分钟）
                 if (screenTime > 480) score -= 20;
                 else if (screenTime > 360) score -= 10;
-
-                // 眼保健操（建议4-6次）
                 if (eyeBreaks < 4) score -= 15;
-
                 return Math.max(0, score);
             }
 
             assessOral() {
                 let score = 100;
                 const { teethBrushing, gumBleeding, mouthUlcer, toothache } = this.data.oral;
-
-                // 刷牙频率（建议2-3次）
                 if (teethBrushing < 2) score -= 20;
-
-                // 牙龈出血
                 if (gumBleeding > 0) score -= 15;
-
-                // 口腔溃疡
                 if (mouthUlcer > 0) score -= 10;
-
-                // 牙痛
                 if (toothache > 0) score -= 15;
-
                 return Math.max(0, score);
             }
 
             assessSkin() {
                 let score = 100;
                 const { acne, dryness, oiliness, rash } = this.data.skin;
-
-                // 痘痘（>5个）
                 if (acne > 5) score -= 20;
                 else if (acne > 2) score -= 10;
-
-                // 干燥程度（1-10）
                 if (dryness > 7) score -= 15;
                 else if (dryness > 5) score -= 8;
-
-                // 出油程度（1-10，5最优）
                 if (oiliness < 3 || oiliness > 7) score -= 10;
-
-                // 皮疹
                 if (rash > 0) score -= 20;
-
                 return Math.max(0, score);
             }
 
             calculateOverall() {
                 const weights = {
-                    sleep: 0.15,
-                    exercise: 0.15,
-                    diet: 0.15,
-                    mood: 0.15,
-                    physical: 0.15,
-                    digestion: 0.10,
-                    vision: 0.10,
-                    oral: 0.05,
-                    skin: 0.05
+                    sleep: 0.15, exercise: 0.15, diet: 0.15, mood: 0.15,
+                    physical: 0.15, digestion: 0.10, vision: 0.10,
+                    oral: 0.05, skin: 0.05
                 };
-
                 let overall = 0;
                 for (let [key, weight] of Object.entries(weights)) {
                     overall += this.categories[key] * weight;
@@ -615,101 +537,47 @@
 
             generateSuggestions() {
                 this.suggestions = [];
-
-                // 睡眠建议
                 if (this.categories.sleep < 70) {
                     this.suggestions.push({
-                        priority: 'high',
-                        icon: '😴',
-                        title: '改善睡眠质量',
-                        tips: [
-                            '保持固定的作息时间',
-                            '睡前1小时避免使用电子设备',
-                            '卧室保持黑暗、安静、凉爽',
-                            '适度运动（但不在睡前）'
-                        ]
+                        priority: 'high', icon: '😴', title: '改善睡眠质量',
+                        tips: ['保持固定的作息时间', '睡前1小时避免使用电子设备',
+                               '卧室保持黑暗、安静、凉爽', '适度运动（但不在睡前）']
                     });
                 }
-
-                // 运动建议
                 if (this.categories.exercise < 70) {
                     this.suggestions.push({
-                        priority: 'high',
-                        icon: '🏃',
-                        title: '增加运动量',
-                        tips: [
-                            '每天至少运动30分钟',
-                            '目标步数8000-10000步',
-                            '选择喜欢的运动方式（跑步、瑜伽、舞蹈）',
-                            '循序渐进，避免过度运动'
-                        ]
+                        priority: 'high', icon: '🏃', title: '增加运动量',
+                        tips: ['每天至少运动30分钟', '目标步数8000-10000步',
+                               '选择喜欢的运动方式', '循序渐进，避免过度运动']
                     });
                 }
-
-                // 饮食建议
                 if (this.categories.diet < 70) {
                     this.suggestions.push({
-                        priority: 'high',
-                        icon: '🥗',
-                        title: '优化饮食结构',
-                        tips: [
-                            '每天喝1.5-2L水',
-                            '增加蔬菜摄入（300g+）',
-                            '减少垃圾食品和高糖饮料',
-                            '控制咖啡因摄入（每天≤3杯）',
-                            '减少或戒酒'
-                        ]
+                        priority: 'high', icon: '🥗', title: '优化饮食结构',
+                        tips: ['每天喝1.5-2L水', '增加蔬菜摄入（300g+）',
+                               '减少垃圾食品和高糖饮料', '控制咖啡因摄入']
                     });
                 }
-
-                // 心理健康建议
                 if (this.categories.mood < 70) {
                     this.suggestions.push({
-                        priority: 'high',
-                        icon: '🧘',
-                        title: '缓解压力焦虑',
-                        tips: [
-                            '尝试冥想或深呼吸（每天10分钟）',
-                            '与朋友家人保持联系',
-                            '参加喜欢的兴趣活动',
-                            '必要时寻求专业心理咨询'
-                        ]
+                        priority: 'high', icon: '🧘', title: '缓解压力焦虑',
+                        tips: ['尝试冥想或深呼吸', '与朋友家人保持联系',
+                               '参加兴趣活动', '必要时寻求专业帮助']
                     });
                 }
-
-                // 眼睛健康建议
                 if (this.categories.vision < 70) {
                     this.suggestions.push({
-                        priority: 'medium',
-                        icon: '👁️',
-                        title: '保护眼睛健康',
-                        tips: [
-                            '每30分钟看屏幕时休息5分钟',
-                            '每天做4-6次眼保健操',
-                            '保持良好的用眼距离和姿势',
-                            '多看远处，适度使用眼药水'
-                        ]
+                        priority: 'medium', icon: '👁️', title: '保护眼睛健康',
+                        tips: ['每30分钟休息5分钟', '每天做4-6次眼保健操',
+                               '保持良好用眼距离', '多看远处']
                     });
                 }
-
-                // 正面反馈
                 if (this.categories.overall >= 80) {
                     this.suggestions.unshift({
-                        priority: 'tip',
-                        icon: '⭐',
-                        title: '健康状况优异',
+                        priority: 'tip', icon: '⭐', title: '健康状况优异',
                         tips: ['继续保持当前的健康习惯', '定期自检，持之以恒']
                     });
                 }
-            }
-
-            getGrade() {
-                const score = this.categories.overall;
-                if (score >= 90) return 'S+';
-                if (score >= 80) return 'A';
-                if (score >= 70) return 'B';
-                if (score >= 60) return 'C';
-                return 'D';
             }
         }
 
@@ -721,28 +589,19 @@
 
             render() {
                 const html = `
-                    <!-- 评分展示 -->
                     <div class="score-section">
                         ${this.renderScoreCards()}
                     </div>
-
-                    <!-- 分类标签 -->
                     <div class="category-tabs">
                         <button class="tab active" onclick="switchTab('overview')">总体概览</button>
                         <button class="tab" onclick="switchTab('sleep')">睡眠</button>
                         <button class="tab" onclick="switchTab('exercise')">运动</button>
                         <button class="tab" onclick="switchTab('diet')">饮食</button>
                         <button class="tab" onclick="switchTab('mood')">心理</button>
-                        <button class="tab" onclick="switchTab('physical')">身体</button>
-                        <button class="tab" onclick="switchTab('vision')">眼睛</button>
                     </div>
-
-                    <!-- 详细内容 -->
                     <div id="tabContent">
                         ${this.renderOverview()}
                     </div>
-
-                    <!-- 建议区域 -->
                     <div class="suggestions-panel">
                         <h2 class="suggestions-title">
                             <i class="fas fa-lightbulb"></i>
@@ -751,7 +610,6 @@
                         ${this.renderSuggestions()}
                     </div>
                 `;
-
                 document.getElementById('mainContent').innerHTML = html;
             }
 
@@ -766,7 +624,6 @@
                     { label: '身体', value: categories.physical, icon: '💪' },
                     { label: '眼睛', value: categories.vision, icon: '👁️' }
                 ];
-
                 return cards.map(card => `
                     <div class="score-card">
                         <div style="font-size: 2.5em; margin-bottom: 10px;">${card.icon}</div>
@@ -781,7 +638,6 @@
                 return `
                     <div class="content-panel">
                         <h2 class="panel-title"><i class="fas fa-chart-pie"></i> 今日概览</h2>
-                        
                         <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--text-primary);">睡眠</h3>
                         <div class="metric-row">
                             <div class="metric-item">
@@ -797,7 +653,6 @@
                                 <div class="metric-value">${data.sleep.nightWakeups}次</div>
                             </div>
                         </div>
-
                         <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--text-primary);">运动</h3>
                         <div class="metric-row">
                             <div class="metric-item">
@@ -813,7 +668,6 @@
                                 <div class="metric-value">${this.translateIntensity(data.exercise.intensity)}</div>
                             </div>
                         </div>
-
                         <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--text-primary);">饮食</h3>
                         <div class="metric-row">
                             <div class="metric-item">
@@ -829,7 +683,6 @@
                                 <div class="metric-value">${data.diet.fruits}g</div>
                             </div>
                         </div>
-
                         <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--text-primary);">心理</h3>
                         <div class="metric-row">
                             <div class="metric-item">
@@ -864,30 +717,21 @@
             }
 
             translateIntensity(intensity) {
-                const map = {
-                    'light': '轻度',
-                    'moderate': '中等',
-                    'intense': '高强度'
-                };
+                const map = { 'light': '轻度', 'moderate': '中等', 'intense': '高强度' };
                 return map[intensity] || intensity;
             }
         }
 
         // ===== 主程序 =====
-        async function init() {
+        function init() {
             try {
-                const response = await fetch('_data/health-data.json');
-                if (!response.ok) throw new Error('无法加载数据');
-
-                const data = await response.json();
-                const assessment = new HealthSelfAssessment(data);
+                const assessment = new HealthSelfAssessment(HEALTH_DATA);
                 const renderer = new DashboardRenderer(assessment);
                 renderer.render();
             } catch (error) {
                 document.getElementById('mainContent').innerHTML = `
                     <div style="text-align: center; padding: 40px; color: #ff6b6b;">
-                        <p>⚠️ 无法加载数据：${error.message}</p>
-                        <p style="font-size: 0.9em; margin-top: 20px;">请确保 _data/health-data.json 文件存在</p>
+                        <p>⚠️ 加载失败：${error.message}</p>
                     </div>
                 `;
             }
@@ -896,7 +740,6 @@
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
-            // 可以在这里添加更多内容切换逻辑
         }
 
         new Starfield();
