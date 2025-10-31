@@ -165,6 +165,31 @@
         .x-bg {
             background: linear-gradient(135deg, #000000 0%, #333333 100%);
         }
+        /* 每周必看按钮样式 */
+        .weekly-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            margin-left: 15px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+        }
+        .weekly-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+        }
+        .weekly-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        .weekly-text {
+            font-size: 14px;
+        }
         /* 响应式设计 */
         @media (max-width: 768px) {
             .matrix-grid {
@@ -241,6 +266,12 @@
                     </span>
                     <span class="video-text">视频矩阵</span>
                 </a>
+                <a class="weekly-link" href="weekly.html">
+                    <span class="weekly-icon">
+                        <i class="fas fa-fire"></i>
+                    </span>
+                    <span class="weekly-text">每周必看</span>
+                </a>
             </div>
             <div class="controls">
                 <button id="themeToggle" class="theme-toggle">
@@ -249,11 +280,13 @@
             </div>
         </div>
     </header>
+
     <div class="video-matrix-container">
         <div class="matrix-title">
             <h1>🎬 视频矩阵</h1>
             <p>多平台内容分发，精准触达不同受众群体</p>
         </div>
+
         <div class="matrix-grid">
             <!-- 长视频 + 专业人群 -->
             <div class="matrix-section">
@@ -274,6 +307,7 @@
                     </a>
                 </div>
             </div>
+
             <!-- 长视频 + 大众人群 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -293,6 +327,7 @@
                     </a>
                 </div>
             </div>
+
             <!-- 短视频 + 专业人群 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -314,6 +349,7 @@
                     </a>
                 </div>
             </div>
+
             <!-- 短视频 + 大众人群 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -335,15 +371,18 @@
             </div>
         </div>
     </div>
+
     <!-- 返回按钮 -->
     <a href="index.html" class="back-button" title="返回首页">
         <i class="fas fa-home"></i>
     </a>
+
     <script>
         // 主题切换功能
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
+
         // 检查本地存储的主题设置
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
@@ -351,8 +390,10 @@
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
+
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
+            
             if (body.classList.contains('dark-mode')) {
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
