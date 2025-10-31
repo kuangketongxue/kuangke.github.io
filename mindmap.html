@@ -11,8 +11,6 @@
     <script src="https://unpkg.com/d3@7"></script>
     <script src="https://unpkg.com/markmap-view@0.15.4"></script>
     <script src="https://unpkg.com/markmap-lib@0.15.4"></script>
-    <!-- 添加HTML5导出库 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -359,6 +357,85 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        /* 导出选项弹窗 */
+        .export-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .export-modal.show {
+            display: flex;
+        }
+        .export-content {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid var(--border-color);
+        }
+        .export-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+        }
+        .export-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .export-option {
+            padding: 1rem;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .export-option:hover {
+            background: rgba(139, 92, 246, 0.1);
+            transform: translateY(-2px);
+        }
+        .export-option i {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+        .export-option-text {
+            flex: 1;
+        }
+        .export-option-title {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        .export-option-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .export-cancel {
+            padding: 0.7rem 1.5rem;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .export-cancel:hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
         /* 错误提示 */
         .error-message {
             background: rgba(244, 67, 54, 0.1);
@@ -498,6 +575,38 @@
             </div>
         </div>
     </main>
+    
+    <!-- 导出选项弹窗 -->
+    <div class="export-modal" id="exportModal">
+        <div class="export-content">
+            <h3 class="export-title">选择导出格式</h3>
+            <div class="export-options">
+                <div class="export-option" id="exportSVG">
+                    <i class="fas fa-file-code"></i>
+                    <div class="export-option-text">
+                        <div class="export-option-title">SVG 矢量图</div>
+                        <div class="export-option-desc">可无限放大不失真，适合编辑</div>
+                    </div>
+                </div>
+                <div class="export-option" id="exportPNG">
+                    <i class="fas fa-file-image"></i>
+                    <div class="export-option-text">
+                        <div class="export-option-title">PNG 图片</div>
+                        <div class="export-option-desc">适合分享和打印</div>
+                    </div>
+                </div>
+                <div class="export-option" id="exportJPEG">
+                    <i class="fas fa-file-image"></i>
+                    <div class="export-option-text">
+                        <div class="export-option-title">JPEG 图片</div>
+                        <div class="export-option-desc">文件较小，适合网页使用</div>
+                    </div>
+                </div>
+            </div>
+            <button class="export-cancel" id="exportCancel">取消</button>
+        </div>
+    </div>
+    
     <script>
         // 等待库加载完成
         window.addEventListener('load', function() {
@@ -657,76 +766,39 @@
                 }
             }
             
-            // 导出图片功能
-            function exportMindmapImage() {
-                if (!mm) {
-                    alert('思维导图尚未加载完成，请稍后重试');
-                    return;
-                }
-                
-                // 显示加载提示
-                const btn = document.getElementById('exportBtn');
-                const originalContent = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>导出中...</span>';
-                btn.disabled = true;
-                
-                // 获取SVG元素
-                const svg = document.getElementById('mindmap-svg');
-                
-                // 使用html2canvas导出
-                html2canvas(svg, {
-                    backgroundColor: document.body.classList.contains('light-mode') ? '#f8f9fa' : '#0a0f28',
-                    scale: 2, // 提高清晰度
-                    logging: false,
-                    useCORS: true,
-                    allowTaint: true
-                }).then(canvas => {
-                    // 创建下载链接
-                    const link = document.createElement('a');
-                    link.download = `阅读思维导图_${new Date().toLocaleDateString('zh-CN')}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    
-                    // 触发下载
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    // 恢复按钮状态
-                    btn.innerHTML = originalContent;
-                    btn.disabled = false;
-                    
-                    console.log('✅ 思维导图导出成功');
-                }).catch(error => {
-                    console.error('❌ PNG导出失败，尝试SVG导出:', error);
-                    // PNG导出失败时降级到SVG导出
-                    exportMindmapSVG(originalContent);
-                });
-            }
-            
-            // 备用SVG导出函数
-            function exportMindmapSVG(originalContent) {
-                const btn = document.getElementById('exportBtn');
-                
+            // 导出SVG
+            function exportSVG() {
                 if (!mm) {
                     alert('思维导图尚未加载完成');
-                    btn.innerHTML = originalContent;
-                    btn.disabled = false;
                     return;
                 }
                 
                 try {
-                    // 获取SVG内容
                     const svg = document.getElementById('mindmap-svg');
                     const svgData = new XMLSerializer().serializeToString(svg);
                     
-                    // 添加XML声明和命名空间
-                    const svgHeader = `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-`;
-                    const fullSvgData = svgHeader + svgData.replace(/<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+                    // 创建一个新的SVG元素，添加背景
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = svgData;
+                    const tempSvg = tempDiv.querySelector('svg');
+                    
+                    // 获取SVG的实际尺寸
+                    const bbox = tempSvg.getBBox ? tempSvg.getBBox() : { width: 1200, height: 800 };
+                    const width = bbox.width || 1200;
+                    const height = bbox.height || 800;
+                    
+                    // 创建带背景的SVG
+                    const isLightMode = document.body.classList.contains('light-mode');
+                    const bgColor = isLightMode ? '#f8f9fa' : '#0a0f28';
+                    
+                    const exportSvg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${bbox.x || 0} ${bbox.y || 0} ${width} ${height}">
+    <rect width="${width}" height="${height}" fill="${bgColor}"/>
+    ${svgData.replace(/<svg[^>]*>/, '').replace(/<\/svg>$/, '')}
+</svg>`;
                     
                     // 创建下载
-                    const blob = new Blob([fullSvgData], { type: 'image/svg+xml;charset=utf-8' });
+                    const blob = new Blob([exportSvg], { type: 'image/svg+xml;charset=utf-8' });
                     const link = document.createElement('a');
                     link.download = `阅读思维导图_${new Date().toLocaleDateString('zh-CN')}.svg`;
                     link.href = URL.createObjectURL(blob);
@@ -737,14 +809,94 @@
                     URL.revokeObjectURL(link.href);
                     
                     console.log('✅ SVG导出成功');
+                    closeExportModal();
                 } catch (error) {
-                    console.error('❌ SVG导出也失败:', error);
-                    alert('导出失败，请检查浏览器是否支持此功能');
+                    console.error('❌ SVG导出失败:', error);
+                    alert('SVG导出失败，请重试');
+                }
+            }
+            
+            // 使用Canvas导出PNG/JPEG
+            function exportImage(format = 'png') {
+                if (!mm) {
+                    alert('思维导图尚未加载完成');
+                    return;
                 }
                 
-                // 恢复按钮状态
-                btn.innerHTML = originalContent;
-                btn.disabled = false;
+                const btn = document.getElementById('exportBtn');
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>导出中...</span>';
+                btn.disabled = true;
+                
+                const svg = document.getElementById('mindmap-svg');
+                const svgData = new XMLSerializer().serializeToString(svg);
+                
+                // 创建canvas
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                // 计算SVG尺寸
+                const svgElement = svg;
+                const bbox = svgElement.getBBox ? svgElement.getBBox() : { width: 1200, height: 800 };
+                const width = Math.max(bbox.width || 1200, 800);
+                const height = Math.max(bbox.height || 800, 600);
+                
+                canvas.width = width * 2; // 高清输出
+                canvas.height = height * 2;
+                ctx.scale(2, 2);
+                
+                // 设置背景色
+                const isLightMode = document.body.classList.contains('light-mode');
+                ctx.fillStyle = isLightMode ? '#f8f9fa' : '#0a0f28';
+                ctx.fillRect(0, 0, width, height);
+                
+                // 创建SVG数据URL
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(svgBlob);
+                
+                img.onload = function() {
+                    ctx.drawImage(img, 0, 0, width, height);
+                    URL.revokeObjectURL(url);
+                    
+                    // 导出图片
+                    const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+                    canvas.toBlob(function(blob) {
+                        const link = document.createElement('a');
+                        link.download = `阅读思维导图_${new Date().toLocaleDateString('zh-CN')}.${format}`;
+                        link.href = URL.createObjectURL(blob);
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(link.href);
+                        
+                        btn.innerHTML = originalContent;
+                        btn.disabled = false;
+                        closeExportModal();
+                        
+                        console.log(`✅ ${format.toUpperCase()}导出成功`);
+                    }, mimeType, format === 'jpeg' ? 0.9 : 1.0);
+                };
+                
+                img.onerror = function() {
+                    URL.revokeObjectURL(url);
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    alert('图片导出失败，请尝试SVG格式');
+                    closeExportModal();
+                };
+                
+                img.src = url;
+            }
+            
+            // 显示导出弹窗
+            function showExportModal() {
+                document.getElementById('exportModal').classList.add('show');
+            }
+            
+            // 关闭导出弹窗
+            function closeExportModal() {
+                document.getElementById('exportModal').classList.remove('show');
             }
             
             // 绑定事件
@@ -761,9 +913,34 @@
                     await loadMindmapData();
                 });
                 
-                // 导出按钮 - 使用改进的导出功能
+                // 导出按钮
                 document.getElementById('exportBtn')?.addEventListener('click', function() {
-                    exportMindmapImage();
+                    showExportModal();
+                });
+                
+                // 导出选项
+                document.getElementById('exportSVG')?.addEventListener('click', function() {
+                    exportSVG();
+                });
+                
+                document.getElementById('exportPNG')?.addEventListener('click', function() {
+                    exportImage('png');
+                });
+                
+                document.getElementById('exportJPEG')?.addEventListener('click', function() {
+                    exportImage('jpeg');
+                });
+                
+                // 取消导出
+                document.getElementById('exportCancel')?.addEventListener('click', function() {
+                    closeExportModal();
+                });
+                
+                // 点击弹窗外部关闭
+                document.getElementById('exportModal')?.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeExportModal();
+                    }
                 });
                 
                 // 视图切换
