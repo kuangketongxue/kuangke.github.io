@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每周必看 - 狂客·银河</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 每周必看专属样式 */
+        .weekly-container {
+            max-width: 1400px;
+            margin: 80px auto 60px;
+            padding: 40px 20px;
+        }
+
+        .weekly-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .weekly-header h1 {
+            font-size: 2.8em;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .weekly-header .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        body.dark-mode .weekly-header .subtitle {
+            color: #aaa;
+        }
+
+        .week-info {
+            display: inline-block;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        /* 往期按钮 */
+        .archive-toggle {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .archive-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .archive-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .archive-btn i {
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .archive-btn.active i {
+            transform: rotate(180deg);
+        }
+
+        /* 视频网格 */
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        body.dark-mode .video-card {
+            background: #2d3748;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3em;
+            position: relative;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-thumbnail .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-card:hover .play-icon {
+            opacity: 1;
+        }
+
+        .video-info {
+            padding: 20px;
+        }
+
+        .video-rank {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .video-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        body.dark-mode .video-title {
+            color: #fff;
+        }
+
+        .video-desc {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        body.dark-mode .video-desc {
+            color: #aaa;
+        }
+
+        /* 往期内容区域 */
+        .archive-section {
+            display: none;
+            margin-top: 50px;
+        }
+
+        .archive-section.active {
+            display: block;
+        }
+
+        .archive-week {
+            margin-bottom: 60px;
+        }
+
+        .archive-week-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+        }
+
+        body.dark-mode .archive-week-title {
+            color: #fff;
+        }
+
+        .archive-week-title i {
+            margin-right: 15px;
+            color: #667eea;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .weekly-header h1 {
+                font-size: 2em;
+            }
+
+            .videos-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .video-thumbnail {
+                height: 180px;
+            }
+        }
+
+        /* 返回按钮 */
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        /* 每周必看按钮样式 */
+        .weekly-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            margin-left: 15px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+        }
+
+        .weekly-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .weekly-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .weekly-text {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body data-page="weekly">
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <h1 class="logo">狂客·银河</h1>
+                <a class="success-link" href="success.html">
+                    <span class="success-icon">
+                        <i class="fas fa-meteor"></i>
+                    </span>
+                    <span class="success-text">成功日记</span>
+                </a>
+                <a class="sky-link" href="reading.html">
+                    <span class="sky-icon">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span class="sky-text">星空</span>
+                </a>
+                <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/">
+                    <span class="exam-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </span>
+                    <span class="exam-text">冬之街小店</span>
+                </a>
+                <a class="video-link" href="video.html">
+                    <span class="video-icon">
+                        <i class="fas fa-video"></i>
+                    </span>
+                    <span class="video-text">视频矩阵</span>
+                </a>
+                <a class="weekly-link" href="weekly.html">
+                    <span class="weekly-icon">
+                        <i class="fas fa-fire"></i>
+                    </span>
+                    <span class="weekly-text">每周必看</span>
+                </a>
+            </div>
+            <div class="controls">
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="weekly-container">
+        <!-- 页面头部 -->
+        <div class="weekly-header">
+            <h1>🔥 每周必看</h1>
+            <p class="subtitle">精选本周最有价值的10个视频</p>
+            <div class="week-info">
+                <i class="fas fa-calendar-alt"></i>
+                本周精选 | 2024年第1周
+            </div>
+        </div>
+
+        <!-- 往期按钮 -->
+        <div class="archive-toggle">
+            <button class="archive-btn" id="archiveBtn">
+                <i class="fas fa-chevron-down"></i>
+                查看往期内容
+            </button>
+        </div>
+
+        <!-- 本周精选视频 -->
+        <div class="videos-grid" id="currentWeek">
+            <!-- 视频1 -->
+            <a href="" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="" alt="视频封面">
+                    <div class="play-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-rank">1</div>
+                    <div class="video-title">视频标题占位（请填写标题）</div>
+                    <div class="video-desc">视频简介占位，可以简单描述这个视频的核心内容和价值点</div>
+                </div>
+            </a>
+
+            <!-- 视频2 -->
+            <a href="" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="" alt="视频封面">
+                    <div class="play-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-rank">2</div>
+                    <div class="video-title">视频标题占位（请填写标题）</div>
+                    <div class="video-desc">视频简介占位，可以简单描述这个视频的核心内容和价值点</div>
+                </div>
+            </a>
+
+            <!-- 视频3 -->
+            <a href="" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="" alt="视频封面">
+                    <div class="play-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-rank">3</div>
+                    <div class="video-title">视频标题占位（请填写标题）</div>
+                    <div class="video-desc">视频简介占位，可以简单描述这个视频的核心内容和价值点</div>
+                </div>
+            </a>
+
+            <!-- 视频4 -->
+            <a href="" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="" alt="视频封面">
+                    <div class="play-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-rank">4</div>
+                    <div class="video-title">视频标题占位（请填写标题）</div>
+                    <div class="video-desc">视频简介占位，可以简单描述这个视频的核心内容和价值点</div>
+                </div>
+            </a>
+
+            <!-- 视频5 -->
+            <a href="" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="" alt="视频封面">
+                    <div class="play-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-rank">5</div>
+                    <div class="video-title">视频标题占位（请填写标题）</div>
+                    <div class="video-desc">视频简介占位，可以简单描述这个视频的核心内容和价值点</div>
+                </div>
+            </a>
+
+            <!-- 视频6 -->
+            <a href="" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="" alt="视频封面">
+                    <div class="play-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-rank">6</div>
+                    <div class="video-title">视频标题占位（请填写标题）</div>
+                    <div class="video-desc">视频简介占位，可以简单描述这个视频的核心内容和价值点</div>
+                </div>
+            </a>
+
+            <!-- 视频7 -->
+            <a href="" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="" alt="视频封面">
+                    <div class="play-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-rank">7</div>
+                    <div class="video-title">视频标题占位（请填写标题）</div>
+                    <div class="video-desc">视频简介占位，可以简单描述这个视频的核心内容和价值点</div>
+                </div>
+            </a>
+
+            <!-- 视频8 -->
+            <a href="" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="" alt="视频封面">
+                    <div class="play-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-rank">8</div>
+                    <div class="video-title">视频标题占位（请填写标题）</div>
+                    <div class="video-desc">视频简介占位，可以简单描述这个视频的核心内容和价值点</div>
+                </div>
+            </a>
+
+            <!-- 视频9 -->
+            <a href="" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="" alt="视频封面">
+                    <div class="play-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-rank">9</div>
+                    <div class="video-title">视频标题占位（请填写标题）</div>
+                    <div class="video-desc">视频简介占位，可以简单描述这个视频的核心内容和价值点</div>
+                </div>
+            </a>
+
+            <!-- 视频10 -->
+            <a href="" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="" alt="视频封面">
+                    <div class="play-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-rank">10</div>
+                    <div class="video-title">视频标题占位（请填写标题）</div>
+                    <div class="video-desc">视频简介占位，可以简单描述这个视频的核心内容和价值点</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 往期内容区域 -->
+        <div class="archive-section" id="archiveSection">
+            <!-- 往期第1周示例 -->
+            <div class="archive-week">
+                <h2 class="archive-week-title">
+                    <i class="fas fa-history"></i>
+                    2023年第52周（示例）
+                </h2>
+                <div class="videos-grid">
+                    <!-- 这里复制上面的视频卡片结构，填入往期内容 -->
+                    <a href="" target="_blank" class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="" alt="视频封面">
+                            <div class="play-icon">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-rank">1</div>
+                            <div class="video-title">往期视频标题占位</div>
+                            <div class="video-desc">往期视频简介占位</div>
+                        </div>
+                    </a>
+                    <!-- 继续添加该周的其他视频... -->
+                </div>
+            </div>
+
+            <!-- 可以继续添加更多往期周的内容 -->
+        </div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <a href="index.html" class="back-button" title="返回首页">
+        <i class="fas fa-home"></i>
+    </a>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+
+        // 检查本地存储的主题设置
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // 往期内容展开/收起功能
+        const archiveBtn = document.getElementById('archiveBtn');
+        const archiveSection = document.getElementById('archiveSection');
+
+        archiveBtn.addEventListener('click', () => {
+            archiveSection.classList.toggle('active');
+            archiveBtn.classList.toggle('active');
+            
+            if (archiveSection.classList.contains('active')) {
+                archiveBtn.innerHTML = '<i class="fas fa-chevron-up"></i> 收起往期内容';
+            } else {
+                archiveBtn.innerHTML = '<i class="fas fa-chevron-down"></i> 查看往期内容';
+            }
+        });
+    </script>
+</body>
+</html>
