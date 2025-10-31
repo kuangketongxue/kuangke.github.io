@@ -67,8 +67,167 @@
             perspective: 1000px;
         }
         
-        /* 响应式调整 */
+        /* 统计面板样式 */
+        .stats-panel {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            transform: translateZ(0);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+        }
+        
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+        
+        .stat-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-description {
+            font-size: 0.875rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent-color, #6366f1);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* 暗色主题适配 */
+        .dark-theme .stats-panel {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+            border-bottom-color: rgba(99, 102, 241, 0.2);
+        }
+        
+        .dark-theme .stat-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        .dark-theme .stat-card:hover {
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
+        }
+        
+        .dark-theme .stat-value {
+            color: #f1f5f9;
+        }
+        
+        .dark-theme .stat-label,
+        .dark-theme .stat-description {
+            color: #94a3b8;
+        }
+        
+        /* 响应式设计 */
         @media (max-width: 768px) {
+            .stats-panel {
+                padding: 1.5rem 0;
+                margin-bottom: 1.5rem;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+            
+            .stat-card {
+                padding: 1.25rem;
+            }
+            
+            .stat-value {
+                font-size: 1.75rem;
+            }
+            
+            .stat-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1rem;
+            }
+            
             #backToTop {
                 bottom: 20px;
                 right: 20px;
@@ -79,6 +238,16 @@
         }
         
         @media (max-width: 480px) {
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .stat-description {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+            
             #backToTop {
                 bottom: 15px;
                 right: 15px;
@@ -112,103 +281,203 @@
     </style>
 </head>
 <body data-page="success">
-    <!-- SVG图标定义 -->
+    <!-- SVG图标定义 - 优化为美观大气奢侈风格 -->
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-        <!-- 箭头左 -->
+        <defs>
+            <!-- 定义渐变色 -->
+            <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="luxuryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+            </linearGradient>
+            <!-- 定义滤镜 -->
+            <filter id="luxuryShadow">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+                <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+            </filter>
+        </defs>
+        
+        <!-- 箭头左 - 优化版 -->
         <symbol id="icon-arrow-left" viewBox="0 0 24 24">
-            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+                <path d="M19 12H5" stroke-width="2.5"/>
+                <path d="M5 12L11 18"/>
+                <path d="M5 12L11 6"/>
+            </g>
         </symbol>
         
-        <!-- 书本打开 -->
+        <!-- 书本打开 - 优化版 -->
         <symbol id="icon-book-open" viewBox="0 0 24 24">
-            <path d="M12 7V14M12 7L4 3V10M12 7L20 3V10M4 10L12 14M4 10V17L12 21M12 14L20 10M12 14V21M20 10V17L12 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3H22V21H2Z" stroke-width="2"/>
+                <path d="M12 3V21"/>
+                <path d="M6 8H10"/>
+                <path d="M6 12H10"/>
+                <path d="M6 16H10"/>
+                <path d="M14 8H18"/>
+                <path d="M14 12H18"/>
+                <path d="M14 16H18"/>
+                <circle cx="8" cy="5.5" r="0.5" fill="currentColor"/>
+                <circle cx="16" cy="5.5" r="0.5" fill="currentColor"/>
+            </g>
         </symbol>
         
-        <!-- 引号左 -->
+        <!-- 引号左 - 优化版 -->
         <symbol id="icon-quote-left" viewBox="0 0 24 24">
-            <path d="M10 11C10 9.93913 9.57857 8.92172 8.82843 8.17157C8.07828 7.42143 7.06087 7 6 7C7.06087 7 8.07828 6.57857 8.82843 5.82843C9.57857 5.07828 10 4.06087 10 3M18 11C18 9.93913 17.5786 8.92172 16.8284 8.17157C16.0783 7.42143 15.0609 7 14 7C15.0609 7 16.0783 6.57857 16.8284 5.82843C17.5786 5.07828 18 4.06087 18 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="currentColor" opacity="0.7">
+                <path d="M3 21C3 21 7 16 11 16C14.866 16 17 19 17 21M9 8C9 8 13 3 17 3C20.866 3 23 6 23 8"/>
+                <circle cx="5" cy="12" r="2" opacity="0.4"/>
+                <circle cx="19" cy="12" r="2" opacity="0.4"/>
+            </g>
         </symbol>
         
-        <!-- 引号右 -->
+        <!-- 引号右 - 优化版 -->
         <symbol id="icon-quote-right" viewBox="0 0 24 24">
-            <path d="M14 13C14 14.0609 14.4214 15.0783 15.1716 15.8284C15.9217 16.5786 16.9391 17 18 17C16.9391 17 15.9217 17.4214 15.1716 18.1716C14.4214 18.9217 14 19.9391 14 21M6 13C6 14.0609 6.42143 15.0783 7.17157 15.8284C7.92172 16.5786 8.93913 17 10 17C8.93913 17 7.92172 17.4214 7.17157 18.1716C6.42143 18.9217 6 19.9391 6 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="currentColor" opacity="0.7">
+                <path d="M21 3C21 3 17 8 13 8C9.134 8 7 5 7 3M15 16C15 16 11 21 7 21C3.134 21 1 18 1 16"/>
+                <circle cx="19" cy="12" r="2" opacity="0.4"/>
+                <circle cx="5" cy="12" r="2" opacity="0.4"/>
+            </g>
         </symbol>
         
-        <!-- 搜索 -->
+        <!-- 搜索 - 优化版 -->
         <symbol id="icon-search" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21L17 17" stroke-width="2.5"/>
+                <circle cx="11" cy="11" r="6" stroke-width="1.5" opacity="0.3"/>
+            </g>
         </symbol>
         
-        <!-- 关闭 -->
+        <!-- 关闭 - 优化版 -->
         <symbol id="icon-times" viewBox="0 0 24 24">
-            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <path d="M18 6L6 18"/>
+                <path d="M6 6L18 18"/>
+            </g>
         </symbol>
         
-        <!-- 语言 -->
+        <!-- 语言 - 优化版 -->
         <symbol id="icon-language" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-            <path d="M2 12H22M12 2C15.5 5.5 17.5 10.5 17.5 12C17.5 13.5 15.5 18.5 12 22C8.5 18.5 6.5 13.5 6.5 12C6.5 10.5 8.5 5.5 12 2Z" stroke="currentColor" stroke-width="2"/>
+            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                <path d="M2 12H22"/>
+                <path d="M12 2C15.5 5.5 17.5 10.5 17.5 12C17.5 13.5 15.5 18.5 12 22C8.5 18.5 6.5 13.5 6.5 12C6.5 10.5 8.5 5.5 12 2Z"/>
+                <circle cx="12" cy="12" r="3" stroke-width="1.5" opacity="0.5"/>
+            </g>
         </symbol>
         
-        <!-- 月亮 -->
+        <!-- 月亮 - 优化版 -->
         <symbol id="icon-moon" viewBox="0 0 24 24">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+            <g fill="currentColor">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" opacity="0.9"/>
+                <circle cx="18" cy="6" r="1.5" fill="white" opacity="0.6"/>
+                <circle cx="16" cy="10" r="1" fill="white" opacity="0.4"/>
+            </g>
         </symbol>
         
-        <!-- 太阳 -->
+        <!-- 太阳 - 优化版 -->
         <symbol id="icon-sun" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
-            <path d="M12 1V6M12 18V23M4.22 4.22L7.05 7.05M16.95 16.95L19.78 19.78M1 12H6M18 12H23M4.22 19.78L7.05 16.95M16.95 7.05L19.78 4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <circle cx="12" cy="12" r="5" stroke-width="2.5"/>
+                <path d="M12 1V4M12 20V23M4 12H1M23 12H20" stroke-width="2.5"/>
+                <path d="M4.22 4.22L6.34 6.34M17.66 17.66L19.78 19.78M4.22 19.78L6.34 17.66M17.66 6.34L19.78 4.22" stroke-width="2"/>
+                <circle cx="12" cy="12" r="7" stroke-width="0.5" opacity="0.2"/>
+            </g>
         </symbol>
         
-        <!-- 标签 -->
+        <!-- 标签 - 优化版 -->
         <symbol id="icon-tags" viewBox="0 0 24 24">
-            <path d="M8.5 8.5L3 14L10 21L15.5 15.5C16 15 16 14.5 16 14V8C16 7.5 15.5 7 15 7H9C8.5 7 8 7.5 7.5 8L8.5 8.5ZM13 11L15 13M18 10L21 7C21.5 6.5 21.5 6 21 5.5L18.5 3C18 2.5 17.5 2.5 17 3L14 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 5H3V11C3 11.5 3.5 12 4 12L11 19L18 12C18.5 11.5 19 11 19 10V4C19 3.5 18.5 3 18 3H13"/>
+                <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+                <path d="M16 8L20 4" stroke-width="2"/>
+            </g>
         </symbol>
         
-        <!-- 笑脸 -->
+        <!-- 笑脸 - 优化版 -->
         <symbol id="icon-smile" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-            <path d="M8 14C8.5 16 10 17 12 17C14 17 15.5 16 16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="9" cy="9" r="1" fill="currentColor"/>
-            <circle cx="15" cy="9" r="1" fill="currentColor"/>
+            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" stroke-width="2.5"/>
+                <path d="M8 14C8.5 16 10 17 12 17C14 17 15.5 16 16 14" stroke-width="2"/>
+                <circle cx="9" cy="9" r="1.2" fill="currentColor"/>
+                <circle cx="15" cy="9" r="1.2" fill="currentColor"/>
+                <circle cx="12" cy="12" r="8" stroke-width="0.5" opacity="0.2"/>
+            </g>
         </symbol>
         
-        <!-- 排序 -->
+        <!-- 排序 - 优化版 -->
         <symbol id="icon-sort" viewBox="0 0 24 24">
-            <path d="M3 6H21M3 12H15M3 18H9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <path d="M3 6H21"/>
+                <path d="M3 12H15"/>
+                <path d="M3 18H9"/>
+                <path d="M21 9L19 11L17 9" fill="none"/>
+                <path d="M21 15L19 17L17 15" fill="none"/>
+            </g>
         </symbol>
         
-        <!-- 重置 -->
+        <!-- 重置 - 优化版 -->
         <symbol id="icon-redo" viewBox="0 0 24 24">
-            <path d="M1 4V10H7M23 20V14H17M20.49 9C19.8 6.1 17.3 4 14.3 4C11.8 4 9.6 5.5 8.5 7.5L1 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 4V10H17"/>
+                <path d="M20.49 15C19.8 17.9 17.3 20 14.3 20C11.8 20 9.6 18.5 8.5 16.5L1 9"/>
+                <path d="M5 8L1 9L2 13"/>
+            </g>
         </symbol>
         
-        <!-- 图表 -->
+        <!-- 图表 - 优化版 -->
         <symbol id="icon-chart" viewBox="0 0 24 24">
-            <path d="M18 20V10M12 20V4M6 20V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <rect x="3" y="3" width="18" height="18" stroke-width="1.5" opacity="0.2"/>
+                <path d="M18 20V10"/>
+                <path d="M12 20V4"/>
+                <path d="M6 20V14"/>
+                <circle cx="18" cy="10" r="2" fill="currentColor"/>
+                <circle cx="12" cy="4" r="2" fill="currentColor"/>
+                <circle cx="6" cy="14" r="2" fill="currentColor"/>
+            </g>
         </symbol>
         
-        <!-- 流 -->
+        <!-- 流 - 优化版 -->
         <symbol id="icon-stream" viewBox="0 0 24 24">
-            <path d="M4 4H20M4 12H20M4 20H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M4 4H20"/>
+                <path d="M4 12H20"/>
+                <path d="M4 20H20"/>
+                <path d="M2 4L4 6L6 4" stroke-width="1.5" opacity="0.5"/>
+                <path d="M2 12L4 14L6 12" stroke-width="1.5" opacity="0.5"/>
+                <path d="M2 20L4 22L6 20" stroke-width="1.5" opacity="0.5"/>
+            </g>
         </symbol>
         
-        <!-- 网格 -->
+        <!-- 网格 - 优化版 -->
         <symbol id="icon-th" viewBox="0 0 24 24">
-            <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"/>
-            <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"/>
-            <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/>
-            <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" stroke-width="2"/>
+                <rect x="14" y="3" width="7" height="7" stroke-width="2"/>
+                <rect x="3" y="14" width="7" height="7" stroke-width="2"/>
+                <rect x="14" y="14" width="7" height="7" stroke-width="2"/>
+                <circle cx="6.5" cy="6.5" r="0.5" fill="currentColor" opacity="0.5"/>
+                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" opacity="0.5"/>
+                <circle cx="6.5" cy="17.5" r="0.5" fill="currentColor" opacity="0.5"/>
+                <circle cx="17.5" cy="17.5" r="0.5" fill="currentColor" opacity="0.5"/>
+            </g>
         </symbol>
         
-        <!-- 箭头上 -->
+        <!-- 箭头上 - 优化版 -->
         <symbol id="icon-arrow-up" viewBox="0 0 24 24">
-            <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 19V5"/>
+                <path d="M5 12L12 5L19 12"/>
+                <path d="M12 7L12 5" stroke-width="1.5" opacity="0.5"/>
+            </g>
         </symbol>
     </svg>
-
+    
     <!-- 背景装饰 -->
     <div class="bg-decoration">
         <div class="circle circle-1"></div>
@@ -216,6 +485,7 @@
         <div class="circle circle-3"></div>
     </div>
     
+    <!-- 顶部头部 -->
     <header class="header">
         <div class="container success-header">
             <div class="header-left">
@@ -253,6 +523,58 @@
         </div>
     </header>
     
+    <!-- ==================== 统计面板 ==================== -->
+    <section class="stats-panel" role="region" aria-label="数据统计概览">
+        <div class="stats-container">
+            <!-- 总记录数 -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <svg class="icon"><use href="#icon-book-open"></use></svg>
+                    </div>
+                    <span class="stat-label" data-i18n="totalRecords">总记录数</span>
+                </div>
+                <div class="stat-value" id="totalRecordsValue">0</div>
+                <div class="stat-description">
+                    <span data-i18n="recordsDesc">已记录的成功时刻</span>
+                </div>
+            </div>
+            
+            <!-- 平均成就值 -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <svg class="icon"><use href="#icon-chart"></use></svg>
+                    </div>
+                    <span class="stat-label" data-i18n="avgAchievement">平均成就值</span>
+                </div>
+                <div class="stat-value" id="avgAchievementValue">0</div>
+                <div class="stat-description">
+                    <span data-i18n="achievementDesc">综合评估指数</span>
+                    <span class="stat-badge" id="achievementLevel">
+                        <svg class="icon" style="width: 12px; height: 12px;"><use href="#icon-chart"></use></svg>
+                        <span>计算中</span>
+                    </span>
+                </div>
+            </div>
+            
+            <!-- 最新发布 -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <svg class="icon"><use href="#icon-stream"></use></svg>
+                    </div>
+                    <span class="stat-label" data-i18n="latestDate">最新发布</span>
+                </div>
+                <div class="stat-value" id="latestDateValue">--</div>
+                <div class="stat-description">
+                    <span data-i18n="daysAgo" id="daysAgoText">距今天数</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 日记工具栏 -->
     <section class="diary-toolbar" role="region" aria-label="日记筛选工具栏">
         <div class="container diary-toolbar-inner">
             <div class="filter-group">
@@ -288,6 +610,7 @@
         </div>
     </section>
     
+    <!-- 主内容区 -->
     <main class="main-content success-main">
         <div class="container">
             <div class="stats-bar">
@@ -319,9 +642,161 @@
         <svg class="icon"><use href="#icon-arrow-up"></use></svg>
     </button>
     
-    <script src="data.js" ></script>
-    <script src="script.js" ></script>
+    <!-- 脚本文件 -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    
+    <!-- 核心功能脚本 -->
     <script>
+        // ==================== 统计功能（适配 successDiaryData）====================
+        function updateStatistics() {
+            console.log('📊 更新统计数据...');
+            
+            // 获取所有日记数据（使用实际的变量名）
+            const diaryData = window.successDiaryData || [];
+            
+            if (diaryData.length === 0) {
+                console.warn('⚠️ 暂无日记数据');
+                // 显示默认值
+                document.getElementById('totalRecordsValue').textContent = '0';
+                document.getElementById('avgAchievementValue').textContent = '0';
+                document.getElementById('latestDateValue').textContent = '--';
+                document.getElementById('daysAgoText').textContent = '暂无记录';
+                document.getElementById('achievementLevel').innerHTML = `
+                    <svg class="icon" style="width: 12px; height: 12px;"><use href="#icon-chart"></use></svg>
+                    <span>暂无数据</span>
+                `;
+                return;
+            }
+            
+            // 1. 总记录数
+            const totalRecords = diaryData.length;
+            document.getElementById('totalRecordsValue').textContent = totalRecords;
+            
+            // 2. 计算平均成就值（使用 achievementLevel 字段）
+            const achievementValues = diaryData
+                .filter(item => item.achievementLevel !== undefined && item.achievementLevel !== null && !isNaN(item.achievementLevel))
+                .map(item => parseFloat(item.achievementLevel));
+            
+            let avgAchievement = 0;
+            let achievementLevel = '暂无数据';
+            
+            if (achievementValues.length > 0) {
+                avgAchievement = achievementValues.reduce((sum, val) => sum + val, 0) / achievementValues.length;
+                avgAchievement = avgAchievement.toFixed(1);
+                
+                // 根据平均值设置等级（假设成就值范围是0-10）
+                if (avgAchievement >= 9) {
+                    achievementLevel = '🌟 卓越';
+                } else if (avgAchievement >= 8) {
+                    achievementLevel = '🎯 优秀';
+                } else if (avgAchievement >= 7) {
+                    achievementLevel = '👍 良好';
+                } else if (avgAchievement >= 6) {
+                    achievementLevel = '📈 合格';
+                } else if (avgAchievement >= 5) {
+                    achievementLevel = '💪 努力中';
+                } else {
+                    achievementLevel = '🔥 加油';
+                }
+            }
+            
+            document.getElementById('avgAchievementValue').textContent = avgAchievement || '0';
+            document.getElementById('achievementLevel').innerHTML = `
+                <svg class="icon" style="width: 12px; height: 12px;"><use href="#icon-chart"></use></svg>
+                <span>${achievementLevel}</span>
+            `;
+            
+            // 3. 最新发布日期
+            const dates = diaryData
+                .filter(item => item.date)
+                .map(item => {
+                    // 处理日期格式（支持 YYYY-MM-DD 格式）
+                    try {
+                        return new Date(item.date);
+                    } catch (e) {
+                        console.error('日期解析错误:', item.date);
+                        return null;
+                    }
+                })
+                .filter(date => date !== null && !isNaN(date.getTime()))
+                .sort((a, b) => b - a);
+            
+            if (dates.length > 0) {
+                const latestDate = dates[0];
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // 重置到当天0点
+                latestDate.setHours(0, 0, 0, 0); // 重置到当天0点
+                
+                const diffTime = Math.abs(today - latestDate);
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                
+                // 格式化日期
+                const year = latestDate.getFullYear();
+                const month = String(latestDate.getMonth() + 1).padStart(2, '0');
+                const day = String(latestDate.getDate()).padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}`;
+                
+                document.getElementById('latestDateValue').textContent = formattedDate;
+                
+                // 显示距今天数
+                let daysAgoText = '';
+                if (diffDays === 0) {
+                    daysAgoText = '🎉 今天更新';
+                } else if (diffDays === 1) {
+                    daysAgoText = '📝 昨天更新';
+                } else if (diffDays <= 7) {
+                    daysAgoText = `📅 ${diffDays} 天前`;
+                } else if (diffDays <= 30) {
+                    const weeks = Math.floor(diffDays / 7);
+                    daysAgoText = `🗓️ ${weeks} 周前`;
+                } else if (diffDays <= 365) {
+                    const months = Math.floor(diffDays / 30);
+                    daysAgoText = `📆 ${months} 个月前`;
+                } else {
+                    const years = Math.floor(diffDays / 365);
+                    daysAgoText = `🗓️ ${years} 年前`;
+                }
+                
+                document.getElementById('daysAgoText').textContent = daysAgoText;
+            } else {
+                document.getElementById('latestDateValue').textContent = '暂无数据';
+                document.getElementById('daysAgoText').textContent = '暂无记录';
+            }
+            
+            console.log('✅ 统计数据更新完成', {
+                totalRecords,
+                avgAchievement,
+                achievementLevel,
+                totalWithAchievement: achievementValues.length
+            });
+        }
+        
+        // 页面加载完成后更新统计
+        document.addEventListener('DOMContentLoaded', function() {
+            // 延迟执行，确保 data.js 已完全加载
+            setTimeout(() => {
+                console.log('🔍 检查数据:', window.successDiaryData);
+                updateStatistics();
+            }, 150);
+        });
+        
+        // 监听数据更新事件（如果有筛选或搜索功能会触发）
+        document.addEventListener('diaryDataUpdated', updateStatistics);
+        
+        // 如果页面有筛选功能，可以在筛选后更新统计（显示当前筛选结果的统计）
+        function updateStatisticsForFilteredData(filteredData) {
+            if (!filteredData || filteredData.length === 0) {
+                return;
+            }
+            
+            // 临时替换数据源
+            const originalData = window.successDiaryData;
+            window.successDiaryData = filteredData;
+            updateStatistics();
+            window.successDiaryData = originalData;
+        }
+        
         // ==================== 回到顶部功能 - 性能优化版 ====================
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 初始化回到顶部功能...');
@@ -331,6 +806,7 @@
                 console.error('❌ 错误：找不到回到顶部按钮！');
                 return;
             }
+            
             console.log('✅ 找到回到顶部按钮');
             
             // 使用 requestAnimationFrame 优化滚动监听
@@ -378,7 +854,7 @@
                     // 兼容性回退
                     const startScroll = window.pageYOffset;
                     const startTime = performance.now();
-                    const duration = 500; // 500ms 动画时长
+                    const duration = 500;
                     
                     function easeInOutCubic(t) {
                         return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -412,12 +888,10 @@
                 }
             });
             
-            // 移除测试代码（生产环境）
             console.log('✅ 回到顶部功能初始化完成');
         });
         
         // ==================== 性能优化工具 ====================
-        
         // 懒加载观察器
         const lazyLoadObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -468,10 +942,13 @@
             observeLazyElements();
         }, 100));
         
-        mutationObserver.observe(document.getElementById('diaryTimeline'), {
-            childList: true,
-            subtree: true
-        });
+        const timelineElement = document.getElementById('diaryTimeline');
+        if (timelineElement) {
+            mutationObserver.observe(timelineElement, {
+                childList: true,
+                subtree: true
+            });
+        }
         
         // 主题切换功能
         const themeToggle = document.getElementById('themeToggle');
@@ -488,7 +965,6 @@
             document.body.classList.toggle('dark-theme');
             const isDark = document.body.classList.contains('dark-theme');
             
-            // 更新图标
             if (isDark) {
                 themeIcon.querySelector('use').setAttribute('href', '#icon-sun');
                 localStorage.setItem('theme', 'dark');
@@ -500,24 +976,21 @@
         
         // 语言切换功能
         const languageToggle = document.getElementById('languageToggle');
-        const currentLang = localStorage.getItem('language') || 'zh';
+        let currentLang = localStorage.getItem('language') || 'zh';
         
         function updateLanguage(lang) {
             const elements = document.querySelectorAll('[data-i18n]');
             elements.forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                // 这里需要根据实际的翻译数据来更新内容
-                // 假设有一个 translations 对象
                 if (window.translations && window.translations[lang] && window.translations[lang][key]) {
                     el.textContent = window.translations[lang][key];
                 }
             });
             
-            // 更新按钮文本
             const span = languageToggle.querySelector('span');
             span.textContent = lang === 'zh' ? '中 → EN' : 'EN → 中';
-            
             localStorage.setItem('language', lang);
+            currentLang = lang;
         }
         
         languageToggle.addEventListener('click', function() {
