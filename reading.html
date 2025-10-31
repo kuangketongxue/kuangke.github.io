@@ -225,19 +225,156 @@
             margin-bottom: 2.5rem;
             flex-wrap: wrap;
         }
+        /* ========== 优化后的星星图标样式 ========== */
         .digest-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 56px;
-            height: 56px;
+            width: 80px;  /* 增大尺寸 */
+            height: 80px;
             flex-shrink: 0;
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.9), rgba(255, 152, 0, 0.75));
-            box-shadow: 0 12px 28px rgba(255, 193, 7, 0.3);
+            
+            /* 多层渐变背景 */
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), transparent 50%),
+                linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+            
+            /* 增强阴影效果 */
+            box-shadow: 
+                0 0 0 4px rgba(255, 193, 7, 0.2),
+                0 0 20px rgba(255, 193, 7, 0.6),
+                0 15px 35px rgba(255, 152, 0, 0.4),
+                inset 0 -8px 20px rgba(255, 140, 0, 0.3);
+            
             color: #fff;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            
+            /* 添加动画 */
+            animation: starGlow 3s ease-in-out infinite, starFloat 4s ease-in-out infinite;
+            
+            position: relative;
+            overflow: visible;
+            
+            /* 平滑过渡 */
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+
+        /* 添加光晕效果 */
+        .digest-icon::before {
+            content: '';
+            position: absolute;
+            inset: -15px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent 60%);
+            filter: blur(15px);
+            animation: pulseGlow 2s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        /* 添加内部光点 */
+        .digest-icon::after {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent 70%);
+            filter: blur(4px);
+            animation: sparkle 2.5s ease-in-out infinite;
+        }
+
+        /* 星星图标本身 */
+        .digest-icon i {
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            animation: starRotate 8s linear infinite;
+        }
+
+        /* 鼠标悬停效果 */
+        .digest-icon:hover {
+            transform: scale(1.15) translateY(-5px);
+            box-shadow: 
+                0 0 0 6px rgba(255, 193, 7, 0.3),
+                0 0 30px rgba(255, 193, 7, 0.8),
+                0 20px 45px rgba(255, 152, 0, 0.5),
+                inset 0 -10px 25px rgba(255, 140, 0, 0.4);
+        }
+
+        .digest-icon:hover i {
+            animation: starRotate 2s linear infinite;
+        }
+
+        /* ========== 动画关键帧 ========== */
+
+        /* 发光动画 */
+        @keyframes starGlow {
+            0%, 100% {
+                box-shadow: 
+                    0 0 0 4px rgba(255, 193, 7, 0.2),
+                    0 0 20px rgba(255, 193, 7, 0.6),
+                    0 15px 35px rgba(255, 152, 0, 0.4),
+                    inset 0 -8px 20px rgba(255, 140, 0, 0.3);
+            }
+            50% {
+                box-shadow: 
+                    0 0 0 6px rgba(255, 193, 7, 0.3),
+                    0 0 35px rgba(255, 193, 7, 0.8),
+                    0 18px 40px rgba(255, 152, 0, 0.5),
+                    inset 0 -10px 25px rgba(255, 140, 0, 0.4);
+            }
+        }
+
+        /* 浮动动画 */
+        @keyframes starFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-8px) rotate(3deg);
+            }
+            75% {
+                transform: translateY(-5px) rotate(-3deg);
+            }
+        }
+
+        /* 光晕脉动 */
+        @keyframes pulseGlow {
+            0%, 100% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.9;
+                transform: scale(1.1);
+            }
+        }
+
+        /* 闪烁效果 */
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0.4;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.3);
+            }
+        }
+
+        /* 星星旋转 */
+        @keyframes starRotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         .reading-digest-header > div {
             flex: 1;
             min-width: 280px;
@@ -719,11 +856,23 @@
                 font-size: 1.4rem;
                 margin-bottom: 0.3rem;
             }
+            
+            /* ========== 响应式星星图标优化 ========== */
             .digest-icon {
-                width: 48px;
-                height: 48px;
-                font-size: 1.2rem;
+                width: 64px;
+                height: 64px;
+                font-size: 1.6rem;
             }
+            
+            .digest-icon::before {
+                inset: -12px;
+            }
+            
+            .digest-icon::after {
+                width: 16px;
+                height: 16px;
+            }
+            
             .digest-stats {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1rem;
@@ -844,6 +993,23 @@
             .reading-digest-header > div {
                 min-width: 100%;
             }
+            
+            /* ========== 小屏幕星星图标优化 ========== */
+            .digest-icon {
+                width: 56px;
+                height: 56px;
+                font-size: 1.4rem;
+            }
+            
+            .digest-icon::before {
+                inset: -10px;
+            }
+            
+            .digest-icon::after {
+                width: 14px;
+                height: 14px;
+            }
+            
             .digest-stats {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.8rem;
@@ -877,6 +1043,31 @@
                 height: 40px;
                 font-size: 0.9rem;
             }
+        }
+
+        /* ========== 浅色模式星星图标适配 ========== */
+        body.light-mode .digest-icon {
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), transparent 50%),
+                linear-gradient(135deg, #FFD700 0%, #FFC107 50%, #FF9800 100%);
+            
+            box-shadow: 
+                0 0 0 4px rgba(255, 193, 7, 0.25),
+                0 0 25px rgba(255, 193, 7, 0.5),
+                0 12px 30px rgba(255, 152, 0, 0.35),
+                inset 0 -6px 18px rgba(255, 140, 0, 0.25);
+        }
+
+        body.light-mode .digest-icon::before {
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.25), transparent 60%);
+        }
+
+        body.light-mode .digest-icon:hover {
+            box-shadow: 
+                0 0 0 6px rgba(255, 193, 7, 0.35),
+                0 0 35px rgba(255, 193, 7, 0.6),
+                0 15px 40px rgba(255, 152, 0, 0.4),
+                inset 0 -8px 22px rgba(255, 140, 0, 0.3);
         }
     </style>
 </head>
@@ -998,7 +1189,6 @@
         let digestData = [];
         let currentDigestData = [];
         let sortOrder = 'default';
-
         // 加载数据的函数
         async function loadDigestData() {
             try {
@@ -1013,7 +1203,6 @@
                 showLoadingError();
             }
         }
-
         // 初始化页面
         document.addEventListener('DOMContentLoaded', async function() {
             document.body.setAttribute('data-page', 'reading');
@@ -1028,14 +1217,12 @@
             bindSortEvents();
             initBackToTop();
         });
-
         // 初始化主题
         function initializeTheme() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.body.classList.toggle('light-mode', savedTheme === 'light');
             updateThemeIcon(savedTheme);
         }
-
         // 更新主题图标
         function updateThemeIcon(theme) {
             const themeIcon = document.querySelector('#themeToggle i');
@@ -1043,7 +1230,6 @@
                 themeIcon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
             }
         }
-
         // 主题切换
         document.getElementById('themeToggle')?.addEventListener('click', function() {
             const isLight = document.body.classList.toggle('light-mode');
@@ -1051,7 +1237,6 @@
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
         });
-
         // 创建评分徽章
         function createRatingBadge(rating) {
             if (!rating || rating === 0) {
@@ -1060,7 +1245,6 @@
             const ratingClass = `rating-value-${rating}`;
             return `<div class="rating-badge ${ratingClass}">${rating}</div>`;
         }
-
         // 渲染书摘表格
         function renderDigestTable() {
             const tableBody = document.querySelector('.reading-digest-table');
@@ -1068,26 +1252,20 @@
                 console.error('未找到表格容器');
                 return;
             }
-
             const headerRow = tableBody.querySelector('.digest-row--head');
             const headerClone = headerRow ? headerRow.cloneNode(true) : null;
-
             tableBody.innerHTML = '';
-
             if (headerClone) {
                 tableBody.appendChild(headerClone);
             }
-
             const loadingDiv = document.createElement('div');
             loadingDiv.className = 'loading';
             loadingDiv.innerHTML = '<div class="loading-spinner"></div>正在加载书摘数据...';
             tableBody.appendChild(loadingDiv);
-
             setTimeout(() => {
                 if (loadingDiv.parentNode === tableBody) {
                     tableBody.removeChild(loadingDiv);
                 }
-
                 if (currentDigestData.length === 0) {
                     const emptyRow = document.createElement('div');
                     emptyRow.className = 'digest-row';
@@ -1122,19 +1300,16 @@
                 }
             }, 300);
         }
-
         // HTML转义函数
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
-
         // 显示加载错误
         function showLoadingError() {
             const tableBody = document.querySelector('.reading-digest-table');
             if (!tableBody) return;
-
             const errorRow = document.createElement('div');
             errorRow.className = 'digest-row';
             errorRow.style.cssText = 'text-align: center; padding: 3rem 1.5rem; grid-column: 1/-1;';
@@ -1145,7 +1320,6 @@
             `;
             tableBody.appendChild(errorRow);
         }
-
         // 更新书摘统计信息
         function updateDigestStats() {
             document.getElementById('totalDigests').textContent = currentDigestData.length;
@@ -1159,13 +1333,11 @@
             const highInspiration = currentDigestData.filter(d => d.rating && d.rating >= 7).length;
             document.getElementById('highInspiration').textContent = highInspiration;
         }
-
         // 绑定搜索事件
         function bindSearchEvents() {
             const searchInput = document.getElementById('digestSearchInput');
             const searchButton = document.getElementById('digestSearchButton');
             const resetButton = document.getElementById('digestSearchReset');
-
             const performSearch = () => {
                 const searchTerm = searchInput.value.trim().toLowerCase();
                 currentDigestData = searchTerm === ''
@@ -1178,12 +1350,10 @@
                 renderDigestTable();
                 updateDigestStats();
             };
-
             searchButton?.addEventListener('click', performSearch);
             searchInput?.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') performSearch();
             });
-
             resetButton?.addEventListener('click', () => {
                 searchInput.value = '';
                 currentDigestData = [...digestData];
@@ -1192,14 +1362,12 @@
                 updateDigestStats();
                 updateSortButton();
             });
-
             let searchTimeout;
             searchInput?.addEventListener('input', () => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(performSearch, 500);
             });
         }
-
         // 绑定排序事件
         function bindSortEvents() {
             const sortButton = document.getElementById('digestSortToggle');
@@ -1212,7 +1380,6 @@
                 updateSortButton();
             });
         }
-
         // 应用当前排序
         function applyCurrentSort() {
             switch (sortOrder) {
@@ -1232,12 +1399,10 @@
                     currentDigestData.sort((a, b) => digestData.indexOf(a) - digestData.indexOf(b));
             }
         }
-
         // 更新排序按钮状态
         function updateSortButton() {
             const sortButton = document.getElementById('digestSortToggle');
             if (!sortButton) return;
-
             const icon = sortButton.querySelector('i');
             const text = sortButton.querySelector('span');
             const labels = {
@@ -1247,21 +1412,17 @@
                 'date-desc': { icon: 'fas fa-calendar-alt', text: '日期↓' },
                 'date-asc': { icon: 'fas fa-calendar', text: '日期↑' }
             };
-
             const label = labels[sortOrder] || labels['default'];
             icon.className = label.icon;
             text.textContent = label.text;
         }
-
         // 初始化返回顶部按钮
         function initBackToTop() {
             const backToTopButton = document.getElementById('backToTop');
             if (!backToTopButton) return;
-
             window.addEventListener('scroll', () => {
                 backToTopButton.classList.toggle('visible', window.pageYOffset > 300);
             });
-
             backToTopButton.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
