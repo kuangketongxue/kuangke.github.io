@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+     {
+        id: 45,
+        date: '2025-10-31',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '写书《自学突围·给所有人的自学案例启发》',
+            en: 'Writing a book titled "Self-Learning Breakthrough: Inspirational Self-Learning Case Studies for Everyone"'
+        },
+        content: {
+            zh: '阅读16本书+。\n网站优化，优化阅读室的那颗大星星+修复朋友圈白天模式无法切换+修复朋友圈显示数量少的问题+优化成功日记记录功能+优化健康提醒系统背景字体+补齐阅读室启发值\n学习11小时+\n创作10000字',
+            en: 'Read 16+ books.\nWebsite optimization.Optimization of the prominent star in the reading room, fixing the issue where the daytime mode in WeChat Moments couldn it be switched, resolving the problem where the number of displayed items in WeChat Moments was limited, optimizing the success diary logging feature, optimizing the background font for the health reminder system, and completing the reading room is inspiration value metrics.\nStudied for 11+ hours\nWrite a piece of content totaling 10000 words.'
+        },
+        highlight: {
+            zh: '乌兹别克棉花案（2）',
+            en: 'Uzbekistan Cotton Case (2)'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 2,
+        coverImage: '',
+        attachments: []
+    },
       {
         id: 44,
         date: '2025-10-30',
