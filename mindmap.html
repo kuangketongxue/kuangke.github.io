@@ -7,7 +7,6 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:;">
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 改用 unpkg CDN -->
     <script src="https://unpkg.com/d3@7"></script>
     <script src="https://unpkg.com/markmap-view@0.15.4"></script>
     <script src="https://unpkg.com/markmap-lib@0.15.4"></script>
@@ -49,7 +48,6 @@
             --text-secondary: #718096;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        /* 头部样式 */
         .mindmap-header {
             background: rgba(10, 15, 40, 0.9);
             backdrop-filter: blur(15px);
@@ -158,7 +156,6 @@
             background: rgba(139, 92, 246, 0.25);
             transform: rotate(20deg);
         }
-        /* 主内容区域 */
         .mindmap-container {
             padding: 2rem 1.5rem;
             max-width: 1600px;
@@ -202,7 +199,6 @@
             border-color: transparent;
             transform: translateY(-2px);
         }
-        /* 思维导图容器 */
         #mindmap-svg {
             width: 100%;
             min-height: 600px;
@@ -215,7 +211,6 @@
         body.light-mode #mindmap-svg {
             background: rgba(0, 0, 0, 0.02);
         }
-        /* Markdown视图 */
         #markdown-view {
             display: none;
             padding: 2rem;
@@ -241,7 +236,6 @@
             background: rgba(0, 0, 0, 0.05);
             color: #2d3748;
         }
-        /* 统计视图 */
         #stats-view {
             display: none;
             padding: 2rem;
@@ -298,7 +292,6 @@
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
-        /* 提示信息 */
         .info-banner {
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(56, 189, 248, 0.12));
             border: 1px solid rgba(139, 92, 246, 0.3);
@@ -339,7 +332,6 @@
             font-family: monospace;
             font-size: 0.85rem;
         }
-        /* 加载动画 */
         .loading {
             display: flex;
             flex-direction: column;
@@ -359,7 +351,6 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        /* 导出选项弹窗 */
         .export-modal {
             display: none;
             position: fixed;
@@ -434,11 +425,11 @@
             cursor: pointer;
             font-size: 0.9rem;
             transition: all 0.3s ease;
+            width: 100%;
         }
         .export-cancel:hover {
             background: rgba(139, 92, 246, 0.1);
         }
-        /* 错误提示 */
         .error-message {
             background: rgba(244, 67, 54, 0.1);
             border: 1px solid rgba(244, 67, 54, 0.3);
@@ -451,7 +442,6 @@
             margin-bottom: 0.5rem;
             color: #ff6b6b;
         }
-        /* ===== 新增：缩放功能相关样式 ===== */
         .zoom-controls-wrapper {
             margin-left: auto;
             display: flex;
@@ -463,6 +453,7 @@
             text-align: center;
             color: var(--text-secondary);
             font-size: 0.9rem;
+            font-weight: 600;
         }
         .fullscreen-modal {
             display: none;
@@ -486,6 +477,10 @@
             padding: 1rem 1.5rem;
             background: rgba(10, 15, 40, 0.95);
             border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        body.light-mode .fullscreen-header {
+            background: rgba(255, 255, 255, 0.95);
         }
         .fullscreen-header h3 {
             margin: 0;
@@ -500,6 +495,9 @@
             cursor: pointer;
             padding: 0.5rem;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .fullscreen-close-btn:hover {
             transform: scale(1.1);
@@ -517,16 +515,12 @@
             max-width: 100%;
             height: auto;
         }
-        /* 响应式设计 */
         @media (max-width: 768px) {
             .header-container {
                 padding: 0 1rem;
             }
             .back-btn span {
                 display: none;
-            }
-            .back-btn::after {
-                content: '返回';
             }
             .title-group h1 {
                 font-size: 1.3rem;
@@ -551,12 +545,12 @@
                 width: 100%;
                 justify-content: center;
                 margin-left: 0;
+                margin-top: 0.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 头部 -->
     <header class="mindmap-header">
         <div class="header-container">
             <div class="header-left">
@@ -584,10 +578,9 @@
             </div>
         </div>
     </header>
-    <!-- 主内容 -->
+
     <main class="mindmap-container">
         <div class="mindmap-card">
-            <!-- 信息提示 -->
             <div class="info-banner">
                 <div class="info-icon">
                     <i class="fas fa-info-circle"></i>
@@ -597,7 +590,7 @@
                     <p>思维导图内容通过 <code>data/mindmap.md</code> 文件进行编辑。请直接在 GitHub 仓库中修改该文件，修改完成后自动生效。</p>
                 </div>
             </div>
-            <!-- 工具栏 -->
+
             <div class="mindmap-toolbar">
                 <button class="view-mode-btn active" data-view="mindmap">
                     <i class="fas fa-project-diagram"></i>
@@ -612,13 +605,12 @@
                     统计分析
                 </button>
                 
-                <!-- 新增：缩放控制 -->
                 <div class="zoom-controls-wrapper">
-                    <button class="view-mode-btn" id="zoomOutBtn" title="缩小 (Ctrl+滚轮)">
+                    <button class="view-mode-btn" id="zoomOutBtn" title="缩小 (Ctrl+滚轮向下)">
                         <i class="fas fa-search-minus"></i>
                     </button>
                     <span id="zoomLevel">100%</span>
-                    <button class="view-mode-btn" id="zoomInBtn" title="放大 (Ctrl+滚轮)">
+                    <button class="view-mode-btn" id="zoomInBtn" title="放大 (Ctrl+滚轮向上)">
                         <i class="fas fa-search-plus"></i>
                     </button>
                     <button class="view-mode-btn" id="zoomResetBtn" title="重置视图">
@@ -629,13 +621,13 @@
                     </button>
                 </div>
             </div>
-            <!-- 思维导图SVG容器 -->
+
             <svg id="mindmap-svg"></svg>
-            <!-- Markdown视图 -->
+
             <div id="markdown-view">
                 <pre id="markdown-content"></pre>
             </div>
-            <!-- 统计视图 -->
+
             <div id="stats-view">
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -665,7 +657,7 @@
             </div>
         </div>
     </main>
-    <!-- 导出选项弹窗 -->
+
     <div class="export-modal" id="exportModal">
         <div class="export-content">
             <h3 class="export-title">选择导出格式</h3>
@@ -696,7 +688,6 @@
         </div>
     </div>
 
-    <!-- 全屏模态框（新增） -->
     <div class="fullscreen-modal" id="fullscreenModal">
         <div class="fullscreen-header">
             <h3>🔍 思维导图全屏查看</h3>
@@ -704,17 +695,14 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="fullscreen-content" id="fullscreenContent">
-            <!-- SVG将被复制到这里 -->
-        </div>
+        <div class="fullscreen-content" id="fullscreenContent"></div>
     </div>
 
     <script>
-        // 等待库加载完成
         window.addEventListener('load', function() {
             if (typeof markmap === 'undefined') {
                 console.error('Markmap库加载失败');
-                document.getElementById('mindmap-svg').innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#ff6b6b">思维导图库加载失败，请刷新页面重试</text>';
+                document.getElementById('mindmap-svg').innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#ff6b6b" font-size="16">思维导图库加载失败，请刷新页面重试</text>';
                 return;
             }
             initApp();
@@ -724,14 +712,12 @@
             let mm = null;
             let mindmapData = '';
             let currentView = 'mindmap';
-            let currentZoom = 100; // 缩放级别
+            let currentZoom = 100;
             
-            // 初始化
             initTheme();
             loadMindmapData();
             bindEvents();
             
-            // 加载思维导图数据
             async function loadMindmapData() {
                 try {
                     const response = await fetch('data/mindmap.md');
@@ -741,7 +727,7 @@
                     mindmapData = await response.text();
                     console.log('✅ 成功加载思维导图数据');
                     renderMindmap();
-                    // 同时加载书摘数据用于统计
+                    
                     try {
                         const digestResponse = await fetch('data/digests.json');
                         if (digestResponse.ok) {
@@ -749,30 +735,36 @@
                             updateStatistics(digestData);
                         }
                     } catch (error) {
-                        console.warn('警告: 无法加载书摘数据进行统计:', error);
+                        console.warn('警告: 无法加载书摘数据:', error);
                     }
                 } catch (error) {
                     console.error('❌ 思维导图数据加载失败:', error);
-                    // 使用默认数据
                     mindmapData = `# 📚 阅读知识体系
+
 ## 📖 书籍分类
+
 ### 技术类
 - 前端开发
 - 后端架构
 - 数据库设计
+
 ### 哲学类
 - 西方哲学
 - 东方哲学
 - 逻辑学
+
 ### 文学类
 - 古典文学
 - 现代文学
 - 诗歌鉴赏
+
 ## 🧠 知识网络
+
 ### 编程思维
 - 算法设计
 - 系统架构
 - 代码优化
+
 ### 阅读技巧
 - 速读方法
 - 精读策略
@@ -781,7 +773,6 @@
                 }
             }
 
-            // 更新统计信息
             function updateStatistics(digestData) {
                 const books = [...new Set(digestData.map(d => d.book))];
                 const chapters = Math.ceil(digestData.length / 3);
@@ -793,7 +784,6 @@
                 document.getElementById('totalNodes').textContent = nodes;
                 document.getElementById('lastUpdated').textContent = lastUpdated;
                 
-                // 生成书籍列表
                 const bookList = document.getElementById('bookList');
                 const bookGroups = digestData.reduce((acc, digest) => {
                     if (!acc[digest.book]) {
@@ -822,17 +812,10 @@
                 });
             }
 
-            // 渲染思维导图
             function renderMindmap() {
                 const svg = document.getElementById('mindmap-svg');
-                // 显示加载状态
-                svg.innerHTML = `
-                    <text x="50%" y="50%" text-anchor="middle" fill="#8b5cf6" font-size="16">
-                        <tspan x="50%" dy="-10">正在渲染思维导图...</tspan>
-                    </text>
-                `;
+                svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#8b5cf6" font-size="16">正在渲染思维导图...</text>';
                 
-                // 更新Markdown视图
                 document.getElementById('markdown-content').textContent = mindmapData;
                 
                 try {
@@ -855,21 +838,17 @@
                         }, root);
                     }
                     console.log('✅ 思维导图渲染成功');
-                    // 重置缩放
                     currentZoom = 100;
                     applyZoom();
                 } catch (error) {
                     console.error('❌ 思维导图渲染失败:', error);
-                    svg.innerHTML = `
-                        <text x="50%" y="50%" text-anchor="middle" fill="#ff6b6b" font-size="14">
-                            <tspan x="50%" dy="-20">渲染失败: ${error.message}</tspan>
-                            <tspan x="50%" dy="20">请检查数据格式或刷新重试</tspan>
-                        </text>
-                    `;
+                    svg.innerHTML = `<text x="50%" y="50%" text-anchor="middle" fill="#ff6b6b" font-size="14">
+                        <tspan x="50%" dy="-20">渲染失败: ${error.message}</tspan>
+                        <tspan x="50%" dy="20">请检查数据格式或刷新重试</tspan>
+                    </text>`;
                 }
             }
 
-            // 导出SVG
             function exportSVG() {
                 if (!mm) {
                     alert('思维导图尚未加载完成');
@@ -878,18 +857,12 @@
                 try {
                     const svg = document.getElementById('mindmap-svg');
                     const svgData = new XMLSerializer().serializeToString(svg);
-                    
-                    // 创建一个新的SVG元素，添加背景
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = svgData;
                     const tempSvg = tempDiv.querySelector('svg');
-                    
-                    // 获取SVG的实际尺寸
                     const bbox = tempSvg.getBBox ? tempSvg.getBBox() : { width: 1200, height: 800 };
                     const width = bbox.width || 1200;
                     const height = bbox.height || 800;
-                    
-                    // 创建带背景的SVG
                     const isLightMode = document.body.classList.contains('light-mode');
                     const bgColor = isLightMode ? '#f8f9fa' : '#0a0f28';
                     const exportSvg = `<?xml version="1.0" encoding="UTF-8"?>
@@ -897,8 +870,6 @@
     <rect width="${width}" height="${height}" fill="${bgColor}"/>
     ${svgData.replace(/<svg[^>]*>/, '').replace(/<\/svg>$/, '')}
 </svg>`;
-                    
-                    // 创建下载
                     const blob = new Blob([exportSvg], { type: 'image/svg+xml;charset=utf-8' });
                     const link = document.createElement('a');
                     link.download = `阅读思维导图_${new Date().toLocaleDateString('zh-CN')}.svg`;
@@ -915,7 +886,6 @@
                 }
             }
 
-            // 使用Canvas导出PNG/JPEG
             function exportImage(format = 'png') {
                 if (!mm) {
                     alert('思维导图尚未加载完成');
@@ -929,36 +899,28 @@
                 
                 const svg = document.getElementById('mindmap-svg');
                 const svgData = new XMLSerializer().serializeToString(svg);
-                
-                // 创建canvas
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 const img = new Image();
-                
-                // 计算SVG尺寸
                 const svgElement = svg;
                 const bbox = svgElement.getBBox ? svgElement.getBBox() : { width: 1200, height: 800 };
                 const width = Math.max(bbox.width || 1200, 800);
                 const height = Math.max(bbox.height || 800, 600);
                 
-                canvas.width = width * 2; // 高清输出
+                canvas.width = width * 2;
                 canvas.height = height * 2;
                 ctx.scale(2, 2);
                 
-                // 设置背景色
                 const isLightMode = document.body.classList.contains('light-mode');
                 ctx.fillStyle = isLightMode ? '#f8f9fa' : '#0a0f28';
                 ctx.fillRect(0, 0, width, height);
                 
-                // 创建SVG数据URL
                 const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
                 const url = URL.createObjectURL(svgBlob);
                 
                 img.onload = function() {
                     ctx.drawImage(img, 0, 0, width, height);
                     URL.revokeObjectURL(url);
-                    
-                    // 导出图片
                     const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
                     canvas.toBlob(function(blob) {
                         const link = document.createElement('a');
@@ -968,7 +930,6 @@
                         link.click();
                         document.body.removeChild(link);
                         URL.revokeObjectURL(link.href);
-                        
                         btn.innerHTML = originalContent;
                         btn.disabled = false;
                         closeExportModal();
@@ -987,18 +948,14 @@
                 img.src = url;
             }
 
-            // 显示导出弹窗
             function showExportModal() {
                 document.getElementById('exportModal').classList.add('show');
             }
 
-            // 关闭导出弹窗
             function closeExportModal() {
                 document.getElementById('exportModal').classList.remove('show');
             }
 
-            // ===== 新增：缩放功能 =====
-            // 放大函数
             function zoomIn() {
                 if (currentZoom < 300) {
                     currentZoom += 10;
@@ -1006,7 +963,6 @@
                 }
             }
 
-            // 缩小函数
             function zoomOut() {
                 if (currentZoom > 50) {
                     currentZoom -= 10;
@@ -1014,30 +970,24 @@
                 }
             }
 
-            // 重置缩放
             function resetZoom() {
                 currentZoom = 100;
                 applyZoom();
-                // 重置位置
                 if (mm) {
                     mm.fit();
                 }
             }
 
-            // 应用缩放
             function applyZoom() {
                 const svg = document.getElementById('mindmap-svg');
                 const scale = currentZoom / 100;
                 svg.style.transform = `scale(${scale})`;
-                
-                // 更新显示
                 const zoomLevelDisplay = document.getElementById('zoomLevel');
                 if (zoomLevelDisplay) {
                     zoomLevelDisplay.textContent = currentZoom + '%';
                 }
             }
 
-            // 全屏功能
             function toggleFullscreen() {
                 const modal = document.getElementById('fullscreenModal');
                 if (!modal.querySelector('svg')) {
@@ -1054,49 +1004,43 @@
                 modal.classList.toggle('show');
             }
 
-            // 绑定事件
             function bindEvents() {
-                // 主题切换
                 document.getElementById('themeToggle')?.addEventListener('click', function() {
                     const isLight = document.body.classList.toggle('light-mode');
                     localStorage.setItem('theme', isLight ? 'light' : 'dark');
                     updateThemeIcon(isLight ? 'light' : 'dark');
                 });
 
-                // 刷新按钮
                 document.getElementById('refreshBtn')?.addEventListener('click', async function() {
                     await loadMindmapData();
                 });
 
-                // 导出按钮
                 document.getElementById('exportBtn')?.addEventListener('click', function() {
                     showExportModal();
                 });
 
-                // 导出选项
                 document.getElementById('exportSVG')?.addEventListener('click', function() {
                     exportSVG();
                 });
+
                 document.getElementById('exportPNG')?.addEventListener('click', function() {
                     exportImage('png');
                 });
+
                 document.getElementById('exportJPEG')?.addEventListener('click', function() {
                     exportImage('jpeg');
                 });
 
-                // 取消导出
                 document.getElementById('exportCancel')?.addEventListener('click', function() {
                     closeExportModal();
                 });
 
-                // 点击弹窗外部关闭
                 document.getElementById('exportModal')?.addEventListener('click', function(e) {
                     if (e.target === this) {
                         closeExportModal();
                     }
                 });
 
-                // 视图切换
                 document.querySelectorAll('[data-view]').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const view = this.dataset.view;
@@ -1106,36 +1050,21 @@
                     });
                 });
 
-                // ===== 新增：缩放控制事件 =====
-                document.getElementById('zoomInBtn')?.addEventListener('click', function() {
-                    zoomIn();
-                });
+                document.getElementById('zoomInBtn')?.addEventListener('click', zoomIn);
+                document.getElementById('zoomOutBtn')?.addEventListener('click', zoomOut);
+                document.getElementById('zoomResetBtn')?.addEventListener('click', resetZoom);
+                document.getElementById('zoomFullscreenBtn')?.addEventListener('click', toggleFullscreen);
 
-                document.getElementById('zoomOutBtn')?.addEventListener('click', function() {
-                    zoomOut();
-                });
-
-                document.getElementById('zoomResetBtn')?.addEventListener('click', function() {
-                    resetZoom();
-                });
-
-                document.getElementById('zoomFullscreenBtn')?.addEventListener('click', function() {
-                    toggleFullscreen();
-                });
-
-                // 全屏模态框关闭按钮
                 document.getElementById('fullscreenCloseBtn')?.addEventListener('click', function() {
                     document.getElementById('fullscreenModal').classList.remove('show');
                 });
 
-                // 点击全屏模态框外部关闭
                 document.getElementById('fullscreenModal')?.addEventListener('click', function(e) {
                     if (e.target === this) {
                         this.classList.remove('show');
                     }
                 });
 
-                // 鼠标滚轮缩放
                 const svg = document.getElementById('mindmap-svg');
                 svg?.addEventListener('wheel', function(e) {
                     if (e.ctrlKey || e.metaKey) {
@@ -1149,27 +1078,22 @@
                 }, { passive: false });
             }
 
-            // 切换视图
             function switchView(view) {
                 currentView = view;
-                // 更新按钮状态
                 document.querySelectorAll('[data-view]').forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.view === view);
                 });
-                // 显示/隐藏视图
                 document.getElementById('mindmap-svg').style.display = view === 'mindmap' ? 'block' : 'none';
                 document.getElementById('markdown-view').style.display = view === 'markdown' ? 'block' : 'none';
                 document.getElementById('stats-view').style.display = view === 'stats' ? 'block' : 'none';
             }
 
-            // 初始化主题
             function initTheme() {
                 const savedTheme = localStorage.getItem('theme') || 'dark';
                 document.body.classList.toggle('light-mode', savedTheme === 'light');
                 updateThemeIcon(savedTheme);
             }
 
-            // 更新主题图标
             function updateThemeIcon(theme) {
                 const icon = document.querySelector('#themeToggle i');
                 if (icon) {
