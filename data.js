@@ -1312,6 +1312,16 @@ function getMomentsStats(moments) {
  * @type {Array<Object>}
  */
 let momentsData = [
+     {
+    id: 31,
+    content: '现在全球大学面对人工智能（Al）的选择，路径完全不一样。美国那边，OpenAI和Google这些科技巨头正在疯狂进校园。2025年2月，加州州立大学系统宣布给全系统52万师生配上ChatGPTEdu——这是OpenAl专门给高校定制的教育版。好家伙，这可是52万人，OpenAl自己说这是“全世界任何单一组织或公司中ChatGPT最大规模的部署”；',
+    value: 10,
+    category: '工作相关',
+    date: '`2025-10-31T23:30:00+08:00`',
+    images: [],
+    likes: 0,
+    comments: []
+  },
   {
     id: 30,
     content: '这个时代最精妙的骗局是让大多数人相信自己没在赌桌上，当所有人都在被动参与资产轮盘的时候，清醒的投机者至少知道自己在冒险在赌什么，而蒙眼的群众却把枷锁当作护身，命运当作确定性。',
