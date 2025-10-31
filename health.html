@@ -80,7 +80,6 @@
             -webkit-backdrop-filter: blur(30px) saturate(180%);
             border-bottom: 1px solid rgba(255, 255, 255, 0.25);
             padding: 20px 0;
-            transition: var(--transition-smooth);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
         }
         body.dark-mode .header {
@@ -1469,23 +1468,6 @@
                 `;
             }
         }
-        // 优化滚动性能
-        window.addEventListener('scroll', debounce(() => {
-            const header = document.querySelector('.header');
-            if (window.scrollY > 50) {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-                header.style.boxShadow = '0 8px 40px rgba(0, 0, 0, 0.1)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.08)';
-                header.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.05)';
-            }
-        }, 16));
-        // 页面加载完成后初始化
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
         // 清理资源
         window.addEventListener('beforeunload', () => {
             if (window.dataManager) {
@@ -1510,6 +1492,12 @@
         document.addEventListener('mousedown', () => {
             document.body.classList.remove('keyboard-navigation');
         });
+        // 页面加载完成后初始化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
     </script>
 </body>
 </html>
