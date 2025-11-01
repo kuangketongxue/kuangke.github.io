@@ -47,7 +47,7 @@
 - 真粉丝信任"你的每次输出都不浪费时间"
 - 节点意识：别人必须通过你才能完成某事
 - Web3/身份个人化：资产长在个人端，平台只能服务
-- [可延伸：我的节点设计与粉丝培养机制]
+- [可延伸：我的节点设计与粉丝培养机制——https://wvwp6ekrk9f.feishu.cn/docx/PYWedHrM2o9lOrxOqcYceKAOnRg?from=from_copylink]
 
 ---
 
