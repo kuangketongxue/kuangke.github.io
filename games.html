@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自制游戏 - 狂客·银河</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 游戏矩阵专属样式 */
+        .game-matrix-container {
+            max-width: 1200px;
+            margin: 80px auto 60px;
+            padding: 40px 20px;
+        }
+        
+        .matrix-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .matrix-title h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+        
+        .matrix-title p {
+            font-size: 1.1em;
+            color: #666;
+            opacity: 0.8;
+        }
+        
+        body.dark-mode .matrix-title p {
+            color: #aaa;
+        }
+        
+        /* 游戏网格布局 */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        /* 游戏卡片样式 */
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        
+        body.dark-mode .game-card {
+            background: #2d3748;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-thumbnail {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 10%);
+            background-size: 50px 50px;
+            animation: float 20s linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .game-info {
+            padding: 25px;
+        }
+        
+        .game-name {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        body.dark-mode .game-name {
+            color: #fff;
+        }
+        
+        .game-desc {
+            font-size: 0.95em;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        body.dark-mode .game-desc {
+            color: #aaa;
+        }
+        
+        .game-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .game-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #999;
+        }
+        
+        .empty-state-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            opacity: 0.5;
+        }
+        
+        .empty-state h2 {
+            font-size: 1.8em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        body.dark-mode .empty-state h2 {
+            color: #aaa;
+        }
+        
+        .empty-state p {
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+        
+        /* 添加游戏按钮 */
+        .add-game-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 6px 20px rgba(67, 233, 123, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: none;
+        }
+        
+        .add-game-btn:hover {
+            transform: translateY(-5px) rotate(90deg);
+            box-shadow: 0 8px 25px rgba(67, 233, 123, 0.5);
+        }
+        
+        /* 返回按钮 */
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+        }
+        
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+        
+        /* 游戏分类标签 */
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .category-btn {
+            padding: 10px 24px;
+            border: 2px solid #667eea;
+            background: transparent;
+            color: #667eea;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn:hover,
+        .category-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        body.dark-mode .category-btn {
+            border-color: #764ba2;
+            color: #764ba2;
+        }
+        
+        /* 自制游戏按钮样式 */
+        .game-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            border-radius: 10px;
+            padding: 8px 16px;
+            margin: 0 8px;
+        }
+        
+        .game-icon {
+            color: white;
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        
+        .game-text {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .game-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+        }
+        
+        /* 自学突围按钮样式 */
+        .breakthrough-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border-radius: 10px;
+            padding: 8px 16px;
+            margin: 0 8px;
+        }
+        
+        .breakthrough-icon {
+            color: white;
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        
+        .breakthrough-text {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .breakthrough-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .game-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .matrix-title h1 {
+                font-size: 2em;
+            }
+            
+            .category-filter {
+                gap: 10px;
+            }
+            
+            .category-btn {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body data-page="games">
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <h1 class="logo">狂客·银河</h1>
+                <a class="success-link" href="success.html">
+                    <span class="success-icon">
+                        <i class="fas fa-meteor"></i>
+                    </span>
+                    <span class="success-text">成功日记</span>
+                </a>
+                <a class="breakthrough-link" href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnGZZB8XUcRr7ChjRqeL27ic">
+                    <span class="breakthrough-icon">
+                        <i class="fas fa-book-open"></i>
+                    </span>
+                    <span class="breakthrough-text">《自学突围》</span>
+                </a>
+                <a class="sky-link" href="reading.html">
+                    <span class="sky-icon">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span class="sky-text">星空</span>
+                </a>
+                <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/">
+                    <span class="exam-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </span>
+                    <span class="exam-text">冬之街小店</span>
+                </a>
+                <a class="video-link" href="video.html">
+                    <span class="video-icon">
+                        <i class="fas fa-video"></i>
+                    </span>
+                    <span class="video-text">视频矩阵</span>
+                </a>
+                <a class="game-link" href="games.html">
+                    <span class="game-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </span>
+                    <span class="game-text">自制游戏</span>
+                </a>
+            </div>
+            <div class="controls">
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="game-matrix-container">
+        <div class="matrix-title">
+            <h1>🎮 自制游戏中心</h1>
+            <p>探索创意，享受乐趣</p>
+        </div>
+
+        <!-- 分类筛选 -->
+        <div class="category-filter">
+            <button class="category-btn active" onclick="filterGames('all')">
+                <i class="fas fa-th"></i> 全部游戏
+            </button>
+            <button class="category-btn" onclick="filterGames('puzzle')">
+                <i class="fas fa-puzzle-piece"></i> 益智类
+            </button>
+            <button class="category-btn" onclick="filterGames('action')">
+                <i class="fas fa-running"></i> 动作类
+            </button>
+            <button class="category-btn" onclick="filterGames('casual')">
+                <i class="fas fa-smile"></i> 休闲类
+            </button>
+        </div>
+
+        <!-- 游戏网格 -->
+        <div class="game-grid" id="gameGrid">
+            <!-- 示例游戏卡片（可以删除或修改） -->
+            <a href="#" class="game-card" data-category="puzzle">
+                <div class="game-thumbnail" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="game-info">
+                    <div class="game-name">示例游戏 1</div>
+                    <div class="game-desc">这是一个有趣的益智游戏，挑战你的思维能力！</div>
+                    <div class="game-tags">
+                        <span class="game-tag">益智</span>
+                        <span class="game-tag">单人</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" class="game-card" data-category="action">
+                <div class="game-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div class="game-info">
+                    <div class="game-name">示例游戏 2</div>
+                    <div class="game-desc">快节奏的动作游戏，考验你的反应速度！</div>
+                    <div class="game-tags">
+                        <span class="game-tag">动作</span>
+                        <span class="game-tag">刺激</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" class="game-card" data-category="casual">
+                <div class="game-thumbnail" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="game-info">
+                    <div class="game-name">示例游戏 3</div>
+                    <div class="game-desc">轻松休闲的游戏体验，放松身心的最佳选择！</div>
+                    <div class="game-tags">
+                        <span class="game-tag">休闲</span>
+                        <span class="game-tag">放松</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 空状态提示（当没有游戏时显示） -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state-icon">🎮</div>
+            <h2>还没有游戏</h2>
+            <p>点击右下角的 + 按钮添加你的第一个游戏吧！</p>
+        </div>
+    </div>
+
+    <!-- 添加游戏按钮 -->
+    <button class="add-game-btn" onclick="addGame()" title="添加新游戏">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- 返回首页按钮 -->
+    <a href="index.html" class="back-button" title="返回首页">
+        <i class="fas fa-home"></i>
+    </a>
+
+    <script>
+        // 游戏数据（可以在这里添加更多游戏）
+        const games = [
+            {
+                name: "示例游戏 1",
+                desc: "这是一个有趣的益智游戏，挑战你的思维能力！",
+                category: "puzzle",
+                icon: "fa-brain",
+                color: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                tags: ["益智", "单人"],
+                url: "#"
+            },
+            {
+                name: "示例游戏 2",
+                desc: "快节奏的动作游戏，考验你的反应速度！",
+                category: "action",
+                icon: "fa-rocket",
+                color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+                tags: ["动作", "刺激"],
+                url: "#"
+            },
+            {
+                name: "示例游戏 3",
+                desc: "轻松休闲的游戏体验，放松身心的最佳选择！",
+                category: "casual",
+                icon: "fa-heart",
+                color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+                tags: ["休闲", "放松"],
+                url: "#"
+            }
+        ];
+
+        // 渲染游戏列表
+        function renderGames(category = 'all') {
+            const gameGrid = document.getElementById('gameGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            let filteredGames = games;
+            if (category !== 'all') {
+                filteredGames = games.filter(game => game.category === category);
+            }
+
+            if (filteredGames.length === 0) {
+                gameGrid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            gameGrid.style.display = 'grid';
+            emptyState.style.display = 'none';
+
+            gameGrid.innerHTML = filteredGames.map(game => `
+                <a href="${game.url}" class="game-card" data-category="${game.category}">
+                    <div class="game-thumbnail" style="background: ${game.color};">
+                        <i class="fas ${game.icon}"></i>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-name">${game.name}</div>
+                        <div class="game-desc">${game.desc}</div>
+                        <div class="game-tags">
+                            ${game.tags.map(tag => `<span class="game-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        // 筛选游戏
+        function filterGames(category) {
+            // 更新按钮状态
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.category-btn').classList.add('active');
+
+            // 渲染游戏
+            renderGames(category);
+        }
+
+        // 添加游戏（示例功能）
+        function addGame() {
+            alert('添加游戏功能开发中...\n\n你可以在代码中的 games 数组里添加新游戏：\n1. 修改游戏名称\n2. 修改游戏描述\n3. 修改分类(puzzle/action/casual)\n4. 修改图标和颜色\n5. 添加游戏链接');
+        }
+
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        
+        // 读取本地存储的主题设置
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        // 主题切换事件
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // 页面加载时渲染游戏
+        window.addEventListener('DOMContentLoaded', () => {
+            renderGames();
+        });
+    </script>
+</body>
+</html>
