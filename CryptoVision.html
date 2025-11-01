@@ -4,7 +4,7 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CryptoVision Pro </title>
+    <title>CryptoVision Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -50,6 +50,13 @@
         .reading-return{ color:var(--text-secondary); text-decoration:none; margin-right:.75rem; }
         .reading-return:hover{ color:var(--text-primary); }
         .nav-right{ display:flex; align-items:center; gap:1rem; }
+        .nav-btn{
+            display:flex; align-items:center; gap:.5rem;
+            padding:.5rem 1rem; background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));
+            border:none; border-radius:8px; color:#fff; font-weight:600; cursor:pointer;
+            transition:transform .3s, box-shadow .3s; text-decoration:none;
+        }
+        .nav-btn:hover{ transform:translateY(-2px); box-shadow:0 5px 20px rgba(102,126,234,0.4); }
         .connection-status{
             display:flex; align-items:center; gap:.5rem;
             padding:.25rem .75rem; background:var(--dark-bg);
@@ -59,9 +66,7 @@
         .status-dot.ok{ background:var(--success-color); animation:pulse 2s infinite; }
         .status-dot.err{ background:var(--danger-color); }
         @keyframes pulse { 0%{opacity:1} 50%{opacity:.5} 100%{opacity:1} }
-
         .main-container{ max-width:1400px; margin:2rem auto; padding:0 2rem; }
-
         .market-overview{
             display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
             gap:1.25rem; margin-bottom:1.5rem;
@@ -88,12 +93,10 @@
         }
         .price-change.up{ background:rgba(16,185,129,.1); color:var(--success-color); }
         .price-change.down{ background:rgba(239,68,68,.1); color:var(--danger-color); }
-
         .panel{ background:var(--card-bg); border:1px solid var(--border-color); border-radius:12px; padding:1.25rem; }
         .grid-2{ display:grid; grid-template-columns:2fr 1fr; gap:1.25rem; margin-bottom:1.25rem; }
         .grid-2-bottom{ display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
         .panel-title{ font-size:1.1rem; font-weight:700; display:flex; gap:.5rem; align-items:center; margin-bottom:1rem; }
-
         .controls{ display:flex; gap:.75rem; align-items:center; flex-wrap:wrap; margin-bottom:.75rem; }
         .select, .btn{
             border:1px solid var(--border-color); background:var(--dark-bg); color:var(--text-primary);
@@ -101,7 +104,6 @@
         }
         .btn{ color:var(--text-secondary); }
         .btn.active{ border-color:var(--primary-color); color:#fff; background:var(--primary-color); }
-
         .indicators{ display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; }
         .ind-item{ background:var(--dark-bg); border:1px solid var(--border-color); border-radius:8px; padding:.75rem; }
         .ind-label{ color:var(--text-secondary); font-size:.8rem; margin-bottom:.2rem; }
@@ -115,7 +117,6 @@
         .signal.neutral{ border-color:var(--warning-color); }
         .signal .title{ font-weight:700; margin-bottom:.25rem; }
         .signal .desc{ color:var(--text-secondary); font-size:.9rem; }
-
         .toast{
             position:fixed; bottom:20px; right:20px; z-index:1001;
             background:var(--card-bg); border-left:4px solid var(--primary-color);
@@ -126,12 +127,10 @@
         .toast.success{ border-left-color:var(--success-color); }
         .toast.error{ border-left-color:var(--danger-color); }
         .toast.warning{ border-left-color:var(--warning-color); }
-
         .data-source-info{
             position:fixed; bottom:20px; left:20px; background:rgba(30,41,59,0.9);
             color:var(--text-secondary); padding:.5rem .75rem; border-radius:8px; font-size:.75rem; z-index:1000;
         }
-
         .api-status{
             position:fixed; top:80px; right:20px; background:var(--card-bg);
             border:1px solid var(--border-color); border-radius:8px; padding:1rem; max-width:300px; display:none; z-index:1000;
@@ -140,18 +139,18 @@
         .api-status .title{ color:var(--warning-color); font-weight:700; margin-bottom:.5rem; }
         .api-status .msg{ color:var(--text-secondary); font-size:.9rem; margin-bottom:.75rem; }
         .api-status .action{ background:var(--primary-color); color:#fff; border:none; border-radius:8px; padding:.5rem .75rem; cursor:pointer; }
-
         .social-footer{ background:var(--card-bg); border-top:1px solid var(--border-color); padding:2rem 0; margin-top:2rem; }
         .container{ max-width:1400px; margin:0 auto; padding:0 2rem; text-align:center; }
         .social-links{ display:flex; justify-content:center; gap:1.25rem; margin-bottom:1rem; }
         .social-link{ display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; background:var(--dark-bg); color:var(--text-secondary); }
         .social-link:hover{ color:var(--primary-color); transform:translateY(-3px); }
-
         @media (max-width:1200px){ .grid-2{ grid-template-columns:1fr; } }
         @media (max-width:768px){
             .market-overview{ grid-template-columns:1fr; }
             .indicators{ grid-template-columns:1fr 1fr; }
             .grid-2-bottom{ grid-template-columns:1fr; }
+            .nav-right{ flex-wrap:wrap; }
+            .nav-btn{ padding:.4rem .75rem; font-size:.9rem; }
         }
         ::-webkit-scrollbar{ width:8px; height:8px; }
         ::-webkit-scrollbar-track{ background:var(--dark-bg); }
@@ -160,7 +159,7 @@
     </style>
 </head>
 <body>
-    <!-- Header（保留返回键） -->
+    <!-- Header（增加投资文章按钮） -->
     <header>
         <div class="header-container">
             <div class="logo">
@@ -171,6 +170,10 @@
                 CryptoVision Pro
             </div>
             <div class="nav-right">
+                <a href="articles.html" class="nav-btn" title="查看投资相关文章">
+                    <i class="fas fa-newspaper"></i>
+                    <span>投资相关文章</span>
+                </a>
                 <div class="connection-status">
                     <div id="connDot" class="status-dot"></div>
                     <span id="connText">从GitHub加载数据...</span>
@@ -178,19 +181,16 @@
             </div>
         </div>
     </header>
-
     <!-- API/GitHub数据状态提示 -->
     <div id="apiStatus" class="api-status" role="status" aria-live="polite">
         <div class="title"><i class="fas fa-exclamation-triangle"></i> 数据源连接问题</div>
         <div id="apiMsg" class="msg">无法从GitHub加载数据，请检查Raw链接或仓库权限。</div>
         <button class="action" onclick="reloadData()"><i class="fas fa-redo"></i> 重试</button>
     </div>
-
     <!-- 主内容 -->
     <main class="main-container">
         <!-- 市场概览 -->
         <section class="market-overview" id="marketOverview"></section>
-
         <!-- 图表 + 指标/信号 -->
         <section class="grid-2">
             <div class="panel">
@@ -231,7 +231,6 @@
                 <div id="signals" class="signals"></div>
             </div>
         </section>
-
         <!-- 成交量 + 动态 -->
         <section class="grid-2-bottom">
             <div class="panel">
@@ -244,15 +243,12 @@
             </div>
         </section>
     </main>
-
     <!-- Toast -->
     <div id="toast" class="toast"><i id="toastIcon" class="fas fa-check-circle"></i><span id="toastMsg">操作成功</span></div>
-
     <!-- 数据源信息 -->
     <div class="data-source-info">
         <span id="dataSourceText">数据来源: GitHub JSON | 建议每日更新</span>
     </div>
-
     <!-- Footer（保留版权和社交链接） -->
     <footer class="social-footer" role="contentinfo">
         <div class="container">
@@ -274,32 +270,8 @@
             </p>
         </div>
     </footer>
-
     <script>
-        // ========== 使用说明 ==========
-        // 1) 在GitHub仓库中维护每日数据JSON，并使用Raw链接替换 DATA_SOURCE_URL。
-        // 2) 推荐JSON结构（示例）：
-        // {
-        //   "updatedAt":"2025-10-31T00:00:00Z",
-        //   "meta":{
-        //     "symbols":{
-        //       "BTCUSDT":{"symbol":"BTC","name":"Bitcoin","color":"#f7931a"},
-        //       "ETHUSDT":{"symbol":"ETH","name":"Ethereum","color":"#627eea"}
-        //     }
-        //   },
-        //   "pairs":{
-        //     "BTCUSDT":[
-        //       {"date":"2025-10-01","open":43000,"high":44000,"low":42500,"close":43880,"volume":123456789,"marketCap":850000000000},
-        //       {"date":"2025-10-02","open":43880,"high":44500,"low":43050,"close":44120,"volume":113456789,"marketCap":855000000000}
-        //     ],
-        //     "ETHUSDT":[
-        //       {"date":"2025-10-01","open":2250,"high":2320,"low":2210,"close":2298,"volume":34567890,"marketCap":280000000000}
-        //     ]
-        //   }
-        // }
-
-        // ========== 配置 ==========
-        const DATA_SOURCE_URL = 'https://raw.githubusercontent.com/kuangketongxue/kuangke.github.io/refs/heads/main/crypto.json'; // 替换为你的Raw地址
+        const DATA_SOURCE_URL = 'https://raw.githubusercontent.com/kuangketongxue/kuangke.github.io/refs/heads/main/crypto.json';
         const DEFAULT_COLORS = {
             BTCUSDT: '#f7931a',
             ETHUSDT: '#627eea',
@@ -310,17 +282,14 @@
             DOGEUSDT: '#c2a633',
             DOTUSDT: '#e6007a'
         };
-
-        // ========== 全局状态 ==========
-        let rawData = null;               // 原始JSON
-        let pairs = {};                   // 标准化后的数据 {pair:[{t,o,h,l,c,v,mc}]}
-        let meta = { symbols:{} };        // 元信息
+        let rawData = null;
+        let pairs = {};
+        let meta = { symbols:{} };
         let currentPair = null;
         let rangeDays = 90;
         let priceChart = null;
         let volumeChart = null;
-
-        // ========== 工具 ==========
+        
         function showToast(msg, type='success'){
             const el = document.getElementById('toast');
             const icon = document.getElementById('toastIcon');
@@ -342,8 +311,7 @@
         }
         function last(arr, n=1){ return arr.slice(-n)[0]; }
         function toMs(dateStr){ return new Date(dateStr+'T00:00:00Z').getTime(); }
-
-        // 指标计算
+        
         function SMA(values, period){
             if(values.length < period) return null;
             const slice = values.slice(-period);
@@ -373,7 +341,6 @@
         }
         function MACD(values){
             if(values.length < 26) return {macd:null, signal:null, hist:null};
-            // 为可重复使用，计算完整EMA序列
             const emaSeq = (vals, p)=>{
                 const k = 2/(p+1);
                 let out = [vals[0]];
@@ -392,8 +359,7 @@
             const hist = macd - signal;
             return {macd, signal, hist};
         }
-
-        // ========== 数据加载 ==========
+        
         async function loadFromGitHub(){
             const apiBox = document.getElementById('apiStatus');
             try{
@@ -415,7 +381,6 @@
                 throw err;
             }
         }
-
         function normalizeData(data){
             pairs = {};
             meta = data.meta || {symbols:{}};
@@ -431,8 +396,7 @@
                 }));
             });
         }
-
-        // ========== UI渲染 ==========
+        
         function renderPairSelect(){
             const sel = document.getElementById('pairSelect');
             sel.innerHTML = '';
@@ -452,15 +416,12 @@
                 showToast(`已切换到 ${getName(currentPair)}`,'success');
             };
         }
-
         function getColor(pair){ return (meta.symbols?.[pair]?.color) || DEFAULT_COLORS[pair] || '#667eea'; }
         function getSymbol(pair){ return (meta.symbols?.[pair]?.symbol) || pair; }
         function getName(pair){ return `${getSymbol(pair)}/USDT`; }
-
         function renderMarketOverview(){
             const container = document.getElementById('marketOverview');
             container.innerHTML = '';
-            // 选前4名（按最新市值或成交量排序）
             const cards = Object.keys(pairs).map(k=>{
                 const arr = pairs[k];
                 const lastBar = last(arr);
@@ -471,7 +432,6 @@
                     score: lastBar?.mc || lastBar?.v || 0
                 };
             }).sort((a,b)=> (b.score - a.score)).slice(0,4);
-
             cards.forEach(item=>{
                 const k = item.key;
                 const info = meta.symbols?.[k] || {};
@@ -507,29 +467,24 @@
                 container.appendChild(el);
             });
         }
-
         function quickSwitch(k){
             currentPair = k;
             document.getElementById('pairSelect').value = k;
             refreshAll();
             showToast(`已切换到 ${getName(k)}`,'success');
         }
-
         function getRangedData(arr){
             if(rangeDays==='all') return arr;
             const cutoff = Date.now() - rangeDays*24*60*60*1000;
             return arr.filter(d=> d.t >= cutoff);
         }
-
         function renderCharts(){
             if(!currentPair || !pairs[currentPair] || pairs[currentPair].length===0) return;
             const all = pairs[currentPair];
             const data = getRangedData(all);
             const color = getColor(currentPair);
-
             const candle = data.map(d=>({ x:d.t, y:[d.o, d.h, d.l, d.c].map(v=>+v.toFixed(2)) }));
             const volumes = data.map(d=>({ x:d.t, y: d.v }));
-
             const priceOptions = {
                 series: [{ name:'价格', type:'candlestick', data: candle }],
                 chart: {
@@ -543,7 +498,6 @@
                 grid:{ borderColor:'#334155', strokeDashArray:4 },
                 tooltip:{ theme:'dark' }
             };
-
             const volOptions = {
                 series:[{ name:'成交量', data:volumes }],
                 chart:{ type:'bar', height:300, background:'transparent', toolbar:{ show:false } },
@@ -555,42 +509,32 @@
                 grid:{ borderColor:'#334155', strokeDashArray:4 },
                 tooltip:{ theme:'dark' }
             };
-
             if(priceChart){ priceChart.destroy(); }
             priceChart = new ApexCharts(document.querySelector('#priceChart'), priceOptions);
             priceChart.render();
-
             if(volumeChart){ volumeChart.destroy(); }
             volumeChart = new ApexCharts(document.querySelector('#volumeChart'), volOptions);
             volumeChart.render();
-
             document.getElementById('chartTitle').textContent = `${getName(currentPair)} K线图`;
         }
-
         function renderIndicatorsAndSignals(){
             if(!currentPair || !pairs[currentPair] || pairs[currentPair].length===0) return;
             const all = pairs[currentPair];
             const data = getRangedData(all);
             const closes = data.map(d=>d.c);
-
             const ma7 = SMA(closes, 7);
             const ma25 = SMA(closes, 25);
             const rsi = RSI(closes, 14);
             const { macd, signal, hist } = MACD(closes);
-
             document.getElementById('ma7').textContent = ma7 ? ('$'+fmtNum(ma7,2)) : '-';
             document.getElementById('ma25').textContent = ma25 ? ('$'+fmtNum(ma25,2)) : '-';
             document.getElementById('rsi').textContent = rsi ? fmtNum(rsi,1) : '-';
             document.getElementById('macd').textContent = macd!==null ? (macd>=0? '+'+fmtNum(macd,2):fmtNum(macd,2)) : '-';
-
-            // 生成信号（基于最近两天交叉/阈值）
             const signalsBox = document.getElementById('signals');
             signalsBox.innerHTML = '';
-            const recent = all.slice(-30); // 近30天内寻找事件
+            const recent = all.slice(-30);
             const rc = recent.map(d=>d.c);
             const evts = [];
-
-            // MA交叉
             if(rc.length>=26){
                 const ma7_seq = rc.map((_,i)=> i<6? null : SMA(rc.slice(0,i+1),7));
                 const ma25_seq = rc.map((_,i)=> i<24? null : SMA(rc.slice(0,i+1),25));
@@ -603,14 +547,11 @@
                     }
                 }
             }
-            // RSI阈值
             if(rsi!==null){
                 if(rsi<30) evts.push({type:'buy', title:'RSI超卖', desc:'RSI<30，可能出现反弹'});
                 if(rsi>70) evts.push({type:'sell', title:'RSI超买', desc:'RSI>70，注意回调风险'});
             }
-            // MACD交叉
             if(rc.length>=26){
-                // 粗略生成MACD序列判断交叉
                 const macdSeq = [];
                 for(let i=0;i<rc.length;i++){
                     const partial = rc.slice(0,i+1);
@@ -625,8 +566,6 @@
                     }
                 }
             }
-
-            // 只展示最近3条
             evts.slice(-3).reverse().forEach(e=>{
                 const node = document.createElement('div');
                 node.className = `signal ${e.type}`;
@@ -639,10 +578,8 @@
                 `;
                 signalsBox.appendChild(node);
             });
-
             renderActivities(evts);
         }
-
         function renderActivities(evts){
             const box = document.getElementById('activityFeed');
             box.innerHTML = '';
@@ -676,7 +613,6 @@
                 box.appendChild(row);
             });
         }
-
         function wireTimeButtons(){
             const wrap = document.getElementById('timeButtons');
             wrap.querySelectorAll('button').forEach(btn=>{
@@ -689,13 +625,11 @@
                 };
             });
         }
-
         function refreshAll(){
             renderMarketOverview();
             renderCharts();
             renderIndicatorsAndSignals();
         }
-
         async function reloadData(){
             try{
                 await loadFromGitHub();
@@ -703,8 +637,6 @@
                 refreshAll();
             }catch(_){}
         }
-
-        // 启动
         document.addEventListener('DOMContentLoaded', async ()=>{
             wireTimeButtons();
             try{
