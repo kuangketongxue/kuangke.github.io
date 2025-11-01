@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D城市探索游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        
+        #gameCanvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 16px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            z-index: 100;
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        #instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 15px 25px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .key {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            margin: 0 5px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <div>位置: <span id="position">X: 0, Z: 0</span></div>
+        <div>速度: <span id="speed">0</span> m/s</div>
+        <div>建筑数量: <span id="buildings">0</span></div>
+    </div>
+    
+    <div id="instructions">
+        <div>🎮 控制说明</div>
+        <div style="margin-top: 10px;">
+            <span class="key">W</span> 前进 
+            <span class="key">S</span> 后退 
+            <span class="key">A</span> 左移 
+            <span class="key">D</span> 右移
+        </div>
+        <div style="margin-top: 5px;">
+            <span class="key">Shift</span> 加速跑 
+            <span class="key">鼠标</span> 视角旋转
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // 游戏配置
+        const config = {
+            moveSpeed: 0.15,
+            sprintSpeed: 0.3,
+            rotationSpeed: 0.002,
+            citySize: 100,
+            buildingCount: 50
+        };
+
+        // 场景初始化
+        let scene, camera, renderer;
+        let player, playerVelocity = new THREE.Vector3();
+        let buildings = [];
+        let ground;
+        
+        // 控制状态
+        const keys = {};
+        const mouse = { x: 0, y: 0, locked: false };
+        let yaw = 0, pitch = 0;
+
+        function init() {
+            // 创建场景
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB);
+            scene.fog = new THREE.Fog(0x87CEEB, 50, 200);
+
+            // 创建相机
+            camera = new THREE.PerspectiveCamera(
+                75,
+                window.innerWidth / window.innerHeight,
+                0.1,
+                1000
+            );
+            camera.position.set(0, 1.6, 0);
+
+            // 创建渲染器
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            document.body.appendChild(renderer.domElement);
+
+            // 创建玩家对象
+            createPlayer();
+
+            // 创建地面
+            createGround();
+
+            // 创建城市建筑
+            createCity();
+
+            // 添加光照
+            createLights();
+
+            // 事件监听
+            setupEventListeners();
+
+            // 开始动画循环
+            animate();
+        }
+
+        function createPlayer() {
+            // 玩家是一个简单的胶囊体（用圆柱体代替）
+            const geometry = new THREE.CylinderGeometry(0.3, 0.3, 1.6, 8);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0xff0000,
+                transparent: true,
+                opacity: 0.7
+            });
+            player = new THREE.Mesh(geometry, material);
+            player.position.y = 0.8;
+            player.castShadow = true;
+            scene.add(player);
+        }
+
+        function createGround() {
+            const geometry = new THREE.PlaneGeometry(config.citySize * 2, config.citySize * 2);
+            const material = new THREE.MeshLambertMaterial({ 
+                color: 0x4a4a4a,
+                side: THREE.DoubleSide
+            });
+            ground = new THREE.Mesh(geometry, material);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // 添加网格线
+            const gridHelper = new THREE.GridHelper(config.citySize * 2, 50, 0x666666, 0x333333);
+            scene.add(gridHelper);
+        }
+
+        function createCity() {
+            const colors = [0x808080, 0xa0a0a0, 0x909090, 0x707070];
+            
+            for (let i = 0; i < config.buildingCount; i++) {
+                const width = Math.random() * 8 + 4;
+                const height = Math.random() * 40 + 10;
+                const depth = Math.random() * 8 + 4;
+
+                const geometry = new THREE.BoxGeometry(width, height, depth);
+                const material = new THREE.MeshLambertMaterial({ 
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                });
+                const building = new THREE.Mesh(geometry, material);
+
+                // 随机位置（避免在中心区域）
+                let x, z;
+                do {
+                    x = (Math.random() - 0.5) * config.citySize * 1.8;
+                    z = (Math.random() - 0.5) * config.citySize * 1.8;
+                } while (Math.abs(x) < 10 && Math.abs(z) < 10);
+
+                building.position.set(x, height / 2, z);
+                building.castShadow = true;
+                building.receiveShadow = true;
+
+                // 添加窗户效果
+                addWindows(building, width, height, depth);
+
+                scene.add(building);
+                buildings.push(building);
+            }
+
+            document.getElementById('buildings').textContent = config.buildingCount;
+        }
+
+        function addWindows(building, width, height, depth) {
+            const windowsGroup = new THREE.Group();
+            const windowMaterial = new THREE.MeshBasicMaterial({ color: 0xffff99 });
+            
+            const windowsPerFloor = Math.floor(width / 2);
+            const floors = Math.floor(height / 4);
+
+            for (let floor = 0; floor < floors; floor++) {
+                for (let w = 0; w < windowsPerFloor; w++) {
+                    if (Math.random() > 0.3) {
+                        const windowGeom = new THREE.BoxGeometry(0.4, 0.6, 0.1);
+                        const window1 = new THREE.Mesh(windowGeom, windowMaterial);
+                        window1.position.set(
+                            (w - windowsPerFloor / 2) * 1.5,
+                            floor * 4 - height / 2 + 2,
+                            depth / 2 + 0.05
+                        );
+                        windowsGroup.add(window1);
+                    }
+                }
+            }
+
+            building.add(windowsGroup);
+        }
+
+        function createLights() {
+            // 环境光
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            // 太阳光（方向光）
+            const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            sunLight.position.set(50, 100, 50);
+            sunLight.castShadow = true;
+            sunLight.shadow.camera.left = -100;
+            sunLight.shadow.camera.right = 100;
+            sunLight.shadow.camera.top = 100;
+            sunLight.shadow.camera.bottom = -100;
+            sunLight.shadow.mapSize.width = 2048;
+            sunLight.shadow.mapSize.height = 2048;
+            scene.add(sunLight);
+
+            // 添加一些路灯
+            for (let i = 0; i < 20; i++) {
+                const light = new THREE.PointLight(0xffaa00, 1, 30);
+                light.position.set(
+                    (Math.random() - 0.5) * config.citySize,
+                    5,
+                    (Math.random() - 0.5) * config.citySize
+                );
+                scene.add(light);
+
+                // 路灯柱子
+                const poleGeom = new THREE.CylinderGeometry(0.1, 0.1, 5);
+                const poleMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+                const pole = new THREE.Mesh(poleGeom, poleMat);
+                pole.position.copy(light.position);
+                pole.position.y = 2.5;
+                scene.add(pole);
+            }
+        }
+
+        function setupEventListeners() {
+            // 键盘事件
+            window.addEventListener('keydown', (e) => {
+                keys[e.key.toLowerCase()] = true;
+            });
+
+            window.addEventListener('keyup', (e) => {
+                keys[e.key.toLowerCase()] = false;
+            });
+
+            // 鼠标锁定
+            renderer.domElement.addEventListener('click', () => {
+                renderer.domElement.requestPointerLock();
+            });
+
+            document.addEventListener('pointerlockchange', () => {
+                mouse.locked = document.pointerLockElement === renderer.domElement;
+            });
+
+            // 鼠标移动
+            document.addEventListener('mousemove', (e) => {
+                if (mouse.locked) {
+                    yaw -= e.movementX * config.rotationSpeed;
+                    pitch -= e.movementY * config.rotationSpeed;
+                    pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch));
+                }
+            });
+
+            // 窗口大小调整
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        function updatePlayer() {
+            // 获取移动速度
+            const speed = keys['shift'] ? config.sprintSpeed : config.moveSpeed;
+            
+            // 计算移动方向
+            const moveDirection = new THREE.Vector3();
+            
+            if (keys['w']) moveDirection.z -= 1;
+            if (keys['s']) moveDirection.z += 1;
+            if (keys['a']) moveDirection.x -= 1;
+            if (keys['d']) moveDirection.x += 1;
+
+            // 标准化方向向量
+            if (moveDirection.length() > 0) {
+                moveDirection.normalize();
+                
+                // 根据视角旋转移动方向
+                moveDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+                
+                // 应用速度
+                player.position.x += moveDirection.x * speed;
+                player.position.z += moveDirection.z * speed;
+            }
+
+            // 碰撞检测
+            checkCollisions();
+
+            // 更新相机位置和旋转
+            camera.position.copy(player.position);
+            camera.position.y += 1.6;
+            
+            camera.rotation.order = 'YXZ';
+            camera.rotation.y = yaw;
+            camera.rotation.x = pitch;
+
+            // 更新UI
+            document.getElementById('position').textContent = 
+                `X: ${player.position.x.toFixed(1)}, Z: ${player.position.z.toFixed(1)}`;
+            document.getElementById('speed').textContent = 
+                (moveDirection.length() * speed * 60).toFixed(1);
+        }
+
+        function checkCollisions() {
+            const playerBox = new THREE.Box3().setFromObject(player);
+            
+            for (let building of buildings) {
+                const buildingBox = new THREE.Box3().setFromObject(building);
+                
+                if (playerBox.intersectsBox(buildingBox)) {
+                    // 简单的推出碰撞
+                    const pushBack = new THREE.Vector3()
+                        .subVectors(player.position, building.position)
+                        .normalize()
+                        .multiplyScalar(0.5);
+                    
+                    player.position.add(pushBack);
+                }
+            }
+
+            // 限制在城市范围内
+            const boundary = config.citySize;
+            player.position.x = Math.max(-boundary, Math.min(boundary, player.position.x));
+            player.position.z = Math.max(-boundary, Math.min(boundary, player.position.z));
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            updatePlayer();
+            
+            renderer.render(scene, camera);
+        }
+
+        // 启动游戏
+        init();
+    </script>
+</body>
+</html>
