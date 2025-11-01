@@ -1317,7 +1317,7 @@ let momentsData = [
     content: '现在全球大学面对人工智能（Al）的选择，路径完全不一样。美国那边，OpenAI和Google这些科技巨头正在疯狂进校园。2025年2月，加州州立大学系统宣布给全系统52万师生配上ChatGPTEdu——这是OpenAl专门给高校定制的教育版。好家伙，这可是52万人，OpenAl自己说这是“全世界任何单一组织或公司中ChatGPT最大规模的部署”；',
     value: 10,
     category: '工作相关',
-    date: '`2025-10-31T23:30:00+08:00`',
+    date: '2025-10-31T23:30:00+08:00',
     images: [],
     likes: 0,
     comments: []
