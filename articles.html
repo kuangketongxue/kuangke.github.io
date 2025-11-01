@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投资相关文章 - CryptoVision Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root{
+            --primary-color:#667eea;
+            --secondary-color:#764ba2;
+            --success-color:#10b981;
+            --danger-color:#ef4444;
+            --warning-color:#f59e0b;
+            --dark-bg:#0f172a;
+            --card-bg:#1e293b;
+            --text-primary:#f1f5f9;
+            --text-secondary:#94a3b8;
+            --border-color:#334155;
+        }
+        body{
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+            background:
+                linear-gradient(rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.85)),
+                url('images/1b2f1ee2a9dba66e20cd0e210ba09e28.png') no-repeat center center fixed;
+            background-size:cover;
+            background-blend-mode:overlay;
+            color:var(--text-primary);
+            min-height:100vh; overflow-x:hidden;
+        }
+        header{
+            background:rgba(30,41,59,0.95);
+            backdrop-filter:blur(10px);
+            border-bottom:1px solid var(--border-color);
+            padding:1rem 2rem; position:sticky; top:0; z-index:1000;
+        }
+        .header-container{
+            max-width:1400px; margin:0 auto;
+            display:flex; justify-content:space-between; align-items:center;
+        }
+        .logo{
+            display:flex; align-items:center; gap:.75rem;
+            font-size:1.5rem; font-weight:bold;
+            background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        }
+        .reading-return{ color:var(--text-secondary); text-decoration:none; margin-right:.75rem; }
+        .reading-return:hover{ color:var(--text-primary); }
+        .nav-right{ display:flex; align-items:center; gap:1rem; }
+        .nav-btn{
+            display:flex; align-items:center; gap:.5rem;
+            padding:.5rem 1rem; background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));
+            border:none; border-radius:8px; color:#fff; font-weight:600; cursor:pointer;
+            transition:transform .3s, box-shadow .3s; text-decoration:none;
+        }
+        .nav-btn:hover{ transform:translateY(-2px); box-shadow:0 5px 20px rgba(102,126,234,0.4); }
+        .main-container{ max-width:1400px; margin:2rem auto; padding:0 2rem; }
+        .page-title{
+            text-align:center; margin-bottom:2rem;
+            font-size:2.5rem; font-weight:700;
+            background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        }
+        .filter-bar{
+            display:flex; gap:1rem; margin-bottom:2rem; flex-wrap:wrap;
+            align-items:center; justify-content:center;
+        }
+        .filter-bar select{
+            border:1px solid var(--border-color); background:var(--card-bg);
+            color:var(--text-primary); border-radius:8px; padding:.5rem .75rem;
+            font-size:.95rem; cursor:pointer;
+        }
+        .articles-grid{
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(350px,1fr));
+            gap:1.5rem; margin-bottom:2rem;
+        }
+        .article-card{
+            background:var(--card-bg); border:1px solid var(--border-color);
+            border-radius:12px; overflow:hidden; transition:transform .3s, box-shadow .3s;
+            display:flex; flex-direction:column;
+        }
+        .article-card:hover{
+            transform:translateY(-8px);
+            box-shadow:0 15px 40px rgba(102,126,234,0.3);
+        }
+        .article-header{
+            background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));
+            height:180px; display:flex; align-items:center; justify-content:center;
+            color:#fff; font-size:3rem;
+        }
+        .article-content{
+            padding:1.5rem; flex:1; display:flex; flex-direction:column;
+        }
+        .article-date{
+            font-size:.85rem; color:var(--text-secondary); margin-bottom:.5rem;
+            display:flex; align-items:center; gap:.3rem;
+        }
+        .article-title{
+            font-size:1.25rem; font-weight:700; margin-bottom:.75rem; line-height:1.4;
+            color:var(--text-primary);
+        }
+        .article-category{
+            display:inline-block; padding:.25rem .6rem; background:rgba(102,126,234,0.2);
+            border-radius:12px; color:var(--primary-color); font-size:.8rem; font-weight:600;
+            margin-bottom:.75rem;
+        }
+        .article-description{
+            color:var(--text-secondary); font-size:.95rem; line-height:1.6; margin-bottom:1rem;
+            flex:1;
+        }
+        .article-footer{
+            display:flex; justify-content:space-between; align-items:center;
+            padding-top:1rem; border-top:1px solid var(--border-color);
+        }
+        .article-stats{
+            display:flex; gap:1.5rem; font-size:.85rem; color:var(--text-secondary);
+        }
+        .article-stat{
+            display:flex; align-items:center; gap:.35rem;
+        }
+        .read-btn{
+            padding:.5rem 1rem; background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));
+            border:none; border-radius:6px; color:#fff; font-weight:600; cursor:pointer;
+            transition:transform .2s; text-decoration:none; display:inline-flex; align-items:center; gap:.4rem;
+        }
+        .read-btn:hover{ transform:translateX(3px); }
+        .empty-state{
+            text-align:center; padding:3rem 1rem; color:var(--text-secondary);
+        }
+        .empty-state i{
+            font-size:3rem; margin-bottom:1rem; opacity:.5;
+        }
+        .toast{
+            position:fixed; bottom:20px; right:20px; z-index:1001;
+            background:var(--card-bg); border-left:4px solid var(--primary-color);
+            color:var(--text-primary); padding:1rem 1.25rem; border-radius:8px;
+            transform:translateX(400px); transition:transform .3s ease; display:flex; align-items:center; gap:.5rem;
+        }
+        .toast.show{ transform:translateX(0); }
+        .toast.success{ border-left-color:var(--success-color); }
+        .social-footer{ background:var(--card-bg); border-top:1px solid var(--border-color); padding:2rem 0; margin-top:3rem; }
+        .container{ max-width:1400px; margin:0 auto; padding:0 2rem; text-align:center; }
+        .social-links{ display:flex; justify-content:center; gap:1.25rem; margin-bottom:1rem; }
+        .social-link{ display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; background:var(--dark-bg); color:var(--text-secondary); transition:color .3s, transform .3s; }
+        .social-link:hover{ color:var(--primary-color); transform:translateY(-3px); }
+        @media (max-width:768px){
+            .articles-grid{ grid-template-columns:1fr; }
+            .page-title{ font-size:1.75rem; }
+            .filter-bar{ justify-content:flex-start; }
+        }
+        ::-webkit-scrollbar{ width:8px; height:8px; }
+        ::-webkit-scrollbar-track{ background:var(--dark-bg); }
+        ::-webkit-scrollbar-thumb{ background:var(--border-color); border-radius:4px; }
+        ::-webkit-scrollbar-thumb:hover{ background:var(--text-secondary); }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <a class="reading-return" href="index.html" aria-label="返回首页">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    <span>退回到"狂客·银河"</span>
+                </a>
+                <span>投资相关文章</span>
+            </div>
+            <div class="nav-right">
+                <a href="index.html" class="nav-btn" title="返回监控面板">
+                    <i class="fas fa-chart-line"></i>
+                    <span>监控面板</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容 -->
+    <main class="main-container">
+        <h1 class="page-title">
+            <i class="fas fa-newspaper"></i> 投资相关文章
+        </h1>
+
+        <!-- 筛选栏 -->
+        <div class="filter-bar">
+            <select id="categoryFilter" aria-label="按分类筛选">
+                <option value="">全部分类</option>
+                <option value="技术分析">技术分析</option>
+                <option value="基本面">基本面分析</option>
+                <option value="交易策略">交易策略</option>
+                <option value="市场评析">市场评析</option>
+                <option value="风险管理">风险管理</option>
+            </select>
+        </div>
+
+        <!-- 文章网格 -->
+        <section class="articles-grid" id="articlesContainer"></section>
+
+        <!-- 空状态 -->
+        <div id="emptyState" class="empty-state" style="display:none;">
+            <i class="fas fa-file-circle-question"></i>
+            <h2>暂无文章</h2>
+            <p>请尝试其他筛选条件或稍后再来</p>
+        </div>
+    </main>
+
+    <!-- Toast通知 -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMsg">操作成功</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="social-footer" role="contentinfo">
+        <div class="container">
+            <nav class="social-links" aria-label="社交媒体">
+                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" target="_blank" rel="noopener noreferrer" class="social-link wechat" title="关注微信公众号" aria-label="微信公众号">
+                    <i class="fab fa-weixin" aria-hidden="true"></i>
+                </a>
+                <a href="https://github.com/kuangketongxue" target="_blank" rel="noopener noreferrer" class="social-link github" title="访问GitHub" aria-label="GitHub主页">
+                    <i class="fab fa-github" aria-hidden="true"></i>
+                </a>
+                <a href="https://x.com/kuangketongxue" target="_blank" rel="noopener noreferrer" class="social-link x" title="关注X(Twitter)" aria-label="X账号">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+            </nav>
+            <p class="copyright">
+                <small>© 2025 狂客·银河 版权所有</small>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // ========== 示例文章数据 ==========
+        // 你可以将此替换为从GitHub或API加载的数据
+        const articlesData = [
+            {
+                id: 1,
+                title: "比特币技术分析：突破关键阻力位",
+                category: "技术分析",
+                date: "2025-01-15",
+                description: "深入分析比特币最近的价格走势，重点讨论K线形态和关键支撑阻力位。",
+                readTime: 8,
+                views: 256,
+                icon: "📊"
+            },
+            {
+                id: 2,
+                title: "以太坊生态发展现状与投资机会",
+                category: "基本面",
+                date: "2025-01-14",
+                description: "从基本面角度分析以太坊生态的发展进展，以及可能的投资机会。",
+                readTime: 12,
+                views: 189,
+                icon: "🔮"
+            },
+            {
+                id: 3,
+                title: "币圈新手必备的风险管理策略",
+                category: "风险管理",
+                date: "2025-01-13",
+                description: "介绍如何在加密货币投资中进行风险控制，保护本金的方法和原则。",
+                readTime: 10,
+                views: 342,
+                icon: "🛡️"
+            },
+            {
+                id: 4,
+                title: "2025年加密货币市场展望",
+                category: "市场评析",
+                date: "2025-01-12",
+                description: "分析2025年的宏观经济形势对加密货币市场的影响，预测主要币种趋势。",
+                readTime: 15,
+                views: 521,
+                icon: "🌐"
+            },
+            {
+                id: 5,
+                title: "交易策略：网格交易法则详解",
+                category: "交易策略",
+                date: "2025-01-11",
+                description: "详细讲解网格交易的原理、设置参数、风险控制等实用技巧。",
+                readTime: 14,
+                views: 408,
+                icon: "📈"
+            },
+            {
+                id: 6,
+                title: "如何读懂链上数据分析报告",
+                category: "技术分析",
+                date: "2025-01-10",
+                description: "学习如何通过链上数据（钱包流向、交易量等）来判断市场走向。",
+                readTime: 11,
+                views: 267,
+                icon: "⛓️"
+            }
+        ];
+
+        // ========== 工具函数 ==========
+        function showToast(msg, type = 'success') {
+            const el = document.getElementById('toast');
+            const txt = document.getElementById('toastMsg');
+            txt.textContent = msg;
+            el.className = 'toast ' + type + ' show';
+            setTimeout(() => el.classList.remove('show'), 2800);
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+
+        // ========== 渲染文章 ==========
+        function renderArticles(articles) {
+            const container = document.getElementById('articlesContainer');
+            const emptyState = document.getElementById('emptyState');
+
+            if (articles.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            container.innerHTML = articles.map(article => `
+                <article class="article-card">
+                    <div class="article-header">
+                        ${article.icon}
+                    </div>
+                    <div class="article-content">
+                        <div class="article-date">
+                            <i class="fas fa-calendar-days"></i>
+                            ${formatDate(article.date)}
+                        </div>
+                        <h2 class="article-title">${article.title}</h2>
+                        <span class="article-category">${article.category}</span>
+                        <p class="article-description">${article.description}</p>
+                        <div class="article-footer">
+                            <div class="article-stats">
+                                <div class="article-stat">
+                                    <i class="fas fa-clock"></i>
+                                    ${article.readTime} 分钟
+                                </div>
+                                <div class="article-stat">
+                                    <i class="fas fa-eye"></i>
+                                    ${article.views} 浏览
+                                </div>
+                            </div>
+                            <a href="#" onclick="openArticle(${article.id}); return false;" class="read-btn">
+                                阅读文章
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function filterArticles() {
+            const category = document.getElementById('categoryFilter').value;
+            const filtered = category 
+                ? articlesData.filter(a => a.category === category)
+                : articlesData;
+            
+            renderArticles(filtered);
+        }
+
+        function openArticle(id) {
+            const article = articlesData.find(a => a.id === id);
+            if (article) {
+                // 这里可以跳转到文章详情页或打开模态框
+                showToast(`已打开: ${article.title}`, 'success');
+                // 示例：可以跳转到详情页
+                // window.location.href = `article-detail.html?id=${id}`;
+            }
+        }
+
+        // ========== 初始化 ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            renderArticles(articlesData);
+            
+            // 绑定筛选事件
+            document.getElementById('categoryFilter').addEventListener('change', filterArticles);
+        });
+    </script>
+</body>
+</html>
