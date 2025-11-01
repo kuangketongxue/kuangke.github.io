@@ -218,13 +218,7 @@
         }
         .empty-state p {
             font-size: 1.2em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .empty-state .empty-icon {
-            font-size: 1.5em;
+            text-align: center;
         }
         /* 响应式设计 */
         @media (max-width: 768px) {
@@ -368,7 +362,7 @@
     <script>
         // ==================== 日期工具函数 ====================
         /**
-         * 获取某个日期所在的周数(ISO 8601标准)
+         * 获取某个日期所在的周数（ISO 8601标准）
          * @param {Date} date - 日期对象
          * @returns {Object} { year, week, month }
          */
@@ -442,10 +436,8 @@
         function createEmptyState(message) {
             return `
                 <div class="empty-state">
-                    <p>
-                        <span class="empty-icon"><i class="fas fa-inbox"></i></span>
-                        ${message}
-                    </p>
+                    <i class="fas fa-inbox"></i>
+                    <p>${message}</p>
                 </div>
             `;
         }
@@ -492,7 +484,7 @@
         function renderCurrentWeek(videos) {
             const container = document.getElementById('currentWeek');
             if (videos.length === 0) {
-                container.innerHTML = createEmptyState('本周暂无精选视频，敬请期待!');
+                container.innerHTML = createEmptyState('本周暂无精选视频，敬请期待！');
                 return;
             }
             // 按日期排序
@@ -525,7 +517,7 @@
                 });
             container.innerHTML = archiveWeeks.map(weekData => {
                 const { info, videos } = weekData;
-                // 视频按日期排序,限制10个
+                // 视频按日期排序，限制10个
                 videos.sort((a, b) => new Date(b.date) - new Date(a.date));
                 const displayVideos = videos.slice(0, 10);
                 const videosHTML = displayVideos
