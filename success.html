@@ -61,9 +61,9 @@
             backface-visibility: hidden;
             perspective: 1000px;
         }
-        /* 统计面板样式 - 修改版：背景透明 */
+        /* 统计面板样式 */
         .stats-panel {
-            background: transparent;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
             border-bottom: 1px solid rgba(99, 102, 241, 0.1);
             padding: 2rem 0;
             margin-bottom: 2rem;
@@ -76,10 +76,8 @@
             margin: 0 auto;
             padding: 0 2rem;
         }
-        /* 统计卡片样式 - 修改版：白天模式使用白色卡片 */
         .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: white;
             border-radius: 16px;
             padding: 1.5rem;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -87,7 +85,6 @@
             position: relative;
             overflow: hidden;
             transform: translateZ(0);
-            border: 1px solid rgba(99, 102, 241, 0.1);
         }
         .stat-card::before {
             content: '';
@@ -103,7 +100,6 @@
         .stat-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
-            border-color: rgba(99, 102, 241, 0.2);
         }
         .stat-card:hover::before {
             opacity: 1;
@@ -162,20 +158,19 @@
             font-size: 0.75rem;
             font-weight: 600;
         }
-        /* 暗色主题适配 - 修改版 */
+        
+        /* ==================== 暗色主题适配（保持背景图片） ==================== */
         .dark-theme .stats-panel {
-            background: transparent;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
             border-bottom-color: rgba(99, 102, 241, 0.2);
         }
         .dark-theme .stat-card {
-            background: rgba(30, 41, 59, 0.9);
+            background: rgba(30, 41, 59, 0.8);
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-            border-color: rgba(99, 102, 241, 0.2);
         }
         .dark-theme .stat-card:hover {
             box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
-            border-color: rgba(99, 102, 241, 0.3);
         }
         .dark-theme .stat-value {
             color: #f1f5f9;
@@ -184,10 +179,52 @@
         .dark-theme .stat-description {
             color: #94a3b8;
         }
-        .dark-theme .stat-badge {
-            background: rgba(99, 102, 241, 0.2);
-            color: #a5b4fc;
+        
+        /* ==================== 白天模式优化：保持背景，只改卡片 ==================== */
+        /* 确保背景装饰在白天模式下也显示 */
+        body:not(.dark-theme) .bg-decoration {
+            opacity: 1 !important;
+            visibility: visible !important;
         }
+        
+        /* 白天模式下的卡片样式 */
+        body:not(.dark-theme) .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        body:not(.dark-theme) .stat-card:hover {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+        }
+        
+        /* 白天模式下的头部样式 */
+        body:not(.dark-theme) .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* 白天模式下的工具栏样式 */
+        body:not(.dark-theme) .diary-toolbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* 白天模式下的日记卡片样式 */
+        body:not(.dark-theme) .timeline-item,
+        body:not(.dark-theme) .diary-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* 白天模式下的输入框样式 */
+        body:not(.dark-theme) .search-box,
+        body:not(.dark-theme) .filter-select {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+        }
+        
         /* 响应式设计 */
         @media (max-width: 768px) {
             .stats-panel {
@@ -252,11 +289,6 @@
         @keyframes loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
-        }
-        /* 暗色主题下骨架屏样式 */
-        .dark-theme .skeleton {
-            background: linear-gradient(90deg, rgba(51, 65, 85, 0.6) 25%, rgba(71, 85, 105, 0.6) 50%, rgba(51, 65, 85, 0.6) 75%);
-            background-size: 200% 100%;
         }
     </style>
 </head>
@@ -601,14 +633,12 @@
     <script src="script.js"></script>
     <!-- 核心功能脚本 -->
     <script>
-        // ==================== 统计功能(适配 successDiaryData)====================
+        // ==================== 统计功能（适配 successDiaryData）====================
         function updateStatistics() {
             console.log('📊 更新统计数据...');
-            // 获取所有日记数据(使用实际的变量名)
             const diaryData = window.successDiaryData || [];
             if (diaryData.length === 0) {
                 console.warn('⚠️ 暂无日记数据');
-                // 显示默认值
                 document.getElementById('totalRecordsValue').textContent = '0';
                 document.getElementById('avgAchievementValue').textContent = '0';
                 document.getElementById('latestDateValue').textContent = '--';
@@ -619,10 +649,8 @@
                 `;
                 return;
             }
-            // 1. 总记录数
             const totalRecords = diaryData.length;
             document.getElementById('totalRecordsValue').textContent = totalRecords;
-            // 2. 计算平均成就值(使用 achievementLevel 字段)
             const achievementValues = diaryData
                 .filter(item => item.achievementLevel !== undefined && item.achievementLevel !== null && !isNaN(item.achievementLevel))
                 .map(item => parseFloat(item.achievementLevel));
@@ -631,7 +659,6 @@
             if (achievementValues.length > 0) {
                 avgAchievement = achievementValues.reduce((sum, val) => sum + val, 0) / achievementValues.length;
                 avgAchievement = avgAchievement.toFixed(1);
-                // 根据平均值设置等级(假设成就值范围是0-10)
                 if (avgAchievement >= 9) {
                     achievementLevel = '🌟 卓越';
                 } else if (avgAchievement >= 8) {
@@ -651,11 +678,9 @@
                 <svg class="icon" style="width: 12px; height: 12px;"><use href="#icon-chart"></use></svg>
                 <span>${achievementLevel}</span>
             `;
-            // 3. 最新发布日期
             const dates = diaryData
                 .filter(item => item.date)
                 .map(item => {
-                    // 处理日期格式(支持 YYYY-MM-DD 格式)
                     try {
                         return new Date(item.date);
                     } catch (e) {
@@ -668,17 +693,15 @@
             if (dates.length > 0) {
                 const latestDate = dates[0];
                 const today = new Date();
-                today.setHours(0, 0, 0, 0); // 重置到当天0点
-                latestDate.setHours(0, 0, 0, 0); // 重置到当天0点
+                today.setHours(0, 0, 0, 0);
+                latestDate.setHours(0, 0, 0, 0);
                 const diffTime = Math.abs(today - latestDate);
                 const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                // 格式化日期
                 const year = latestDate.getFullYear();
                 const month = String(latestDate.getMonth() + 1).padStart(2, '0');
                 const day = String(latestDate.getDate()).padStart(2, '0');
                 const formattedDate = `${year}-${month}-${day}`;
                 document.getElementById('latestDateValue').textContent = formattedDate;
-                // 显示距今天数
                 let daysAgoText = '';
                 if (diffDays === 0) {
                     daysAgoText = '🎉 今天更新';
@@ -708,22 +731,17 @@
                 totalWithAchievement: achievementValues.length
             });
         }
-        // 页面加载完成后更新统计
         document.addEventListener('DOMContentLoaded', function() {
-            // 延迟执行,确保 data.js 已完全加载
             setTimeout(() => {
                 console.log('🔍 检查数据:', window.successDiaryData);
                 updateStatistics();
             }, 150);
         });
-        // 监听数据更新事件(如果有筛选或搜索功能会触发)
         document.addEventListener('diaryDataUpdated', updateStatistics);
-        // 如果页面有筛选功能,可以在筛选后更新统计(显示当前筛选结果的统计)
         function updateStatisticsForFilteredData(filteredData) {
             if (!filteredData || filteredData.length === 0) {
                 return;
             }
-            // 临时替换数据源
             const originalData = window.successDiaryData;
             window.successDiaryData = filteredData;
             updateStatistics();
@@ -738,7 +756,6 @@
                 return;
             }
             console.log('✅ 找到回到顶部按钮');
-            // 使用 requestAnimationFrame 优化滚动监听
             let ticking = false;
             let lastKnownScrollPosition = 0;
             function updateBackToTopButton(scrollPos) {
@@ -748,7 +765,6 @@
                     backToTopBtn.classList.remove('show');
                 }
             }
-            // 节流滚动事件
             function onScroll() {
                 lastKnownScrollPosition = window.scrollY || document.documentElement.scrollTop;
                 if (!ticking) {
@@ -759,13 +775,10 @@
                     ticking = true;
                 }
             }
-            // 优化的滚动监听器
             window.addEventListener('scroll', onScroll, { passive: true });
-            // 点击回到顶部 - 优化版
             backToTopBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 console.log('🎯 点击回到顶部');
-                // 检查是否支持 smooth behavior
                 const supportsNativeSmooth = 'scrollBehavior' in document.documentElement.style;
                 if (supportsNativeSmooth) {
                     window.scrollTo({
@@ -773,7 +786,6 @@
                         behavior: 'smooth'
                     });
                 } else {
-                    // 兼容性回退
                     const startScroll = window.pageYOffset;
                     const startTime = performance.now();
                     const duration = 500;
@@ -793,9 +805,7 @@
                     window.requestAnimationFrame(animateScroll);
                 }
             });
-            // 初始检查
             updateBackToTopButton(window.scrollY || document.documentElement.scrollTop);
-            // 键盘导航支持
             backToTopBtn.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -805,7 +815,6 @@
             console.log('✅ 回到顶部功能初始化完成');
         });
         // ==================== 性能优化工具 ====================
-        // 懒加载观察器
         const lazyLoadObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -816,12 +825,10 @@
         }, {
             rootMargin: '50px'
         });
-        // 监听需要懒加载的元素
         function observeLazyElements() {
             const lazyElements = document.querySelectorAll('.timeline-item, .diary-card');
             lazyElements.forEach(el => lazyLoadObserver.observe(el));
         }
-        // 防抖函数
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -833,7 +840,6 @@
                 timeout = setTimeout(later, wait);
             };
         }
-        // 节流函数
         function throttle(func, limit) {
             let inThrottle;
             return function() {
@@ -846,7 +852,6 @@
                 }
             };
         }
-        // 监听DOM变化以初始化懒加载
         const mutationObserver = new MutationObserver(debounce(() => {
             observeLazyElements();
         }, 100));
@@ -857,10 +862,8 @@
                 subtree: true
             });
         }
-        // 主题切换功能
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('.theme-icon');
-        // 检查本地存储的主题设置
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             document.body.classList.add('dark-theme');
@@ -877,7 +880,6 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-        // 语言切换功能
         const languageToggle = document.getElementById('languageToggle');
         let currentLang = localStorage.getItem('language') || 'zh';
         function updateLanguage(lang) {
@@ -897,9 +899,7 @@
             const newLang = currentLang === 'zh' ? 'en' : 'zh';
             updateLanguage(newLang);
         });
-        // 初始化语言
         updateLanguage(currentLang);
-        // 页面卸载时清理
         window.addEventListener('beforeunload', function() {
             lazyLoadObserver.disconnect();
             mutationObserver.disconnect();
