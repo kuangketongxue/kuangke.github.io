@@ -10,16 +10,16 @@
 const videosData = [
     // ==================== 2024年第2周 ====================
     {
-        date: '2024-01-08',
-        url: 'https://www.bilibili.com/video/BV1xx4y1x7xx',
-        thumbnail: 'images/weekly/2024-w2-1.jpg',
-        title: 'Python高级编程技巧',
-        desc: '掌握Python装饰器、生成器等高级特性，提升代码质量'
+        date: '2025-11-01',
+        url: 'https://b23.tv/iogh4mJ',
+        thumbnail: 'images/weekly/2025-w44-1.jpg',
+        title: 'AI大模型周报2025年11月a',
+        desc: 'minimax更新，世界模拟器，Sora2角色客串......'
     },
     {
         date: '2024-01-09',
         url: 'https://www.bilibili.com/video/BV1xx4y1x7xx',
-        thumbnail: 'images/weekly/2024-w2-2.jpg',
+        thumbnail: '',
         title: 'Docker容器化实战',
         desc: '从零开始学习Docker，实现应用快速部署和迁移'
     },
@@ -84,14 +84,14 @@ const videosData = [
     {
         date: '2024-01-02',
         url: 'https://www.bilibili.com/video/BV1xx4y1x7xx',
-        thumbnail: 'images/weekly/2024-w1-1.jpg',
+        thumbnail: '',
         title: '2024新年第一课：如何制定年度计划',
         desc: '新的一年，教你科学制定年度目标，让2024更有方向感'
     },
     {
         date: '2024-01-03',
         url: 'https://www.bilibili.com/video/BV1xx4y1x7xx',
-        thumbnail: 'images/weekly/2024-w1-2.jpg',
+        thumbnail: '',
         title: 'AI编程助手使用指南',
         desc: '深度体验各类AI编程工具，提升开发效率10倍'
     },
@@ -156,7 +156,7 @@ const videosData = [
     {
         date: '2023-12-25',
         url: 'https://www.bilibili.com/video/BV1xx4y1x7xx',
-        thumbnail: 'images/weekly/2023-w52-1.jpg',
+        thumbnail: '',
         title: '2023年度技术回顾',
         desc: '盘点2023年最重要的技术突破和发展趋势'
     },
