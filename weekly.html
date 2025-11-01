@@ -218,6 +218,13 @@
         }
         .empty-state p {
             font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .empty-state .empty-icon {
+            font-size: 1.5em;
         }
         /* 响应式设计 */
         @media (max-width: 768px) {
@@ -326,7 +333,6 @@
             </div>
         </div>
     </header>
-
     <div class="weekly-container">
         <!-- 页面头部 -->
         <div class="weekly-header">
@@ -337,7 +343,6 @@
                 <span id="currentWeekText">加载中...</span>
             </div>
         </div>
-
         <!-- 往期按钮 -->
         <div class="archive-toggle" id="archiveToggleSection" style="display: none;">
             <button class="archive-btn" id="archiveBtn">
@@ -345,31 +350,25 @@
                 查看往期内容
             </button>
         </div>
-
         <!-- 本周精选视频 -->
         <div class="videos-grid" id="currentWeek">
             <!-- 动态生成 -->
         </div>
-
         <!-- 往期内容区域 -->
         <div class="archive-section" id="archiveSection">
             <!-- 动态生成 -->
         </div>
     </div>
-
     <!-- 返回按钮 -->
     <a href="index.html" class="back-button" title="返回首页">
         <i class="fas fa-home"></i>
     </a>
-
     <!-- 引入视频数据 -->
     <script src="videosData.js"></script>
-    
     <script>
         // ==================== 日期工具函数 ====================
-        
         /**
-         * 获取某个日期所在的周数（ISO 8601标准）
+         * 获取某个日期所在的周数(ISO 8601标准)
          * @param {Date} date - 日期对象
          * @returns {Object} { year, week, month }
          */
@@ -389,11 +388,10 @@
                 month: date.getMonth() + 1
             };
         }
-
         /**
          * 判断两个日期是否在同一周
-         * @param {Date} date1 
-         * @param {Date} date2 
+         * @param {Date} date1
+         * @param {Date} date2
          * @returns {boolean}
          */
         function isSameWeek(date1, date2) {
@@ -401,7 +399,6 @@
             const week2 = getWeekNumber(date2);
             return week1.year === week2.year && week1.week === week2.week;
         }
-
         /**
          * 格式化周信息
          * @param {Object} weekInfo - { year, week, month }
@@ -410,9 +407,7 @@
         function formatWeekInfo(weekInfo) {
             return `${weekInfo.year}年${weekInfo.month}月第${weekInfo.week}周`;
         }
-
         // ==================== 视频渲染函数 ====================
-        
         /**
          * 创建视频卡片HTML
          * @param {Object} video - 视频数据
@@ -420,10 +415,9 @@
          * @returns {string}
          */
         function createVideoCard(video, rank) {
-            const thumbnailContent = video.thumbnail 
+            const thumbnailContent = video.thumbnail
                 ? `<img src="${video.thumbnail}" alt="视频封面">`
                 : `<i class="fas fa-video"></i>`;
-            
             return `
                 <a href="${video.url}" target="_blank" class="video-card">
                     <div class="video-thumbnail">
@@ -440,42 +434,37 @@
                 </a>
             `;
         }
-
         /**
          * 创建空状态提示
-         * @param {string} message 
+         * @param {string} message
          * @returns {string}
          */
         function createEmptyState(message) {
             return `
                 <div class="empty-state">
-                    <i class="fas fa-inbox"></i>
-                    <p>${message}</p>
+                    <p>
+                        <span class="empty-icon"><i class="fas fa-inbox"></i></span>
+                        ${message}
+                    </p>
                 </div>
             `;
         }
-
         // ==================== 主要逻辑 ====================
-        
         /**
          * 初始化页面
          */
         function initPage() {
             const today = new Date();
             const currentWeekInfo = getWeekNumber(today);
-            
             // 更新页面标题
-            document.getElementById('currentWeekText').textContent = 
+            document.getElementById('currentWeekText').textContent =
                 `本周精选 | ${formatWeekInfo(currentWeekInfo)}`;
-            
             // 分类视频
             const currentWeekVideos = [];
             const archiveWeeksMap = new Map(); // key: 'year-week', value: videos array
-            
             videosData.forEach(video => {
                 const videoDate = new Date(video.date);
                 const videoWeekInfo = getWeekNumber(videoDate);
-                
                 if (isSameWeek(videoDate, today)) {
                     // 当周视频
                     currentWeekVideos.push(video);
@@ -491,52 +480,41 @@
                     archiveWeeksMap.get(weekKey).videos.push(video);
                 }
             });
-            
             // 渲染当周视频
             renderCurrentWeek(currentWeekVideos);
-            
             // 渲染往期视频
             renderArchive(archiveWeeksMap);
         }
-
         /**
          * 渲染当周视频
-         * @param {Array} videos 
+         * @param {Array} videos
          */
         function renderCurrentWeek(videos) {
             const container = document.getElementById('currentWeek');
-            
             if (videos.length === 0) {
-                container.innerHTML = createEmptyState('本周暂无精选视频，敬请期待！');
+                container.innerHTML = createEmptyState('本周暂无精选视频，敬请期待!');
                 return;
             }
-            
             // 按日期排序
             videos.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
             // 限制最多10个
             const displayVideos = videos.slice(0, 10);
-            
             container.innerHTML = displayVideos
                 .map((video, index) => createVideoCard(video, index + 1))
                 .join('');
         }
-
         /**
          * 渲染往期视频
-         * @param {Map} archiveWeeksMap 
+         * @param {Map} archiveWeeksMap
          */
         function renderArchive(archiveWeeksMap) {
             const container = document.getElementById('archiveSection');
             const toggleSection = document.getElementById('archiveToggleSection');
-            
             if (archiveWeeksMap.size === 0) {
                 toggleSection.style.display = 'none';
                 return;
             }
-            
             toggleSection.style.display = 'block';
-            
             // 转换为数组并按周倒序排序
             const archiveWeeks = Array.from(archiveWeeksMap.values())
                 .sort((a, b) => {
@@ -545,18 +523,14 @@
                     }
                     return b.info.week - a.info.week;
                 });
-            
             container.innerHTML = archiveWeeks.map(weekData => {
                 const { info, videos } = weekData;
-                
-                // 视频按日期排序，限制10个
+                // 视频按日期排序,限制10个
                 videos.sort((a, b) => new Date(b.date) - new Date(a.date));
                 const displayVideos = videos.slice(0, 10);
-                
                 const videosHTML = displayVideos
                     .map((video, index) => createVideoCard(video, index + 1))
                     .join('');
-                
                 return `
                     <div class="archive-week">
                         <h2 class="archive-week-title">
@@ -570,21 +544,17 @@
                 `;
             }).join('');
         }
-
         // ==================== 事件监听 ====================
-        
         // 主题切换功能
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
-        
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
-        
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
             if (body.classList.contains('dark-mode')) {
@@ -597,22 +567,18 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-        
         // 往期内容展开/收起功能
         const archiveBtn = document.getElementById('archiveBtn');
         const archiveSection = document.getElementById('archiveSection');
-        
         archiveBtn.addEventListener('click', () => {
             archiveSection.classList.toggle('active');
             archiveBtn.classList.toggle('active');
-            
             if (archiveSection.classList.contains('active')) {
                 archiveBtn.innerHTML = '<i class="fas fa-chevron-up"></i> 收起往期内容';
             } else {
                 archiveBtn.innerHTML = '<i class="fas fa-chevron-down"></i> 查看往期内容';
             }
         });
-
         // ==================== 页面加载时初始化 ====================
         document.addEventListener('DOMContentLoaded', initPage);
     </script>
