@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+      {
+        id: 46,
+        date: '2025-11-01',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: 'b站专栏创作',
+            en: 'Content creation for B-Station is column'
+        },
+        content: {
+            zh: '阅读17本书+。\n网站优化健康提醒系统，优化了“每周必看”排版；增加“效率工具”内容。\n学习8小时+\n创作148+字',
+            en: 'Read 17+ books.\nWebsite optimization.The layout of the "Must-Watch Weekly" section has been optimized; additional content related to "Efficiency Tools" has been added.\nStudied for 8+ hours\nWrite a piece of content totaling 148+ words.'
+        },
+        highlight: {
+            zh: '【狂客】极客周刊；Walter Lewin物理老师；榴莲不错',
+            en: '[Krazy Guest] Geek Weekly; Walter Lewin, Physics Teacher; Durian is quite tasty'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
      {
         id: 45,
         date: '2025-10-31',
