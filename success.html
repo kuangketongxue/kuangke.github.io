@@ -6,15 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>成功日记 | 狂客·银河</title>
     <link rel="stylesheet" href="style.css">
-    <!-- 内联SVG图标定义 -->
+    
     <style>
         /* ==================== 强制背景一致性（最高优先级） ==================== */
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-            background-attachment: fixed !important;
-            min-height: 100vh !important;
-        }
-        
+        /* 确保背景装饰显示 */
         .bg-decoration {
             display: block !important;
             opacity: 1 !important;
@@ -32,6 +27,62 @@
             display: block !important;
             opacity: 1 !important;
             visibility: visible !important;
+        }
+        
+        /* 确保 body::before 背景图片显示 */
+        body::before {
+            content: "" !important;
+            position: fixed !important;
+            inset: 0 !important;
+            z-index: -2 !important;
+            pointer-events: none !important;
+            background: url("images/sky.jpg") center center / cover no-repeat !important;
+            background-attachment: fixed !important;
+            opacity: 1 !important;
+        }
+        
+        /* 确保 body::after 层显示 */
+        body::after {
+            content: "" !important;
+            position: fixed !important;
+            inset: 0 !important;
+            pointer-events: none !important;
+            z-index: -1 !important;
+        }
+        
+        /* 白天模式保持背景图片 */
+        body:not(.dark-theme)::before,
+        body.light-mode::before {
+            opacity: 0.5 !important;
+            filter: saturate(0.85) brightness(1.08) !important;
+        }
+        
+        body:not(.dark-theme)::after,
+        body.light-mode::after {
+            background: rgba(255, 255, 255, 0.65) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+        }
+        
+        /* 暗色模式保持背景图片 */
+        body.dark-theme::before {
+            opacity: 1 !important;
+        }
+        
+        body.dark-theme::after {
+            background: rgba(5, 9, 28, 0.15) !important;
+            backdrop-filter: blur(0px) !important;
+            -webkit-backdrop-filter: blur(0px) !important;
+        }
+        
+        /* 确保内容在背景之上 */
+        .header,
+        .stats-panel,
+        .diary-toolbar,
+        .main-content,
+        .container {
+            position: relative !important;
+            z-index: 1 !important;
         }
         
         /* SVG图标样式 */
@@ -190,47 +241,6 @@
             border-radius: 12px;
             font-size: 0.75rem;
             font-weight: 600;
-        }
-        
-        /* ==================== 白天模式样式（保持背景，只改卡片） ==================== */
-        body:not(.dark-theme) .stat-card {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-        }
-        
-        body:not(.dark-theme) .stat-card:hover {
-            background: rgba(255, 255, 255, 0.98) !important;
-        }
-        
-        body:not(.dark-theme) .header {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-        }
-        
-        body:not(.dark-theme) .diary-toolbar {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-        }
-        
-        body:not(.dark-theme) .timeline-item,
-        body:not(.dark-theme) .diary-card {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-        }
-        
-        body:not(.dark-theme) .search-box,
-        body:not(.dark-theme) .filter-select {
-            background: rgba(255, 255, 255, 0.9) !important;
-            backdrop-filter: blur(5px) !important;
-        }
-        
-        body:not(.dark-theme) .stats-panel {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%) !important;
-        }
-        
-        body:not(.dark-theme) .main-content {
-            position: relative;
-            z-index: 1;
         }
         
         /* ==================== 暗色主题适配 ==================== */
