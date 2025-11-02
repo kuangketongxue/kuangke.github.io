@@ -47,7 +47,7 @@
 - 真粉丝信任"你的每次输出都不浪费时间"
 - 节点意识：别人必须通过你才能完成某事
 - Web3/身份个人化：资产长在个人端，平台只能服务
-- [可延伸：我的节点设计与粉丝培养机制——https://wvwp6ekrk9f.feishu.cn/docx/PYWedHrM2o9lOrxOqcYceKAOnRg?from=from_copylink]
+- [可延伸：我的节点设计与粉丝培养机制]
 
 ---
 
@@ -60,7 +60,7 @@
 - **教是最好的学习；反复讲解提升全面程度**
 - **你值得讲、别人值得听的，一定是你做得比别人好的东西**（《自学是门手艺》）
 - 找活干，进入核心层，贡献越大越被需要
-- [可延伸：我的作品清单与拆解树]
+- [可延伸：我的作品清单与拆解树——https://wvwp6ekrk9f.feishu.cn/docx/PYWedHrM2o9lOrxOqcYceKAOnRg?from=from_copylink]
 
 ### 搜索·文档·阅读
 - 能Google到的就不麻烦别人；不认真用Google就错过自学黄金时代
