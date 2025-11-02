@@ -39,40 +39,168 @@
             background: url("images/sky.jpg") center center / cover no-repeat !important;
             background-attachment: fixed !important;
             opacity: 1 !important;
+            filter: none !important;
         }
         
-        /* 确保 body::after 层显示 */
+        /* 确保 body::after 层完全透明 */
         body::after {
             content: "" !important;
             position: fixed !important;
             inset: 0 !important;
             pointer-events: none !important;
             z-index: -1 !important;
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
         }
         
-        /* 白天模式保持背景图片 */
+        /* 白天/黑夜模式都保持背景图片完全可见 */
         body:not(.dark-theme)::before,
-        body.light-mode::before {
-            opacity: 0.5 !important;
-            filter: saturate(0.85) brightness(1.08) !important;
+        body.light-mode::before,
+        body.dark-theme::before {
+            opacity: 1 !important;
+            filter: none !important;
         }
         
         body:not(.dark-theme)::after,
-        body.light-mode::after {
-            background: rgba(255, 255, 255, 0.65) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
-        }
-        
-        /* 暗色模式保持背景图片 */
-        body.dark-theme::before {
-            opacity: 1 !important;
-        }
-        
+        body.light-mode::after,
         body.dark-theme::after {
-            background: rgba(5, 9, 28, 0.15) !important;
-            backdrop-filter: blur(0px) !important;
-            -webkit-backdrop-filter: blur(0px) !important;
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+        
+        /* ==================== 顶部标题栏 - 保持清晰透明 ==================== */
+        .header {
+            background: rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.25) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        body.dark-theme .header,
+        body:not(.dark-theme) .header {
+            background: rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+        }
+        
+        /* 标题文字增强对比度 */
+        .logo {
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 
+                         0 0 20px rgba(255, 255, 255, 0.5) !important;
+        }
+        
+        .success-subtitle {
+            color: rgba(255, 255, 255, 0.95) !important;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4) !important;
+        }
+        
+        /* 标题图标 */
+        .title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .title-icon {
+            width: 1.5em;
+            height: 1.5em;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+        
+        .quote-icon {
+            width: 1em;
+            height: 1em;
+            opacity: 0.8;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+        
+        /* 搜索框透明度调整 */
+        .search-box {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+        }
+        
+        .search-box input {
+            color: #ffffff !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+        
+        .search-box .icon {
+            color: rgba(255, 255, 255, 0.8) !important;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+        
+        .search-clear {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            padding: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .search-clear:hover {
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+        
+        /* 返回按钮透明 */
+        .back-link {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: translateY(-2px);
+        }
+        
+        .back-link .icon {
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+        
+        /* 语言和主题切换按钮 */
+        .language-toggle,
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+            transition: all 0.3s ease;
+        }
+        
+        .language-toggle:hover,
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25) !important;
+        }
+        
+        .theme-icon,
+        .language-toggle .icon {
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+        
+        .language-toggle span {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
         
         /* 确保内容在背景之上 */
@@ -141,15 +269,23 @@
             perspective: 1000px;
         }
         
-        /* 统计面板样式 */
+        /* 统计面板样式 - 保持轻微透明 */
         .stats-panel {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
-            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
             padding: 2rem 0;
             margin-bottom: 2rem;
             position: relative;
             z-index: 1;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
+        
+        body.dark-theme .stats-panel,
+        body:not(.dark-theme) .stats-panel {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+        
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -158,9 +294,11 @@
             margin: 0 auto;
             padding: 0 2rem;
         }
+        
         .stat-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 1.5rem;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -169,6 +307,7 @@
             overflow: hidden;
             transform: translateZ(0);
         }
+        
         .stat-card::before {
             content: '';
             position: absolute;
@@ -180,20 +319,24 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
+        
         .stat-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
             background: rgba(255, 255, 255, 0.98);
         }
+        
         .stat-card:hover::before {
             opacity: 1;
         }
+        
         .stat-header {
             display: flex;
             align-items: center;
             gap: 0.75rem;
             margin-bottom: 1rem;
         }
+        
         .stat-icon {
             width: 40px;
             height: 40px;
@@ -206,6 +349,7 @@
             color: white;
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
+        
         .stat-label {
             font-size: 0.875rem;
             color: #64748b;
@@ -213,6 +357,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+        
         .stat-value {
             font-size: 2rem;
             font-weight: 700;
@@ -224,6 +369,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        
         .stat-description {
             font-size: 0.875rem;
             color: #64748b;
@@ -231,6 +377,7 @@
             align-items: center;
             gap: 0.5rem;
         }
+        
         .stat-badge {
             display: inline-flex;
             align-items: center;
@@ -247,37 +394,32 @@
         body:not(.dark-theme) .stat-card {
             background: rgba(255, 255, 255, 0.95) !important;
             backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
         }
         
         body:not(.dark-theme) .stat-card:hover {
             background: rgba(255, 255, 255, 0.98) !important;
         }
         
-        body:not(.dark-theme) .header {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-        }
-        
         body:not(.dark-theme) .diary-toolbar {
             background: rgba(255, 255, 255, 0.95) !important;
             backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
         }
         
         body:not(.dark-theme) .timeline-item,
         body:not(.dark-theme) .diary-card,
-        body:not(.dark-theme) .timeline-card {
+        body:not(.dark-theme) .timeline-card,
+        body:not(.dark-theme) .diary-card-body {
             background: rgba(255, 255, 255, 0.95) !important;
             backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
         }
         
-        body:not(.dark-theme) .search-box,
         body:not(.dark-theme) .filter-select {
             background: rgba(255, 255, 255, 0.9) !important;
             backdrop-filter: blur(5px) !important;
-        }
-        
-        body:not(.dark-theme) .stats-panel {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%) !important;
+            -webkit-backdrop-filter: blur(5px) !important;
         }
         
         body:not(.dark-theme) .main-content {
@@ -286,22 +428,22 @@
         }
         
         /* ==================== 暗色主题适配 ==================== */
-        .dark-theme .stats-panel {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
-            border-bottom-color: rgba(99, 102, 241, 0.2);
-        }
         .dark-theme .stat-card {
             background: rgba(30, 41, 59, 0.8);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
         }
+        
         .dark-theme .stat-card:hover {
             box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
             background: rgba(30, 41, 59, 0.9);
         }
+        
         .dark-theme .stat-value {
             color: #f1f5f9;
         }
+        
         .dark-theme .stat-label,
         .dark-theme .stat-description {
             color: #94a3b8;
@@ -336,7 +478,19 @@
                 height: 45px;
                 font-size: 1.1rem;
             }
+            .header .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .header-left {
+                width: 100%;
+            }
+            .controls {
+                width: 100%;
+                justify-content: center;
+            }
         }
+        
         @media (max-width: 480px) {
             .stat-value {
                 font-size: 1.5rem;
@@ -353,6 +507,10 @@
                 height: 40px;
                 font-size: 1rem;
             }
+            .success-subtitle {
+                font-size: 0.85rem;
+                line-height: 1.5;
+            }
         }
         
         /* 加载动画 */
@@ -360,6 +518,7 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
         .fade-in {
             animation: fadeIn 0.5s ease-out forwards;
         }
@@ -370,9 +529,437 @@
             background-size: 200% 100%;
             animation: loading 1.5s infinite;
         }
+        
         @keyframes loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
+        }
+        
+        /* 日记工具栏样式 */
+        .diary-toolbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .diary-toolbar-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 1.6rem;
+            border-radius: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.15);
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .filter-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-title {
+            font-weight: 600;
+            color: #64748b;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+        
+        .filter-chip {
+            border: 1px solid rgba(139, 92, 246, 0.28);
+            background: rgba(139, 92, 246, 0.12);
+            color: #4338ca;
+            border-radius: 999px;
+            padding: 0.45rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .filter-chip:hover {
+            transform: translateY(-2px);
+            background: rgba(139, 92, 246, 0.25);
+        }
+        
+        .filter-chip.active {
+            background: linear-gradient(135deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .filter-select {
+            background: rgba(255, 255, 255, 0.9);
+            color: #1e293b;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 0.55rem 0.9rem;
+            min-width: 170px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-select:hover,
+        .filter-select:focus {
+            border-color: rgba(139, 92, 246, 0.55);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
+            outline: none;
+        }
+        
+        .ghost-btn {
+            border-radius: 14px;
+            padding: 0.65rem 1.4rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            background: rgba(139, 92, 246, 0.1);
+            color: #4338ca;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+        
+        .ghost-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .reset-btn {
+            margin-left: auto;
+        }
+        
+        /* 主内容区域 */
+        .success-main {
+            padding: 2.5rem 0 5rem;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .diary-counter {
+            color: #64748b;
+            font-size: 0.92rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.25rem;
+            border-radius: 12px;
+            border: 1px solid rgba(99, 102, 241, 0.15);
+        }
+        
+        .view-btn {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #64748b;
+        }
+        
+        .view-btn:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: #4338ca;
+        }
+        
+        .view-btn.active {
+            background: linear-gradient(135deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
+            color: white;
+        }
+        
+        /* 时间轴样式 */
+        .timeline {
+            position: relative;
+            padding-left: 2.5rem;
+            border-left: 2px solid rgba(139, 92, 246, 0.35);
+            display: flex;
+            flex-direction: column;
+            gap: 2.2rem;
+        }
+        
+        .timeline-item {
+            position: relative;
+            display: flex;
+            gap: 1.2rem;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: -32px;
+            top: 12px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
+            box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.18);
+        }
+        
+        .timeline-card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            animation: slideInLeft 0.45s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .diary-card-body {
+            padding: 1.6rem;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1.1rem;
+        }
+        
+        .diary-cover {
+            width: 100%;
+            border-radius: 16px;
+            object-fit: cover;
+            max-height: 220px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .diary-card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .diary-card-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+        
+        .diary-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.45;
+        }
+        
+        .diary-alt {
+            color: #64748b;
+            font-size: 0.92rem;
+            line-height: 1.55;
+            white-space: pre-wrap;
+        }
+        
+        .diary-text {
+            color: #475569;
+            line-height: 1.7;
+        }
+        
+        .diary-text p {
+            margin-bottom: 0.75rem;
+            white-space: pre-wrap;
+        }
+        
+        .diary-highlight {
+            background: rgba(139, 92, 246, 0.12);
+            border-radius: 16px;
+            padding: 1rem;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: inset 0 0 15px rgba(139, 92, 246, 0.08);
+        }
+        
+        .diary-highlight span {
+            white-space: pre-wrap;
+            display: block;
+        }
+        
+        .diary-meta {
+            display: grid;
+            gap: 0.55rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        .meta-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-right: 0.4rem;
+        }
+        
+        .meta-content {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            align-items: center;
+        }
+        
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(139, 92, 246, 0.18);
+            color: #4338ca;
+            font-size: 0.85rem;
+        }
+        
+        .mood-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid currentColor;
+            font-size: 0.88rem;
+        }
+        
+        .achievement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 12px;
+            background: rgba(250, 204, 21, 0.12);
+            color: #facc15;
+            font-weight: 600;
+        }
+        
+        .diary-attachments {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        .diary-attachment {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+        
+        .diary-attachment-link {
+            padding: 0.45rem 0.8rem;
+            border-radius: 12px;
+            background: rgba(139, 92, 246, 0.1);
+            color: #4338ca;
+            text-decoration: none;
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            transition: all 0.3s ease;
+        }
+        
+        .diary-attachment-link:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+        
+        .diary-actions-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #64748b;
+        }
+        
+        .empty-state.hidden {
+            display: none;
+        }
+        
+        .empty-icon {
+            width: 4rem;
+            height: 4rem;
+            opacity: 0.5;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #475569;
+        }
+        
+        /* 暗色主题下的日记卡片 */
+        .dark-theme .timeline-card,
+        .dark-theme .diary-card-body {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(99, 102, 241, 0.25);
+        }
+        
+        .dark-theme .diary-title {
+            color: #f1f5f9;
+        }
+        
+        .dark-theme .diary-alt,
+        .dark-theme .diary-text {
+            color: #cbd5e1;
+        }
+        
+        .dark-theme .meta-title {
+            color: #e2e8f0;
         }
     </style>
 </head>
