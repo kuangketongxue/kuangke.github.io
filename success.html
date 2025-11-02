@@ -70,8 +70,8 @@
             -webkit-backdrop-filter: none !important;
         }
         
-        /* ==================== 顶部标题栏 - 保持清晰透明 ==================== */
-        .header {
+        /* ==================== 白天模式 - 顶部标题栏保持透明 ==================== */
+        body:not(.dark-theme) .header {
             background: rgba(255, 255, 255, 0.15) !important;
             backdrop-filter: blur(8px) !important;
             -webkit-backdrop-filter: blur(8px) !important;
@@ -79,22 +79,314 @@
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
         }
         
-        body.dark-theme .header,
-        body:not(.dark-theme) .header {
-            background: rgba(255, 255, 255, 0.15) !important;
+        body:not(.dark-theme) .logo {
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 
+                         0 0 20px rgba(255, 255, 255, 0.5) !important;
+            color: #ffffff !important;
+        }
+        
+        body:not(.dark-theme) .success-subtitle {
+            color: rgba(255, 255, 255, 0.95) !important;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4) !important;
+        }
+        
+        body:not(.dark-theme) .search-box {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
             backdrop-filter: blur(8px) !important;
             -webkit-backdrop-filter: blur(8px) !important;
         }
         
-        /* 标题文字增强对比度 */
-        .logo {
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 
-                         0 0 20px rgba(255, 255, 255, 0.5) !important;
+        body:not(.dark-theme) .search-box input {
+            color: #ffffff !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
         
-        .success-subtitle {
-            color: rgba(255, 255, 255, 0.95) !important;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4) !important;
+        body:not(.dark-theme) .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+        
+        body:not(.dark-theme) .search-box .icon {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        body:not(.dark-theme) .back-link {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+            backdrop-filter: blur(8px) !important;
+        }
+        
+        body:not(.dark-theme) .language-toggle,
+        body:not(.dark-theme) .theme-toggle {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+            backdrop-filter: blur(8px) !important;
+        }
+        
+        /* ==================== 暗色模式 - 深色半透明背景 + 白色文字 ==================== */
+        body.dark-theme .header {
+            background: rgba(30, 41, 59, 0.75) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.3) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+        }
+        
+        body.dark-theme .logo {
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 
+                         0 0 20px rgba(255, 255, 255, 0.3) !important;
+            color: #f8fafc !important;
+        }
+        
+        body.dark-theme .success-subtitle {
+            color: rgba(226, 232, 240, 0.95) !important;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) !important;
+        }
+        
+        body.dark-theme .search-box {
+            background: rgba(30, 41, 59, 0.6) !important;
+            border: 1px solid rgba(100, 116, 139, 0.4) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+        }
+        
+        body.dark-theme .search-box input {
+            color: #f1f5f9 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        body.dark-theme .search-box input::placeholder {
+            color: rgba(203, 213, 225, 0.7) !important;
+        }
+        
+        body.dark-theme .search-box .icon {
+            color: rgba(226, 232, 240, 0.8) !important;
+        }
+        
+        body.dark-theme .back-link {
+            background: rgba(30, 41, 59, 0.6) !important;
+            border: 1px solid rgba(100, 116, 139, 0.4) !important;
+            color: #f1f5f9 !important;
+            backdrop-filter: blur(10px) !important;
+        }
+        
+        body.dark-theme .language-toggle,
+        body.dark-theme .theme-toggle {
+            background: rgba(30, 41, 59, 0.6) !important;
+            border: 1px solid rgba(100, 116, 139, 0.4) !important;
+            color: #f1f5f9 !important;
+            backdrop-filter: blur(10px) !important;
+        }
+        
+        /* ==================== 统计面板 ==================== */
+        body:not(.dark-theme) .stats-panel {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(8px);
+        }
+        
+        body.dark-theme .stats-panel {
+            background: rgba(30, 41, 59, 0.6) !important;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.3) !important;
+            backdrop-filter: blur(12px);
+        }
+        
+        /* 白天模式统计卡片 */
+        body:not(.dark-theme) .stat-card {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        body:not(.dark-theme) .stat-card:hover {
+            background: rgba(255, 255, 255, 0.98) !important;
+        }
+        
+        /* 暗色模式统计卡片 - 深色背景 + 白色文字 */
+        body.dark-theme .stat-card {
+            background: rgba(30, 41, 59, 0.85) !important;
+            backdrop-filter: blur(12px) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(100, 116, 139, 0.25);
+        }
+        
+        body.dark-theme .stat-card:hover {
+            background: rgba(30, 41, 59, 0.95) !important;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+        }
+        
+        body.dark-theme .stat-label {
+            color: #cbd5e1 !important;
+        }
+        
+        body.dark-theme .stat-value {
+            color: #f8fafc !important;
+        }
+        
+        body.dark-theme .stat-description {
+            color: #cbd5e1 !important;
+        }
+        
+        /* ==================== 工具栏样式 ==================== */
+        body:not(.dark-theme) .diary-toolbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+        
+        body.dark-theme .diary-toolbar {
+            background: rgba(30, 41, 59, 0.85) !important;
+            backdrop-filter: blur(12px) !important;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.3);
+        }
+        
+        body.dark-theme .diary-toolbar-inner {
+            border: 1px solid rgba(100, 116, 139, 0.3);
+        }
+        
+        body.dark-theme .filter-title,
+        body.dark-theme .filter-label {
+            color: #cbd5e1 !important;
+        }
+        
+        body.dark-theme .filter-chip {
+            background: rgba(99, 102, 241, 0.2) !important;
+            border: 1px solid rgba(139, 92, 246, 0.4) !important;
+            color: #c4b5fd !important;
+        }
+        
+        body.dark-theme .filter-chip:hover {
+            background: rgba(99, 102, 241, 0.3) !important;
+        }
+        
+        body.dark-theme .filter-chip.active {
+            background: linear-gradient(135deg, #6366f1, #7c3aed) !important;
+            color: #ffffff !important;
+        }
+        
+        body.dark-theme .filter-select {
+            background: rgba(30, 41, 59, 0.7) !important;
+            color: #f1f5f9 !important;
+            border: 1px solid rgba(100, 116, 139, 0.4) !important;
+        }
+        
+        body.dark-theme .ghost-btn {
+            background: rgba(99, 102, 241, 0.2) !important;
+            border: 1px solid rgba(139, 92, 246, 0.4) !important;
+            color: #c4b5fd !important;
+        }
+        
+        body.dark-theme .ghost-btn:hover {
+            background: rgba(99, 102, 241, 0.3) !important;
+        }
+        
+        /* ==================== 主内容区域 ==================== */
+        body.dark-theme .diary-counter {
+            color: #cbd5e1 !important;
+        }
+        
+        body.dark-theme .view-toggle {
+            background: rgba(30, 41, 59, 0.7) !important;
+            border: 1px solid rgba(100, 116, 139, 0.3) !important;
+        }
+        
+        body.dark-theme .view-btn {
+            color: #94a3b8 !important;
+        }
+        
+        body.dark-theme .view-btn:hover {
+            background: rgba(99, 102, 241, 0.2) !important;
+            color: #c4b5fd !important;
+        }
+        
+        body.dark-theme .view-btn.active {
+            color: #ffffff !important;
+        }
+        
+        /* ==================== 时间轴样式 ==================== */
+        body.dark-theme .timeline {
+            border-left-color: rgba(139, 92, 246, 0.4);
+        }
+        
+        /* 白天模式日记卡片 */
+        body:not(.dark-theme) .timeline-card,
+        body:not(.dark-theme) .diary-card-body {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+        
+        /* 暗色模式日记卡片 - 深色背景 + 白色文字 */
+        body.dark-theme .timeline-card,
+        body.dark-theme .diary-card-body {
+            background: rgba(30, 41, 59, 0.85) !important;
+            backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(100, 116, 139, 0.3) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+        
+        body.dark-theme .diary-title {
+            color: #f8fafc !important;
+        }
+        
+        body.dark-theme .diary-alt,
+        body.dark-theme .diary-text {
+            color: #e2e8f0 !important;
+        }
+        
+        body.dark-theme .diary-highlight {
+            background: rgba(99, 102, 241, 0.2) !important;
+            border: 1px solid rgba(139, 92, 246, 0.4) !important;
+        }
+        
+        body.dark-theme .meta-title {
+            color: #f1f5f9 !important;
+        }
+        
+        body.dark-theme .diary-meta {
+            color: #cbd5e1 !important;
+        }
+        
+        body.dark-theme .tag-pill {
+            background: rgba(99, 102, 241, 0.25) !important;
+            color: #c4b5fd !important;
+        }
+        
+        body.dark-theme .mood-badge {
+            border-color: currentColor !important;
+        }
+        
+        body.dark-theme .diary-attachment-link {
+            background: rgba(99, 102, 241, 0.2) !important;
+            color: #c4b5fd !important;
+            border: 1px solid rgba(139, 92, 246, 0.4) !important;
+        }
+        
+        body.dark-theme .empty-state {
+            color: #94a3b8 !important;
+        }
+        
+        body.dark-theme .empty-state h3 {
+            color: #cbd5e1 !important;
+        }
+        
+        /* 确保内容在背景之上 */
+        .header,
+        .stats-panel,
+        .diary-toolbar,
+        .main-content,
+        .container {
+            position: relative !important;
+            z-index: 1 !important;
+        }
+        
+        /* SVG图标样式 */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            fill: currentColor;
+            vertical-align: middle;
         }
         
         /* 标题图标 */
@@ -117,32 +409,10 @@
             filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
         }
         
-        /* 搜索框透明度调整 */
-        .search-box {
-            background: rgba(255, 255, 255, 0.2) !important;
-            border: 1px solid rgba(255, 255, 255, 0.3) !important;
-            backdrop-filter: blur(8px) !important;
-            -webkit-backdrop-filter: blur(8px) !important;
-        }
-        
-        .search-box input {
-            color: #ffffff !important;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-        }
-        
-        .search-box input::placeholder {
-            color: rgba(255, 255, 255, 0.7) !important;
-        }
-        
-        .search-box .icon {
-            color: rgba(255, 255, 255, 0.8) !important;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-        }
-        
         .search-clear {
             background: transparent;
             border: none;
-            color: rgba(255, 255, 255, 0.8);
+            color: inherit;
             cursor: pointer;
             padding: 0.25rem;
             display: flex;
@@ -152,50 +422,18 @@
         }
         
         .search-clear:hover {
-            color: #ffffff;
             transform: scale(1.1);
         }
         
-        /* 返回按钮透明 */
-        .back-link {
-            background: rgba(255, 255, 255, 0.2) !important;
-            border: 1px solid rgba(255, 255, 255, 0.3) !important;
-            color: #ffffff !important;
-            backdrop-filter: blur(8px) !important;
-            -webkit-backdrop-filter: blur(8px) !important;
-            transition: all 0.3s ease;
-        }
-        
-        .back-link:hover {
-            background: rgba(255, 255, 255, 0.3) !important;
-            transform: translateY(-2px);
-        }
-        
-        .back-link .icon {
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-        }
-        
-        /* 语言和主题切换按钮 */
-        .language-toggle,
-        .theme-toggle {
-            background: rgba(255, 255, 255, 0.2) !important;
-            border: 1px solid rgba(255, 255, 255, 0.3) !important;
-            color: #ffffff !important;
-            backdrop-filter: blur(8px) !important;
-            -webkit-backdrop-filter: blur(8px) !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-            transition: all 0.3s ease;
-        }
-        
+        .back-link:hover,
         .language-toggle:hover,
         .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.3) !important;
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25) !important;
         }
         
         .theme-icon,
-        .language-toggle .icon {
+        .language-toggle .icon,
+        .back-link .icon {
             filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
         }
         
@@ -203,26 +441,7 @@
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
         
-        /* 确保内容在背景之上 */
-        .header,
-        .stats-panel,
-        .diary-toolbar,
-        .main-content,
-        .container {
-            position: relative !important;
-            z-index: 1 !important;
-        }
-        
-        /* SVG图标样式 */
-        .icon {
-            display: inline-block;
-            width: 1em;
-            height: 1em;
-            fill: currentColor;
-            vertical-align: middle;
-        }
-        
-        /* 回到顶部按钮 - 优化版 */
+        /* 回到顶部按钮 */
         #backToTop {
             position: fixed;
             bottom: 30px;
@@ -245,22 +464,24 @@
             z-index: 10000;
             transform: translateY(100px);
             will-change: transform, opacity;
-            contain: layout style paint;
         }
+        
         #backToTop.show {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
+        
         #backToTop:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 28px rgba(99, 102, 241, 0.45);
         }
+        
         #backToTop:active {
             transform: translateY(-1px);
         }
         
-        /* 性能优化：使用GPU加速 */
+        /* 性能优化 */
         .timeline-item,
         .diary-card,
         .filter-chip {
@@ -269,21 +490,12 @@
             perspective: 1000px;
         }
         
-        /* 统计面板样式 - 保持轻微透明 */
+        /* 统计面板布局 */
         .stats-panel {
-            background: rgba(255, 255, 255, 0.1) !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
             padding: 2rem 0;
             margin-bottom: 2rem;
             position: relative;
             z-index: 1;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        
-        body.dark-theme .stats-panel,
-        body:not(.dark-theme) .stats-panel {
-            background: rgba(255, 255, 255, 0.1) !important;
         }
         
         .stats-container {
@@ -296,12 +508,8 @@
         }
         
         .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 1.5rem;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
@@ -322,8 +530,6 @@
         
         .stat-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
-            background: rgba(255, 255, 255, 0.98);
         }
         
         .stat-card:hover::before {
@@ -352,7 +558,6 @@
         
         .stat-label {
             font-size: 0.875rem;
-            color: #64748b;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -361,7 +566,6 @@
         .stat-value {
             font-size: 2rem;
             font-weight: 700;
-            color: #1e293b;
             line-height: 1.2;
             margin-bottom: 0.5rem;
             background: linear-gradient(135deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
@@ -372,7 +576,6 @@
         
         .stat-description {
             font-size: 0.875rem;
-            color: #64748b;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -390,63 +593,359 @@
             font-weight: 600;
         }
         
-        /* ==================== 白天模式样式（保持背景，只改卡片） ==================== */
-        body:not(.dark-theme) .stat-card {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+        /* 工具栏布局 */
+        .diary-toolbar {
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
         }
         
-        body:not(.dark-theme) .stat-card:hover {
-            background: rgba(255, 255, 255, 0.98) !important;
+        .diary-toolbar-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 1.6rem;
+            border-radius: 16px;
         }
         
-        body:not(.dark-theme) .diary-toolbar {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
         
-        body:not(.dark-theme) .timeline-item,
-        body:not(.dark-theme) .diary-card,
-        body:not(.dark-theme) .timeline-card,
-        body:not(.dark-theme) .diary-card-body {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+        .filter-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        body:not(.dark-theme) .filter-select {
-            background: rgba(255, 255, 255, 0.9) !important;
-            backdrop-filter: blur(5px) !important;
-            -webkit-backdrop-filter: blur(5px) !important;
+        .filter-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
-        body:not(.dark-theme) .main-content {
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+        
+        .filter-chip {
+            border-radius: 999px;
+            padding: 0.45rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .filter-chip:hover {
+            transform: translateY(-2px);
+        }
+        
+        .filter-chip.active {
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-label {
+            font-size: 0.9rem;
+        }
+        
+        .filter-select {
+            border-radius: 12px;
+            padding: 0.55rem 0.9rem;
+            min-width: 170px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-select:hover,
+        .filter-select:focus {
+            outline: none;
+        }
+        
+        .ghost-btn {
+            border-radius: 14px;
+            padding: 0.65rem 1.4rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+        
+        .ghost-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .reset-btn {
+            margin-left: auto;
+        }
+        
+        /* 主内容区域 */
+        .success-main {
+            padding: 2.5rem 0 5rem;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .diary-counter {
+            font-size: 0.92rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.25rem;
+            border-radius: 12px;
+        }
+        
+        .view-btn {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .view-btn.active {
+            background: linear-gradient(135deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
+            color: white;
+        }
+        
+        /* 时间轴布局 */
+        .timeline {
             position: relative;
-            z-index: 1;
+            padding-left: 2.5rem;
+            border-left: 2px solid;
+            display: flex;
+            flex-direction: column;
+            gap: 2.2rem;
         }
         
-        /* ==================== 暗色主题适配 ==================== */
-        .dark-theme .stat-card {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        .timeline-item {
+            position: relative;
+            display: flex;
+            gap: 1.2rem;
         }
         
-        .dark-theme .stat-card:hover {
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
-            background: rgba(30, 41, 59, 0.9);
+        .timeline-marker {
+            position: absolute;
+            left: -32px;
+            top: 12px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
+            box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.18);
         }
         
-        .dark-theme .stat-value {
-            color: #f1f5f9;
+        .timeline-card {
+            flex: 1;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            animation: slideInLeft 0.45s ease-out;
         }
         
-        .dark-theme .stat-label,
-        .dark-theme .stat-description {
-            color: #94a3b8;
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .diary-card-body {
+            padding: 1.6rem;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1.1rem;
+        }
+        
+        .diary-cover {
+            width: 100%;
+            border-radius: 16px;
+            object-fit: cover;
+            max-height: 220px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .diary-card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .diary-card-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+        
+        .diary-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+        
+        .diary-alt {
+            font-size: 0.92rem;
+            line-height: 1.55;
+            white-space: pre-wrap;
+        }
+        
+        .diary-text {
+            line-height: 1.7;
+        }
+        
+        .diary-text p {
+            margin-bottom: 0.75rem;
+            white-space: pre-wrap;
+        }
+        
+        .diary-highlight {
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: inset 0 0 15px rgba(139, 92, 246, 0.08);
+        }
+        
+        .diary-highlight span {
+            white-space: pre-wrap;
+            display: block;
+        }
+        
+        .diary-meta {
+            display: grid;
+            gap: 0.55rem;
+            font-size: 0.9rem;
+        }
+        
+        .meta-title {
+            font-weight: 600;
+            margin-right: 0.4rem;
+        }
+        
+        .meta-content {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            align-items: center;
+        }
+        
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+        }
+        
+        .mood-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid currentColor;
+            font-size: 0.88rem;
+        }
+        
+        .achievement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 12px;
+            background: rgba(250, 204, 21, 0.12);
+            color: #facc15;
+            font-weight: 600;
+        }
+        
+        .diary-attachments {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .diary-attachment {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+        
+        .diary-attachment-link {
+            padding: 0.45rem 0.8rem;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .diary-attachment-link:hover {
+            transform: translateY(-2px);
+        }
+        
+        .diary-actions-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        
+        .empty-state.hidden {
+            display: none;
+        }
+        
+        .empty-icon {
+            width: 4rem;
+            height: 4rem;
+            opacity: 0.5;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
         }
         
         /* 响应式设计 */
@@ -523,7 +1022,7 @@
             animation: fadeIn 0.5s ease-out forwards;
         }
         
-        /* 骨架屏加载 */
+        /* 骨架屏 */
         .skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
@@ -534,440 +1033,12 @@
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
-        
-        /* 日记工具栏样式 */
-        .diary-toolbar {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
-            padding: 1.5rem 0;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .diary-toolbar-inner {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            padding: 1.6rem;
-            border-radius: 16px;
-            border: 1px solid rgba(99, 102, 241, 0.15);
-        }
-        
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-        
-        .filter-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .filter-title {
-            font-weight: 600;
-            color: #64748b;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        .filter-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.55rem;
-        }
-        
-        .filter-chip {
-            border: 1px solid rgba(139, 92, 246, 0.28);
-            background: rgba(139, 92, 246, 0.12);
-            color: #4338ca;
-            border-radius: 999px;
-            padding: 0.45rem 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-        
-        .filter-chip:hover {
-            transform: translateY(-2px);
-            background: rgba(139, 92, 246, 0.25);
-        }
-        
-        .filter-chip.active {
-            background: linear-gradient(135deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
-            border-color: transparent;
-            color: #fff;
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
-        }
-        
-        .filter-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            align-items: center;
-        }
-        
-        .filter-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .filter-label {
-            color: #64748b;
-            font-size: 0.9rem;
-        }
-        
-        .filter-select {
-            background: rgba(255, 255, 255, 0.9);
-            color: #1e293b;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 12px;
-            padding: 0.55rem 0.9rem;
-            min-width: 170px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .filter-select:hover,
-        .filter-select:focus {
-            border-color: rgba(139, 92, 246, 0.55);
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
-            outline: none;
-        }
-        
-        .ghost-btn {
-            border-radius: 14px;
-            padding: 0.65rem 1.4rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(139, 92, 246, 0.25);
-            background: rgba(139, 92, 246, 0.1);
-            color: #4338ca;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-        }
-        
-        .ghost-btn:hover {
-            background: rgba(139, 92, 246, 0.2);
-            transform: translateY(-2px);
-        }
-        
-        .reset-btn {
-            margin-left: auto;
-        }
-        
-        /* 主内容区域 */
-        .success-main {
-            padding: 2.5rem 0 5rem;
-        }
-        
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-        
-        .diary-counter {
-            color: #64748b;
-            font-size: 0.92rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .view-toggle {
-            display: flex;
-            gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 0.25rem;
-            border-radius: 12px;
-            border: 1px solid rgba(99, 102, 241, 0.15);
-        }
-        
-        .view-btn {
-            background: transparent;
-            border: none;
-            padding: 0.5rem 0.75rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #64748b;
-        }
-        
-        .view-btn:hover {
-            background: rgba(99, 102, 241, 0.1);
-            color: #4338ca;
-        }
-        
-        .view-btn.active {
-            background: linear-gradient(135deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
-            color: white;
-        }
-        
-        /* 时间轴样式 */
-        .timeline {
-            position: relative;
-            padding-left: 2.5rem;
-            border-left: 2px solid rgba(139, 92, 246, 0.35);
-            display: flex;
-            flex-direction: column;
-            gap: 2.2rem;
-        }
-        
-        .timeline-item {
-            position: relative;
-            display: flex;
-            gap: 1.2rem;
-        }
-        
-        .timeline-marker {
-            position: absolute;
-            left: -32px;
-            top: 12px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-color, #6366f1), var(--accent-hover, #7c3aed));
-            box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.18);
-        }
-        
-        .timeline-card {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(99, 102, 241, 0.15);
-            border-radius: 20px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            animation: slideInLeft 0.45s ease-out;
-        }
-        
-        @keyframes slideInLeft {
-            from {
-                transform: translateX(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        .diary-card-body {
-            padding: 1.6rem;
-            display: grid;
-            grid-template-columns: minmax(0, 1fr);
-            gap: 1.1rem;
-        }
-        
-        .diary-cover {
-            width: 100%;
-            border-radius: 16px;
-            object-fit: cover;
-            max-height: 220px;
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
-        }
-        
-        .diary-card-content {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .diary-card-header {
-            display: flex;
-            flex-direction: column;
-            gap: 0.45rem;
-        }
-        
-        .diary-title {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: #1e293b;
-            line-height: 1.45;
-        }
-        
-        .diary-alt {
-            color: #64748b;
-            font-size: 0.92rem;
-            line-height: 1.55;
-            white-space: pre-wrap;
-        }
-        
-        .diary-text {
-            color: #475569;
-            line-height: 1.7;
-        }
-        
-        .diary-text p {
-            margin-bottom: 0.75rem;
-            white-space: pre-wrap;
-        }
-        
-        .diary-highlight {
-            background: rgba(139, 92, 246, 0.12);
-            border-radius: 16px;
-            padding: 1rem;
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            box-shadow: inset 0 0 15px rgba(139, 92, 246, 0.08);
-        }
-        
-        .diary-highlight span {
-            white-space: pre-wrap;
-            display: block;
-        }
-        
-        .diary-meta {
-            display: grid;
-            gap: 0.55rem;
-            font-size: 0.9rem;
-            color: #64748b;
-        }
-        
-        .meta-title {
-            font-weight: 600;
-            color: #1e293b;
-            margin-right: 0.4rem;
-        }
-        
-        .meta-content {
-            display: inline-flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            align-items: center;
-        }
-        
-        .tag-pill {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.35rem 0.75rem;
-            border-radius: 999px;
-            background: rgba(139, 92, 246, 0.18);
-            color: #4338ca;
-            font-size: 0.85rem;
-        }
-        
-        .mood-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.35rem 0.75rem;
-            border-radius: 999px;
-            border: 1px solid currentColor;
-            font-size: 0.88rem;
-        }
-        
-        .achievement-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            padding: 0.35rem 0.75rem;
-            border-radius: 12px;
-            background: rgba(250, 204, 21, 0.12);
-            color: #facc15;
-            font-weight: 600;
-        }
-        
-        .diary-attachments {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem;
-            align-items: center;
-            font-size: 0.9rem;
-            color: #64748b;
-        }
-        
-        .diary-attachment {
-            width: 90px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 14px;
-            border: 1px solid rgba(139, 92, 246, 0.25);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-        }
-        
-        .diary-attachment-link {
-            padding: 0.45rem 0.8rem;
-            border-radius: 12px;
-            background: rgba(139, 92, 246, 0.1);
-            color: #4338ca;
-            text-decoration: none;
-            border: 1px solid rgba(139, 92, 246, 0.25);
-            transition: all 0.3s ease;
-        }
-        
-        .diary-attachment-link:hover {
-            background: rgba(139, 92, 246, 0.2);
-        }
-        
-        .diary-actions-inline {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem;
-            margin-top: 0.5rem;
-        }
-        
-        /* 空状态 */
-        .empty-state {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: #64748b;
-        }
-        
-        .empty-state.hidden {
-            display: none;
-        }
-        
-        .empty-icon {
-            width: 4rem;
-            height: 4rem;
-            opacity: 0.5;
-            margin-bottom: 1rem;
-        }
-        
-        .empty-state h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-            color: #475569;
-        }
-        
-        /* 暗色主题下的日记卡片 */
-        .dark-theme .timeline-card,
-        .dark-theme .diary-card-body {
-            background: rgba(30, 41, 59, 0.8);
-            border-color: rgba(99, 102, 241, 0.25);
-        }
-        
-        .dark-theme .diary-title {
-            color: #f1f5f9;
-        }
-        
-        .dark-theme .diary-alt,
-        .dark-theme .diary-text {
-            color: #cbd5e1;
-        }
-        
-        .dark-theme .meta-title {
-            color: #e2e8f0;
-        }
     </style>
 </head>
 <body data-page="success">
     <!-- SVG图标定义 -->
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <defs>
-            <!-- 定义渐变色 -->
             <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
                 <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
@@ -976,13 +1047,11 @@
                 <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
                 <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
             </linearGradient>
-            <!-- 定义滤镜 -->
             <filter id="luxuryShadow">
                 <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
                 <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
             </filter>
         </defs>
-        <!-- 箭头左 -->
         <symbol id="icon-arrow-left" viewBox="0 0 24 24">
             <g stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
                 <path d="M19 12H5" stroke-width="2.5"/>
@@ -990,7 +1059,6 @@
                 <path d="M5 12L11 6"/>
             </g>
         </symbol>
-        <!-- 书本打开 -->
         <symbol id="icon-book-open" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M2 3H22V21H2Z" stroke-width="2"/>
@@ -1005,7 +1073,6 @@
                 <circle cx="16" cy="5.5" r="0.5" fill="currentColor"/>
             </g>
         </symbol>
-        <!-- 引号左 -->
         <symbol id="icon-quote-left" viewBox="0 0 24 24">
             <g fill="currentColor" opacity="0.7">
                 <path d="M3 21C3 21 7 16 11 16C14.866 16 17 19 17 21M9 8C9 8 13 3 17 3C20.866 3 23 6 23 8"/>
@@ -1013,7 +1080,6 @@
                 <circle cx="19" cy="12" r="2" opacity="0.4"/>
             </g>
         </symbol>
-        <!-- 引号右 -->
         <symbol id="icon-quote-right" viewBox="0 0 24 24">
             <g fill="currentColor" opacity="0.7">
                 <path d="M21 3C21 3 17 8 13 8C9.134 8 7 5 7 3M15 16C15 16 11 21 7 21C3.134 21 1 18 1 16"/>
@@ -1021,7 +1087,6 @@
                 <circle cx="5" cy="12" r="2" opacity="0.4"/>
             </g>
         </symbol>
-        <!-- 搜索 -->
         <symbol id="icon-search" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="11" cy="11" r="8"/>
@@ -1029,14 +1094,12 @@
                 <circle cx="11" cy="11" r="6" stroke-width="1.5" opacity="0.3"/>
             </g>
         </symbol>
-        <!-- 关闭 -->
         <symbol id="icon-times" viewBox="0 0 24 24">
             <g stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                 <path d="M18 6L6 18"/>
                 <path d="M6 6L18 18"/>
             </g>
         </symbol>
-        <!-- 语言 -->
         <symbol id="icon-language" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10" stroke-width="2"/>
@@ -1045,7 +1108,6 @@
                 <circle cx="12" cy="12" r="3" stroke-width="1.5" opacity="0.5"/>
             </g>
         </symbol>
-        <!-- 月亮 -->
         <symbol id="icon-moon" viewBox="0 0 24 24">
             <g fill="currentColor">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" opacity="0.9"/>
@@ -1053,7 +1115,6 @@
                 <circle cx="16" cy="10" r="1" fill="white" opacity="0.4"/>
             </g>
         </symbol>
-        <!-- 太阳 -->
         <symbol id="icon-sun" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                 <circle cx="12" cy="12" r="5" stroke-width="2.5"/>
@@ -1062,7 +1123,6 @@
                 <circle cx="12" cy="12" r="7" stroke-width="0.5" opacity="0.2"/>
             </g>
         </symbol>
-        <!-- 标签 -->
         <symbol id="icon-tags" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 5H3V11C3 11.5 3.5 12 4 12L11 19L18 12C18.5 11.5 19 11 19 10V4C19 3.5 18.5 3 18 3H13"/>
@@ -1070,7 +1130,6 @@
                 <path d="M16 8L20 4" stroke-width="2"/>
             </g>
         </symbol>
-        <!-- 笑脸 -->
         <symbol id="icon-smile" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10" stroke-width="2.5"/>
@@ -1080,7 +1139,6 @@
                 <circle cx="12" cy="12" r="8" stroke-width="0.5" opacity="0.2"/>
             </g>
         </symbol>
-        <!-- 排序 -->
         <symbol id="icon-sort" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                 <path d="M3 6H21"/>
@@ -1090,7 +1148,6 @@
                 <path d="M21 15L19 17L17 15" fill="none"/>
             </g>
         </symbol>
-        <!-- 重置 -->
         <symbol id="icon-redo" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M23 4V10H17"/>
@@ -1098,7 +1155,6 @@
                 <path d="M5 8L1 9L2 13"/>
             </g>
         </symbol>
-        <!-- 图表 -->
         <symbol id="icon-chart" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                 <rect x="3" y="3" width="18" height="18" stroke-width="1.5" opacity="0.2"/>
@@ -1110,7 +1166,6 @@
                 <circle cx="6" cy="14" r="2" fill="currentColor"/>
             </g>
         </symbol>
-        <!-- 流 -->
         <symbol id="icon-stream" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                 <path d="M4 4H20"/>
@@ -1121,7 +1176,6 @@
                 <path d="M2 20L4 22L6 20" stroke-width="1.5" opacity="0.5"/>
             </g>
         </symbol>
-        <!-- 网格 -->
         <symbol id="icon-th" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
                 <rect x="3" y="3" width="7" height="7" stroke-width="2"/>
@@ -1134,7 +1188,6 @@
                 <circle cx="17.5" cy="17.5" r="0.5" fill="currentColor" opacity="0.5"/>
             </g>
         </symbol>
-        <!-- 箭头上 -->
         <symbol id="icon-arrow-up" viewBox="0 0 24 24">
             <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 19V5"/>
@@ -1189,10 +1242,9 @@
         </div>
     </header>
     
-    <!-- ==================== 统计面板 ==================== -->
+    <!-- 统计面板 -->
     <section class="stats-panel" role="region" aria-label="数据统计概览">
         <div class="stats-container">
-            <!-- 总记录数 -->
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon">
@@ -1205,7 +1257,6 @@
                     <span data-i18n="recordsDesc">已记录的成功时刻</span>
                 </div>
             </div>
-            <!-- 平均成就值 -->
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon">
@@ -1222,7 +1273,6 @@
                     </span>
                 </div>
             </div>
-            <!-- 最新发布 -->
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon">
@@ -1292,7 +1342,6 @@
                 </div>
             </div>
             <div id="diaryTimeline" class="timeline"></div>
-            <!-- 空状态 -->
             <div class="empty-state hidden">
                 <svg class="icon empty-icon"><use href="#icon-search"></use></svg>
                 <h3>未找到匹配的记录</h3>
@@ -1312,7 +1361,7 @@
     
     <!-- 核心功能脚本 -->
     <script>
-        // ==================== 统计功能（适配 successDiaryData）====================
+        // 统计功能
         function updateStatistics() {
             console.log('📊 更新统计数据...');
             const diaryData = window.successDiaryData || [];
@@ -1342,19 +1391,12 @@
                 avgAchievement = achievementValues.reduce((sum, val) => sum + val, 0) / achievementValues.length;
                 avgAchievement = avgAchievement.toFixed(1);
                 
-                if (avgAchievement >= 9) {
-                    achievementLevel = '🌟 卓越';
-                } else if (avgAchievement >= 8) {
-                    achievementLevel = '🎯 优秀';
-                } else if (avgAchievement >= 7) {
-                    achievementLevel = '👍 良好';
-                } else if (avgAchievement >= 6) {
-                    achievementLevel = '📈 合格';
-                } else if (avgAchievement >= 5) {
-                    achievementLevel = '💪 努力中';
-                } else {
-                    achievementLevel = '🔥 加油';
-                }
+                if (avgAchievement >= 9) achievementLevel = '🌟 卓越';
+                else if (avgAchievement >= 8) achievementLevel = '🎯 优秀';
+                else if (avgAchievement >= 7) achievementLevel = '👍 良好';
+                else if (avgAchievement >= 6) achievementLevel = '📈 合格';
+                else if (avgAchievement >= 5) achievementLevel = '💪 努力中';
+                else achievementLevel = '🔥 加油';
             }
             
             document.getElementById('avgAchievementValue').textContent = avgAchievement || '0';
@@ -1366,12 +1408,8 @@
             const dates = diaryData
                 .filter(item => item.date)
                 .map(item => {
-                    try {
-                        return new Date(item.date);
-                    } catch (e) {
-                        console.error('日期解析错误:', item.date);
-                        return null;
-                    }
+                    try { return new Date(item.date); }
+                    catch (e) { return null; }
                 })
                 .filter(date => date !== null && !isNaN(date.getTime()))
                 .sort((a, b) => b - a);
@@ -1381,79 +1419,39 @@
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
                 latestDate.setHours(0, 0, 0, 0);
-                const diffTime = Math.abs(today - latestDate);
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                const diffDays = Math.floor(Math.abs(today - latestDate) / (1000 * 60 * 60 * 24));
                 
-                const year = latestDate.getFullYear();
-                const month = String(latestDate.getMonth() + 1).padStart(2, '0');
-                const day = String(latestDate.getDate()).padStart(2, '0');
-                const formattedDate = `${year}-${month}-${day}`;
-                
+                const formattedDate = `${latestDate.getFullYear()}-${String(latestDate.getMonth() + 1).padStart(2, '0')}-${String(latestDate.getDate()).padStart(2, '0')}`;
                 document.getElementById('latestDateValue').textContent = formattedDate;
                 
                 let daysAgoText = '';
-                if (diffDays === 0) {
-                    daysAgoText = '🎉 今天更新';
-                } else if (diffDays === 1) {
-                    daysAgoText = '📝 昨天更新';
-                } else if (diffDays <= 7) {
-                    daysAgoText = `📅 ${diffDays} 天前`;
-                } else if (diffDays <= 30) {
-                    const weeks = Math.floor(diffDays / 7);
-                    daysAgoText = `🗓️ ${weeks} 周前`;
-                } else if (diffDays <= 365) {
-                    const months = Math.floor(diffDays / 30);
-                    daysAgoText = `📆 ${months} 个月前`;
-                } else {
-                    const years = Math.floor(diffDays / 365);
-                    daysAgoText = `🗓️ ${years} 年前`;
-                }
+                if (diffDays === 0) daysAgoText = '🎉 今天更新';
+                else if (diffDays === 1) daysAgoText = '📝 昨天更新';
+                else if (diffDays <= 7) daysAgoText = `📅 ${diffDays} 天前`;
+                else if (diffDays <= 30) daysAgoText = `🗓️ ${Math.floor(diffDays / 7)} 周前`;
+                else if (diffDays <= 365) daysAgoText = `📆 ${Math.floor(diffDays / 30)} 个月前`;
+                else daysAgoText = `🗓️ ${Math.floor(diffDays / 365)} 年前`;
                 
                 document.getElementById('daysAgoText').textContent = daysAgoText;
-            } else {
-                document.getElementById('latestDateValue').textContent = '暂无数据';
-                document.getElementById('daysAgoText').textContent = '暂无记录';
             }
             
-            console.log('✅ 统计数据更新完成', {
-                totalRecords,
-                avgAchievement,
-                achievementLevel,
-                totalWithAchievement: achievementValues.length
-            });
+            console.log('✅ 统计数据更新完成');
         }
         
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
-                console.log('🔍 检查数据:', window.successDiaryData);
                 updateStatistics();
             }, 150);
         });
         
         document.addEventListener('diaryDataUpdated', updateStatistics);
         
-        function updateStatisticsForFilteredData(filteredData) {
-            if (!filteredData || filteredData.length === 0) {
-                return;
-            }
-            const originalData = window.successDiaryData;
-            window.successDiaryData = filteredData;
-            updateStatistics();
-            window.successDiaryData = originalData;
-        }
-        
-        // ==================== 回到顶部功能 - 性能优化版 ====================
+        // 回到顶部功能
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 初始化回到顶部功能...');
             const backToTopBtn = document.getElementById('backToTop');
-            if (!backToTopBtn) {
-                console.error('❌ 错误:找不到回到顶部按钮!');
-                return;
-            }
-            console.log('✅ 找到回到顶部按钮');
+            if (!backToTopBtn) return;
             
             let ticking = false;
-            let lastKnownScrollPosition = 0;
             
             function updateBackToTopButton(scrollPos) {
                 if (scrollPos > 300) {
@@ -1464,10 +1462,10 @@
             }
             
             function onScroll() {
-                lastKnownScrollPosition = window.scrollY || document.documentElement.scrollTop;
+                const scrollPos = window.scrollY || document.documentElement.scrollTop;
                 if (!ticking) {
                     window.requestAnimationFrame(() => {
-                        updateBackToTopButton(lastKnownScrollPosition);
+                        updateBackToTopButton(scrollPos);
                         ticking = false;
                     });
                     ticking = true;
@@ -1478,103 +1476,13 @@
             
             backToTopBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log('🎯 点击回到顶部');
-                const supportsNativeSmooth = 'scrollBehavior' in document.documentElement.style;
-                if (supportsNativeSmooth) {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                } else {
-                    const startScroll = window.pageYOffset;
-                    const startTime = performance.now();
-                    const duration = 500;
-                    
-                    function easeInOutCubic(t) {
-                        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-                    }
-                    
-                    function animateScroll(currentTime) {
-                        const elapsed = currentTime - startTime;
-                        const progress = Math.min(elapsed / duration, 1);
-                        const easeProgress = easeInOutCubic(progress);
-                        const scrollPosition = startScroll * (1 - easeProgress);
-                        window.scrollTo(0, scrollPosition);
-                        if (progress < 1) {
-                            window.requestAnimationFrame(animateScroll);
-                        }
-                    }
-                    window.requestAnimationFrame(animateScroll);
-                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
             
             updateBackToTopButton(window.scrollY || document.documentElement.scrollTop);
-            
-            backToTopBtn.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    backToTopBtn.click();
-                }
-            });
-            
-            console.log('✅ 回到顶部功能初始化完成');
         });
         
-        // ==================== 性能优化工具 ====================
-        const lazyLoadObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in');
-                    lazyLoadObserver.unobserve(entry.target);
-                }
-            });
-        }, {
-            rootMargin: '50px'
-        });
-        
-        function observeLazyElements() {
-            const lazyElements = document.querySelectorAll('.timeline-item, .diary-card');
-            lazyElements.forEach(el => lazyLoadObserver.observe(el));
-        }
-        
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-        
-        function throttle(func, limit) {
-            let inThrottle;
-            return function() {
-                const args = arguments;
-                const context = this;
-                if (!inThrottle) {
-                    func.apply(context, args);
-                    inThrottle = true;
-                    setTimeout(() => inThrottle = false, limit);
-                }
-            };
-        }
-        
-        const mutationObserver = new MutationObserver(debounce(() => {
-            observeLazyElements();
-        }, 100));
-        
-        const timelineElement = document.getElementById('diaryTimeline');
-        if (timelineElement) {
-            mutationObserver.observe(timelineElement, {
-                childList: true,
-                subtree: true
-            });
-        }
-        
-        // 主题切换功能
+        // 主题切换
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('.theme-icon');
         const currentTheme = localStorage.getItem('theme') || 'light';
@@ -1587,16 +1495,11 @@
         themeToggle.addEventListener('click', function() {
             document.body.classList.toggle('dark-theme');
             const isDark = document.body.classList.contains('dark-theme');
-            if (isDark) {
-                themeIcon.querySelector('use').setAttribute('href', '#icon-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                themeIcon.querySelector('use').setAttribute('href', '#icon-moon');
-                localStorage.setItem('theme', 'light');
-            }
+            themeIcon.querySelector('use').setAttribute('href', isDark ? '#icon-sun' : '#icon-moon');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
         
-        // 语言切换功能
+        // 语言切换
         const languageToggle = document.getElementById('languageToggle');
         let currentLang = localStorage.getItem('language') || 'zh';
         
@@ -1608,23 +1511,16 @@
                     el.textContent = window.translations[lang][key];
                 }
             });
-            const span = languageToggle.querySelector('span');
-            span.textContent = lang === 'zh' ? '中 → EN' : 'EN → 中';
+            languageToggle.querySelector('span').textContent = lang === 'zh' ? '中 → EN' : 'EN → 中';
             localStorage.setItem('language', lang);
             currentLang = lang;
         }
         
         languageToggle.addEventListener('click', function() {
-            const newLang = currentLang === 'zh' ? 'en' : 'zh';
-            updateLanguage(newLang);
+            updateLanguage(currentLang === 'zh' ? 'en' : 'zh');
         });
         
         updateLanguage(currentLang);
-        
-        window.addEventListener('beforeunload', function() {
-            lazyLoadObserver.disconnect();
-            mutationObserver.disconnect();
-        });
     </script>
 </body>
 </html>
