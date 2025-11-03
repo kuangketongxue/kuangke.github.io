@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
      {
+        id: 46,
+        date: '2025-11-03',
+        categories: ['study', 'creative','finance'],
+        headline: {
+            zh: '创建新钱包',
+            en: 'Create a new wallet'
+        },
+        content: {
+            zh: '阅读17本书+。\n学习11小时+\n创作字\n创建新钱包买比特币',
+            en: 'Read 17+ books.\nStudied for 11+ hours\nWrite a piece of content totaling 10000 words.\nCreate a new wallet to buy Bitcoin'
+        },
+        highlight: {
+            zh: '寿司+烤串不错；“你被困在2025年10月25号”互动视频不错',
+            en: 'Sushi and grilled skewers are quite good; the interactive video "You are Trapped in October 25, 2025" is also enjoyable.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 2,
+        coverImage: '',
+        attachments: []
+    },
+     {
         id: 45,
         date: '2025-11-02',
         categories: ['study', 'creative'],
