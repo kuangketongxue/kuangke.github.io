@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>广州珠江新城 - 3D实景探索</title>
+    <title>广州珠江新城 3D 探索</title>
     <style>
         * {
             margin: 0;
@@ -19,31 +19,82 @@
             width: 100vw;
             height: 100vh;
         }
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+        }
+        #loadingScreen.hidden {
+            display: none;
+        }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         #ui {
             position: absolute;
             top: 20px;
             left: 20px;
             color: white;
-            font-size: 16px;
+            font-size: 14px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             z-index: 100;
             background: rgba(0,0,0,0.6);
             padding: 15px;
-            border-radius: 8px;
-            min-width: 280px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            min-width: 250px;
         }
-        #landmark {
+        .ui-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #4fc3f7;
+        }
+        .ui-item {
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .ui-label {
+            color: #b0bec5;
+        }
+        .ui-value {
+            color: #ffffff;
+            font-weight: bold;
+        }
+        #buildingInfo {
             position: absolute;
             top: 20px;
             right: 20px;
             color: white;
-            background: rgba(255,107,107,0.9);
-            padding: 15px 20px;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.6);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            max-width: 300px;
+            display: none;
+        }
+        #buildingInfo.show {
+            display: block;
         }
         #instructions {
             position: absolute;
@@ -51,18 +102,20 @@
             left: 50%;
             transform: translateX(-50%);
             color: white;
-            background: rgba(0,0,0,0.75);
+            background: rgba(0,0,0,0.7);
             padding: 15px 25px;
-            border-radius: 8px;
+            border-radius: 10px;
             text-align: center;
+            backdrop-filter: blur(10px);
         }
         .key {
             display: inline-block;
-            background: rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.2);
             padding: 5px 10px;
             margin: 0 5px;
             border-radius: 4px;
             font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.3);
         }
         #minimap {
             position: absolute;
@@ -70,34 +123,48 @@
             right: 20px;
             width: 200px;
             height: 200px;
-            background: rgba(0,0,0,0.7);
-            border: 2px solid #fff;
-            border-radius: 8px;
-        }
-        .info-item {
-            margin: 5px 0;
-            padding: 3px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.6);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
         }
     </style>
 </head>
 <body>
+    <div id="loadingScreen">
+        <div class="spinner"></div>
+        <h2>正在加载广州珠江新城...</h2>
+        <p id="loadingText">初始化场景</p>
+    </div>
+
     <div id="ui">
-        <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px; color: #FFD700;">
-            🏙️ 广州珠江新城
+        <div class="ui-title">🏙️ 珠江新城</div>
+        <div class="ui-item">
+            <span class="ui-label">位置:</span>
+            <span class="ui-value" id="position">X: 0, Z: 0</span>
         </div>
-        <div class="info-item">📍 位置: <span id="position">X: 0, Z: 0</span></div>
-        <div class="info-item">🏃 速度: <span id="speed">0</span> km/h</div>
-        <div class="info-item">🏢 地标建筑: <span id="buildings">18</span></div>
-        <div class="info-item">🧭 朝向: <span id="direction">北</span></div>
+        <div class="ui-item">
+            <span class="ui-label">高度:</span>
+            <span class="ui-value" id="height">0 m</span>
+        </div>
+        <div class="ui-item">
+            <span class="ui-label">速度:</span>
+            <span class="ui-value" id="speed">0 km/h</span>
+        </div>
+        <div class="ui-item">
+            <span class="ui-label">时间:</span>
+            <span class="ui-value" id="time">14:00</span>
+        </div>
     </div>
-    
-    <div id="landmark">
-        <div id="nearestLandmark">探索珠江新城...</div>
+
+    <div id="buildingInfo">
+        <h3 id="buildingName">建筑名称</h3>
+        <p id="buildingDesc">建筑描述</p>
+        <p><strong>高度:</strong> <span id="buildingHeight">0</span> 米</p>
     </div>
-    
+
     <div id="instructions">
-        <div style="font-size: 18px; margin-bottom: 8px;">🎮 控制说明</div>
+        <div style="font-size: 18px; margin-bottom: 10px;">🎮 控制说明</div>
         <div style="margin-top: 10px;">
             <span class="key">W</span> 前进
             <span class="key">S</span> 后退
@@ -105,230 +172,214 @@
             <span class="key">D</span> 右移
         </div>
         <div style="margin-top: 5px;">
-            <span class="key">Shift</span> 快跑
-            <span class="key">Space</span> 跳跃
+            <span class="key">Shift</span> 加速跑
+            <span class="key">Space</span> 上升
+            <span class="key">C</span> 下降
+        </div>
+        <div style="margin-top: 5px;">
             <span class="key">鼠标</span> 视角旋转
+            <span class="key">鼠标滚轮</span> 缩放
         </div>
     </div>
-    
+
     <canvas id="minimap"></canvas>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // 珠江新城真实地标数据（基于实际坐标和建筑信息）
-        const LANDMARKS = [
+        // ==================== 珠江新城真实建筑数据 ====================
+        const ZhujiangNewTownBuildings = [
             {
-                name: '广州塔（小蛮腰）',
-                name_en: 'Canton Tower',
-                position: [-400, 0, 300],
-                size: [25, 600, 25],
-                color: 0xE6B800,
-                type: 'tower',
-                height: 600, // 实际高度600米
-                features: '世界第二高塔'
+                name: "广州塔（小蛮腰）",
+                position: { x: -200, z: 300 },
+                width: 50,
+                height: 600,
+                depth: 50,
+                color: 0xff6b6b,
+                windows: true,
+                landmark: true,
+                desc: "广州新电视塔，高600米，是广州的标志性建筑"
             },
             {
-                name: '广州国际金融中心（IFC）',
-                name_en: 'Guangzhou IFC',
-                position: [0, 0, 0],
-                size: [80, 440, 80],
-                color: 0x4A90E2,
-                type: 'tower',
-                height: 440,
-                features: '珠江新城地标，高440.75米'
+                name: "广州国际金融中心（西塔）",
+                position: { x: 0, z: 0 },
+                width: 60,
+                height: 432,
+                depth: 60,
+                color: 0x4a90e2,
+                windows: true,
+                landmark: true,
+                desc: "高432米，103层，珠江新城第二高建筑"
             },
             {
-                name: '周大福金融中心（东塔）',
-                name_en: 'CTF Finance Centre',
-                position: [150, 0, -100],
-                size: [70, 530, 70],
-                color: 0x2C3E50,
-                type: 'tower',
+                name: "周大福金融中心（东塔）",
+                position: { x: 150, z: -50 },
+                width: 70,
                 height: 530,
-                features: '中国第二高楼，530米'
+                depth: 70,
+                color: 0x5fb3b3,
+                windows: true,
+                landmark: true,
+                desc: "高530米，111层，广州第一高楼"
             },
             {
-                name: '广州大剧院',
-                name_en: 'Guangzhou Opera House',
-                position: [-200, 0, -150],
-                size: [120, 45, 90],
-                color: 0xBDC3C7,
-                type: 'cultural',
-                height: 45,
-                features: '扎哈·哈迪德设计'
+                name: "广州大剧院",
+                position: { x: -100, z: 200 },
+                width: 80,
+                height: 40,
+                depth: 100,
+                color: 0xc9c9c9,
+                windows: false,
+                landmark: true,
+                desc: "扎哈·哈迪德设计，双砾石造型"
             },
             {
-                name: '广东省博物馆',
-                name_en: 'Guangdong Museum',
-                position: [-300, 0, -120],
-                size: [100, 60, 100],
-                color: 0x8E44AD,
-                type: 'cultural',
+                name: "广东省博物馆",
+                position: { x: 100, z: 250 },
+                width: 120,
                 height: 60,
-                features: '岭南文化宝库'
+                depth: 80,
+                color: 0xd4a574,
+                windows: false,
+                landmark: true,
+                desc: "岭南传统工艺宝盒造型"
             },
             {
-                name: '广州图书馆',
-                name_en: 'Guangzhou Library',
-                position: [-350, 0, 0],
-                size: [110, 65, 80],
-                color: 0x3498DB,
-                type: 'cultural',
-                height: 65,
-                features: '全国最美图书馆之一'
-            },
-            {
-                name: '花城广场',
-                name_en: 'Huacheng Square',
-                position: [-180, 0, 0],
-                size: [250, 2, 150],
-                color: 0x27AE60,
-                type: 'plaza',
+                name: "海心沙",
+                position: { x: 0, z: 350 },
+                width: 200,
                 height: 2,
-                features: '广州城市客厅'
+                depth: 150,
+                color: 0x66bb6a,
+                windows: false,
+                landmark: true,
+                desc: "亚运会开幕式主会场"
             },
             {
-                name: '太古汇',
-                name_en: 'Taikoo Hui',
-                position: [80, 0, 120],
-                size: [90, 180, 70],
-                color: 0x95A5A6,
-                type: 'commercial',
-                height: 180,
-                features: '高端购物中心'
+                name: "高德置地广场",
+                position: { x: -80, z: -100 },
+                width: 55,
+                height: 160,
+                depth: 55,
+                color: 0x7986cb,
+                windows: true,
+                landmark: false,
+                desc: "购物中心，160米双塔"
             },
             {
-                name: '天河城',
-                name_en: 'Teemall',
-                position: [200, 0, 200],
-                size: [100, 80, 90],
-                color: 0xE74C3C,
-                type: 'commercial',
+                name: "太古汇",
+                position: { x: 80, z: -150 },
+                width: 60,
+                height: 100,
+                depth: 80,
+                color: 0x9575cd,
+                windows: true,
+                landmark: false,
+                desc: "高端购物中心"
+            },
+            {
+                name: "天河城",
+                position: { x: -200, z: -200 },
+                width: 90,
                 height: 80,
-                features: '天河商圈核心'
+                depth: 70,
+                color: 0xff9800,
+                windows: true,
+                landmark: false,
+                desc: "大型购物中心"
             },
             {
-                name: '高德置地',
-                name_en: 'Gao De Land Plaza',
-                position: [-50, 0, 150],
-                size: [75, 200, 65],
-                color: 0x34495E,
-                type: 'office',
+                name: "珠江新城写字楼A",
+                position: { x: -150, z: -50 },
+                width: 40,
+                height: 180,
+                depth: 40,
+                color: 0x90a4ae,
+                windows: true,
+                landmark: false,
+                desc: "商务办公楼"
+            },
+            {
+                name: "珠江新城写字楼B",
+                position: { x: 200, z: 50 },
+                width: 45,
                 height: 200,
-                features: '甲级写字楼'
+                depth: 45,
+                color: 0x78909c,
+                windows: true,
+                landmark: false,
+                desc: "商务办公楼"
             },
             {
-                name: '富力盈凯广场',
-                name_en: 'R&F Yingkai Plaza',
-                position: [100, 0, -150],
-                size: [60, 220, 60],
-                color: 0x16A085,
-                type: 'office',
-                height: 220,
-                features: '商务办公综合体'
-            },
-            {
-                name: '越秀金融大厦',
-                name_en: 'Yuexiu Financial Tower',
-                position: [-100, 0, 100],
-                size: [55, 310, 55],
-                color: 0x2980B9,
-                type: 'office',
-                height: 310,
-                features: '310米超高层建筑'
-            },
-            {
-                name: '珠江城大厦',
-                name_en: 'Pearl River Tower',
-                position: [200, 0, -50],
-                size: [50, 310, 50],
-                color: 0x1ABC9C,
-                type: 'office',
-                height: 310,
-                features: '绿色节能建筑典范'
-            },
-            {
-                name: '利通广场',
-                name_en: 'LiTong Plaza',
-                position: [-150, 0, 200],
-                size: [70, 200, 70],
-                color: 0x7F8C8D,
-                type: 'office',
-                height: 200,
-                features: '现代化办公楼'
-            },
-            {
-                name: '天汇广场（IGC）',
-                name_en: 'The Exchange',
-                position: [50, 0, -200],
-                size: [85, 360, 85],
-                color: 0x34495E,
-                type: 'office',
-                height: 360,
-                features: '360米双子塔'
-            },
-            {
-                name: '侨鑫国际金融中心',
-                name_en: 'Wealthking IFC',
-                position: [-250, 0, 150],
-                size: [45, 220, 45],
-                color: 0x95A5A6,
-                type: 'office',
-                height: 220,
-                features: '现代化金融中心'
-            },
-            {
-                name: '海航威斯汀酒店',
-                name_en: 'Westin Hotel',
-                position: [150, 0, 100],
-                size: [60, 150, 60],
-                color: 0xD35400,
-                type: 'hotel',
+                name: "珠江新城写字楼C",
+                position: { x: -50, z: -200 },
+                width: 35,
                 height: 150,
-                features: '五星级酒店'
+                depth: 35,
+                color: 0xb0bec5,
+                windows: true,
+                landmark: false,
+                desc: "商务办公楼"
             },
             {
-                name: 'W酒店',
-                name_en: 'W Hotel',
-                position: [250, 0, 0],
-                size: [50, 120, 50],
-                color: 0xC0392B,
-                type: 'hotel',
-                height: 120,
-                features: '时尚潮流酒店'
+                name: "富力盈凯广场",
+                position: { x: 250, z: 150 },
+                width: 50,
+                height: 170,
+                depth: 50,
+                color: 0x64b5f6,
+                windows: true,
+                landmark: false,
+                desc: "综合商务楼"
+            },
+            {
+                name: "侨鑫国际金融中心",
+                position: { x: -250, z: 100 },
+                width: 48,
+                height: 190,
+                depth: 48,
+                color: 0x81c784,
+                windows: true,
+                landmark: false,
+                desc: "商务办公"
             }
         ];
 
-        // 游戏配置
+        // ==================== 游戏配置 ====================
         const config = {
             moveSpeed: 0.5,
-            sprintSpeed: 1.2,
-            jumpForce: 0.3,
-            gravity: 0.015,
+            sprintSpeed: 1.5,
+            verticalSpeed: 0.3,
             rotationSpeed: 0.002,
-            cityBounds: 600
+            citySize: 500,
+            minHeight: 1.6,
+            maxHeight: 700
         };
 
-        // 场景变量
+        // ==================== 全局变量 ====================
         let scene, camera, renderer;
         let player, playerVelocity = new THREE.Vector3();
         let buildings = [];
-        let ground;
-        let isJumping = false;
+        let ground, river;
+        let time = 14; // 14:00
 
         // 控制状态
         const keys = {};
-        const mouse = { locked: false };
+        const mouse = { x: 0, y: 0, locked: false };
         let yaw = 0, pitch = 0;
 
-        // 小地图
-        let minimapCanvas, minimapCtx;
+        // 选中的建筑
+        let selectedBuilding = null;
+        const raycaster = new THREE.Raycaster();
+        const mouseVector = new THREE.Vector2();
 
+        // ==================== 初始化 ====================
         function init() {
+            updateLoadingText("创建场景...");
+            
             // 创建场景
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x87CEEB); // 天空蓝
-            scene.fog = new THREE.Fog(0x87CEEB, 100, 800);
+            scene.background = new THREE.Color(0x87CEEB);
+            scene.fog = new THREE.Fog(0x87CEEB, 100, 1000);
 
             // 创建相机
             camera = new THREE.PerspectiveCamera(
@@ -337,7 +388,7 @@
                 0.1,
                 2000
             );
-            camera.position.set(0, 1.7, 0);
+            camera.position.set(0, 50, 200);
 
             // 创建渲染器
             renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -346,215 +397,210 @@
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             document.body.appendChild(renderer.domElement);
 
-            // 创建玩家
+            updateLoadingText("创建玩家...");
             createPlayer();
 
-            // 创建地面
+            updateLoadingText("创建地面和珠江...");
             createGround();
+            createRiver();
 
-            // 创建珠江新城建筑
-            createGuangzhouLandmarks();
+            updateLoadingText("建造珠江新城建筑...");
+            createZhujiangNewTownBuildings();
 
-            // 添加光照
+            updateLoadingText("添加光照...");
             createLights();
 
-            // 添加天空和环境
-            createEnvironment();
+            updateLoadingText("添加天空和环境...");
+            createSkybox();
+            createTrees();
 
-            // 初始化小地图
-            initMinimap();
-
-            // 事件监听
+            updateLoadingText("初始化控制系统...");
             setupEventListeners();
+
+            // 隐藏加载画面
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 1000);
 
             // 开始动画循环
             animate();
         }
 
+        function updateLoadingText(text) {
+            document.getElementById('loadingText').textContent = text;
+        }
+
+        // ==================== 创建玩家 ====================
         function createPlayer() {
-            const geometry = new THREE.CapsuleGeometry(0.4, 1.4, 8, 16);
+            const geometry = new THREE.CylinderGeometry(0.3, 0.3, 1.6, 8);
             const material = new THREE.MeshPhongMaterial({
-                color: 0xff4444,
+                color: 0xff0000,
                 transparent: true,
-                opacity: 0.8,
-                emissive: 0xff0000,
-                emissiveIntensity: 0.2
+                opacity: 0
             });
             player = new THREE.Mesh(geometry, material);
-            player.position.set(0, 0.85, 0);
-            player.castShadow = true;
+            player.position.set(0, 50, 200);
             scene.add(player);
         }
 
+        // ==================== 创建地面 ====================
         function createGround() {
-            // 珠江（水面）
-            const riverGeometry = new THREE.PlaneGeometry(200, 1500);
-            const riverMaterial = new THREE.MeshPhongMaterial({
-                color: 0x1E90FF,
-                shininess: 100,
-                transparent: true,
-                opacity: 0.8
-            });
-            const river = new THREE.Mesh(riverGeometry, riverMaterial);
-            river.rotation.x = -Math.PI / 2;
-            river.position.set(-450, -0.5, 0);
-            river.receiveShadow = true;
-            scene.add(river);
-
             // 主地面
-            const groundGeometry = new THREE.PlaneGeometry(config.cityBounds * 2, config.cityBounds * 2);
-            const groundMaterial = new THREE.MeshLambertMaterial({
-                color: 0x2C3E50
+            const geometry = new THREE.PlaneGeometry(config.citySize * 3, config.citySize * 3);
+            
+            // 创建地面纹理
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            
+            // 绘制道路网格
+            ctx.fillStyle = '#2a2a2a';
+            ctx.fillRect(0, 0, 512, 512);
+            
+            ctx.strokeStyle = '#444444';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * 51.2, 0);
+                ctx.lineTo(i * 51.2, 512);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(0, i * 51.2);
+                ctx.lineTo(512, i * 51.2);
+                ctx.stroke();
+            }
+            
+            // 添加车道线
+            ctx.strokeStyle = '#ffff00';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([10, 10]);
+            for (let i = 0; i < 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * 51.2 + 25.6, 0);
+                ctx.lineTo(i * 51.2 + 25.6, 512);
+                ctx.stroke();
+            }
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(20, 20);
+            
+            const material = new THREE.MeshLambertMaterial({
+                map: texture
             });
-            ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            
+            ground = new THREE.Mesh(geometry, material);
             ground.rotation.x = -Math.PI / 2;
             ground.receiveShadow = true;
             scene.add(ground);
-
-            // 道路网格
-            createRoads();
-
-            // 绿化带
-            createGreenery();
         }
 
-        function createRoads() {
-            const roadMaterial = new THREE.MeshLambertMaterial({ color: 0x3A3A3A });
+        // ==================== 创建珠江 ====================
+        function createRiver() {
+            const riverGeometry = new THREE.PlaneGeometry(800, 200);
             
-            // 主要道路
-            const roads = [
-                { pos: [0, 0.1, 0], size: [600, 1, 40] }, // 花城大道
-                { pos: [0, 0.1, 0], size: [40, 1, 600] }, // 花城广场路
-                { pos: [-200, 0.1, 0], size: [40, 1, 600] }, // 临江大道
-                { pos: [200, 0.1, 0], size: [40, 1, 600] }  // 珠江东路
-            ];
+            // 水面材质
+            const riverMaterial = new THREE.MeshPhongMaterial({
+                color: 0x1e88e5,
+                transparent: true,
+                opacity: 0.6,
+                shininess: 100
+            });
+            
+            river = new THREE.Mesh(riverGeometry, riverMaterial);
+            river.rotation.x = -Math.PI / 2;
+            river.position.y = 0.1;
+            river.position.z = 300;
+            river.receiveShadow = true;
+            scene.add(river);
+        }
 
-            roads.forEach(road => {
-                const geometry = new THREE.BoxGeometry(...road.size);
-                const roadMesh = new THREE.Mesh(geometry, roadMaterial);
-                roadMesh.position.set(...road.pos);
-                roadMesh.receiveShadow = true;
-                scene.add(roadMesh);
+        // ==================== 创建珠江新城建筑 ====================
+        function createZhujiangNewTownBuildings() {
+            ZhujiangNewTownBuildings.forEach(buildingData => {
+                createBuilding(buildingData);
             });
         }
 
-        function createGreenery() {
-            // 在花城广场添加绿化
-            for (let i = 0; i < 100; i++) {
-                const treeGeometry = new THREE.ConeGeometry(3, 10, 8);
-                const treeMaterial = new THREE.MeshLambertMaterial({ color: 0x228B22 });
-                const tree = new THREE.Mesh(treeGeometry, treeMaterial);
+        function createBuilding(data) {
+            const geometry = new THREE.BoxGeometry(data.width, data.height, data.depth);
+            
+            // 创建建筑材质
+            const materials = [];
+            
+            // 为每个面创建不同的材质
+            for (let i = 0; i < 6; i++) {
+                const canvas = document.createElement('canvas');
+                canvas.width = 512;
+                canvas.height = 512;
+                const ctx = canvas.getContext('2d');
                 
-                const x = -180 + (Math.random() - 0.5) * 200;
-                const z = (Math.random() - 0.5) * 100;
-                tree.position.set(x, 5, z);
-                tree.castShadow = true;
-                scene.add(tree);
-            }
-        }
-
-        function createGuangzhouLandmarks() {
-            LANDMARKS.forEach(landmark => {
-                const building = createLandmarkBuilding(landmark);
-                scene.add(building);
-                buildings.push({ mesh: building, data: landmark });
-            });
-        }
-
-        function createLandmarkBuilding(landmark) {
-            const [width, height, depth] = landmark.size;
-            const group = new THREE.Group();
-
-            // 主建筑
-            const geometry = new THREE.BoxGeometry(width, height, depth);
-            const material = new THREE.MeshPhongMaterial({
-                color: landmark.color,
-                shininess: 50,
-                specular: 0x444444
-            });
-            const building = new THREE.Mesh(geometry, material);
-            building.position.y = height / 2;
-            building.castShadow = true;
-            building.receiveShadow = true;
-
-            // 特殊建筑造型
-            if (landmark.type === 'tower') {
-                // 塔楼顶部装饰
-                const topGeometry = new THREE.ConeGeometry(width * 0.6, height * 0.1, 8);
-                const topMaterial = new THREE.MeshPhongMaterial({ 
-                    color: 0xFFD700,
-                    emissive: 0xFFAA00,
-                    emissiveIntensity: 0.3
-                });
-                const top = new THREE.Mesh(topGeometry, topMaterial);
-                top.position.y = height;
-                building.add(top);
-            }
-
-            // 广州塔特殊造型
-            if (landmark.name === '广州塔（小蛮腰）') {
-                building.scale.set(1, 1, 1);
-                // 添加腰部收缩效果
-                const waistGeometry = new THREE.CylinderGeometry(
-                    width * 0.4, width * 0.7, height * 0.6, 32
-                );
-                const waist = new THREE.Mesh(waistGeometry, material);
-                waist.position.y = height * 0.3;
-                building.add(waist);
-            }
-
-            // 添加窗户
-            addWindows(building, width, height, depth, landmark.type);
-
-            // 添加夜景灯光
-            if (landmark.height > 200) {
-                const light = new THREE.PointLight(landmark.color, 0.8, 150);
-                light.position.y = height;
-                building.add(light);
-            }
-
-            group.add(building);
-            group.position.set(...landmark.position);
-
-            return group;
-        }
-
-        function addWindows(building, width, height, depth, type) {
-            const windowMaterial = new THREE.MeshBasicMaterial({ 
-                color: Math.random() > 0.5 ? 0xFFFF99 : 0x4488FF 
-            });
-            
-            const floors = Math.floor(height / 4);
-            const windowsPerRow = Math.floor(Math.max(width, depth) / 3);
-
-            for (let floor = 1; floor < floors; floor++) {
-                for (let w = 0; w < windowsPerRow; w++) {
-                    if (Math.random() > 0.2) {
-                        const windowGeom = new THREE.PlaneGeometry(1, 1.5);
-                        
-                        // 前后面窗户
-                        const windowFront = new THREE.Mesh(windowGeom, windowMaterial);
-                        windowFront.position.set(
-                            (w - windowsPerRow / 2) * 2.5,
-                            floor * 4 - height / 2,
-                            depth / 2 + 0.1
-                        );
-                        building.add(windowFront);
-
-                        // 左右面窗户
-                        const windowSide = new THREE.Mesh(windowGeom, windowMaterial);
-                        windowSide.rotation.y = Math.PI / 2;
-                        windowSide.position.set(
-                            width / 2 + 0.1,
-                            floor * 4 - height / 2,
-                            (w - windowsPerRow / 2) * 2.5
-                        );
-                        building.add(windowSide);
+                // 基础颜色
+                ctx.fillStyle = '#' + data.color.toString(16).padStart(6, '0');
+                ctx.fillRect(0, 0, 512, 512);
+                
+                // 如果有窗户
+                if (data.windows && i < 4) { // 只在侧面添加窗户
+                    const floors = Math.floor(data.height / 4);
+                    const windowsPerRow = i < 2 ? Math.floor(data.width / 3) : Math.floor(data.depth / 3);
+                    
+                    for (let floor = 0; floor < floors; floor++) {
+                        for (let col = 0; col < windowsPerRow; col++) {
+                            if (Math.random() > 0.1) {
+                                const isLit = Math.random() > 0.3;
+                                ctx.fillStyle = isLit ? '#ffffaa' : '#334455';
+                                const x = (col + 0.5) * (512 / windowsPerRow) - 15;
+                                const y = (floor + 0.5) * (512 / floors) - 20;
+                                ctx.fillRect(x, y, 30, 40);
+                            }
+                        }
                     }
                 }
+                
+                // 添加建筑细节
+                if (data.landmark) {
+                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                    ctx.lineWidth = 2;
+                    for (let j = 0; j < 5; j++) {
+                        ctx.beginPath();
+                        ctx.moveTo(0, j * 102.4);
+                        ctx.lineTo(512, j * 102.4);
+                        ctx.stroke();
+                    }
+                }
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                materials.push(new THREE.MeshLambertMaterial({ map: texture }));
+            }
+            
+            const building = new THREE.Mesh(geometry, materials);
+            building.position.set(data.position.x, data.height / 2, data.position.z);
+            building.castShadow = true;
+            building.receiveShadow = true;
+            
+            // 存储建筑数据
+            building.userData = {
+                name: data.name,
+                height: data.height,
+                desc: data.desc,
+                landmark: data.landmark
+            };
+            
+            scene.add(building);
+            buildings.push(building);
+
+            // 为地标建筑添加顶部灯光
+            if (data.landmark) {
+                const topLight = new THREE.PointLight(0xffffff, 2, 100);
+                topLight.position.set(data.position.x, data.height + 10, data.position.z);
+                scene.add(topLight);
             }
         }
 
+        // ==================== 创建光照 ====================
         function createLights() {
             // 环境光
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
@@ -562,7 +608,7 @@
 
             // 太阳光
             const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            sunLight.position.set(200, 500, 200);
+            sunLight.position.set(500, 600, 500);
             sunLight.castShadow = true;
             sunLight.shadow.camera.left = -500;
             sunLight.shadow.camera.right = 500;
@@ -570,92 +616,104 @@
             sunLight.shadow.camera.bottom = -500;
             sunLight.shadow.mapSize.width = 4096;
             sunLight.shadow.mapSize.height = 4096;
+            sunLight.shadow.camera.far = 2000;
             scene.add(sunLight);
 
-            // 路灯系统
-            for (let x = -500; x < 500; x += 50) {
-                for (let z = -500; z < 500; z += 50) {
-                    const streetLight = new THREE.PointLight(0xFFAA55, 0.6, 40);
-                    streetLight.position.set(x, 8, z);
-                    scene.add(streetLight);
-                }
+            // 添加城市夜景灯光
+            for (let i = 0; i < 50; i++) {
+                const light = new THREE.PointLight(0xffaa00, 0.5, 50);
+                light.position.set(
+                    (Math.random() - 0.5) * config.citySize * 2,
+                    5,
+                    (Math.random() - 0.5) * config.citySize * 2
+                );
+                scene.add(light);
             }
         }
 
-        function createEnvironment() {
+        // ==================== 创建天空盒 ====================
+        function createSkybox() {
+            const skyGeometry = new THREE.SphereGeometry(1500, 32, 32);
+            const skyMaterial = new THREE.MeshBasicMaterial({
+                color: 0x87CEEB,
+                side: THREE.BackSide
+            });
+            const sky = new THREE.Mesh(skyGeometry, skyMaterial);
+            scene.add(sky);
+
             // 添加云朵
-            for (let i = 0; i < 30; i++) {
-                const cloudGeometry = new THREE.SphereGeometry(20 + Math.random() * 20, 8, 8);
-                const cloudMaterial = new THREE.MeshBasicMaterial({ 
-                    color: 0xFFFFFF,
+            for (let i = 0; i < 20; i++) {
+                const cloudGeometry = new THREE.SphereGeometry(Math.random() * 30 + 20, 8, 8);
+                const cloudMaterial = new THREE.MeshBasicMaterial({
+                    color: 0xffffff,
                     transparent: true,
-                    opacity: 0.7
+                    opacity: 0.6
                 });
                 const cloud = new THREE.Mesh(cloudGeometry, cloudMaterial);
                 cloud.position.set(
                     (Math.random() - 0.5) * 1000,
-                    300 + Math.random() * 200,
+                    Math.random() * 200 + 400,
                     (Math.random() - 0.5) * 1000
                 );
                 scene.add(cloud);
             }
         }
 
-        function initMinimap() {
-            minimapCanvas = document.getElementById('minimap');
-            minimapCtx = minimapCanvas.getContext('2d');
-        }
-
-        function updateMinimap() {
-            const size = 200;
-            const scale = size / (config.cityBounds);
-            
-            minimapCtx.fillStyle = 'rgba(20, 20, 30, 0.9)';
-            minimapCtx.fillRect(0, 0, size, size);
-
-            // 绘制建筑
-            buildings.forEach(({ mesh, data }) => {
-                const x = (mesh.position.x + config.cityBounds / 2) * scale;
-                const z = (mesh.position.z + config.cityBounds / 2) * scale;
+        // ==================== 创建树木 ====================
+        function createTrees() {
+            for (let i = 0; i < 100; i++) {
+                const treeGroup = new THREE.Group();
                 
-                minimapCtx.fillStyle = `#${data.color.toString(16).padStart(6, '0')}`;
-                minimapCtx.fillRect(x - 2, z - 2, 4, 4);
-            });
-
-            // 绘制玩家
-            const playerX = (player.position.x + config.cityBounds / 2) * scale;
-            const playerZ = (player.position.z + config.cityBounds / 2) * scale;
-            
-            minimapCtx.fillStyle = '#FF0000';
-            minimapCtx.beginPath();
-            minimapCtx.arc(playerX, playerZ, 4, 0, Math.PI * 2);
-            minimapCtx.fill();
-
-            // 绘制方向指示
-            minimapCtx.strokeStyle = '#FFFFFF';
-            minimapCtx.lineWidth = 2;
-            minimapCtx.beginPath();
-            minimapCtx.moveTo(playerX, playerZ);
-            minimapCtx.lineTo(
-                playerX + Math.sin(yaw) * 10,
-                playerZ + Math.cos(yaw) * 10
-            );
-            minimapCtx.stroke();
+                // 树干
+                const trunkGeometry = new THREE.CylinderGeometry(0.5, 0.8, 8, 8);
+                const trunkMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+                const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+                trunk.position.y = 4;
+                treeGroup.add(trunk);
+                
+                // 树冠
+                const foliageGeometry = new THREE.SphereGeometry(4, 8, 8);
+                const foliageMaterial = new THREE.MeshLambertMaterial({ color: 0x228B22 });
+                const foliage = new THREE.Mesh(foliageGeometry, foliageMaterial);
+                foliage.position.y = 10;
+                treeGroup.add(foliage);
+                
+                // 随机位置（避开建筑区域）
+                let x, z;
+                let validPosition = false;
+                while (!validPosition) {
+                    x = (Math.random() - 0.5) * config.citySize * 2;
+                    z = (Math.random() - 0.5) * config.citySize * 2;
+                    
+                    validPosition = true;
+                    for (let building of ZhujiangNewTownBuildings) {
+                        const dx = x - building.position.x;
+                        const dz = z - building.position.z;
+                        const distance = Math.sqrt(dx * dx + dz * dz);
+                        if (distance < 80) {
+                            validPosition = false;
+                            break;
+                        }
+                    }
+                }
+                
+                treeGroup.position.set(x, 0, z);
+                scene.add(treeGroup);
+            }
         }
 
+        // ==================== 事件监听 ====================
         function setupEventListeners() {
+            // 键盘事件
             window.addEventListener('keydown', (e) => {
                 keys[e.key.toLowerCase()] = true;
-                if (e.key === ' ' && !isJumping) {
-                    playerVelocity.y = config.jumpForce;
-                    isJumping = true;
-                }
             });
-
+            
             window.addEventListener('keyup', (e) => {
                 keys[e.key.toLowerCase()] = false;
             });
 
+            // 鼠标锁定
             renderer.domElement.addEventListener('click', () => {
                 renderer.domElement.requestPointerLock();
             });
@@ -664,14 +722,28 @@
                 mouse.locked = document.pointerLockElement === renderer.domElement;
             });
 
+            // 鼠标移动
             document.addEventListener('mousemove', (e) => {
                 if (mouse.locked) {
                     yaw -= e.movementX * config.rotationSpeed;
                     pitch -= e.movementY * config.rotationSpeed;
                     pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch));
                 }
+                
+                // 更新鼠标位置用于射线检测
+                mouseVector.x = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseVector.y = -(e.clientY / window.innerHeight) * 2 + 1;
             });
 
+            // 鼠标滚轮缩放
+            window.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const zoomSpeed = 5;
+                player.position.y += e.deltaY > 0 ? -zoomSpeed : zoomSpeed;
+                player.position.y = Math.max(config.minHeight, Math.min(config.maxHeight, player.position.y));
+            }, { passive: false });
+
+            // 窗口大小调整
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
@@ -679,15 +751,26 @@
             });
         }
 
+        // ==================== 更新玩家 ====================
         function updatePlayer() {
+            // 获取移动速度
             const speed = keys['shift'] ? config.sprintSpeed : config.moveSpeed;
-            const moveDirection = new THREE.Vector3();
 
+            // 计算移动方向
+            const moveDirection = new THREE.Vector3();
             if (keys['w']) moveDirection.z -= 1;
             if (keys['s']) moveDirection.z += 1;
             if (keys['a']) moveDirection.x -= 1;
             if (keys['d']) moveDirection.x += 1;
 
+            // 垂直移动
+            if (keys[' ']) player.position.y += config.verticalSpeed;
+            if (keys['c']) player.position.y -= config.verticalSpeed;
+
+            // 限制高度
+            player.position.y = Math.max(config.minHeight, Math.min(config.maxHeight, player.position.y));
+
+            // 标准化方向向量
             if (moveDirection.length() > 0) {
                 moveDirection.normalize();
                 moveDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
@@ -695,100 +778,118 @@
                 player.position.z += moveDirection.z * speed;
             }
 
-            // 跳跃和重力
-            player.position.y += playerVelocity.y;
-            playerVelocity.y -= config.gravity;
-
-            if (player.position.y <= 0.85) {
-                player.position.y = 0.85;
-                playerVelocity.y = 0;
-                isJumping = false;
-            }
-
-            // 碰撞检测
-            checkCollisions();
-
-            // 限制边界
-            const boundary = config.cityBounds / 2;
+            // 限制在城市范围内
+            const boundary = config.citySize * 1.5;
             player.position.x = Math.max(-boundary, Math.min(boundary, player.position.x));
             player.position.z = Math.max(-boundary, Math.min(boundary, player.position.z));
 
             // 更新相机
             camera.position.copy(player.position);
-            camera.position.y += 1.7;
             camera.rotation.order = 'YXZ';
             camera.rotation.y = yaw;
             camera.rotation.x = pitch;
 
+            // 检测建筑物
+            detectBuildings();
+
             // 更新UI
-            updateUI(moveDirection, speed);
-            
-            // 更新小地图
-            updateMinimap();
+            updateUI(moveDirection.length() * speed);
         }
 
-        function checkCollisions() {
-            const playerBox = new THREE.Box3().setFromObject(player);
-            
-            for (let { mesh } of buildings) {
-                const buildingBox = new THREE.Box3().setFromObject(mesh);
-                if (playerBox.intersectsBox(buildingBox)) {
-                    const pushBack = new THREE.Vector3()
-                        .subVectors(player.position, mesh.position)
-                        .normalize()
-                        .multiplyScalar(0.8);
-                    player.position.add(pushBack);
+        // ==================== 检测建筑物 ====================
+        function detectBuildings() {
+            raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+            const intersects = raycaster.intersectObjects(buildings);
+
+            if (intersects.length > 0) {
+                const building = intersects[0].object;
+                if (selectedBuilding !== building) {
+                    selectedBuilding = building;
+                    showBuildingInfo(building.userData);
                 }
-            }
-        }
-
-        function updateUI(moveDirection, speed) {
-            document.getElementById('position').textContent = 
-                `X: ${player.position.x.toFixed(0)}, Z: ${player.position.z.toFixed(0)}`;
-            
-            const speedKmh = (moveDirection.length() * speed * 60 * 3.6).toFixed(1);
-            document.getElementById('speed').textContent = speedKmh;
-
-            // 更新方向
-            const directions = ['北', '东北', '东', '东南', '南', '西南', '西', '西北'];
-            const directionIndex = Math.round(((yaw + Math.PI) / (Math.PI / 4)) % 8);
-            document.getElementById('direction').textContent = directions[directionIndex];
-
-            // 查找最近的地标
-            let nearestLandmark = null;
-            let minDistance = Infinity;
-
-            buildings.forEach(({ mesh, data }) => {
-                const distance = player.position.distanceTo(mesh.position);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    nearestLandmark = data;
-                }
-            });
-
-            if (nearestLandmark && minDistance < 100) {
-                document.getElementById('nearestLandmark').innerHTML = 
-                    `📍 ${nearestLandmark.name}<br>` +
-                    `<small style="font-size:14px;">${nearestLandmark.name_en}</small><br>` +
-                    `<small style="font-size:12px;">距离: ${minDistance.toFixed(0)}m | ` +
-                    `高度: ${nearestLandmark.height}m</small><br>` +
-                    `<small style="font-size:11px; color:#FFD700;">${nearestLandmark.features}</small>`;
             } else {
-                document.getElementById('nearestLandmark').textContent = '探索珠江新城...';
+                if (selectedBuilding) {
+                    selectedBuilding = null;
+                    hideBuildingInfo();
+                }
             }
         }
 
+        // ==================== 显示建筑信息 ====================
+        function showBuildingInfo(data) {
+            const infoDiv = document.getElementById('buildingInfo');
+            document.getElementById('buildingName').textContent = data.name;
+            document.getElementById('buildingDesc').textContent = data.desc;
+            document.getElementById('buildingHeight').textContent = data.height;
+            infoDiv.classList.add('show');
+        }
+
+        function hideBuildingInfo() {
+            document.getElementById('buildingInfo').classList.remove('show');
+        }
+
+        // ==================== 更新UI ====================
+        function updateUI(moveSpeed) {
+            document.getElementById('position').textContent =
+                `X: ${player.position.x.toFixed(0)}, Z: ${player.position.z.toFixed(0)}`;
+            document.getElementById('height').textContent =
+                `${player.position.y.toFixed(0)} m`;
+            document.getElementById('speed').textContent =
+                `${(moveSpeed * 3.6).toFixed(1)} km/h`;
+            
+            // 更新时间
+            const hours = Math.floor(time);
+            const minutes = Math.floor((time % 1) * 60);
+            document.getElementById('time').textContent =
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        }
+
+        // ==================== 动画循环 ====================
+        let lastTime = Date.now();
         function animate() {
             requestAnimationFrame(animate);
+            
+            const currentTime = Date.now();
+            const deltaTime = (currentTime - lastTime) / 1000;
+            lastTime = currentTime;
+
+            // 更新时间（慢速）
+            time += deltaTime * 0.01;
+            if (time >= 24) time = 0;
+
+            // 更新天空颜色（根据时间）
+            updateSkyColor();
+
+            // 更新玩家
             updatePlayer();
+
+            // 渲染场景
             renderer.render(scene, camera);
         }
 
-        // 启动游戏
-        init();
+        // ==================== 更新天空颜色 ====================
+        function updateSkyColor() {
+            let skyColor;
+            if (time >= 6 && time < 8) {
+                // 日出
+                skyColor = new THREE.Color(0xff9966);
+            } else if (time >= 8 && time < 18) {
+                // 白天
+                skyColor = new THREE.Color(0x87CEEB);
+            } else if (time >= 18 && time < 20) {
+                // 日落
+                skyColor = new THREE.Color(0xff6644);
+            } else {
+                // 夜晚
+                skyColor = new THREE.Color(0x1a1a2e);
+            }
+            
+            scene.background.lerp(skyColor, 0.01);
+            scene.fog.color.lerp(skyColor, 0.01);
+        }
 
-        console.log('%c🏙️ 欢迎来到广州珠江新城！', 'color: #FFD700; font-size: 20px; font-weight: bold;');
-        console.log('已还原 18 个真实地标建筑');
+        // ==================== 启动游戏 ====================
+        init();
     </script>
 </body>
 </html>
