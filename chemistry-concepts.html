@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>化学的所有概念 - 狂客·银河</title>
+    <link rel="stylesheet" href="style.css"><!-- 若无该文件不影响本页运行 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root{
+            --brand-start:#667eea;
+            --brand-end:#764ba2;
+            --text:#2d3748;
+            --muted:#718096;
+            --bg:#f7fafc;
+            --card:#ffffff;
+            --dark-bg:#0f172a;
+            --dark-card:#1f2937;
+            --dark-text:#e5e7eb;
+            --accent:#ff6b6b;
+            --shadow:0 10px 30px rgba(0,0,0,0.12);
+        }
+        *{box-sizing:border-box}
+        html,body{margin:0;padding:0}
+        body{
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+            color:var(--text);
+            background: linear-gradient(135deg,#eef2f7 0%,#e8ecf4 100%);
+        }
+        body.dark-mode{
+            color:var(--dark-text);
+            background: radial-gradient(1200px 600px at 20% -10%,rgba(102,126,234,0.10),transparent),
+                        radial-gradient(1000px 500px at 80% -10%,rgba(118,75,162,0.10),transparent),
+                        #0b1220;
+        }
+
+        /* Header（复刻感） */
+        .header{
+            position: sticky; top:0; z-index:1000;
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(10px);
+            border-bottom:1px solid rgba(102,126,234,0.15);
+        }
+        body.dark-mode .header{
+            background: rgba(17,24,39,0.6);
+            border-color: rgba(102,126,234,0.25);
+        }
+        .container{
+            max-width:1200px; margin:0 auto; padding:14px 20px;
+            display:flex; align-items:center; justify-content:space-between;
+        }
+        .header-left{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+        .logo{
+            margin:0 10px 0 0;
+            font-size:20px; font-weight:800; letter-spacing:1px;
+            background: linear-gradient(135deg,var(--brand-start),var(--brand-end));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        }
+        .nav-link{
+            display:flex; align-items:center; gap:8px;
+            padding:8px 14px; border-radius:10px; text-decoration:none;
+            color:#334155; font-weight:600; font-size:14px;
+            background: #ffffff; border:1px solid rgba(102,126,234,0.12);
+            box-shadow: 0 6px 16px rgba(102,126,234,0.08);
+            transition:.25s ease;
+        }
+        .nav-link:hover{ transform: translateY(-2px); box-shadow:0 10px 22px rgba(102,126,234,0.16)}
+        body.dark-mode .nav-link{
+            background:#111827; border-color:rgba(118,75,162,0.2); color:#e5e7eb;
+        }
+        .nav-link .fa{ color:#fff; width:22px; height:22px; border-radius:6px;
+            display:flex; align-items:center; justify-content:center;
+            background: linear-gradient(135deg,var(--brand-start),var(--brand-end));
+            box-shadow: 0 6px 14px rgba(102,126,234,0.35);
+        }
+        .game-link{ background: linear-gradient(135deg,#ff6b6b 0%, #feca57 100%); color:#fff; border:none; box-shadow:0 6px 0 #c44569,0 6px 16px rgba(0,0,0,0.2)}
+        .game-link:hover{ transform: translateY(2px); box-shadow:0 3px 0 #c44569,0 10px 20px rgba(0,0,0,0.2)}
+        body.dark-mode .game-link{ box-shadow:0 6px 0 #ff4757,0 10px 22px rgba(0,0,0,0.35)}
+
+        .controls{display:flex; align-items:center; gap:10px;}
+        .theme-toggle{
+            width:40px; height:40px; border-radius:12px; border:none; cursor:pointer;
+            background: linear-gradient(135deg,var(--brand-start),var(--brand-end)); color:#fff;
+            box-shadow: 0 10px 20px rgba(102,126,234,0.35);
+            transition:.25s ease;
+        }
+        .theme-toggle:hover{ transform: translateY(-2px) }
+
+        /* 页面标题区 */
+        .hero{
+            max-width:1200px; margin:70px auto 20px; padding:20px 20px 0;
+            text-align:center;
+        }
+        .hero h1{
+            font-size:2.6em; margin:0 0 10px;
+            background: linear-gradient(135deg,var(--brand-start),var(--brand-end));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        }
+        .hero p{ color:#64748b; margin:0 auto; max-width:720px }
+        body.dark-mode .hero p{ color:#9aa3b2 }
+
+        /* Mindmap 外层容器与工具栏 */
+        .mindmap-shell{
+            max-width:1200px; margin:16px auto 60px; padding:0 20px 40px;
+        }
+        .toolbar{
+            display:flex; align-items:center; flex-wrap:wrap; gap:10px;
+            justify-content:space-between; margin-bottom:14px;
+        }
+        .toolbar-left, .toolbar-right{ display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+        .search-box{
+            display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px;
+            background:#fff; border:1px solid rgba(102,126,234,0.14); min-width:280px;
+            box-shadow: 0 6px 16px rgba(102,126,234,0.08);
+        }
+        .search-box input{
+            outline:none; border:none; flex:1; font-size:14px; color:#334155; background:transparent;
+        }
+        .btn{
+            display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; cursor:pointer;
+            background: linear-gradient(135deg,#f5f7fa 0%, #e8ecf4 100%); color:#334155; border:1px solid rgba(102,126,234,0.14);
+            box-shadow: 0 6px 16px rgba(102,126,234,0.08); font-weight:600; transition:.2s ease; user-select:none;
+        }
+        .btn:hover{ transform: translateY(-2px) }
+        .btn.primary{ color:#fff; border:none; background:linear-gradient(135deg,var(--brand-start),var(--brand-end)) }
+        .zoom-display{ font-weight:700; color:#334155 }
+        body.dark-mode .search-box{ background:#0b1220; border-color:rgba(118,75,162,0.25) }
+        body.dark-mode .search-box input{ color:#e5e7eb }
+        body.dark-mode .btn{ background:#111827; color:#e5e7eb; border-color:rgba(118,75,162,0.25) }
+
+        /* 思维导图树 */
+        .map-viewport{
+            position:relative; overflow:auto; height: calc(100vh - 260px);
+            background: radial-gradient(900px 500px at 20% 0%,rgba(102,126,234,0.08),transparent),
+                        radial-gradient(900px 600px at 80% 10%,rgba(118,75,162,0.10),transparent);
+            border-radius:20px; border:1px solid rgba(102,126,234,0.14);
+            box-shadow: var(--shadow);
+        }
+        body.dark-mode .map-viewport{
+            background: radial-gradient(900px 500px at 20% 0%,rgba(102,126,234,0.12),transparent),
+                        radial-gradient(900px 600px at 80% 10%,rgba(118,75,162,0.14),transparent);
+            border-color: rgba(118,75,162,0.25)
+        }
+        .map-stage{ transform-origin: 0 0; padding:40px; width: max-content }
+        /* 树结构（经典 UL/LI 画线法） */
+        .tree{ position:relative; white-space:nowrap }
+        .tree ul{
+            padding-top: 16px; position: relative; padding-left: 28px; margin:0
+        }
+        .tree li{
+            position: relative; list-style-type: none; padding: 14px 0 0 28px;
+        }
+        .tree li::before{
+            content: ""; position: absolute; top:0; left:12px; border-left:2px solid rgba(102,126,234,0.25);
+            height:100%; width:0;
+        }
+        .tree li::after{
+            content: ""; position: absolute; top:24px; left:12px; width:28px; height:0;
+            border-top:2px solid rgba(102,126,234,0.25);
+        }
+        .tree li:last-child::before{ height:24px }
+
+        /* 节点卡片 */
+        .node{
+            position: relative; display:inline-flex; align-items:center; gap:10px;
+            background: #fff; color:#1f2937; border-radius:14px; padding:12px 14px;
+            border:1px solid rgba(102,126,234,0.18);
+            box-shadow: 0 8px 22px rgba(102,126,234,0.12);
+            max-width: 420px;
+        }
+        .node .dot{
+            flex:0 0 auto; width:26px; height:26px; border-radius:8px; color:#fff; display:flex; align-items:center; justify-content:center;
+            background: linear-gradient(135deg,var(--brand-start),var(--brand-end));
+            box-shadow: 0 6px 14px rgba(102,126,234,0.35);
+            font-size:14px;
+        }
+        .node .title{ font-weight:700; font-size:14px; line-height:1.25 }
+        .node .meta{ color:#64748b; font-size:12px }
+        .node .actions{ margin-left:auto; display:flex; align-items:center; gap:8px }
+        .chip{
+            padding:4px 8px; border-radius:8px; font-size:12px; font-weight:700; color:#fff;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .toggle{
+            width:32px; height:32px; border-radius:8px; border:none; cursor:pointer;
+            background: linear-gradient(135deg,#f5f7fa 0%, #e8ecf4 100%); color:#334155;
+            border:1px solid rgba(102,126,234,0.18)
+        }
+        .info{
+            width:32px; height:32px; border-radius:8px; border:none; cursor:pointer; color:#fff;
+            background: linear-gradient(135deg,#ff6b6b 0%, #ee5a24 100%);
+            box-shadow: 0 6px 14px rgba(255,107,107,0.35);
+        }
+        body.dark-mode .node{
+            background:#0b1220; color:#e5e7eb; border-color:rgba(118,75,162,0.25);
+            box-shadow: 0 10px 22px rgba(0,0,0,0.35)
+        }
+        body.dark-mode .meta{ color:#9aa3b2 }
+        body.dark-mode .toggle{ background:#111827; color:#e5e7eb; border-color:rgba(118,75,162,0.25) }
+
+        /* 匹配高亮 */
+        .highlight .title{
+            background: linear-gradient(135deg,#ffe066 0%, #ff9f1a 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        }
+        .hidden-branch{ display:none !important }
+
+        /* 返回首页按钮 */
+        .back-button {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            background: linear-gradient(135deg, var(--brand-start), var(--brand-end));
+            color: white; border-radius: 50%; display:flex; align-items:center; justify-content:center;
+            font-size: 22px; box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35); cursor: pointer;
+            transition: all 0.3s ease; z-index: 1000; text-decoration: none;
+        }
+        .back-button:hover { transform: translateY(-4px) }
+
+        /* 定义弹窗 */
+        .modal{ display:none; position:fixed; inset:0; z-index:2000; background: rgba(0,0,0,0.65)}
+        .modal-card{
+            background:#fff; color:#1f2937; width: min(760px,92vw); max-height:80vh; overflow:auto;
+            border-radius:18px; margin:6vh auto; padding:26px 26px 16px;
+            box-shadow: 0 40px 60px rgba(0,0,0,0.35);
+        }
+        body.dark-mode .modal-card{ background:#111827; color:#e5e7eb }
+        .modal-header{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px }
+        .modal-title{ font-size:20px; font-weight:900; margin:0 }
+        .modal-close{
+            width:40px; height:40px; border-radius:12px; border:none; cursor:pointer;
+            background: linear-gradient(135deg,#f5f7fa 0%, #e8ecf4 100%); color:#334155;
+            border:1px solid rgba(102,126,234,0.18)
+        }
+        body.dark-mode .modal-close{ background:#0b1220; color:#e5e7eb; border-color:rgba(118,75,162,0.25) }
+        .def-content{ margin-top:10px; color:#475569; line-height:1.7 }
+        body.dark-mode .def-content{ color:#c5ceda }
+        .def-meta{ margin-top:6px; font-size:12px; color:#64748b }
+        body.dark-mode .def-meta{ color:#9aa3b2 }
+
+        @media (max-width: 768px){
+            .hero h1{ font-size:2.1em }
+            .map-viewport{ height: calc(100vh - 280px) }
+        }
+    </style>
+</head>
+
+<body data-page="chemistry-all">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <h1 class="logo">狂客·银河</h1>
+
+                <a class="nav-link" href="success.html" title="成功日记">
+                    <i class="fa fa-meteor"></i><span>成功日记</span>
+                </a>
+
+                <a class="nav-link" href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnGZZB8XUcRr7ChjRqeL27ic" title="《自学突围》">
+                    <i class="fa fa-book-open"></i><span>《自学突围》</span>
+                </a>
+
+                <a class="nav-link" href="reading.html" title="星空">
+                    <i class="fa fa-star"></i><span>星空</span>
+                </a>
+
+                <a class="nav-link" href="https://kuangketongxue.github.io/tongxuekuangke/" title="冬之街小店">
+                    <i class="fa fa-graduation-cap"></i><span>冬之街小店</span>
+                </a>
+
+                <a class="nav-link" href="video.html" title="视频矩阵">
+                    <i class="fa fa-video"></i><span>视频矩阵</span>
+                </a>
+
+                <a class="nav-link game-link" href="games.html" title="自制游戏" style="gap:10px">
+                    <i class="fa fa-gamepad" style="background:none"></i><span>自制游戏</span>
+                </a>
+            </div>
+
+            <div class="controls">
+                <button id="themeToggle" class="theme-toggle" title="切换主题">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 标题 -->
+    <section class="hero">
+        <h1>🧪 化学的所有概念</h1>
+        <p>以“第一性原理”的视角，系统整理高考化学满分所需的底层概念与定义。支持搜索、展开折叠、缩放与暗黑模式，便于查阅与总览。</p>
+    </section>
+
+    <!-- 工具栏 + 思维导图视图 -->
+    <section class="mindmap-shell">
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <div class="search-box">
+                    <i class="fa fa-search" style="color:#667eea"></i>
+                    <input id="searchInput" type="text" placeholder="搜索概念或定义关键词…（例如：氧化还原 / pH / 杂化）">
+                </div>
+                <button class="btn" id="expandAll"><i class="fa fa-plus-square"></i>展开全部</button>
+                <button class="btn" id="collapseAll"><i class="fa fa-minus-square"></i>折叠全部</button>
+                <button class="btn" id="clearSearch"><i class="fa fa-eraser"></i>清除搜索</button>
+            </div>
+            <div class="toolbar-right">
+                <button class="btn" id="zoomOut"><i class="fa fa-search-minus"></i></button>
+                <span class="zoom-display" id="zoomPercent">100%</span>
+                <button class="btn" id="zoomIn"><i class="fa fa-search-plus"></i></button>
+                <button class="btn primary" id="fitView"><i class="fa fa-compress"></i>适配视图</button>
+                <button class="btn" id="printMap"><i class="fa fa-print"></i>打印/导出</button>
+            </div>
+        </div>
+
+        <div class="map-viewport" id="viewport">
+            <div class="map-stage" id="stage">
+                <div class="tree" id="treeRoot">
+                    <!-- 动态渲染导图 -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 定义弹窗 -->
+    <div class="modal" id="defModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title" id="defTitle">概念</h3>
+                <button class="modal-close" id="modalClose"><i class="fa fa-times"></i></button>
+            </div>
+            <div class="def-content" id="defContent"></div>
+            <div class="def-meta" id="defMeta"></div>
+        </div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <a href="index.html" class="back-button" title="返回首页">
+        <i class="fas fa-home"></i>
+    </a>
+
+    <script>
+        // 主题切换
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon'); icon.classList.add('fa-sun');
+        }
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon'); icon.classList.add('fa-sun');
+                localStorage.setItem('theme','dark');
+            } else {
+                icon.classList.remove('fa-sun'); icon.classList.add('fa-moon');
+                localStorage.setItem('theme','light');
+            }
+        });
+
+        // 思维导图数据（覆盖高考化学满分所需的底层概念）
+        // 结构：title, def, color, icon, children:[]
+        const mindmapData = {
+            title: "化学的所有概念", icon:"fa-atom", color:"#ff6b6b",
+            def: "以粒子观与守恒观为底层框架，统摄化学计量、结构与性质、反应与能量、可持续与实验探究等核心素养。",
+            children: [
+                {
+                    title:"计量与基本定律", icon:"fa-scale-balanced", color:"#4facfe",
+                    def:"化学的数量语言；以摩尔为桥梁连接微观粒子与宏观测量，受守恒定律与定量规律约束。",
+                    children:[
+                        {title:"物质的量 n", def:"表示所含微粒数量的物理量，单位 mol；1 mol 含 6.02×10^23 个微粒。"},
+                        {title:"摩尔 mol", def:"物质的量单位；数值上与阿伏加德罗常数对应的粒子数。"},
+                        {title:"阿伏加德罗常数 N_A", def:"每 1 mol 物质所含微粒数，6.02×10^23 mol^-1（近似值）。"},
+                        {title:"摩尔质量 M", def:"每 1 mol 物质的质量，单位 g·mol^-1，数值等于相对分子（原子）质量。"},
+                        {title:"相对原子质量", def:"以 12C 的 1/12 为基准的无量纲相对值，反映平均原子质量。"},
+                        {title:"相对分子质量", def:"分子中各原子相对原子质量之和（或式量）。"},
+                        {title:"摩尔体积 V_m", def:"标准状况下任何气体的 1 mol 体积约为 22.4 L·mol^-1。"},
+                        {title:"质量分数 ω", def:"溶质质量占溶液质量的分数（或百分数）。"},
+                        {title:"物质的量浓度 c", def:"每升溶液中所含溶质的物质的量（mol·L^-1）。"},
+                        {title:"气体摩尔体积（非标况）", def:"由状态方程定性判断体积随 T、p 变化，高中多作定性或等比推断。"},
+                        {title:"质量守恒定律", def:"化学反应前后各元素总质量不变。"},
+                        {title:"定比分（恒定组成）定律", def:"同一化合物中各元素质量比为确定不变的最简整数比。"},
+                        {title:"倍比定律", def:"两元素形成不同化合物时，在固定一种元素质量下，另一元素质量之比为最简整数比。"},
+                        {title:"能量守恒与转化", def:"反应过程中能量总量守恒，可在不同形式间转化（热、电、化学能）。"},
+                    ]
+                },
+                {
+                    title:"微观粒子与原子结构", icon:"fa-atom", color:"#30cfd0",
+                    def:"原子—分子—离子是物质的微观构成；核外电子排布决定元素的化学性质。",
+                    children:[
+                        {title:"质子", def:"带 +1 电荷，位于原子核内，其数目等于核电荷数。"},
+                        {title:"中子", def:"不带电，位于原子核内，贡献原子质量但不改变核电荷数。"},
+                        {title:"电子", def:"带 -1 电荷，核外运动，参与化学键与反应。"},
+                        {title:"核电荷数（Z）", def:"等于质子数，决定元素种类与周期表位置。"},
+                        {title:"同位素", def:"同一元素的不同核素（质子数相同，中子数不同）。"},
+                        {title:"相对原子质量（平均）", def:"按天然同位素丰度加权的平均值。"},
+                        {title:"价电子", def:"最外层电子；决定元素的化学活性与成键能力。"},
+                        {title:"电子层与能级", def:"核外电子按能量由低到高分层、分亚层有序排布。"},
+                        {title:"基态排布", def:"电子占据最低能级的排布状态，高中常用简化写法。"},
+                        {title:"离子", def:"原子或原子团得失电子形成的带电粒子（阳离子/阴离子）。"},
+                        {title:"相对分子质量/式量", def:"分子或晶体化学式中原子相对原子质量之和。"},
+                        {title:"经验式", def:"化合物中各元素原子个数最简整数比表示。"},
+                        {title:"分子式", def:"化合物分子中各元素的实际原子个数表示。"},
+                        {title:"结构式（高中）", def:"在满足价键数前提下的平面键连表示，用于理解有机官能团。"},
+                    ]
+                },
+                {
+                    title:"元素周期律与元素性质", icon:"fa-table", color:"#a18cd1",
+                    def:"原子序数递增时，元素性质按周期性变化；同周期与同主族呈规律趋势。",
+                    children:[
+                        {title:"周期与族", def:"周期表横行为周期，纵列为族（高中关注主族）。"},
+                        {title:"原子半径", def:"同周期自左向右减小，同族自上而下增大（一般规律）。"},
+                        {title:"第一电离能", def:"同周期一般增大，同族自上而下减小。"},
+                        {title:"电负性", def:"同周期一般增大，同族自上而下减小。"},
+                        {title:"金属性/非金属性", def:"金属性同周期向右减弱、同族向下增强；非金属性相反。"},
+                        {title:"氧化性/还原性趋势", def:"F、O 等非金属氧化性强；活泼金属还原性强。"},
+                        {title:"主族元素价态", def:"常按最外层电子数与 8 关系判断常见价态（高中定性）。"},
+                        {title:"同周期比较", def:"由核电荷作用增强引起性质有序变化。"},
+                        {title:"同主族比较", def:"由电子层数增多引起性质随族向下改变。"},
+                    ]
+                },
+                {
+                    title:"化学键与物质结构", icon:"fa-link", color:"#43e97b",
+                    def:"键型与分子结构决定物质宏观性质；分子间作用力影响熔沸点、溶解性等。",
+                    children:[
+                        {title:"离子键", def:"阴阳离子间库仑力形成，多见于离子化合物（如 NaCl）。"},
+                        {title:"共价键", def:"原子通过共用电子对形成的化学键（极性/非极性）。"},
+                        {title:"金属键", def:"金属阳离子与自由电子海之间的作用，导电导热延展。"},
+                        {title:"极性键/非极性键", def:"由成键原子电负性差异决定键的极性。"},
+                        {title:"键能与键长", def:"键能越大键长越短，键越稳定。"},
+                        {title:"VSEPR（价层电子对互斥）", def:"价层电子对尽量远离，决定分子几何构型（高中定性）。"},
+                        {title:"杂化（sp/sp2/sp3）", def:"价轨道重组解释键角与构型（高中常见有机结构）。"},
+                        {title:"分子间作用力", def:"氢键、范德华力等影响熔沸点、黏度、溶解性等。"},
+                        {title:"晶体类型", def:"离子晶体、分子晶体、原子晶体、金属晶体性质差异。"},
+                        {title:"晶格能（定性）", def:"离子间作用强弱的度量，影响熔点与溶解性。"},
+                        {title:"导电与溶解性", def:"电解质溶液/熔融态导电；“相似相溶”定性判断溶解性。"},
+                    ]
+                },
+                {
+                    title:"物质分类与溶液", icon:"fa-flask", color:"#fa709a",
+                    def:"纯净物、混合物与溶液的组成表述、配制与定量计算。",
+                    children:[
+                        {title:"纯净物/混合物", def:"纯净物由一种微粒构成；混合物由两种及以上微粒构成。"},
+                        {title:"溶质/溶剂", def:"形成溶液的成分，溶剂常为数量较多者或指定者。"},
+                        {title:"溶解度", def:"在一定温度下，溶剂中溶解某溶质的最大量。"},
+                        {title:"饱和溶液", def:"在一定条件下，溶质达最大溶解量的溶液。"},
+                        {title:"稀释与配制", def:"c1V1=c2V2（同一溶质、体积可加性条件下近似）。"},
+                        {title:"质量分数/体积分数", def:"表征组成的常用方式（体积分数多用于气体）。"},
+                        {title:"溶液浓度单位", def:"常用物质的量浓度（mol·L^-1）。"},
+                        {title:"溶解过程的热效应", def:"吸热/放热影响溶解度随温度变化（定性）。"},
+                    ]
+                },
+                {
+                    title:"酸碱盐与离子反应", icon:"fa-vial", color:"#fed6e3",
+                    def:"以电离、酸碱中和与离子共存为核心的水溶液化学。",
+                    children:[
+                        {title:"电解质/非电解质", def:"水溶液或熔融状态下能/不能导电的物质（因是否电离）。"},
+                        {title:"强电解质/弱电解质", def:"在水溶液中完全/部分电离的物质（定性）。"},
+                        {title:"酸", def:"能电离出 H+ 的电解质（高中多用阿伦尼乌斯定义）。"},
+                        {title:"碱", def:"能电离出 OH- 的电解质。"},
+                        {title:"盐", def:"由金属离子或铵根与酸根组成的离子化合物。"},
+                        {title:"氧化物", def:"氧的化合物，酸性/碱性/两性/中性（定性）。"},
+                        {title:"离子方程式", def:"以实际参加反应的离子形式表示，书写需遵守电荷与质量守恒。"},
+                        {title:"酸碱中和", def:"H+ 与 OH- 生成 H2O 的反应，常伴随热效应。"},
+                        {title:"pH / pOH", def:"溶液酸碱度的对数标度，常温近似 pH + pOH = 14。"},
+                        {title:"缓冲作用（定性）", def:"弱酸/弱碱及其共轭体系抵抗 pH 变化（高中定性）。"},
+                        {title:"盐类水解（定性）", def:"某些盐溶液呈酸性/碱性，源自离子水解。"},
+                        {title:"同离子效应（定性）", def:"溶解平衡受相同离子影响，溶解度降低。"},
+                        {title:"沉淀与复分解", def:"生成难溶沉淀或弱电解质驱动反应（如 BaSO4）。"},
+                        {title:"常见离子检验", def:"Ag+（白色沉淀 AgCl）、Ba2+（白色 BaSO4）、CO3^2-（放 CO2）等。"},
+                    ]
+                },
+                {
+                    title:"氧化还原与电化学", icon:"fa-bolt", color:"#fee140",
+                    def:"电子转移为本质的反应类型；原电池与电解构成化学与电能转化的桥梁。",
+                    children:[
+                        {title:"氧化数", def:"用以跟踪电子得失的形式电荷，便于配平与判断。"},
+                        {title:"氧化剂/还原剂", def:"得电子者为氧化剂（被还原），失电子者为还原剂（被氧化）。"},
+                        {title:"氧化还原反应", def:"伴随电子转移的反应，总得失电子数相等。"},
+                        {title:"离子-电子法配平", def:"在酸性/碱性介质中分别配平电子与电荷实现守恒。"},
+                        {title:"原电池", def:"将自发的氧化还原反应的化学能转化为电能的装置。"},
+                        {title:"负极/正极", def:"原电池中发生氧化的为负极，发生还原的为正极。"},
+                        {title:"电子流向/离子流向", def:"电子从负极经外电路流向正极；阳离子向阴极、阴离子向阳极。"},
+                        {title:"电动势（定性）", def:"反映电池反应的“驱动力”（高中多做比较判断）。"},
+                        {title:"电解与电镀（定性）", def:"用电能驱动非自发反应（方向与原电池相反）。"},
+                        {title:"腐蚀与防护", def:"化学/电化学腐蚀与牺牲阳极保护等。"},
+                    ]
+                },
+                {
+                    title:"反应热、速率与平衡", icon:"fa-fire", color:"#ff9f1a",
+                    def:"能量变化、进行快慢与进行程度三大问题构成物理化学基础。",
+                    children:[
+                        {title:"反应热 ΔH", def:"恒压条件下的热效应，放热（ΔH<0）/吸热（ΔH>0）。"},
+                        {title:"盖斯定律", def:"反应热与途径无关，仅与始态、终态有关。"},
+                        {title:"活化能", def:"反应发生所需的最小能量门槛，催化剂可降低。"},
+                        {title:"影响速率的因素", def:"浓度、温度、催化剂、接触面积等（碰撞理论）。"},
+                        {title:"化学平衡", def:"可逆反应在一定条件下达到的动态平衡状态。"},
+                        {title:"平衡常数 K（定性）", def:"只与温度有关，反映反应在平衡时进行程度（高中定性）。"},
+                        {title:"勒夏特列原理", def:"外界条件改变引起平衡移向抵消该改变的方向。"},
+                        {title:"反应商 Q（定性）", def:"与 K 比较判断反应进行方向（高中定性）。"},
+                        {title:"开口/闭口体系（定性）", def:"气体生成/逸散对平衡转化的影响。"},
+                    ]
+                },
+                {
+                    title:"无机常见元素与化合物", icon:"fa-flask-vial", color:"#00f2fe",
+                    def:"掌握主族常见元素单质、重要化合物的性质、制备与用途。",
+                    children:[
+                        {title:"氢 H2", def:"可燃，还原性；实验室常用金属+酸制取；火焰淡蓝。"},
+                        {title:"氧 O2", def:"助燃；制取可由常温分解 H2O2（催化）或加热 KClO3。"},
+                        {title:"氯 Cl2", def:"黄绿色气体，有刺激性气味；强氧化性；制漂白粉原料。"},
+                        {title:"硫 S 与 SO2/SO3", def:"S 可燃；SO2 具漂白性与还原性；SO3 强烈吸水。"},
+                        {title:"氮 N2 与 NH3", def:"N2 惰性大；NH3 易溶于水呈碱性，有刺激性气味。"},
+                        {title:"碳 C、CO、CO2", def:"C 还原性；CO 有毒且可燃；CO2 不燃且助灭火。"},
+                        {title:"硅 Si 与 SiO2", def:"Si 半导体；SiO2 为原子晶体，硬度大，不溶于水。"},
+                        {title:"钠 Na 与 NaOH、NaCl", def:"Na 活泼；NaOH 强碱；NaCl 常见盐类。"},
+                        {title:"铝 Al 与 Al2O3/Al(OH)3", def:"Al 活泼但有致密氧化膜；Al(OH)3 两性。"},
+                        {title:"铁 Fe 与其氧化物", def:"Fe2+/Fe3+ 转化；铁锈主要为水合氧化铁；易被腐蚀。"},
+                        {title:"铜 Cu 与其化合物", def:"Cu 导电性好；Cu(OH)2 蓝色沉淀，加热分解为黑色 CuO。"},
+                        {title:"强酸", def:"HCl、HNO3、H2SO4（前两者挥发性酸）。"},
+                        {title:"强碱", def:"NaOH、KOH、Ba(OH)2。"},
+                        {title:"两性氢氧化物", def:"如 Al(OH)3、Zn(OH)2，既能与酸又能与强碱反应。"},
+                        {title:"常见难溶盐", def:"AgCl、BaSO4、CaCO3 等（定性记忆与离子共存判断）。"},
+                    ]
+                },
+                {
+                    title:"有机化学基础与官能团", icon:"fa-seedling", color:"#38f9d7",
+                    def:"“结构决定性质，性质决定用途”；以官能团为核心，掌握基本反应类型与规律。",
+                    children:[
+                        {title:"同系物", def:"结构相似、相邻成员相差一个基本结构单元（如 -CH2-）的一组有机物。"},
+                        {title:"同分异构（高中）", def:"以结构异构（碳骨架、官能团位置、互变异构）和几何异构为主。"},
+                        {title:"烷烃（饱和烃）", def:"σ 键为主，性质稳定；取代反应（卤代）。"},
+                        {title:"烯烃（不饱和烃）", def:"含 C=C π 键，易加成与加聚。"},
+                        {title:"炔烃", def:"含 C≡C；与卤素、氢卤酸加成。"},
+                        {title:"芳香烃（苯）", def:"苯环共轭，易发生取代（如硝化、卤代）。"},
+                        {title:"卤代烃", def:"可发生亲核取代（高中定性）。"},
+                        {title:"醇（乙醇）", def:"能与金属钠、酸酐、羧酸反应；易氧化。"},
+                        {title:"酚（苯酚）", def:"酸性较醇强，可与 FeCl3 显色。"},
+                        {title:"醛（甲醛、乙醛）", def:"具还原性，可银镜反应或新制 Cu(OH)2 变砖红。"},
+                        {title:"酮（丙酮）", def:"较难氧化，作为溶剂广用。"},
+                        {title:"羧酸（乙酸）", def:"酸性，与碱/金属/碳酸盐反应；参与酯化。"},
+                        {title:"酯（乙酸乙酯）", def:"由酸与醇在酸催化下脱水生成；可水解。"},
+                        {title:"糖类（葡萄糖/蔗糖）", def:"葡萄糖具还原性，蔗糖无还原性。"},
+                        {title:"油脂", def:"高级脂肪酸与甘油的酯；可皂化。"},
+                        {title:"蛋白质（定性）", def:"生物大分子，受热变性；与双缩脲试剂显色。"},
+                        {title:"高分子（聚乙烯等）", def:"加聚/缩聚形成的聚合物，性质与单体结构相关。"},
+                        {title:"基本反应类型", def:"取代、加成、消去、氧化/还原、酯化/水解等。"},
+                        {title:"官能团决定律", def:"官能团种类与位置决定主要化学性质与反应方向。"},
+                    ]
+                },
+                {
+                    title:"实验基础与探究", icon:"fa-microscope", color:"#a8edea",
+                    def:"以安全为前提，强调操作规范、数据处理与误差分析。",
+                    children:[
+                        {title:"常用仪器", def:"试管、量筒、滴定管、锥形瓶、烧杯、冷凝管等。"},
+                        {title:"基本操作", def:"加热、溶解、过滤、蒸发、结晶、蒸馏、萃取、洗涤、干燥等。"},
+                        {title:"气体制备与检验", def:"H2、O2、CO2、NH3、Cl2 的实验室制备与性质检验。"},
+                        {title:"读数与不确定度（定性）", def:"估读到分度的下一位，记录有效数字。"},
+                        {title:"指示剂与终点判断", def:"酚酞、甲基橙等；终点颜色与范围。"},
+                        {title:"标准溶液的配制", def:"称量—溶解—转移—定容—混匀（注意温度与刻度线）。"},
+                        {title:"滴定（酸碱/沉淀）", def:"控制滴速，观察终点，做空白对照。"},
+                        {title:"离子检验与分离", def:"沉淀、络合、气体或颜色变化判断；选择性分离。"},
+                        {title:"安全与环保", def:"防腐蚀、防毒害、废液分类收集与处理。"},
+                        {title:"误差分析（定性）", def:"系统误差与偶然误差来源与减小策略。"},
+                    ]
+                }
+            ]
+        };
+
+        // 渲染树
+        const treeRoot = document.getElementById('treeRoot');
+
+        function renderNode(node, depth=0){
+            const hasChildren = Array.isArray(node.children) && node.children.length > 0;
+            const color = node.color || '#667eea';
+            const icon = node.icon || 'fa-circle';
+            const opened = depth <= 1; // 默认展开前两层
+
+            const nodeId = 'n_' + Math.random().toString(36).slice(2);
+            const defAttr = node.def ? node.def.replace(/"/g,'&quot;') : '';
+
+            const nodeHtml = `
+                <li data-node-id="${nodeId}" ${opened ? '' : 'data-collapsed="true"'} >
+                    <div class="node" style="border-left:6px solid ${color}">
+                        <div class="dot" style="background: linear-gradient(135deg, ${color}, ${color})">
+                            <i class="fa ${icon}"></i>
+                        </div>
+                        <div>
+                            <div class="title">${node.title}</div>
+                            ${node.def ? `<div class="meta">${escapeHtml(shorten(node.def, 80))}</div>` : ``}
+                        </div>
+                        <div class="actions">
+                            ${hasChildren ? `<button class="toggle" title="展开/折叠"><i class="fa ${opened ? 'fa-chevron-down' : 'fa-chevron-right'}"></i></button>` : ``}
+                            ${node.def ? `<button class="info" title="查看定义" data-def="${defAttr}" data-title="${escapeHtml(node.title)}"><i class="fa fa-info"></i></button>` : ``}
+                        </div>
+                    </div>
+                    ${hasChildren ? `
+                        <ul class="children" style="${opened ? '' : 'display:none'}">
+                            ${node.children.map(child => renderNode(child, depth+1)).join('')}
+                        </ul>
+                    ` : ``}
+                </li>
+            `;
+            return nodeHtml;
+        }
+
+        function renderTree(data){
+            treeRoot.innerHTML = `<ul class="root">${renderNode(data, 0)}</ul>`;
+        }
+
+        function shorten(text, len){
+            if(!text) return '';
+            return text.length > len ? text.slice(0,len) + '…' : text;
+        }
+
+        function escapeHtml(s){
+            return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+        }
+
+        renderTree(mindmapData);
+
+        // 展开/折叠交互
+        treeRoot.addEventListener('click', (e)=>{
+            const t = e.target;
+            const btn = t.closest('.toggle');
+            if(btn){
+                const li = btn.closest('li');
+                const ul = li.querySelector(':scope > ul.children');
+                if(!ul) return;
+                const icon = btn.querySelector('i');
+                const collapsed = ul.style.display === 'none';
+                ul.style.display = collapsed ? '' : 'none';
+                li.toggleAttribute('data-collapsed', !collapsed);
+                icon.classList.toggle('fa-chevron-right', !collapsed);
+                icon.classList.toggle('fa-chevron-down', collapsed);
+            }
+            const info = t.closest('.info');
+            if(info){
+                openDefModal(info.getAttribute('data-title') || '概念', info.getAttribute('data-def') || '', buildPath(info.closest('li')));
+            }
+        });
+
+        // 构建路径（父链）
+        function buildPath(li){
+            const titles = [];
+            let cur = li;
+            while(cur){
+                const title = cur.querySelector(':scope > .node .title');
+                if(title) titles.push(title.textContent.trim());
+                cur = cur.parentElement?.closest('li') || null;
+            }
+            return titles.reverse().join(' › ');
+        }
+
+        // 定义弹窗
+        const modal = document.getElementById('defModal');
+        const defTitle = document.getElementById('defTitle');
+        const defContent = document.getElementById('defContent');
+        const defMeta = document.getElementById('defMeta');
+        const modalClose = document.getElementById('modalClose');
+
+        function openDefModal(title, def, meta){
+            defTitle.textContent = title;
+            defContent.textContent = def;
+            defMeta.textContent = meta ? '路径：' + meta : '';
+            modal.style.display = 'block';
+        }
+        modalClose.addEventListener('click', ()=> modal.style.display='none');
+        modal.addEventListener('click', (e)=>{ if(e.target === modal) modal.style.display='none' });
+
+        // 搜索与高亮
+        const searchInput = document.getElementById('searchInput');
+        const clearSearch = document.getElementById('clearSearch');
+
+        function clearHighlights(){
+            treeRoot.querySelectorAll('.highlight').forEach(n=> n.classList.remove('highlight'));
+            treeRoot.querySelectorAll('.hidden-branch').forEach(n=> n.classList.remove('hidden-branch'));
+        }
+
+        function expandParents(li){
+            let cur = li.parentElement?.closest('li');
+            while(cur){
+                const ul = cur.querySelector(':scope > ul.children');
+                const toggleBtn = cur.querySelector(':scope > .node .toggle i');
+                if(ul && ul.style.display === 'none'){
+                    ul.style.display = '';
+                    cur.removeAttribute('data-collapsed');
+                    if(toggleBtn){ toggleBtn.classList.remove('fa-chevron-right'); toggleBtn.classList.add('fa-chevron-down'); }
+                }
+                cur = cur.parentElement?.closest('li');
+            }
+        }
+
+        function searchTree(q){
+            clearHighlights();
+            if(!q){ return; }
+            q = q.trim().toLowerCase();
+            const lis = Array.from(treeRoot.querySelectorAll('li'));
+            const matched = new Set();
+
+            lis.forEach(li=>{
+                const titleEl = li.querySelector(':scope > .node .title');
+                const metaEl = li.querySelector(':scope > .node .meta');
+                const text = ((titleEl?.textContent || '') + ' ' + (metaEl?.textContent || '')).toLowerCase();
+                if(text.includes(q)){
+                    const card = li.querySelector(':scope > .node');
+                    card?.classList.add('highlight');
+                    matched.add(li);
+                    expandParents(li);
+                }
+            });
+
+            // 隐藏不匹配分支：只保留匹配节点及其祖先、子孙
+            if(matched.size){
+                lis.forEach(li=>{
+                    const keep = isAncestorOrDescendantOfMatched(li, matched);
+                    if(!keep){ li.classList.add('hidden-branch'); }
+                });
+            }
+        }
+
+        function isAncestorOrDescendantOfMatched(li, matched){
+            if(matched.has(li)) return true;
+            // 祖先
+            let cur = li.parentElement?.closest('li');
+            while(cur){
+                if(matched.has(cur)) return true;
+                cur = cur.parentElement?.closest('li');
+            }
+            // 子孙
+            for(const m of matched){
+                let parent = m.parentElement?.closest('li');
+                while(parent){
+                    if(parent === li) return true;
+                    parent = parent.parentElement?.closest('li');
+                }
+            }
+            return false;
+        }
+
+        searchInput.addEventListener('input', (e)=> searchTree(e.target.value));
+        clearSearch.addEventListener('click', ()=>{
+            searchInput.value=''; clearHighlights();
+        });
+
+        // 展开/折叠全部
+        document.getElementById('expandAll').addEventListener('click', ()=>{
+            treeRoot.querySelectorAll('li').forEach(li=>{
+                const ul = li.querySelector(':scope > ul.children');
+                const icon = li.querySelector(':scope > .node .toggle i');
+                if(ul){ ul.style.display=''; li.removeAttribute('data-collapsed'); }
+                if(icon){ icon.classList.remove('fa-chevron-right'); icon.classList.add('fa-chevron-down'); }
+            });
+        });
+        document.getElementById('collapseAll').addEventListener('click', ()=>{
+            treeRoot.querySelectorAll('li').forEach((li, idx)=>{
+                if(idx===0) return; // 根节点保留
+                const ul = li.querySelector(':scope > ul.children');
+                const icon = li.querySelector(':scope > .node .toggle i');
+                if(ul){ ul.style.display='none'; li.setAttribute('data-collapsed','true'); }
+                if(icon){ icon.classList.remove('fa-chevron-down'); icon.classList.add('fa-chevron-right'); }
+            });
+        });
+
+        // 缩放与适配
+        const stage = document.getElementById('stage');
+        const viewport = document.getElementById('viewport');
+        const zoomPercent = document.getElementById('zoomPercent');
+        let scale = 1;
+
+        function applyScale(){
+            stage.style.transform = `scale(${scale})`;
+            zoomPercent.textContent = Math.round(scale*100) + '%';
+        }
+        document.getElementById('zoomIn').addEventListener('click', ()=>{ scale = Math.min(2, scale+0.1); applyScale(); });
+        document.getElementById('zoomOut').addEventListener('click', ()=>{ scale = Math.max(0.5, scale-0.1); applyScale(); });
+        document.getElementById('fitView').addEventListener('click', ()=>{
+            // 简易适配：根据当前内容宽度与视口宽度估算
+            const contentWidth = stage.getBoundingClientRect().width / scale; // 真实宽度
+            const vw = viewport.clientWidth - 80;
+            const s = Math.max(0.5, Math.min(1.2, vw / contentWidth));
+            scale = s; applyScale();
+            viewport.scrollTo({left:0, top:0, behavior:'smooth'});
+        });
+        applyScale();
+
+        // 打印导出（浏览器打印）
+        document.getElementById('printMap').addEventListener('click', ()=> window.print());
+    </script>
+</body>
+</html>
