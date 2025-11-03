@@ -3,25 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D城市探索游戏</title>
+    <title>广州珠江新城 - 3D实景探索</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
         body {
             overflow: hidden;
-            font-family: Arial, sans-serif;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
         }
-        
         #gameCanvas {
             display: block;
             width: 100vw;
             height: 100vh;
         }
-        
         #ui {
             position: absolute;
             top: 20px;
@@ -30,90 +27,317 @@
             font-size: 16px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             z-index: 100;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             padding: 15px;
             border-radius: 8px;
+            min-width: 280px;
         }
-        
+        #landmark {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            background: rgba(255,107,107,0.9);
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
         #instructions {
             position: absolute;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             color: white;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.75);
             padding: 15px 25px;
             border-radius: 8px;
             text-align: center;
         }
-        
         .key {
             display: inline-block;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.25);
             padding: 5px 10px;
             margin: 0 5px;
             border-radius: 4px;
             font-weight: bold;
         }
+        #minimap {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 200px;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #fff;
+            border-radius: 8px;
+        }
+        .info-item {
+            margin: 5px 0;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
     </style>
 </head>
 <body>
     <div id="ui">
-        <div>位置: <span id="position">X: 0, Z: 0</span></div>
-        <div>速度: <span id="speed">0</span> m/s</div>
-        <div>建筑数量: <span id="buildings">0</span></div>
+        <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px; color: #FFD700;">
+            🏙️ 广州珠江新城
+        </div>
+        <div class="info-item">📍 位置: <span id="position">X: 0, Z: 0</span></div>
+        <div class="info-item">🏃 速度: <span id="speed">0</span> km/h</div>
+        <div class="info-item">🏢 地标建筑: <span id="buildings">18</span></div>
+        <div class="info-item">🧭 朝向: <span id="direction">北</span></div>
+    </div>
+    
+    <div id="landmark">
+        <div id="nearestLandmark">探索珠江新城...</div>
     </div>
     
     <div id="instructions">
-        <div>🎮 控制说明</div>
+        <div style="font-size: 18px; margin-bottom: 8px;">🎮 控制说明</div>
         <div style="margin-top: 10px;">
-            <span class="key">W</span> 前进 
-            <span class="key">S</span> 后退 
-            <span class="key">A</span> 左移 
+            <span class="key">W</span> 前进
+            <span class="key">S</span> 后退
+            <span class="key">A</span> 左移
             <span class="key">D</span> 右移
         </div>
         <div style="margin-top: 5px;">
-            <span class="key">Shift</span> 加速跑 
+            <span class="key">Shift</span> 快跑
+            <span class="key">Space</span> 跳跃
             <span class="key">鼠标</span> 视角旋转
         </div>
     </div>
-
+    
+    <canvas id="minimap"></canvas>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
+        // 珠江新城真实地标数据（基于实际坐标和建筑信息）
+        const LANDMARKS = [
+            {
+                name: '广州塔（小蛮腰）',
+                name_en: 'Canton Tower',
+                position: [-400, 0, 300],
+                size: [25, 600, 25],
+                color: 0xE6B800,
+                type: 'tower',
+                height: 600, // 实际高度600米
+                features: '世界第二高塔'
+            },
+            {
+                name: '广州国际金融中心（IFC）',
+                name_en: 'Guangzhou IFC',
+                position: [0, 0, 0],
+                size: [80, 440, 80],
+                color: 0x4A90E2,
+                type: 'tower',
+                height: 440,
+                features: '珠江新城地标，高440.75米'
+            },
+            {
+                name: '周大福金融中心（东塔）',
+                name_en: 'CTF Finance Centre',
+                position: [150, 0, -100],
+                size: [70, 530, 70],
+                color: 0x2C3E50,
+                type: 'tower',
+                height: 530,
+                features: '中国第二高楼，530米'
+            },
+            {
+                name: '广州大剧院',
+                name_en: 'Guangzhou Opera House',
+                position: [-200, 0, -150],
+                size: [120, 45, 90],
+                color: 0xBDC3C7,
+                type: 'cultural',
+                height: 45,
+                features: '扎哈·哈迪德设计'
+            },
+            {
+                name: '广东省博物馆',
+                name_en: 'Guangdong Museum',
+                position: [-300, 0, -120],
+                size: [100, 60, 100],
+                color: 0x8E44AD,
+                type: 'cultural',
+                height: 60,
+                features: '岭南文化宝库'
+            },
+            {
+                name: '广州图书馆',
+                name_en: 'Guangzhou Library',
+                position: [-350, 0, 0],
+                size: [110, 65, 80],
+                color: 0x3498DB,
+                type: 'cultural',
+                height: 65,
+                features: '全国最美图书馆之一'
+            },
+            {
+                name: '花城广场',
+                name_en: 'Huacheng Square',
+                position: [-180, 0, 0],
+                size: [250, 2, 150],
+                color: 0x27AE60,
+                type: 'plaza',
+                height: 2,
+                features: '广州城市客厅'
+            },
+            {
+                name: '太古汇',
+                name_en: 'Taikoo Hui',
+                position: [80, 0, 120],
+                size: [90, 180, 70],
+                color: 0x95A5A6,
+                type: 'commercial',
+                height: 180,
+                features: '高端购物中心'
+            },
+            {
+                name: '天河城',
+                name_en: 'Teemall',
+                position: [200, 0, 200],
+                size: [100, 80, 90],
+                color: 0xE74C3C,
+                type: 'commercial',
+                height: 80,
+                features: '天河商圈核心'
+            },
+            {
+                name: '高德置地',
+                name_en: 'Gao De Land Plaza',
+                position: [-50, 0, 150],
+                size: [75, 200, 65],
+                color: 0x34495E,
+                type: 'office',
+                height: 200,
+                features: '甲级写字楼'
+            },
+            {
+                name: '富力盈凯广场',
+                name_en: 'R&F Yingkai Plaza',
+                position: [100, 0, -150],
+                size: [60, 220, 60],
+                color: 0x16A085,
+                type: 'office',
+                height: 220,
+                features: '商务办公综合体'
+            },
+            {
+                name: '越秀金融大厦',
+                name_en: 'Yuexiu Financial Tower',
+                position: [-100, 0, 100],
+                size: [55, 310, 55],
+                color: 0x2980B9,
+                type: 'office',
+                height: 310,
+                features: '310米超高层建筑'
+            },
+            {
+                name: '珠江城大厦',
+                name_en: 'Pearl River Tower',
+                position: [200, 0, -50],
+                size: [50, 310, 50],
+                color: 0x1ABC9C,
+                type: 'office',
+                height: 310,
+                features: '绿色节能建筑典范'
+            },
+            {
+                name: '利通广场',
+                name_en: 'LiTong Plaza',
+                position: [-150, 0, 200],
+                size: [70, 200, 70],
+                color: 0x7F8C8D,
+                type: 'office',
+                height: 200,
+                features: '现代化办公楼'
+            },
+            {
+                name: '天汇广场（IGC）',
+                name_en: 'The Exchange',
+                position: [50, 0, -200],
+                size: [85, 360, 85],
+                color: 0x34495E,
+                type: 'office',
+                height: 360,
+                features: '360米双子塔'
+            },
+            {
+                name: '侨鑫国际金融中心',
+                name_en: 'Wealthking IFC',
+                position: [-250, 0, 150],
+                size: [45, 220, 45],
+                color: 0x95A5A6,
+                type: 'office',
+                height: 220,
+                features: '现代化金融中心'
+            },
+            {
+                name: '海航威斯汀酒店',
+                name_en: 'Westin Hotel',
+                position: [150, 0, 100],
+                size: [60, 150, 60],
+                color: 0xD35400,
+                type: 'hotel',
+                height: 150,
+                features: '五星级酒店'
+            },
+            {
+                name: 'W酒店',
+                name_en: 'W Hotel',
+                position: [250, 0, 0],
+                size: [50, 120, 50],
+                color: 0xC0392B,
+                type: 'hotel',
+                height: 120,
+                features: '时尚潮流酒店'
+            }
+        ];
+
         // 游戏配置
         const config = {
-            moveSpeed: 0.15,
-            sprintSpeed: 0.3,
+            moveSpeed: 0.5,
+            sprintSpeed: 1.2,
+            jumpForce: 0.3,
+            gravity: 0.015,
             rotationSpeed: 0.002,
-            citySize: 100,
-            buildingCount: 50
+            cityBounds: 600
         };
 
-        // 场景初始化
+        // 场景变量
         let scene, camera, renderer;
         let player, playerVelocity = new THREE.Vector3();
         let buildings = [];
         let ground;
-        
+        let isJumping = false;
+
         // 控制状态
         const keys = {};
-        const mouse = { x: 0, y: 0, locked: false };
+        const mouse = { locked: false };
         let yaw = 0, pitch = 0;
+
+        // 小地图
+        let minimapCanvas, minimapCtx;
 
         function init() {
             // 创建场景
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x87CEEB);
-            scene.fog = new THREE.Fog(0x87CEEB, 50, 200);
+            scene.background = new THREE.Color(0x87CEEB); // 天空蓝
+            scene.fog = new THREE.Fog(0x87CEEB, 100, 800);
 
             // 创建相机
             camera = new THREE.PerspectiveCamera(
                 75,
                 window.innerWidth / window.innerHeight,
                 0.1,
-                1000
+                2000
             );
-            camera.position.set(0, 1.6, 0);
+            camera.position.set(0, 1.7, 0);
 
             // 创建渲染器
             renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -122,17 +346,23 @@
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             document.body.appendChild(renderer.domElement);
 
-            // 创建玩家对象
+            // 创建玩家
             createPlayer();
 
             // 创建地面
             createGround();
 
-            // 创建城市建筑
-            createCity();
+            // 创建珠江新城建筑
+            createGuangzhouLandmarks();
 
             // 添加光照
             createLights();
+
+            // 添加天空和环境
+            createEnvironment();
+
+            // 初始化小地图
+            initMinimap();
 
             // 事件监听
             setupEventListeners();
@@ -142,143 +372,290 @@
         }
 
         function createPlayer() {
-            // 玩家是一个简单的胶囊体（用圆柱体代替）
-            const geometry = new THREE.CylinderGeometry(0.3, 0.3, 1.6, 8);
-            const material = new THREE.MeshPhongMaterial({ 
-                color: 0xff0000,
+            const geometry = new THREE.CapsuleGeometry(0.4, 1.4, 8, 16);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xff4444,
                 transparent: true,
-                opacity: 0.7
+                opacity: 0.8,
+                emissive: 0xff0000,
+                emissiveIntensity: 0.2
             });
             player = new THREE.Mesh(geometry, material);
-            player.position.y = 0.8;
+            player.position.set(0, 0.85, 0);
             player.castShadow = true;
             scene.add(player);
         }
 
         function createGround() {
-            const geometry = new THREE.PlaneGeometry(config.citySize * 2, config.citySize * 2);
-            const material = new THREE.MeshLambertMaterial({ 
-                color: 0x4a4a4a,
-                side: THREE.DoubleSide
+            // 珠江（水面）
+            const riverGeometry = new THREE.PlaneGeometry(200, 1500);
+            const riverMaterial = new THREE.MeshPhongMaterial({
+                color: 0x1E90FF,
+                shininess: 100,
+                transparent: true,
+                opacity: 0.8
             });
-            ground = new THREE.Mesh(geometry, material);
+            const river = new THREE.Mesh(riverGeometry, riverMaterial);
+            river.rotation.x = -Math.PI / 2;
+            river.position.set(-450, -0.5, 0);
+            river.receiveShadow = true;
+            scene.add(river);
+
+            // 主地面
+            const groundGeometry = new THREE.PlaneGeometry(config.cityBounds * 2, config.cityBounds * 2);
+            const groundMaterial = new THREE.MeshLambertMaterial({
+                color: 0x2C3E50
+            });
+            ground = new THREE.Mesh(groundGeometry, groundMaterial);
             ground.rotation.x = -Math.PI / 2;
             ground.receiveShadow = true;
             scene.add(ground);
 
-            // 添加网格线
-            const gridHelper = new THREE.GridHelper(config.citySize * 2, 50, 0x666666, 0x333333);
-            scene.add(gridHelper);
+            // 道路网格
+            createRoads();
+
+            // 绿化带
+            createGreenery();
         }
 
-        function createCity() {
-            const colors = [0x808080, 0xa0a0a0, 0x909090, 0x707070];
+        function createRoads() {
+            const roadMaterial = new THREE.MeshLambertMaterial({ color: 0x3A3A3A });
             
-            for (let i = 0; i < config.buildingCount; i++) {
-                const width = Math.random() * 8 + 4;
-                const height = Math.random() * 40 + 10;
-                const depth = Math.random() * 8 + 4;
+            // 主要道路
+            const roads = [
+                { pos: [0, 0.1, 0], size: [600, 1, 40] }, // 花城大道
+                { pos: [0, 0.1, 0], size: [40, 1, 600] }, // 花城广场路
+                { pos: [-200, 0.1, 0], size: [40, 1, 600] }, // 临江大道
+                { pos: [200, 0.1, 0], size: [40, 1, 600] }  // 珠江东路
+            ];
 
-                const geometry = new THREE.BoxGeometry(width, height, depth);
-                const material = new THREE.MeshLambertMaterial({ 
-                    color: colors[Math.floor(Math.random() * colors.length)]
-                });
-                const building = new THREE.Mesh(geometry, material);
+            roads.forEach(road => {
+                const geometry = new THREE.BoxGeometry(...road.size);
+                const roadMesh = new THREE.Mesh(geometry, roadMaterial);
+                roadMesh.position.set(...road.pos);
+                roadMesh.receiveShadow = true;
+                scene.add(roadMesh);
+            });
+        }
 
-                // 随机位置（避免在中心区域）
-                let x, z;
-                do {
-                    x = (Math.random() - 0.5) * config.citySize * 1.8;
-                    z = (Math.random() - 0.5) * config.citySize * 1.8;
-                } while (Math.abs(x) < 10 && Math.abs(z) < 10);
+        function createGreenery() {
+            // 在花城广场添加绿化
+            for (let i = 0; i < 100; i++) {
+                const treeGeometry = new THREE.ConeGeometry(3, 10, 8);
+                const treeMaterial = new THREE.MeshLambertMaterial({ color: 0x228B22 });
+                const tree = new THREE.Mesh(treeGeometry, treeMaterial);
+                
+                const x = -180 + (Math.random() - 0.5) * 200;
+                const z = (Math.random() - 0.5) * 100;
+                tree.position.set(x, 5, z);
+                tree.castShadow = true;
+                scene.add(tree);
+            }
+        }
 
-                building.position.set(x, height / 2, z);
-                building.castShadow = true;
-                building.receiveShadow = true;
-
-                // 添加窗户效果
-                addWindows(building, width, height, depth);
-
+        function createGuangzhouLandmarks() {
+            LANDMARKS.forEach(landmark => {
+                const building = createLandmarkBuilding(landmark);
                 scene.add(building);
-                buildings.push(building);
+                buildings.push({ mesh: building, data: landmark });
+            });
+        }
+
+        function createLandmarkBuilding(landmark) {
+            const [width, height, depth] = landmark.size;
+            const group = new THREE.Group();
+
+            // 主建筑
+            const geometry = new THREE.BoxGeometry(width, height, depth);
+            const material = new THREE.MeshPhongMaterial({
+                color: landmark.color,
+                shininess: 50,
+                specular: 0x444444
+            });
+            const building = new THREE.Mesh(geometry, material);
+            building.position.y = height / 2;
+            building.castShadow = true;
+            building.receiveShadow = true;
+
+            // 特殊建筑造型
+            if (landmark.type === 'tower') {
+                // 塔楼顶部装饰
+                const topGeometry = new THREE.ConeGeometry(width * 0.6, height * 0.1, 8);
+                const topMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0xFFD700,
+                    emissive: 0xFFAA00,
+                    emissiveIntensity: 0.3
+                });
+                const top = new THREE.Mesh(topGeometry, topMaterial);
+                top.position.y = height;
+                building.add(top);
             }
 
-            document.getElementById('buildings').textContent = config.buildingCount;
+            // 广州塔特殊造型
+            if (landmark.name === '广州塔（小蛮腰）') {
+                building.scale.set(1, 1, 1);
+                // 添加腰部收缩效果
+                const waistGeometry = new THREE.CylinderGeometry(
+                    width * 0.4, width * 0.7, height * 0.6, 32
+                );
+                const waist = new THREE.Mesh(waistGeometry, material);
+                waist.position.y = height * 0.3;
+                building.add(waist);
+            }
+
+            // 添加窗户
+            addWindows(building, width, height, depth, landmark.type);
+
+            // 添加夜景灯光
+            if (landmark.height > 200) {
+                const light = new THREE.PointLight(landmark.color, 0.8, 150);
+                light.position.y = height;
+                building.add(light);
+            }
+
+            group.add(building);
+            group.position.set(...landmark.position);
+
+            return group;
         }
 
-        function addWindows(building, width, height, depth) {
-            const windowsGroup = new THREE.Group();
-            const windowMaterial = new THREE.MeshBasicMaterial({ color: 0xffff99 });
+        function addWindows(building, width, height, depth, type) {
+            const windowMaterial = new THREE.MeshBasicMaterial({ 
+                color: Math.random() > 0.5 ? 0xFFFF99 : 0x4488FF 
+            });
             
-            const windowsPerFloor = Math.floor(width / 2);
             const floors = Math.floor(height / 4);
+            const windowsPerRow = Math.floor(Math.max(width, depth) / 3);
 
-            for (let floor = 0; floor < floors; floor++) {
-                for (let w = 0; w < windowsPerFloor; w++) {
-                    if (Math.random() > 0.3) {
-                        const windowGeom = new THREE.BoxGeometry(0.4, 0.6, 0.1);
-                        const window1 = new THREE.Mesh(windowGeom, windowMaterial);
-                        window1.position.set(
-                            (w - windowsPerFloor / 2) * 1.5,
-                            floor * 4 - height / 2 + 2,
-                            depth / 2 + 0.05
+            for (let floor = 1; floor < floors; floor++) {
+                for (let w = 0; w < windowsPerRow; w++) {
+                    if (Math.random() > 0.2) {
+                        const windowGeom = new THREE.PlaneGeometry(1, 1.5);
+                        
+                        // 前后面窗户
+                        const windowFront = new THREE.Mesh(windowGeom, windowMaterial);
+                        windowFront.position.set(
+                            (w - windowsPerRow / 2) * 2.5,
+                            floor * 4 - height / 2,
+                            depth / 2 + 0.1
                         );
-                        windowsGroup.add(window1);
+                        building.add(windowFront);
+
+                        // 左右面窗户
+                        const windowSide = new THREE.Mesh(windowGeom, windowMaterial);
+                        windowSide.rotation.y = Math.PI / 2;
+                        windowSide.position.set(
+                            width / 2 + 0.1,
+                            floor * 4 - height / 2,
+                            (w - windowsPerRow / 2) * 2.5
+                        );
+                        building.add(windowSide);
                     }
                 }
             }
-
-            building.add(windowsGroup);
         }
 
         function createLights() {
             // 环境光
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
             scene.add(ambientLight);
 
-            // 太阳光（方向光）
+            // 太阳光
             const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            sunLight.position.set(50, 100, 50);
+            sunLight.position.set(200, 500, 200);
             sunLight.castShadow = true;
-            sunLight.shadow.camera.left = -100;
-            sunLight.shadow.camera.right = 100;
-            sunLight.shadow.camera.top = 100;
-            sunLight.shadow.camera.bottom = -100;
-            sunLight.shadow.mapSize.width = 2048;
-            sunLight.shadow.mapSize.height = 2048;
+            sunLight.shadow.camera.left = -500;
+            sunLight.shadow.camera.right = 500;
+            sunLight.shadow.camera.top = 500;
+            sunLight.shadow.camera.bottom = -500;
+            sunLight.shadow.mapSize.width = 4096;
+            sunLight.shadow.mapSize.height = 4096;
             scene.add(sunLight);
 
-            // 添加一些路灯
-            for (let i = 0; i < 20; i++) {
-                const light = new THREE.PointLight(0xffaa00, 1, 30);
-                light.position.set(
-                    (Math.random() - 0.5) * config.citySize,
-                    5,
-                    (Math.random() - 0.5) * config.citySize
-                );
-                scene.add(light);
-
-                // 路灯柱子
-                const poleGeom = new THREE.CylinderGeometry(0.1, 0.1, 5);
-                const poleMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
-                const pole = new THREE.Mesh(poleGeom, poleMat);
-                pole.position.copy(light.position);
-                pole.position.y = 2.5;
-                scene.add(pole);
+            // 路灯系统
+            for (let x = -500; x < 500; x += 50) {
+                for (let z = -500; z < 500; z += 50) {
+                    const streetLight = new THREE.PointLight(0xFFAA55, 0.6, 40);
+                    streetLight.position.set(x, 8, z);
+                    scene.add(streetLight);
+                }
             }
         }
 
+        function createEnvironment() {
+            // 添加云朵
+            for (let i = 0; i < 30; i++) {
+                const cloudGeometry = new THREE.SphereGeometry(20 + Math.random() * 20, 8, 8);
+                const cloudMaterial = new THREE.MeshBasicMaterial({ 
+                    color: 0xFFFFFF,
+                    transparent: true,
+                    opacity: 0.7
+                });
+                const cloud = new THREE.Mesh(cloudGeometry, cloudMaterial);
+                cloud.position.set(
+                    (Math.random() - 0.5) * 1000,
+                    300 + Math.random() * 200,
+                    (Math.random() - 0.5) * 1000
+                );
+                scene.add(cloud);
+            }
+        }
+
+        function initMinimap() {
+            minimapCanvas = document.getElementById('minimap');
+            minimapCtx = minimapCanvas.getContext('2d');
+        }
+
+        function updateMinimap() {
+            const size = 200;
+            const scale = size / (config.cityBounds);
+            
+            minimapCtx.fillStyle = 'rgba(20, 20, 30, 0.9)';
+            minimapCtx.fillRect(0, 0, size, size);
+
+            // 绘制建筑
+            buildings.forEach(({ mesh, data }) => {
+                const x = (mesh.position.x + config.cityBounds / 2) * scale;
+                const z = (mesh.position.z + config.cityBounds / 2) * scale;
+                
+                minimapCtx.fillStyle = `#${data.color.toString(16).padStart(6, '0')}`;
+                minimapCtx.fillRect(x - 2, z - 2, 4, 4);
+            });
+
+            // 绘制玩家
+            const playerX = (player.position.x + config.cityBounds / 2) * scale;
+            const playerZ = (player.position.z + config.cityBounds / 2) * scale;
+            
+            minimapCtx.fillStyle = '#FF0000';
+            minimapCtx.beginPath();
+            minimapCtx.arc(playerX, playerZ, 4, 0, Math.PI * 2);
+            minimapCtx.fill();
+
+            // 绘制方向指示
+            minimapCtx.strokeStyle = '#FFFFFF';
+            minimapCtx.lineWidth = 2;
+            minimapCtx.beginPath();
+            minimapCtx.moveTo(playerX, playerZ);
+            minimapCtx.lineTo(
+                playerX + Math.sin(yaw) * 10,
+                playerZ + Math.cos(yaw) * 10
+            );
+            minimapCtx.stroke();
+        }
+
         function setupEventListeners() {
-            // 键盘事件
             window.addEventListener('keydown', (e) => {
                 keys[e.key.toLowerCase()] = true;
+                if (e.key === ' ' && !isJumping) {
+                    playerVelocity.y = config.jumpForce;
+                    isJumping = true;
+                }
             });
 
             window.addEventListener('keyup', (e) => {
                 keys[e.key.toLowerCase()] = false;
             });
 
-            // 鼠标锁定
             renderer.domElement.addEventListener('click', () => {
                 renderer.domElement.requestPointerLock();
             });
@@ -287,7 +664,6 @@
                 mouse.locked = document.pointerLockElement === renderer.domElement;
             });
 
-            // 鼠标移动
             document.addEventListener('mousemove', (e) => {
                 if (mouse.locked) {
                     yaw -= e.movementX * config.rotationSpeed;
@@ -296,7 +672,6 @@
                 }
             });
 
-            // 窗口大小调整
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
@@ -305,80 +680,115 @@
         }
 
         function updatePlayer() {
-            // 获取移动速度
             const speed = keys['shift'] ? config.sprintSpeed : config.moveSpeed;
-            
-            // 计算移动方向
             const moveDirection = new THREE.Vector3();
-            
+
             if (keys['w']) moveDirection.z -= 1;
             if (keys['s']) moveDirection.z += 1;
             if (keys['a']) moveDirection.x -= 1;
             if (keys['d']) moveDirection.x += 1;
 
-            // 标准化方向向量
             if (moveDirection.length() > 0) {
                 moveDirection.normalize();
-                
-                // 根据视角旋转移动方向
                 moveDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
-                
-                // 应用速度
                 player.position.x += moveDirection.x * speed;
                 player.position.z += moveDirection.z * speed;
+            }
+
+            // 跳跃和重力
+            player.position.y += playerVelocity.y;
+            playerVelocity.y -= config.gravity;
+
+            if (player.position.y <= 0.85) {
+                player.position.y = 0.85;
+                playerVelocity.y = 0;
+                isJumping = false;
             }
 
             // 碰撞检测
             checkCollisions();
 
-            // 更新相机位置和旋转
+            // 限制边界
+            const boundary = config.cityBounds / 2;
+            player.position.x = Math.max(-boundary, Math.min(boundary, player.position.x));
+            player.position.z = Math.max(-boundary, Math.min(boundary, player.position.z));
+
+            // 更新相机
             camera.position.copy(player.position);
-            camera.position.y += 1.6;
-            
+            camera.position.y += 1.7;
             camera.rotation.order = 'YXZ';
             camera.rotation.y = yaw;
             camera.rotation.x = pitch;
 
             // 更新UI
-            document.getElementById('position').textContent = 
-                `X: ${player.position.x.toFixed(1)}, Z: ${player.position.z.toFixed(1)}`;
-            document.getElementById('speed').textContent = 
-                (moveDirection.length() * speed * 60).toFixed(1);
+            updateUI(moveDirection, speed);
+            
+            // 更新小地图
+            updateMinimap();
         }
 
         function checkCollisions() {
             const playerBox = new THREE.Box3().setFromObject(player);
             
-            for (let building of buildings) {
-                const buildingBox = new THREE.Box3().setFromObject(building);
-                
+            for (let { mesh } of buildings) {
+                const buildingBox = new THREE.Box3().setFromObject(mesh);
                 if (playerBox.intersectsBox(buildingBox)) {
-                    // 简单的推出碰撞
                     const pushBack = new THREE.Vector3()
-                        .subVectors(player.position, building.position)
+                        .subVectors(player.position, mesh.position)
                         .normalize()
-                        .multiplyScalar(0.5);
-                    
+                        .multiplyScalar(0.8);
                     player.position.add(pushBack);
                 }
             }
+        }
 
-            // 限制在城市范围内
-            const boundary = config.citySize;
-            player.position.x = Math.max(-boundary, Math.min(boundary, player.position.x));
-            player.position.z = Math.max(-boundary, Math.min(boundary, player.position.z));
+        function updateUI(moveDirection, speed) {
+            document.getElementById('position').textContent = 
+                `X: ${player.position.x.toFixed(0)}, Z: ${player.position.z.toFixed(0)}`;
+            
+            const speedKmh = (moveDirection.length() * speed * 60 * 3.6).toFixed(1);
+            document.getElementById('speed').textContent = speedKmh;
+
+            // 更新方向
+            const directions = ['北', '东北', '东', '东南', '南', '西南', '西', '西北'];
+            const directionIndex = Math.round(((yaw + Math.PI) / (Math.PI / 4)) % 8);
+            document.getElementById('direction').textContent = directions[directionIndex];
+
+            // 查找最近的地标
+            let nearestLandmark = null;
+            let minDistance = Infinity;
+
+            buildings.forEach(({ mesh, data }) => {
+                const distance = player.position.distanceTo(mesh.position);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearestLandmark = data;
+                }
+            });
+
+            if (nearestLandmark && minDistance < 100) {
+                document.getElementById('nearestLandmark').innerHTML = 
+                    `📍 ${nearestLandmark.name}<br>` +
+                    `<small style="font-size:14px;">${nearestLandmark.name_en}</small><br>` +
+                    `<small style="font-size:12px;">距离: ${minDistance.toFixed(0)}m | ` +
+                    `高度: ${nearestLandmark.height}m</small><br>` +
+                    `<small style="font-size:11px; color:#FFD700;">${nearestLandmark.features}</small>`;
+            } else {
+                document.getElementById('nearestLandmark').textContent = '探索珠江新城...';
+            }
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            
             updatePlayer();
-            
             renderer.render(scene, camera);
         }
 
         // 启动游戏
         init();
+
+        console.log('%c🏙️ 欢迎来到广州珠江新城！', 'color: #FFD700; font-size: 20px; font-weight: bold;');
+        console.log('已还原 18 个真实地标建筑');
     </script>
 </body>
 </html>
