@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
      {
+        id: 47,
+        date: '2025-11-04',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '周刊创作',
+            en: 'Weekly creative writing'
+        },
+        content: {
+            zh: '阅读19本书+。\n学习12小时+\n创作100字\n视频剪辑',
+            en: 'Read 18+ books.\nStudied for 12+ hours\nWrite a piece of content totaling 100 words.\nVideo editing'
+        },
+        highlight: {
+            zh: '演讲➡️露脸直播；写作➡️公众号；视频剪辑➡️b站发布',
+            en: 'speech➡️Live streaming with face visible; writing➡️WeChat account; video editing➡️Published on Bilibili'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
+     {
         id: 46,
         date: '2025-11-03',
         categories: ['study', 'creative','finance'],
@@ -76,8 +101,8 @@ let successDiaryData = [
             en: 'Create a new wallet'
         },
         content: {
-            zh: '阅读17本书+。\n学习11小时+\n创作字\n创建新钱包买比特币',
-            en: 'Read 17+ books.\nStudied for 11+ hours\nWrite a piece of content totaling 10000 words.\nCreate a new wallet to buy Bitcoin'
+            zh: '阅读17本书+。\n学习11小时+\n创建新钱包买比特币',
+            en: 'Read 17+ books.\nStudied for 11+ hours\nCreate a new wallet to buy Bitcoin'
         },
         highlight: {
             zh: '寿司+烤串不错；“你被困在2025年10月25号”互动视频不错',
