@@ -1413,6 +1413,16 @@ function getMomentsStats(moments) {
  */
 let momentsData = [
      {
+    id: 32,
+    content: '想把《beyond feelings》翻译为中文。查了查目前公开信息显示，《Beyond Feelings》（《超越感觉》）的中文翻译版本至少有8次，但是被反映效果不好。这本书我又非常喜欢，被我归为“最值得读的书”之列，我明天开始尝试，我的规划是1天翻译一页，大概半年后出结果。主要步骤分为打大纲➡️内容翻译创作➡️内容补充校对➡️风格打磨➡️排版布局完善➡️封面美观优化➡️联系出版商，如果没人愿意出版则公开在网上（公众号+GitHub+b站）',
+    value: 10,
+    category: '工作相关',
+    date: '2025-10-26T16:11:00+08:00',
+    images: ['images/4d590198a4b3d2ec92ec88c5b2b06deb.jpg'],
+    likes: 0,
+    comments: []
+  },
+     {
     id: 31,
     content: '现在全球大学面对人工智能（Al）的选择，路径完全不一样。美国那边，OpenAI和Google这些科技巨头正在疯狂进校园。2025年2月，加州州立大学系统宣布给全系统52万师生配上ChatGPTEdu——这是OpenAl专门给高校定制的教育版。好家伙，这可是52万人，OpenAl自己说这是“全世界任何单一组织或公司中ChatGPT最大规模的部署”；',
     value: 10,
