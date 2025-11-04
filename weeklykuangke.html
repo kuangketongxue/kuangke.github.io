@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【狂客】极客周刊 - 狂客·银河</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 周刊容器样式 */
+        .weekly-container {
+            max-width: 1200px;
+            margin: 80px auto 60px;
+            padding: 40px 20px;
+        }
+        .weekly-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .weekly-title h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+        .weekly-title p {
+            font-size: 1.1em;
+            color: #666;
+            opacity: 0.8;
+        }
+        body.dark-mode .weekly-title p {
+            color: #aaa;
+        }
+        /* 周刊列表 */
+        .weekly-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .weekly-item {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .weekly-item {
+            background: #2d3748;
+        }
+        .weekly-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        .weekly-item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+        }
+        .weekly-item-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #333;
+        }
+        body.dark-mode .weekly-item-title {
+            color: #fff;
+        }
+        .weekly-item-date {
+            font-size: 1em;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        body.dark-mode .weekly-item-date {
+            color: #aaa;
+        }
+        .weekly-item-content {
+            margin-bottom: 25px;
+        }
+        .weekly-item-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #555;
+            white-space: pre-wrap;
+        }
+        body.dark-mode .weekly-item-text {
+            color: #ccc;
+        }
+        .weekly-item-video {
+            margin-top: 20px;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 宽高比 */
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .video-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+        }
+        .video-placeholder i {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .video-placeholder p {
+            font-size: 1.2em;
+            margin: 0;
+        }
+        /* 空状态 */
+        .empty-weekly {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .empty-weekly-icon {
+            font-size: 64px;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .empty-weekly h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        body.dark-mode .empty-weekly h2 {
+            color: #fff;
+        }
+        .empty-weekly p {
+            font-size: 1.1em;
+            color: #666;
+        }
+        body.dark-mode .empty-weekly p {
+            color: #aaa;
+        }
+        /* 返回按钮 */
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+        }
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .weekly-title h1 {
+                font-size: 2em;
+            }
+            .weekly-item {
+                padding: 25px;
+            }
+            .weekly-item-title {
+                font-size: 1.5em;
+            }
+            .weekly-item-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+        /* 导航按钮样式（与主页面一致） */
+        .breakthrough-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border-radius: 10px;
+            padding: 8px 16px;
+            margin: 0 8px;
+        }
+        .breakthrough-icon {
+            color: white;
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        .breakthrough-text {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .breakthrough-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        .game-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            border-radius: 6px;
+            padding: 8px 16px;
+            margin: 0 8px;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 0 #c44569, 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .game-icon {
+            color: white;
+            font-size: 20px;
+            margin-right: 8px;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+        }
+        .game-text {
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+        }
+        .game-link:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #c44569, 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .game-link:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        body.dark-mode .game-link {
+            border-color: #2d3748;
+            box-shadow: 0 4px 0 #ff4757, 0 4px 10px rgba(0,0,0,0.4);
+        }
+        body.dark-mode .game-link:hover {
+            box-shadow: 0 2px 0 #ff4757, 0 2px 6px rgba(0,0,0,0.4);
+        }
+        .weekly-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            padding: 8px 16px;
+            margin: 0 8px;
+        }
+        .weekly-icon {
+            color: white;
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        .weekly-text {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .weekly-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body data-page="weekly">
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <h1 class="logo">狂客·银河</h1>
+                <a class="success-link" href="success.html">
+                    <span class="success-icon">
+                        <i class="fas fa-meteor"></i>
+                    </span>
+                    <span class="success-text">成功日记</span>
+                </a>
+                <a class="breakthrough-link" href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnGZZB8XUcRr7ChjRqeL27ic">
+                    <span class="breakthrough-icon">
+                        <i class="fas fa-book-open"></i>
+                    </span>
+                    <span class="breakthrough-text">《自学突围》</span>
+                </a>
+                <a class="sky-link" href="reading.html">
+                    <span class="sky-icon">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span class="sky-text">星空</span>
+                </a>
+                <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/">
+                    <span class="exam-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </span>
+                    <span class="exam-text">冬之街小店</span>
+                </a>
+                <a class="video-link" href="video.html">
+                    <span class="video-icon">
+                        <i class="fas fa-video"></i>
+                    </span>
+                    <span class="video-text">视频矩阵</span>
+                </a>
+                <a class="game-link" href="games.html">
+                    <span class="game-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </span>
+                    <span class="game-text">自制游戏</span>
+                </a>
+                <a class="weekly-link" href="weekly.html">
+                    <span class="weekly-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </span>
+                    <span class="weekly-text">【狂客】极客周刊</span>
+                </a>
+            </div>
+            <div class="controls">
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="weekly-container">
+        <div class="weekly-title">
+            <h1>📰 【狂客】极客周刊</h1>
+            <p>每周分享最新AI资讯、技术趋势与深度思考</p>
+        </div>
+
+        <div class="weekly-list" id="weeklyList">
+            <!-- 示例：第一期周刊 -->
+            <div class="weekly-item">
+                <div class="weekly-item-header">
+                    <h2 class="weekly-item-title">第1期 - AI时代的学习革命</h2>
+                    <div class="weekly-item-date">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>2024年1月1日</span>
+                    </div>
+                </div>
+                <div class="weekly-item-content">
+                    <div class="weekly-item-text">
+<!-- 在这里填写您的文稿内容 -->
+本期主题：AI如何改变我们的学习方式
+
+1. AI工具推荐
+- Claude：最强思考型AI
+- ChatGPT：通用型AI助手
+- Kimi：长文本处理专家
+
+2. 学习技巧分享
+- 如何用AI提升学习效率
+- AI辅助知识整理的方法
+- 构建个人知识体系
+
+3. 本周AI新闻
+- GPT-5即将发布
+- 国产AI大模型新进展
+                    </div>
+                </div>
+                <div class="weekly-item-video">
+                    <!-- 视频区域：填写视频URL或留空 -->
+                    <div class="video-container">
+                        <!-- 方式1：直接嵌入视频（例如B站、YouTube） -->
+                        <!-- <iframe src="您的视频URL" frameborder="0" allowfullscreen></iframe> -->
+                        
+                        <!-- 方式2：暂无视频时显示占位符 -->
+                        <div class="video-placeholder">
+                            <i class="fas fa-video"></i>
+                            <p>视频内容待添加</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 更多周刊内容模板（可复制以下结构添加新的周刊） -->
+            <!--
+            <div class="weekly-item">
+                <div class="weekly-item-header">
+                    <h2 class="weekly-item-title">第X期 - 标题</h2>
+                    <div class="weekly-item-date">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>日期</span>
+                    </div>
+                </div>
+                <div class="weekly-item-content">
+                    <div class="weekly-item-text">
+文稿内容...
+                    </div>
+                </div>
+                <div class="weekly-item-video">
+                    <div class="video-container">
+                        <iframe src="视频URL" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            -->
+
+            <!-- 空状态提示（当没有内容时显示） -->
+            <!--
+            <div class="empty-weekly">
+                <div class="empty-weekly-icon">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <h2>敬请期待</h2>
+                <p>【狂客】极客周刊即将上线，每周为您带来精彩的AI内容分享</p>
+            </div>
+            -->
+        </div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <a href="index.html" class="back-button" title="返回首页">
+        <i class="fas fa-home"></i>
+    </a>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>
