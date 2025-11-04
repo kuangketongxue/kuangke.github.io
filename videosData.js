@@ -19,7 +19,7 @@ const videosData = [
     {
         date: '2025-11-03',
         url: 'https://b23.tv/vLPYx0B',
-        thumbnail: '',
+        thumbnail: 'images/87faf1327a80090f2a80c05166b2078f.png',
         title: '用生命做视频？00后的博主都在做什么',
         desc: '飞机，变成流星，空中客厅'
     }
