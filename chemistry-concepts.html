@@ -7,364 +7,495 @@
     <title>化学的所有概念 - 狂客·银河</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        /* 基础样式保持与原页面一致 */
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-            font-family: 'Microsoft YaHei', 'Arial', sans-serif;
-        }
-        
-        body.dark-mode {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-        }
-
-        /* 页面标题区域 */
-        .chemistry-title {
+        /* 化学概念页面专属样式 */
+        .chemistry-container {
             max-width: 1400px;
-            margin: 100px auto 30px;
-            text-align: center;
+            margin: 80px auto 60px;
             padding: 40px 20px;
         }
-        
-        .chemistry-title h1 {
-            font-size: 3.5em;
-            background: linear-gradient(135deg, #fff 0%, #ffd700 100%);
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .page-header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 20px;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            margin-bottom: 15px;
+            animation: titleGlow 2s ease-in-out infinite;
         }
-        
-        body.dark-mode .chemistry-title h1 {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+
+        @keyframes titleGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
         }
-        
-        .chemistry-title p {
-            font-size: 1.3em;
-            color: rgba(255, 255, 255, 0.9);
+
+        .page-header p {
+            font-size: 1.2em;
+            color: #666;
             opacity: 0.9;
         }
-        
+
+        body.dark-mode .page-header p {
+            color: #aaa;
+        }
+
         /* 控制面板 */
         .control-panel {
-            position: fixed;
-            top: 120px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
         }
-        
-        body.dark-mode .control-panel {
-            background: rgba(45, 55, 72, 0.95);
-            color: #fff;
-        }
-        
-        .control-title {
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #333;
-        }
-        
-        body.dark-mode .control-title {
-            color: #fff;
-        }
-        
-        .control-button {
-            display: block;
-            width: 100%;
-            margin: 8px 0;
-            padding: 10px 15px;
-            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+
+        .control-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .control-btn i {
+            margin-right: 8px;
+        }
+
+        .zoom-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .zoom-control {
+            background: #2d3748;
+        }
+
+        .zoom-btn {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 1.2em;
         }
-        
-        .control-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(48, 207, 208, 0.3);
+
+        .zoom-btn:hover {
+            transform: scale(1.1);
         }
-        
-        /* 思维导图容器 */
-        .mindmap-container {
-            max-width: 1600px;
-            margin: 30px auto;
-            padding: 20px;
-            height: 70vh;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 25px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
+
+        .zoom-display {
+            font-weight: 600;
+            color: #333;
+            min-width: 60px;
+            text-align: center;
         }
-        
-        body.dark-mode .mindmap-container {
-            background: rgba(45, 55, 72, 0.95);
-        }
-        
-        #mindmap {
-            width: 100%;
-            height: 100%;
-        }
-        
-        /* 节点样式 */
-        .node {
-            cursor: pointer;
-        }
-        
-        .node circle {
-            fill: #fff;
-            stroke: #333;
-            stroke-width: 2px;
-            transition: all 0.3s ease;
-        }
-        
-        body.dark-mode .node circle {
-            fill: #2d3748;
-            stroke: #fff;
-        }
-        
-        .node.has-children circle {
-            fill: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .node text {
-            font-size: 12px;
-            fill: #333;
-            font-weight: 500;
-            pointer-events: none;
-        }
-        
-        body.dark-mode .node text {
-            fill: #fff;
-        }
-        
-        .link {
-            fill: none;
-            stroke: #ccc;
-            stroke-width: 1.5px;
-        }
-        
-        body.dark-mode .link {
-            stroke: #666;
-        }
-        
-        /* 概念详情弹窗 */
-        .concept-tooltip {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.98);
-            border: 2px solid #667eea;
-            border-radius: 12px;
-            padding: 15px;
-            max-width: 350px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
-            display: none;
-            backdrop-filter: blur(10px);
-        }
-        
-        body.dark-mode .concept-tooltip {
-            background: rgba(45, 55, 72, 0.98);
-            border-color: #764ba2;
+
+        body.dark-mode .zoom-display {
             color: #fff;
         }
-        
-        .concept-title {
+
+        /* 思维导图容器 */
+        .mindmap-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: auto;
+            position: relative;
+            min-height: 800px;
+        }
+
+        body.dark-mode .mindmap-container {
+            background: #2d3748;
+        }
+
+        .mindmap-wrapper {
+            transform-origin: top left;
+            transition: transform 0.3s ease;
+        }
+
+        /* 根节点 */
+        .root-node {
+            text-align: center;
+            margin: 0 auto 60px;
+            width: fit-content;
+        }
+
+        .root-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 50px;
+            border-radius: 50px;
+            font-size: 2em;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .root-bubble:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        /* 一级分支 */
+        .level-1-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .level-1-node {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .level-1-node {
+            background: linear-gradient(135deg, #3a4556 0%, #2d3748 100%);
+        }
+
+        .level-1-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .level-1-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        body.dark-mode .level-1-title {
+            color: #fff;
+        }
+
+        .level-1-icon {
+            font-size: 1.2em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .collapse-icon {
+            margin-left: auto;
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+        }
+
+        .collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+
+        /* 二级分支 */
+        .level-2-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 5000px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .collapsed .level-2-container {
+            max-height: 0;
+        }
+
+        .level-2-node {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        body.dark-mode .level-2-node {
+            background: #1a202c;
+        }
+
+        .level-2-node:hover {
+            transform: translateX(10px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .level-2-title {
             font-size: 1.2em;
             font-weight: 600;
             color: #667eea;
             margin-bottom: 10px;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 5px;
-        }
-        
-        .concept-definition {
-            font-size: 0.95em;
-            line-height: 1.6;
-            color: #333;
-        }
-        
-        body.dark-mode .concept-definition {
-            color: #ddd;
-        }
-        
-        .concept-formula {
-            background: #f8f9fa;
-            padding: 8px;
-            border-radius: 6px;
-            margin: 8px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-        }
-        
-        body.dark-mode .concept-formula {
-            background: #1a202c;
-        }
-        
-        /* 搜索框 */
-        .search-container {
-            position: fixed;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 999;
-        }
-        
-        .search-box {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 25px;
-            padding: 12px 25px;
             display: flex;
             align-items: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(10px);
+            gap: 8px;
         }
-        
-        body.dark-mode .search-box {
-            background: rgba(45, 55, 72, 0.95);
+
+        .level-2-icon {
+            font-size: 0.9em;
         }
-        
-        .search-box input {
-            border: none;
-            background: none;
-            outline: none;
-            font-size: 16px;
-            width: 300px;
+
+        /* 三级内容（概念定义） */
+        .level-3-container {
+            margin-top: 10px;
+            padding-left: 20px;
+            border-left: 3px solid #667eea;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .level-2-node.expanded .level-3-container {
+            max-height: 10000px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .concept-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .concept-item {
+            background: #2d3748;
+        }
+
+        .concept-item:hover {
+            background: linear-gradient(135deg, #f093fb15 0%, #f5576c15 100%);
+        }
+
+        .concept-name {
+            font-weight: 600;
             color: #333;
+            margin-bottom: 8px;
+            font-size: 1.05em;
         }
-        
-        body.dark-mode .search-box input {
+
+        body.dark-mode .concept-name {
             color: #fff;
         }
-        
-        .search-box i {
-            color: #667eea;
-            margin-right: 10px;
-            font-size: 18px;
+
+        .concept-definition {
+            color: #666;
+            line-height: 1.8;
+            font-size: 0.95em;
         }
-        
-        /* 缩放控制 */
-        .zoom-controls {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
+
+        body.dark-mode .concept-definition {
+            color: #aaa;
+        }
+
+        .concept-definition p {
+            margin: 8px 0;
+        }
+
+        .concept-definition ul, .concept-definition ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .concept-definition li {
+            margin: 4px 0;
+        }
+
+        .concept-definition code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* 搜索功能 */
+        .search-container {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 600px;
             display: flex;
             gap: 10px;
         }
-        
-        .zoom-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            font-size: 1em;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        body.dark-mode .search-input {
+            background: #2d3748;
+            color: #fff;
+            border-color: #667eea;
+        }
+
+        .search-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* 返回按钮 */
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-        
-        .zoom-btn:hover {
-            transform: scale(1.1);
+            font-size: 24px;
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
         }
-        
-        /* 统计信息 */
-        .stats-panel {
+
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        /* 加载提示 */
+        .loading-overlay {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 15px 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(10px);
-        }
-        
-        body.dark-mode .stats-panel {
-            background: rgba(45, 55, 72, 0.95);
-            color: #fff;
-        }
-        
-        .stat-item {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
             display: flex;
             align-items: center;
-            margin: 5px 0;
-            font-size: 14px;
+            justify-content: center;
+            z-index: 9999;
         }
-        
-        .stat-item i {
+
+        body.dark-mode .loading-overlay {
+            background: rgba(45, 55, 72, 0.9);
+        }
+
+        .loading-content {
+            text-align: center;
             color: #667eea;
-            margin-right: 8px;
         }
-        
+
+        .loading-content i {
+            font-size: 3em;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-content p {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+
         /* 响应式设计 */
         @media (max-width: 768px) {
-            .chemistry-title h1 {
-                font-size: 2.5em;
+            .page-header h1 {
+                font-size: 2em;
             }
-            
-            .control-panel {
-                position: relative;
-                top: auto;
-                right: auto;
-                margin: 20px auto;
-                max-width: 300px;
+
+            .level-1-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
             }
-            
-            .search-box input {
-                width: 200px;
-            }
-            
+
             .mindmap-container {
-                height: 60vh;
-                margin: 20px 10px;
+                padding: 20px;
+            }
+
+            .control-panel {
+                flex-direction: column;
             }
         }
-        
-        /* 加载动画 */
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
+
+        /* 高亮效果 */
+        .highlight {
+            animation: highlightPulse 1s ease-in-out 3;
         }
-        
-        .loading i {
-            font-size: 48px;
-            color: #667eea;
-            animation: spin 2s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        @keyframes highlightPulse {
+            0%, 100% { background-color: transparent; }
+            50% { background-color: rgba(255, 235, 59, 0.3); }
         }
     </style>
 </head>
-<body data-page="chemistry">
+<body data-page="chemistry-concepts">
+    <!-- 加载遮罩 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <i class="fas fa-atom"></i>
+            <p>正在加载化学概念...</p>
+        </div>
+    </div>
+
     <header class="header">
         <div class="container">
             <div class="header-left">
@@ -399,11 +530,11 @@
                     </span>
                     <span class="video-text">视频矩阵</span>
                 </a>
-                <a class="ai-link" href="ai.html">
-                    <span class="ai-icon">
-                        <i class="fas fa-robot"></i>
+                <a class="game-link" href="games.html">
+                    <span class="game-icon">
+                        <i class="fas fa-gamepad"></i>
                     </span>
-                    <span class="ai-text">高考AI助手</span>
+                    <span class="game-text">自制游戏</span>
                 </a>
             </div>
             <div class="controls">
@@ -414,645 +545,326 @@
         </div>
     </header>
 
-    <!-- 页面标题 -->
-    <div class="chemistry-title">
-        <h1>⚗️ 化学的所有概念</h1>
-        <p>从原子到宇宙，探索化学学科的完整知识体系</p>
-    </div>
-
-    <!-- 搜索框 -->
-    <div class="search-container">
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" id="conceptSearch" placeholder="搜索化学概念...">
+    <div class="chemistry-container">
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <h1>⚗️ 化学的所有概念</h1>
+            <p>从化学诞生到现在的完整概念体系 · 满足高考满分的知识深度</p>
         </div>
-    </div>
 
-    <!-- 控制面板 -->
-    <div class="control-panel">
-        <div class="control-title">🎮 控制面板</div>
-        <button class="control-button" onclick="expandAll()">
-            <i class="fas fa-expand-arrows-alt"></i> 展开全部
-        </button>
-        <button class="control-button" onclick="collapseAll()">
-            <i class="fas fa-compress-arrows-alt"></i> 收起全部
-        </button>
-        <button class="control-button" onclick="resetView()">
-            <i class="fas fa-undo"></i> 重置视图
-        </button>
-        <button class="control-button" onclick="exportData()">
-            <i class="fas fa-download"></i> 导出数据
-        </button>
-    </div>
-
-    <!-- 思维导图容器 -->
-    <div class="mindmap-container">
-        <div class="loading" id="loading">
-            <i class="fas fa-flask"></i>
-            <p>正在加载化学概念...</p>
+        <!-- 搜索功能 -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索概念名称或定义...">
+                <button class="search-btn" onclick="searchConcept()">
+                    <i class="fas fa-search"></i> 搜索
+                </button>
+            </div>
         </div>
-        <div id="mindmap"></div>
-        
-        <!-- 缩放控制 -->
-        <div class="zoom-controls">
-            <button class="zoom-btn" onclick="zoomIn()">
-                <i class="fas fa-plus"></i>
+
+        <!-- 控制面板 -->
+        <div class="control-panel">
+            <button class="control-btn" onclick="expandAll()">
+                <i class="fas fa-expand-alt"></i> 展开全部
             </button>
-            <button class="zoom-btn" onclick="zoomOut()">
-                <i class="fas fa-minus"></i>
+            <button class="control-btn" onclick="collapseAll()">
+                <i class="fas fa-compress-alt"></i> 收起全部
             </button>
-            <button class="zoom-btn" onclick="fitToScreen()">
-                <i class="fas fa-expand"></i>
+            <div class="zoom-control">
+                <button class="zoom-btn" onclick="zoomOut()">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <span class="zoom-display" id="zoomDisplay">100%</span>
+                <button class="zoom-btn" onclick="zoomIn()">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <button class="control-btn" onclick="resetZoom()">
+                <i class="fas fa-redo"></i> 重置
             </button>
         </div>
-    </div>
 
-    <!-- 统计面板 -->
-    <div class="stats-panel">
-        <div class="stat-item">
-            <i class="fas fa-sitemap"></i>
-            <span>总概念数: <strong id="totalConcepts">0</strong></span>
-        </div>
-        <div class="stat-item">
-            <i class="fas fa-layer-group"></i>
-            <span>层级数: <strong id="totalLevels">0</strong></span>
-        </div>
-        <div class="stat-item">
-            <i class="fas fa-eye"></i>
-            <span>当前显示: <strong id="visibleNodes">0</strong></span>
-        </div>
-    </div>
+        <!-- 思维导图容器 -->
+        <div class="mindmap-container">
+            <div class="mindmap-wrapper" id="mindmapWrapper">
+                <!-- 根节点 -->
+                <div class="root-node">
+                    <div class="root-bubble">化学</div>
+                </div>
 
-    <!-- 概念详情弹窗 -->
-    <div class="concept-tooltip" id="conceptTooltip">
-        <div class="concept-title" id="tooltipTitle"></div>
-        <div class="concept-definition" id="tooltipDefinition"></div>
-        <div class="concept-formula" id="tooltipFormula" style="display: none;"></div>
+                <!-- 一级分支容器 - 将由JavaScript动态生成 -->
+                <div class="level-1-container" id="conceptContainer">
+                    <!-- 内容将从MD文件加载 -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- 返回按钮 -->
-    <a href="index.html" class="back-button" title="返回首页">
-        <i class="fas fa-home"></i>
+    <a href="ai.html" class="back-button" title="返回AI助手">
+        <i class="fas fa-arrow-left"></i>
     </a>
 
-    <!-- 引入D3.js -->
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    
     <script>
-        // ==================== 化学概念数据结构 ====================
-        // 在以下区域填写你的化学概念
-        const chemistryConcepts = {
-            name: "化学",
-            definition: "研究物质的组成、结构、性质、变化规律以及应用的科学",
-            formula: "",
-            children: [
-                {
-                    name: "基础概念",
-                    definition: "化学学科的基本概念和术语",
-                    children: [
-                        {
-                            name: "物质",
-                            definition: "占据空间并具有质量的一切客观存在",
-                            formula: "ρ = m/V",
-                            children: [
-                                {
-                                    name: "纯净物",
-                                    definition: "由同种分子组成的物质",
-                                    children: [
-                                        {
-                                            name: "单质",
-                                            definition: "由同一种元素组成的纯净物",
-                                            formula: "元素符号表示",
-                                            children: [
-                                                {
-                                                    name: "金属单质",
-                                                    definition: "具有金属性的元素单质，如Fe、Cu、Al",
-                                                    properties: "导电性、延展性、金属光泽"
-                                                },
-                                                {
-                                                    name: "非金属单质",
-                                                    definition: "不具有金属性的元素单质，如O₂、N₂、C",
-                                                    properties: "不导电、脆性、无金属光泽"
-                                                },
-                                                {
-                                                    name: "稀有气体",
-                                                    definition: "元素周期表第18族元素",
-                                                    properties: "化学性质稳定、外层电子满"
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            name: "化合物",
-                                            definition: "由不同种元素组成的纯净物",
-                                            formula: "化学式表示",
-                                            children: [
-                                                {
-                                                    name: "有机化合物",
-                                                    definition: "含碳化合物（除CO、CO₂、碳酸盐等）",
-                                                    formula: "CₙH₂ₙ₊₂",
-                                                    children: [
-                                                        // 📝 填写区域1: 有机化合物详细分类
-                                                        // 请在这里添加烷烃、烯烃、炔烃、芳香烃等详细分类
-                                                        // 格式:
-                                                        // {
-                                                        //     name: "你的概念名称",
-                                                        //     definition: "你的详细定义",
-                                                        //     formula: "相关公式(可选)"
-                                                        // }
-                                                        // 例如:
-                                                        // {
-                                                        //     name: "烷烃",
-                                                        //     definition: "饱和链烃，分子中只有C-C单键",
-                                                        //     formula: "CₙH₂ₙ₊₂"
-                                                        // }
-                                                    ]
-                                                },
-                                                {
-                                                    name: "无机化合物",
-                                                    definition: "除有机化合物外的所有化合物",
-                                                    children: [
-                                                        // 📝 填写区域2: 无机化合物详细分类
-                                                        // 请在这里添加氧化物、酸、碱、盐等详细分类
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-                                {
-                                    name: "混合物",
-                                    definition: "由两种或多种物质混合而成的物质",
-                                    children: [
-                                        // 📝 填写区域3: 混合物详细分类
-                                        // 请在这里添加溶液、悬浊液、乳浊液、胶体等详细分类
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            name: "元素",
-                            definition: "具有相同质子数的原子的总称",
-                            formula: "元素符号表示",
-                            children: [
-                                {
-                                    name: "元素周期表",
-                                    definition: "按原子序数排列的元素表",
-                                    children: [
-                                        // 📝 填写区域4: 元素周期表详细内容
-                                        // 请在这里添加周期、族、区域划分等详细内容
-                                    ]
-                                },
-                                {
-                                    name: "元素性质",
-                                    definition: "元素固有的物理和化学特征",
-                                    children: [
-                                        // 📝 填写区域5: 元素性质详细内容
-                                        // 请在这里添加原子半径、电负性、电离能等详细内容
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: "原子结构与化学键",
-                    definition: "原子的内部结构和原子间的相互作用",
-                    children: [
-                        {
-                            name: "原子结构",
-                            definition: "原子的组成和电子排布",
-                            children: [
-                                // 📝 填写区域6: 原子结构详细内容
-                                // 请在这里添加原子核、电子层、电子排布等详细内容
-                            ]
-                        },
-                        {
-                            name: "化学键",
-                            definition: "原子间的强烈相互作用",
-                            children: [
-                                // 📝 填写区域7: 化学键详细内容
-                                // 请在这里添加离子键、共价键、金属键、氢键等详细内容
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: "化学计量学",
-                    definition: "研究化学中数量关系的学科",
-                    children: [
-                        // 📝 填写区域8: 化学计量学详细内容
-                        // 请在这里添加物质的量、化学方程式、溶液浓度等详细内容
-                    ]
-                },
-                {
-                    name: "化学反应原理",
-                    definition: "研究化学反应机理和规律的理论",
-                    children: [
-                        // 📝 填写区域9: 化学反应原理详细内容
-                        // 请在这里添加反应类型、化学平衡、反应速率等详细内容
-                    ]
-                },
-                {
-                    name: "化学热力学",
-                    definition: "研究化学反应中能量变化的学科",
-                    children: [
-                        // 📝 填写区域10: 化学热力学详细内容
-                        // 请在这里添加热化学、化学动力学、电化学等详细内容
-                    ]
-                },
-                {
-                    name: "有机化学",
-                    definition: "研究碳化合物的化学学科",
-                    children: [
-                        // 📝 填写区域11: 有机化学详细内容
-                        // 请在这里添加有机化合物分类、有机反应类型、聚合物等详细内容
-                    ]
-                },
-                {
-                    name: "分析化学",
-                    definition: "研究物质组成和结构的分析方法的学科",
-                    children: [
-                        // 📝 填写区域12: 分析化学详细内容
-                        // 请在这里添加定性分析、定量分析等详细内容
-                    ]
-                },
-                {
-                    name: "物理化学",
-                    definition: "运用物理学原理和方法研究化学现象的学科",
-                    children: [
-                        // 📝 填写区域13: 物理化学详细内容
-                        // 请在这里添加化学热力学、化学动力学、量子化学等详细内容
-                    ]
-                },
-                {
-                    name: "化学实验",
-                    definition: "进行化学研究和教学实践活动",
-                    children: [
-                        // 📝 填写区域14: 化学实验详细内容
-                        // 请在这里添加实验技术、实验仪器、实验室安全等详细内容
-                    ]
-                },
-                {
-                    name: "应用化学",
-                    definition: "化学原理在各个领域的实际应用",
-                    children: [
-                        // 📝 填写区域15: 应用化学详细内容
-                        // 请在这里添加工业化学、生物化学、环境化学、材料化学等详细内容
-                    ]
-                }
-            ]
-        };
+        // Markdown文件路径
+        const MD_FILE_PATH = 'chemistry-concepts.md';
 
-        // ==================== 全局变量 ====================
-        let svg, g, tree, root, currentZoom = 1;
-        let margin = {top: 20, right: 90, bottom: 30, left: 90};
-        let width, height;
-        let i = 0;
-        let duration = 750;
-        
-        // ==================== 初始化思维导图 ====================
-        function initMindmap() {
-            const container = document.getElementById('mindmap');
-            const rect = container.getBoundingClientRect();
-            width = rect.width - margin.right - margin.left;
-            height = rect.height - margin.top - margin.bottom;
-            
-            // 创建SVG
-            svg = d3.select("#mindmap")
-                .append("svg")
-                .attr("width", width + margin.right + margin.left)
-                .attr("height", height + margin.top + margin.bottom);
-            
-            g = svg.append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-            
-            // 创建树布局
-            tree = d3.tree().size([height, width]);
-            
-            // 处理数据
-            root = d3.hierarchy(chemistryConcepts, d => d.children);
-            root.x0 = height / 2;
-            root.y0 = 0;
-            
-            // 初始折叠一些深层节点
-            if (root.children) {
-                root.children.forEach(collapse);
-            }
-            
-            update(root);
-            
-            // 添加缩放功能
-            const zoom = d3.zoom()
-                .scaleExtent([0.1, 3])
-                .on("zoom", (event) => {
-                    g.attr("transform", event.transform);
-                    currentZoom = event.transform.k;
-                });
-            
-            svg.call(zoom);
-            
-            // 隐藏加载动画
-            document.getElementById('loading').style.display = 'none';
-            
-            // 更新统计信息
-            updateStats();
-        }
-        
-        // ==================== 节点操作函数 ====================
-        function collapse(d) {
-            if (d.children) {
-                d._children = d.children;
-                d._children.forEach(collapse);
-                d.children = null;
+        // 从MD文件加载并渲染内容
+        async function loadChemistryConcepts() {
+            try {
+                const response = await fetch(MD_FILE_PATH);
+                if (!response.ok) {
+                    throw new Error('无法加载概念文件');
+                }
+                const markdown = await response.text();
+                parseAndRenderConcepts(markdown);
+                document.getElementById('loadingOverlay').style.display = 'none';
+            } catch (error) {
+                console.error('加载失败:', error);
+                document.getElementById('conceptContainer').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3em; margin-bottom: 20px;"></i>
+                        <p>加载概念数据失败，请检查 chemistry-concepts.md 文件是否存在</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">错误信息: ${error.message}</p>
+                    </div>
+                `;
+                document.getElementById('loadingOverlay').style.display = 'none';
             }
         }
-        
-        function expand(d) {
-            if (d._children) {
-                d.children = d._children;
-                d.children.forEach(expand);
-                d._children = null;
-            }
-        }
-        
-        // ==================== 更新思维导图 ====================
-        function update(source) {
-            const treeData = tree(root);
-            const nodes = treeData.descendants();
-            const links = treeData.descendants().slice(1);
-            
-            // 标准化深度
-            nodes.forEach(d => { d.y = d.depth * 200; });
-            
-            // 节点处理
-            const node = g.selectAll('g.node')
-                .data(nodes, d => d.id || (d.id = ++i));
-            
-            // 进入新节点
-            const nodeEnter = node.enter().append('g')
-                .attr('class', 'node')
-                .attr("transform", d => "translate(" + source.y0 + "," + source.x0 + ")")
-                .on('click', click)
-                .on('mouseover', showTooltip)
-                .on('mouseout', hideTooltip);
-            
-            nodeEnter.append('circle')
-                .attr('r', 1e-6)
-                .style("fill", d => d._children ? "lightsteelblue" : "#fff");
-            
-            nodeEnter.append('text')
-                .attr("dy", ".35em")
-                .attr("x", d => d.children || d._children ? -13 : 13)
-                .attr("text-anchor", d => d.children || d._children ? "end" : "start")
-                .text(d => d.data.name)
-                .style("fill-opacity", 1e-6);
-            
-            // 更新节点
-            const nodeUpdate = nodeEnter.merge(node);
-            
-            nodeUpdate.transition()
-                .duration(duration)
-                .attr("transform", d => "translate(" + d.y + "," + d.x + ")");
-            
-            nodeUpdate.select('circle')
-                .attr('r', 8)
-                .style("fill", d => d._children ? "lightsteelblue" : "#fff")
-                .attr('cursor', 'pointer');
-            
-            nodeUpdate.select('text')
-                .style("fill-opacity", 1);
-            
-            // 退出节点
-            const nodeExit = node.exit().transition()
-                .duration(duration)
-                .attr("transform", d => "translate(" + source.y + "," + source.x + ")")
-                .remove();
-            
-            nodeExit.select('circle')
-                .attr('r', 1e-6);
-            
-            nodeExit.select('text')
-                .style('fill-opacity', 1e-6);
-            
-            // 连接线处理
-            const link = g.selectAll('path.link')
-                .data(links, d => d.id);
-            
-            // 进入新连接线
-            const linkEnter = link.enter().insert('path', "g")
-                .attr("class", "link")
-                .attr('d', d => {
-                    const o = {x: source.x0, y: source.y0};
-                    return diagonal(o, o);
-                });
-            
-            // 更新连接线
-            const linkUpdate = linkEnter.merge(link);
-            
-            linkUpdate.transition()
-                .duration(duration)
-                .attr('d', d => diagonal(d, d.parent));
-            
-            // 退出连接线
-            link.exit().transition()
-                .duration(duration)
-                .attr('d', d => {
-                    const o = {x: source.x, y: source.y};
-                    return diagonal(o, o);
-                })
-                .remove();
-            
-            // 存储旧位置
-            nodes.forEach(d => {
-                d.x0 = d.x;
-                d.y0 = d.y;
-            });
-        }
-        
-        // ==================== 辅助函数 ====================
-        function diagonal(s, d) {
-            const path = `M ${s.y} ${s.x}
-                    C ${(s.y + d.y) / 2} ${s.x},
-                      ${(s.y + d.y) / 2} ${d.x},
-                      ${d.y} ${d.x}`;
-            return path;
-        }
-        
-        function click(event, d) {
-            if (d.children) {
-                d._children = d.children;
-                d.children = null;
-            } else {
-                d.children = d._children;
-                d._children = null;
-            }
-            update(d);
-            updateStats();
-        }
-        
-        function showTooltip(event, d) {
-            const tooltip = document.getElementById('conceptTooltip');
-            const title = document.getElementById('tooltipTitle');
-            const definition = document.getElementById('tooltipDefinition');
-            const formula = document.getElementById('tooltipFormula');
-            
-            title.textContent = d.data.name;
-            definition.textContent = d.data.definition || '暂无定义';
-            
-            if (d.data.formula && d.data.formula !== '') {
-                formula.textContent = '公式: ' + d.data.formula;
-                formula.style.display = 'block';
-            } else {
-                formula.style.display = 'none';
+
+        // 解析MD并渲染为HTML
+        function parseAndRenderConcepts(markdown) {
+            const container = document.getElementById('conceptContainer');
+            const lines = markdown.split('\n');
+            let html = '';
+            let currentLevel1 = null;
+            let currentLevel2 = null;
+            let level1Id = 0;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                // 一级标题 (## 标题)
+                if (line.startsWith('## ')) {
+                    if (currentLevel1) {
+                        html += '</div></div></div>'; // 关闭前一个一级节点
+                    }
+                    
+                    const titleMatch = line.match(/## (.+?) - (.+)/);
+                    if (titleMatch) {
+                        const icon = titleMatch[1].trim();
+                        const title = titleMatch[2].trim();
+                        level1Id++;
+                        
+                        html += `
+                            <div class="level-1-node" id="level1-${level1Id}">
+                                <div class="level-1-title" onclick="toggleLevel1(this)">
+                                    <span class="level-1-icon">${icon}</span>
+                                    ${title}
+                                    <span class="collapse-icon"><i class="fas fa-chevron-down"></i></span>
+                                </div>
+                                <div class="level-2-container">
+                        `;
+                        currentLevel1 = true;
+                        currentLevel2 = null;
+                    }
+                }
+                // 二级标题 (### 标题)
+                else if (line.startsWith('### ')) {
+                    if (currentLevel2) {
+                        html += '</div></div>'; // 关闭前一个二级节点
+                    }
+                    
+                    const titleMatch = line.match(/### (.+?) (.+)/);
+                    if (titleMatch) {
+                        const icon = titleMatch[1].trim();
+                        const title = titleMatch[2].trim();
+                        
+                        html += `
+                            <div class="level-2-node" onclick="toggleLevel2(this)">
+                                <div class="level-2-title">
+                                    <span class="level-2-icon">${icon}</span>
+                                    ${title}
+                                </div>
+                                <div class="level-3-container">
+                        `;
+                        currentLevel2 = true;
+                    }
+                }
+                // 概念项 (#### 概念名)
+                else if (line.startsWith('#### ')) {
+                    const conceptName = line.replace('#### ', '').trim();
+                    let definition = '';
+                    
+                    // 读取定义内容直到遇到下一个标题或空行
+                    i++;
+                    while (i < lines.length) {
+                        const defLine = lines[i].trim();
+                        if (defLine.startsWith('#') || (defLine === '' && lines[i + 1]?.trim().startsWith('#'))) {
+                            i--;
+                            break;
+                        }
+                        if (defLine) {
+                            definition += defLine + '\n';
+                        }
+                        i++;
+                    }
+                    
+                    // 使用marked.js渲染markdown
+                    const renderedDefinition = marked.parse(definition);
+                    
+                    html += `
+                        <div class="concept-item">
+                            <div class="concept-name">${conceptName}</div>
+                            <div class="concept-definition">${renderedDefinition}</div>
+                        </div>
+                    `;
+                }
             }
             
-            tooltip.style.display = 'block';
-            tooltip.style.left = (event.pageX + 10) + 'px';
-            tooltip.style.top = (event.pageY - 10) + 'px';
+            // 关闭最后的节点
+            if (currentLevel2) {
+                html += '</div></div>';
+            }
+            if (currentLevel1) {
+                html += '</div></div>';
+            }
+            
+            container.innerHTML = html;
         }
-        
-        function hideTooltip() {
-            document.getElementById('conceptTooltip').style.display = 'none';
-        }
-        
-        // ==================== 控制函数 ====================
-        function expandAll() {
-            expand(root);
-            update(root);
-            updateStats();
-        }
-        
-        function collapseAll() {
-            collapse(root);
-            update(root);
-            updateStats();
-        }
-        
-        function resetView() {
-            svg.transition()
-                .duration(750)
-                .call(
-                    d3.zoom().transform,
-                    d3.zoomIdentity.translate(margin.left, margin.top)
-                );
-        }
-        
+
+        // 缩放功能
+        let currentZoom = 100;
+        const wrapper = document.getElementById('mindmapWrapper');
+        const zoomDisplay = document.getElementById('zoomDisplay');
+
         function zoomIn() {
-            svg.transition()
-                .duration(300)
-                .call(
-                    d3.zoom().scaleBy,
-                    1.3
-                );
+            if (currentZoom < 200) {
+                currentZoom += 10;
+                updateZoom();
+            }
         }
-        
+
         function zoomOut() {
-            svg.transition()
-                .duration(300)
-                .call(
-                    d3.zoom().scaleBy,
-                    0.7
-                );
+            if (currentZoom > 50) {
+                currentZoom -= 10;
+                updateZoom();
+            }
         }
-        
-        function fitToScreen() {
-            const bounds = g.node().getBBox();
-            const fullWidth = width + margin.right + margin.left;
-            const fullHeight = height + margin.top + margin.bottom;
-            const widthScale = fullWidth / bounds.width;
-            const heightScale = fullHeight / bounds.height;
-            const scale = 0.8 * Math.min(widthScale, heightScale);
-            
-            const translate = [
-                fullWidth / 2 - scale * (bounds.x + bounds.width / 2),
-                fullHeight / 2 - scale * (bounds.y + bounds.height / 2)
-            ];
-            
-            svg.transition()
-                .duration(750)
-                .call(
-                    d3.zoom().transform,
-                    d3.zoomIdentity
-                        .translate(translate[0], translate[1])
-                        .scale(scale)
-                );
+
+        function resetZoom() {
+            currentZoom = 100;
+            updateZoom();
         }
-        
-        function exportData() {
-            const dataStr = JSON.stringify(chemistryConcepts, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'chemistry_concepts.json';
-            link.click();
+
+        function updateZoom() {
+            wrapper.style.transform = `scale(${currentZoom / 100})`;
+            zoomDisplay.textContent = currentZoom + '%';
         }
-        
-        function updateStats() {
-            const allNodes = root.descendants();
-            const visibleNodes = allNodes.filter(d => !d._children && d.parent);
-            
-            document.getElementById('totalConcepts').textContent = allNodes.length;
-            document.getElementById('visibleNodes').textContent = visibleNodes.length;
-            
-            // 计算最大深度
-            let maxDepth = 0;
-            allNodes.forEach(d => {
-                if (d.depth > maxDepth) maxDepth = d.depth;
+
+        // 展开/收起一级节点
+        function toggleLevel1(element) {
+            const node = element.parentElement;
+            node.classList.toggle('collapsed');
+        }
+
+        // 展开/收起二级节点
+        function toggleLevel2(element) {
+            element.classList.toggle('expanded');
+        }
+
+        // 全部展开
+        function expandAll() {
+            document.querySelectorAll('.level-1-node').forEach(node => {
+                node.classList.remove('collapsed');
             });
-            document.getElementById('totalLevels').textContent = maxDepth + 1;
+            document.querySelectorAll('.level-2-node').forEach(node => {
+                node.classList.add('expanded');
+            });
         }
-        
-        // ==================== 搜索功能 ====================
-        document.getElementById('conceptSearch').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            if (searchTerm === '') {
-                update(root);
+
+        // 全部收起
+        function collapseAll() {
+            document.querySelectorAll('.level-1-node').forEach(node => {
+                node.classList.add('collapsed');
+            });
+            document.querySelectorAll('.level-2-node').forEach(node => {
+                node.classList.remove('expanded');
+            });
+        }
+
+        // 搜索功能
+        function searchConcept() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (!searchTerm) {
+                alert('请输入搜索内容');
                 return;
             }
+
+            // 移除之前的高亮
+            document.querySelectorAll('.highlight').forEach(el => {
+                el.classList.remove('highlight');
+            });
+
+            let found = false;
+            let firstMatch = null;
+            const concepts = document.querySelectorAll('.concept-item');
             
-            function searchNode(node) {
-                if (node.data.name.toLowerCase().includes(searchTerm)) {
-                    expandToRoot(node);
-                }
-                if (node.children) {
-                    node.children.forEach(searchNode);
-                }
-                if (node._children) {
-                    node._children.forEach(searchNode);
-                }
-            }
-            
-            function expandToRoot(node) {
-                if (node.parent) {
-                    if (node.parent._children) {
-                        node.parent.children = node.parent._children;
-                        node.parent._children = null;
+            concepts.forEach(concept => {
+                const name = concept.querySelector('.concept-name').textContent.toLowerCase();
+                const definition = concept.querySelector('.concept-definition').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || definition.includes(searchTerm)) {
+                    found = true;
+                    
+                    // 展开所有父节点
+                    let parent = concept.closest('.level-2-node');
+                    if (parent) {
+                        parent.classList.add('expanded');
+                        let level1 = parent.closest('.level-1-node');
+                        if (level1) {
+                            level1.classList.remove('collapsed');
+                        }
                     }
-                    expandToRoot(node.parent);
+                    
+                    // 高亮
+                    concept.classList.add('highlight');
+                    
+                    // 记录第一个匹配项
+                    if (!firstMatch) {
+                        firstMatch = concept;
+                    }
                 }
+            });
+
+            if (found && firstMatch) {
+                firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                alert('未找到相关概念');
             }
-            
-            searchNode(root);
-            update(root);
-            updateStats();
+        }
+
+        // 回车搜索
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchConcept();
+            }
         });
-        
-        // ==================== 主题切换 ====================
+
+        // 主题切换功能
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
-        
         const currentTheme = localStorage.getItem('theme') || 'light';
+
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
-        
+
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
-            
             if (body.classList.contains('dark-mode')) {
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
@@ -1063,18 +875,10 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-        
-        // ==================== 响应式处理 ====================
-        window.addEventListener('resize', () => {
-            d3.select("#mindmap").selectAll("*").remove();
-            initMindmap();
-        });
-        
-        // ==================== 页面初始化 ====================
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                initMindmap();
-            }, 500);
+
+        // 页面加载时加载概念
+        window.addEventListener('load', () => {
+            loadChemistryConcepts();
         });
     </script>
 </body>
