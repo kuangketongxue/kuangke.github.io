@@ -20,6 +20,7 @@
             --luxury-gradient: linear-gradient(135deg, #f6d365 0%, #fda085 50%, #764ba2 100%);
             --gold-gradient: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ff6b6b 100%);
             --accent-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             /* 文字颜色 */
             --text-primary: #1a1a2e;
             --text-secondary: #4a5568;
@@ -520,6 +521,155 @@
         body.dark-mode .metric-value {
             color: #e8eaf6;
         }
+        /* ==================== 运动达标检测面板 ==================== */
+        .exercise-goals-panel {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 36px;
+            padding: 50px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-smooth);
+        }
+        body.dark-mode .exercise-goals-panel {
+            background: rgba(45, 55, 72, 0.35);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .exercise-goals-panel:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-luxury);
+        }
+        .goal-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            margin-bottom: 16px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        body.dark-mode .goal-item {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .goal-item:hover {
+            transform: translateX(10px);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+        .goal-item.completed {
+            background: linear-gradient(135deg, rgba(17, 153, 142, 0.2) 0%, rgba(56, 239, 125, 0.2) 100%);
+            border-color: rgba(56, 239, 125, 0.5);
+        }
+        .goal-item.incomplete {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        .goal-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+        .goal-icon {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1));
+        }
+        body.dark-mode .goal-icon {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .goal-details {
+            flex: 1;
+        }
+        .goal-name {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            -webkit-font-smoothing: antialiased;
+        }
+        body.dark-mode .goal-name {
+            color: #e8eaf6;
+        }
+        .goal-progress {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        body.dark-mode .goal-progress {
+            color: #94a3b8;
+        }
+        .goal-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            padding: 12px 24px;
+            border-radius: 24px;
+        }
+        .goal-status.completed {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.15);
+        }
+        .goal-status.incomplete {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.15);
+        }
+        .overall-progress {
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 24px;
+            text-align: center;
+        }
+        body.dark-mode .overall-progress {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .progress-bar-container {
+            width: 100%;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--success-gradient);
+            border-radius: 15px;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+        .progress-text {
+            font-size: 2rem;
+            font-weight: 900;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        .progress-label {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
         /* ==================== 数据表格优化 ==================== */
         .data-table {
             width: 100%;
@@ -683,6 +833,18 @@
             }
             .report-card {
                 padding: 30px;
+            }
+            .exercise-goals-panel {
+                padding: 30px;
+            }
+            .goal-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .goal-status {
+                width: 100%;
+                justify-content: center;
             }
         }
         @media (max-width: 480px) {
@@ -935,6 +1097,25 @@
                         <li>在仓库设置中启用 GitHub Pages</li>
                         <li>访问 <code class="code-block">https://your-username.github.io/health-tracker/</code></li>
                     </ol>
+                    <h4 style="margin: 40px 0 20px;">
+                        <i class="fas fa-dumbbell"></i>
+                        每日运动目标设置
+                    </h4>
+                    <p>在 <code class="code-block">health-data.json</code> 中添加每日运动完成情况，系统会自动计算达标率：</p>
+                    <div class="code-block" style="white-space: pre-wrap; font-size: 0.85rem;">
+{
+  "date": "2024-01-15",
+  "exerciseGoals": {
+    "kegel": 30,        // 凯格尔运动 (目标30个)
+    "pushups": 30,      // 俯卧撑 (目标30个)
+    "running": 3.0,     // 跑步 (目标3公里)
+    "squats": 10,       // 深蹲 (目标10个)
+    "abdomen": 10,      // 推腹 (目标10个)
+    "plank": 1.0,       // 平板支撑 (目标1分钟)
+    "hiit": 2.0,        // HIIT (目标2分钟)
+    "burpees": 10       // 波比跳 (目标10个)
+  }
+}</div>
                 </div>
             </div>
         </section>
@@ -997,6 +1178,17 @@
                 this.data = null;
                 this.charts = {};
                 this.cache = new Map();
+                // 定义运动目标
+                this.exerciseTargets = {
+                    kegel: { name: '凯格尔运动', target: 30, unit: '个', icon: '🔥' },
+                    pushups: { name: '俯卧撑', target: 30, unit: '个', icon: '💪' },
+                    running: { name: '跑步', target: 3.0, unit: '公里', icon: '🏃' },
+                    squats: { name: '深蹲', target: 10, unit: '个', icon: '🦵' },
+                    abdomen: { name: '推腹', target: 10, unit: '个', icon: '🤸' },
+                    plank: { name: '平板支撑', target: 1.0, unit: '分钟', icon: '⏱️' },
+                    hiit: { name: 'HIIT', target: 2.0, unit: '分钟', icon: '⚡' },
+                    burpees: { name: '波比跳', target: 10, unit: '个', icon: '🔥' }
+                };
             }
             async loadData() {
                 const cacheKey = 'health-data';
@@ -1022,6 +1214,41 @@
             getRecentRecords(days = 30) {
                 if (!this.data?.records) return [];
                 return this.data.records.slice(-days);
+            }
+            // 计算今日运动达标情况
+            calculateExerciseGoals(record) {
+                if (!record?.exerciseGoals) return null;
+                
+                const goals = record.exerciseGoals;
+                const results = [];
+                let completedCount = 0;
+                let totalCount = 0;
+                
+                for (const [key, targetInfo] of Object.entries(this.exerciseTargets)) {
+                    const actual = goals[key] || 0;
+                    const target = targetInfo.target;
+                    const completed = actual >= target;
+                    
+                    if (completed) completedCount++;
+                    totalCount++;
+                    
+                    results.push({
+                        name: targetInfo.name,
+                        icon: targetInfo.icon,
+                        actual: actual,
+                        target: target,
+                        unit: targetInfo.unit,
+                        completed: completed,
+                        percentage: Math.min((actual / target) * 100, 100).toFixed(0)
+                    });
+                }
+                
+                return {
+                    goals: results,
+                    completedCount: completedCount,
+                    totalCount: totalCount,
+                    completionRate: ((completedCount / totalCount) * 100).toFixed(0)
+                };
             }
             calculateStats() {
                 const records = this.getRecentRecords();
@@ -1280,6 +1507,65 @@
                     }
                 };
             }
+            // 渲染运动达标面板
+            renderExerciseGoals(goalData) {
+                if (!goalData) {
+                    return `
+                        <div class="exercise-goals-panel">
+                            <h3 class="panel-title">
+                                <i class="fas fa-dumbbell"></i>
+                                每日运动达标检测
+                            </h3>
+                            <div class="info-box">
+                                <p style="text-align:center;">
+                                    <i class="fas fa-info-circle" style="margin-right:10px;"></i>
+                                    今日暂无运动目标数据，请在 health-data.json 中添加 exerciseGoals 字段
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                const goalsHTML = goalData.goals.map(goal => `
+                    <div class="goal-item ${goal.completed ? 'completed' : 'incomplete'}">
+                        <div class="goal-info">
+                            <div class="goal-icon">${goal.icon}</div>
+                            <div class="goal-details">
+                                <div class="goal-name">${goal.name}</div>
+                                <div class="goal-progress">
+                                    完成 ${goal.actual}${goal.unit} / 目标 ${goal.target}${goal.unit}
+                                    (${goal.percentage}%)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="goal-status ${goal.completed ? 'completed' : 'incomplete'}">
+                            <i class="fas ${goal.completed ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                            ${goal.completed ? '已达标' : '未达标'}
+                        </div>
+                    </div>
+                `).join('');
+                
+                return `
+                    <div class="exercise-goals-panel">
+                        <h3 class="panel-title">
+                            <i class="fas fa-dumbbell"></i>
+                            每日运动达标检测
+                        </h3>
+                        ${goalsHTML}
+                        <div class="overall-progress">
+                            <div class="progress-text">${goalData.completionRate}%</div>
+                            <div class="progress-label">
+                                已完成 ${goalData.completedCount} / ${goalData.totalCount} 项运动目标
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: ${goalData.completionRate}%">
+                                    ${goalData.completionRate}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
             renderToday() {
                 this.queueRender(() => {
                     const latest = this.dm.getLatestRecord();
@@ -1288,39 +1574,36 @@
                         return;
                     }
                     document.getElementById('todayDate').textContent = latest.date;
-
+                    
+                    // 计算运动达标情况
+                    const exerciseGoals = this.dm.calculateExerciseGoals(latest);
+                    const exerciseHTML = this.renderExerciseGoals(exerciseGoals);
+                    
                     // 新增：明日最紧急的一件事
                     const urgent = this.computeUrgentAction(latest);
                     const urgentHTML = this.createUrgentActionHTML(urgent);
-
                     const html = this.createTodayHTML(latest);
-                    document.getElementById('todayContent').innerHTML = urgentHTML + html;
+                    document.getElementById('todayContent').innerHTML = exerciseHTML + urgentHTML + html;
                 });
             }
-            // 新增：根据今日数据计算明日最紧急事项
+            // 新增:根据今日数据计算明日最紧急事项
             computeUrgentAction(latest) {
                 const sleepH = latest.sleep?.hours ?? 0;
                 const sleepQ = latest.sleep?.quality ?? 0;
                 const wakeups = latest.sleep?.nightWakeups ?? 0;
-
                 const exMin = latest.exercise?.minutes ?? 0;
                 const steps = latest.exercise?.steps ?? 0;
                 const intensity = latest.exercise?.intensity ?? '';
-
                 const water = latest.diet?.waterIntake ?? 0;
                 const junk = latest.diet?.junkFood ?? 0;
-
                 const mood = latest.mood?.score ?? 0;
                 const stress = latest.mood?.stress ?? 0;
                 const anxiety = latest.mood?.anxiety ?? 0;
-
                 const energy = latest.physical?.energy ?? 0;
                 const fatigue = latest.physical?.fatigue ?? 0;
                 const pain = latest.physical?.pain ?? 0;
-
                 const screen = latest.vision?.screenTime ?? 0;
                 const eyeFatigue = latest.vision?.eyeFatigue ?? 0;
-
                 // 优先级判断（从高到低）
                 if (pain >= 7) {
                     return {
@@ -1334,7 +1617,7 @@
                     return {
                         icon: 'fa-bed',
                         title: '优先改善睡眠',
-                        action: '今晚提前入睡；睡前1小时远离屏幕，明日目标睡满 7.5 小时。',
+                        action: '今晚提前入睡；睡前1小时远离屏幕,明日目标睡满 7.5 小时。',
                         reason: `睡眠不足/质量偏低（时长 ${sleepH}h，质量 ${sleepQ}/10，夜醒 ${wakeups} 次）。`
                     };
                 }
