@@ -1,1760 +1,1320 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- SEO优化 -->
-    <title>弄潮先锋营 - 前沿知识库 | 狂客空间</title>
-    <meta name="description" content="弄潮先锋营 - 前沿知识点检索与学习平台">
-    <meta name="keywords" content="知识库,检索,学习,前沿技术">
-    <meta name="author" content="狂客">
-    <meta name="robots" content="index, follow">
-    <!-- 主题颜色 -->
-    <meta name="theme-color" content="#000000">
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-    <!-- 字体预加载 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;600;700;900&family=Noto+Sans+SC:wght@100;200;300;400;500;600;700;900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>化学的所有概念 - 狂客·银河</title>
+    
+    <!-- 预加载关键资源 -->
+    <link rel="preload" href="chemistry-concepts.md" as="fetch" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
     <style>
-        /* ==================== CSS变量系统 ==================== */
-        :root {
-            /* 主题色 - 根据背景图片调整的暖金色系统 */
-            --primary-gold: #E8B44C;
-            --primary-gold-light: #F4D084;
-            --primary-gold-dark: #C89A3C;
-            --accent-gold: #FFF4D9;
-            --shimmer-gold: #FFFAED;
-            --warm-copper: #CD8B3C;
-            --deep-bronze: #9A6F3E;
-            /* 背景色 - 适配图片的深色调 */
-            --bg-primary: #000000;
-            --bg-secondary: #0F0F0F;
-            --bg-tertiary: #1A1A1A;
-            --bg-card: rgba(20, 25, 30, 0.88);
-            --bg-card-hover: rgba(30, 35, 40, 0.94);
-            --bg-overlay: rgba(15, 20, 25, 0.75);
-            --bg-glass: rgba(255, 255, 255, 0.03);
-            /* 文字颜色 - 提升对比度 */
-            --text-primary: #FFFFFF;
-            --text-secondary: #E8E8E8;
-            --text-tertiary: #C5C5C5;
-            --text-muted: #8A8A8A;
-            --text-gold: #E8B44C;
-            --text-gold-light: #F4D084;
-            --text-warm: #FFE6C7;
-            /* 边框 - 暖色调边框 */
-            --border-gold: rgba(232, 180, 76, 0.35);
-            --border-gold-strong: rgba(232, 180, 76, 0.65);
-            --border-warm: rgba(255, 230, 199, 0.15);
-            --border-copper: rgba(205, 139, 60, 0.40);
-            /* 阴影系统 - 增强深度 */
-            --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.50);
-            --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.60);
-            --shadow-strong: 0 12px 48px rgba(0, 0, 0, 0.70);
-            --shadow-gold: 0 4px 32px rgba(232, 180, 76, 0.25);
-            --shadow-gold-strong: 0 8px 48px rgba(232, 180, 76, 0.40);
-            --shadow-warm: 0 8px 32px rgba(255, 200, 100, 0.20);
-            --text-shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.70);
-            --text-shadow: 0 3px 16px rgba(0, 0, 0, 0.90);
-            --text-shadow-strong: 0 4px 20px rgba(0, 0, 0, 1);
-            --text-glow: 0 0 20px rgba(232, 180, 76, 0.30);
-            /* 动画 */
-            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            /* 间距系统 */
-            --spacing-xs: 8px;
-            --spacing-sm: 16px;
-            --spacing-md: 24px;
-            --spacing-lg: 40px;
-            --spacing-xl: 64px;
-            --spacing-2xl: 96px;
-            --spacing-3xl: 128px;
-            /* 圆角 */
-            --radius-sm: 6px;
-            --radius: 10px;
-            --radius-lg: 14px;
-            --radius-xl: 20px;
-            /* 字体 */
-            --font-serif: 'Noto Serif SC', 'Georgia', 'Times New Roman', serif;
-            --font-sans: 'Noto Sans SC', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --font-display: 'Noto Serif SC', serif;
-            /* 字体大小 */
-            --text-xs: 0.75rem;
-            --text-sm: 0.875rem;
-            --text-base: 1rem;
-            --text-lg: 1.125rem;
-            --text-xl: 1.25rem;
-            --text-2xl: 1.5rem;
-            --text-3xl: 1.875rem;
-            --text-4xl: 2.25rem;
-            --text-5xl: 3rem;
-            --text-6xl: 3.75rem;
-            /* 字重 */
-            --font-thin: 200;
-            --font-light: 300;
-            --font-normal: 400;
-            --font-medium: 500;
-            --font-semibold: 600;
-            --font-bold: 700;
-            --font-black: 900;
-            /* 行高 */
-            --leading-tight: 1.25;
-            --leading-snug: 1.375;
-            --leading-normal: 1.6;
-            --leading-relaxed: 1.75;
-            --leading-loose: 2;
-        }
-        /* ==================== 基础重置 ==================== */
+        /* 基础样式 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        html {
-            font-size: 16px;
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #43e97b;
+            --warning-color: #ffd700;
+            --danger-color: #f56565;
+            --dark-bg: #1a202c;
+            --dark-card: #2d3748;
         }
-        body {
-            font-family: var(--font-sans);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: var(--leading-normal);
-            overflow-x: hidden;
-            font-weight: var(--font-normal);
-            letter-spacing: 0.01em;
+
+        /* 化学概念页面专属样式 */
+        .chemistry-container {
+            max-width: 1400px;
+            margin: 80px auto 60px;
+            padding: 40px 20px;
         }
-        /* ==================== 背景图片区域 - 优化叠加效果 ==================== */
-        .hero-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: 0;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-            image-rendering: high-quality;
-            -ms-interpolation-mode: bicubic;
-            background:
-                linear-gradient(180deg,
-                    rgba(0, 0, 0, 0.45) 0%,
-                    rgba(10, 15, 20, 0.60) 30%,
-                    rgba(15, 20, 25, 0.70) 60%,
-                    rgba(0, 0, 0, 0.80) 100%),
-                linear-gradient(135deg,
-                    rgba(232, 180, 76, 0.08) 0%,
-                    transparent 40%,
-                    rgba(205, 139, 60, 0.06) 100%),
-                url('image/646319e1a90b5935aee2d99bf472021f.png');
-            background-position: center center;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            opacity: 1;
-            transform: translateZ(0);
-            will-change: transform;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            filter: contrast(1.15) brightness(0.85) saturate(1.10);
-            -webkit-filter: contrast(1.15) brightness(0.85) saturate(1.10);
-        }
-        .hero-background::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background:
-                repeating-linear-gradient(
-                    0deg,
-                    rgba(255, 255, 255, 0.01) 0px,
-                    transparent 1px,
-                    transparent 2px,
-                    rgba(255, 255, 255, 0.01) 3px
-                );
-            opacity: 0.3;
-            pointer-events: none;
-        }
-        @media
-            (-webkit-min-device-pixel-ratio: 2),
-            (min-resolution: 192dpi) {
-            .hero-background {
-                background-image:
-                    linear-gradient(180deg,
-                        rgba(0, 0, 0, 0.45) 0%,
-                        rgba(10, 15, 20, 0.60) 30%,
-                        rgba(15, 20, 25, 0.70) 60%,
-                        rgba(0, 0, 0, 0.80) 100%),
-                    linear-gradient(135deg,
-                        rgba(232, 180, 76, 0.08) 0%,
-                        transparent 40%,
-                        rgba(205, 139, 60, 0.06) 100%),
-                    url('image/646319e1a90b5935aee2d99bf472021f.png');
-            }
-        }
-        /* ==================== 顶部声明条 ==================== */
-        .top-notice {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(15, 20, 25, 0.92);
-            border-bottom: 1px solid var(--border-gold);
-            backdrop-filter: blur(28px) saturate(150%);
-            -webkit-backdrop-filter: blur(28px) saturate(150%);
-            z-index: 100;
-            padding: 14px 24px;
+
+        /* 页面头部 */
+        .page-header {
             text-align: center;
-            font-size: var(--text-sm);
-            color: var(--text-secondary);
-            letter-spacing: 0.03em;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.40);
-        }
-        .notice-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-        }
-        .notice-text {
-            color: var(--text-warm);
-            font-weight: var(--font-medium);
-            text-shadow: var(--text-shadow-subtle);
-            letter-spacing: 0.05em;
-        }
-        .notice-close {
-            background: transparent;
-            border: 1px solid var(--border-gold);
-            color: var(--text-gold);
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: var(--font-light);
-        }
-        .notice-close:hover {
-            background: rgba(232, 180, 76, 0.25);
-            border-color: var(--border-gold-strong);
-            transform: rotate(90deg) scale(1.1);
-            box-shadow: var(--shadow-gold);
-        }
-        .notice-hidden {
-            display: none;
-        }
-        /* ==================== 主容器 ==================== */
-        .main-wrapper {
+            margin-bottom: 50px;
             position: relative;
-            z-index: 1;
-            padding-top: 56px;
         }
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 32px;
-        }
-        /* ==================== 页头 ==================== */
-        .site-header {
-            text-align: center;
-            padding: var(--spacing-2xl) var(--spacing-lg);
-            margin-bottom: var(--spacing-2xl);
-            background: var(--bg-card);
-            backdrop-filter: blur(24px) saturate(140%);
-            -webkit-backdrop-filter: blur(24px) saturate(140%);
-            border-radius: var(--radius-xl);
-            border: 1px solid var(--border-warm);
-            box-shadow: var(--shadow-strong);
-            position: relative;
-            overflow: hidden;
-        }
-        .site-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg,
-                transparent 0%,
-                var(--primary-gold) 50%,
-                transparent 100%);
-            opacity: 0.6;
-        }
-        .site-title {
-            font-family: var(--font-display);
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: var(--font-black);
-            color: var(--primary-gold);
-            letter-spacing: 0.08em;
-            margin-bottom: var(--spacing-md);
-            background: linear-gradient(135deg,
-                #FFF4D9 0%,
-                #E8B44C 20%,
-                #FFFAED 40%,
-                #F4D084 60%,
-                #E8B44C 80%,
-                #C89A3C 100%);
-            background-size: 200% auto;
+
+        .page-header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(0 4px 20px rgba(232, 180, 76, 0.50));
-            animation: shimmer 5s ease-in-out infinite;
-            line-height: var(--leading-tight);
-            text-shadow: var(--text-glow);
+            margin-bottom: 15px;
+            animation: titleGlow 2s ease-in-out infinite;
         }
-        @keyframes shimmer {
-            0%, 100% {
-                background-position: 0% center;
-                filter: drop-shadow(0 4px 20px rgba(232, 180, 76, 0.50));
-            }
-            50% {
-                background-position: 100% center;
-                filter: drop-shadow(0 6px 28px rgba(244, 208, 132, 0.65));
-            }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
         }
-        .site-subtitle {
-            font-size: var(--text-xl);
-            color: var(--text-warm);
-            font-weight: var(--font-light);
-            letter-spacing: 0.25em;
-            text-shadow: var(--text-shadow);
-            text-transform: uppercase;
-            opacity: 0.95;
+
+        .page-header p {
+            font-size: 1.2em;
+            color: #666;
+            opacity: 0.9;
         }
-        /* ==================== 优化后的返回链接按钮 ==================== */
-        .back-link {
-            display: inline-flex;
+
+        body.dark-mode .page-header p {
+            color: #aaa;
+        }
+
+        /* 搜索容器 */
+        .search-container {
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 10px;
-            color: var(--text-warm);
-            text-decoration: none;
-            font-size: var(--text-base);
-            margin-bottom: var(--spacing-lg);
-            transition: var(--transition);
-            text-shadow: var(--text-shadow-subtle);
-            padding: 12px 28px;
-            background: linear-gradient(135deg,
-                rgba(232, 180, 76, 0.15) 0%,
-                rgba(232, 180, 76, 0.10) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 30px;
-            border: 2px solid var(--border-gold);
-            font-weight: var(--font-semibold);
-            letter-spacing: 0.05em;
-            box-shadow: var(--shadow-gold);
-            position: relative;
-            overflow: hidden;
         }
-        .back-link::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s ease, height 0.6s ease;
-        }
-        .back-link:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-        .back-link:hover {
-            color: var(--shimmer-gold);
-            transform: translateX(-8px);
-            background: linear-gradient(135deg,
-                rgba(232, 180, 76, 0.28) 0%,
-                rgba(232, 180, 76, 0.18) 100%);
-            border-color: var(--primary-gold-light);
-            box-shadow: 0 8px 40px rgba(232, 180, 76, 0.50);
-        }
-        /* ==================== 统计面板 ==================== */
-        .stats-panel {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: var(--spacing-lg);
-            margin-bottom: var(--spacing-2xl);
-        }
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-warm);
-            border-radius: var(--radius-xl);
-            padding: var(--spacing-lg);
-            text-align: center;
-            transition: var(--transition);
-            backdrop-filter: blur(24px) saturate(140%);
-            -webkit-backdrop-filter: blur(24px) saturate(140%);
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-medium);
-        }
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
-            transition: var(--transition-slow);
-        }
-        .stat-card:hover {
-            border-color: var(--border-gold-strong);
-            background: var(--bg-card-hover);
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-gold-strong);
-        }
-        .stat-card:hover::before {
-            left: 100%;
-        }
-        .stat-icon {
-            font-size: 3rem;
-            margin-bottom: var(--spacing-sm);
-            filter: drop-shadow(0 4px 12px rgba(232, 180, 76, 0.40));
-        }
-        .stat-value {
-            font-family: var(--font-display);
-            font-size: var(--text-5xl);
-            font-weight: var(--font-bold);
-            color: var(--primary-gold-light);
-            margin-bottom: var(--spacing-sm);
-            text-shadow: var(--text-shadow), var(--text-glow);
-            line-height: var(--leading-tight);
-            letter-spacing: 0.02em;
-        }
-        .stat-label {
-            font-size: var(--text-base);
-            color: var(--text-secondary);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-medium);
-            letter-spacing: 0.05em;
-        }
-        .stat-date {
-            font-size: var(--text-sm);
-            color: var(--text-muted);
-            margin-top: var(--spacing-sm);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-light);
-        }
-        /* ==================== 搜索区域 ==================== */
-        .search-section {
-            margin-bottom: var(--spacing-2xl);
-        }
-        .search-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
+
         .search-box {
-            position: relative;
+            width: 100%;
+            max-width: 600px;
             display: flex;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-lg);
+            gap: 10px;
         }
+
         .search-input {
             flex: 1;
-            background: var(--bg-card);
-            border: 1px solid var(--border-warm);
-            border-radius: var(--radius-lg);
-            padding: 20px 28px;
-            color: var(--text-primary);
-            font-size: var(--text-lg);
-            font-family: var(--font-sans);
-            transition: var(--transition);
-            backdrop-filter: blur(24px) saturate(140%);
-            -webkit-backdrop-filter: blur(24px) saturate(140%);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-normal);
-            letter-spacing: 0.02em;
-            box-shadow: var(--shadow-soft);
-        }
-        .search-input:focus {
+            padding: 15px 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            font-size: 1em;
             outline: none;
-            border-color: var(--border-gold-strong);
-            background: var(--bg-card-hover);
-            box-shadow: 0 0 0 3px rgba(232, 180, 76, 0.20), var(--shadow-gold);
+            transition: all 0.3s ease;
         }
-        .search-input::placeholder {
-            color: var(--text-muted);
-            font-weight: var(--font-light);
-            letter-spacing: 0.03em;
+
+        .search-input:focus {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
         }
+
+        body.dark-mode .search-input {
+            background: var(--dark-card);
+            color: #fff;
+        }
+
         .search-btn {
-            background: linear-gradient(135deg,
-                var(--primary-gold-light) 0%,
-                var(--primary-gold) 50%,
-                var(--warm-copper) 100%);
-            color: #1A1A1A;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
             border: none;
-            border-radius: var(--radius-lg);
-            padding: 20px 40px;
-            font-size: var(--text-lg);
-            font-weight: var(--font-bold);
+            padding: 15px 30px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font-sans);
-            letter-spacing: 0.08em;
-            box-shadow: var(--shadow-gold);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
+
         .search-btn::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent);
-            transition: var(--transition-slow);
-        }
-        .search-btn:hover::before {
-            left: 100%;
-        }
-        .search-btn:hover {
-            background: linear-gradient(135deg,
-                var(--shimmer-gold) 0%,
-                var(--primary-gold-light) 50%,
-                var(--primary-gold) 100%);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-gold-strong);
-        }
-        .search-btn:active {
-            transform: translateY(-1px);
-        }
-        .search-stats {
-            text-align: center;
-            color: var(--text-tertiary);
-            font-size: var(--text-base);
-            margin-bottom: var(--spacing-md);
-            padding: 12px 24px;
-            background: rgba(232, 180, 76, 0.08);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: var(--radius);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-light);
-            letter-spacing: 0.05em;
-            border: 1px solid var(--border-warm);
-        }
-        .search-stats span {
-            color: var(--text-gold-light);
-            font-weight: var(--font-semibold);
-            text-shadow: var(--text-glow);
-        }
-        /* ==================== 工具栏 ==================== */
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-lg);
-            padding: var(--spacing-md);
-            background: var(--bg-card);
-            backdrop-filter: blur(24px) saturate(140%);
-            -webkit-backdrop-filter: blur(24px) saturate(140%);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-warm);
-            box-shadow: var(--shadow-soft);
-        }
-        .sort-controls {
-            display: flex;
-            gap: var(--spacing-sm);
-            align-items: center;
-        }
-        .sort-label {
-            color: var(--text-secondary);
-            font-size: var(--text-base);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-medium);
-            letter-spacing: 0.05em;
-        }
-        .sort-btn {
-            background: rgba(232, 180, 76, 0.08);
-            border: 1px solid var(--border-warm);
-            border-radius: var(--radius);
-            padding: 10px 20px;
-            color: var(--text-secondary);
-            font-size: var(--text-base);
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font-sans);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-medium);
-            letter-spacing: 0.03em;
-        }
-        .sort-btn:hover {
-            border-color: var(--border-gold);
-            color: var(--text-gold-light);
-            background: rgba(232, 180, 76, 0.15);
-        }
-        .sort-btn.active {
-            background: rgba(232, 180, 76, 0.28);
-            border-color: var(--primary-gold);
-            color: var(--primary-gold-light);
-            font-weight: var(--font-semibold);
-            box-shadow: var(--shadow-gold);
-        }
-        /* ==================== 分类过滤 ==================== */
-        .filter-section {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--spacing-md);
-            justify-content: center;
-            margin-bottom: var(--spacing-2xl);
-            padding: var(--spacing-lg);
-            background: var(--bg-card);
-            backdrop-filter: blur(24px) saturate(140%);
-            -webkit-backdrop-filter: blur(24px) saturate(140%);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-warm);
-            box-shadow: var(--shadow-soft);
-        }
-        /* ==================== 优化后的过滤按钮样式 ==================== */
-        .filter-btn {
-            background: linear-gradient(135deg,
-                rgba(232, 180, 76, 0.10) 0%,
-                rgba(232, 180, 76, 0.05) 100%);
-            border: 2px solid var(--border-warm);
-            border-radius: 25px;
-            padding: 12px 28px;
-            color: var(--text-secondary);
-            font-size: var(--text-base);
-            cursor: pointer;
-            transition: all var(--transition);
-            font-family: var(--font-sans);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-semibold);
-            letter-spacing: 0.06em;
-            position: relative;
-            overflow: hidden;
-        }
-        .filter-btn::before {
-            content: '';
-            position: absolute;
             top: 50%;
             left: 50%;
             width: 0;
             height: 0;
-            background: radial-gradient(circle, rgba(232, 180, 76, 0.4), transparent 70%);
             border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
             transform: translate(-50%, -50%);
-            transition: width 0.5s ease, height 0.5s ease;
+            transition: width 0.6s, height 0.6s;
         }
-        .filter-btn:hover::before {
+
+        .search-btn:hover::before {
             width: 300px;
             height: 300px;
         }
-        .filter-btn:hover {
-            border-color: var(--border-gold);
-            color: var(--text-gold-light);
-            background: linear-gradient(135deg,
-                rgba(232, 180, 76, 0.20) 0%,
-                rgba(232, 180, 76, 0.12) 100%);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 30px rgba(232, 180, 76, 0.35);
+
+        .search-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
         }
-        .filter-btn.active {
-            background: linear-gradient(135deg,
-                rgba(232, 180, 76, 0.38) 0%,
-                rgba(232, 180, 76, 0.28) 100%);
-            border-color: var(--primary-gold);
-            color: var(--shimmer-gold);
-            font-weight: var(--font-bold);
-            box-shadow: 0 6px 35px rgba(232, 180, 76, 0.50),
-                        inset 0 1px 3px rgba(255, 255, 255, 0.2);
-            transform: scale(1.08);
+
+        #searchResult {
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+            min-height: 20px;
         }
-        /* ==================== 启发值筛选 ==================== */
-        .inspiration-filter {
+
+        body.dark-mode #searchResult {
+            color: #aaa;
+        }
+
+        /* 控制面板 - 优化按钮样式 */
+        .control-panel {
             display: flex;
-            gap: var(--spacing-sm);
+            justify-content: center;
             align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
         }
-        .inspiration-label {
-            color: var(--text-secondary);
-            font-size: var(--text-base);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-medium);
-            letter-spacing: 0.05em;
-        }
-        /* ==================== 优化后的启发值按钮样式 ==================== */
-        .inspiration-btn {
-            background: linear-gradient(135deg,
-                rgba(232, 180, 76, 0.10) 0%,
-                rgba(232, 180, 76, 0.05) 100%);
-            border: 2px solid var(--border-warm);
-            border-radius: 20px;
-            padding: 10px 20px;
-            color: var(--text-secondary);
-            font-size: var(--text-sm);
+
+        .control-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-size: 1em;
+            font-weight: 600;
             cursor: pointer;
-            transition: all var(--transition);
-            font-family: var(--font-sans);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-semibold);
-            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.35);
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .inspiration-btn::before {
+
+        .control-btn::before {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
             width: 0;
             height: 0;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent 70%);
             border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
             transform: translate(-50%, -50%);
-            transition: width 0.4s ease, height 0.4s ease;
+            transition: width 0.5s, height 0.5s;
         }
-        .inspiration-btn:hover::before {
-            width: 250px;
-            height: 250px;
+
+        .control-btn:hover::before {
+            width: 350px;
+            height: 350px;
         }
-        .inspiration-btn:hover {
-            border-color: var(--border-gold);
-            color: var(--text-gold-light);
-            background: linear-gradient(135deg,
-                rgba(232, 180, 76, 0.18) 0%,
-                rgba(232, 180, 76, 0.10) 100%);
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 6px 25px rgba(232, 180, 76, 0.30);
+
+        .control-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
         }
-        .inspiration-btn.active {
-            background: linear-gradient(135deg,
-                rgba(232, 180, 76, 0.35) 0%,
-                rgba(232, 180, 76, 0.25) 100%);
-            border-color: var(--primary-gold);
-            color: var(--shimmer-gold);
-            font-weight: var(--font-bold);
-            box-shadow: 0 4px 30px rgba(232, 180, 76, 0.45),
-                        inset 0 1px 2px rgba(255, 255, 255, 0.2);
-            transform: scale(1.08);
+
+        .control-btn:active {
+            transform: translateY(-1px) scale(0.98);
         }
-        /* ==================== 知识点列表 ==================== */
-        .knowledge-list {
-            display: grid;
-            gap: var(--spacing-lg);
-            margin-bottom: var(--spacing-3xl);
+
+        .control-btn i, .control-btn span {
+            position: relative;
+            z-index: 1;
         }
-        .knowledge-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border-warm);
-            border-radius: var(--radius-xl);
-            padding: var(--spacing-lg);
-            transition: var(--transition);
+
+        .control-btn i {
+            font-size: 1.1em;
+        }
+
+        /* 收藏统计 */
+        .favorite-count {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            padding: 12px 24px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+            color: var(--warning-color);
+            font-weight: 700;
+            border: 2px solid var(--warning-color);
+        }
+
+        body.dark-mode .favorite-count {
+            background: linear-gradient(135deg, var(--dark-card) 0%, #3a4556 100%);
+            border-color: var(--warning-color);
+        }
+
+        .favorite-count i {
+            font-size: 1.2em;
+            animation: starPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes starPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* 缩放控制 */
+        .zoom-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            padding: 10px 20px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+            border: 2px solid var(--success-color);
+        }
+
+        body.dark-mode .zoom-control {
+            background: linear-gradient(135deg, var(--dark-card) 0%, #3a4556 100%);
+        }
+
+        .zoom-btn {
+            background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%);
+            color: white;
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2em;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(24px) saturate(140%);
-            -webkit-backdrop-filter: blur(24px) saturate(140%);
-            box-shadow: var(--shadow-soft);
+            box-shadow: 0 3px 12px rgba(67, 233, 123, 0.4);
         }
-        .knowledge-item::before {
+
+        .zoom-btn::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg,
-                transparent 0%,
-                var(--primary-gold) 50%,
-                transparent 100%);
-            opacity: 0;
-            transition: var(--transition-slow);
-        }
-        .knowledge-item:hover {
-            border-color: var(--border-gold-strong);
-            background: var(--bg-card-hover);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-gold-strong);
-        }
-        .knowledge-item:hover::before {
-            opacity: 1;
-        }
-        .knowledge-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: var(--spacing-md);
-            gap: var(--spacing-md);
-        }
-        .knowledge-title {
-            font-family: var(--font-display);
-            font-size: var(--text-2xl);
-            font-weight: var(--font-semibold);
-            color: var(--text-primary);
-            margin-bottom: var(--spacing-xs);
-            flex: 1;
-            text-shadow: var(--text-shadow-subtle);
-            line-height: var(--leading-snug);
-            letter-spacing: 0.02em;
-        }
-        .knowledge-badges {
-            display: flex;
-            gap: var(--spacing-sm);
-            align-items: center;
-        }
-        .knowledge-category {
-            display: inline-block;
-            background: rgba(232, 180, 76, 0.25);
-            border: 1px solid var(--border-gold);
-            border-radius: var(--radius);
-            padding: 6px 16px;
-            font-size: var(--text-sm);
-            color: var(--text-gold-light);
-            font-weight: var(--font-semibold);
-            white-space: nowrap;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            text-shadow: var(--text-shadow-subtle);
-            letter-spacing: 0.05em;
-        }
-        /* ==================== 启发值星级 ==================== */
-        .inspiration-rating {
-            display: flex;
-            gap: 3px;
-            align-items: center;
-        }
-        .star {
-            color: var(--primary-gold-light);
-            font-size: var(--text-base);
-            filter: drop-shadow(0 2px 6px rgba(232, 180, 76, 0.70));
-        }
-        .star.empty {
-            color: var(--text-muted);
-            opacity: 0.25;
-        }
-        .knowledge-content {
-            color: var(--text-secondary);
-            font-size: var(--text-lg);
-            line-height: var(--leading-relaxed);
-            margin-bottom: var(--spacing-md);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-light);
-            letter-spacing: 0.02em;
-        }
-        .knowledge-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--spacing-sm);
-            align-items: center;
-        }
-        .knowledge-tag {
-            background: rgba(232, 180, 76, 0.10);
-            border: 1px solid var(--border-warm);
-            border-radius: var(--radius);
-            padding: 6px 14px;
-            font-size: var(--text-sm);
-            color: var(--text-tertiary);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-normal);
-            letter-spacing: 0.03em;
-            transition: var(--transition-fast);
-        }
-        .knowledge-tag:hover {
-            border-color: var(--border-gold);
-            color: var(--text-gold-light);
-            background: rgba(232, 180, 76, 0.18);
-        }
-        .knowledge-date {
-            color: var(--text-muted);
-            font-size: var(--text-sm);
-            margin-left: auto;
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-light);
-            letter-spacing: 0.03em;
-        }
-        /* ==================== 空状态 ==================== */
-        .empty-state {
-            text-align: center;
-            padding: var(--spacing-2xl) 0;
-            background: var(--bg-card);
-            backdrop-filter: blur(24px) saturate(140%);
-            -webkit-backdrop-filter: blur(24px) saturate(140%);
-            border-radius: var(--radius-xl);
-            border: 1px solid var(--border-warm);
-            box-shadow: var(--shadow-soft);
-        }
-        .empty-icon {
-            font-size: 5rem;
-            margin-bottom: var(--spacing-lg);
-            opacity: 0.25;
-            filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.8));
-        }
-        .empty-text {
-            color: var(--text-muted);
-            font-size: var(--text-xl);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-light);
-            letter-spacing: 0.05em;
-        }
-        /* ==================== 加载状态 ==================== */
-        .loading {
-            text-align: center;
-            padding: var(--spacing-2xl) 0;
-        }
-        .loading-spinner {
-            display: inline-block;
-            width: 48px;
-            height: 48px;
-            border: 3px solid var(--border-warm);
-            border-top-color: var(--primary-gold);
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            background: rgba(255, 255, 255, 0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
         }
-        @keyframes spin {
+
+        .zoom-btn:hover::before {
+            width: 120px;
+            height: 120px;
+        }
+
+        .zoom-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 5px 18px rgba(67, 233, 123, 0.6);
+        }
+
+        .zoom-display {
+            font-weight: 700;
+            color: var(--success-color);
+            min-width: 65px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        body.dark-mode .zoom-display {
+            color: var(--success-color);
+        }
+
+        /* 思维导图容器 */
+        .mindmap-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: auto;
+            position: relative;
+            min-height: 800px;
+        }
+
+        body.dark-mode .mindmap-container {
+            background: var(--dark-card);
+        }
+
+        .mindmap-wrapper {
+            transform-origin: top left;
+            transition: transform 0.3s ease;
+        }
+
+        /* 根节点 */
+        .root-node {
+            text-align: center;
+            margin: 0 auto 60px;
+            width: fit-content;
+        }
+
+        .root-bubble {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 30px 50px;
+            border-radius: 50px;
+            font-size: 2em;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .root-bubble::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-        /* ==================== 页脚 ==================== */
-        .site-footer {
-            border-top: 1px solid var(--border-warm);
-            padding: var(--spacing-2xl) 0;
-            text-align: center;
-            margin-top: var(--spacing-3xl);
-            background: var(--bg-card);
-            backdrop-filter: blur(28px) saturate(150%);
-            -webkit-backdrop-filter: blur(28px) saturate(150%);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-strong);
+
+        .root-bubble:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
         }
-        .footer-title {
-            font-family: var(--font-display);
-            font-size: var(--text-3xl);
-            color: var(--primary-gold-light);
-            margin-bottom: var(--spacing-lg);
-            font-weight: var(--font-semibold);
-            text-shadow: var(--text-shadow), var(--text-glow);
-            letter-spacing: 0.08em;
+
+        /* 一级分支 */
+        .level-1-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
         }
-        .social-links {
+
+        .level-1-node {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .level-1-node {
+            background: linear-gradient(135deg, #3a4556 0%, var(--dark-card) 100%);
+        }
+
+        .level-1-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .level-1-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-color);
             display: flex;
-            justify-content: center;
-            gap: var(--spacing-lg);
-            margin-bottom: var(--spacing-lg);
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
         }
-        .social-link {
-            width: 56px;
-            height: 56px;
-            border: 1px solid var(--border-warm);
+
+        body.dark-mode .level-1-title {
+            color: #fff;
+        }
+
+        .level-1-icon {
+            font-size: 1.2em;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .collapse-icon {
+            margin-left: auto;
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+        }
+
+        .collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+
+        /* 二级分支 */
+        .level-2-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 5000px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .collapsed .level-2-container {
+            max-height: 0;
+        }
+
+        .level-2-node {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        body.dark-mode .level-2-node {
+            background: var(--dark-bg);
+        }
+
+        .level-2-node:hover {
+            transform: translateX(10px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .level-2-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .level-2-icon {
+            font-size: 0.9em;
+        }
+
+        /* 三级内容 */
+        .level-3-container {
+            margin-top: 10px;
+            padding-left: 20px;
+            border-left: 3px solid var(--primary-color);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .level-2-node.expanded .level-3-container {
+            max-height: 10000px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        /* 概念项 */
+        .concept-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .concept-item {
+            background: var(--dark-card);
+        }
+
+        .concept-item:hover {
+            background: linear-gradient(135deg, #f093fb15 0%, #f5576c15 100%);
+        }
+
+        .concept-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .concept-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.05em;
+        }
+
+        body.dark-mode .concept-name {
+            color: #fff;
+        }
+
+        .favorite-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px;
+        }
+
+        .favorite-btn:hover {
+            color: var(--warning-color);
+            transform: scale(1.2);
+        }
+
+        .concept-item.favorited .favorite-btn {
+            color: var(--warning-color);
+        }
+
+        .concept-item.favorited .favorite-btn i::before {
+            content: "\f005";
+            font-weight: 900;
+        }
+
+        .concept-definition {
+            color: #666;
+            line-height: 1.8;
+            font-size: 0.95em;
+        }
+
+        body.dark-mode .concept-definition {
+            color: #aaa;
+        }
+
+        .concept-definition p {
+            margin: 8px 0;
+        }
+
+        .concept-definition ul, .concept-definition ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .concept-definition li {
+            margin: 4px 0;
+        }
+
+        .concept-definition code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* 高亮效果 */
+        .highlight {
+            animation: highlightPulse 1s ease-in-out 3;
+        }
+
+        @keyframes highlightPulse {
+            0%, 100% { background-color: transparent; }
+            50% { background-color: rgba(255, 235, 59, 0.3); }
+        }
+
+        /* 返回按钮组 - 固定在右下角 */
+        .fixed-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        /* 返回AI助手按钮 */
+        .back-button {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-secondary);
+            font-size: 24px;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
             text-decoration: none;
-            font-size: var(--text-2xl);
-            transition: var(--transition);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            background: rgba(232, 180, 76, 0.08);
+            position: relative;
+            overflow: hidden;
         }
-        .social-link:hover {
-            border-color: var(--primary-gold);
-            color: var(--primary-gold-light);
-            transform: translateY(-6px) scale(1.05);
-            background: rgba(232, 180, 76, 0.20);
-            box-shadow: var(--shadow-gold);
+
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
-        .copyright {
-            color: var(--text-muted);
-            font-size: var(--text-base);
-            font-weight: var(--font-light);
-            text-shadow: var(--text-shadow-subtle);
-            letter-spacing: 0.05em;
+
+        .back-button:hover::before {
+            width: 150px;
+            height: 150px;
         }
-        /* ==================== 高亮显示 ==================== */
-        .highlight {
-            background: rgba(232, 180, 76, 0.35);
-            color: var(--shimmer-gold);
-            padding: 2px 6px;
-            border-radius: var(--radius-sm);
-            text-shadow: var(--text-shadow-subtle);
-            font-weight: var(--font-semibold);
-            box-shadow: 0 0 12px rgba(232, 180, 76, 0.25);
+
+        .back-button:hover {
+            transform: translateY(-5px) rotate(360deg);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
         }
-        /* ==================== 返回顶部按钮 ==================== */
+
+        .back-button i {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 返回顶部按钮 */
         .back-to-top {
-            position: fixed;
-            right: 40px;
-            bottom: 40px;
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg,
-                var(--primary-gold-light) 0%,
-                var(--primary-gold) 50%,
-                var(--warm-copper) 100%);
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%);
+            color: white;
             border: none;
             border-radius: 50%;
-            color: #1A1A1A;
-            font-size: var(--text-3xl);
             cursor: pointer;
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px);
-            transition: all var(--transition);
-            box-shadow: var(--shadow-gold-strong);
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
-            font-weight: var(--font-black);
+            font-size: 22px;
+            box-shadow: 0 5px 18px rgba(67, 233, 123, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        .back-to-top:hover {
-            background: linear-gradient(135deg,
-                var(--shimmer-gold) 0%,
-                var(--primary-gold-light) 50%,
-                var(--primary-gold) 100%);
-            transform: translateY(-6px) scale(1.05);
-            box-shadow: 0 12px 56px rgba(232, 180, 76, 0.50);
-        }
-        .back-to-top:active {
-            transform: translateY(-4px) scale(1.02);
-        }
-        /* ==================== 新增：右下角返回按钮（与返回顶部并排）==================== */
-        .back-button {
-            position: fixed;
-            right: 120px;
-            bottom: 40px;
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg,
-                rgba(100, 150, 255, 0.9) 0%,
-                rgba(80, 120, 220, 0.9) 50%,
-                rgba(60, 100, 200, 0.9) 100%);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+
+        .back-to-top::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
             border-radius: 50%;
-            color: #FFFFFF;
-            font-size: var(--text-2xl);
-            cursor: pointer;
-            z-index: 998;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px);
-            transition: all var(--transition);
-            box-shadow: 0 8px 32px rgba(80, 120, 220, 0.40);
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .back-to-top:hover::before {
+            width: 140px;
+            height: 140px;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 7px 22px rgba(67, 233, 123, 0.6);
+        }
+
+        .back-to-top i {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 阅读进度条 */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            z-index: 10000;
+            transition: width 0.2s ease;
+            width: 0%;
+        }
+
+        /* 加载提示 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: var(--font-bold);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            z-index: 9999;
         }
-        .back-button.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+
+        body.dark-mode .loading-overlay {
+            background: rgba(26, 32, 44, 0.9);
         }
-        .back-button:hover {
-            background: linear-gradient(135deg,
-                rgba(120, 170, 255, 1) 0%,
-                rgba(100, 150, 240, 1) 50%,
-                rgba(80, 120, 220, 1) 100%);
-            transform: translateY(-6px) scale(1.05);
-            box-shadow: 0 12px 48px rgba(100, 150, 255, 0.60);
-            border-color: rgba(255, 255, 255, 0.5);
+
+        .loading-content {
+            text-align: center;
+            color: var(--primary-color);
         }
-        .back-button:active {
-            transform: translateY(-4px) scale(1.02);
+
+        .loading-content i {
+            font-size: 3em;
+            animation: spin 1s linear infinite;
         }
-        /* ==================== 移动端响应式优化 ==================== */
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-content p {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .chemistry-container {
+                max-width: 95%;
+                padding: 30px 15px;
+            }
+        }
+
         @media (max-width: 768px) {
-            :root {
-                --spacing-xl: 48px;
-                --spacing-2xl: 64px;
-                --spacing-3xl: 80px;
+            .page-header h1 {
+                font-size: 2em;
             }
-            .hero-background {
-                background-attachment: scroll;
-                background-size: cover;
-                background-position: center center;
+
+            .page-header p {
+                font-size: 1em;
             }
-            .container {
-                padding: 0 20px;
+
+            .root-bubble {
+                padding: 20px 30px;
+                font-size: 1.5em;
             }
-            .site-header {
-                padding: var(--spacing-xl) var(--spacing-md);
+
+            .control-panel {
+                flex-direction: column;
+                gap: 10px;
             }
-            .site-title {
-                font-size: clamp(2rem, 8vw, 3rem);
-                letter-spacing: 0.05em;
+
+            .control-btn {
+                padding: 12px 20px;
+                font-size: 0.95em;
+                width: 100%;
+                max-width: 320px;
             }
-            .site-subtitle {
-                font-size: var(--text-base);
-                letter-spacing: 0.15em;
+
+            .level-1-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
             }
+
+            .mindmap-container {
+                padding: 20px;
+            }
+
+            .level-1-title {
+                font-size: 1.3em;
+            }
+
+            .level-2-title {
+                font-size: 1.1em;
+            }
+
+            .fixed-buttons {
+                bottom: 20px;
+                right: 20px;
+                gap: 12px;
+            }
+
+            .back-button {
+                width: 55px;
+                height: 55px;
+            }
+
+            .back-to-top {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chemistry-container {
+                margin: 60px auto 40px;
+                padding: 20px 10px;
+            }
+
             .search-box {
                 flex-direction: column;
-                gap: var(--spacing-sm);
             }
-            .search-btn {
+
+            .search-input, .search-btn {
                 width: 100%;
             }
-            .toolbar {
-                flex-direction: column;
-                align-items: stretch;
-                gap: var(--spacing-md);
-            }
-            .sort-controls,
-            .inspiration-filter {
+
+            .zoom-control {
+                width: 100%;
                 justify-content: center;
-                flex-wrap: wrap;
             }
-            .filter-section {
-                gap: var(--spacing-sm);
-                padding: var(--spacing-md);
-            }
-            .filter-btn {
-                padding: 10px 20px;
-                font-size: var(--text-sm);
-            }
-            .knowledge-header {
-                flex-direction: column;
-                gap: var(--spacing-sm);
-            }
-            .knowledge-badges {
-                width: 100%;
-                justify-content: space-between;
-            }
-            .knowledge-title {
-                font-size: var(--text-xl);
-            }
-            .knowledge-content {
-                font-size: var(--text-base);
-            }
-            .knowledge-date {
-                margin-left: 0;
-            }
-            .back-to-top {
-                right: 20px;
-                bottom: 90px;
-                width: 56px;
-                height: 56px;
-                font-size: var(--text-2xl);
-            }
-            .back-button {
-                right: 20px;
-                bottom: 20px;
-                width: 56px;
-                height: 56px;
-                font-size: var(--text-xl);
-            }
-            .social-link {
-                width: 48px;
-                height: 48px;
-                font-size: var(--text-xl);
+
+            .fixed-buttons {
+                bottom: 15px;
+                right: 15px;
             }
         }
-        /* ==================== 滚动条美化 ==================== */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg,
-                var(--primary-gold-light) 0%,
-                var(--primary-gold) 50%,
-                var(--warm-copper) 100%);
-            border-radius: 5px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg,
-                var(--shimmer-gold) 0%,
-                var(--primary-gold-light) 50%,
-                var(--primary-gold) 100%);
-        }
-        /* ==================== 选中文本样式 ==================== */
-        ::selection {
-            background: rgba(232, 180, 76, 0.40);
-            color: var(--text-primary);
-            text-shadow: var(--text-shadow-subtle);
-        }
-        ::-moz-selection {
-            background: rgba(232, 180, 76, 0.40);
-            color: var(--text-primary);
-            text-shadow: var(--text-shadow-subtle);
-        }
-        /* ==================== 平滑进入动画 ==================== */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .site-header,
-        .stats-panel,
-        .search-section,
-        .toolbar,
-        .filter-section,
-        .knowledge-item {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-        .stats-panel { animation-delay: 0.1s; }
-        .search-section { animation-delay: 0.2s; }
-        .toolbar { animation-delay: 0.3s; }
-        .filter-section { animation-delay: 0.4s; }
     </style>
 </head>
-<body>
-    <!-- 背景图片 -->
-    <div class="hero-background"></div>
-    <!-- 顶部声明 -->
-    <div class="top-notice" id="topNotice">
-        <div class="notice-content">
-            <span class="notice-text">⚡ 知识库持续更新中,欢迎探索前沿知识</span>
-            <button class="notice-close" id="noticeClose" aria-label="关闭">×</button>
+<body data-page="chemistry-concepts">
+    <!-- 阅读进度条 -->
+    <div class="reading-progress"></div>
+
+    <!-- 加载遮罩 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <i class="fas fa-atom"></i>
+            <p>正在加载化学概念...</p>
         </div>
     </div>
-    <!-- 主内容 -->
-    <div class="main-wrapper">
+
+    <!-- 头部导航 -->
+    <header class="header">
         <div class="container">
-            <!-- 页头 -->
-            <header class="site-header">
-                <a href="index.html" class="back-link">
-                    <span>←</span>
-                    <span>返回首页</span>
+            <div class="header-left">
+                <h1 class="logo">狂客·银河</h1>
+                <a class="success-link" href="success.html">
+                    <span class="success-icon"><i class="fas fa-meteor"></i></span>
+                    <span class="success-text">成功日记</span>
                 </a>
-                <h1 class="site-title">弄潮先锋营</h1>
-                <p class="site-subtitle">前沿知识 · 智能检索</p>
-            </header>
-            <!-- 统计面板 -->
-            <section class="stats-panel">
-                <div class="stat-card">
-                    <div class="stat-icon">📚</div>
-                    <div class="stat-value" id="totalKnowledge">0</div>
-                    <div class="stat-label">知识点总数</div>
+                <a class="breakthrough-link" href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnGZZB8XUcRr7ChjRqeL27ic">
+                    <span class="breakthrough-icon"><i class="fas fa-book-open"></i></span>
+                    <span class="breakthrough-text">《自学突围》</span>
+                </a>
+                <a class="sky-link" href="reading.html">
+                    <span class="sky-icon"><i class="fas fa-star"></i></span>
+                    <span class="sky-text">星空</span>
+                </a>
+                <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/">
+                    <span class="exam-icon"><i class="fas fa-graduation-cap"></i></span>
+                    <span class="exam-text">冬之街小店</span>
+                </a>
+                <a class="video-link" href="video.html">
+                    <span class="video-icon"><i class="fas fa-video"></i></span>
+                    <span class="video-text">视频矩阵</span>
+                </a>
+                <a class="game-link" href="games.html">
+                    <span class="game-icon"><i class="fas fa-gamepad"></i></span>
+                    <span class="game-text">自制游戏</span>
+                </a>
+            </div>
+            <div class="controls">
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体内容 -->
+    <div class="chemistry-container">
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <h1>⚗️ 化学的所有概念</h1>
+            <p>从化学诞生到现在的完整概念体系 · 满足高考满分的知识深度</p>
+        </div>
+
+        <!-- 搜索功能 -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索概念名称或定义...">
+                <button class="search-btn" onclick="enhancedSearch()">
+                    <i class="fas fa-search"></i> 搜索
+                </button>
+            </div>
+            <div id="searchResult"></div>
+        </div>
+
+        <!-- 控制面板 -->
+        <div class="control-panel">
+            <button class="control-btn" onclick="expandAll()">
+                <i class="fas fa-expand-alt"></i><span>展开全部</span>
+            </button>
+            <button class="control-btn" onclick="collapseAll()">
+                <i class="fas fa-compress-alt"></i><span>收起全部</span>
+            </button>
+            <div class="favorite-count">
+                <i class="fas fa-star"></i>
+                <span>已收藏: <span id="favoriteCount">0</span></span>
+            </div>
+            <div class="zoom-control">
+                <button class="zoom-btn" onclick="zoomOut()">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <span class="zoom-display" id="zoomDisplay">100%</span>
+                <button class="zoom-btn" onclick="zoomIn()">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <button class="control-btn" onclick="resetZoom()">
+                <i class="fas fa-redo"></i><span>重置</span>
+            </button>
+        </div>
+
+        <!-- 思维导图容器 -->
+        <div class="mindmap-container">
+            <div class="mindmap-wrapper" id="mindmapWrapper">
+                <!-- 根节点 -->
+                <div class="root-node">
+                    <div class="root-bubble">化学</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⭐</div>
-                    <div class="stat-value" id="avgInspiration">0</div>
-                    <div class="stat-label">平均启发值</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🕒</div>
-                    <div class="stat-value" id="lastUpdate">-</div>
-                    <div class="stat-label">最新更新</div>
-                    <div class="stat-date" id="lastUpdateFull"></div>
-                </div>
-            </section>
-            <!-- 搜索区域 -->
-            <section class="search-section">
-                <div class="search-container">
-                    <div class="search-box">
-                        <input
-                            type="text"
-                            class="search-input"
-                            id="searchInput"
-                            placeholder="搜索知识点关键词..."
-                            autocomplete="off"
-                        >
-                        <button class="search-btn" id="searchBtn">搜索</button>
-                    </div>
-                    <div class="search-stats" id="searchStats">
-                        共收录 <span id="totalCount">0</span> 个知识点
-                    </div>
-                </div>
-            </section>
-            <!-- 工具栏 -->
-            <div class="toolbar">
-                <div class="sort-controls">
-                    <span class="sort-label">排序:</span>
-                    <button class="sort-btn active" data-sort="date">最新</button>
-                    <button class="sort-btn" data-sort="inspiration">启发值</button>
-                </div>
-                <div class="inspiration-filter">
-                    <span class="inspiration-label">启发值筛选:</span>
-                    <button class="inspiration-btn active" data-stars="all">全部</button>
-                    <button class="inspiration-btn" data-stars="5">⭐5星</button>
-                    <button class="inspiration-btn" data-stars="4">⭐4星+</button>
-                    <button class="inspiration-btn" data-stars="3">⭐3星+</button>
+                <!-- 一级分支容器 -->
+                <div class="level-1-container" id="conceptContainer">
+                    <!-- 内容将从MD文件加载 -->
                 </div>
             </div>
-            <!-- 分类过滤 -->
-            <section class="filter-section" id="filterSection">
-                <!-- 动态生成分类按钮 -->
-            </section>
-            <!-- 知识点列表 -->
-            <section class="knowledge-list" id="knowledgeList">
-                <div class="loading">
-                    <div class="loading-spinner"></div>
-                </div>
-            </section>
-            <!-- 页脚 -->
-            <footer class="site-footer">
-                <h3 class="footer-title">联系我们</h3>
-                <div class="social-links">
-                    <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89"
-                       class="social-link"
-                       target="_blank"
-                       rel="noopener"
-                       aria-label="微信公众号">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.969-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.969-.982z"/>
-                        </svg>
-                    </a>
-                    <a href="https://github.com/kuangketongxue"
-                       class="social-link"
-                       target="_blank"
-                       rel="noopener"
-                       aria-label="GitHub">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-                        </svg>
-                    </a>
-                    <a href="https://x.com/kuangketongxue"
-                       class="social-link"
-                       target="_blank"
-                       rel="noopener"
-                       aria-label="X (Twitter)">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                        </svg>
-                    </a>
-                </div>
-                <p class="copyright">© 2025 狂客 版权所有</p>
-            </footer>
         </div>
     </div>
-    <!-- 返回顶部按钮 -->
-    <button class="back-to-top" id="backToTop" aria-label="返回顶部">
-        ↑
-    </button>
-    <!-- 新增：返回按钮 -->
-    <button class="back-button" id="backButton" aria-label="返回上一页">
-        ←
-    </button>
+
+    <!-- 固定按钮组 - 右下角 -->
+    <div class="fixed-buttons">
+        <button class="back-to-top" id="backToTopBtn" title="返回顶部">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        <a href="ai.html" class="back-button" title="返回AI助手">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
+
     <script>
-        'use strict';
-        // ==================== 知识库管理类 ====================
-        class KnowledgeBase {
-            constructor() {
-                this.data = [];
-                this.filteredData = [];
-                this.currentCategory = 'all';
-                this.currentSort = 'date';
-                this.currentStarFilter = 'all';
-                this.searchQuery = '';
-                // DOM 元素
-                this.searchInput = document.getElementById('searchInput');
-                this.searchBtn = document.getElementById('searchBtn');
-                this.filterSection = document.getElementById('filterSection');
-                this.knowledgeList = document.getElementById('knowledgeList');
-                this.searchStats = document.getElementById('searchStats');
-                this.totalCount = document.getElementById('totalCount');
-                // 统计面板元素
-                this.totalKnowledge = document.getElementById('totalKnowledge');
-                this.avgInspiration = document.getElementById('avgInspiration');
-                this.lastUpdate = document.getElementById('lastUpdate');
-                this.lastUpdateFull = document.getElementById('lastUpdateFull');
-                this.init();
-            }
-            async init() {
-                await this.loadData();
-                this.setupEventListeners();
-                this.renderFilters();
-                this.updateStats();
-                this.renderList();
-            }
-            // 加载数据
-            async loadData() {
-                try {
-                    const response = await fetch('knowledge-data.json');
-                    if (!response.ok) {
-                        throw new Error('数据加载失败');
-                    }
-                    this.data = await response.json();
-                    this.filteredData = [...this.data];
-                    this.totalCount.textContent = this.data.length;
-                } catch (error) {
-                    console.error('加载数据失败:', error);
-                    this.showError('数据加载失败,请刷新页面重试');
+        // ========== 配置 ==========
+        const MD_FILE_PATH = 'chemistry-concepts.md';
+
+        // ========== 主要功能 ==========
+        
+        // 从MD文件加载并渲染内容
+        async function loadChemistryConcepts() {
+            try {
+                const response = await fetch(MD_FILE_PATH);
+                if (!response.ok) {
+                    throw new Error('无法加载概念文件');
                 }
+                const markdown = await response.text();
+                parseAndRenderConcepts(markdown);
+                
+                // 恢复收藏状态
+                setTimeout(() => {
+                    restoreFavorites();
+                    updateFavoriteCount();
+                }, 300);
+                
+                document.getElementById('loadingOverlay').style.display = 'none';
+            } catch (error) {
+                console.error('加载失败:', error);
+                document.getElementById('conceptContainer').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3em; margin-bottom: 20px;"></i>
+                        <p>加载概念数据失败,请检查 chemistry-concepts.md 文件是否存在</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">错误信息: ${error.message}</p>
+                    </div>
+                `;
+                document.getElementById('loadingOverlay').style.display = 'none';
             }
-            // 更新统计信息
-            updateStats() {
-                // 知识点总数
-                this.totalKnowledge.textContent = this.data.length;
-                // 计算平均启发值
-                if (this.data.length > 0) {
-                    const totalInspiration = this.data.reduce((sum, item) => {
-                        return sum + (item.inspiration || 0);
-                    }, 0);
-                    const average = (totalInspiration / this.data.length).toFixed(1);
-                    this.avgInspiration.textContent = average;
-                } else {
-                    this.avgInspiration.textContent = '0';
-                }
-                // 最新更新时间
-                const dates = this.data
-                    .map(item => item.date)
-                    .filter(Boolean)
-                    .sort((a, b) => new Date(b) - new Date(a));
-                if (dates.length > 0) {
-                    const latestDate = new Date(dates[0]);
-                    this.lastUpdate.textContent = this.formatShortDate(latestDate);
-                    this.lastUpdateFull.textContent = this.formatFullDate(latestDate);
-                } else {
-                    this.lastUpdate.textContent = '-';
-                    this.lastUpdateFull.textContent = '暂无更新记录';
-                }
-            }
-            // 格式化短日期
-            formatShortDate(date) {
-                const now = new Date();
-                const diff = now - date;
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                if (days === 0) return '今天';
-                if (days === 1) return '昨天';
-                if (days < 7) return `${days}天前`;
-                if (days < 30) return `${Math.floor(days / 7)}周前`;
-                if (days < 365) return `${Math.floor(days / 30)}月前`;
-                return `${Math.floor(days / 365)}年前`;
-            }
-            // 格式化完整日期
-            formatFullDate(date) {
-                return date.toLocaleDateString('zh-CN', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-            }
-            // 设置事件监听
-            setupEventListeners() {
-                // 搜索按钮
-                this.searchBtn.addEventListener('click', () => this.handleSearch());
-                // 回车搜索
-                this.searchInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        this.handleSearch();
+        }
+
+        // 解析MD并渲染为HTML
+        function parseAndRenderConcepts(markdown) {
+            const container = document.getElementById('conceptContainer');
+            const lines = markdown.split('\n');
+            let html = '';
+            let currentLevel1 = null;
+            let currentLevel2 = null;
+            let level1Id = 0;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+
+                // 一级标题 (## 标题)
+                if (line.startsWith('## ')) {
+                    if (currentLevel1) {
+                        html += '</div></div></div>';
                     }
-                });
-                // 实时搜索(输入延迟)
-                let searchTimeout;
-                this.searchInput.addEventListener('input', (e) => {
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => {
-                        this.searchQuery = e.target.value.trim();
-                        this.filterAndRender();
-                    }, 300);
-                });
-                // 排序按钮
-                document.querySelectorAll('.sort-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        this.currentSort = e.target.dataset.sort;
-                        document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-                        e.target.classList.add('active');
-                        this.filterAndRender();
-                    });
-                });
-                // 启发值筛选按钮
-                document.querySelectorAll('.inspiration-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        this.currentStarFilter = e.target.dataset.stars;
-                        document.querySelectorAll('.inspiration-btn').forEach(b => b.classList.remove('active'));
-                        e.target.classList.add('active');
-                        this.filterAndRender();
-                    });
-                });
-            }
-            // 处理搜索
-            handleSearch() {
-                this.searchQuery = this.searchInput.value.trim();
-                this.filterAndRender();
-            }
-            // 渲染分类过滤按钮
-            renderFilters() {
-                const categories = new Set(['all']);
-                this.data.forEach(item => {
-                    if (item.category) {
-                        categories.add(item.category);
-                    }
-                });
-                const categoryNames = {
-                    'all': '全部',
-                    'ai': 'AI技术',
-                    'programming': '编程开发',
-                    'design': '设计创意',
-                    'business': '商业思维',
-                    'learning': '学习方法',
-                    'tool': '工具应用',
-                    'other': '其他'
-                };
-                this.filterSection.innerHTML = Array.from(categories).map(cat => `
-                    <button
-                        class="filter-btn ${cat === this.currentCategory ? 'active' : ''}"
-                        data-category="${cat}"
-                    >
-                        ${categoryNames[cat] || cat}
-                    </button>
-                `).join('');
-                // 绑定分类点击事件
-                this.filterSection.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        this.currentCategory = e.target.dataset.category;
-                        this.filterAndRender();
-                        // 更新按钮状态
-                        this.filterSection.querySelectorAll('.filter-btn').forEach(b => {
-                            b.classList.remove('active');
-                        });
-                        e.target.classList.add('active');
-                    });
-                });
-            }
-            // 过滤并渲染
-            filterAndRender() {
-                this.filteredData = this.data.filter(item => {
-                    // 分类过滤
-                    const categoryMatch = this.currentCategory === 'all' ||
-                                        item.category === this.currentCategory;
-                    // 启发值过滤
-                    let starMatch = true;
-                    if (this.currentStarFilter !== 'all') {
-                        const minStars = parseInt(this.currentStarFilter);
-                        const itemStars = item.inspiration || 0;
-                        starMatch = itemStars >= minStars;
-                    }
-                    // 搜索过滤
-                    if (!this.searchQuery) {
-                        return categoryMatch && starMatch;
-                    }
-                    const query = this.searchQuery.toLowerCase();
-                    const titleMatch = item.title.toLowerCase().includes(query);
-                    const contentMatch = item.content.toLowerCase().includes(query);
-                    const tagsMatch = item.tags && item.tags.some(tag =>
-                        tag.toLowerCase().includes(query)
-                    );
-                    return categoryMatch && starMatch && (titleMatch || contentMatch || tagsMatch);
-                });
-                // 排序
-                this.sortData();
-                this.renderList();
-            }
-            // 排序数据
-            sortData() {
-                if (this.currentSort === 'date') {
-                    this.filteredData.sort((a, b) => {
-                        const dateA = new Date(a.date || '1970-01-01');
-                        const dateB = new Date(b.date || '1970-01-01');
-                        return dateB - dateA;
-                    });
-                } else if (this.currentSort === 'inspiration') {
-                    this.filteredData.sort((a, b) => {
-                        const insA = a.inspiration || 0;
-                        const insB = b.inspiration || 0;
-                        return insB - insA;
-                    });
-                }
-            }
-            // 渲染知识点列表
-            renderList() {
-                if (this.filteredData.length === 0) {
-                    this.showEmpty();
-                    return;
-                }
-                this.knowledgeList.innerHTML = this.filteredData.map(item => {
-                    const highlightedTitle = this.highlightText(item.title);
-                    const highlightedContent = this.highlightText(item.content);
-                    const stars = this.renderStars(item.inspiration || 0);
-                    return `
-                        <article class="knowledge-item">
-                            <div class="knowledge-header">
-                                <h3 class="knowledge-title">${highlightedTitle}</h3>
-                                <div class="knowledge-badges">
-                                    <span class="knowledge-category">${this.getCategoryName(item.category)}</span>
-                                    ${stars}
+                    const titleMatch = line.match(/## (.+?) (.+)/);
+                    if (titleMatch) {
+                        const icon = titleMatch[1].trim();
+                        const title = titleMatch[2].trim();
+                        level1Id++;
+                        html += `
+                            <div class="level-1-node" id="level1-${level1Id}">
+                                <div class="level-1-title" onclick="toggleLevel1(this)">
+                                    <span class="level-1-icon">${icon}</span>
+                                    ${title}
+                                    <span class="collapse-icon"><i class="fas fa-chevron-down"></i></span>
                                 </div>
-                            </div>
-                            <div class="knowledge-content">${highlightedContent}</div>
-                            <div class="knowledge-meta">
-                                ${item.tags ? item.tags.map(tag =>
-                                    `<span class="knowledge-tag">${tag}</span>`
-                                ).join('') : ''}
-                                ${item.date ? `<span class="knowledge-date">${this.formatFullDate(new Date(item.date))}</span>` : ''}
-                            </div>
-                        </article>
-                    `;
-                }).join('');
-                // 更新统计信息
-                const resultText = this.searchQuery || this.currentStarFilter !== 'all' || this.currentCategory !== 'all' ?
-                    `找到 <span>${this.filteredData.length}</span> 个相关结果` :
-                    `共收录 <span>${this.data.length}</span> 个知识点`;
-                this.searchStats.innerHTML = resultText;
-            }
-            // 渲染星级
-            renderStars(count) {
-                if (count === 0) return '';
-                const maxStars = 5;
-                let starsHtml = '<div class="inspiration-rating">';
-                for (let i = 1; i <= maxStars; i++) {
-                    starsHtml += `<span class="star ${i <= count ? '' : 'empty'}">★</span>`;
+                                <div class="level-2-container">
+                        `;
+                        currentLevel1 = true;
+                        currentLevel2 = null;
+                    }
                 }
-                starsHtml += '</div>';
-                return starsHtml;
-            }
-            // 高亮文本
-            highlightText(text) {
-                if (!this.searchQuery) return text;
-                const regex = new RegExp(`(${this.searchQuery})`, 'gi');
-                return text.replace(regex, '<span class="highlight">$1</span>');
-            }
-            // 获取分类名称
-            getCategoryName(category) {
-                const names = {
-                    'ai': 'AI技术',
-                    'programming': '编程开发',
-                    'design': '设计创意',
-                    'business': '商业思维',
-                    'learning': '学习方法',
-                    'tool': '工具应用',
-                    'other': '其他'
-                };
-                return names[category] || category;
-            }
-            // 显示空状态
-            showEmpty() {
-                this.knowledgeList.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">🔍</div>
-                        <p class="empty-text">
-                            ${this.searchQuery ? '未找到相关知识点' : '暂无知识点'}
-                        </p>
-                    </div>
-                `;
-            }
-            // 显示错误
-            showError(message) {
-                this.knowledgeList.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">⚠️</div>
-                        <p class="empty-text">${message}</p>
-                    </div>
-                `;
-            }
-        }
-        // ==================== 顶部声明管理 ====================
-        class NoticeManager {
-            constructor() {
-                this.notice = document.getElementById('topNotice');
-                this.closeBtn = document.getElementById('noticeClose');
-                this.init();
-            }
-            init() {
-                if (!this.notice || !this.closeBtn) return;
-                if (localStorage.getItem('knowledgeNoticeClose') === 'true') {
-                    this.hide();
-                    return;
+                // 二级标题 (### 标题)
+                else if (line.startsWith('### ')) {
+                    if (currentLevel2) {
+                        html += '</div></div>';
+                    }
+                    const titleMatch = line.match(/### (.+?) (.+)/);
+                    if (titleMatch) {
+                        const icon = titleMatch[1].trim();
+                        const title = titleMatch[2].trim();
+                        html += `
+                            <div class="level-2-node" onclick="toggleLevel2(this)">
+                                <div class="level-2-title">
+                                    <span class="level-2-icon">${icon}</span>
+                                    ${title}
+                                </div>
+                                <div class="level-3-container">
+                        `;
+                        currentLevel2 = true;
+                    }
                 }
-                this.closeBtn.addEventListener('click', () => this.close());
-                setTimeout(() => this.close(), 10000);
-            }
-            close() {
-                localStorage.setItem('knowledgeNoticeClose', 'true');
-                this.hide();
-            }
-            hide() {
-                if (this.notice) {
-                    this.notice.classList.add('notice-hidden');
-                    document.querySelector('.main-wrapper').style.paddingTop = '0';
-                }
-            }
-        }
-        // ==================== 初始化 ====================
-        document.addEventListener('DOMContentLoaded', () => {
-            new NoticeManager();
-            new KnowledgeBase();
-            // 返回顶部按钮
-            const backToTopBtn = document.getElementById('backToTop');
-            const backButton = document.getElementById('backButton');
-            
-            // 监听滚动事件
-            let scrollTimeout;
-            window.addEventListener('scroll', () => {
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    if (window.pageYOffset > 300) {
-                        backToTopBtn.classList.add('visible');
-                        backButton.classList.add('visible');
+                // 概念项 (#### 或 - **)
+                else if (line.startsWith('#### ') || line.match(/^- \*\*/)) {
+                    let conceptName = '';
+                    if (line.startsWith('#### ')) {
+                        conceptName = line.replace('#### ', '').trim();
                     } else {
-                        backToTopBtn.classList.remove('visible');
-                        backButton.classList.remove('visible');
+                        const match = line.match(/- \*\*(.+?)\*\*/);
+                        if (match) conceptName = match[1].trim();
                     }
-                }, 100);
+                    
+                    if (conceptName) {
+                        let definition = '';
+                        i++;
+                        while (i < lines.length) {
+                            const defLine = lines[i].trim();
+                            if (defLine.startsWith('#') || defLine.match(/^- \*\*/) || (defLine === '' && lines[i + 1]?.trim().startsWith('#'))) {
+                                i--;
+                                break;
+                            }
+                            if (defLine) {
+                                definition += defLine + '\n';
+                            }
+                            i++;
+                        }
+
+                        const renderedDefinition = marked.parse(definition);
+                        html += `
+                            <div class="concept-item" data-concept="${conceptName}">
+                                <div class="concept-header">
+                                    <div class="concept-name">${conceptName}</div>
+                                    <button class="favorite-btn" onclick="toggleFavorite(this.closest('.concept-item'))">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </div>
+                                <div class="concept-definition">${renderedDefinition}</div>
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            if (currentLevel2) html += '</div></div>';
+            if (currentLevel1) html += '</div></div>';
+
+            container.innerHTML = html;
+        }
+
+        // ========== 缩放功能 ==========
+        let currentZoom = 100;
+        const wrapper = document.getElementById('mindmapWrapper');
+        const zoomDisplay = document.getElementById('zoomDisplay');
+
+        function zoomIn() {
+            if (currentZoom < 200) {
+                currentZoom += 10;
+                updateZoom();
+            }
+        }
+
+        function zoomOut() {
+            if (currentZoom > 50) {
+                currentZoom -= 10;
+                updateZoom();
+            }
+        }
+
+        function resetZoom() {
+            currentZoom = 100;
+            updateZoom();
+        }
+
+        function updateZoom() {
+            wrapper.style.transform = `scale(${currentZoom / 100})`;
+            zoomDisplay.textContent = currentZoom + '%';
+        }
+
+        // ========== 展开/收起功能 ==========
+        function toggleLevel1(element) {
+            const node = element.parentElement;
+            node.classList.toggle('collapsed');
+        }
+
+        function toggleLevel2(element) {
+            element.classList.toggle('expanded');
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.level-1-node').forEach(node => {
+                node.classList.remove('collapsed');
             });
-            // 点击返回顶部
-            backToTopBtn.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+            document.querySelectorAll('.level-2-node').forEach(node => {
+                node.classList.add('expanded');
             });
-            // 点击返回上一页
-            backButton.addEventListener('click', () => {
-                // 优先使用浏览器历史记录返回
-                if (window.history.length > 1) {
-                    window.history.back();
-                } else {
-                    // 如果没有历史记录,跳转到首页
-                    window.location.href = 'index.html';
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('.level-1-node').forEach(node => {
+                node.classList.add('collapsed');
+            });
+            document.querySelectorAll('.level-2-node').forEach(node => {
+                node.classList.remove('expanded');
+            });
+        }
+
+        // ========== 搜索功能 ==========
+        function enhancedSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const searchResult = document.getElementById('searchResult');
+            
+            // 移除之前的高亮
+            document.querySelectorAll('.highlight').forEach(el => {
+                el.classList.remove('highlight');
+            });
+
+            if (!searchTerm) {
+                searchResult.textContent = '';
+                return;
+            }
+
+            let matchCount = 0;
+            const concepts = document.querySelectorAll('.concept-item');
+            
+            concepts.forEach(concept => {
+                const name = concept.querySelector('.concept-name').textContent.toLowerCase();
+                const definition = concept.querySelector('.concept-definition').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || definition.includes(searchTerm)) {
+                    matchCount++;
+                    
+                    // 展开所有父节点
+                    let parent = concept.closest('.level-2-node');
+                    if (parent) {
+                        parent.classList.add('expanded');
+                        let level1 = parent.closest('.level-1-node');
+                        if (level1) {
+                            level1.classList.remove('collapsed');
+                        }
+                    }
+                    
+                    // 高亮
+                    concept.classList.add('highlight');
                 }
             });
-            // 平滑滚动
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
+
+            // 显示搜索结果统计
+            searchResult.textContent = matchCount > 0 ? `找到 ${matchCount} 个相关概念` : '未找到相关概念';
+            searchResult.style.color = matchCount > 0 ? '#43e97b' : '#f56565';
+
+            // 滚动到第一个结果
+            if (matchCount > 0) {
+                const firstMatch = document.querySelector('.highlight');
+                if (firstMatch) {
+                    setTimeout(() => {
+                        firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
+            }
+        }
+
+        // 实时搜索
+        document.getElementById('searchInput').addEventListener('input', enhancedSearch);
+
+        // 回车搜索
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                enhancedSearch();
+            }
+        });
+
+        // ========== 收藏功能 ==========
+        function toggleFavorite(conceptElement) {
+            const conceptName = conceptElement.getAttribute('data-concept');
+            let favorites = JSON.parse(localStorage.getItem('chemistryFavorites')) || [];
+            
+            if (favorites.includes(conceptName)) {
+                favorites = favorites.filter(name => name !== conceptName);
+                conceptElement.classList.remove('favorited');
+            } else {
+                favorites.push(conceptName);
+                conceptElement.classList.add('favorited');
+            }
+            
+            localStorage.setItem('chemistryFavorites', JSON.stringify(favorites));
+            updateFavoriteCount();
+        }
+
+        function updateFavoriteCount() {
+            const favorites = JSON.parse(localStorage.getItem('chemistryFavorites')) || [];
+            const countElement = document.getElementById('favoriteCount');
+            if (countElement) {
+                countElement.textContent = favorites.length;
+            }
+        }
+
+        function restoreFavorites() {
+            const favorites = JSON.parse(localStorage.getItem('chemistryFavorites')) || [];
+            document.querySelectorAll('.concept-item').forEach(item => {
+                const name = item.getAttribute('data-concept');
+                if (favorites.includes(name)) {
+                    item.classList.add('favorited');
+                }
             });
+        }
+
+        // ========== 主题切换 ==========
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // ========== 返回顶部功能 ==========
+        const backToTopBtn = document.getElementById('backToTopBtn');
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.style.display = 'flex';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ========== 阅读进度条 ==========
+        const progressBar = document.querySelector('.reading-progress');
+
+        window.addEventListener('scroll', () => {
+            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (window.pageYOffset / windowHeight) * 100;
+            progressBar.style.width = scrolled + '%';
+        });
+
+        // ========== 页面加载 ==========
+        window.addEventListener('load', () => {
+            loadChemistryConcepts();
         });
     </script>
 </body>
