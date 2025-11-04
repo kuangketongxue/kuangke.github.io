@@ -67,6 +67,26 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .control-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .control-btn:hover {
@@ -76,6 +96,13 @@
 
         .control-btn i {
             margin-right: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .control-btn span {
+            position: relative;
+            z-index: 1;
         }
 
         .zoom-control {
@@ -102,6 +129,26 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 1.2em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .zoom-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .zoom-btn:hover::before {
+            width: 100px;
+            height: 100px;
         }
 
         .zoom-btn:hover {
@@ -157,6 +204,24 @@
             cursor: pointer;
             transition: all 0.3s ease;
             display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .root-bubble::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .root-bubble:hover {
@@ -270,7 +335,7 @@
             font-size: 0.9em;
         }
 
-        /* 三级内容（概念定义） */
+        /* 三级内容(概念定义) */
         .level-3-container {
             margin-top: 10px;
             padding-left: 20px;
@@ -385,11 +450,36 @@
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .search-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .search-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .search-btn i {
+            position: relative;
+            z-index: 1;
         }
 
         /* 返回按钮 */
@@ -411,11 +501,36 @@
             transition: all 0.3s ease;
             z-index: 1000;
             text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .back-button:hover::before {
+            width: 150px;
+            height: 150px;
         }
 
         .back-button:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) rotate(360deg);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .back-button i {
+            position: relative;
+            z-index: 1;
         }
 
         /* 加载提示 */
@@ -565,10 +680,10 @@
         <!-- 控制面板 -->
         <div class="control-panel">
             <button class="control-btn" onclick="expandAll()">
-                <i class="fas fa-expand-alt"></i> 展开全部
+                <i class="fas fa-expand-alt"></i><span>展开全部</span>
             </button>
             <button class="control-btn" onclick="collapseAll()">
-                <i class="fas fa-compress-alt"></i> 收起全部
+                <i class="fas fa-compress-alt"></i><span>收起全部</span>
             </button>
             <div class="zoom-control">
                 <button class="zoom-btn" onclick="zoomOut()">
@@ -580,7 +695,7 @@
                 </button>
             </div>
             <button class="control-btn" onclick="resetZoom()">
-                <i class="fas fa-redo"></i> 重置
+                <i class="fas fa-redo"></i><span>重置</span>
             </button>
         </div>
 
@@ -624,7 +739,7 @@
                 document.getElementById('conceptContainer').innerHTML = `
                     <div style="text-align: center; padding: 40px; color: #999;">
                         <i class="fas fa-exclamation-triangle" style="font-size: 3em; margin-bottom: 20px;"></i>
-                        <p>加载概念数据失败，请检查 chemistry-concepts.md 文件是否存在</p>
+                        <p>加载概念数据失败,请检查 chemistry-concepts.md 文件是否存在</p>
                         <p style="font-size: 0.9em; margin-top: 10px;">错误信息: ${error.message}</p>
                     </div>
                 `;
@@ -643,19 +758,17 @@
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
-                
+
                 // 一级标题 (## 标题)
                 if (line.startsWith('## ')) {
                     if (currentLevel1) {
                         html += '</div></div></div>'; // 关闭前一个一级节点
                     }
-                    
                     const titleMatch = line.match(/## (.+?) - (.+)/);
                     if (titleMatch) {
                         const icon = titleMatch[1].trim();
                         const title = titleMatch[2].trim();
                         level1Id++;
-                        
                         html += `
                             <div class="level-1-node" id="level1-${level1Id}">
                                 <div class="level-1-title" onclick="toggleLevel1(this)">
@@ -674,12 +787,10 @@
                     if (currentLevel2) {
                         html += '</div></div>'; // 关闭前一个二级节点
                     }
-                    
                     const titleMatch = line.match(/### (.+?) (.+)/);
                     if (titleMatch) {
                         const icon = titleMatch[1].trim();
                         const title = titleMatch[2].trim();
-                        
                         html += `
                             <div class="level-2-node" onclick="toggleLevel2(this)">
                                 <div class="level-2-title">
@@ -695,7 +806,6 @@
                 else if (line.startsWith('#### ')) {
                     const conceptName = line.replace('#### ', '').trim();
                     let definition = '';
-                    
                     // 读取定义内容直到遇到下一个标题或空行
                     i++;
                     while (i < lines.length) {
@@ -709,10 +819,8 @@
                         }
                         i++;
                     }
-                    
                     // 使用marked.js渲染markdown
                     const renderedDefinition = marked.parse(definition);
-                    
                     html += `
                         <div class="concept-item">
                             <div class="concept-name">${conceptName}</div>
@@ -721,7 +829,7 @@
                     `;
                 }
             }
-            
+
             // 关闭最后的节点
             if (currentLevel2) {
                 html += '</div></div>';
@@ -729,7 +837,7 @@
             if (currentLevel1) {
                 html += '</div></div>';
             }
-            
+
             container.innerHTML = html;
         }
 
@@ -808,15 +916,14 @@
 
             let found = false;
             let firstMatch = null;
+
             const concepts = document.querySelectorAll('.concept-item');
-            
             concepts.forEach(concept => {
                 const name = concept.querySelector('.concept-name').textContent.toLowerCase();
                 const definition = concept.querySelector('.concept-definition').textContent.toLowerCase();
-                
+
                 if (name.includes(searchTerm) || definition.includes(searchTerm)) {
                     found = true;
-                    
                     // 展开所有父节点
                     let parent = concept.closest('.level-2-node');
                     if (parent) {
@@ -826,10 +933,10 @@
                             level1.classList.remove('collapsed');
                         }
                     }
-                    
+
                     // 高亮
                     concept.classList.add('highlight');
-                    
+
                     // 记录第一个匹配项
                     if (!firstMatch) {
                         firstMatch = concept;
@@ -855,8 +962,8 @@
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
-        const currentTheme = localStorage.getItem('theme') || 'light';
 
+        const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
