@@ -38,7 +38,7 @@
         }
         body {
             /* 优化后的背景设置 - 单一超清背景 */
-            background-image: 
+            background-image:
                 linear-gradient(135deg, rgba(246, 211, 101, 0.15) 0%, rgba(253, 160, 133, 0.15) 50%, rgba(118, 75, 162, 0.15) 100%),
                 url('images/80dbd22bcd4bc64914205b5bdd5bc84e.jpg');
             background-size: cover;
@@ -63,7 +63,7 @@
         }
         body.dark-mode {
             /* 深色模式背景 - 单一背景 */
-            background-image: 
+            background-image:
                 linear-gradient(135deg, rgba(26, 32, 44, 0.85), rgba(45, 55, 72, 0.85)),
                 url('images/80dbd22bcd4bc64914205b5bdd5bc84e.jpg');
             color: #e8eaf6;
@@ -1288,9 +1288,128 @@
                         return;
                     }
                     document.getElementById('todayDate').textContent = latest.date;
+
+                    // 新增：明日最紧急的一件事
+                    const urgent = this.computeUrgentAction(latest);
+                    const urgentHTML = this.createUrgentActionHTML(urgent);
+
                     const html = this.createTodayHTML(latest);
-                    document.getElementById('todayContent').innerHTML = html;
+                    document.getElementById('todayContent').innerHTML = urgentHTML + html;
                 });
+            }
+            // 新增：根据今日数据计算明日最紧急事项
+            computeUrgentAction(latest) {
+                const sleepH = latest.sleep?.hours ?? 0;
+                const sleepQ = latest.sleep?.quality ?? 0;
+                const wakeups = latest.sleep?.nightWakeups ?? 0;
+
+                const exMin = latest.exercise?.minutes ?? 0;
+                const steps = latest.exercise?.steps ?? 0;
+                const intensity = latest.exercise?.intensity ?? '';
+
+                const water = latest.diet?.waterIntake ?? 0;
+                const junk = latest.diet?.junkFood ?? 0;
+
+                const mood = latest.mood?.score ?? 0;
+                const stress = latest.mood?.stress ?? 0;
+                const anxiety = latest.mood?.anxiety ?? 0;
+
+                const energy = latest.physical?.energy ?? 0;
+                const fatigue = latest.physical?.fatigue ?? 0;
+                const pain = latest.physical?.pain ?? 0;
+
+                const screen = latest.vision?.screenTime ?? 0;
+                const eyeFatigue = latest.vision?.eyeFatigue ?? 0;
+
+                // 优先级判断（从高到低）
+                if (pain >= 7) {
+                    return {
+                        icon: 'fa-notes-medical',
+                        title: '优先缓解疼痛',
+                        action: '明日安排就医或理疗；避免高强度运动，改为轻柔拉伸与热敷。',
+                        reason: `疼痛评分 ${pain}/10 偏高，需要优先处理。`
+                    };
+                }
+                if (sleepH < 7 || sleepQ < 6 || wakeups > 2) {
+                    return {
+                        icon: 'fa-bed',
+                        title: '优先改善睡眠',
+                        action: '今晚提前入睡；睡前1小时远离屏幕，明日目标睡满 7.5 小时。',
+                        reason: `睡眠不足/质量偏低（时长 ${sleepH}h，质量 ${sleepQ}/10，夜醒 ${wakeups} 次）。`
+                    };
+                }
+                if (stress >= 7 || anxiety >= 7) {
+                    return {
+                        icon: 'fa-brain',
+                        title: '优先减压放松',
+                        action: '安排 30–45 分钟冥想/深呼吸/散步，减少高刺激信息摄入。',
+                        reason: `压力/焦虑偏高（压力 ${stress}/10，焦虑 ${anxiety}/10）。`
+                    };
+                }
+                if (energy <= 4 || fatigue >= 7) {
+                    return {
+                        icon: 'fa-bolt',
+                        title: '优先恢复精力',
+                        action: '明日进行 20 分钟轻有氧 + 10 分钟拉伸，并确保早睡早起。',
+                        reason: `精力偏低/疲劳较高（精力 ${energy}/10，疲劳 ${fatigue}/10）。`
+                    };
+                }
+                if (exMin < 30 || steps < 6000) {
+                    return {
+                        icon: 'fa-running',
+                        title: '优先完成一次中等强度运动',
+                        action: '明日快走/慢跑 30–45 分钟，目标 8,000–10,000 步。',
+                        reason: `运动不足（时长 ${exMin} 分钟，步数 ${steps}）。`
+                    };
+                }
+                if (water < 1500) {
+                    return {
+                        icon: 'fa-droplet',
+                        title: '优先补充水分',
+                        action: '设置喝水提醒，明日目标 2,000–2,500 ml，分时段完成。',
+                        reason: `今日饮水 ${water} ml 偏少。`
+                    };
+                }
+                if (screen >= 240 || eyeFatigue >= 6) {
+                    return {
+                        icon: 'fa-eye',
+                        title: '优先保护视力',
+                        action: '执行 20-20-20 法则；每 25 分钟休息 5 分钟并做眼保健操。',
+                        reason: `屏幕时长/眼疲劳偏高（屏幕 ${screen} 分钟，眼疲劳 ${eyeFatigue}/10）。`
+                    };
+                }
+                if (junk > 0) {
+                    return {
+                        icon: 'fa-apple-whole',
+                        title: '优先清洁饮食',
+                        action: '明日避免高糖高脂零食，准备水果坚果等健康加餐。',
+                        reason: `今日垃圾食品 ${junk} 次。`
+                    };
+                }
+                return {
+                    icon: 'fa-check-circle',
+                    title: '保持良好习惯',
+                    action: '继续规律作息、适量运动与足量饮水，小步快跑地持续优化。',
+                    reason: '今日指标总体稳定，无明显紧急项。'
+                };
+            }
+            // 新增：渲染紧急事项面板
+            createUrgentActionHTML(suggestion) {
+                return `
+                    <div class="chart-panel">
+                        <h3 class="panel-title">
+                            <i class="fas fa-exclamation-circle"></i>
+                            明日最紧急的一件事
+                        </h3>
+                        <div class="info-box">
+                            <p style="font-weight:800;margin-bottom:10px;">
+                                <i class="fas ${suggestion.icon}" style="margin-right:10px;"></i>${suggestion.title}
+                            </p>
+                            <p style="margin:8px 0;"><strong>理由：</strong>${suggestion.reason}</p>
+                            <p style="margin:8px 0;"><strong>行动：</strong>${suggestion.action}</p>
+                        </div>
+                    </div>
+                `;
             }
             createTodayHTML(latest) {
                 return `
