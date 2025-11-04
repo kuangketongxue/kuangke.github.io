@@ -1,1230 +1,841 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>化学的所有概念 - 狂客·银河</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- 站点样式（若您已有 style.css，会继承原站风格；本页也提供了足够的内联样式保证独立可用） -->
-  <link rel="stylesheet" href="style.css" />
-  <!-- Font Awesome 图标 -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
+    <title>化学的所有概念 - 狂客·银河</title>
 
-  <style>
-    /* 页面主体视觉（延续您提供页的基调与渐变） */
-    :root {
-      --primary-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --card-grad: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      --dark-card-grad: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-      --text-1: #333;
-      --text-2: #666;
-      --muted: #999;
-      --white: #fff;
-      --shadow-1: rgba(0, 0, 0, 0.08);
-      --shadow-2: rgba(0, 0, 0, 0.12);
-      --brand-1: #667eea;
-      --brand-2: #764ba2;
-      --accent: #43e97b;
-      --accent-2: #38f9d7;
-      --chip-bg: rgba(102, 126, 234, 0.1);
-    }
+    <!-- 继承现有站点样式（若不存在也不影响本页） -->
+    <link rel="stylesheet" href="style.css">
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #f7f8fc;
-      color: var(--text-1);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC",
-        "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
-    }
-    body.dark-mode {
-      background: #0f172a;
-      color: #e5e7eb;
-    }
+    <!-- Font Awesome 图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
-    /* 顶部导航（与原站布局相似，若有 style.css 将自动融合） */
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(102, 126, 234, 0.15);
-    }
-    body.dark-mode .header {
-      background: rgba(17, 24, 39, 0.75);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-    .header .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .logo {
-      font-size: 20px;
-      font-weight: 800;
-      background: var(--primary-grad);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin: 0 10px 0 0;
-      letter-spacing: 1px;
-    }
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .theme-toggle {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      border: none;
-      background: var(--primary-grad);
-      color: white;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .theme-toggle:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 24px rgba(102, 126, 234, 0.45);
-    }
+    <!-- d3 for 思维导图 -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 
-    /* 顶部链接（延续原站风格的彩色胶囊） */
-    .success-link, .breakthrough-link, .sky-link, .exam-link, .video-link, .game-link, .home-link {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      padding: 8px 14px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.5);
-      background: #ffffff;
-      box-shadow: 0 6px 16px var(--shadow-1);
-      transition: all 0.2s ease;
-    }
-    body.dark-mode .success-link, body.dark-mode .breakthrough-link,
-    body.dark-mode .sky-link, body.dark-mode .exam-link,
-    body.dark-mode .video-link, body.dark-mode .game-link, body.dark-mode .home-link {
-      background: #1f2937;
-      border-color: rgba(255,255,255,0.06);
-    }
-    .success-link:hover, .breakthrough-link:hover, .sky-link:hover, .exam-link:hover, .video-link:hover, .game-link:hover, .home-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 22px var(--shadow-2);
-    }
-    .success-icon, .breakthrough-icon, .sky-icon, .exam-icon, .video-icon, .game-icon, .home-icon {
-      margin-right: 8px;
-      color: white;
-      width: 22px;
-      height: 22px;
-      display: grid;
-      place-items: center;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-    .success-icon { background: linear-gradient(135deg, #06beb6, #48b1bf); }
-    .sky-icon { background: linear-gradient(135deg, #f7971e, #ffd200); }
-    .exam-icon { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
-    .video-icon { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
-    .home-icon { background: linear-gradient(135deg, #667eea, #764ba2); }
-    .success-text, .breakthrough-text, .sky-text, .exam-text, .video-text, .game-text, .home-text {
-      color: #374151;
-      font-weight: 600;
-      font-size: 14px;
-    }
-    body.dark-mode .success-text, body.dark-mode .breakthrough-text,
-    body.dark-mode .sky-text, body.dark-mode .exam-text,
-    body.dark-mode .video-text, body.dark-mode .game-text, body.dark-mode .home-text {
-      color: #e5e7eb;
-    }
-    /* 自学突围、游戏 链接的专属样式沿用您原页 */
-    .breakthrough-link {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-      border: none;
-      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-    }
-    .breakthrough-text { color: #fff; font-weight: 700; }
-    .game-link {
-      background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
-      border: 3px solid #fff;
-      box-shadow: 0 4px 0 #c44569, 0 4px 10px rgba(0,0,0,0.2);
-    }
-    body.dark-mode .game-link {
-      border-color: #2d3748;
-      box-shadow: 0 4px 0 #ff4757, 0 4px 10px rgba(0,0,0,0.4);
-    }
+    <style>
+        /* 页面基调（与既有站点一致） */
+        :root{
+            --grad-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --grad-2: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --grad-3: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            --text-1:#333; --text-2:#666; --white:#fff; --muted:#aaa;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --card-shadow-strong: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        body{ font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; }
+        body.dark-mode{ background:#0f1221; color:#e8e8e8; }
 
-    /* 页面标题区 */
-    .map-container {
-      max-width: 1200px;
-      margin: 80px auto 60px;
-      padding: 0 20px 30px;
-    }
-    .matrix-title {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-    .matrix-title h1 {
-      font-size: 2.6em;
-      margin: 0 0 12px;
-      background: var(--primary-grad);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 1px;
-    }
-    .matrix-title p {
-      margin: 0 auto;
-      color: var(--text-2);
-      opacity: 0.85;
-      font-size: 1.05em;
-      max-width: 780px;
-    }
-    body.dark-mode .matrix-title p { color: #a3a3a3; }
+        /* 页头保持一致 */
+        .header { position: sticky; top:0; z-index: 100; background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        body.dark-mode .header { background: rgba(26,32,44,0.85); border-color: rgba(255,255,255,0.06); }
+        .header .container { max-width: 1200px; margin: 0 auto; padding: 14px 20px; display:flex; align-items:center; justify-content: space-between; }
+        .header-left { display:flex; align-items:center; gap: 10px; flex-wrap: wrap; }
+        .logo { margin:0; font-size: 20px; background: var(--grad-1); -webkit-background-clip:text; -webkit-text-fill-color: transparent; }
 
-    /* 操作条 */
-    .toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin: 24px auto;
-      max-width: 1200px;
-      flex-wrap: wrap;
-    }
-    .toolbar-left, .toolbar-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .tool-card {
-      background: var(--card-grad);
-      border-radius: 16px;
-      padding: 12px 14px;
-      box-shadow: 0 8px 26px var(--shadow-1);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    body.dark-mode .tool-card {
-      background: var(--dark-card-grad);
-      box-shadow: 0 8px 28px rgba(0,0,0,0.45);
-    }
-    .chip {
-      padding: 8px 12px;
-      border-radius: 10px;
-      background: var(--chip-bg);
-      color: #334155;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    body.dark-mode .chip { color: #e5e7eb; }
+        /* 顶部链接按钮（沿用原站风格） */
+        .success-link,.breakthrough-link,.sky-link,.exam-link,.video-link,.game-link{
+            display:flex; align-items:center; text-decoration:none; padding:8px 14px; border-radius:10px; transition: all .2s ease; gap:8px;
+        }
+        .success-link { background: linear-gradient(135deg,#00c6ff 0%,#0072ff 100%); color:#fff; }
+        .sky-link { background: linear-gradient(135deg,#7f7fd5 0%,#86a8e7 50%,#91eae4 100%); color:#fff; }
+        .exam-link { background: linear-gradient(135deg,#f7971e 0%,#ffd200 100%); color:#4a2; }
+        .video-link { background: linear-gradient(135deg,#30cfd0 0%,#330867 100%); color:#fff; }
+        .success-link:hover,.sky-link:hover,.exam-link:hover,.video-link:hover { transform: translateY(-2px); }
+        .controls { display:flex; align-items:center; gap:10px; }
+        .theme-toggle{ border:none; background: var(--grad-1); color:#fff; width:40px; height:40px; border-radius:10px; cursor:pointer; box-shadow:0 6px 20px rgba(102,126,234,.4); }
+        .theme-toggle:hover{ transform: translateY(-2px); }
 
-    .btn {
-      border: none;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-weight: 700;
-      color: #fff;
-      background: var(--primary-grad);
-      cursor: pointer;
-      box-shadow: 0 10px 24px rgba(102, 126, 234, 0.35);
-      transition: transform .15s ease, box-shadow .15s ease;
-    }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(102,126,234,.45); }
-    .btn.secondary {
-      background: linear-gradient(135deg, #43e97b, #38f9d7);
-      box-shadow: 0 10px 24px rgba(67, 233, 123, 0.35);
-    }
-    .btn.light {
-      background: linear-gradient(135deg, #a8edea, #fed6e3);
-      color: #374151;
-      box-shadow: 0 10px 24px rgba(168, 237, 234, 0.4);
-    }
+        /* 页面容器与标题 */
+        .chem-matrix-container {
+            max-width: 1300px; margin: 80px auto 60px; padding: 40px 20px;
+        }
+        .chem-title { text-align:center; margin-bottom: 30px; }
+        .chem-title h1{
+            font-size: 2.6em; margin: 8px 0 10px;
+            background: var(--grad-1);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .chem-title p{ color: var(--text-2); opacity:.85; }
+        body.dark-mode .chem-title p{ color:#bbb; }
 
-    .search {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .search input {
-      height: 40px;
-      width: 260px;
-      border: 1px solid rgba(102,126,234,0.2);
-      border-radius: 10px;
-      outline: none;
-      padding: 0 12px;
-      background: #fff;
-      color: var(--text-1);
-      box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
-    }
-    body.dark-mode .search input {
-      background: #1f2937;
-      color: #e5e7eb;
-      border-color: rgba(255,255,255,0.06);
-    }
+        /* 导图与操作区外框（延续玻璃卡片 + 渐变） */
+        .map-wrap{
+            background: var(--grad-2);
+            border-radius: 22px;
+            box-shadow: var(--card-shadow);
+            padding: 18px;
+        }
+        body.dark-mode .map-wrap{ background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%); }
 
-    /* 思维导图画布容器 */
-    .mindmap-wrap {
-      position: relative;
-      background: radial-gradient(1200px 600px at 50% -200px, rgba(102, 126, 234, 0.15), transparent 60%) ,
-                  radial-gradient(800px 600px at 120% 20%, rgba(118, 75, 162, 0.15), transparent 60%);
-      border-radius: 20px;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.1);
-      overflow: hidden;
-      height: 72vh;
-      min-height: 560px;
-    }
-    body.dark-mode .mindmap-wrap {
-      background: radial-gradient(1200px 600px at 50% -200px, rgba(102, 126, 234, 0.15), transparent 60%) ,
-                  radial-gradient(800px 600px at 120% 20%, rgba(118, 75, 162, 0.18), transparent 60%),
-                  #0b1220;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-    }
-    svg {
-      width: 100%;
-      height: 100%;
-      user-select: none;
-      -webkit-user-select: none;
-      -ms-user-select: none;
-      cursor: grab;
-    }
-    svg:active { cursor: grabbing; }
+        .map-toolbar{
+            display:flex; align-items:center; gap: 10px; flex-wrap: wrap;
+            background: rgba(255,255,255,0.7); border-radius: 14px; padding: 10px 12px; margin-bottom: 12px;
+        }
+        body.dark-mode .map-toolbar{ background: rgba(0,0,0,0.25); }
 
-    /* 节点样式 */
-    .node circle {
-      fill: #ffffff;
-      stroke: rgba(102,126,234,0.9);
-      stroke-width: 2;
-      filter: drop-shadow(0 4px 10px rgba(102, 126, 234, 0.25));
-      transition: transform .15s ease;
-    }
-    body.dark-mode .node circle { fill: #1f2937; stroke: #7c93ff; }
-    .node:hover circle { transform: scale(1.06); }
-    .node text {
-      font-size: 12px;
-      font-weight: 700;
-      fill: #334155;
-      paint-order: stroke;
-      stroke: rgba(255,255,255,0.7);
-      stroke-width: 3px;
-      stroke-linejoin: round;
-    }
-    body.dark-mode .node text { fill: #e2e8f0; stroke: rgba(0,0,0,0.45); }
+        .tool-btn{
+            border:none; cursor:pointer; color:#fff; padding:10px 14px; border-radius: 10px;
+            box-shadow:0 6px 18px rgba(102,126,234,0.35); transition: all .2s ease; background: var(--grad-1);
+        }
+        .tool-btn:hover{ transform: translateY(-2px); box-shadow:0 10px 24px rgba(102,126,234,0.45); }
+        .tool-btn.secondary{ background: linear-gradient(135deg,#43e97b 0%, #38f9d7 100%); box-shadow:0 6px 18px rgba(67,233,123,0.35); }
+        .tool-btn.warn{ background: linear-gradient(135deg,#ff6b6b 0%, #ee5a24 100%); box-shadow:0 6px 18px rgba(255,107,107,0.35); }
 
-    .link {
-      fill: none;
-      stroke: rgba(102, 126, 234, 0.35);
-      stroke-width: 1.8px;
-    }
-    body.dark-mode .link { stroke: rgba(124, 147, 255, 0.45); }
+        .tool-split{ flex:1 1 auto; }
+        .search-box{
+            display:flex; align-items:center; gap:8px; background: rgba(255,255,255,0.8);
+            border: 1px solid rgba(0,0,0,0.05); border-radius: 10px; padding: 8px 10px;
+        }
+        .search-input{
+            border:none; outline:none; background:transparent; width:240px; color:#333;
+        }
+        body.dark-mode .search-box{ background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.08); }
+        body.dark-mode .search-input{ color:#fff; }
 
-    .node.highlight circle {
-      stroke: #22c55e !important;
-      stroke-width: 3;
-      filter: drop-shadow(0 6px 16px rgba(34, 197, 94, 0.45));
-    }
-    .node.root circle {
-      fill: url(#rootGrad);
-      stroke: transparent;
-    }
+        /* 思维导图画布 */
+        .map-canvas{
+            position: relative; width: 100%; height: 72vh; min-height: 560px; background: #ffffff;
+            border-radius: 16px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+        body.dark-mode .map-canvas{ background: #111527; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04); }
 
-    /* 信息模态框 */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      background: rgba(0,0,0,0.6);
-      animation: fadeIn .25s ease;
-    }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .modal-content {
-      background: #fff;
-      border-radius: 16px;
-      width: 92%;
-      max-width: 720px;
-      margin: 6% auto;
-      padding: 28px 28px 22px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-      animation: slideUp .25s ease;
-      position: relative;
-    }
-    body.dark-mode .modal-content { background: #111827; color: #e5e7eb; }
-    @keyframes slideUp {
-      from { transform: translateY(40px); opacity: 0; }
-      to   { transform: translateY(0); opacity: 1; }
-    }
-    .close-modal {
-      position: absolute;
-      right: 18px;
-      top: 12px;
-      font-size: 26px;
-      color: #a3a3a3;
-      cursor: pointer;
-    }
-    .close-modal:hover { color: #667eea; }
-    .modal h2 {
-      margin: 4px 0 6px;
-      font-size: 22px;
-      background: var(--primary-grad);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .def-text {
-      color: #374151;
-      line-height: 1.8;
-      font-size: 15px;
-    }
-    body.dark-mode .def-text { color: #d1d5db; }
-    .def-meta {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-    .tag {
-      font-size: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(102, 126, 234, 0.12);
-      color: #334155;
-      font-weight: 700;
-    }
-    body.dark-mode .tag { color: #e5e7eb; }
+        /* 工具提示与侧栏 */
+        .node-tooltip{
+            position: absolute; pointer-events: none; z-index: 10; max-width: 360px;
+            background: rgba(255,255,255,0.95); color: #333; border-radius: 12px; padding: 10px 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.18); border: 1px solid rgba(0,0,0,0.05);
+            display:none;
+        }
+        body.dark-mode .node-tooltip{ background: rgba(45,55,72,0.96); color:#fff; border-color: rgba(255,255,255,0.08); }
 
-    /* 返回按钮（回首页） */
-    .back-button {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 60px;
-      height: 60px;
-      background: var(--primary-grad);
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-      cursor: pointer;
-      transition: transform .2s ease, box-shadow .2s ease;
-      z-index: 1100;
-      text-decoration: none;
-    }
-    .back-button:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 28px rgba(102, 126, 234, 0.6);
-    }
+        .detail-panel{
+            margin-top: 12px; background: rgba(255,255,255,0.75); border-radius: 14px; padding: 14px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        body.dark-mode .detail-panel{ background: rgba(0,0,0,0.25); border-color: rgba(255,255,255,0.08); }
+        .detail-title{ font-weight:700; margin-bottom:6px; }
+        .detail-body{ color: var(--text-2); }
+        body.dark-mode .detail-body{ color:#bbb; }
 
-    /* 导入 JSON 的小抽屉 */
-    .import-panel {
-      display: none;
-      position: fixed;
-      right: 20px;
-      bottom: 110px;
-      width: 360px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-      padding: 14px;
-      z-index: 1500;
-    }
-    body.dark-mode .import-panel { background: #111827; }
-    .import-panel h3 {
-      margin: 6px 0 10px;
-      font-size: 16px;
-      color: #334155;
-    }
-    body.dark-mode .import-panel h3 { color: #e5e7eb; }
-    .import-panel textarea {
-      width: 100%;
-      height: 160px;
-      border-radius: 8px;
-      border: 1px solid rgba(102,126,234,0.25);
-      background: #fff;
-      color: #111827;
-      padding: 10px;
-    }
-    body.dark-mode .import-panel textarea {
-      background: #0b1220;
-      color: #e5e7eb;
-      border-color: rgba(255,255,255,0.08);
-    }
-    .import-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 10px;
-    }
+        /* 节点样式 */
+        .node circle{ cursor: pointer; }
+        .node text{ font-size: 12px; user-select: none; }
+        .node text.label{ fill:#222; }
+        body.dark-mode .node text.label{ fill:#f1f1f1; }
+        .node .hit{ fill: transparent; cursor: pointer; }
+        .link{ fill: none; stroke-width: 1.6px; }
+        .link.base{ stroke: rgba(102,126,234,0.28); }
+        body.dark-mode .link.base{ stroke: rgba(148,163,255,0.25); }
+        .link.hl{ stroke: #ffb142; stroke-width: 2.2px; }
 
-    @media (max-width: 768px) {
-      .matrix-title h1 { font-size: 2.1em; }
-      .toolbar { justify-content: center; }
-      .mindmap-wrap { height: 68vh; min-height: 520px; }
-      .search input { width: 200px; }
-      .import-panel { width: calc(100% - 40px); right: 20px; }
-    }
-  </style>
+        /* 返回主页悬浮按钮（保持一致） */
+        .back-button {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            background: var(--grad-1); color:#fff; border-radius:50%;
+            display:flex; align-items:center; justify-content:center; font-size:24px;
+            box-shadow: 0 6px 20px rgba(102,126,234,0.4); cursor:pointer; transition: all .3s ease; z-index: 1000; text-decoration: none;
+        }
+        .back-button:hover{ transform: translateY(-5px); box-shadow: 0 8px 25px rgba(102,126,234,0.5); }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .chem-title h1{ font-size: 2.1em; }
+            .map-canvas{ height: 70vh; }
+            .search-input{ width: 160px; }
+        }
+    </style>
 </head>
-<body data-page="ai">
-  <!-- 顶部导航（保持与原站一致的入口结构） -->
-  <header class="header">
-    <div class="container">
-      <div class="header-left">
-        <h1 class="logo">狂客·银河</h1>
-
-        <a class="success-link" href="success.html" title="成功日记">
-          <span class="success-icon"><i class="fas fa-meteor"></i></span>
-          <span class="success-text">成功日记</span>
-        </a>
-
-        <a class="breakthrough-link" href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnGZZB8XUcRr7ChjRqeL27ic" title="《自学突围》">
-          <span class="breakthrough-icon"><i class="fas fa-book-open"></i></span>
-          <span class="breakthrough-text">《自学突围》</span>
-        </a>
-
-        <a class="sky-link" href="reading.html" title="星空">
-          <span class="sky-icon"><i class="fas fa-star"></i></span>
-          <span class="sky-text">星空</span>
-        </a>
-
-        <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/" title="冬之街小店">
-          <span class="exam-icon"><i class="fas fa-graduation-cap"></i></span>
-          <span class="exam-text">冬之街小店</span>
-        </a>
-
-        <a class="video-link" href="video.html" title="视频矩阵">
-          <span class="video-icon"><i class="fas fa-video"></i></span>
-          <span class="video-text">视频矩阵</span>
-        </a>
-
-        <a class="game-link" href="games.html" title="自制游戏">
-          <span class="game-icon"><i class="fas fa-gamepad"></i></span>
-          <span class="game-text">自制游戏</span>
-        </a>
-      </div>
-
-      <div class="controls">
-        <button id="themeToggle" class="theme-toggle" title="切换主题">
-          <i class="fas fa-moon"></i>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- 页面标题与工具条 -->
-  <div class="map-container">
-    <div class="matrix-title">
-      <h1>🧪 化学的所有概念</h1>
-      <p>自“物质的量”到“电化学”“有机官能团”，以第一性原理组织的全景知识图谱。支持缩放、搜索与定义查看，覆盖高考化学满分所需核心概念并可持续扩展。</p>
-    </div>
-
-    <div class="toolbar">
-      <div class="toolbar-left tool-card">
-        <span class="chip"><i class="fas fa-shapes"></i> 思维导图</span>
-        <button id="btnCenter" class="btn" title="回到中心"><i class="fas fa-bullseye"></i> 居中</button>
-        <button id="btnFit" class="btn secondary" title="自适应缩放"><i class="fas fa-expand-arrows-alt"></i> 适配</button>
-        <button id="btnImportToggle" class="btn light" title="导入/追加数据"><i class="fas fa-file-import"></i> 导入数据</button>
-      </div>
-
-      <div class="toolbar-right tool-card">
-        <div class="search">
-          <input id="searchInput" type="text" placeholder="搜索概念名称，如：溶度积、原电池..." />
-          <button id="btnSearch" class="btn" title="搜索"><i class="fas fa-search"></i> 搜索</button>
-          <button id="btnClear" class="btn secondary" title="清除高亮"><i class="fas fa-eraser"></i> 清除</button>
+<body data-page="chem-concepts">
+    <!-- 顶部导航（延续站点结构与按钮） -->
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <h1 class="logo">狂客·银河</h1>
+                <a class="success-link" href="success.html">
+                    <span class="success-icon"><i class="fas fa-meteor"></i></span>
+                    <span class="success-text">成功日记</span>
+                </a>
+                <a class="breakthrough-link" href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnGZZB8XUcRr7ChjRqeL27ic">
+                    <span class="breakthrough-icon"><i class="fas fa-book-open"></i></span>
+                    <span class="breakthrough-text">《自学突围》</span>
+                </a>
+                <a class="sky-link" href="reading.html">
+                    <span class="sky-icon"><i class="fas fa-star"></i></span>
+                    <span class="sky-text">星空</span>
+                </a>
+                <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/">
+                    <span class="exam-icon"><i class="fas fa-graduation-cap"></i></span>
+                    <span class="exam-text">冬之街小店</span>
+                </a>
+                <a class="video-link" href="video.html">
+                    <span class="video-icon"><i class="fas fa-video"></i></span>
+                    <span class="video-text">视频矩阵</span>
+                </a>
+                <a class="game-link" href="games.html">
+                    <span class="game-icon"><i class="fas fa-gamepad"></i></span>
+                    <span class="game-text">自制游戏</span>
+                </a>
+            </div>
+            <div class="controls">
+                <button id="themeToggle" class="theme-toggle" title="主题切换">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
         </div>
-      </div>
+    </header>
+
+    <div class="chem-matrix-container">
+        <div class="chem-title">
+            <div style="font-size: 20px; letter-spacing: .2em; opacity:.85;">CHEMISTRY</div>
+            <h1>化学的所有概念</h1>
+            <p>以第一性原理为纲，完整覆盖高考化学核心概念与考点，支持思维导图缩放/伸缩/搜索，助你构建“从本原到满分”的知识体系</p>
+        </div>
+
+        <div class="map-wrap">
+            <!-- 工具条 -->
+            <div class="map-toolbar">
+                <button class="tool-btn" id="fitBtn" title="适配视窗">
+                    <i class="fas fa-compress-arrows-alt"></i> 适配
+                </button>
+                <button class="tool-btn" id="expandAllBtn" title="展开全部">
+                    <i class="fas fa-folder-open"></i> 全部展开
+                </button>
+                <button class="tool-btn warn" id="collapseAllBtn" title="折叠到一级">
+                    <i class="fas fa-folder"></i> 折叠到一级
+                </button>
+
+                <div class="tool-split"></div>
+
+                <div class="search-box">
+                    <i class="fas fa-search" style="color:#667eea;"></i>
+                    <input id="searchInput" class="search-input" type="text" placeholder="搜索概念名或关键词（回车）" />
+                    <button class="tool-btn secondary" id="searchBtn"><i class="fas fa-highlighter"></i> 搜索</button>
+                    <button class="tool-btn" id="clearSearchBtn"><i class="fas fa-eraser"></i> 清除</button>
+                </div>
+            </div>
+
+            <!-- 画布 -->
+            <div id="mindmap" class="map-canvas"></div>
+
+            <!-- 详情面板 -->
+            <div class="detail-panel" id="detailPanel">
+                <div class="detail-title" id="detailTitle">提示</div>
+                <div class="detail-body" id="detailBody">
+                    - 单击节点：展开/折叠该分支；<br/>
+                    - 悬停节点：查看简要定义；<br/>
+                    - 拖拽空白处：平移导图；滚轮：缩放；<br/>
+                    - 使用上方搜索框可定位并高亮相关概念；<br/>
+                    - “适配”一键居中，“全部展开/折叠到一级”快速切换视野。
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="mindmap-wrap" id="mindmapWrap">
-      <svg id="mindmapSvg">
-        <defs>
-          <radialGradient id="rootGrad" cx="50%" cy="50%" r="80%">
-            <stop offset="0%" stop-color="#8fa3ff" stop-opacity="1" />
-            <stop offset="60%" stop-color="#7e8ef1" stop-opacity=".95" />
-            <stop offset="100%" stop-color="#6a7bd7" stop-opacity=".92" />
-          </radialGradient>
-        </defs>
-        <g id="mindmapG"></g>
-      </svg>
-    </div>
-  </div>
+    <!-- 返回首页 -->
+    <a href="index.html" class="back-button" title="返回首页">
+        <i class="fas fa-home"></i>
+    </a>
 
-  <!-- 概念定义模态框 -->
-  <div id="defModal" class="modal">
-    <div class="modal-content">
-      <span class="close-modal" id="closeDefModal">&times;</span>
-      <h2 id="defTitle">概念</h2>
-      <div class="def-text" id="defBody">这里显示所选概念的权威简明定义与备注。</div>
-      <div class="def-meta" id="defMeta"></div>
-    </div>
-  </div>
-
-  <!-- 导入 JSON 面板 -->
-  <div class="import-panel" id="importPanel">
-    <h3><i class="fas fa-file-code"></i> 导入/追加概念 JSON</h3>
-    <textarea id="importTextarea" placeholder='粘贴 {"name":"名称","definition":"定义","children":[...]} 或子树'></textarea>
-    <div class="import-actions">
-      <button id="btnAppend" class="btn"><i class="fas fa-plus-circle"></i> 追加到根</button>
-      <button id="btnReplace" class="btn secondary"><i class="fas fa-exchange-alt"></i> 替换整个图</button>
-      <button id="btnCloseImport" class="btn light"><i class="fas fa-times"></i> 关闭</button>
-    </div>
-  </div>
-
-  <!-- 返回首页 -->
-  <a href="index.html" class="back-button" title="返回首页">
-    <i class="fas fa-home"></i>
-  </a>
-
-  <!-- D3.js 用于思维导图 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-
-  <script>
-    // 主题切换（与原站一致）
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-    const icon = themeToggle.querySelector('i');
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    if (currentTheme === 'dark') {
-      body.classList.add('dark-mode');
-      icon.classList.remove('fa-moon');
-      icon.classList.add('fa-sun');
-    }
-    themeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      if (body.classList.contains('dark-mode')) {
-        icon.classList.remove('fa-moon'); icon.classList.add('fa-sun');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        icon.classList.remove('fa-sun'); icon.classList.add('fa-moon');
-        localStorage.setItem('theme', 'light');
-      }
-    });
-
-    // 核心数据：高考化学满分所需的“底层概念 + 拓展”
-    // 说明：
-    // - 每个节点：name, definition（定义/要点）, tags（可选）, children（子概念）
-    // - 已尽量从第一性原理组织（结构->键->能与变->速与衡->酸碱->电化学->溶液->无机->有机->分析->实验）
-    const chemMindMap = {
-      name: "化学的所有概念",
-      definition: "化学研究物质的组成、结构、性质及变化规律的科学。以微观粒子模型和能量变化为核心，构建解释与预测的体系。",
-      tags: ["总览","第一性原理"],
-      children: [
-        {
-          name: "化学基础",
-          definition: "从物质分类与计量入手，建立统一量纲与常用物理化学量。",
-          tags: ["入门","计量"],
-          children: [
-            { name: "物质", definition: "具有质量和体积的一切客体。", tags:["定义"] },
-            { name: "纯净物", definition: "只含一种纯净成分的物质，如NaCl、H2O。", tags:["分类"] },
-            { name: "混合物", definition: "由两种或多种纯净物按任意比例物理混合而成。", tags:["分类"] },
-            { name: "单质", definition: "由同种元素组成的纯净物，如O2、Fe。", tags:["分类"] },
-            { name: "化合物", definition: "由不同元素化合而成的纯净物，如H2O、NaCl。", tags:["分类"] },
-            { name: "同素异形体", definition: "同种元素形成的不同单质，如O2与O3、金刚石与石墨。", tags:["结构"] },
-            {
-              name: "物质的量（n）",
-              definition: "以摩尔（mol）为单位，表示粒子数目的物理量。1mol含6.022×10^23个粒子。",
-              tags:["核心","计量","Avogadro"],
-              children: [
-                { name: "阿伏伽德罗常数（NA）", definition: "6.022×10^23 mol^-1，1mol粒子数。", tags:["常数"] },
-                { name: "摩尔质量（M）", definition: "单位：g·mol^-1，数值等于相对分子质量。", tags:["换算"] },
-                { name: "摩尔体积（Vm）", definition: "气体在标准状况下约22.4 L·mol^-1。", tags:["气体"] }
-              ]
-            },
-            {
-              name: "浓度",
-              definition: "溶液中溶质含量的度量方式，常见有质量分数与物质的量浓度。",
-              tags:["溶液"],
-              children: [
-                { name: "质量分数（w）", definition: "溶质质量/溶液质量。", tags:["浓度"] },
-                { name: "物质的量浓度（c）", definition: "n溶质/V溶液，单位mol·L^-1。", tags:["浓度"] },
-                { name: "稀释公式", definition: "c1V1=c2V2（同一溶质，体积相加近似）。", tags:["工具"] }
-              ]
-            },
-            {
-              name: "气体定律与状态方程",
-              definition: "理想气体模型下的压强、体积、温度、物质的量关系。",
-              tags:["气体"],
-              children: [
-                { name: "波义耳定律", definition: "T、n不变时，pV=常数。", tags:["定律"] },
-                { name: "查理定律", definition: "p、n不变时，V/T=常数。", tags:["定律"] },
-                { name: "理想气体方程", definition: "pV=nRT。", tags:["方程","R"] }
-              ]
-            },
-            {
-              name: "溶解度与沉淀",
-              definition: "一定条件下溶质在溶剂中的最大溶解量；沉淀生成受离子积与Ksp制约。",
-              tags:["溶液","平衡"],
-              children: [
-                { name: "溶解度", definition: "单位质量（体积）溶剂在给定条件下溶解溶质量。", tags:["定义"] },
-                { name: "溶度积（Ksp）", definition: "微溶电解质溶解平衡常数，用于沉淀判断。", tags:["常数"] },
-                { name: "离子积判据", definition: "Q=[Mn+][Xz-]^...；Q>Ksp 生成沉淀；Q<Ksp 不沉淀。", tags:["判据"] }
-              ]
-            }
-          ]
-        },
-        {
-          name: "结构与键",
-          definition: "原子结构决定元素周期规律；化学键与分子间作用力决定物性。",
-          tags: ["微观","结构-性质关系"],
-          children: [
-            {
-              name: "原子结构",
-              definition: "原子核（p、n）与核外电子，能级与电子排布。",
-              children: [
-                { name: "质子数（Z）", definition: "决定元素的种类。", tags:["本质"] },
-                { name: "中子数（N）", definition: "同位素之间差别。", tags:["同位素"] },
-                { name: "电子排布", definition: "KLMN层，构建价电子与化学性质。", tags:["排布"] },
-                { name: "价电子", definition: "参与成键与反应的外层电子。", tags:["反应本质"] }
-              ]
-            },
-            {
-              name: "元素周期律",
-              definition: "随原子序数递增，元素性质呈周期性变化。",
-              children: [
-                { name: "原子半径", definition: "同周期→递减；同主族→递增。", tags:["趋势"] },
-                { name: "第一电离能", definition: "夺取一个电子所需能量；同周期→增，同主族→减。", tags:["趋势"] },
-                { name: "电负性", definition: "同周期→增，同主族→减；F最大。", tags:["趋势"] },
-                { name: "金属性/非金属性", definition: "随周期律相反变化。", tags:["趋势"] }
-              ]
-            },
-            {
-              name: "化学键",
-              definition: "稳定结构的微观作用：离子键、共价键、金属键、配位键。",
-              children: [
-                { name: "离子键", definition: "阳离子与阴离子静电作用形成，如NaCl。", tags:["无机晶体"] },
-                { name: "共价键", definition: "原子间通过共用电子对形成。", tags:["分子"] },
-                { name: "极性键/非极性键", definition: "由键两端电负性差决定偶极。", tags:["极性"] },
-                { name: "金属键", definition: "金属阳离子与自由电子，导电延展。", tags:["金属"] },
-                { name: "配位键", definition: "一方提供成键电子对，如NH4+。", tags:["络合"] },
-                { name: "VSEPR形状", definition: "价层电子对互斥决定分子几何。", tags:["形状"] },
-                { name: "分子间作用力", definition: "氢键、偶极-偶极、色散力。", tags:["物性"] },
-                { name: "晶体类型", definition: "离子、金属、共价、分子晶体。", tags:["固体"] }
-              ]
-            }
-          ]
-        },
-        {
-          name: "能量与反应类型",
-          definition: "化学变化的能量本质：焓、熵、自由能；反应的基本分类。",
-          tags:["热化学","自发性"],
-          children: [
-            { name: "反应热/焓变（ΔH）", definition: "定压条件下反应系统的热效应。放热ΔH<0，吸热ΔH>0。", tags:["热化学"] },
-            { name: "盖斯定律", definition: "反应总焓变与路径无关，只与初末态有关。", tags:["定律"] },
-            { name: "熵（S）", definition: "无序程度的量度，孤立系统自发趋增。", tags:["自发性"] },
-            { name: "吉布斯自由能（ΔG）", definition: "ΔG=ΔH−TΔS；ΔG<0 自发。", tags:["判据"] },
-            {
-              name: "反应类型",
-              definition: "化合、分解、置换、复分解、氧化还原。",
-              children: [
-                { name: "化合反应", definition: "多种物质生成一种。", tags:["分类"] },
-                { name: "分解反应", definition: "一种物质生成多种。", tags:["分类"] },
-                { name: "置换反应", definition: "元素间互换位置。", tags:["分类"] },
-                { name: "复分解反应", definition: "两种化合物交换成分。", tags:["分类"] },
-                { name: "氧化还原反应", definition: "伴随电子得失与化合价变化。", tags:["核心"] }
-              ]
-            }
-          ]
-        },
-        {
-          name: "速率与平衡",
-          definition: "反应进行快慢与最终状态：速率受条件影响，平衡受K与外界扰动制约。",
-          tags:["动力学","平衡"],
-          children: [
-            {
-              name: "化学反应速率",
-              definition: "单位时间内反应物或生成物浓度的变化率。",
-              children: [
-                { name: "碰撞理论", definition: "有效碰撞才发生反应，需合适取向与足够能量。", tags:["机理"] },
-                { name: "活化能", definition: "形成活化复合物的最小能量。", tags:["能垒"] },
-                { name: "催化剂", definition: "降低活化能、改变反应途径而不改平衡常数。", tags:["催化"] }
-              ]
-            },
-            {
-              name: "化学平衡",
-              definition: "正逆反应速率相等、宏观性质不再变化的动态平衡。",
-              children: [
-                { name: "平衡常数（K）", definition: "由温度决定；K>1产物优势，K<1反应物优势。", tags:["常数"] },
-                { name: "勒夏特列原理", definition: "外界条件改变，平衡向抵消该改变的方向移动。", tags:["定性"] },
-                { name: "分压/浓度/温度/催化影响", definition: "影响平衡移动与速率的典型因素。", tags:["影响因素"] }
-              ]
-            }
-          ]
-        },
-        {
-          name: "酸碱",
-          definition: "质子转移与酸碱对概念；pH/Ka/Kb/水解/缓冲与滴定分析。",
-          tags:["核心","溶液"],
-          children: [
-            { name: "阿伦尼乌斯酸碱", definition: "酸：水溶液中产生H+；碱：产生OH-。", tags:["定义"] },
-            { name: "布朗斯特-劳里酸碱", definition: "酸为质子供体，碱为质子受体。", tags:["定义"] },
-            { name: "共轭酸碱对", definition: "酸失去H+后成为其共轭碱，反之亦然。", tags:["对"] },
-            { name: "pH", definition: "pH=-lg[H+]；25℃纯水pH=7。", tags:["指标"] },
-            { name: "酸度常数（Ka）", definition: "酸强弱度量；同理碱常数（Kb）。", tags:["常数"] },
-            { name: "水解", definition: "盐溶液中离子与水反应导致溶液酸碱性。", tags:["平衡"] },
-            { name: "缓冲溶液", definition: "由弱酸/弱碱及其盐组成，抵抗pH变化。", tags:["应用"] },
-            { name: "中和滴定", definition: "酸碱定量分析，指示剂判定终点。", tags:["分析"] }
-          ]
-        },
-        {
-          name: "氧化还原与电化学",
-          definition: "以电子转移为核心，建立电极/电池/电解的统一图式。",
-          tags:["核心","电子转移"],
-          children: [
-            { name: "氧化数（化合价）", definition: "形式电荷的记账工具，判断氧化还原。", tags:["判据"] },
-            { name: "氧化剂/还原剂", definition: "得电子为氧化剂被还原；失电子为还原剂被氧化。", tags:["角色"] },
-            { name: "歧化/互变", definition: "同一元素被氧化与被还原并存的反应类型。", tags:["类型"] },
-            {
-              name: "原电池",
-              definition: "把化学能转变为电能的装置，负极发生氧化，正极发生还原，电子经外电路由负极流向正极。",
-              children: [
-                { name: "电极反应式", definition: "半反应配平与离子方程式的核心。", tags:["书写"] },
-                { name: "标准电极电势（E°）", definition: "相对氢电极的还原电势，决定趋向。", tags:["判据"] }
-              ]
-            },
-            {
-              name: "电解",
-              definition: "以电能驱动非自发反应，遵循法拉第定律。",
-              children: [
-                { name: "法拉第定律", definition: "m= (It M) / (nF)，定量电解产物。", tags:["定量"] }
-              ]
-            }
-          ]
-        },
-        {
-          name: "溶液与电解质",
-          definition: "溶质-溶剂-电离的统一图景，解释导电性与反应途径。",
-          tags:["基础","电解质"],
-          children: [
-            { name: "电解质", definition: "水溶液或熔融态能导电的化合物。", tags:["定义"] },
-            { name: "强/弱电解质", definition: "完全/部分电离，如HCl强酸、CH3COOH弱酸。", tags:["分类"] },
-            { name: "电离方程式", definition: "反应式按实际离子存在形式表达。", tags:["方程"] },
-            { name: "胶体与丁达尔效应", definition: "粒径介于溶液与悬浊液之间，能散射光。", tags:["分散系"] }
-          ]
-        },
-        {
-          name: "无机化学（要点）",
-          definition: "高考核心元素与化合物的性质、制备与用途。",
-          tags:["必考","元素化学"],
-          children: [
-            {
-              name: "常见非金属",
-              definition: "C、N、O、F、P、S、Cl、Si 及其典型化合物。",
-              children: [
-                { name: "氧气 O2", definition: "强氧化剂，助燃，实验室制法：H2O2催化分解/加热KClO3+MnO2。", tags:["制备","性质"] },
-                { name: "臭氧 O3", definition: "强氧化性，易分解，用于消毒。", tags:["性质"] },
-                { name: "氯气 Cl2", definition: "强氧化剂与漂白性，制备：MnO2+HCl浓。", tags:["性质","制备"] },
-                { name: "氯化氢/盐酸", definition: "强酸，气体具强刺激性，溶液为盐酸。", tags:["强酸"] },
-                { name: "硫的氧化物", definition: "SO2（还原性/弱氧化性）、SO3；H2SO4强酸性与脱水性。", tags:["性质"] },
-                { name: "氮的氧化物", definition: "NO、NO2互变；硝酸强氧化性（与Cu反应放出NO/NO2）。", tags:["性质"] },
-                { name: "氨 NH3", definition: "极性分子，易溶于水成弱碱；哈柏法工业合成。", tags:["弱碱","工业"] },
-                { name: "二氧化硅 SiO2", definition: "共价晶体，不溶于水与酸（除HF），与强碱熔融反应。", tags:["晶体"] },
-                { name: "碳的氧化物", definition: "CO还原性；CO2酸性氧化物，与碱反应生成碳酸盐/酸式盐。", tags:["性质"] }
-              ]
-            },
-            {
-              name: "常见金属与离子",
-              definition: "Na、Mg、Al、Fe、Cu 等及其典型化合物/反应。",
-              children: [
-                { name: "钠 Na", definition: "活泼金属，与水剧烈反应生成NaOH与H2。", tags:["活泼"] },
-                { name: "镁 Mg", definition: "与酸反应放氢；燃烧生成MgO，强碱土金属。", tags:["性质"] },
-                { name: "铝 Al", definition: "两性金属，Al2O3与Al(OH)3两性；电解铝工业。", tags:["两性","工业"] },
-                { name: "铁 Fe", definition: "与稀酸放氢；Fe2+/Fe3+氧化还原互变；铁锈主要为水合氧化铁。", tags:["价态"] },
-                { name: "铜 Cu", definition: "与稀HCl不反应，与HNO3或热浓H2SO4反应。", tags:["性质"] },
-                { name: "钙化合物", definition: "CaCO3受热分解；Ca(OH)2澄清石灰水检验CO2。", tags:["反应"] }
-              ]
-            }
-          ]
-        },
-        {
-          name: "有机化学（要点）",
-          definition: "官能团决定反应性；同系物性质递变；典型反应类型与检验方法。",
-          tags:["官能团","同系物"],
-          children: [
-            {
-              name: "结构与命名",
-              definition: "官能团、同分异构（结构/几何/光学）、饱和/不饱和、芳香性。",
-              children: [
-                { name: "官能团", definition: "决定有机物化学性质的原子团，如–OH、–COOH、–CHO。", tags:["核心"] },
-                { name: "同分异构", definition: "结构不同而分子式相同，含位置/链/官能团/几何/对映等。", tags:["结构"] },
-                { name: "芳香性", definition: "平面环状共轭、4n+2 π电子满足休克尔规则。", tags:["性质"] }
-              ]
-            },
-            {
-              name: "反应类型",
-              definition: "取代、加成、消去、缩合/加聚、氧化还原。",
-              children: [
-                { name: "亲电取代", definition: "芳香环上发生，如硝化、卤代。", tags:["芳香烃"] },
-                { name: "亲核取代", definition: "卤代烃中卤素被亲核试剂取代。", tags:["SN"] },
-                { name: "加成反应", definition: "烯/炔与Br2、H2、H2O等加成。", tags:["不饱和"] },
-                { name: "消去反应", definition: "醇脱水生成烯烃。", tags:["机理"] },
-                { name: "氧化还原", definition: "KMnO4氧化烯/叔醇不反应，苯甲醇→苯甲酸等。", tags:["有机氧化"] }
-              ]
-            },
-            {
-              name: "同系物要点",
-              definition: "烷烃、烯烃、炔烃、芳香烃、卤代烃、醇、酚、醚、醛酮、羧酸、酯、胺、酰胺与高分子。",
-              children: [
-                { name: "烷烃", definition: "饱和、取代/燃烧；同系物沸点递增。", tags:["CnH2n+2"] },
-                { name: "烯烃", definition: "不饱和、易加成；可使溴水褪色检验。", tags:["CnH2n"] },
-                { name: "炔烃", definition: "更高不饱和度，端基炔能显弱酸性。", tags:["性质"] },
-                { name: "芳香烃（苯）", definition: "亲电取代为主，稳定性高。", tags:["苯环"] },
-                { name: "卤代烃", definition: "可发生亲核取代与消去。", tags:["反应性"] },
-                { name: "醇/酚", definition: "醇：–OH连脂肪碳；酚：–OH连芳环（酸性显著）。", tags:["区分"] },
-                { name: "醚", definition: "相对惰性，沸点低于同分子量醇。", tags:["物性"] },
-                { name: "醛", definition: "可被银镜反应/费林试剂氧化。", tags:["检验"] },
-                { name: "酮", definition: "一般不与托伦/费林反应。", tags:["区分"] },
-                { name: "羧酸/酯", definition: "酸性、可酯化与水解平衡。", tags:["平衡"] },
-                { name: "胺/酰胺", definition: "碱性与酰胺的稳定性。", tags:["性质"] },
-                { name: "高分子", definition: "加聚（PE、PVC）、缩聚（涤纶、尼龙）。", tags:["聚合"] }
-              ]
-            },
-            {
-              name: "常用鉴别试剂",
-              definition: "溴水、酸性KMnO4、托伦试剂、费林试剂、FeCl3鉴酚。",
-              children: [
-                { name: "溴水褪色", definition: "检不饱和键与某些加成/取代反应。", tags:["显色"] },
-                { name: "酸性KMnO4", definition: "被还原褪色：烯烃、某些醇。", tags:["氧化"] },
-                { name: "托伦试剂", definition: "醛 → 银镜；酮一般不反应。", tags:["银镜"] },
-                { name: "费林试剂", definition: "醛被还原生成砖红色Cu2O沉淀。", tags:["还原性"] },
-                { name: "FeCl3 检酚", definition: "某些酚显紫色配合物。", tags:["显色"] }
-              ]
-            }
-          ]
-        },
-        {
-          name: "分析化学（要点）",
-          definition: "定性-定量-仪器分析三位一体，服务于物质结构与含量判定。",
-          tags:["分析","实验"],
-          children: [
-            { name: "定性分析", definition: "焰色反应/沉淀颜色/气体检验。", tags:["识别"] },
-            { name: "滴定分析", definition: "酸碱滴定/氧化还原滴定终点判定。", tags:["定量"] },
-            { name: "光谱/色谱（概念）", definition: "紫外-可见、红外、核磁共振、气-液相色谱基础认识。", tags:["拓展"] }
-          ]
-        },
-        {
-          name: "实验与安全",
-          definition: "常规仪器与基本操作，气体制备/收集，滴定/过滤/蒸馏/萃取/结晶与安全规范。",
-          tags:["必考","操作"],
-          children: [
-            { name: "玻璃仪器", definition: "容量瓶/滴定管/移液管/锥形瓶等用途与读数要求。", tags:["仪器"] },
-            { name: "气体制备与收集", definition: "排水/向上/向下排空气；干燥/净化。", tags:["技巧"] },
-            { name: "过滤/蒸馏/萃取/结晶/干燥", definition: "分离纯化的核心流程与注意事项。", tags:["分离"] },
-            { name: "滴定操作与指示剂", definition: "洗涤/标定/读数/终点判断。", tags:["滴定"] },
-            { name: "安全与废液处理", definition: "防腐蚀/防氧化/防燃爆与分类回收。", tags:["安全"] }
-          ]
-        },
-        {
-          name: "化学与社会（拓展）",
-          definition: "工业流程与环境议题：从哈柏法到接触法，从酸雨到碳中和。",
-          tags:["应用","拓展"],
-          children: [
-            { name: "哈柏法", definition: "N2+3H2 ⇌ 2NH3，铁系催化剂，高温高压。", tags:["平衡","工业"] },
-            { name: "接触法", definition: "SO2→SO3（V2O5 催化），制硫酸。", tags:["工业"] },
-            { name: "电解铝", definition: "冰晶石-氧化铝熔盐电解，阳极效应与能耗。", tags:["工业"] },
-            { name: "索尔维制碱", definition: "氨碱法制Na2CO3。", tags:["工业"] },
-            { name: "环境化学", definition: "酸雨/温室气体/光化学烟雾与治理。", tags:["环保"] }
-          ]
+    <script>
+        // 主题切换（继承站点逻辑）
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            icon.classList.replace('fa-moon','fa-sun');
         }
-      ]
-    };
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.replace('fa-moon','fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.replace('fa-sun','fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
 
-    // 画布与布局
-    const svg = d3.select("#mindmapSvg");
-    const g = d3.select("#mindmapG");
-    const wrap = document.getElementById("mindmapWrap");
+        // =============== 化学思维导图数据 ===============
+        // 说明：
+        // - 以“第一性原理→高考核心”为主线，覆盖高考化学知识体系；
+        // - 每个节点包含 name（名称）和可选 definition（定义），children 为子概念；
+        // - 您可后续继续在相应分支增删节点，结构会自动渲染。
+        const chemMindMap = {
+            name: "化学的所有概念",
+            definition: "以微观粒子与相互作用为本原，研究物质的组成、结构、性质及变化规律的科学。",
+            children: [
+                {
+                    name: "物质与分类",
+                    definition: "按组成与均一性将客体划分为纯净物和混合物；纯净物含固定化学式，混合物组分比可变。",
+                    children: [
+                        {
+                            name: "物质",
+                            definition: "具有一定质量和体积、能够占据空间的一切客观存在。",
+                            children: [
+                                { name: "纯净物", definition: "只含一种化学纯物质的样品，具有确定的化学式与性质。" ,
+                                  children: [
+                                      { name: "元素", definition: "具有相同核电荷数的一类原子的总称。化学变化中不能再分为更简单的物质。"},
+                                      { name: "化合物", definition: "由两种或两种以上元素组成的纯净物，具有确定的组成比例与结构。"}
+                                  ]
+                                },
+                                { name: "混合物", definition: "由两种或两种以上纯净物机械混合而成，组分比例可变，性质受组分影响。"}
+                            ]
+                        },
+                        {
+                            name: "变化类型",
+                            definition: "从是否生成新物质区分物理变化与化学变化。",
+                            children: [
+                                { name: "物理变化", definition: "不生成新物质的变化，如状态、形态改变。" },
+                                { name: "化学变化", definition: "生成新物质的变化，涉及化学键断裂与生成。" }
+                            ]
+                        },
+                        {
+                            name: "溶液与浓度",
+                            definition: "溶质分散在溶剂中形成均相体系，常用浓度表示组成。",
+                            children: [
+                                { name: "溶质", definition: "被溶解的物质。" },
+                                { name: "溶剂", definition: "起溶解作用并占多数的组分。" },
+                                { name: "溶解度", definition: "在一定温度下，达到饱和时每100 g 溶剂所溶解溶质的质量。" },
+                                { name: "质量分数 w", definition: "溶质质量与溶液质量之比，通常以百分数表示。" },
+                                { name: "物质的量浓度 c", definition: "每升溶液所含溶质的物质的量（mol·L⁻¹）。" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "原子结构与元素周期律",
+                    definition: "原子的核电荷与核外电子排布决定微观结构；元素性质随周期与族呈规律变化。",
+                    children: [
+                        {
+                            name: "原子",
+                            definition: "由带正电的原子核与核外电子构成的中性微粒。",
+                            children: [
+                                { name: "核电荷数 Z", definition: "原子核所带正电荷数，等于核内质子数与核外电子数（中性原子）。" },
+                                { name: "同位素", definition: "核电荷数相同而中子数不同的一组原子。" },
+                                { name: "相对原子质量", definition: "以 12C 的质量的 1/12 为基准的原子平均质量（无量纲）。" },
+                                { name: "电子排布", definition: "电子按能量由低到高占据轨道形成排布，如1s²2s²2p⁶…" },
+                                { name: "价电子", definition: "参与化学反应、决定化学性质的最外层电子。"}
+                            ]
+                        },
+                        {
+                            name: "元素周期表",
+                            definition: "按核电荷数递增排列，元素性质呈周期性变化的图表。",
+                            children: [
+                                { name: "周期", definition: "电子层数相同的横行。" },
+                                { name: "族", definition: "最外层电子数相近、性质相近的纵列。" },
+                                { name: "周期律", definition: "随 Z 增大，原子半径、电离能、电负性等呈周期变化。" },
+                                { name: "金属性/非金属性", definition: "元素失电子/得电子倾向的强弱特征。" },
+                                { name: "氧化数", definition: "用以表示元素在化合物或离子中得失电子数目的书写习惯。"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "化学键与物质结构",
+                    definition: "微粒间通过电子转移、共享或金属键合形成化学键及多种聚集状态，决定物质性质。",
+                    children: [
+                        {
+                            name: "化学键",
+                            definition: "使原子结合成分子或晶体的强相互作用。",
+                            children: [
+                                { name: "离子键", definition: "金属与非金属间通过电子转移形成阳/阴离子并由静电作用结合。" },
+                                { name: "共价键", definition: "原子通过共享电子对形成的定向键；可分极性键与非极性键。" },
+                                { name: "金属键", definition: "金属阳离子与离域电子之间的作用，解释延展性与导电性。" }
+                            ]
+                        },
+                        {
+                            name: "分子极性与作用力",
+                            definition: "键极性与空间构型共同决定分子极性；分子间作用力影响熔/沸点等宏观性质。",
+                            children: [
+                                { name: "键极性", definition: "由成键原子电负性差异引起的电荷偏移。" },
+                                { name: "分子极性", definition: "分子内电荷中心不重合导致的整体偶极矩。" },
+                                { name: "氢键", definition: "H 与强电负性原子间的特殊作用力，显著提高沸点与粘度。" },
+                                { name: "范德华力", definition: "瞬时偶极与诱导偶极引起的弱作用力。"}
+                            ]
+                        },
+                        {
+                            name: "晶体类型与性质",
+                            definition: "微粒几何重复排列形成的固体；不同键型决定不同性质。",
+                            children: [
+                                { name: "离子晶体", definition: "阴阳离子构成，硬而脆、熔点高，熔融或水溶液能导电。" },
+                                { name: "分子晶体", definition: "分子为结构单元，分子间作用力为主，熔点低，多为绝缘体。" },
+                                { name: "原子晶体", definition: "共价键贯通全晶体，如金刚石、SiO₂，硬度大、熔点高。" },
+                                { name: "金属晶体", definition: "金属阳离子与自由电子海，导电导热性优良。"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "化学反应与能量",
+                    definition: "反应本质为化学键断裂/生成与能量交换，守恒规律与热化学支配能量变化。",
+                    children: [
+                        { name: "化学方程式", definition: "用化学式与系数表示反应的定量表达，应遵循质量与电荷守恒。" },
+                        { name: "反应类型", definition: "化合、分解、置换、复分解、氧化还原等类型。" },
+                        { name: "反应热/焓变 ΔH", definition: "在规定条件下反应放出或吸收的热量；放热 ΔH<0，吸热 ΔH>0。" },
+                        { name: "盖斯定律", definition: "反应焓变与途径无关，只与初末状态有关，可进行焓的代数加和。"}
+                    ]
+                },
+                {
+                    name: "反应速率与化学平衡",
+                    definition: "速率描述单位时间内反应进程；平衡为可逆反应正逆速率相等的动态状态。",
+                    children: [
+                        { name: "反应速率", definition: "单位时间内反应物浓度的减少或生成物浓度的增加。" },
+                        { name: "影响因素", definition: "浓度、温度、催化剂、接触面积等影响速率。" },
+                        { name: "化学平衡", definition: "可逆反应在一定条件下正逆反应速率相等、宏观性质稳定的状态。" },
+                        { name: "平衡常数 K", definition: "恒温下由平衡浓度比确定的常数，反映平衡位置。" },
+                        { name: "勒夏特列原理", definition: "条件改变时，平衡将向抵消该改变的方向移动。"}
+                    ]
+                },
+                {
+                    name: "电化学与离子反应",
+                    definition: "溶液中离子电离与迁移规律；氧化还原与电能/化学能的相互转化。",
+                    children: [
+                        {
+                            name: "电解质与电离",
+                            definition: "在水溶液或熔融状态下能导电的物质；电离生成离子。",
+                            children: [
+                                { name: "强电解质", definition: "在水中几乎完全电离（如强酸、强碱、可溶性盐）。" },
+                                { name: "弱电解质", definition: "在水中部分电离（如弱酸、弱碱）。" },
+                                { name: "电离方程式", definition: "用离子形式表示电解质电离过程的式子。" },
+                                { name: "离子方程式", definition: "剔除未参与反应的旁观离子，保留实质反应粒子的方程式。" }
+                            ]
+                        },
+                        {
+                            name: "氧化还原反应",
+                            definition: "伴随电子得失的反应；得电子为还原，失电子为氧化。",
+                            children: [
+                                { name: "氧化剂/还原剂", definition: "使他物氧化/还原且自身发生相反变化的物质。" },
+                                { name: "电子守恒法", definition: "以电子转移守恒配平氧化还原反应的常用方法。"}
+                            ]
+                        },
+                        {
+                            name: "原电池与电解",
+                            definition: "化学能与电能的转化装置与过程。",
+                            children: [
+                                { name: "原电池", definition: "自发氧化还原反应将化学能转化为电能的装置，阳极氧化、阴极还原。" },
+                                { name: "电极反应式", definition: "分别表示阳极与阴极的半反应。" },
+                                { name: "电解", definition: "外电源供能驱动非自发反应发生的过程。" }
+                            ]
+                        },
+                        {
+                            name: "水的电离与 pH",
+                            definition: "水自电离生成 H⁺ 与 OH⁻；pH=−lg[H⁺] 表征溶液酸碱性。",
+                            children: [
+                                { name: "中性/酸性/碱性", definition: "[H⁺]=[OH⁻]/[H⁺]＞[OH⁻]/[H⁺]＜[OH⁻]。" },
+                                { name: "盐类水解", definition: "某些盐的离子与水反应导致溶液呈酸或碱性。"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "物质的量与化学计量",
+                    definition: "以摩尔为桥梁实现微粒世界与宏观测量的转换，是化学计算的核心。",
+                    children: [
+                        { name: "物质的量 n", definition: "表示微粒多少的物理量，单位为摩尔（mol）。" },
+                        { name: "阿伏加德罗常数 N_A", definition: "1 mol 任意微粒所含的基本微粒数（6.02×10²³·mol⁻¹）。" },
+                        { name: "摩尔质量 M", definition: "每 mol 物质的质量（g·mol⁻¹）。" },
+                        { name: "气体摩尔体积 V_m", definition: "同温同压下每 mol 气体所占体积（STP约22.4 L·mol⁻¹）。" },
+                        { name: "守恒关系", definition: "质量守恒、电荷守恒、元素守恒、电子守恒。" },
+                        { name: "计量计算", definition: "基于化学方程式量的关系进行的定量推算。"}
+                    ]
+                },
+                {
+                    name: "有机化学基础与高分子",
+                    definition: "以碳为骨架的化合物及其反应规律；官能团决定性质与反应类型。",
+                    children: [
+                        {
+                            name: "烃与衍生物",
+                            definition: "只含 C、H 的烃与官能团取代后的化合物。",
+                            children: [
+                                { name: "烷烃（CnH2n+2）", definition: "饱和烃，特征反应为取代；构象与异构常见。" },
+                                { name: "烯烃（CnH2n）", definition: "含C=C双键，易加成与加聚。" },
+                                { name: "炔烃（CnH2n-2）", definition: "含C≡C三键，易加成。" },
+                                { name: "芳香烃（如苯）", definition: "芳香性体系，典型反应为亲电取代。"},
+                                { name: "卤代烃", definition: "烃基上的 H 被卤素取代，易发生取代/消去。" },
+                                { name: "醇", definition: "含羟基（–OH），可发生氧化、酯化、脱水。" },
+                                { name: "醛/酮", definition: "含 –CHO/羰基，醛具还原性（银镜/斐林）。" },
+                                { name: "羧酸", definition: "含 –COOH，酸性，能与醇酯化生成酯。" },
+                                { name: "酯", definition: "由酸与醇缩合并脱水形成，可水解。"}
+                            ]
+                        },
+                        {
+                            name: "同分异构与命名",
+                            definition: "不同结构但组成相同称同分异构；系统命名遵循碳链主干与取代基定位规则。",
+                            children: [
+                                { name: "结构异构", definition: "碳骨架异构、官能团位置异构等。" },
+                                { name: "几何/光学异构", definition: "因双键或手性中心导致的空间构型差异。" }
+                            ]
+                        },
+                        {
+                            name: "高分子与材料",
+                            definition: "由大量小分子经聚合形成的大分子物质。",
+                            children: [
+                                { name: "加聚反应", definition: "不生成小分子，如乙烯 → 聚乙烯（PE）。" },
+                                { name: "缩聚反应", definition: "生成小分子（如水/氨），如己二酸+己二胺→尼龙。" },
+                                { name: "常见聚合物", definition: "PE、PP、PVC、PET、PA、PS等，广泛用于材料领域。"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "无机化学元素及化合物",
+                    definition: "常见主族/过渡元素的单质性质与重要化合物的制备与用途。",
+                    children: [
+                        {
+                            name: "金属元素",
+                            definition: "具有良好导电导热性与延展性的元素。",
+                            children: [
+                                { name: "Na 与化合物", definition: "活泼金属，与水反应放氢；NaOH 强碱；NaCl 常见盐。" },
+                                { name: "Mg/Al 与化合物", definition: "两性氧化物/氢氧化物特征；铝热反应；Al 有致密氧化膜。" },
+                                { name: "Fe 与化合物", definition: "铁的化合价+2/+3；Fe₂O₃/Fe₃O₄；防锈与合金。" },
+                                { name: "Cu 与化合物", definition: "导电性好；CuO/Cu(OH)₂；与稀酸反应特征。"}
+                            ]
+                        },
+                        {
+                            name: "非金属元素",
+                            definition: "得电子倾向较强，形成酸性氧化物与非金属氢化物等。",
+                            children: [
+                                { name: "H/O 与化合物", definition: "H₂、H₂O、H₂O₂；水的极性与氢键；过氧化物性质。" },
+                                { name: "C 与化合物", definition: "C的同素异形体；CO/CO₂；碳酸盐与热分解。" },
+                                { name: "N 与化合物", definition: "NH₃碱性与易溶性；HNO₃强氧化性；NO/NO₂转化。" },
+                                { name: "S 与化合物", definition: "SO₂/SO₃；H₂SO₄强酸性与脱水性；接触法制酸原理。" },
+                                { name: "Cl 与化合物", definition: "HCl 强酸；Cl₂氧化性；漂白与消毒。" },
+                                { name: "Si 与化合物", definition: "SiO₂与硅酸盐；玻璃与陶瓷材料。"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "实验与安全·数据处理",
+                    definition: "规范的实验操作、安全防护与数据处理是获取可靠结论的保障。",
+                    children: [
+                        {
+                            name: "常用操作",
+                            definition: "加热、冷凝、蒸馏、萃取、过滤、洗涤、干燥与结晶等。",
+                            children: [
+                                { name: "仪器识别与连接", definition: "试管、烧瓶、冷凝管、滴定管、分液漏斗、干燥器等。" },
+                                { name: "气体制备与检验", definition: "H₂、O₂、CO₂、NH₃等的制备与性质验证。" },
+                                { name: "滴定分析", definition: "标准溶液、指示剂、读数方法与体积校正。"}
+                            ]
+                        },
+                        {
+                            name: "安全与环保",
+                            definition: "穿戴防护、远离火源、规范标识、废液分类回收与中和处理。",
+                            children: [
+                                { name: "实验风险控制", definition: "腐蚀性、可燃性、毒性与强氧化性的风险识别与隔离。" },
+                                { name: "有效数字与误差", definition: "读数规范，系统误差/偶然误差与不确定度估计。"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "化学思想与方法",
+                    definition: "模型建构、等级守恒、控制变量、定量推理与结构—性质关系等一般科学方法。",
+                    children: [
+                        { name: "结构—性质—应用", definition: "由微观结构推断宏观性质，并指导材料与工艺应用。" },
+                        { name: "守恒与平衡思维", definition: "质量/电荷/元素/电子守恒与平衡移动规律贯穿解题。" },
+                        { name: "控制变量法", definition: "研究多因素影响时，保持除一个变量外的其余变量不变。" },
+                        { name: "图像与表格法", definition: "利用图像、表格归纳规律并提取定量关系。"}
+                    ]
+                }
+            ]
+        };
 
-    // 缩放/平移
-    const zoom = d3.zoom().scaleExtent([0.25, 2.5]).on("zoom", (ev) => {
-      g.attr("transform", ev.transform);
-    });
-    svg.call(zoom);
+        // =============== 导图渲染 ===============
+        const container = document.getElementById('mindmap');
+        const tooltip = document.createElement('div');
+        tooltip.className = 'node-tooltip';
+        container.appendChild(tooltip);
 
-    // 尺寸与树布局（径向）
-    function getSize() {
-      const rect = wrap.getBoundingClientRect();
-      return { w: rect.width, h: rect.height };
-    }
-    let { w, h } = getSize();
-    const radius = Math.min(w, h) / 2 - 40;
-    let tree = d3.tree().size([2 * Math.PI, radius]);
+        const detailTitle = document.getElementById('detailTitle');
+        const detailBody  = document.getElementById('detailBody');
 
-    // 根数据与折叠初始化
-    let root = d3.hierarchy(chemMindMap);
-    root.x0 = 0;
-    root.y0 = 0;
-    root.children?.forEach(collapseAll);
+        const width  = container.clientWidth;
+        const height = container.clientHeight;
 
-    function collapseAll(d) {
-      if (d.children) {
-        d._children = d.children;
-        d._children.forEach(collapseAll);
-        d.children = null;
-      }
-    }
+        const svg = d3.select(container).append('svg')
+            .attr('width', width).attr('height', height)
+            .style('cursor','grab');
 
-    // 渲染函数
-    function update(source) {
-      // 重新计算布局
-      tree = d3.tree().size([2 * Math.PI, Math.min(getSize().w, getSize().h) / 2 - 50]);
-      const nodes = tree(root);
-      const links = nodes.links();
+        const gZoom = svg.append('g');     // 缩放容器
+        const gLink = gZoom.append('g').attr('class','links');
+        const gNode = gZoom.append('g').attr('class','nodes');
 
-      // 极坐标->笛卡尔
-      function project(x, y) {
-        const angle = x - Math.PI / 2;
-        return [Math.cos(angle) * y, Math.sin(angle) * y];
-      }
+        // 颜色映射：按第一层子类赋色
+        const palette = d3.schemeSet2.concat(d3.schemeSet3);
+        const categoryColor = new Map();
 
-      // LINKS
-      const link = g.selectAll("path.link").data(links, d => d.target.data.name + "_" + d.target.depth);
-      link.join(
-        enter => enter.append("path")
-          .attr("class", "link")
-          .attr("d", d => {
-            const [sx, sy] = project(source.x0 ?? source.x, source.y0 ?? source.y);
-            return d3.linkRadial().angle(() => source.x0 ?? source.x).radius(() => source.y0 ?? source.y)({ source: { x: source.x0 ?? source.x, y: source.y0 ?? source.y }, target: { x: source.x0 ?? source.x, y: source.y0 ?? source.y } });
-          })
-          .transition().duration(350)
-          .attr("d", d3.linkRadial().angle(d => d.x).radius(d => d.y)),
-        update => update.transition().duration(350)
-          .attr("d", d3.linkRadial().angle(d => d.x).radius(d => d.y)),
-        exit => exit.transition().duration(250)
-          .attr("d", d => {
-            return d3.linkRadial().angle(() => source.x).radius(() => source.y)({
-              source: { x: source.x, y: source.y },
-              target: { x: source.x, y: source.y }
+        // 径向树布局
+        const radius = Math.min(width, height) / 2 - 30;
+        const tree = d3.tree().size([2 * Math.PI, radius]);
+
+        // 数据层级化
+        const root = d3.hierarchy(chemMindMap);
+        root.x0 = Math.PI; root.y0 = 0;
+
+        // 默认折叠到第2层
+        root.children?.forEach(collapseDeep);
+        expandLevel(root, 2); // 展开前2层
+
+        // 为第一层类别贴上颜色
+        (root.children||[]).forEach((c, i) => categoryColor.set(c.data.name, palette[i % palette.length]));
+
+        function collapseDeep(node){
+            if(node.children){
+                node._children = node.children;
+                node._children.forEach(collapseDeep);
+                node.children = null;
+            }
+        }
+        function expand(node){
+            if(node._children){ node.children = node._children; node._children = null; }
+        }
+        function expandAll(node){
+            expand(node);
+            (node.children||[]).forEach(expandAll);
+        }
+        function collapseToLevel(node, depth){
+            if(node.depth >= depth && node.children){
+                node._children = node.children; node.children = null;
+            }
+            (node.children||node._children||[]).forEach(n => collapseToLevel(n, depth));
+        }
+        function expandLevel(node, depth){
+            if(node.depth < depth){ expand(node); (node.children||[]).forEach(n => expandLevel(n, depth)); }
+        }
+
+        // 坐标转换（极坐标 -> 笛卡尔）
+        function project(x, y){
+            const angle = x - Math.PI / 2;
+            return [Math.cos(angle) * y, Math.sin(angle) * y];
+        }
+
+        // 缩放
+        const zoom = d3.zoom().scaleExtent([0.3, 3]).on('zoom', (event) => {
+            gZoom.attr('transform', event.transform);
+        });
+        svg.call(zoom);
+
+        // 更新图
+        function update(source) {
+            const rootLayout = tree(root);
+
+            const nodes = rootLayout.descendants();
+            const links = rootLayout.links();
+
+            // Links
+            const link = gLink.selectAll('path.link').data(links, d => d.target.data.name + '-' + d.target.depth);
+
+            link.join(
+                enter => enter.append('path')
+                    .attr('class', 'link base')
+                    .attr('d', d3.linkRadial()
+                        .angle(d => d.x)
+                        .radius(d => d.y)
+                    )
+                    .attr('opacity', 0)
+                    .transition().duration(350)
+                    .attr('opacity', 1),
+                update => update,
+                exit => exit.transition().duration(250).attr('opacity',0).remove()
+            );
+
+            // Nodes
+            const node = gNode.selectAll('g.node').data(nodes, d => d.data.name + '-' + d.depth);
+
+            const nodeEnter = node.enter().append('g')
+                .attr('class', 'node')
+                .attr('transform', d => {
+                    const [x, y] = project(source.x0 ?? d.x, source.y0 ?? d.y);
+                    return `translate(${x},${y})`;
+                })
+                .on('click', (_, d) => {
+                    if (d.children) { d._children = d.children; d.children = null; }
+                    else { d.children = d._children; d._children = null; }
+                    update(d);
+                })
+                .on('mouseenter', (event, d) => {
+                    const def = d.data.definition || '（暂无定义）';
+                    tooltip.innerHTML = `<div style="font-weight:700;margin-bottom:4px">${d.data.name}</div><div style="font-size:13px;line-height:1.5">${def}</div>`;
+                    tooltip.style.display = 'block';
+                })
+                .on('mousemove', (event) => {
+                    const pad = 14;
+                    tooltip.style.left = (event.offsetX + pad) + 'px';
+                    tooltip.style.top  = (event.offsetY + pad) + 'px';
+                })
+                .on('mouseleave', () => {
+                    tooltip.style.display = 'none';
+                })
+                .on('contextmenu', (event, d) => {
+                    event.preventDefault();
+                    // 右键：更新侧栏详情
+                    detailTitle.textContent = d.data.name;
+                    detailBody.textContent  = d.data.definition || '（暂无定义）';
+                });
+
+            // 节点圈
+            nodeEnter.append('circle')
+                .attr('r', 0)
+                .attr('fill', d => {
+                    if(d.depth === 0) return '#764ba2';
+                    if(d.depth === 1) return categoryColor.get(d.data.name) || '#667eea';
+                    const p = d.ancestors().find(a=>a.depth===1);
+                    return p ? (categoryColor.get(p.data.name) || '#667eea') : '#667eea';
+                })
+                .attr('stroke', 'white').attr('stroke-width', 1.2)
+                .transition().duration(350).attr('r', 5.2);
+
+            // 放大点击热区，提升可点性
+            nodeEnter.append('circle')
+                .attr('class','hit')
+                .attr('r', 16);
+
+            // 文本标签
+            nodeEnter.append('text')
+                .attr('class','label')
+                .attr('dy','0.31em')
+                .attr('x', d => d.x < Math.PI === !d.children ? 8 : -8)
+                .attr('text-anchor', d => d.x < Math.PI === !d.children ? 'start' : 'end')
+                .attr('transform', d => `rotate(${(d.x * 180/Math.PI) - 90}) translate(${d.children ? -6 : 6},0) rotate(${d.x >= Math.PI ? 180 : 0})`)
+                .text(d => d.data.name)
+                .attr('opacity', 0)
+                .transition().duration(300).attr('opacity', 1);
+
+            // 更新位置
+            const nodeUpdate = nodeEnter.merge(node);
+            nodeUpdate.transition().duration(350)
+                .attr('transform', d => {
+                    const [x, y] = project(d.x, d.y);
+                    return `translate(${x},${y})`;
+                });
+
+            // 记录旧位置
+            nodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
+
+            // 高亮保留（若搜索）
+            refreshHighlights();
+        }
+
+        update(root);
+
+        // 适配视窗
+        function fitToScreen() {
+            const bounds = gZoom.node().getBBox();
+            const fullWidth = container.clientWidth;
+            const fullHeight = container.clientHeight;
+            const midX = bounds.x + bounds.width / 2;
+            const midY = bounds.y + bounds.height / 2;
+
+            if (bounds.width === 0 || bounds.height === 0) return;
+
+            const scale = 0.86 / Math.max(bounds.width / fullWidth, bounds.height / fullHeight);
+            const transform = d3.zoomIdentity.translate(fullWidth/2, fullHeight/2).scale(scale).translate(-midX, -midY);
+
+            svg.transition().duration(480).call(zoom.transform, transform);
+        }
+
+        // 展开/折叠控制
+        document.getElementById('expandAllBtn').addEventListener('click', () => { expandAll(root); update(root); setTimeout(fitToScreen, 40); });
+        document.getElementById('collapseAllBtn').addEventListener('click', () => { collapseToLevel(root, 1); expandLevel(root, 1); update(root); setTimeout(fitToScreen, 40); });
+        document.getElementById('fitBtn').addEventListener('click', fitToScreen);
+
+        // 初始自适应
+        setTimeout(fitToScreen, 60);
+        window.addEventListener('resize', () => {
+            // 简易响应处理：重设 SVG 尺寸并适配
+            svg.attr('width', container.clientWidth).attr('height', container.clientHeight);
+            setTimeout(fitToScreen, 60);
+        });
+
+        // 搜索高亮
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn   = document.getElementById('searchBtn');
+        const clearBtn    = document.getElementById('clearSearchBtn');
+        let highlightNames = new Set();
+
+        function clearHighlights(){
+            highlightNames.clear();
+            refreshHighlights();
+        }
+        function refreshHighlights(){
+            // 链接高亮：如果其目标或源在高亮路径上则加亮
+            const hlSet = new Set();
+            if (highlightNames.size > 0){
+                root.each(node => {
+                    if (highlightNames.has(node.data.name)) {
+                        node.ancestors().forEach(a => hlSet.add(a));
+                        node.descendants().forEach(d => hlSet.add(d));
+                    }
+                });
+            }
+            gLink.selectAll('path.link')
+                .attr('class', d => hlSet.has(d.source) && hlSet.has(d.target) ? 'link hl' : 'link base');
+
+            gNode.selectAll('g.node').select('circle')
+                .attr('stroke-width', d => highlightNames.has(d.data.name) ? 3 : 1.2)
+                .attr('stroke', d => highlightNames.has(d.data.name) ? '#ffb142' : '#fff');
+        }
+
+        function ensureVisible(name){
+            // 展开至包含该名称的节点
+            let target = null;
+            root.each(d => { if (d.data.name.toLowerCase() === name.toLowerCase()) target = d; });
+            if (!target) return;
+
+            // 逐层展开
+            target.ancestors().forEach(a => {
+                if (a._children){ a.children = a._children; a._children = null; }
             });
-          }).remove()
-      );
+            update(target);
 
-      // NODES
-      const node = g.selectAll("g.node").data(nodes.descendants(), d => d.data.name + "_" + d.depth);
-      const nodeEnter = node.enter().append("g")
-        .attr("class", d => "node" + (d.depth === 0 ? " root" : ""))
-        .attr("transform", d => {
-          const [x, y] = project(source.x0 ?? source.x, source.y0 ?? source.y);
-          return `translate(${x},${y})`;
-        })
-        .on("click", (_, d) => {
-          // 展开/折叠
-          if (d.children) { d._children = d.children; d.children = null; }
-          else { d.children = d._children; d._children = null; }
-          update(d);
-          // 定位并打开定义
-          centerOnNode(d, 1.0);
-          openDef(d);
-        });
-
-      nodeEnter.append("circle")
-        .attr("r", d => d.depth === 0 ? 14 : 8);
-
-      nodeEnter.append("text")
-        .attr("dy", "0.31em")
-        .attr("x", d => (d.x < Math.PI === !d.children) ? 12 : -12)
-        .attr("text-anchor", d => (d.x < Math.PI === !d.children) ? "start" : "end")
-        .attr("transform", d => (d.x >= Math.PI ? "rotate(180)" : null))
-        .text(d => d.data.name);
-
-      const nodeUpdate = nodeEnter.merge(node);
-      nodeUpdate.transition().duration(350)
-        .attr("transform", d => {
-          const [x, y] = project(d.x, d.y);
-          return `translate(${x},${y})`;
-        });
-      nodeUpdate.select("circle").attr("r", d => d.depth === 0 ? 14 : 8);
-
-      node.exit().transition().duration(250)
-        .attr("transform", d => {
-          const [x, y] = project(source.x, source.y);
-          return `translate(${x},${y})`;
-        })
-        .remove();
-
-      // 保存旧位置
-      nodes.each(d => { d.x0 = d.x; d.y0 = d.y; });
-    }
-
-    // 初渲染
-    update(root);
-    // 初始视图：略微缩放并居中
-    centerOnNode(root, 0.9);
-
-    // 居中与适配
-    const btnCenter = document.getElementById('btnCenter');
-    const btnFit = document.getElementById('btnFit');
-    btnCenter.addEventListener('click', () => centerOnNode(root, 0.9));
-    btnFit.addEventListener('click', fitToView);
-
-    function centerOnNode(d, scale = 1.0) {
-      const { w, h } = getSize();
-      const [x, y] = polarToCartesian(d.x, d.y);
-      svg.transition().duration(350).call(
-        zoom.transform,
-        d3.zoomIdentity.translate(w / 2, h / 2).scale(scale).translate(-x, -y)
-      );
-    }
-    function polarToCartesian(x, y) {
-      const angle = x - Math.PI / 2;
-      return [Math.cos(angle) * y, Math.sin(angle) * y];
-    }
-    function fitToView() {
-      const bbox = g.node().getBBox();
-      const { w, h } = getSize();
-      const scale = Math.max(0.25, Math.min(2.2, 0.9 / Math.max(bbox.width / w, bbox.height / h)));
-      const tx = -bbox.x * scale + (w - bbox.width * scale) / 2;
-      const ty = -bbox.y * scale + (h - bbox.height * scale) / 2;
-      svg.transition().duration(380).call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
-    }
-
-    // 窗口尺寸变化时重算并适配
-    window.addEventListener('resize', () => {
-      update(root);
-      fitToView();
-    });
-
-    // 定义模态框
-    const defModal = document.getElementById('defModal');
-    const closeDefModal = document.getElementById('closeDefModal');
-    function openDef(d) {
-      const title = document.getElementById('defTitle');
-      const body = document.getElementById('defBody');
-      const meta = document.getElementById('defMeta');
-      title.textContent = d.data.name;
-      body.textContent = d.data.definition || '（暂无定义，请在导入数据中补充此概念的定义）';
-      meta.innerHTML = '';
-      (d.data.tags || []).forEach(t => {
-        const span = document.createElement('span');
-        span.className = 'tag';
-        span.textContent = t;
-        meta.appendChild(span);
-      });
-      defModal.style.display = 'block';
-    }
-    function closeModal() { defModal.style.display = 'none'; }
-    closeDefModal.onclick = closeModal;
-    window.addEventListener('click', (e) => {
-      if (e.target === defModal) closeModal();
-    });
-
-    // 搜索与高亮
-    const input = document.getElementById('searchInput');
-    const btnSearch = document.getElementById('btnSearch');
-    const btnClear = document.getElementById('btnClear');
-
-    btnSearch.addEventListener('click', () => doSearch(input.value.trim()));
-    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(input.value.trim()); });
-    btnClear.addEventListener('click', () => clearHighlight());
-
-    function doSearch(q) {
-      clearHighlight();
-      if (!q) return;
-
-      // 先找最匹配的一个（全词>包含）
-      const all = root.descendants();
-      let best = null;
-
-      const exact = all.filter(d => d.data.name === q);
-      if (exact.length) best = exact[0];
-      else {
-        const inc = all.filter(d => d.data.name.includes(q));
-        if (inc.length) best = inc[0];
-      }
-
-      if (!best) {
-        alert('未找到相关概念：' + q);
-        return;
-      }
-
-      // 展开路径
-      let p = best;
-      const toOpen = [];
-      while (p.parent) {
-        if (p.parent._children) {
-          p.parent.children = p.parent._children;
-          p.parent._children = null;
+            // 平移至视野中心
+            const [x, y] = project(target.x, target.y);
+            const pt = d3.zoomTransform(svg.node()).apply([x, y]);
+            const fullW = container.clientWidth, fullH = container.clientHeight;
+            const t = d3.zoomTransform(svg.node());
+            const desired = d3.zoomIdentity.translate(fullW/2 - (pt[0]-t.x), fullH/2 - (pt[1]-t.y)).scale(t.k);
+            svg.transition().duration(480).call(zoom.transform, desired);
         }
-        toOpen.push(p.parent);
-        p = p.parent;
-      }
-      update(best);
 
-      // 高亮并定位
-      highlightNode(best);
-      centerOnNode(best, 1.2);
-      openDef(best);
-    }
+        function doSearch(){
+            const kw = (searchInput.value || '').trim().toLowerCase();
+            clearHighlights();
+            if (!kw) { return refreshHighlights(); }
 
-    function highlightNode(d) {
-      g.selectAll("g.node")
-        .filter(n => n === d)
-        .classed("highlight", true);
-    }
+            const hits = [];
+            root.each(d => {
+                const name = d.data.name?.toLowerCase() || '';
+                const def  = d.data.definition?.toLowerCase() || '';
+                if (name.includes(kw) || def.includes(kw)) hits.push(d);
+            });
+            if (hits.length === 0){
+                detailTitle.textContent = '搜索结果';
+                detailBody.textContent  = '未找到匹配项，请尝试其他关键词。';
+                return;
+            }
+            hits.slice(0, 24).forEach(h => highlightNames.add(h.data.name));
+            refreshHighlights();
+            ensureVisible(hits[0].data.name);
 
-    function clearHighlight() {
-      g.selectAll("g.node").classed("highlight", false);
-    }
+            detailTitle.textContent = '搜索结果';
+            detailBody.innerHTML = `共定位到 ${hits.length} 个相关概念，已高亮前 ${Math.min(24,hits.length)} 项。`;
+        }
 
-    // 导入/追加 JSON 面板
-    const importPanel = document.getElementById('importPanel');
-    const btnImportToggle = document.getElementById('btnImportToggle');
-    const btnCloseImport = document.getElementById('btnCloseImport');
-    const btnAppend = document.getElementById('btnAppend');
-    const btnReplace = document.getElementById('btnReplace');
-    const importTextarea = document.getElementById('importTextarea');
+        searchBtn.addEventListener('click', doSearch);
+        searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearch(); });
+        clearBtn.addEventListener('click', ()=>{ searchInput.value=''; clearHighlights(); });
 
-    btnImportToggle.addEventListener('click', () => {
-      importPanel.style.display = (importPanel.style.display === 'block') ? 'none' : 'block';
-    });
-    btnCloseImport.addEventListener('click', () => importPanel.style.display = 'none');
-
-    btnAppend.addEventListener('click', () => {
-      try {
-        const json = JSON.parse(importTextarea.value);
-        const toAppend = Array.isArray(json) ? json : [json];
-        if (!root.data.children) root.data.children = [];
-        root.data.children.push(...toAppend);
-        root = d3.hierarchy(root.data);
-        update(root);
-        fitToView();
-        alert('追加成功！');
-      } catch (e) {
-        alert('JSON 解析失败：' + e.message);
-      }
-    });
-
-    btnReplace.addEventListener('click', () => {
-      if (!confirm('确定要用导入的 JSON 替换整个图吗？此操作不可撤销。')) return;
-      try {
-        const json = JSON.parse(importTextarea.value);
-        root = d3.hierarchy(json);
-        root.x0 = 0; root.y0 = 0;
-        update(root);
-        fitToView();
-        alert('替换成功！');
-      } catch (e) {
-        alert('JSON 解析失败：' + e.message);
-      }
-    });
-  </script>
+        // 初始详情
+        detailTitle.textContent = chemMindMap.name;
+        detailBody.textContent  = chemMindMap.definition;
+    </script>
 </body>
 </html>
