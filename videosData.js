@@ -17,11 +17,11 @@ const videosData = [
         desc: 'minimax更新，世界模拟器，Sora2角色客串......'
     },
     {
-        date: '2024-01-09',
-        url: 'https://www.bilibili.com/video/BV1xx4y1x7xx',
+        date: '2025-11-03',
+        url: 'https://b23.tv/vLPYx0B',
         thumbnail: '',
-        title: 'Docker容器化实战',
-        desc: '从零开始学习Docker，实现应用快速部署和迁移'
+        title: '用生命做视频？00后的博主都在做什么',
+        desc: '飞机，变成流星，空中客厅'
     }
 
     // ==================== 添加更多周的数据 ====================
