@@ -2,840 +2,1990 @@
 <html lang="zh-CN">
 <head>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>化学的所有概念 - 狂客·银河</title>
-
-    <!-- 继承现有站点样式（若不存在也不影响本页） -->
     <link rel="stylesheet" href="style.css">
-
-    <!-- Font Awesome 图标 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-
-    <!-- d3 for 思维导图 -->
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 页面基调（与既有站点一致） */
-        :root{
-            --grad-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --grad-2: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            --grad-3: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            --text-1:#333; --text-2:#666; --white:#fff; --muted:#aaa;
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            --card-shadow-strong: 0 15px 40px rgba(0,0,0,0.15);
+        /* 基础样式保持与原页面一致 */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', 'Arial', sans-serif;
         }
-        body{ font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; }
-        body.dark-mode{ background:#0f1221; color:#e8e8e8; }
+        
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        }
 
-        /* 页头保持一致 */
-        .header { position: sticky; top:0; z-index: 100; background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.05); }
-        body.dark-mode .header { background: rgba(26,32,44,0.85); border-color: rgba(255,255,255,0.06); }
-        .header .container { max-width: 1200px; margin: 0 auto; padding: 14px 20px; display:flex; align-items:center; justify-content: space-between; }
-        .header-left { display:flex; align-items:center; gap: 10px; flex-wrap: wrap; }
-        .logo { margin:0; font-size: 20px; background: var(--grad-1); -webkit-background-clip:text; -webkit-text-fill-color: transparent; }
-
-        /* 顶部链接按钮（沿用原站风格） */
-        .success-link,.breakthrough-link,.sky-link,.exam-link,.video-link,.game-link{
-            display:flex; align-items:center; text-decoration:none; padding:8px 14px; border-radius:10px; transition: all .2s ease; gap:8px;
+        /* 页面标题区域 */
+        .chemistry-title {
+            max-width: 1400px;
+            margin: 100px auto 30px;
+            text-align: center;
+            padding: 40px 20px;
         }
-        .success-link { background: linear-gradient(135deg,#00c6ff 0%,#0072ff 100%); color:#fff; }
-        .sky-link { background: linear-gradient(135deg,#7f7fd5 0%,#86a8e7 50%,#91eae4 100%); color:#fff; }
-        .exam-link { background: linear-gradient(135deg,#f7971e 0%,#ffd200 100%); color:#4a2; }
-        .video-link { background: linear-gradient(135deg,#30cfd0 0%,#330867 100%); color:#fff; }
-        .success-link:hover,.sky-link:hover,.exam-link:hover,.video-link:hover { transform: translateY(-2px); }
-        .controls { display:flex; align-items:center; gap:10px; }
-        .theme-toggle{ border:none; background: var(--grad-1); color:#fff; width:40px; height:40px; border-radius:10px; cursor:pointer; box-shadow:0 6px 20px rgba(102,126,234,.4); }
-        .theme-toggle:hover{ transform: translateY(-2px); }
-
-        /* 页面容器与标题 */
-        .chem-matrix-container {
-            max-width: 1300px; margin: 80px auto 60px; padding: 40px 20px;
+        
+        .chemistry-title h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #fff 0%, #ffd700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
         }
-        .chem-title { text-align:center; margin-bottom: 30px; }
-        .chem-title h1{
-            font-size: 2.6em; margin: 8px 0 10px;
-            background: var(--grad-1);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        
+        body.dark-mode .chemistry-title h1 {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .chem-title p{ color: var(--text-2); opacity:.85; }
-        body.dark-mode .chem-title p{ color:#bbb; }
-
-        /* 导图与操作区外框（延续玻璃卡片 + 渐变） */
-        .map-wrap{
-            background: var(--grad-2);
-            border-radius: 22px;
-            box-shadow: var(--card-shadow);
-            padding: 18px;
+        
+        .chemistry-title p {
+            font-size: 1.3em;
+            color: rgba(255, 255, 255, 0.9);
+            opacity: 0.9;
         }
-        body.dark-mode .map-wrap{ background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%); }
-
-        .map-toolbar{
-            display:flex; align-items:center; gap: 10px; flex-wrap: wrap;
-            background: rgba(255,255,255,0.7); border-radius: 14px; padding: 10px 12px; margin-bottom: 12px;
+        
+        /* 控制面板 */
+        .control-panel {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
         }
-        body.dark-mode .map-toolbar{ background: rgba(0,0,0,0.25); }
-
-        .tool-btn{
-            border:none; cursor:pointer; color:#fff; padding:10px 14px; border-radius: 10px;
-            box-shadow:0 6px 18px rgba(102,126,234,0.35); transition: all .2s ease; background: var(--grad-1);
+        
+        body.dark-mode .control-panel {
+            background: rgba(45, 55, 72, 0.95);
+            color: #fff;
         }
-        .tool-btn:hover{ transform: translateY(-2px); box-shadow:0 10px 24px rgba(102,126,234,0.45); }
-        .tool-btn.secondary{ background: linear-gradient(135deg,#43e97b 0%, #38f9d7 100%); box-shadow:0 6px 18px rgba(67,233,123,0.35); }
-        .tool-btn.warn{ background: linear-gradient(135deg,#ff6b6b 0%, #ee5a24 100%); box-shadow:0 6px 18px rgba(255,107,107,0.35); }
-
-        .tool-split{ flex:1 1 auto; }
-        .search-box{
-            display:flex; align-items:center; gap:8px; background: rgba(255,255,255,0.8);
-            border: 1px solid rgba(0,0,0,0.05); border-radius: 10px; padding: 8px 10px;
+        
+        .control-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
         }
-        .search-input{
-            border:none; outline:none; background:transparent; width:240px; color:#333;
+        
+        body.dark-mode .control-title {
+            color: #fff;
         }
-        body.dark-mode .search-box{ background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.08); }
-        body.dark-mode .search-input{ color:#fff; }
-
-        /* 思维导图画布 */
-        .map-canvas{
-            position: relative; width: 100%; height: 72vh; min-height: 560px; background: #ffffff;
-            border-radius: 16px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+        
+        .control-button {
+            display: block;
+            width: 100%;
+            margin: 8px 0;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(48, 207, 208, 0.3);
+        }
+        
+        /* 思维导图容器 */
+        .mindmap-container {
+            max-width: 1600px;
+            margin: 30px auto;
+            padding: 20px;
+            height: 70vh;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            position: relative;
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
-        body.dark-mode .map-canvas{ background: #111527; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04); }
-
-        /* 工具提示与侧栏 */
-        .node-tooltip{
-            position: absolute; pointer-events: none; z-index: 10; max-width: 360px;
-            background: rgba(255,255,255,0.95); color: #333; border-radius: 12px; padding: 10px 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.18); border: 1px solid rgba(0,0,0,0.05);
-            display:none;
+        
+        body.dark-mode .mindmap-container {
+            background: rgba(45, 55, 72, 0.95);
         }
-        body.dark-mode .node-tooltip{ background: rgba(45,55,72,0.96); color:#fff; border-color: rgba(255,255,255,0.08); }
-
-        .detail-panel{
-            margin-top: 12px; background: rgba(255,255,255,0.75); border-radius: 14px; padding: 14px;
-            border: 1px solid rgba(0,0,0,0.05);
+        
+        #mindmap {
+            width: 100%;
+            height: 100%;
         }
-        body.dark-mode .detail-panel{ background: rgba(0,0,0,0.25); border-color: rgba(255,255,255,0.08); }
-        .detail-title{ font-weight:700; margin-bottom:6px; }
-        .detail-body{ color: var(--text-2); }
-        body.dark-mode .detail-body{ color:#bbb; }
-
+        
         /* 节点样式 */
-        .node circle{ cursor: pointer; }
-        .node text{ font-size: 12px; user-select: none; }
-        .node text.label{ fill:#222; }
-        body.dark-mode .node text.label{ fill:#f1f1f1; }
-        .node .hit{ fill: transparent; cursor: pointer; }
-        .link{ fill: none; stroke-width: 1.6px; }
-        .link.base{ stroke: rgba(102,126,234,0.28); }
-        body.dark-mode .link.base{ stroke: rgba(148,163,255,0.25); }
-        .link.hl{ stroke: #ffb142; stroke-width: 2.2px; }
-
-        /* 返回主页悬浮按钮（保持一致） */
-        .back-button {
-            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
-            background: var(--grad-1); color:#fff; border-radius:50%;
-            display:flex; align-items:center; justify-content:center; font-size:24px;
-            box-shadow: 0 6px 20px rgba(102,126,234,0.4); cursor:pointer; transition: all .3s ease; z-index: 1000; text-decoration: none;
+        .node {
+            cursor: pointer;
         }
-        .back-button:hover{ transform: translateY(-5px); box-shadow: 0 8px 25px rgba(102,126,234,0.5); }
-
-        /* 响应式 */
+        
+        .node circle {
+            fill: #fff;
+            stroke: #333;
+            stroke-width: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode .node circle {
+            fill: #2d3748;
+            stroke: #fff;
+        }
+        
+        .node.has-children circle {
+            fill: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .node text {
+            font-size: 12px;
+            fill: #333;
+            font-weight: 500;
+            pointer-events: none;
+        }
+        
+        body.dark-mode .node text {
+            fill: #fff;
+        }
+        
+        .link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 1.5px;
+        }
+        
+        body.dark-mode .link {
+            stroke: #666;
+        }
+        
+        /* 概念详情弹窗 */
+        .concept-tooltip {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.98);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 15px;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+        
+        body.dark-mode .concept-tooltip {
+            background: rgba(45, 55, 72, 0.98);
+            border-color: #764ba2;
+            color: #fff;
+        }
+        
+        .concept-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+        
+        .concept-definition {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        body.dark-mode .concept-definition {
+            color: #ddd;
+        }
+        
+        .concept-formula {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 6px;
+            margin: 8px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        body.dark-mode .concept-formula {
+            background: #1a202c;
+        }
+        
+        /* 搜索框 */
+        .search-container {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+        }
+        
+        .search-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+        
+        body.dark-mode .search-box {
+            background: rgba(45, 55, 72, 0.95);
+        }
+        
+        .search-box input {
+            border: none;
+            background: none;
+            outline: none;
+            font-size: 16px;
+            width: 300px;
+            color: #333;
+        }
+        
+        body.dark-mode .search-box input {
+            color: #fff;
+        }
+        
+        .search-box i {
+            color: #667eea;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* 缩放控制 */
+        .zoom-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .zoom-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* 统计信息 */
+        .stats-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+        
+        body.dark-mode .stats-panel {
+            background: rgba(45, 55, 72, 0.95);
+            color: #fff;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .stat-item i {
+            color: #667eea;
+            margin-right: 8px;
+        }
+        
+        /* 响应式设计 */
         @media (max-width: 768px) {
-            .chem-title h1{ font-size: 2.1em; }
-            .map-canvas{ height: 70vh; }
-            .search-input{ width: 160px; }
+            .chemistry-title h1 {
+                font-size: 2.5em;
+            }
+            
+            .control-panel {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 20px auto;
+                max-width: 300px;
+            }
+            
+            .search-box input {
+                width: 200px;
+            }
+            
+            .mindmap-container {
+                height: 60vh;
+                margin: 20px 10px;
+            }
+        }
+        
+        /* 加载动画 */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .loading i {
+            font-size: 48px;
+            color: #667eea;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body data-page="chem-concepts">
-    <!-- 顶部导航（延续站点结构与按钮） -->
+<body data-page="chemistry">
     <header class="header">
         <div class="container">
             <div class="header-left">
                 <h1 class="logo">狂客·银河</h1>
                 <a class="success-link" href="success.html">
-                    <span class="success-icon"><i class="fas fa-meteor"></i></span>
+                    <span class="success-icon">
+                        <i class="fas fa-meteor"></i>
+                    </span>
                     <span class="success-text">成功日记</span>
                 </a>
                 <a class="breakthrough-link" href="https://wvwp6ekrk9f.feishu.cn/share/base/view/shrcnGZZB8XUcRr7ChjRqeL27ic">
-                    <span class="breakthrough-icon"><i class="fas fa-book-open"></i></span>
+                    <span class="breakthrough-icon">
+                        <i class="fas fa-book-open"></i>
+                    </span>
                     <span class="breakthrough-text">《自学突围》</span>
                 </a>
                 <a class="sky-link" href="reading.html">
-                    <span class="sky-icon"><i class="fas fa-star"></i></span>
+                    <span class="sky-icon">
+                        <i class="fas fa-star"></i>
+                    </span>
                     <span class="sky-text">星空</span>
                 </a>
                 <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/">
-                    <span class="exam-icon"><i class="fas fa-graduation-cap"></i></span>
+                    <span class="exam-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </span>
                     <span class="exam-text">冬之街小店</span>
                 </a>
                 <a class="video-link" href="video.html">
-                    <span class="video-icon"><i class="fas fa-video"></i></span>
+                    <span class="video-icon">
+                        <i class="fas fa-video"></i>
+                    </span>
                     <span class="video-text">视频矩阵</span>
                 </a>
-                <a class="game-link" href="games.html">
-                    <span class="game-icon"><i class="fas fa-gamepad"></i></span>
-                    <span class="game-text">自制游戏</span>
+                <a class="ai-link" href="ai.html">
+                    <span class="ai-icon">
+                        <i class="fas fa-robot"></i>
+                    </span>
+                    <span class="ai-text">高考AI助手</span>
                 </a>
             </div>
             <div class="controls">
-                <button id="themeToggle" class="theme-toggle" title="主题切换">
+                <button id="themeToggle" class="theme-toggle">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <div class="chem-matrix-container">
-        <div class="chem-title">
-            <div style="font-size: 20px; letter-spacing: .2em; opacity:.85;">CHEMISTRY</div>
-            <h1>化学的所有概念</h1>
-            <p>以第一性原理为纲，完整覆盖高考化学核心概念与考点，支持思维导图缩放/伸缩/搜索，助你构建“从本原到满分”的知识体系</p>
-        </div>
+    <!-- 页面标题 -->
+    <div class="chemistry-title">
+        <h1>⚗️ 化学的所有概念</h1>
+        <p>从原子到宇宙，探索化学学科的完整知识体系</p>
+    </div>
 
-        <div class="map-wrap">
-            <!-- 工具条 -->
-            <div class="map-toolbar">
-                <button class="tool-btn" id="fitBtn" title="适配视窗">
-                    <i class="fas fa-compress-arrows-alt"></i> 适配
-                </button>
-                <button class="tool-btn" id="expandAllBtn" title="展开全部">
-                    <i class="fas fa-folder-open"></i> 全部展开
-                </button>
-                <button class="tool-btn warn" id="collapseAllBtn" title="折叠到一级">
-                    <i class="fas fa-folder"></i> 折叠到一级
-                </button>
-
-                <div class="tool-split"></div>
-
-                <div class="search-box">
-                    <i class="fas fa-search" style="color:#667eea;"></i>
-                    <input id="searchInput" class="search-input" type="text" placeholder="搜索概念名或关键词（回车）" />
-                    <button class="tool-btn secondary" id="searchBtn"><i class="fas fa-highlighter"></i> 搜索</button>
-                    <button class="tool-btn" id="clearSearchBtn"><i class="fas fa-eraser"></i> 清除</button>
-                </div>
-            </div>
-
-            <!-- 画布 -->
-            <div id="mindmap" class="map-canvas"></div>
-
-            <!-- 详情面板 -->
-            <div class="detail-panel" id="detailPanel">
-                <div class="detail-title" id="detailTitle">提示</div>
-                <div class="detail-body" id="detailBody">
-                    - 单击节点：展开/折叠该分支；<br/>
-                    - 悬停节点：查看简要定义；<br/>
-                    - 拖拽空白处：平移导图；滚轮：缩放；<br/>
-                    - 使用上方搜索框可定位并高亮相关概念；<br/>
-                    - “适配”一键居中，“全部展开/折叠到一级”快速切换视野。
-                </div>
-            </div>
+    <!-- 搜索框 -->
+    <div class="search-container">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="conceptSearch" placeholder="搜索化学概念...">
         </div>
     </div>
 
-    <!-- 返回首页 -->
+    <!-- 控制面板 -->
+    <div class="control-panel">
+        <div class="control-title">🎮 控制面板</div>
+        <button class="control-button" onclick="expandAll()">
+            <i class="fas fa-expand-arrows-alt"></i> 展开全部
+        </button>
+        <button class="control-button" onclick="collapseAll()">
+            <i class="fas fa-compress-arrows-alt"></i> 收起全部
+        </button>
+        <button class="control-button" onclick="resetView()">
+            <i class="fas fa-undo"></i> 重置视图
+        </button>
+        <button class="control-button" onclick="exportData()">
+            <i class="fas fa-download"></i> 导出数据
+        </button>
+    </div>
+
+    <!-- 思维导图容器 -->
+    <div class="mindmap-container">
+        <div class="loading" id="loading">
+            <i class="fas fa-flask"></i>
+            <p>正在加载化学概念...</p>
+        </div>
+        <div id="mindmap"></div>
+        
+        <!-- 缩放控制 -->
+        <div class="zoom-controls">
+            <button class="zoom-btn" onclick="zoomIn()">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button class="zoom-btn" onclick="zoomOut()">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button class="zoom-btn" onclick="fitToScreen()">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 统计面板 -->
+    <div class="stats-panel">
+        <div class="stat-item">
+            <i class="fas fa-sitemap"></i>
+            <span>总概念数: <strong id="totalConcepts">0</strong></span>
+        </div>
+        <div class="stat-item">
+            <i class="fas fa-layer-group"></i>
+            <span>层级数: <strong id="totalLevels">0</strong></span>
+        </div>
+        <div class="stat-item">
+            <i class="fas fa-eye"></i>
+            <span>当前显示: <strong id="visibleNodes">0</strong></span>
+        </div>
+    </div>
+
+    <!-- 概念详情弹窗 -->
+    <div class="concept-tooltip" id="conceptTooltip">
+        <div class="concept-title" id="tooltipTitle"></div>
+        <div class="concept-definition" id="tooltipDefinition"></div>
+        <div class="concept-formula" id="tooltipFormula" style="display: none;"></div>
+    </div>
+
+    <!-- 返回按钮 -->
     <a href="index.html" class="back-button" title="返回首页">
         <i class="fas fa-home"></i>
     </a>
 
+    <!-- 引入D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
     <script>
-        // 主题切换（继承站点逻辑）
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        const icon = themeToggle.querySelector('i');
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        if (currentTheme === 'dark') {
-            body.classList.add('dark-mode');
-            icon.classList.replace('fa-moon','fa-sun');
-        }
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            if (body.classList.contains('dark-mode')) {
-                icon.classList.replace('fa-moon','fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                icon.classList.replace('fa-sun','fa-moon');
-                localStorage.setItem('theme', 'light');
-            }
-        });
-
-        // =============== 化学思维导图数据 ===============
-        // 说明：
-        // - 以“第一性原理→高考核心”为主线，覆盖高考化学知识体系；
-        // - 每个节点包含 name（名称）和可选 definition（定义），children 为子概念；
-        // - 您可后续继续在相应分支增删节点，结构会自动渲染。
-        const chemMindMap = {
-            name: "化学的所有概念",
-            definition: "以微观粒子与相互作用为本原，研究物质的组成、结构、性质及变化规律的科学。",
+        // 化学概念数据结构
+        const chemistryConcepts = {
+            name: "化学",
+            definition: "研究物质的组成、结构、性质、变化规律以及应用的科学",
+            formula: "",
             children: [
                 {
-                    name: "物质与分类",
-                    definition: "按组成与均一性将客体划分为纯净物和混合物；纯净物含固定化学式，混合物组分比可变。",
+                    name: "基础概念",
+                    definition: "化学学科的基本概念和术语",
                     children: [
                         {
                             name: "物质",
-                            definition: "具有一定质量和体积、能够占据空间的一切客观存在。",
+                            definition: "占据空间并具有质量的一切客观存在",
+                            formula: "ρ = m/V",
                             children: [
-                                { name: "纯净物", definition: "只含一种化学纯物质的样品，具有确定的化学式与性质。" ,
-                                  children: [
-                                      { name: "元素", definition: "具有相同核电荷数的一类原子的总称。化学变化中不能再分为更简单的物质。"},
-                                      { name: "化合物", definition: "由两种或两种以上元素组成的纯净物，具有确定的组成比例与结构。"}
-                                  ]
+                                {
+                                    name: "纯净物",
+                                    definition: "由同种分子组成的物质",
+                                    children: [
+                                        {
+                                            name: "单质",
+                                            definition: "由同一种元素组成的纯净物",
+                                            formula: "元素符号表示",
+                                            children: [
+                                                {
+                                                    name: "金属单质",
+                                                    definition: "具有金属性的元素单质，如Fe、Cu、Al",
+                                                    properties: "导电性、延展性、金属光泽"
+                                                },
+                                                {
+                                                    name: "非金属单质",
+                                                    definition: "不具有金属性的元素单质，如O₂、N₂、C",
+                                                    properties: "不导电、脆性、无金属光泽"
+                                                },
+                                                {
+                                                    name: "稀有气体",
+                                                    definition: "元素周期表第18族元素",
+                                                    properties: "化学性质稳定、外层电子满"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "化合物",
+                                            definition: "由不同种元素组成的纯净物",
+                                            formula: "化学式表示",
+                                            children: [
+                                                {
+                                                    name: "有机化合物",
+                                                    definition: "含碳化合物（除CO、CO₂、碳酸盐等）",
+                                                    formula: "CₙH₂ₙ₊₂",
+                                                    children: [
+                                                        {
+                                                            name: "烷烃",
+                                                            definition: "饱和链烃，分子中只有C-C单键",
+                                                            formula: "CₙH₂ₙ₊₂"
+                                                        },
+                                                        {
+                                                            name: "烯烃",
+                                                            definition: "不饱和链烃，分子中含C=C双键",
+                                                            formula: "CₙH₂ₙ"
+                                                        },
+                                                        {
+                                                            name: "炔烃",
+                                                            definition: "不饱和链烃，分子中含C≡C三键",
+                                                            formula: "CₙH₂ₙ₋₂"
+                                                        },
+                                                        {
+                                                            name: "芳香烃",
+                                                            definition: "含苯环结构的烃类",
+                                                            formula: "C₆H₆"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    name: "无机化合物",
+                                                    definition: "除有机化合物外的所有化合物",
+                                                    children: [
+                                                        {
+                                                            name: "氧化物",
+                                                            definition: "由氧和另一种元素组成的化合物",
+                                                            formula: "AₓOᵧ"
+                                                        },
+                                                        {
+                                                            name: "酸",
+                                                            definition: "在水溶液中电离出的阳离子全部是H⁺的化合物",
+                                                            formula: "HₙA"
+                                                        },
+                                                        {
+                                                            name: "碱",
+                                                            definition: "在水溶液中电离出的阴离子全部是OH⁻的化合物",
+                                                            formula: "M(OH)ₙ"
+                                                        },
+                                                        {
+                                                            name: "盐",
+                                                            definition: "由金属离子（或铵根离子）和酸根离子组成的化合物",
+                                                            formula: "MₙAₘ"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
                                 },
-                                { name: "混合物", definition: "由两种或两种以上纯净物机械混合而成，组分比例可变，性质受组分影响。"}
+                                {
+                                    name: "混合物",
+                                    definition: "由两种或多种物质混合而成的物质",
+                                    children: [
+                                        {
+                                            name: "溶液",
+                                            definition: "一种或多种物质分散在另一种物质中形成的均一混合物",
+                                            formula: "溶质 + 溶剂 = 溶液",
+                                            children: [
+                                                {
+                                                    name: "饱和溶液",
+                                                    definition: "在一定温度和压力下，不能再溶解更多溶质的溶液"
+                                                },
+                                                {
+                                                    name: "不饱和溶液",
+                                                    definition: "还能继续溶解更多溶质的溶液"
+                                                },
+                                                {
+                                                    name: "过饱和溶液",
+                                                    definition: "溶解的溶质量超过饱和溶液的溶液"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "悬浊液",
+                                            definition: "固体颗粒分散在液体中形成的不均匀混合物"
+                                        },
+                                        {
+                                            name: "乳浊液",
+                                            definition: "液体小滴分散在另一种液体中形成的不均匀混合物"
+                                        },
+                                        {
+                                            name: "胶体",
+                                            definition: "粒子大小在1-100nm之间的分散系",
+                                            properties: "丁达尔效应、布朗运动"
+                                        }
+                                    ]
+                                }
                             ]
                         },
                         {
-                            name: "变化类型",
-                            definition: "从是否生成新物质区分物理变化与化学变化。",
+                            name: "元素",
+                            definition: "具有相同质子数的原子的总称",
+                            formula: "元素符号表示",
                             children: [
-                                { name: "物理变化", definition: "不生成新物质的变化，如状态、形态改变。" },
-                                { name: "化学变化", definition: "生成新物质的变化，涉及化学键断裂与生成。" }
-                            ]
-                        },
-                        {
-                            name: "溶液与浓度",
-                            definition: "溶质分散在溶剂中形成均相体系，常用浓度表示组成。",
-                            children: [
-                                { name: "溶质", definition: "被溶解的物质。" },
-                                { name: "溶剂", definition: "起溶解作用并占多数的组分。" },
-                                { name: "溶解度", definition: "在一定温度下，达到饱和时每100 g 溶剂所溶解溶质的质量。" },
-                                { name: "质量分数 w", definition: "溶质质量与溶液质量之比，通常以百分数表示。" },
-                                { name: "物质的量浓度 c", definition: "每升溶液所含溶质的物质的量（mol·L⁻¹）。" }
+                                {
+                                    name: "元素周期表",
+                                    definition: "按原子序数排列的元素表",
+                                    children: [
+                                        {
+                                            name: "周期",
+                                            definition: "元素周期表中的横行，表示电子层数相同",
+                                            children: [
+                                                { name: "短周期", definition: "第1-3周期，电子层数1-3" },
+                                                { name: "长周期", definition: "第4-7周期，电子层数4-7" }
+                                            ]
+                                        },
+                                        {
+                                            name: "族",
+                                            definition: "元素周期表中的纵列，表示最外层电子数相同",
+                                            children: [
+                                                { name: "主族", definition: "第IA-VIIA族" },
+                                                { name: "副族", definition: "第IIIB-VIIB族和VIII族" },
+                                                { name: "第零族", definition: "稀有气体元素" }
+                                            ]
+                                        },
+                                        {
+                                            name: "区域划分",
+                                            definition: "根据电子层结构划分的元素区域",
+                                            children: [
+                                                { name: "s区元素", definition: "IA、IIA族" },
+                                                { name: "p区元素", definition: "IIIA-VIIA族和0族" },
+                                                { name: "d区元素", definition: "过渡元素" },
+                                                { name: "f区元素", definition: "镧系和锕系" }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "元素性质",
+                                    definition: "元素固有的物理和化学特征",
+                                    children: [
+                                        {
+                                            name: "原子半径",
+                                            definition: "原子核到最外层电子的距离",
+                                            formula: "rₐ",
+                                            trends: "同周期递减，同族递增"
+                                        },
+                                        {
+                                            name: "电负性",
+                                            definition: "原子吸引电子的能力",
+                                            formula: "χ (鲍林标度)",
+                                            trends: "同周期递增，同族递减"
+                                        },
+                                        {
+                                            name: "电离能",
+                                            definition: "从气态原子中移去电子所需的能量",
+                                            formula: "I₁, I₂, I₃...",
+                                            trends: "同周期递增，同族递减"
+                                        },
+                                        {
+                                            name: "电子亲和能",
+                                            definition: "气态原子获得电子时释放的能量",
+                                            formula: "EA"
+                                        }
+                                    ]
+                                }
                             ]
                         }
                     ]
                 },
                 {
-                    name: "原子结构与元素周期律",
-                    definition: "原子的核电荷与核外电子排布决定微观结构；元素性质随周期与族呈规律变化。",
+                    name: "原子结构与化学键",
+                    definition: "原子的内部结构和原子间的相互作用",
                     children: [
                         {
-                            name: "原子",
-                            definition: "由带正电的原子核与核外电子构成的中性微粒。",
+                            name: "原子结构",
+                            definition: "原子的组成和电子排布",
                             children: [
-                                { name: "核电荷数 Z", definition: "原子核所带正电荷数，等于核内质子数与核外电子数（中性原子）。" },
-                                { name: "同位素", definition: "核电荷数相同而中子数不同的一组原子。" },
-                                { name: "相对原子质量", definition: "以 12C 的质量的 1/12 为基准的原子平均质量（无量纲）。" },
-                                { name: "电子排布", definition: "电子按能量由低到高占据轨道形成排布，如1s²2s²2p⁶…" },
-                                { name: "价电子", definition: "参与化学反应、决定化学性质的最外层电子。"}
+                                {
+                                    name: "原子核",
+                                    definition: "由质子和中子构成，位于原子中心",
+                                    formula: "质量数 A = 质子数 Z + 中子数 N",
+                                    children: [
+                                        {
+                                            name: "质子",
+                                            definition: "带正电的粒子，决定元素种类",
+                                            formula: "电荷 +1，质量 ≈ 1u"
+                                        },
+                                        {
+                                            name: "中子",
+                                            definition: "不带电的粒子，影响同位素",
+                                            formula: "电荷 0，质量 ≈ 1u"
+                                        },
+                                        {
+                                            name: "同位素",
+                                            definition: "质子数相同但中子数不同的原子",
+                                            example: "¹²C, ¹³C, ¹⁴C"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "电子层",
+                                    definition: "电子在原子核外的排布层次",
+                                    formula: "n = 1, 2, 3, 4, 5, 6, 7 (K, L, M, N, O, P, Q)",
+                                    children: [
+                                        {
+                                            name: "电子亚层",
+                                            definition: "同一电子层内不同能量的轨道",
+                                            formula: "s, p, d, f",
+                                            children: [
+                                                { name: "s亚层", definition: "球形轨道，最多2个电子" },
+                                                { name: "p亚层", definition: "哑铃形轨道，最多6个电子" },
+                                                { name: "d亚层", definition: "较复杂形状，最多10个电子" },
+                                                { name: "f亚层", definition: "最复杂形状，最多14个电子" }
+                                            ]
+                                        },
+                                        {
+                                            name: "电子排布",
+                                            definition: "电子在各轨道中的分布",
+                                            principles: [
+                                                "能量最低原理",
+                                                "泡利不相容原理",
+                                                "洪特规则"
+                                            ]
+                                        }
+                                    ]
+                                }
                             ]
                         },
-                        {
-                            name: "元素周期表",
-                            definition: "按核电荷数递增排列，元素性质呈周期性变化的图表。",
-                            children: [
-                                { name: "周期", definition: "电子层数相同的横行。" },
-                                { name: "族", definition: "最外层电子数相近、性质相近的纵列。" },
-                                { name: "周期律", definition: "随 Z 增大，原子半径、电离能、电负性等呈周期变化。" },
-                                { name: "金属性/非金属性", definition: "元素失电子/得电子倾向的强弱特征。" },
-                                { name: "氧化数", definition: "用以表示元素在化合物或离子中得失电子数目的书写习惯。"}
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: "化学键与物质结构",
-                    definition: "微粒间通过电子转移、共享或金属键合形成化学键及多种聚集状态，决定物质性质。",
-                    children: [
                         {
                             name: "化学键",
-                            definition: "使原子结合成分子或晶体的强相互作用。",
+                            definition: "原子间的强烈相互作用",
                             children: [
-                                { name: "离子键", definition: "金属与非金属间通过电子转移形成阳/阴离子并由静电作用结合。" },
-                                { name: "共价键", definition: "原子通过共享电子对形成的定向键；可分极性键与非极性键。" },
-                                { name: "金属键", definition: "金属阳离子与离域电子之间的作用，解释延展性与导电性。" }
-                            ]
-                        },
-                        {
-                            name: "分子极性与作用力",
-                            definition: "键极性与空间构型共同决定分子极性；分子间作用力影响熔/沸点等宏观性质。",
-                            children: [
-                                { name: "键极性", definition: "由成键原子电负性差异引起的电荷偏移。" },
-                                { name: "分子极性", definition: "分子内电荷中心不重合导致的整体偶极矩。" },
-                                { name: "氢键", definition: "H 与强电负性原子间的特殊作用力，显著提高沸点与粘度。" },
-                                { name: "范德华力", definition: "瞬时偶极与诱导偶极引起的弱作用力。"}
-                            ]
-                        },
-                        {
-                            name: "晶体类型与性质",
-                            definition: "微粒几何重复排列形成的固体；不同键型决定不同性质。",
-                            children: [
-                                { name: "离子晶体", definition: "阴阳离子构成，硬而脆、熔点高，熔融或水溶液能导电。" },
-                                { name: "分子晶体", definition: "分子为结构单元，分子间作用力为主，熔点低，多为绝缘体。" },
-                                { name: "原子晶体", definition: "共价键贯通全晶体，如金刚石、SiO₂，硬度大、熔点高。" },
-                                { name: "金属晶体", definition: "金属阳离子与自由电子海，导电导热性优良。"}
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: "化学反应与能量",
-                    definition: "反应本质为化学键断裂/生成与能量交换，守恒规律与热化学支配能量变化。",
-                    children: [
-                        { name: "化学方程式", definition: "用化学式与系数表示反应的定量表达，应遵循质量与电荷守恒。" },
-                        { name: "反应类型", definition: "化合、分解、置换、复分解、氧化还原等类型。" },
-                        { name: "反应热/焓变 ΔH", definition: "在规定条件下反应放出或吸收的热量；放热 ΔH<0，吸热 ΔH>0。" },
-                        { name: "盖斯定律", definition: "反应焓变与途径无关，只与初末状态有关，可进行焓的代数加和。"}
-                    ]
-                },
-                {
-                    name: "反应速率与化学平衡",
-                    definition: "速率描述单位时间内反应进程；平衡为可逆反应正逆速率相等的动态状态。",
-                    children: [
-                        { name: "反应速率", definition: "单位时间内反应物浓度的减少或生成物浓度的增加。" },
-                        { name: "影响因素", definition: "浓度、温度、催化剂、接触面积等影响速率。" },
-                        { name: "化学平衡", definition: "可逆反应在一定条件下正逆反应速率相等、宏观性质稳定的状态。" },
-                        { name: "平衡常数 K", definition: "恒温下由平衡浓度比确定的常数，反映平衡位置。" },
-                        { name: "勒夏特列原理", definition: "条件改变时，平衡将向抵消该改变的方向移动。"}
-                    ]
-                },
-                {
-                    name: "电化学与离子反应",
-                    definition: "溶液中离子电离与迁移规律；氧化还原与电能/化学能的相互转化。",
-                    children: [
-                        {
-                            name: "电解质与电离",
-                            definition: "在水溶液或熔融状态下能导电的物质；电离生成离子。",
-                            children: [
-                                { name: "强电解质", definition: "在水中几乎完全电离（如强酸、强碱、可溶性盐）。" },
-                                { name: "弱电解质", definition: "在水中部分电离（如弱酸、弱碱）。" },
-                                { name: "电离方程式", definition: "用离子形式表示电解质电离过程的式子。" },
-                                { name: "离子方程式", definition: "剔除未参与反应的旁观离子，保留实质反应粒子的方程式。" }
-                            ]
-                        },
-                        {
-                            name: "氧化还原反应",
-                            definition: "伴随电子得失的反应；得电子为还原，失电子为氧化。",
-                            children: [
-                                { name: "氧化剂/还原剂", definition: "使他物氧化/还原且自身发生相反变化的物质。" },
-                                { name: "电子守恒法", definition: "以电子转移守恒配平氧化还原反应的常用方法。"}
-                            ]
-                        },
-                        {
-                            name: "原电池与电解",
-                            definition: "化学能与电能的转化装置与过程。",
-                            children: [
-                                { name: "原电池", definition: "自发氧化还原反应将化学能转化为电能的装置，阳极氧化、阴极还原。" },
-                                { name: "电极反应式", definition: "分别表示阳极与阴极的半反应。" },
-                                { name: "电解", definition: "外电源供能驱动非自发反应发生的过程。" }
-                            ]
-                        },
-                        {
-                            name: "水的电离与 pH",
-                            definition: "水自电离生成 H⁺ 与 OH⁻；pH=−lg[H⁺] 表征溶液酸碱性。",
-                            children: [
-                                { name: "中性/酸性/碱性", definition: "[H⁺]=[OH⁻]/[H⁺]＞[OH⁻]/[H⁺]＜[OH⁻]。" },
-                                { name: "盐类水解", definition: "某些盐的离子与水反应导致溶液呈酸或碱性。"}
+                                {
+                                    name: "离子键",
+                                    definition: "正负离子间的静电引力",
+                                    formula: "Na⁺ + Cl⁻ → NaCl",
+                                    properties: "无方向性、无饱和性",
+                                    examples: "NaCl、MgO、CaF₂"
+                                },
+                                {
+                                    name: "共价键",
+                                    definition: "原子间共享电子对形成的化学键",
+                                    children: [
+                                        {
+                                            name: "单键",
+                                            definition: "共享一对电子的共价键",
+                                            formula: "A-B",
+                                            examples: "H₂、Cl₂、CH₄"
+                                        },
+                                        {
+                                            name: "双键",
+                                            definition: "共享两对电子的共价键",
+                                            formula: "A=B",
+                                            examples: "O₂、CO₂、C₂H₄"
+                                        },
+                                        {
+                                            name: "三键",
+                                            definition: "共享三对电子的共价键",
+                                            formula: "A≡B",
+                                            examples: "N₂、C₂H₂、HCN"
+                                        },
+                                        {
+                                            name: "极性共价键",
+                                            definition: "电子对偏向某一原子的共价键",
+                                            formula: "δ⁺A-Bδ⁻",
+                                            examples: "HCl、H₂O"
+                                        },
+                                        {
+                                            name: "非极性共价键",
+                                            definition: "电子对不偏向任何原子的共价键",
+                                            examples: "H₂、Cl₂、N₂"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "金属键",
+                                    definition: "金属原子与自由电子间的相互作用",
+                                    properties: "金属的导电性、导热性、延展性",
+                                    examples: "Fe、Cu、Al"
+                                },
+                                {
+                                    name: "氢键",
+                                    definition: "与H相连的原子与F、O、N等原子间的相互作用",
+                                    formula: "X-H...Y (X,Y=F,O,N)",
+                                    properties: "分子间作用力，影响沸点和溶解性",
+                                    examples: "水中的氢键、DNA中的氢键"
+                                }
                             ]
                         }
                     ]
                 },
                 {
-                    name: "物质的量与化学计量",
-                    definition: "以摩尔为桥梁实现微粒世界与宏观测量的转换，是化学计算的核心。",
-                    children: [
-                        { name: "物质的量 n", definition: "表示微粒多少的物理量，单位为摩尔（mol）。" },
-                        { name: "阿伏加德罗常数 N_A", definition: "1 mol 任意微粒所含的基本微粒数（6.02×10²³·mol⁻¹）。" },
-                        { name: "摩尔质量 M", definition: "每 mol 物质的质量（g·mol⁻¹）。" },
-                        { name: "气体摩尔体积 V_m", definition: "同温同压下每 mol 气体所占体积（STP约22.4 L·mol⁻¹）。" },
-                        { name: "守恒关系", definition: "质量守恒、电荷守恒、元素守恒、电子守恒。" },
-                        { name: "计量计算", definition: "基于化学方程式量的关系进行的定量推算。"}
-                    ]
-                },
-                {
-                    name: "有机化学基础与高分子",
-                    definition: "以碳为骨架的化合物及其反应规律；官能团决定性质与反应类型。",
+                    name: "化学计量学",
+                    definition: "研究化学中数量关系的学科",
                     children: [
                         {
-                            name: "烃与衍生物",
-                            definition: "只含 C、H 的烃与官能团取代后的化合物。",
+                            name: "物质的量",
+                            definition: "表示物质所含基本单元数量的物理量",
+                            formula: "n = N/Nₐ",
+                            unit: "摩尔 (mol)",
                             children: [
-                                { name: "烷烃（CnH2n+2）", definition: "饱和烃，特征反应为取代；构象与异构常见。" },
-                                { name: "烯烃（CnH2n）", definition: "含C=C双键，易加成与加聚。" },
-                                { name: "炔烃（CnH2n-2）", definition: "含C≡C三键，易加成。" },
-                                { name: "芳香烃（如苯）", definition: "芳香性体系，典型反应为亲电取代。"},
-                                { name: "卤代烃", definition: "烃基上的 H 被卤素取代，易发生取代/消去。" },
-                                { name: "醇", definition: "含羟基（–OH），可发生氧化、酯化、脱水。" },
-                                { name: "醛/酮", definition: "含 –CHO/羰基，醛具还原性（银镜/斐林）。" },
-                                { name: "羧酸", definition: "含 –COOH，酸性，能与醇酯化生成酯。" },
-                                { name: "酯", definition: "由酸与醇缩合并脱水形成，可水解。"}
+                                {
+                                    name: "摩尔质量",
+                                    definition: "1摩尔物质的质量",
+                                    formula: "M = m/n",
+                                    unit: "g/mol"
+                                },
+                                {
+                                    name: "气体摩尔体积",
+                                    definition: "1摩尔气体在标准状况下的体积",
+                                    formula: "Vm = V/n = 22.4 L/mol (STP)"
+                                },
+                                {
+                                    name: "物质的量浓度",
+                                    definition: "单位体积溶液中所含溶质的物质的量",
+                                    formula: "c = n/V",
+                                    unit: "mol/L"
+                                }
                             ]
                         },
                         {
-                            name: "同分异构与命名",
-                            definition: "不同结构但组成相同称同分异构；系统命名遵循碳链主干与取代基定位规则。",
+                            name: "化学方程式",
+                            definition: "用化学式表示化学反应的方程式",
                             children: [
-                                { name: "结构异构", definition: "碳骨架异构、官能团位置异构等。" },
-                                { name: "几何/光学异构", definition: "因双键或手性中心导致的空间构型差异。" }
+                                {
+                                    name: "配平原则",
+                                    definition: "遵循质量守恒定律",
+                                    rules: [
+                                        "原子个数守恒",
+                                        "电荷数守恒",
+                                        "电子数守恒"
+                                    ]
+                                },
+                                {
+                                    name: "化学计量数",
+                                    definition: "化学方程式中各物质的系数",
+                                    formula: "aA + bB → cC + dD"
+                                }
                             ]
                         },
                         {
-                            name: "高分子与材料",
-                            definition: "由大量小分子经聚合形成的大分子物质。",
+                            name: "溶液浓度",
+                            definition: "表示溶液中溶质含量的物理量",
                             children: [
-                                { name: "加聚反应", definition: "不生成小分子，如乙烯 → 聚乙烯（PE）。" },
-                                { name: "缩聚反应", definition: "生成小分子（如水/氨），如己二酸+己二胺→尼龙。" },
-                                { name: "常见聚合物", definition: "PE、PP、PVC、PET、PA、PS等，广泛用于材料领域。"}
+                                {
+                                    name: "质量分数",
+                                    definition: "溶质质量与溶液质量之比",
+                                    formula: "ω = m溶质/m溶液 × 100%"
+                                },
+                                {
+                                    name: "体积分数",
+                                    definition: "溶质体积与溶液体积之比",
+                                    formula: "φ = V溶质/V溶液 × 100%"
+                                },
+                                {
+                                    name: "ppm/ppb",
+                                    definition: "百万分之一/十亿分之一",
+                                    formula: "1 ppm = 1 mg/kg"
+                                }
                             ]
                         }
                     ]
                 },
                 {
-                    name: "无机化学元素及化合物",
-                    definition: "常见主族/过渡元素的单质性质与重要化合物的制备与用途。",
+                    name: "化学反应原理",
+                    definition: "研究化学反应机理和规律的理论",
                     children: [
                         {
-                            name: "金属元素",
-                            definition: "具有良好导电导热性与延展性的元素。",
+                            name: "反应类型",
+                            definition: "化学反应的基本分类",
                             children: [
-                                { name: "Na 与化合物", definition: "活泼金属，与水反应放氢；NaOH 强碱；NaCl 常见盐。" },
-                                { name: "Mg/Al 与化合物", definition: "两性氧化物/氢氧化物特征；铝热反应；Al 有致密氧化膜。" },
-                                { name: "Fe 与化合物", definition: "铁的化合价+2/+3；Fe₂O₃/Fe₃O₄；防锈与合金。" },
-                                { name: "Cu 与化合物", definition: "导电性好；CuO/Cu(OH)₂；与稀酸反应特征。"}
+                                {
+                                    name: "化合反应",
+                                    definition: "两种或多种物质生成一种新物质",
+                                    formula: "A + B → AB",
+                                    examples: "2H₂ + O₂ → 2H₂O"
+                                },
+                                {
+                                    name: "分解反应",
+                                    definition: "一种物质生成两种或多种新物质",
+                                    formula: "AB → A + B",
+                                    examples: "2H₂O → 2H₂ + O₂"
+                                },
+                                {
+                                    name: "置换反应",
+                                    definition: "一种单质与化合物反应生成另一种单质和化合物",
+                                    formula: "A + BC → AC + B",
+                                    examples: "Zn + CuSO₄ → ZnSO₄ + Cu"
+                                },
+                                {
+                                    name: "复分解反应",
+                                    definition: "两种化合物相互交换成分生成另外两种化合物",
+                                    formula: "AB + CD → AD + CB",
+                                    examples: "NaCl + AgNO₃ → NaNO₃ + AgCl↓"
+                                },
+                                {
+                                    name: "氧化还原反应",
+                                    definition: "有电子转移的化学反应",
+                                    formula: "氧化剂 + 还原剂 → 氧化产物 + 还原产物",
+                                    concepts: [
+                                        "氧化数变化",
+                                        "电子转移",
+                                        "化合价升降"
+                                    ]
+                                }
                             ]
                         },
                         {
-                            name: "非金属元素",
-                            definition: "得电子倾向较强，形成酸性氧化物与非金属氢化物等。",
+                            name: "化学平衡",
+                            definition: "可逆反应中正逆反应速率相等的状态",
                             children: [
-                                { name: "H/O 与化合物", definition: "H₂、H₂O、H₂O₂；水的极性与氢键；过氧化物性质。" },
-                                { name: "C 与化合物", definition: "C的同素异形体；CO/CO₂；碳酸盐与热分解。" },
-                                { name: "N 与化合物", definition: "NH₃碱性与易溶性；HNO₃强氧化性；NO/NO₂转化。" },
-                                { name: "S 与化合物", definition: "SO₂/SO₃；H₂SO₄强酸性与脱水性；接触法制酸原理。" },
-                                { name: "Cl 与化合物", definition: "HCl 强酸；Cl₂氧化性；漂白与消毒。" },
-                                { name: "Si 与化合物", definition: "SiO₂与硅酸盐；玻璃与陶瓷材料。"}
+                                {
+                                    name: "平衡常数",
+                                    definition: "平衡时产物浓度幂之积与反应物浓度幂之积的比值",
+                                    formula: "Kc = [C]ᶜ[D]ᵈ/[A]ᵃ[B]ᵇ"
+                                },
+                                {
+                                    name: "勒夏特列原理",
+                                    definition: "平衡移动的定性规律",
+                                    principle: "如果改变影响平衡的一个条件，平衡就向能够减弱这种改变的方向移动"
+                                },
+                                {
+                                    name: "平衡移动",
+                                    factors: [
+                                        "浓度影响",
+                                        "温度影响",
+                                        "压力影响（仅气体）",
+                                        "催化剂影响"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "反应速率",
+                            definition: "单位时间内反应物浓度的减少量或产物浓度的增加量",
+                            formula: "v = Δc/Δt",
+                            children: [
+                                {
+                                    name: "速率方程",
+                                    definition: "表示反应速率与浓度关系的方程",
+                                    formula: "v = k[A]ᵐ[B]ⁿ"
+                                },
+                                {
+                                    name: "活化能",
+                                    definition: "反应物转变为产物所需的最低能量",
+                                    formula: "Ea"
+                                },
+                                {
+                                    name: "催化剂",
+                                    definition: "能改变反应速率而本身质量和化学性质不变的物质",
+                                    effect: "降低活化能"
+                                }
                             ]
                         }
                     ]
                 },
                 {
-                    name: "实验与安全·数据处理",
-                    definition: "规范的实验操作、安全防护与数据处理是获取可靠结论的保障。",
+                    name: "化学热力学",
+                    definition: "研究化学反应中能量变化的学科",
                     children: [
                         {
-                            name: "常用操作",
-                            definition: "加热、冷凝、蒸馏、萃取、过滤、洗涤、干燥与结晶等。",
+                            name: "热化学",
+                            definition: "研究化学反应热效应的学科",
                             children: [
-                                { name: "仪器识别与连接", definition: "试管、烧瓶、冷凝管、滴定管、分液漏斗、干燥器等。" },
-                                { name: "气体制备与检验", definition: "H₂、O₂、CO₂、NH₃等的制备与性质验证。" },
-                                { name: "滴定分析", definition: "标准溶液、指示剂、读数方法与体积校正。"}
+                                {
+                                    name: "焓变",
+                                    definition: "恒压条件下反应的热效应",
+                                    formula: "ΔH = H产物 - H反应物",
+                                    signs: {
+                                        "ΔH < 0": "放热反应",
+                                        "ΔH > 0": "吸热反应"
+                                    }
+                                },
+                                {
+                                    name: "燃烧热",
+                                    definition: "1摩尔物质完全燃烧生成稳定氧化物时放出的热量",
+                                    formula: "Q = n × ΔH燃烧"
+                                },
+                                {
+                                    name: "中和热",
+                                    definition: "稀溶液中酸与碱反应生成1摩尔水时放出的热量",
+                                    formula: "ΔH中和 = -57.3 kJ/mol"
+                                },
+                                {
+                                    name: "盖斯定律",
+                                    definition: "反应的热效应只与始末态有关，与路径无关",
+                                    formula: "ΔH₁ + ΔH₂ = ΔH₃"
+                                }
                             ]
                         },
                         {
-                            name: "安全与环保",
-                            definition: "穿戴防护、远离火源、规范标识、废液分类回收与中和处理。",
+                            name: "化学动力学",
+                            definition: "研究化学反应速率和机理的学科",
                             children: [
-                                { name: "实验风险控制", definition: "腐蚀性、可燃性、毒性与强氧化性的风险识别与隔离。" },
-                                { name: "有效数字与误差", definition: "读数规范，系统误差/偶然误差与不确定度估计。"}
+                                {
+                                    name: "反应机理",
+                                    definition: "化学反应发生的具体步骤和过程",
+                                    concepts: [
+                                        "基元反应",
+                                        "反应中间体",
+                                        "决定步骤"
+                                    ]
+                                },
+                                {
+                                    name: "碰撞理论",
+                                    definition: "解释反应速率的分子理论",
+                                    requirements: [
+                                        "有效碰撞",
+                                        "活化能",
+                                        "空间取向"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "电化学",
+                            definition: "研究化学能与电能相互转换的学科",
+                            children: [
+                                {
+                                    name: "原电池",
+                                    definition: "将化学能转化为电能的装置",
+                                    formula: "负极：M → Mⁿ⁺ + ne⁻",
+                                    components: [
+                                        "负极（氧化）",
+                                        "正极（还原）",
+                                        "电解质溶液",
+                                        "外电路"
+                                    ]
+                                },
+                                {
+                                    name: "电解池",
+                                    definition: "将电能转化为化学能的装置",
+                                    formula: "阴极：Mⁿ⁺ + ne⁻ → M",
+                                    rules: [
+                                        "阳极发生氧化",
+                                        "阴极发生还原"
+                                    ]
+                                },
+                                {
+                                    name: "电极电势",
+                                    definition: "电极与溶液界面间的电势差",
+                                    formula: "E = E⁰ + (RT/nF)ln([氧化型]/[还原型])"
+                                }
                             ]
                         }
                     ]
                 },
                 {
-                    name: "化学思想与方法",
-                    definition: "模型建构、等级守恒、控制变量、定量推理与结构—性质关系等一般科学方法。",
+                    name: "有机化学",
+                    definition: "研究碳化合物的化学学科",
                     children: [
-                        { name: "结构—性质—应用", definition: "由微观结构推断宏观性质，并指导材料与工艺应用。" },
-                        { name: "守恒与平衡思维", definition: "质量/电荷/元素/电子守恒与平衡移动规律贯穿解题。" },
-                        { name: "控制变量法", definition: "研究多因素影响时，保持除一个变量外的其余变量不变。" },
-                        { name: "图像与表格法", definition: "利用图像、表格归纳规律并提取定量关系。"}
+                        {
+                            name: "有机化合物分类",
+                            definition: "按结构和性质对有机化合物进行分类",
+                            children: [
+                                {
+                                    name: "烃类",
+                                    definition: "只含碳和氢的有机化合物",
+                                    children: [
+                                        {
+                                            name: "饱和烃",
+                                            definition: "分子中只有C-C单键的烃",
+                                            formula: "CₙH₂ₙ₊₂",
+                                            examples: "甲烷CH₄、乙烷C₂H₆"
+                                        },
+                                        {
+                                            name: "不饱和烃",
+                                            definition: "分子中含C=C或C≡C键的烃",
+                                            children: [
+                                                {
+                                                    name: "烯烃",
+                                                    definition: "含C=C双键的烃",
+                                                    formula: "CₙH₂ₙ"
+                                                },
+                                                {
+                                                    name: "炔烃",
+                                                    definition: "含C≡C三键的烃",
+                                                    formula: "CₙH₂ₙ₋₂"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "芳香烃",
+                                            definition: "含苯环结构的烃",
+                                            formula: "CₙH₂ₙ₋₆ (n≥6)",
+                                            examples: "苯C₆H₆、甲苯C₇H₈"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "烃的衍生物",
+                                    definition: "烃分子中的氢原子被其他原子或基团取代的产物",
+                                    children: [
+                                        {
+                                            name: "卤代烃",
+                                            definition: "含卤原子的烃的衍生物",
+                                            formula: "R-X (X=F,Cl,Br,I)"
+                                        },
+                                        {
+                                            name: "醇",
+                                            definition: "含羟基(-OH)的烃的衍生物",
+                                            formula: "R-OH"
+                                        },
+                                        {
+                                            name: "酚",
+                                            definition: "羟基直接连在苯环上的化合物",
+                                            formula: "Ar-OH"
+                                        },
+                                        {
+                                            name: "醛",
+                                            definition: "含醛基(-CHO)的化合物",
+                                            formula: "R-CHO"
+                                        },
+                                        {
+                                            name: "酮",
+                                            definition: "含羰基(C=O)且碳原子连接两个烃基的化合物",
+                                            formula: "R-CO-R'"
+                                        },
+                                        {
+                                            name: "羧酸",
+                                            definition: "含羧基(-COOH)的化合物",
+                                            formula: "R-COOH"
+                                        },
+                                        {
+                                            name: "酯",
+                                            definition: "羧酸与醇脱水生成的化合物",
+                                            formula: "R-COOR'"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "有机反应类型",
+                            definition: "有机化合物的主要反应类型",
+                            children: [
+                                {
+                                    name: "取代反应",
+                                    definition: "有机物分子中的原子或基团被其他原子或基团替代的反应",
+                                    types: [
+                                        "卤代反应",
+                                        "硝化反应",
+                                        "磺化反应",
+                                        "酯化反应"
+                                    ]
+                                },
+                                {
+                                    name: "加成反应",
+                                    definition: "不饱和化合物与其他分子反应生成饱和化合物的反应",
+                                    types: [
+                                        "加氢反应",
+                                        "加卤反应",
+                                        "加水反应",
+                                        "加HX反应"
+                                    ]
+                                },
+                                {
+                                    name: "消去反应",
+                                    definition: "有机物分子中脱去小分子生成不饱和化合物的反应",
+                                    types: [
+                                        "脱水反应",
+                                        "脱卤化氢反应"
+                                    ]
+                                },
+                                {
+                                    name: "氧化反应",
+                                    definition: "有机物失去氢或得到氧的反应",
+                                    examples: [
+                                        "醇→醛→酸",
+                                        "烷烃→CO₂+H₂O"
+                                    ]
+                                },
+                                {
+                                    name: "还原反应",
+                                    definition: "有机物得到氢或失去氧的反应",
+                                    examples: [
+                                        "醛→醇",
+                                        "硝基化合物→胺"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "聚合物",
+                            definition: "由重复结构单元组成的大分子",
+                            children: [
+                                {
+                                    name: "加聚物",
+                                    definition: "通过加成聚合反应生成的聚合物",
+                                    examples: [
+                                        "聚乙烯(PE)",
+                                        "聚丙烯(PP)",
+                                        "聚氯乙烯(PVC)"
+                                    ]
+                                },
+                                {
+                                    name: "缩聚物",
+                                    definition: "通过缩合聚合反应生成的聚合物",
+                                    examples: [
+                                        "涤纶(PET)",
+                                        "尼龙",
+                                        "酚醛树脂"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "分析化学",
+                    definition: "研究物质组成和结构的分析方法的学科",
+                    children: [
+                        {
+                            name: "定性分析",
+                            definition: "确定物质组成的分析方法",
+                            children: [
+                                {
+                                    name: "化学分析",
+                                    definition: "利用化学反应进行的分析",
+                                    methods: [
+                                        "沉淀反应",
+                                        "显色反应",
+                                        "气体反应"
+                                    ]
+                                },
+                                {
+                                    name: "仪器分析",
+                                    definition: "利用仪器进行的分析",
+                                    methods: [
+                                        "光谱分析",
+                                        "色谱分析",
+                                        "质谱分析"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "定量分析",
+                            definition: "确定物质含量的分析方法",
+                            children: [
+                                {
+                                    name: "滴定分析",
+                                    definition: "利用滴定法进行的定量分析",
+                                    types: [
+                                        "酸碱滴定",
+                                        "氧化还原滴定",
+                                        "络合滴定",
+                                        "沉淀滴定"
+                                    ]
+                                },
+                                {
+                                    name: "重量分析",
+                                    definition: "通过称量确定物质含量的分析方法"
+                                },
+                                {
+                                    name: "仪器定量",
+                                    definition: "利用仪器进行的定量分析",
+                                    methods: [
+                                        "分光光度法",
+                                        "原子吸收法",
+                                        "色谱法定量"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "物理化学",
+                    definition: "运用物理学原理和方法研究化学现象的学科",
+                    children: [
+                        {
+                            name: "化学热力学",
+                            definition: "研究化学反应中的能量转换",
+                            children: [
+                                {
+                                    name: "热力学定律",
+                                    children: [
+                                        {
+                                            name: "第一定律",
+                                            definition: "能量守恒定律",
+                                            formula: "ΔU = Q + W"
+                                        },
+                                        {
+                                            name: "第二定律",
+                                            definition: "熵增定律",
+                                            formula: "ΔS ≥ Q/T"
+                                        },
+                                        {
+                                            name: "第三定律",
+                                            definition: "绝对零度下完美晶体的熵为零"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "自由能",
+                                    definition: "体系能做功的能量",
+                                    formula: "G = H - TS",
+                                    criterion: "ΔG < 0 时反应自发进行"
+                                }
+                            ]
+                        },
+                        {
+                            name: "化学动力学",
+                            definition: "研究化学反应速率和机理",
+                            children: [
+                                {
+                                    name: "反应速率理论",
+                                    types: [
+                                        "碰撞理论",
+                                        "过渡态理论",
+                                        "分子反应动力学"
+                                    ]
+                                },
+                                {
+                                    name: "催化机理",
+                                    definition: "催化剂作用原理",
+                                    concepts: [
+                                        "均相催化",
+                                        "多相催化",
+                                        "酶催化"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "量子化学",
+                            definition: "运用量子力学研究化学现象",
+                            children: [
+                                {
+                                    name: "分子轨道理论",
+                                    definition: "描述分子中电子分布的理论",
+                                    concepts: [
+                                        "成键轨道",
+                                        "反键轨道",
+                                        "非键轨道"
+                                    ]
+                                },
+                                {
+                                    name: "价键理论",
+                                    definition: "描述化学键本质的理论",
+                                    concepts: [
+                                        "杂化轨道",
+                                        "共振理论",
+                                        "配位场理论"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "化学实验",
+                    definition: "进行化学研究和教学实践活动",
+                    children: [
+                        {
+                            name: "实验技术",
+                            definition: "化学实验的基本技术和方法",
+                            children: [
+                                {
+                                    name: "分离技术",
+                                    methods: [
+                                        "过滤",
+                                        "蒸馏",
+                                        "萃取",
+                                        "层析",
+                                        "结晶"
+                                    ]
+                                },
+                                {
+                                    name: "纯化技术",
+                                    methods: [
+                                        "重结晶",
+                                        "升华",
+                                        "色谱分离"
+                                    ]
+                                },
+                                {
+                                    name: "分析技术",
+                                    methods: [
+                                        "滴定分析",
+                                        "光谱分析",
+                                        "色谱分析",
+                                        "质谱分析"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "实验仪器",
+                            definition: "化学实验中使用的仪器设备",
+                            children: [
+                                {
+                                    name: "玻璃仪器",
+                                    examples: [
+                                        "烧杯、量筒",
+                                        "容量瓶、滴定管",
+                                        "试管、锥形瓶"
+                                    ]
+                                },
+                                {
+                                    name: "测量仪器",
+                                    examples: [
+                                        "天平、pH计",
+                                        "分光光度计",
+                                        "色谱仪、质谱仪"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "实验室安全",
+                            definition: "化学实验室的安全规程和防护措施",
+                            children: [
+                                {
+                                    name: "安全设备",
+                                    examples: [
+                                        "通风橱",
+                                        "洗眼器",
+                                        "灭火器",
+                                        "急救箱"
+                                    ]
+                                },
+                                {
+                                    name: "防护措施",
+                                    requirements: [
+                                        "防护眼镜",
+                                        "实验服",
+                                        "手套",
+                                        "通风良好"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "应用化学",
+                    definition: "化学原理在各个领域的实际应用",
+                    children: [
+                        {
+                            name: "工业化学",
+                            definition: "化学在工业生产中的应用",
+                            children: [
+                                {
+                                    name: "石油化工",
+                                    products: [
+                                        "燃料（汽油、柴油）",
+                                        "塑料、橡胶",
+                                        "合成纤维",
+                                        "洗涤剂"
+                                    ]
+                                },
+                                {
+                                    name: "煤化工",
+                                    products: [
+                                        "焦炭",
+                                        "煤焦油",
+                                        "合成氨",
+                                        "甲醇"
+                                    ]
+                                },
+                                {
+                                    name: "精细化工",
+                                    products: [
+                                        "医药",
+                                        "农药",
+                                        "染料",
+                                        "香料"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "生物化学",
+                            definition: "化学在生物体系中的应用",
+                            children: [
+                                {
+                                    name: "生物大分子",
+                                    types: [
+                                        "蛋白质",
+                                        "核酸(DNA/RNA)",
+                                        "多糖",
+                                        "脂质"
+                                    ]
+                                },
+                                {
+                                    name: "新陈代谢",
+                                    processes: [
+                                        "糖酵解",
+                                        "柠檬酸循环",
+                                        "氧化磷酸化",
+                                        "光合作用"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "环境化学",
+                            definition: "化学在环境科学中的应用",
+                            children: [
+                                {
+                                    name: "环境污染",
+                                    types: [
+                                        "大气污染",
+                                        "水污染",
+                                        "土壤污染",
+                                        "固体废物"
+                                    ]
+                                },
+                                {
+                                    name: "环境监测",
+                                    methods: [
+                                        "空气质量监测",
+                                        "水质分析",
+                                        "土壤检测"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "材料化学",
+                            definition: "化学在材料科学中的应用",
+                            children: [
+                                {
+                                    name: "金属材料",
+                                    examples: [
+                                        "钢、铁合金",
+                                        "铝合金、钛合金",
+                                        "贵金属"
+                                    ]
+                                },
+                                {
+                                    name: "陶瓷材料",
+                                    examples: [
+                                        "传统陶瓷",
+                                        "特种陶瓷",
+                                        "玻璃材料"
+                                    ]
+                                },
+                                {
+                                    name: "高分子材料",
+                                    examples: [
+                                        "塑料",
+                                        "橡胶",
+                                        "纤维",
+                                        "涂料"
+                                    ]
+                                }
+                            ]
+                        }
                     ]
                 }
             ]
         };
 
-        // =============== 导图渲染 ===============
-        const container = document.getElementById('mindmap');
-        const tooltip = document.createElement('div');
-        tooltip.className = 'node-tooltip';
-        container.appendChild(tooltip);
-
-        const detailTitle = document.getElementById('detailTitle');
-        const detailBody  = document.getElementById('detailBody');
-
-        const width  = container.clientWidth;
-        const height = container.clientHeight;
-
-        const svg = d3.select(container).append('svg')
-            .attr('width', width).attr('height', height)
-            .style('cursor','grab');
-
-        const gZoom = svg.append('g');     // 缩放容器
-        const gLink = gZoom.append('g').attr('class','links');
-        const gNode = gZoom.append('g').attr('class','nodes');
-
-        // 颜色映射：按第一层子类赋色
-        const palette = d3.schemeSet2.concat(d3.schemeSet3);
-        const categoryColor = new Map();
-
-        // 径向树布局
-        const radius = Math.min(width, height) / 2 - 30;
-        const tree = d3.tree().size([2 * Math.PI, radius]);
-
-        // 数据层级化
-        const root = d3.hierarchy(chemMindMap);
-        root.x0 = Math.PI; root.y0 = 0;
-
-        // 默认折叠到第2层
-        root.children?.forEach(collapseDeep);
-        expandLevel(root, 2); // 展开前2层
-
-        // 为第一层类别贴上颜色
-        (root.children||[]).forEach((c, i) => categoryColor.set(c.data.name, palette[i % palette.length]));
-
-        function collapseDeep(node){
-            if(node.children){
-                node._children = node.children;
-                node._children.forEach(collapseDeep);
-                node.children = null;
+        // 全局变量
+        let svg, g, tree, root, currentZoom = 1;
+        let margin = {top: 20, right: 90, bottom: 30, left: 90};
+        let width, height;
+        let i = 0;
+        let duration = 750;
+        
+        // 初始化思维导图
+        function initMindmap() {
+            const container = document.getElementById('mindmap');
+            const rect = container.getBoundingClientRect();
+            width = rect.width - margin.right - margin.left;
+            height = rect.height - margin.top - margin.bottom;
+            
+            // 创建SVG
+            svg = d3.select("#mindmap")
+                .append("svg")
+                .attr("width", width + margin.right + margin.left)
+                .attr("height", height + margin.top + margin.bottom);
+            
+            g = svg.append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            
+            // 创建树布局
+            tree = d3.tree().size([height, width]);
+            
+            // 处理数据
+            root = d3.hierarchy(chemistryConcepts, d => d.children);
+            root.x0 = height / 2;
+            root.y0 = 0;
+            
+            // 初始折叠一些深层节点
+            if (root.children) {
+                root.children.forEach(collapse);
+            }
+            
+            update(root);
+            
+            // 添加缩放功能
+            const zoom = d3.zoom()
+                .scaleExtent([0.1, 3])
+                .on("zoom", (event) => {
+                    g.attr("transform", event.transform);
+                    currentZoom = event.transform.k;
+                });
+            
+            svg.call(zoom);
+            
+            // 隐藏加载动画
+            document.getElementById('loading').style.display = 'none';
+            
+            // 更新统计信息
+            updateStats();
+        }
+        
+        // 折叠节点
+        function collapse(d) {
+            if (d.children) {
+                d._children = d.children;
+                d._children.forEach(collapse);
+                d.children = null;
             }
         }
-        function expand(node){
-            if(node._children){ node.children = node._children; node._children = null; }
-        }
-        function expandAll(node){
-            expand(node);
-            (node.children||[]).forEach(expandAll);
-        }
-        function collapseToLevel(node, depth){
-            if(node.depth >= depth && node.children){
-                node._children = node.children; node.children = null;
+        
+        // 展开节点
+        function expand(d) {
+            if (d._children) {
+                d.children = d._children;
+                d.children.forEach(expand);
+                d._children = null;
             }
-            (node.children||node._children||[]).forEach(n => collapseToLevel(n, depth));
         }
-        function expandLevel(node, depth){
-            if(node.depth < depth){ expand(node); (node.children||[]).forEach(n => expandLevel(n, depth)); }
-        }
-
-        // 坐标转换（极坐标 -> 笛卡尔）
-        function project(x, y){
-            const angle = x - Math.PI / 2;
-            return [Math.cos(angle) * y, Math.sin(angle) * y];
-        }
-
-        // 缩放
-        const zoom = d3.zoom().scaleExtent([0.3, 3]).on('zoom', (event) => {
-            gZoom.attr('transform', event.transform);
-        });
-        svg.call(zoom);
-
-        // 更新图
+        
+        // 更新思维导图
         function update(source) {
-            const rootLayout = tree(root);
-
-            const nodes = rootLayout.descendants();
-            const links = rootLayout.links();
-
-            // Links
-            const link = gLink.selectAll('path.link').data(links, d => d.target.data.name + '-' + d.target.depth);
-
-            link.join(
-                enter => enter.append('path')
-                    .attr('class', 'link base')
-                    .attr('d', d3.linkRadial()
-                        .angle(d => d.x)
-                        .radius(d => d.y)
-                    )
-                    .attr('opacity', 0)
-                    .transition().duration(350)
-                    .attr('opacity', 1),
-                update => update,
-                exit => exit.transition().duration(250).attr('opacity',0).remove()
-            );
-
-            // Nodes
-            const node = gNode.selectAll('g.node').data(nodes, d => d.data.name + '-' + d.depth);
-
+            const treeData = tree(root);
+            const nodes = treeData.descendants();
+            const links = treeData.descendants().slice(1);
+            
+            // 标准化深度
+            nodes.forEach(d => { d.y = d.depth * 200; });
+            
+            // 节点处理
+            const node = g.selectAll('g.node')
+                .data(nodes, d => d.id || (d.id = ++i));
+            
+            // 进入新节点
             const nodeEnter = node.enter().append('g')
                 .attr('class', 'node')
-                .attr('transform', d => {
-                    const [x, y] = project(source.x0 ?? d.x, source.y0 ?? d.y);
-                    return `translate(${x},${y})`;
-                })
-                .on('click', (_, d) => {
-                    if (d.children) { d._children = d.children; d.children = null; }
-                    else { d.children = d._children; d._children = null; }
-                    update(d);
-                })
-                .on('mouseenter', (event, d) => {
-                    const def = d.data.definition || '（暂无定义）';
-                    tooltip.innerHTML = `<div style="font-weight:700;margin-bottom:4px">${d.data.name}</div><div style="font-size:13px;line-height:1.5">${def}</div>`;
-                    tooltip.style.display = 'block';
-                })
-                .on('mousemove', (event) => {
-                    const pad = 14;
-                    tooltip.style.left = (event.offsetX + pad) + 'px';
-                    tooltip.style.top  = (event.offsetY + pad) + 'px';
-                })
-                .on('mouseleave', () => {
-                    tooltip.style.display = 'none';
-                })
-                .on('contextmenu', (event, d) => {
-                    event.preventDefault();
-                    // 右键：更新侧栏详情
-                    detailTitle.textContent = d.data.name;
-                    detailBody.textContent  = d.data.definition || '（暂无定义）';
-                });
-
-            // 节点圈
+                .attr("transform", d => "translate(" + source.y0 + "," + source.x0 + ")")
+                .on('click', click)
+                .on('mouseover', showTooltip)
+                .on('mouseout', hideTooltip);
+            
             nodeEnter.append('circle')
-                .attr('r', 0)
-                .attr('fill', d => {
-                    if(d.depth === 0) return '#764ba2';
-                    if(d.depth === 1) return categoryColor.get(d.data.name) || '#667eea';
-                    const p = d.ancestors().find(a=>a.depth===1);
-                    return p ? (categoryColor.get(p.data.name) || '#667eea') : '#667eea';
-                })
-                .attr('stroke', 'white').attr('stroke-width', 1.2)
-                .transition().duration(350).attr('r', 5.2);
-
-            // 放大点击热区，提升可点性
-            nodeEnter.append('circle')
-                .attr('class','hit')
-                .attr('r', 16);
-
-            // 文本标签
+                .attr('r', 1e-6)
+                .style("fill", d => d._children ? "lightsteelblue" : "#fff");
+            
             nodeEnter.append('text')
-                .attr('class','label')
-                .attr('dy','0.31em')
-                .attr('x', d => d.x < Math.PI === !d.children ? 8 : -8)
-                .attr('text-anchor', d => d.x < Math.PI === !d.children ? 'start' : 'end')
-                .attr('transform', d => `rotate(${(d.x * 180/Math.PI) - 90}) translate(${d.children ? -6 : 6},0) rotate(${d.x >= Math.PI ? 180 : 0})`)
+                .attr("dy", ".35em")
+                .attr("x", d => d.children || d._children ? -13 : 13)
+                .attr("text-anchor", d => d.children || d._children ? "end" : "start")
                 .text(d => d.data.name)
-                .attr('opacity', 0)
-                .transition().duration(300).attr('opacity', 1);
-
-            // 更新位置
+                .style("fill-opacity", 1e-6);
+            
+            // 更新节点
             const nodeUpdate = nodeEnter.merge(node);
-            nodeUpdate.transition().duration(350)
-                .attr('transform', d => {
-                    const [x, y] = project(d.x, d.y);
-                    return `translate(${x},${y})`;
+            
+            nodeUpdate.transition()
+                .duration(duration)
+                .attr("transform", d => "translate(" + d.y + "," + d.x + ")");
+            
+            nodeUpdate.select('circle')
+                .attr('r', 8)
+                .style("fill", d => d._children ? "lightsteelblue" : "#fff")
+                .attr('cursor', 'pointer');
+            
+            nodeUpdate.select('text')
+                .style("fill-opacity", 1);
+            
+            // 退出节点
+            const nodeExit = node.exit().transition()
+                .duration(duration)
+                .attr("transform", d => "translate(" + source.y + "," + source.x + ")")
+                .remove();
+            
+            nodeExit.select('circle')
+                .attr('r', 1e-6);
+            
+            nodeExit.select('text')
+                .style('fill-opacity', 1e-6);
+            
+            // 连接线处理
+            const link = g.selectAll('path.link')
+                .data(links, d => d.id);
+            
+            // 进入新连接线
+            const linkEnter = link.enter().insert('path', "g")
+                .attr("class", "link")
+                .attr('d', d => {
+                    const o = {x: source.x0, y: source.y0};
+                    return diagonal(o, o);
                 });
-
-            // 记录旧位置
-            nodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
-
-            // 高亮保留（若搜索）
-            refreshHighlights();
+            
+            // 更新连接线
+            const linkUpdate = linkEnter.merge(link);
+            
+            linkUpdate.transition()
+                .duration(duration)
+                .attr('d', d => diagonal(d, d.parent));
+            
+            // 退出连接线
+            link.exit().transition()
+                .duration(duration)
+                .attr('d', d => {
+                    const o = {x: source.x, y: source.y};
+                    return diagonal(o, o);
+                })
+                .remove();
+            
+            // 存储旧位置
+            nodes.forEach(d => {
+                d.x0 = d.x;
+                d.y0 = d.y;
+            });
         }
-
-        update(root);
-
-        // 适配视窗
-        function fitToScreen() {
-            const bounds = gZoom.node().getBBox();
-            const fullWidth = container.clientWidth;
-            const fullHeight = container.clientHeight;
-            const midX = bounds.x + bounds.width / 2;
-            const midY = bounds.y + bounds.height / 2;
-
-            if (bounds.width === 0 || bounds.height === 0) return;
-
-            const scale = 0.86 / Math.max(bounds.width / fullWidth, bounds.height / fullHeight);
-            const transform = d3.zoomIdentity.translate(fullWidth/2, fullHeight/2).scale(scale).translate(-midX, -midY);
-
-            svg.transition().duration(480).call(zoom.transform, transform);
+        
+        // 创建曲线路径
+        function diagonal(s, d) {
+            const path = `M ${s.y} ${s.x}
+                    C ${(s.y + d.y) / 2} ${s.x},
+                      ${(s.y + d.y) / 2} ${d.x},
+                      ${d.y} ${d.x}`;
+            return path;
         }
-
-        // 展开/折叠控制
-        document.getElementById('expandAllBtn').addEventListener('click', () => { expandAll(root); update(root); setTimeout(fitToScreen, 40); });
-        document.getElementById('collapseAllBtn').addEventListener('click', () => { collapseToLevel(root, 1); expandLevel(root, 1); update(root); setTimeout(fitToScreen, 40); });
-        document.getElementById('fitBtn').addEventListener('click', fitToScreen);
-
-        // 初始自适应
-        setTimeout(fitToScreen, 60);
-        window.addEventListener('resize', () => {
-            // 简易响应处理：重设 SVG 尺寸并适配
-            svg.attr('width', container.clientWidth).attr('height', container.clientHeight);
-            setTimeout(fitToScreen, 60);
-        });
-
-        // 搜索高亮
-        const searchInput = document.getElementById('searchInput');
-        const searchBtn   = document.getElementById('searchBtn');
-        const clearBtn    = document.getElementById('clearSearchBtn');
-        let highlightNames = new Set();
-
-        function clearHighlights(){
-            highlightNames.clear();
-            refreshHighlights();
-        }
-        function refreshHighlights(){
-            // 链接高亮：如果其目标或源在高亮路径上则加亮
-            const hlSet = new Set();
-            if (highlightNames.size > 0){
-                root.each(node => {
-                    if (highlightNames.has(node.data.name)) {
-                        node.ancestors().forEach(a => hlSet.add(a));
-                        node.descendants().forEach(d => hlSet.add(d));
-                    }
-                });
+        
+        // 点击节点
+        function click(event, d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
             }
-            gLink.selectAll('path.link')
-                .attr('class', d => hlSet.has(d.source) && hlSet.has(d.target) ? 'link hl' : 'link base');
-
-            gNode.selectAll('g.node').select('circle')
-                .attr('stroke-width', d => highlightNames.has(d.data.name) ? 3 : 1.2)
-                .attr('stroke', d => highlightNames.has(d.data.name) ? '#ffb142' : '#fff');
+            update(d);
+            updateStats();
         }
-
-        function ensureVisible(name){
-            // 展开至包含该名称的节点
-            let target = null;
-            root.each(d => { if (d.data.name.toLowerCase() === name.toLowerCase()) target = d; });
-            if (!target) return;
-
-            // 逐层展开
-            target.ancestors().forEach(a => {
-                if (a._children){ a.children = a._children; a._children = null; }
-            });
-            update(target);
-
-            // 平移至视野中心
-            const [x, y] = project(target.x, target.y);
-            const pt = d3.zoomTransform(svg.node()).apply([x, y]);
-            const fullW = container.clientWidth, fullH = container.clientHeight;
-            const t = d3.zoomTransform(svg.node());
-            const desired = d3.zoomIdentity.translate(fullW/2 - (pt[0]-t.x), fullH/2 - (pt[1]-t.y)).scale(t.k);
-            svg.transition().duration(480).call(zoom.transform, desired);
+        
+        // 显示工具提示
+        function showTooltip(event, d) {
+            const tooltip = document.getElementById('conceptTooltip');
+            const title = document.getElementById('tooltipTitle');
+            const definition = document.getElementById('tooltipDefinition');
+            const formula = document.getElementById('tooltipFormula');
+            
+            title.textContent = d.data.name;
+            definition.textContent = d.data.definition || '暂无定义';
+            
+            if (d.data.formula && d.data.formula !== '') {
+                formula.textContent = '公式: ' + d.data.formula;
+                formula.style.display = 'block';
+            } else {
+                formula.style.display = 'none';
+            }
+            
+            tooltip.style.display = 'block';
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY - 10) + 'px';
         }
-
-        function doSearch(){
-            const kw = (searchInput.value || '').trim().toLowerCase();
-            clearHighlights();
-            if (!kw) { return refreshHighlights(); }
-
-            const hits = [];
-            root.each(d => {
-                const name = d.data.name?.toLowerCase() || '';
-                const def  = d.data.definition?.toLowerCase() || '';
-                if (name.includes(kw) || def.includes(kw)) hits.push(d);
+        
+        // 隐藏工具提示
+        function hideTooltip() {
+            document.getElementById('conceptTooltip').style.display = 'none';
+        }
+        
+        // 展开全部
+        function expandAll() {
+            expand(root);
+            update(root);
+            updateStats();
+        }
+        
+        // 收起全部
+        function collapseAll() {
+            collapse(root);
+            update(root);
+            updateStats();
+        }
+        
+        // 重置视图
+        function resetView() {
+            svg.transition()
+                .duration(750)
+                .call(
+                    d3.zoom().transform,
+                    d3.zoomIdentity.translate(margin.left, margin.top)
+                );
+        }
+        
+        // 放大
+        function zoomIn() {
+            svg.transition()
+                .duration(300)
+                .call(
+                    d3.zoom().scaleBy,
+                    1.3
+                );
+        }
+        
+        // 缩小
+        function zoomOut() {
+            svg.transition()
+                .duration(300)
+                .call(
+                    d3.zoom().scaleBy,
+                    0.7
+                );
+        }
+        
+        // 适应屏幕
+        function fitToScreen() {
+            const bounds = g.node().getBBox();
+            const fullWidth = width + margin.right + margin.left;
+            const fullHeight = height + margin.top + margin.bottom;
+            const widthScale = fullWidth / bounds.width;
+            const heightScale = fullHeight / bounds.height;
+            const scale = 0.8 * Math.min(widthScale, heightScale);
+            
+            const translate = [
+                fullWidth / 2 - scale * (bounds.x + bounds.width / 2),
+                fullHeight / 2 - scale * (bounds.y + bounds.height / 2)
+            ];
+            
+            svg.transition()
+                .duration(750)
+                .call(
+                    d3.zoom().transform,
+                    d3.zoomIdentity
+                        .translate(translate[0], translate[1])
+                        .scale(scale)
+                );
+        }
+        
+        // 导出数据
+        function exportData() {
+            const dataStr = JSON.stringify(chemistryConcepts, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'chemistry_concepts.json';
+            link.click();
+        }
+        
+        // 更新统计信息
+        function updateStats() {
+            const allNodes = root.descendants();
+            const visibleNodes = allNodes.filter(d => !d._children && d.parent);
+            
+            document.getElementById('totalConcepts').textContent = allNodes.length;
+            document.getElementById('visibleNodes').textContent = visibleNodes.length;
+            
+            // 计算最大深度
+            let maxDepth = 0;
+            allNodes.forEach(d => {
+                if (d.depth > maxDepth) maxDepth = d.depth;
             });
-            if (hits.length === 0){
-                detailTitle.textContent = '搜索结果';
-                detailBody.textContent  = '未找到匹配项，请尝试其他关键词。';
+            document.getElementById('totalLevels').textContent = maxDepth + 1;
+        }
+        
+        // 搜索功能
+        document.getElementById('conceptSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            if (searchTerm === '') {
+                update(root);
                 return;
             }
-            hits.slice(0, 24).forEach(h => highlightNames.add(h.data.name));
-            refreshHighlights();
-            ensureVisible(hits[0].data.name);
-
-            detailTitle.textContent = '搜索结果';
-            detailBody.innerHTML = `共定位到 ${hits.length} 个相关概念，已高亮前 ${Math.min(24,hits.length)} 项。`;
+            
+            // 展开所有包含搜索词的节点
+            function searchNode(node) {
+                if (node.data.name.toLowerCase().includes(searchTerm)) {
+                    // 展开到该节点的所有父节点
+                    expandToRoot(node);
+                }
+                if (node.children) {
+                    node.children.forEach(searchNode);
+                }
+                if (node._children) {
+                    node._children.forEach(searchNode);
+                }
+            }
+            
+            function expandToRoot(node) {
+                if (node.parent) {
+                    if (node.parent._children) {
+                        node.parent.children = node.parent._children;
+                        node.parent._children = null;
+                    }
+                    expandToRoot(node.parent);
+                }
+            }
+            
+            searchNode(root);
+            update(root);
+            updateStats();
+        });
+        
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
         }
-
-        searchBtn.addEventListener('click', doSearch);
-        searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearch(); });
-        clearBtn.addEventListener('click', ()=>{ searchInput.value=''; clearHighlights(); });
-
-        // 初始详情
-        detailTitle.textContent = chemMindMap.name;
-        detailBody.textContent  = chemMindMap.definition;
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // 窗口大小改变时重新初始化
+        window.addEventListener('resize', () => {
+            d3.select("#mindmap").selectAll("*").remove();
+            initMindmap();
+        });
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                initMindmap();
+            }, 500);
+        });
     </script>
 </body>
 </html>
