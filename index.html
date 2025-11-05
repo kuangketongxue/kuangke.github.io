@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -6,1207 +5,197 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
     <!-- SEO优化 -->
     <meta name="description" content="狂客·银河 - 记录生活精彩瞬间，分享美好时刻">
     <meta name="keywords" content="狂客,银河,朋友圈,生活分享,成功日记">
     <meta name="author" content="狂客">
     <meta name="robots" content="index, follow">
-    <!-- Open Graph / 社交媒体分享 -->
+    
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="狂客·银河">
     <meta property="og:description" content="记录生活精彩瞬间，分享美好时刻">
-    <meta property="og:site_name" content="狂客·银河">
+    
     <!-- 网站图标 -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="images/favicon.ico">
+    
     <!-- 预连接外部资源 -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
     <title>狂客·银河 - 记录生活精彩瞬间</title>
-    <!-- 样式表 -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+    
+    <!-- 关键CSS内联 -->
     <style>
-        /* ==================== 星空主题背景 ==================== */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            /* 背景图片位置 - 在这里修改背景图片 */
-            background: url('images/53ddd6ae5983053a99f8388b3aaa5266.png') center center/cover fixed;
-            min-height: 100vh;
-            padding-top: 60px;
-            position: relative;
-        }
-        /* 星空遮罩层 */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(
-                135deg,
-                rgba(10, 10, 35, 0.7) 0%,
-                rgba(25, 25, 60, 0.6) 50%,
-                rgba(15, 15, 45, 0.7) 100%
-            );
-            z-index: -1;
-            pointer-events: none;
-        }
-        /* 动态星星效果 */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image:
-                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.8), transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.6), transparent),
-                radial-gradient(1px 1px at 50px 50px, rgba(255, 255, 255, 0.9), transparent),
-                radial-gradient(1px 1px at 80px 80px, rgba(255, 255, 255, 0.7), transparent),
-                radial-gradient(2px 2px at 130px 40px, rgba(255, 255, 255, 0.8), transparent),
-                radial-gradient(1px 1px at 200px 150px, rgba(255, 255, 255, 0.6), transparent);
-            background-repeat: repeat;
-            background-size: 250px 250px;
-            animation: stars 120s linear infinite, twinkle 3s ease-in-out infinite;
-            z-index: -1;
-            pointer-events: none;
-        }
-        @keyframes stars {
-            from { transform: translateX(0); }
-            to { transform: translateX(-250px); }
-        }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
-        }
-        /* ==================== 重置和基础样式 ==================== */
+        /* ==================== 关键路径CSS ==================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        /* ==================== 顶部导航栏优化 ==================== */
-       /* ==================== 顶部导航栏重新布局 ==================== */
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: rgba(15, 15, 45, 0.95);
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: 1000;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-}
-.header-left {
-    display: flex;
-    align-items: center;
-}
-.logo {
-    font-size: 20px;
-    font-weight: 700;
-    color: #fff;
-    text-decoration: none;
-    background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
-}
-.primary-nav {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex: 1;
-    justify-content: center;
-}
-.primary-nav a {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    font-size: 14px;
-    font-weight: 500;
-}
-.primary-nav a:hover {
-    background: rgba(102, 126, 234, 0.2);
-    color: #a8b2ff;
-    transform: translateY(-2px);
-}
-.controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.function-buttons {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-/* 其他样式保持不变 */
-        .nav-button-base {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 12px;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 10px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: url('images/53ddd6ae5983053a99f8388b3aaa5266.png') center/cover fixed;
+            min-height: 100vh;
+            padding-top: 60px;
             position: relative;
-            overflow: hidden;
-            font-weight: 600;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            overflow-x: hidden;
         }
-        .nav-button-base::before {
+        
+        body::before {
             content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-            );
-            transition: left 0.5s ease;
-        }
-        .nav-button-base:hover::before {
-            left: 100%;
-        }
-        .nav-button-base:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-        .nav-button-base:active {
-            transform: translateY(0);
-        }
-        .button-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 18px;
-            height: 18px;
-            margin-right: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-        .nav-button-base:hover .button-icon {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1) rotate(5deg);
-        }
-        /* AI前沿按钮 */
-        .ai-nav-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        .ai-nav-button:hover {
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-        }
-        /* 健康提醒按钮 */
-        .health-nav-button {
-            background: linear-gradient(135deg, #00c9a7 0%, #8b5cf6 100%);
-            box-shadow: 0 4px 15px rgba(0, 201, 167, 0.4);
-        }
-        .health-nav-button:hover {
-            box-shadow: 0 8px 25px rgba(0, 201, 167, 0.6);
-            background: linear-gradient(135deg, #8b5cf6 0%, #00c9a7 100%);
-        }
-        /* 美食聚餐按钮 */
-        .meal-nav-button {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-        }
-        .meal-nav-button:hover {
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
-            background: linear-gradient(135deg, #ffa500 0%, #ff6b6b 100%);
-        }
-        /* 加密货币按钮 */
-        .crypto-nav-button {
-            background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%);
-            box-shadow: 0 4px 15px rgba(247, 147, 26, 0.4);
-        }
-        .crypto-nav-button:hover {
-            box-shadow: 0 8px 25px rgba(247, 147, 26, 0.6);
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931a 100%);
-        }
-        /* ==================== 分类导航优化 ==================== */
-        .category-nav {
-            background: rgba(20, 20, 50, 0.9);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 16px 0;
-            margin-top: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-        .category-scroll {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 4px 0;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(102, 126, 234, 0.5) transparent;
-        }
-        .category-scroll::-webkit-scrollbar {
-            height: 4px;
-        }
-        .category-scroll::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .category-scroll::-webkit-scrollbar-thumb {
-            background: rgba(102, 126, 234, 0.5);
-            border-radius: 2px;
-        }
-        .category-btn {
-            padding: 8px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.8);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            font-weight: 500;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        .category-btn:hover {
-            border-color: #667eea;
-            color: #a8b2ff;
-            background: rgba(102, 126, 234, 0.2);
-            transform: translateY(-2px);
-        }
-        .category-btn.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        /* ==================== 排序控件优化 ==================== */
-        .sort-nav {
-            background: rgba(20, 20, 50, 0.9);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 16px 0;
-            position: sticky;
-            top: 60px;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-        .sort-controls {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-        .sort-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .sort-label {
-            font-size: 14px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.8);
-            white-space: nowrap;
-        }
-        .sort-select {
-            padding: 8px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 160px;
-        }
-        .sort-select option {
-            background: #1a1a3e;
-            color: #fff;
-        }
-        .sort-select:hover {
-            border-color: #667eea;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
-            background: rgba(255, 255, 255, 0.15);
-        }
-        .sort-select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-        }
-        .view-options {
-            display: flex;
-            gap: 4px;
-        }
-        .view-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .view-btn:hover {
-            border-color: #667eea;
-            color: #a8b2ff;
-            background: rgba(102, 126, 234, 0.2);
-        }
-        .view-btn.active {
-            background: #667eea;
-            border-color: #667eea;
-            color: white;
-        }
-        .export-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .export-btn:hover {
-            border-color: #667eea;
-            color: #a8b2ff;
-            background: rgba(102, 126, 234, 0.2);
-        }
-        /* ==================== 主要内容区域优化 ==================== */
-        .main-content {
-            padding: 30px 0;
-            min-height: calc(100vh - 300px);
-        }
-        /* 统计卡片 */
-        .moments-stats {
-            margin-bottom: 30px;
-        }
-        .stat-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .stat-card {
-            background: rgba(20, 20, 50, 0.8);
-            backdrop-filter: blur(15px);
-            border-radius: 16px;
-            padding: 24px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
-            border-color: rgba(102, 126, 234, 0.3);
-        }
-        .stat-card.highlight {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
-            border-color: rgba(102, 126, 234, 0.4);
-            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
-        }
-        .stat-number {
-            font-size: 32px;
-            font-weight: 700;
-            color: #a8b2ff;
-            margin-bottom: 8px;
-            text-shadow: 0 0 10px rgba(168, 178, 255, 0.5);
-        }
-        .stat-label {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-        }
-        /* 排序提示 */
-        .sort-hint {
-            text-align: center;
-            margin-top: 16px;
-            padding: 8px;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 8px;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-        /* 朋友圈网格 */
-        .moments-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-        .moment-card {
-            background: rgba(20, 20, 50, 0.85);
-            backdrop-filter: blur(15px);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.5s ease forwards;
-            opacity: 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            transform-origin: center;
-        }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .moment-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 16px 40px rgba(102, 126, 234, 0.3);
-            border-color: rgba(102, 126, 234, 0.3);
-        }
-        .moment-card:active {
-            transform: scale(0.98);
-        }
-        .moment-header {
-            margin-bottom: 16px;
-        }
-        .moment-meta {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .moment-date {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-        }
-        .moment-category {
-            font-size: 12px;
-            padding: 4px 8px;
-            background: rgba(102, 126, 234, 0.2);
-            color: #a8b2ff;
-            border-radius: 12px;
-            font-weight: 500;
-            border: 1px solid rgba(102, 126, 234, 0.3);
-        }
-        .value-badge {
-            font-size: 12px;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-weight: 600;
-            color: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        /* ==================== 内容折叠/展开样式优化 ==================== */
-        .moment-content {
-            margin-bottom: 16px;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 14px;
-            position: relative;
-            transition: max-height 0.4s ease, opacity 0.3s ease;
-            overflow: hidden;
-        }
-
-        .moment-content.collapsed {
-            max-height: 120px;
-            position: relative;
-        }
-
-        .moment-content.collapsed::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 40px;
-            background: linear-gradient(to bottom, transparent, rgba(20, 20, 50, 0.95));
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(10,10,35,0.7), rgba(25,25,60,0.6), rgba(15,15,45,0.7));
+            z-index: -1;
             pointer-events: none;
         }
-
-        /* 展开按钮样式 */
-        .expand-toggle-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(102, 126, 234, 0.15);
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            color: #667eea;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            padding: 8px 16px;
-            margin-top: 8px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .expand-toggle-btn:hover {
-            background: rgba(102, 126, 234, 0.25);
-            border-color: rgba(102, 126, 234, 0.5);
-            color: #a8b2ff;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-
-        .expand-toggle-btn:active {
-            transform: translateY(0);
-        }
-
-        .expand-toggle-btn .toggle-icon {
-            transition: transform 0.3s ease;
-            font-size: 12px;
-        }
-
-        .expand-toggle-btn.expanded .toggle-icon {
-            transform: rotate(180deg);
-        }
-
-        /* 展开状态的内容 */
-        .moment-content.expanded {
-            max-height: none;
-        }
-
-        .moment-content.expanded::after {
-            display: none;
-        }
-
-        /* 添加平滑的高度过渡效果 */
-        .moment-content p {
-            margin: 0;
-            transition: all 0.3s ease;
-        }
-
-        .moment-images {
-            display: grid;
-            gap: 8px;
-            margin-bottom: 16px;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .moment-images.single {
-            grid-template-columns: 1fr;
-        }
-        .moment-images.double {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        .moment-images.multiple {
-            grid-template-columns: repeat(3, 1fr);
-        }
-        .moment-images img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .moment-images.single img {
-            height: 200px;
-        }
-        .moment-images img:hover {
-            transform: scale(1.05);
-        }
-        .moment-actions {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .action-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .action-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            padding: 8px 12px;
-            border-radius: 8px;
-            min-height: 40px;
-        }
-        .action-btn:hover {
-            background: rgba(102, 126, 234, 0.2);
-            color: #a8b2ff;
-            transform: translateY(-2px);
-        }
-        .action-btn.liked {
-            color: #ff6b6b;
-        }
-        .action-btn.liked:hover {
-            color: #ff8e8e;
-            background: rgba(255, 107, 107, 0.2);
-        }
-        .action-count {
-            font-size: 13px;
-            font-weight: 500;
-            min-width: 20px;
-            text-align: center;
-        }
-        .share-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 12px;
-            background: rgba(102, 126, 234, 0.2);
-            color: #a8b2ff;
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        .share-btn:hover {
-            background: rgba(102, 126, 234, 0.3);
-            border-color: rgba(102, 126, 234, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-        /* ==================== 分页控件优化 ==================== */
-        .pagination-container {
-            background: rgba(20, 20, 50, 0.8);
-            backdrop-filter: blur(15px);
-            border-radius: 16px;
-            padding: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-        .pagination-info {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-        .pagination-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .pagination-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .pagination-btn:hover:not(:disabled) {
-            border-color: #667eea;
-            color: #a8b2ff;
-            background: rgba(102, 126, 234, 0.2);
-        }
-        .pagination-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        .page-numbers {
-            display: flex;
-            gap: 4px;
-        }
-        .page-number {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 36px;
-            height: 36px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .page-number:hover {
-            border-color: #667eea;
-            color: #a8b2ff;
-            background: rgba(102, 126, 234, 0.2);
-        }
-        .page-number.active {
-            background: #667eea;
-            border-color: #667eea;
-            color: white;
-        }
-        .pagination-settings {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .pagination-settings label {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-        }
-        .pagination-settings select {
-            padding: 6px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-            cursor: pointer;
-        }
-        .pagination-settings select option {
-            background: #1a1a3e;
-            color: #fff;
-        }
-        /* ==================== 底部优化 ==================== */
-        .social-footer {
-            background: rgba(20, 20, 50, 0.9);
-            backdrop-filter: blur(15px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 30px 0;
-            margin-top: 60px;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
-        }
-        .social-footer .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .social-links {
-            display: flex;
-            gap: 16px;
-        }
-        .social-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .social-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-            border-color: #667eea;
-            color: #a8b2ff;
-        }
-        .social-link.wechat:hover {
-            background: #07c160;
-            color: white;
-            border-color: #07c160;
-        }
-        .social-link.github:hover {
-            background: #333;
-            color: white;
-            border-color: #333;
-        }
-        .social-link.x:hover {
-            background: #000;
-            color: white;
-            border-color: #000;
-        }
-        .copyright {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-        /* ==================== 列表视图样式 ==================== */
-        .moments-grid.list-view {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .moments-grid.list-view .moment-card {
-            width: 100%;
-            max-width: none;
-        }
-        /* ==================== 背景模式返回按钮 ==================== */
-        .background-mode-return {
+        
+        /* 优化的星星效果 - 使用transform代替background-position */
+        body::after {
+            content: '';
             position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 10001;
-            display: none;
+            inset: 0;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 50px 50px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 80px 80px, rgba(255,255,255,0.7), transparent);
+            background-repeat: repeat;
+            background-size: 250px 250px;
+            animation: stars 120s linear infinite;
+            z-index: -1;
+            pointer-events: none;
+            will-change: transform;
+        }
+        
+        @keyframes stars {
+            to { transform: translateX(-250px); }
+        }
+        
+        /* ==================== 头部导航 ==================== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(15,15,45,0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            will-change: transform;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
-            background: rgba(102, 126, 234, 0.9);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
+            justify-content: space-between;
+            height: 100%;
         }
-        .background-mode-return:hover {
-            background: rgba(102, 126, 234, 1);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .background-mode-return:active {
-            transform: translateY(0);
-        }
-        .background-mode-return i {
-            transition: transform 0.3s ease;
-        }
-        .background-mode-return:hover i {
-            transform: translateX(-3px);
-        }
-        /* ==================== 响应式设计 ==================== */
-        @media (max-width: 1200px) {
-            .moments-grid {
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            }
-        }
-        @media (max-width: 992px) {
-            .header-left {
-                gap: 20px;
-            }
-            .primary-nav {
-                display: none;
-            }
-            .controls {
-                gap: 8px;
-            }
-            .nav-button-base span:not(.button-icon) {
-                display: none;
-            }
-            .button-icon {
-                margin-right: 0;
-            }
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 16px;
-            }
-            body {
-                padding-top: 60px;
-            }
-            .sort-controls {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
-            }
-            .sort-group {
-                justify-content: space-between;
-            }
-            .view-options {
-                justify-content: center;
-            }
-            .moments-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            .stat-cards {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            .pagination-container {
-                flex-direction: column;
-                text-align: center;
-            }
-            .pagination-controls {
-                order: 2;
-            }
-            .pagination-info {
-                order: 1;
-            }
-            .pagination-settings {
-                order: 3;
-            }
-            .export-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            .background-mode-return {
-                top: 10px;
-                left: 10px;
-                padding: 10px 14px;
-                font-size: 13px;
-            }
-        }
-        @media (max-width: 576px) {
-            .function-buttons {
-                gap: 4px;
-            }
-            .nav-button-base {
-                padding: 6px 8px;
-            }
-            .button-icon {
-                width: 16px;
-                height: 16px;
-            }
-            .moment-card {
-                padding: 16px;
-            }
-            .moment-meta {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            .category-btn {
-                min-height: 40px;
-                padding: 8px 16px;
-            }
-            .moment-actions {
-                flex-direction: column;
-                gap: 12px;
-                align-items: stretch;
-            }
-            .action-group {
-                justify-content: center;
-            }
-            .share-btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-        /* ==================== 工具类 ==================== */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        /* ==================== 加载动画 ==================== */
-        .skeleton {
-            background: linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0.1) 25%,
-                rgba(255, 255, 255, 0.2) 50%,
-                rgba(255, 255, 255, 0.1) 75%
-            );
-            background-size: 200% 100%;
-            animation: loading 1.5s ease-in-out infinite;
-            border-radius: 8px;
-        }
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        /* 深色模式适配（保持星空主题） */
-        [data-theme="light"] body::before {
-            background: linear-gradient(
-                135deg,
-                rgba(10, 10, 35, 0.6) 0%,
-                rgba(25, 25, 60, 0.5) 50%,
-                rgba(15, 15, 45, 0.6) 100%
-            );
-        }
-        /* 排序动画 */
-        .sort-nav.sorting {
-            animation: pulse 0.3s ease;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-        /* 无限滚动加载指示器 */
-        .loading-indicator {
-            text-align: center;
-            padding: 20px;
-            color: rgba(255, 255, 255, 0.6);
-            display: none;
-        }
-        .loading-indicator.active {
-            display: block;
-        }
-        .loading-indicator i {
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        
+        /* 隐藏非关键内容直到JS加载 */
+        .moments-grid {
+            min-height: 400px;
         }
     </style>
+    
+    <!-- 非关键CSS延迟加载 -->
+    <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    
+    <!-- Font Awesome延迟加载 -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin="anonymous">
 </head>
 <body data-page="moments">
+    
     <!-- ==================== 背景模式返回按钮 ==================== -->
-    <button id="backgroundModeReturn" class="background-mode-return" aria-label="退出背景模式">
-        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+    <button id="backgroundModeReturn" class="background-mode-return" style="display:none" aria-label="退出背景模式">
+        <i class="fas fa-arrow-left"></i>
         <span>返回正常视图</span>
     </button>
+    
     <!-- ==================== 顶部导航栏 ==================== -->
-    <!-- 修改后的导航结构 -->
-<header class="header" role="banner">
-    <div class="container">
-        <!-- 左侧图标区域 -->
-        <div class="header-left">
-            <h1 class="logo">
-                <a href="index.html" aria-label="返回首页">狂客·银河</a>
-            </h1>
-        </div>
-        <!-- 中央导航区域 -->
-        <nav class="primary-nav" role="navigation" aria-label="主导航">
-            <!-- 成功日记 -->
-            <a class="success-link" href="success.html" title="查看成功日记">
-                <span class="success-icon" aria-hidden="true">
-                    <i class="fas fa-meteor"></i>
-                </span>
-                <span class="success-text">成功日记</span>
-            </a>
-            <!-- 星空 -->
-            <a class="sky-link" href="reading.html" title="探索星空">
-                <span class="sky-icon" aria-hidden="true">
-                    <i class="fas fa-star"></i>
-                </span>
-                <span class="sky-text">星空</span>
-            </a>
-            <!-- 冬之街小店 -->
-            <a class="exam-link"
-               href="https://kuangketongxue.github.io/tongxuekuangke/"
-               target="_blank"
-               rel="noopener noreferrer"
-               title="访问冬之街小店">
-                <span class="exam-icon" aria-hidden="true">
-                    <i class="fas fa-graduation-cap"></i>
-                </span>
-                <span class="exam-text">冬之街小店</span>
-            </a>
-            <!-- 视频矩阵 -->
-            <a class="video-link" href="video.html" title="观看视频内容">
-                <span class="video-icon" aria-hidden="true">
-                    <i class="fas fa-video"></i>
-                </span>
-                <span class="video-text">视频矩阵</span>
-            </a>
-        </nav>
-        <!-- 右侧功能按钮区域 -->
-        <div class="controls">
-            <!-- AI前沿按钮 -->
-            <a href="ai.html"
-               class="nav-button-base ai-nav-button"
-               title="探索AI赋能工具">
-                <span class="button-icon">
-                    <i class="fas fa-brain"></i>
-                </span>
-                <span>AI赋能</span>
-            </a>
-            <!-- 健康提醒按钮 -->
-            <a href="health.html"
-               class="nav-button-base health-nav-button"
-               title="查看健康提醒">
-                <span class="button-icon">
-                    <i class="fas fa-heartbeat"></i>
-                </span>
-                <span>健康提醒</span>
-            </a>
-            <!-- 美食聚餐选择按钮 -->
-            <a href="https://kuangketongxue.github.io/meal-planner/"
-               class="nav-button-base meal-nav-button"
-               target="_blank"
-               rel="noopener noreferrer"
-               title="美食聚餐计划">
-                <span class="button-icon">
-                    <i class="fas fa-utensils"></i>
-                </span>
-                <span>美食聚餐</span>
-            </a>
-            <!-- 加密货币交易分析系统按钮 -->
-            <a href="CryptoVision.html"
-               class="nav-button-base crypto-nav-button"
-               title="进入加密货币交易分析系统">
-                <span class="button-icon">
-                    <i class="fas fa-chart-line"></i>
-                </span>
-                <span>加密货币分析</span>
-            </a>
-            <!-- 搜索框 -->
-            <div class="search-box" role="search">
-                <label for="searchInput" class="sr-only">搜索内容</label>
-                <i class="fas fa-search" aria-hidden="true"></i>
-                <input
-                    type="search"
-                    id="searchInput"
-                    placeholder="搜索银河中..."
-                    autocomplete="off"
-                    aria-label="搜索朋友圈内容">
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header-left">
+                <h1 class="logo">
+                    <a href="index.html" aria-label="返回首页">狂客·银河</a>
+                </h1>
             </div>
-            <!-- 主题切换 -->
-            <button
-                id="themeToggle"
-                class="theme-toggle"
-                aria-label="切换深色/浅色主题"
-                title="切换主题">
-                <i class="fas fa-moon" aria-hidden="true"></i>
-            </button>
+            
+            <nav class="primary-nav" role="navigation" aria-label="主导航">
+                <a class="success-link" href="success.html" title="查看成功日记">
+                    <i class="fas fa-meteor"></i>
+                    <span>成功日记</span>
+                </a>
+                <a class="sky-link" href="reading.html" title="探索星空">
+                    <i class="fas fa-star"></i>
+                    <span>星空</span>
+                </a>
+                <a class="exam-link" href="https://kuangketongxue.github.io/tongxuekuangke/" target="_blank" rel="noopener noreferrer" title="访问冬之街小店">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>冬之街小店</span>
+                </a>
+                <a class="video-link" href="video.html" title="观看视频内容">
+                    <i class="fas fa-video"></i>
+                    <span>视频矩阵</span>
+                </a>
+            </nav>
+            
+            <div class="controls">
+                <a href="ai.html" class="nav-button-base ai-nav-button" title="探索AI赋能工具">
+                    <i class="fas fa-brain"></i>
+                    <span>AI赋能</span>
+                </a>
+                <a href="health.html" class="nav-button-base health-nav-button" title="查看健康提醒">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>健康提醒</span>
+                </a>
+                <a href="https://kuangketongxue.github.io/meal-planner/" class="nav-button-base meal-nav-button" target="_blank" rel="noopener noreferrer" title="美食聚餐计划">
+                    <i class="fas fa-utensils"></i>
+                    <span>美食聚餐</span>
+                </a>
+                <a href="CryptoVision.html" class="nav-button-base crypto-nav-button" title="进入加密货币交易分析系统">
+                    <i class="fas fa-chart-line"></i>
+                    <span>加密货币分析</span>
+                </a>
+                
+                <div class="search-box" role="search">
+                    <i class="fas fa-search"></i>
+                    <input type="search" id="searchInput" placeholder="搜索银河中..." autocomplete="off" aria-label="搜索朋友圈内容">
+                </div>
+                
+                <button id="themeToggle" class="theme-toggle" aria-label="切换深色/浅色主题" title="切换主题">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
+    
     <!-- ==================== 分类导航 ==================== -->
     <nav class="category-nav" role="navigation" aria-label="内容分类">
         <div class="container">
             <div class="category-scroll" role="tablist">
-                <button class="category-btn active" data-category="all" role="tab" aria-selected="true">
-                    全部
-                </button>
+                <button class="category-btn active" data-category="all" role="tab" aria-selected="true">全部</button>
                 <button class="category-btn" data-category="生活日常" role="tab">生活日常</button>
                 <button class="category-btn" data-category="美食分享" role="tab">美食分享</button>
                 <button class="category-btn" data-category="旅行见闻" role="tab">旅行见闻</button>
@@ -1225,6 +214,7 @@
             </div>
         </div>
     </nav>
+    
     <!-- ==================== 排序控件 ==================== -->
     <nav class="sort-nav" role="navigation" aria-label="内容排序">
         <div class="container">
@@ -1240,10 +230,10 @@
                 </div>
                 <div class="view-options">
                     <button id="gridView" class="view-btn active" title="网格视图" aria-label="网格视图">
-                        <i class="fas fa-th" aria-hidden="true"></i>
+                        <i class="fas fa-th"></i>
                     </button>
                     <button id="listView" class="view-btn" title="列表视图" aria-label="列表视图">
-                        <i class="fas fa-list" aria-hidden="true"></i>
+                        <i class="fas fa-list"></i>
                     </button>
                 </div>
                 <button class="export-btn" id="exportBtn" title="导出数据">
@@ -1253,6 +243,7 @@
             </div>
         </div>
     </nav>
+    
     <!-- ==================== 主要内容区域 ==================== -->
     <main class="main-content" role="main">
         <div class="container">
@@ -1260,73 +251,52 @@
             <section class="moments-stats" aria-label="朋友圈统计">
                 <div class="stat-cards">
                     <article class="stat-card">
-                        <div class="stat-number" id="totalMoments" aria-live="polite">0</div>
+                        <div class="stat-number" id="totalMoments">0</div>
                         <div class="stat-label">朋友圈总数</div>
                     </article>
                     <article class="stat-card highlight">
-                        <div class="stat-number" id="highValueMoments" aria-live="polite">0</div>
+                        <div class="stat-number" id="highValueMoments">0</div>
                         <div class="stat-label">高价值内容</div>
                     </article>
                     <article class="stat-card">
-                        <div class="stat-number" id="todayMoments" aria-live="polite">0</div>
+                        <div class="stat-number" id="todayMoments">0</div>
                         <div class="stat-label">今日发布</div>
                     </article>
                 </div>
                 <div class="sort-hint" id="sortHint"></div>
             </section>
+            
             <!-- 朋友圈内容列表 -->
-            <section
-                id="momentsContainer"
-                class="moments-grid"
-                role="feed"
-                aria-label="朋友圈内容列表"
-                aria-live="polite"
-                aria-busy="false">
+            <section id="momentsContainer" class="moments-grid" role="feed" aria-label="朋友圈内容列表">
                 <!-- 内容由JavaScript动态加载 -->
             </section>
-            <!-- 无限滚动加载指示器 -->
-            <div class="loading-indicator" id="loadingIndicator">
+            
+            <!-- 加载指示器 -->
+            <div class="loading-indicator" id="loadingIndicator" style="display:none">
                 <i class="fas fa-spinner"></i>
                 <p>正在加载更多内容...</p>
             </div>
+            
             <!-- ==================== 分页控件 ==================== -->
             <nav class="pagination-container" role="navigation" aria-label="分页导航">
                 <div class="pagination-info">
-                    <span id="paginationText" aria-live="polite">
+                    <span id="paginationText">
                         显示 <strong id="showingStart">0</strong> - <strong id="showingEnd">0</strong>
                         共 <strong id="totalItems">0</strong> 条
                     </span>
                 </div>
                 <div class="pagination-controls">
-                    <button
-                        id="firstPage"
-                        class="pagination-btn"
-                        aria-label="第一页"
-                        title="第一页">
+                    <button id="firstPage" class="pagination-btn" aria-label="第一页" title="第一页">
                         <i class="fas fa-angle-double-left"></i>
                     </button>
-                    <button
-                        id="prevPage"
-                        class="pagination-btn"
-                        aria-label="上一页"
-                        title="上一页">
+                    <button id="prevPage" class="pagination-btn" aria-label="上一页" title="上一页">
                         <i class="fas fa-angle-left"></i>
                     </button>
-                    <div id="pageNumbers" class="page-numbers" role="list">
-                        <!-- 页码由JavaScript动态生成 -->
-                    </div>
-                    <button
-                        id="nextPage"
-                        class="pagination-btn"
-                        aria-label="下一页"
-                        title="下一页">
+                    <div id="pageNumbers" class="page-numbers" role="list"></div>
+                    <button id="nextPage" class="pagination-btn" aria-label="下一页" title="下一页">
                         <i class="fas fa-angle-right"></i>
                     </button>
-                    <button
-                        id="lastPage"
-                        class="pagination-btn"
-                        aria-label="最后一页"
-                        title="最后一页">
+                    <button id="lastPage" class="pagination-btn" aria-label="最后一页" title="最后一页">
                         <i class="fas fa-angle-double-right"></i>
                     </button>
                 </div>
@@ -1342,589 +312,409 @@
             </nav>
         </div>
     </main>
+    
     <!-- ==================== 页面底部 ==================== -->
     <footer class="social-footer" role="contentinfo">
         <div class="container">
-            <!-- 社交媒体链接 -->
             <nav class="social-links" aria-label="社交媒体">
-                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="social-link wechat"
-                   title="关注微信公众号"
-                   aria-label="微信公众号">
-                    <i class="fab fa-weixin" aria-hidden="true"></i>
+                <a href="https://open.weixin.qq.com/qr/code?username=gh_ba5b6bb6bd89" target="_blank" rel="noopener noreferrer" class="social-link wechat" title="关注微信公众号" aria-label="微信公众号">
+                    <i class="fab fa-weixin"></i>
                 </a>
-                <a href="https://github.com/kuangketongxue"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="social-link github"
-                   title="访问GitHub"
-                   aria-label="GitHub主页">
-                    <i class="fab fa-github" aria-hidden="true"></i>
+                <a href="https://github.com/kuangketongxue" target="_blank" rel="noopener noreferrer" class="social-link github" title="访问GitHub" aria-label="GitHub主页">
+                    <i class="fab fa-github"></i>
                 </a>
-                <a href="https://x.com/kuangketongxue"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="social-link x"
-                   title="关注X(Twitter)"
-                   aria-label="X账号">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <a href="https://x.com/kuangketongxue" target="_blank" rel="noopener noreferrer" class="social-link x" title="关注X(Twitter)" aria-label="X账号">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                 </a>
             </nav>
-            <!-- 版权信息 -->
             <p class="copyright">
                 <small>© 2025 狂客·银河 版权所有</small>
             </p>
         </div>
     </footer>
-    <!-- ==================== JavaScript文件 ==================== -->
-    <!-- 数据文件优先加载 -->
-    <script src="data.js"></script>
-    <!-- 主逻辑文件延迟加载 -->
+    
+    <!-- ==================== JavaScript - 优化加载 ==================== -->
     <script>
-        // ==================== 排序、视图、分页相关全局变量 ====================
-        let currentSortMethod = 'date-desc'; // 默认按日期降序
-        let currentViewMode = 'grid'; // 默认网格视图
-        let currentPage = 1;
-        let currentFilteredMoments = [];
-        let isLoading = false;
-        let userLikes = {};
-        let userBookmarks = {};
-        let backgroundOnlyMode = false; // 背景模式状态
-        
-        // ==================== 初始化功能 ====================
-        document.addEventListener('DOMContentLoaded', function() {
-            // 恢复用户数据
-            restoreUserData();
-            // 初始化主题
-            initializeTheme();
-            // 初始化背景模式返回按钮
-            initializeBackgroundModeReturn();
-            // 初始化事件监听器
-            initializeSortControls();
-            initializeViewControls();
-            initializeCategoryFilters();
-            initializeSearchBox();
-            initializeLikeButtons();
-            initPaginationControls();
-            initializeExportButton();
-            initializeInfiniteScroll();
-            // 恢复用户的偏好设置
-            restoreUserPreferences();
-            // 初始化页面（等数据）
-            setTimeout(() => {
-                initializePage();
-            }, 100);
-        });
-
-        // ==================== 背景模式返回按钮初始化 ====================
-        function initializeBackgroundModeReturn() {
-            const returnBtn = document.getElementById('backgroundModeReturn');
-            returnBtn.addEventListener('click', function() {
-                exitBackgroundMode();
-            });
-        }
-
-        // ==================== 主题初始化 ====================
-        function initializeTheme() {
-            const themeToggle = document.getElementById('themeToggle');
-            themeToggle.addEventListener('click', function() {
-                if (!backgroundOnlyMode) {
-                    // 切换到只显示背景图模式
-                    enterBackgroundMode();
-                } else {
-                    // 切换回正常显示模式
-                    exitBackgroundMode();
-                }
-            });
-        }
-
-        // ==================== 进入背景模式 ====================
-        function enterBackgroundMode() {
-            backgroundOnlyMode = true;
-            document.body.classList.add('background-only');
-            // 更新主题切换按钮
-            const themeToggle = document.getElementById('themeToggle');
-            themeToggle.innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i>';
-            themeToggle.title = '显示全部内容';
-            // 隐藏所有内容元素
-            hideAllContent();
-            // 显示返回按钮
-            const returnBtn = document.getElementById('backgroundModeReturn');
-            returnBtn.style.display = 'flex';
-        }
-
-        // ==================== 退出背景模式 ====================
-        function exitBackgroundMode() {
-            backgroundOnlyMode = false;
-            document.body.classList.remove('background-only');
-            // 恢复原来的主题切换逻辑
-            const currentTheme = document.body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            // 更新主题切换按钮
-            const themeToggle = document.getElementById('themeToggle');
-            if (newTheme === 'light') {
-                themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
-                themeToggle.title = '切换主题';
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i>';
-                themeToggle.title = '切换主题';
+        // 内联关键JS - 立即执行初始化
+        (function() {
+            'use strict';
+            
+            // 性能优化：使用requestIdleCallback延迟非关键初始化
+            const scheduleTask = window.requestIdleCallback || function(cb) { setTimeout(cb, 1); };
+            
+            // 全局状态管理
+            const state = {
+                currentSortMethod: 'date-desc',
+                currentViewMode: 'grid',
+                currentPage: 1,
+                currentFilteredMoments: [],
+                isLoading: false,
+                userLikes: {},
+                userBookmarks: {},
+                backgroundOnlyMode: false,
+                itemsPerPage: 12
+            };
+            
+            // 性能优化：防抖函数
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
             }
-            // 显示所有内容
-            showAllContent();
-            // 隐藏返回按钮
-            const returnBtn = document.getElementById('backgroundModeReturn');
-            returnBtn.style.display = 'none';
-        }
-
-        // ==================== 隐藏所有内容 ====================
-        function hideAllContent() {
-            const elementsToHide = [
-                '.header',
-                '.category-nav',
-                '.sort-nav',
-                '.main-content',
-                '.social-footer'
-            ];
-            elementsToHide.forEach(selector => {
-                const elements = document.querySelectorAll(selector);
-                elements.forEach(el => {
-                    el.style.display = 'none';
-                });
-            });
-        }
-
-        // ==================== 显示所有内容 ====================
-        function showAllContent() {
-            const elementsToShow = [
-                '.header',
-                '.category-nav',
-                '.sort-nav',
-                '.main-content',
-                '.social-footer'
-            ];
-            elementsToShow.forEach(selector => {
-                const elements = document.querySelectorAll(selector);
-                elements.forEach(el => {
-                    el.style.display = '';
-                });
-            });
-        }
-
-        // ==================== 页面初始化 ====================
-        function initializePage() {
-            // 确保数据已加载
-            if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
-                window.momentsData = momentsData;
-                // 初始化虚拟滚动观察器
-                initVirtualScroll();
-                sortAndRenderMoments();
-                updateViewMode();
-            } else {
-                // 如果数据尚未加载，等待
-                setTimeout(initializePage, 500);
+            
+            // 性能优化：节流函数
+            function throttle(func, limit) {
+                let inThrottle;
+                return function(...args) {
+                    if (!inThrottle) {
+                        func.apply(this, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                };
             }
-        }
-
-        // ==================== 虚拟滚动优化 ====================
-        function initVirtualScroll() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // 延迟加载图片
-                        const img = entry.target.querySelector('img');
-                        if (img && img.dataset.src) {
-                            img.src = img.dataset.src;
-                            img.removeAttribute('data-src');
-                        }
-                    }
-                });
-            }, { rootMargin: '50px' });
-            // 观察所有朋友圈卡片
-            document.querySelectorAll('.moment-card').forEach(card => {
-                observer.observe(card);
-            });
-        }
-
-        // ==================== 分类筛选初始化 ====================
-        function initializeCategoryFilters() {
-            const categoryBtns = document.querySelectorAll('.category-btn');
-            categoryBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const category = this.dataset.category;
-                    // 更新活动状态
-                    categoryBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    // 筛选数据
-                    if (category === 'all') {
-                        window.currentFilteredMoments = window.momentsData;
-                    } else {
-                        window.currentFilteredMoments = window.momentsData.filter(moment =>
-                            moment.category === category
-                        );
-                    }
-                    // 重新渲染
-                    window.currentPage = 1;
-                    sortAndRenderMoments();
-                    updatePagination();
-                });
-            });
-        }
-
-        // ==================== 搜索功能初始化 ====================
-        function initializeSearchBox() {
-            const searchInput = document.getElementById('searchInput');
-            let searchTimeout;
-            searchInput.addEventListener('input', function(e) {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    const searchTerm = e.target.value.toLowerCase().trim();
-                    if (searchTerm.length >= 2) {
-                        // 执行搜索
-                        const filtered = window.momentsData.filter(moment =>
-                            (moment.content && moment.content.toLowerCase().includes(searchTerm)) ||
-                            (moment.category && moment.category.toLowerCase().includes(searchTerm))
-                        );
-                        window.currentFilteredMoments = filtered;
-                        window.currentPage = 1;
-                        sortAndRenderMoments();
-                        updatePagination();
-                    } else if (searchTerm.length === 0) {
-                        // 重置为当前分类的数据
-                        const activeCategory = document.querySelector('.category-btn.active').dataset.category;
-                        if (activeCategory === 'all') {
-                            window.currentFilteredMoments = window.momentsData;
-                        } else {
-                            window.currentFilteredMoments = window.momentsData.filter(moment =>
-                                moment.category === activeCategory
-                            );
-                        }
-                        window.currentPage = 1;
-                        sortAndRenderMoments();
-                        updatePagination();
-                    }
-                }, 300);
-            });
-        }
-
-        // ==================== 点赞功能初始化 ====================
-        function initializeLikeButtons() {
-            document.addEventListener('click', function(e) {
-                const actionBtn = e.target.closest('.action-btn');
-                if (actionBtn && actionBtn.querySelector('.fa-heart')) {
-                    e.preventDefault();
-                    const icon = actionBtn.querySelector('.fa-heart');
-                    const countSpan = actionBtn.querySelector('.action-count');
-                    const momentCard = actionBtn.closest('.moment-card');
-                    const momentId = momentCard.dataset.id || Date.now().toString();
-                    if (!momentCard.dataset.id) {
-                        momentCard.dataset.id = momentId;
-                    }
-                    let count = parseInt(countSpan.textContent, 10) || 0;
-                    const isLiked = userLikes[momentId];
-                    if (isLiked) {
-                        // 取消点赞
-                        userLikes[momentId] = false;
-                        icon.classList.remove('fas', 'liked');
-                        icon.classList.add('far');
-                        icon.style.color = '';
-                        count--;
-                        actionBtn.classList.remove('liked');
-                    } else {
-                        // 点赞
-                        userLikes[momentId] = true;
-                        icon.classList.remove('far');
-                        icon.classList.add('fas', 'liked');
-                        icon.style.color = '#ff6b6b';
-                        count++;
-                        actionBtn.classList.add('liked');
-                        // 添加动画效果
-                        actionBtn.style.transform = 'scale(1.2)';
-                        setTimeout(() => actionBtn.style.transform = 'scale(1)', 200);
-                    }
-                    countSpan.textContent = count;
-                    saveUserData();
-                }
-            });
-        }
-
-        // ==================== 导出功能初始化 ====================
-        function initializeExportButton() {
-            const exportBtn = document.getElementById('exportBtn');
-            if (exportBtn) {
-                exportBtn.addEventListener('click', function() {
-                    exportMomentsData();
-                });
+            
+            // DOM缓存
+            const DOM = {};
+            function cacheDOM() {
+                DOM.momentsContainer = document.getElementById('momentsContainer');
+                DOM.searchInput = document.getElementById('searchInput');
+                DOM.sortBy = document.getElementById('sortBy');
+                DOM.itemsPerPage = document.getElementById('itemsPerPage');
+                DOM.gridView = document.getElementById('gridView');
+                DOM.listView = document.getElementById('listView');
+                DOM.themeToggle = document.getElementById('themeToggle');
+                DOM.backgroundModeReturn = document.getElementById('backgroundModeReturn');
+                DOM.categoryBtns = document.querySelectorAll('.category-btn');
+                DOM.totalMoments = document.getElementById('totalMoments');
+                DOM.highValueMoments = document.getElementById('highValueMoments');
+                DOM.todayMoments = document.getElementById('todayMoments');
+                DOM.sortHint = document.getElementById('sortHint');
             }
-        }
-
-        // ==================== 无限滚动初始化 ====================
-        function initializeInfiniteScroll() {
-            let lastScrollY = window.scrollY;
-            let scrollTimeout;
-            window.addEventListener('scroll', () => {
-                if (isLoading) return;
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    const scrollPosition = window.innerHeight + window.scrollY;
-                    const pageHeight = document.body.offsetHeight;
-                    if (scrollPosition >= pageHeight - 500) {
-                        // 检查是否还有更多内容可以加载
-                        const perPage = parseInt(document.getElementById('itemsPerPage').value, 10);
-                        const totalFiltered = (window.currentFilteredMoments || []).length;
-                        const currentlyShowing = window.currentPage * perPage;
-                        if (currentlyShowing < totalFiltered) {
-                            loadMoreContent();
-                        }
+            
+            // 数据加载检查
+            function waitForData(callback, maxAttempts = 10) {
+                let attempts = 0;
+                const interval = setInterval(() => {
+                    if (typeof window.momentsData !== 'undefined' && Array.isArray(window.momentsData)) {
+                        clearInterval(interval);
+                        callback();
+                    } else if (++attempts >= maxAttempts) {
+                        clearInterval(interval);
+                        console.error('数据加载超时');
                     }
-                    lastScrollY = window.scrollY;
                 }, 100);
-            });
-        }
-
-        // ==================== 加载更多内容 ====================
-        function loadMoreContent() {
-            if (isLoading) return;
-            isLoading = true;
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            if (loadingIndicator) {
-                loadingIndicator.classList.add('active');
             }
-            setTimeout(() => {
-                window.currentPage++;
-                renderMoreMoments();
-                updatePagination();
-                if (loadingIndicator) {
-                    loadingIndicator.classList.remove('active');
-                }
-                isLoading = false;
-            }, 800);
-        }
-
-        // ==================== 渲染更多朋友圈 ====================
-        function renderMoreMoments() {
-            const momentsContainer = document.getElementById('momentsContainer');
-            if (!momentsContainer) return;
-            // 使用已排序的筛选数据
-            let momentsToRender = window.currentFilteredMoments || window.momentsData || [];
-            // 分页处理
-            const itemsPerPage = parseInt(document.getElementById('itemsPerPage').value, 10);
-            const startIndex = (window.currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const pageMoments = momentsToRender.slice(startIndex, endIndex);
-            // 渲染新的朋友圈卡片
-            pageMoments.forEach((moment, index) => {
-                const card = createMomentCard(moment, startIndex + index);
-                momentsContainer.appendChild(card);
-                // 渐进显示动画
-                setTimeout(() => {
-                    card.classList.add('fade-in');
-                }, index * 50);
-            });
-            // 更新虚拟滚动观察器
-            initVirtualScroll();
-        }
-
-        // ==================== 排序控件初始化 ====================
-        function initializeSortControls() {
-            const sortBySelect = document.getElementById('sortBy');
-            if (sortBySelect) {
-                sortBySelect.addEventListener('change', function(e) {
-                    currentSortMethod = e.target.value;
-                    sortAndRenderMoments();
-                    updateSortUI();
-                });
-            }
-        }
-
-        // ==================== 视图控件初始化 ====================
-        function initializeViewControls() {
-            const gridViewBtn = document.getElementById('gridView');
-            const listViewBtn = document.getElementById('listView');
-            if (gridViewBtn && listViewBtn) {
-                gridViewBtn.addEventListener('click', function() {
-                    currentViewMode = 'grid';
-                    updateViewMode();
-                });
-                listViewBtn.addEventListener('click', function() {
-                    currentViewMode = 'list';
-                    updateViewMode();
-                });
-            }
-        }
-
-        // ==================== 恢复用户偏好设置 ====================
-        function restoreUserPreferences() {
-            // 恢复排序偏好
-            const savedSortMethod = localStorage.getItem('preferredSortMethod');
-            if (savedSortMethod) {
-                currentSortMethod = savedSortMethod;
-                const sortBySelect = document.getElementById('sortBy');
-                if (sortBySelect) {
-                    sortBySelect.value = savedSortMethod;
+            
+            // 初始化主题
+            function initTheme() {
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                document.body.setAttribute('data-theme', savedTheme);
+                if (DOM.themeToggle) {
+                    DOM.themeToggle.innerHTML = savedTheme === 'light' 
+                        ? '<i class="fas fa-sun"></i>' 
+                        : '<i class="fas fa-moon"></i>';
                 }
             }
-            // 恢复视图偏好
-            const savedViewMode = localStorage.getItem('preferredViewMode');
-            if (savedViewMode) {
-                currentViewMode = savedViewMode;
+            
+            // 恢复用户数据
+            function restoreUserData() {
+                try {
+                    const savedData = localStorage.getItem('userData');
+                    if (savedData) {
+                        const userData = JSON.parse(savedData);
+                        state.userLikes = userData.likes || {};
+                        state.userBookmarks = userData.bookmarks || {};
+                        if (userData.preferences) {
+                            state.currentSortMethod = userData.preferences.sortMethod || 'date-desc';
+                            state.currentViewMode = userData.preferences.viewMode || 'grid';
+                        }
+                    }
+                } catch (error) {
+                    console.error('恢复用户数据失败:', error);
+                }
             }
-        }
-
-        // ==================== 视图模式更新 ====================
-        function updateViewMode() {
-            const momentsContainer = document.getElementById('momentsContainer');
-            const gridViewBtn = document.getElementById('gridView');
-            const listViewBtn = document.getElementById('listView');
-            if (momentsContainer) {
-                if (currentViewMode === 'list') {
-                    momentsContainer.classList.add('list-view');
-                    momentsContainer.classList.remove('moments-grid');
-                    listViewBtn && listViewBtn.classList.add('active');
-                    gridViewBtn && gridViewBtn.classList.remove('active');
+            
+            // 保存用户数据 - 使用防抖优化
+            const saveUserData = debounce(() => {
+                try {
+                    const userData = {
+                        likes: state.userLikes,
+                        bookmarks: state.userBookmarks,
+                        preferences: {
+                            sortMethod: state.currentSortMethod,
+                            viewMode: state.currentViewMode,
+                            theme: document.body.getAttribute('data-theme')
+                        }
+                    };
+                    localStorage.setItem('userData', JSON.stringify(userData));
+                } catch (error) {
+                    console.error('保存用户数据失败:', error);
+                }
+            }, 500);
+            
+            // 事件委托 - 性能优化
+            function initEventDelegation() {
+                // 朋友圈容器事件委托
+                DOM.momentsContainer?.addEventListener('click', handleMomentClick);
+                
+                // 分类按钮事件委托
+                document.querySelector('.category-scroll')?.addEventListener('click', handleCategoryClick);
+            }
+            
+            // 处理朋友圈点击事件
+            function handleMomentClick(e) {
+                const target = e.target;
+                
+                // 点赞按钮
+                const likeBtn = target.closest('.action-btn .fa-heart');
+                if (likeBtn) {
+                    e.preventDefault();
+                    handleLike(likeBtn.closest('.action-btn'));
+                    return;
+                }
+                
+                // 展开/收起按钮
+                const expandBtn = target.closest('.expand-toggle-btn');
+                if (expandBtn) {
+                    handleExpand(expandBtn);
+                    return;
+                }
+                
+                // 图片点击
+                const img = target.closest('.moment-images img');
+                if (img) {
+                    handleImageClick(img);
+                    return;
+                }
+            }
+            
+            // 处理点赞
+            function handleLike(actionBtn) {
+                const icon = actionBtn.querySelector('.fa-heart');
+                const countSpan = actionBtn.querySelector('.action-count');
+                const momentCard = actionBtn.closest('.moment-card');
+                const momentId = momentCard.dataset.id;
+                
+                let count = parseInt(countSpan.textContent, 10) || 0;
+                const isLiked = state.userLikes[momentId];
+                
+                if (isLiked) {
+                    state.userLikes[momentId] = false;
+                    icon.classList.remove('fas', 'liked');
+                    icon.classList.add('far');
+                    count--;
+                    actionBtn.classList.remove('liked');
                 } else {
-                    momentsContainer.classList.add('moments-grid');
-                    momentsContainer.classList.remove('list-view');
-                    gridViewBtn && gridViewBtn.classList.add('active');
-                    listViewBtn && listViewBtn.classList.remove('active');
+                    state.userLikes[momentId] = true;
+                    icon.classList.remove('far');
+                    icon.classList.add('fas', 'liked');
+                    count++;
+                    actionBtn.classList.add('liked');
+                    // 使用CSS动画代替JS动画
+                    actionBtn.style.animation = 'likeAnimation 0.3s ease';
+                    setTimeout(() => actionBtn.style.animation = '', 300);
+                }
+                
+                countSpan.textContent = count;
+                saveUserData();
+            }
+            
+            // 处理展开/收起
+            function handleExpand(btn) {
+                const contentBox = btn.previousElementSibling;
+                const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+                const fullContent = contentBox.dataset.fullContent;
+                const para = contentBox.querySelector('p');
+                
+                if (isExpanded) {
+                    contentBox.classList.add('collapsed');
+                    contentBox.classList.remove('expanded');
+                    btn.setAttribute('aria-expanded', 'false');
+                    btn.querySelector('.toggle-text').textContent = '展开全文';
+                    btn.querySelector('.toggle-icon').className = 'fas fa-chevron-down toggle-icon';
+                    para.textContent = fullContent.substring(0, 300) + '...';
+                } else {
+                    contentBox.classList.remove('collapsed');
+                    contentBox.classList.add('expanded');
+                    btn.setAttribute('aria-expanded', 'true');
+                    btn.querySelector('.toggle-text').textContent = '收起';
+                    btn.querySelector('.toggle-icon').className = 'fas fa-chevron-up toggle-icon';
+                    para.textContent = decodeHtml(fullContent);
                 }
             }
-            // 保存视图模式偏好
-            localStorage.setItem('preferredViewMode', currentViewMode);
-        }
-
-        // ==================== 排序功能 ====================
-        function sortMoments(moments, sortMethod) {
-            const sortedMoments = [...moments];
-            switch (sortMethod) {
-                case 'date-desc':
-                    // 最新发布（日期降序）
-                    sortedMoments.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    break;
-                case 'date-asc':
-                    // 最早发布（日期升序）
-                    sortedMoments.sort((a, b) => new Date(a.date) - new Date(b.date));
-                    break;
-                case 'value-desc':
-                    // 价值最高（价值降序）
-                    sortedMoments.sort((a, b) => (b.value || 0) - (a.value || 0));
-                    break;
-                case 'value-asc':
-                    // 价值最低（价值升序）
-                    sortedMoments.sort((a, b) => (a.value || 0) - (b.value || 0));
-                    break;
-                default:
-                    // 默认按日期降序
-                    sortedMoments.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // 处理分类点击
+            function handleCategoryClick(e) {
+                const btn = e.target.closest('.category-btn');
+                if (!btn) return;
+                
+                const category = btn.dataset.category;
+                
+                // 更新UI
+                DOM.categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // 筛选数据
+                if (category === 'all') {
+                    state.currentFilteredMoments = window.momentsData;
+                } else {
+                    state.currentFilteredMoments = window.momentsData.filter(m => m.category === category);
+                }
+                
+                state.currentPage = 1;
+                sortAndRenderMoments();
             }
-            return sortedMoments;
-        }
-
-        // ==================== 排序并渲染朋友圈 ====================
-        function sortAndRenderMoments() {
-            // 获取当前筛选后的朋友圈数据
-            let currentMoments = window.currentFilteredMoments || window.momentsData;
-            // 如果没有筛选数据，使用全部数据
-            if (!currentMoments || currentMoments.length === 0) {
-                currentMoments = window.momentsData || [];
+            
+            // 搜索功能 - 使用防抖
+            const handleSearch = debounce((searchTerm) => {
+                if (searchTerm.length >= 2) {
+                    state.currentFilteredMoments = window.momentsData.filter(m =>
+                        (m.content && m.content.toLowerCase().includes(searchTerm)) ||
+                        (m.category && m.category.toLowerCase().includes(searchTerm))
+                    );
+                } else if (searchTerm.length === 0) {
+                    const activeCategory = document.querySelector('.category-btn.active')?.dataset.category;
+                    state.currentFilteredMoments = activeCategory === 'all' 
+                        ? window.momentsData 
+                        : window.momentsData.filter(m => m.category === activeCategory);
+                }
+                state.currentPage = 1;
+                sortAndRenderMoments();
+            }, 300);
+            
+            // 排序并渲染
+            function sortAndRenderMoments() {
+                const sorted = sortMoments(state.currentFilteredMoments, state.currentSortMethod);
+                state.currentFilteredMoments = sorted;
+                renderMoments();
+                updateStats(sorted);
+                updatePagination();
             }
-            // 执行排序
-            const sortedMoments = sortMoments(currentMoments, currentSortMethod);
-            // 更新全局筛选数据
-            window.currentFilteredMoments = sortedMoments;
-            // 重置分页并重新渲染
-            window.currentPage = 1;
-            renderMoments();
-            updatePagination();
-            // 更新统计信息
-            updateStats(sortedMoments);
-            // 保存排序偏好
-            localStorage.setItem('preferredSortMethod', currentSortMethod);
-            // 添加排序动画效果
-            animateSortChange();
-        }
-
-        // ==================== 更新排序UI ====================
-        function updateSortUI() {
-            const sortBySelect = document.getElementById('sortBy');
-            if (sortBySelect) {
-                sortBySelect.value = currentSortMethod;
+            
+            // 排序函数
+            function sortMoments(moments, method) {
+                const sorted = [...moments];
+                switch (method) {
+                    case 'date-desc':
+                        return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    case 'date-asc':
+                        return sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    case 'value-desc':
+                        return sorted.sort((a, b) => (b.value || 0) - (a.value || 0));
+                    case 'value-asc':
+                        return sorted.sort((a, b) => (a.value || 0) - (b.value || 0));
+                    default:
+                        return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
+                }
             }
-            const sortNav = document.querySelector('.sort-nav');
-            if (sortNav) {
-                sortNav.classList.add('sorting');
-                setTimeout(() => {
-                    sortNav.classList.remove('sorting');
-                }, 300);
+            
+            // 渲染朋友圈 - 使用DocumentFragment优化
+            function renderMoments() {
+                if (!DOM.momentsContainer) return;
+                
+                const startIndex = (state.currentPage - 1) * state.itemsPerPage;
+                const endIndex = startIndex + state.itemsPerPage;
+                const pageMoments = state.currentFilteredMoments.slice(startIndex, endIndex);
+                
+                // 清空容器
+                DOM.momentsContainer.innerHTML = '';
+                
+                // 使用DocumentFragment批量插入
+                const fragment = document.createDocumentFragment();
+                pageMoments.forEach((moment, index) => {
+                    const card = createMomentCard(moment, startIndex + index);
+                    fragment.appendChild(card);
+                });
+                
+                DOM.momentsContainer.appendChild(fragment);
+                
+                // 延迟执行动画
+                requestAnimationFrame(() => {
+                    const cards = DOM.momentsContainer.querySelectorAll('.moment-card');
+                    cards.forEach((card, i) => {
+                        setTimeout(() => card.classList.add('fade-in'), i * 30);
+                    });
+                });
             }
-        }
-
-        // ==================== 排序动画效果 ====================
-        function animateSortChange() {
-            const momentsContainer = document.getElementById('momentsContainer');
-            if (!momentsContainer) return;
-            momentsContainer.style.opacity = '0.5';
-            momentsContainer.style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                momentsContainer.style.opacity = '1';
-                momentsContainer.style.transform = 'scale(1)';
-            }, 200);
-        }
-
-        // ==================== 渲染朋友圈 ====================
-        function renderMoments() {
-            const momentsContainer = document.getElementById('momentsContainer');
-            if (!momentsContainer) return;
-            // 使用已排序的筛选数据
-            let momentsToRender = window.currentFilteredMoments || window.momentsData || [];
-            // 分页处理
-            const itemsPerPage = parseInt(document.getElementById('itemsPerPage').value, 10);
-            const startIndex = (window.currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const pageMoments = momentsToRender.slice(startIndex, endIndex);
-            // 清空容器
-            momentsContainer.innerHTML = '';
-            // 加载状态
-            momentsContainer.setAttribute('aria-busy', 'true');
-            // 渲染朋友圈卡片
-            pageMoments.forEach((moment, index) => {
-                const card = createMomentCard(moment, startIndex + index);
-                momentsContainer.appendChild(card);
-                // 渐进显示动画
-                setTimeout(() => {
-                    card.classList.add('fade-in');
-                }, index * 50);
-            });
-            // 移除加载状态
-            setTimeout(() => {
-                momentsContainer.setAttribute('aria-busy', 'false');
-            }, pageMoments.length * 50);
-            // 更新分页信息
-            updatePaginationInfo();
-        }
-
-        // ==================== 创建朋友圈卡片（优化版） ====================
-        function createMomentCard(moment, index) {
-            const card = document.createElement('article');
-            card.className = 'moment-card';
-            card.setAttribute('role', 'article');
-            card.setAttribute('aria-label', `朋友圈内容 ${index + 1}`);
-            card.dataset.id = moment.id || `moment-${index}`;
-
-            // 检查用户是否已点赞
-            const isLiked = userLikes[card.dataset.id];
-
-            // 格式化日期
-            const rawDate = new Date(moment.date);
-            const hasValidDate = rawDate instanceof Date && !isNaN(rawDate);
-            const formattedDate = hasValidDate ? formatDate(rawDate) : (moment.date || '未知时间');
-
-            // 价值标签颜色判断逻辑
+            
+            // 创建朋友圈卡片 - 优化版
+            function createMomentCard(moment, index) {
+                const card = document.createElement('article');
+                card.className = 'moment-card';
+                card.dataset.id = moment.id || `moment-${index}`;
+                
+                const isLiked = state.userLikes[card.dataset.id];
+                const date = new Date(moment.date);
+                const formattedDate = isNaN(date) ? moment.date : formatDate(date);
+                
+                const content = moment.content || '';
+                const shouldCollapse = content.length > 300;
+                const previewContent = shouldCollapse ? content.substring(0, 300) + '...' : content;
+                
+                // 使用模板字符串构建HTML
+                card.innerHTML = `
+                    <div class="moment-header">
+                        <div class="moment-meta">
+                            <span class="moment-date">${formattedDate}</span>
+                            <span class="moment-category">${moment.category || '未分类'}</span>
+                            ${moment.value ? `<span class="value-badge" style="background:${getValueColor(moment.value)}">价值 ${moment.value}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="moment-content ${shouldCollapse ? 'collapsed' : ''}" data-full-content="${escapeHtml(content)}">
+                        <p>${escapeHtml(previewContent)}</p>
+                    </div>
+                    ${shouldCollapse ? `
+                        <button class="expand-toggle-btn" aria-expanded="false" type="button" title="展开查看完整内容">
+                            <span class="toggle-text">展开全文</span>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </button>
+                    ` : ''}
+                    ${moment.images?.length ? `
+                        <div class="moment-images ${getImageClass(moment.images.length)}">
+                            ${moment.images.map((img, i) => `<img src="${img}" alt="朋友圈图片 ${i+1}" loading="lazy">`).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="moment-actions">
+                        <div class="action-group">
+                            <button class="action-btn ${isLiked ? 'liked' : ''}" aria-label="点赞">
+                                <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
+                                <span class="action-count">${moment.likes || 0}</span>
+                            </button>
+                            <button class="action-btn" aria-label="评论">
+                                <i class="far fa-comment"></i>
+                                <span class="action-count">${moment.comments || 0}</span>
+                            </button>
+                        </div>
+                        <button class="share-btn" aria-label="分享">
+                            <i class="fas fa-share-alt"></i>
+                            <span>分享</span>
+                        </button>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            // 辅助函数
+            function formatDate(date) {
+                const now = new Date();
+                const diff = now - date;
+                const minute = 60 * 1000;
+                const hour = 60 * minute;
+                const day = 24 * hour;
+                
+                if (diff < hour) return `${Math.floor(diff / minute)}分钟前`;
+                if (diff < day) return `${Math.floor(diff / hour)}小时前`;
+                if (diff < 2 * day) return '昨天';
+                if (diff < 7 * day) return `${Math.floor(diff / day)}天前`;
+                return date.toLocaleDateString('zh-CN');
+            }
+            
             function getValueColor(value) {
                 if (value >= 9) return 'linear-gradient(135deg, #ff6b6b, #ff8e53)';
                 if (value >= 7) return 'linear-gradient(135deg, #667eea, #764ba2)';
@@ -1932,415 +722,315 @@
                 if (value >= 3) return 'linear-gradient(135deg, #ffc107, #ff9800)';
                 return 'linear-gradient(135deg, #868e96, #495057)';
             }
-
-            // 价值标签
-            const valueLabel = moment.value ? `
-                <span class="value-badge" style="background: ${getValueColor(moment.value)}">
-                    价值 ${moment.value}
-                </span>
-            ` : '';
-
-            // 处理内容长度和折叠状态
-            const content = moment.content || '';
-            const COLLAPSE_THRESHOLD = 300;
-            const shouldCollapse = content.length > COLLAPSE_THRESHOLD;
-            const previewContent = shouldCollapse ? content.substring(0, COLLAPSE_THRESHOLD) + '...' : content;
-
-            card.innerHTML = `
-                <div class="moment-header">
-                    <div class="moment-meta">
-                        <span class="moment-date">${formattedDate}</span>
-                        <span class="moment-category">${moment.category || '未分类'}</span>
-                        ${valueLabel}
-                    </div>
-                </div>
-                <div class="moment-content ${shouldCollapse ? 'collapsed' : ''}" data-full-content="${escapeHtml(content)}">
-                    <p>${escapeHtml(previewContent)}</p>
-                </div>
-                ${shouldCollapse ? `
-                    <button class="expand-toggle-btn" aria-expanded="false" type="button" title="展开查看完整内容">
-                        <span class="toggle-text">展开全文</span>
-                        <i class="fas fa-chevron-down toggle-icon" aria-hidden="true"></i>
-                    </button>
-                ` : ''}
-                ${moment.images && moment.images.length > 0 ? `
-                    <div class="moment-images ${getImageClass(moment.images.length)}">
-                        ${moment.images.map((img, imgIndex) => `
-                            <img src="${img}" alt="朋友圈图片 ${imgIndex + 1}" loading="lazy">
-                        `).join('')}
-                    </div>
-                ` : ''}
-                <div class="moment-actions">
-                    <div class="action-group">
-                        <button class="action-btn ${isLiked ? 'liked' : ''}" aria-label="点赞">
-                            <i class="${isLiked ? 'fas' : 'far'} fa-heart" style="${isLiked ? 'color: #ff6b6b;' : ''}"></i>
-                            <span class="action-count">${moment.likes || 0}</span>
-                        </button>
-                        <button class="action-btn" aria-label="评论">
-                            <i class="far fa-comment"></i>
-                            <span class="action-count">${moment.comments || 0}</span>
-                        </button>
-                    </div>
-                    <button class="share-btn" aria-label="分享">
-                        <i class="fas fa-share-alt"></i>
-                        <span>分享</span>
-                    </button>
-                </div>
-            `;
-
-            // 折叠/展开事件处理（优化版）
-            const toggleBtn = card.querySelector('.expand-toggle-btn');
-            const contentBox = card.querySelector('.moment-content');
-            const contentPara = contentBox?.querySelector('p');
             
-            if (toggleBtn && contentBox && contentPara) {
-                toggleBtn.addEventListener('click', function() {
-                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                    const fullContent = contentBox.dataset.fullContent;
+            function getImageClass(count) {
+                if (count === 1) return 'single';
+                if (count === 2) return 'double';
+                return 'multiple';
+            }
+            
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            function decodeHtml(html) {
+                const txt = document.createElement('textarea');
+                txt.innerHTML = html;
+                return txt.value;
+            }
+            
+            // 更新统计 - 使用requestAnimationFrame优化
+            function updateStats(moments) {
+                const total = moments.length;
+                const highValue = moments.filter(m => (m.value || 0) >= 9).length;
+                const today = new Date().toISOString().split('T')[0];
+                const todayCount = moments.filter(m => m.date?.startsWith(today)).length;
+                
+                animateNumber(DOM.totalMoments, total);
+                animateNumber(DOM.highValueMoments, highValue);
+                animateNumber(DOM.todayMoments, todayCount);
+                
+                if (DOM.sortHint) {
+                    DOM.sortHint.textContent = getSortDescription(state.currentSortMethod);
+                }
+            }
+            
+            function animateNumber(element, target) {
+                if (!element) return;
+                const current = parseInt(element.textContent) || 0;
+                const duration = 500;
+                const start = Date.now();
+                
+                function update() {
+                    const elapsed = Date.now() - start;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const value = Math.round(current + (target - current) * progress);
+                    element.textContent = value;
                     
-                    if (isExpanded) {
-                        // 收起内容
-                        contentBox.classList.add('collapsed');
-                        contentBox.classList.remove('expanded');
-                        this.setAttribute('aria-expanded', 'false');
-                        this.classList.remove('expanded');
-                        this.title = '展开查看完整内容';
-                        
-                        // 更新按钮文本和图标
-                        this.querySelector('.toggle-text').textContent = '展开全文';
-                        this.querySelector('.toggle-icon').className = 'fas fa-chevron-down toggle-icon';
-                        
-                        // 恢复预览内容
-                        contentPara.textContent = previewContent;
-                        
-                        // 平滑滚动到卡片顶部
-                        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    } else {
-                        // 展开内容
-                        contentBox.classList.remove('collapsed');
-                        contentBox.classList.add('expanded');
-                        this.setAttribute('aria-expanded', 'true');
-                        this.classList.add('expanded');
-                        this.title = '收起内容';
-                        
-                        // 更新按钮文本和图标
-                        this.querySelector('.toggle-text').textContent = '收起';
-                        this.querySelector('.toggle-icon').className = 'fas fa-chevron-up toggle-icon';
-                        
-                        // 显示完整内容
-                        contentPara.textContent = decodeHtml(fullContent);
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
                     }
+                }
+                
+                requestAnimationFrame(update);
+            }
+            
+            function getSortDescription(method) {
+                const descriptions = {
+                    'date-desc': '按最新发布时间排序',
+                    'date-asc': '按最早发布时间排序',
+                    'value-desc': '按内容价值从高到低排序',
+                    'value-asc': '按内容价值从低到高排序'
+                };
+                return descriptions[method] || '按最新发布时间排序';
+            }
+            
+            // 分页功能
+            function updatePagination() {
+                const total = state.currentFilteredMoments.length;
+                const totalPages = Math.ceil(total / state.itemsPerPage) || 1;
+                state.currentPage = Math.min(Math.max(1, state.currentPage), totalPages);
+                
+                // 更新按钮状态
+                const firstPage = document.getElementById('firstPage');
+                const prevPage = document.getElementById('prevPage');
+                const nextPage = document.getElementById('nextPage');
+                const lastPage = document.getElementById('lastPage');
+                
+                if (firstPage) firstPage.disabled = state.currentPage === 1;
+                if (prevPage) prevPage.disabled = state.currentPage === 1;
+                if (nextPage) nextPage.disabled = state.currentPage === totalPages;
+                if (lastPage) lastPage.disabled = state.currentPage === totalPages;
+                
+                // 更新页码
+                const pageNumbers = document.getElementById('pageNumbers');
+                if (pageNumbers) {
+                    pageNumbers.innerHTML = '';
+                    const maxButtons = 5;
+                    let start = Math.max(1, state.currentPage - 2);
+                    let end = Math.min(totalPages, start + maxButtons - 1);
+                    start = Math.max(1, end - maxButtons + 1);
+                    
+                    const fragment = document.createDocumentFragment();
+                    for (let i = start; i <= end; i++) {
+                        const btn = document.createElement('button');
+                        btn.className = `page-number ${i === state.currentPage ? 'active' : ''}`;
+                        btn.textContent = i;
+                        btn.onclick = () => {
+                            state.currentPage = i;
+                            renderMoments();
+                            updatePagination();
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        };
+                        fragment.appendChild(btn);
+                    }
+                    pageNumbers.appendChild(fragment);
+                }
+                
+                // 更新文本信息
+                const start = total === 0 ? 0 : (state.currentPage - 1) * state.itemsPerPage + 1;
+                const end = Math.min(total, state.currentPage * state.itemsPerPage);
+                
+                const startEl = document.getElementById('showingStart');
+                const endEl = document.getElementById('showingEnd');
+                const totalEl = document.getElementById('totalItems');
+                
+                if (startEl) startEl.textContent = start;
+                if (endEl) endEl.textContent = end;
+                if (totalEl) totalEl.textContent = total;
+            }
+            
+            // 无限滚动 - 使用Intersection Observer
+            function initInfiniteScroll() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && !state.isLoading) {
+                            const totalPages = Math.ceil(state.currentFilteredMoments.length / state.itemsPerPage);
+                            if (state.currentPage < totalPages) {
+                                loadMore();
+                            }
+                        }
+                    });
+                }, { rootMargin: '100px' });
+                
+                const sentinel = document.getElementById('loadingIndicator');
+                if (sentinel) observer.observe(sentinel);
+            }
+            
+            function loadMore() {
+                if (state.isLoading) return;
+                state.isLoading = true;
+                
+                const indicator = document.getElementById('loadingIndicator');
+                if (indicator) indicator.style.display = 'block';
+                
+                setTimeout(() => {
+                    state.currentPage++;
+                    const startIndex = (state.currentPage - 1) * state.itemsPerPage;
+                    const endIndex = startIndex + state.itemsPerPage;
+                    const newMoments = state.currentFilteredMoments.slice(startIndex, endIndex);
+                    
+                    const fragment = document.createDocumentFragment();
+                    newMoments.forEach((moment, i) => {
+                        const card = createMomentCard(moment, startIndex + i);
+                        fragment.appendChild(card);
+                    });
+                    
+                    DOM.momentsContainer.appendChild(fragment);
+                    
+                    if (indicator) indicator.style.display = 'none';
+                    state.isLoading = false;
+                    updatePagination();
+                }, 500);
+            }
+            
+            // 主初始化函数
+            function init() {
+                cacheDOM();
+                initTheme();
+                restoreUserData();
+                
+                waitForData(() => {
+                    state.currentFilteredMoments = window.momentsData;
+                    sortAndRenderMoments();
+                    initEventDelegation();
+                    
+                    // 延迟初始化非关键功能
+                    scheduleTask(() => {
+                        initInfiniteScroll();
+                        initControls();
+                    });
                 });
             }
-
-            return card;
-        }
-
-        // HTML转义函数（防止XSS）
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // HTML解码函数
-        function decodeHtml(html) {
-            const txt = document.createElement('textarea');
-            txt.innerHTML = html;
-            return txt.value;
-        }
-
-        // ==================== 辅助函数 ====================
-        function formatDate(date) {
-            const now = new Date();
-            const diffTime = Math.abs(now - date);
-            const minute = 60 * 1000;
-            const hour = 60 * minute;
-            const day = 24 * hour;
-            const diffDays = Math.floor(diffTime / day);
-            if (diffDays === 0) {
-                const diffHours = Math.floor(diffTime / hour);
-                if (diffHours === 0) {
-                    const diffMinutes = Math.floor(diffTime / minute);
-                    return diffMinutes === 0 ? '刚刚' : `${diffMinutes}分钟前`;
-                }
-                return `${diffHours}小时前`;
-            } else if (diffDays === 1) {
-                return '昨天';
-            } else if (diffDays < 7) {
-                return `${diffDays}天前`;
-            } else {
-                return date.toLocaleDateString('zh-CN');
+            
+            // 初始化控件
+            function initControls() {
+                // 排序
+                DOM.sortBy?.addEventListener('change', (e) => {
+                    state.currentSortMethod = e.target.value;
+                    sortAndRenderMoments();
+                    saveUserData();
+                });
+                
+                // 搜索
+                DOM.searchInput?.addEventListener('input', (e) => {
+                    handleSearch(e.target.value.toLowerCase().trim());
+                });
+                
+                // 每页数量
+                DOM.itemsPerPage?.addEventListener('change', (e) => {
+                    state.itemsPerPage = parseInt(e.target.value);
+                    state.currentPage = 1;
+                    renderMoments();
+                    updatePagination();
+                });
+                
+                // 视图切换
+                DOM.gridView?.addEventListener('click', () => {
+                    state.currentViewMode = 'grid';
+                    updateViewMode();
+                });
+                
+                DOM.listView?.addEventListener('click', () => {
+                    state.currentViewMode = 'list';
+                    updateViewMode();
+                });
+                
+                // 主题切换
+                DOM.themeToggle?.addEventListener('click', () => {
+                    const current = document.body.getAttribute('data-theme');
+                    const newTheme = current === 'dark' ? 'light' : 'dark';
+                    document.body.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    DOM.themeToggle.innerHTML = newTheme === 'light' 
+                        ? '<i class="fas fa-sun"></i>' 
+                        : '<i class="fas fa-moon"></i>';
+                });
+                
+                // 分页按钮
+                document.getElementById('firstPage')?.addEventListener('click', () => {
+                    state.currentPage = 1;
+                    renderMoments();
+                    updatePagination();
+                });
+                
+                document.getElementById('prevPage')?.addEventListener('click', () => {
+                    state.currentPage = Math.max(1, state.currentPage - 1);
+                    renderMoments();
+                    updatePagination();
+                });
+                
+                document.getElementById('nextPage')?.addEventListener('click', () => {
+                    const totalPages = Math.ceil(state.currentFilteredMoments.length / state.itemsPerPage);
+                    state.currentPage = Math.min(totalPages, state.currentPage + 1);
+                    renderMoments();
+                    updatePagination();
+                });
+                
+                document.getElementById('lastPage')?.addEventListener('click', () => {
+                    state.currentPage = Math.ceil(state.currentFilteredMoments.length / state.itemsPerPage);
+                    renderMoments();
+                    updatePagination();
+                });
+                
+                // 导出按钮
+                document.getElementById('exportBtn')?.addEventListener('click', exportData);
             }
-        }
-        
-        function getImageClass(count) {
-            if (count === 1) return 'single';
-            if (count === 2) return 'double';
-            return 'multiple';
-        }
-
-        // ==================== 统计信息更新 ====================
-        function updateStats(moments) {
-            const totalMoments = moments.length;
-            // 修改高价值内容判断标准从 >=8 改为 >=9
-            const highValueMoments = moments.filter(m => (m.value || 0) >= 9).length;
-            const today = new Date().toISOString().split('T')[0];
-            const todayMoments = moments.filter(m => m.date && String(m.date).startsWith(today)).length;
-            // 更新DOM
-            animateNumber('totalMoments', totalMoments);
-            animateNumber('highValueMoments', highValueMoments);
-            animateNumber('todayMoments', todayMoments);
-            // 添加排序信息提示
-            const sortHint = document.getElementById('sortHint');
-            if (sortHint) {
-                const sortInfo = getSortDescription(currentSortMethod);
-                sortHint.textContent = sortInfo;
-            }
-        }
-        
-        function getSortDescription(sortMethod) {
-            const descriptions = {
-                'date-desc': '按最新发布时间排序',
-                'date-asc': '按最早发布时间排序',
-                'value-desc': '按内容价值从高到低排序',
-                'value-asc': '按内容价值从低到高排序'
-            };
-            return descriptions[sortMethod] || '按最新发布时间排序';
-        }
-
-        // ==================== 数字动画 ====================
-        function animateNumber(elementId, targetValue) {
-            const element = document.getElementById(elementId);
-            if (!element) return;
-            const currentValue = parseInt(element.textContent, 10) || 0;
-            const steps = 20;
-            const increment = (targetValue - currentValue) / steps;
-            let current = currentValue;
-            let step = 0;
-            const timer = setInterval(() => {
-                step++;
-                current += increment;
-                if (step >= steps) {
-                    element.textContent = String(targetValue);
-                    clearInterval(timer);
+            
+            function updateViewMode() {
+                if (state.currentViewMode === 'list') {
+                    DOM.momentsContainer?.classList.add('list-view');
+                    DOM.listView?.classList.add('active');
+                    DOM.gridView?.classList.remove('active');
                 } else {
-                    element.textContent = String(Math.round(current));
+                    DOM.momentsContainer?.classList.remove('list-view');
+                    DOM.gridView?.classList.add('active');
+                    DOM.listView?.classList.remove('active');
                 }
-            }, 30);
-        }
-
-        // ==================== 分页功能（完整实现） ====================
-        function initPaginationControls() {
-            document.getElementById('firstPage')?.addEventListener('click', () => {
-                window.currentPage = 1;
-                renderMoments();
-                updatePagination();
-            });
-            document.getElementById('prevPage')?.addEventListener('click', () => {
-                window.currentPage = Math.max(1, (window.currentPage || 1) - 1);
-                renderMoments();
-                updatePagination();
-            });
-            document.getElementById('nextPage')?.addEventListener('click', () => {
-                const perPage = parseInt(document.getElementById('itemsPerPage').value, 10);
-                const totalPages = Math.max(1, Math.ceil((window.currentFilteredMoments || []).length / perPage));
-                window.currentPage = Math.min(totalPages, (window.currentPage || 1) + 1);
-                renderMoments();
-                updatePagination();
-            });
-            document.getElementById('lastPage')?.addEventListener('click', () => {
-                const perPage = parseInt(document.getElementById('itemsPerPage').value, 10);
-                const totalPages = Math.max(1, Math.ceil((window.currentFilteredMoments || []).length / perPage));
-                window.currentPage = totalPages;
-                renderMoments();
-                updatePagination();
-            });
-            document.getElementById('itemsPerPage')?.addEventListener('change', () => {
-                window.currentPage = 1;
-                renderMoments();
-                updatePagination();
-            });
-        }
-
-        function updatePagination() {
-            const list = window.currentFilteredMoments || [];
-            const perPageEl = document.getElementById('itemsPerPage');
-            const perPage = parseInt(perPageEl?.value || '12', 10);
-            const totalPages = Math.max(1, Math.ceil(list.length / perPage));
-            // 纠正当前页范围
-            window.currentPage = Math.min(Math.max(1, window.currentPage || 1), totalPages);
-            // 更新分页按钮状态
-            const firstPageBtn = document.getElementById('firstPage');
-            const prevPageBtn = document.getElementById('prevPage');
-            const nextPageBtn = document.getElementById('nextPage');
-            const lastPageBtn = document.getElementById('lastPage');
-            if (firstPageBtn) firstPageBtn.disabled = window.currentPage === 1;
-            if (prevPageBtn) prevPageBtn.disabled = window.currentPage === 1;
-            if (nextPageBtn) nextPageBtn.disabled = window.currentPage === totalPages;
-            if (lastPageBtn) lastPageBtn.disabled = window.currentPage === totalPages;
-            // 生成页码按钮
-            const pageNumbers = document.getElementById('pageNumbers');
-            if (pageNumbers) {
-                pageNumbers.innerHTML = '';
-                const maxButtons = 5;
-                let start = Math.max(1, window.currentPage - Math.floor(maxButtons / 2));
-                let end = Math.min(totalPages, start + maxButtons - 1);
-                start = Math.max(1, end - maxButtons + 1);
-                for (let i = start; i <= end; i++) {
-                    const btn = document.createElement('button');
-                    btn.className = `page-number ${i === window.currentPage ? 'active' : ''}`;
-                    btn.textContent = String(i);
-                    if (i === window.currentPage) {
-                        btn.setAttribute('aria-current', 'page');
-                    }
-                    btn.addEventListener('click', () => {
-                        window.currentPage = i;
-                        renderMoments();
-                        updatePagination();
-                    });
-                    pageNumbers.appendChild(btn);
-                }
+                saveUserData();
             }
-            // 更新文本信息
-            updatePaginationInfo();
-        }
-
-        function updatePaginationInfo() {
-            const perPage = parseInt(document.getElementById('itemsPerPage').value, 10);
-            const list = window.currentFilteredMoments || [];
-            const total = list.length;
-            const start = total === 0 ? 0 : (window.currentPage - 1) * perPage + 1;
-            const end = Math.min(total, window.currentPage * perPage);
-            const startEl = document.getElementById('showingStart');
-            const endEl = document.getElementById('showingEnd');
-            const totalEl = document.getElementById('totalItems');
-            if (startEl) startEl.textContent = String(start);
-            if (endEl) endEl.textContent = String(end);
-            if (totalEl) totalEl.textContent = String(total);
-        }
-
-        // ==================== 数据持久化功能 ====================
-        function saveUserData() {
-            const userData = {
-                likes: userLikes,
-                bookmarks: userBookmarks,
-                preferences: {
-                    sortMethod: currentSortMethod,
-                    viewMode: currentViewMode,
-                    theme: document.body.getAttribute('data-theme')
-                }
-            };
-            localStorage.setItem('userData', JSON.stringify(userData));
-        }
-
-        function restoreUserData() {
-            const savedData = localStorage.getItem('userData');
-            if (savedData) {
-                try {
-                    const userData = JSON.parse(savedData);
-                    // 恢复用户点赞状态
-                    userLikes = userData.likes || {};
-                    userBookmarks = userData.bookmarks || {};
-                    // 恢复用户偏好
-                    if (userData.preferences) {
-                        currentSortMethod = userData.preferences.sortMethod || 'date-desc';
-                        currentViewMode = userData.preferences.viewMode || 'grid';
-                        const savedTheme = userData.preferences.theme || 'dark';
-                        document.body.setAttribute('data-theme', savedTheme);
-                        const themeToggle = document.getElementById('themeToggle');
-                        if (themeToggle) {
-                            themeToggle.innerHTML = savedTheme === 'light'
-                                ? '<i class="fas fa-sun" aria-hidden="true"></i>'
-                                : '<i class="fas fa-moon" aria-hidden="true"></i>';
-                        }
-                    }
-                } catch (error) {
-                    console.error('恢复用户数据失败:', error);
-                }
+            
+            function exportData() {
+                const data = {
+                    exportDate: new Date().toISOString(),
+                    totalItems: state.currentFilteredMoments.length,
+                    moments: state.currentFilteredMoments
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `朋友圈数据_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
             }
-        }
-
-        // ==================== 导出功能 ====================
-        function exportMomentsData() {
-            const dataToExport = {
-                exportDate: new Date().toISOString(),
-                totalItems: window.currentFilteredMoments.length,
-                sortMethod: currentSortMethod,
-                viewMode: currentViewMode,
-                moments: window.currentFilteredMoments,
-                userStats: {
-                    totalLikes: Object.values(userLikes).filter(liked => liked).length,
-                    totalBookmarks: Object.keys(userBookmarks).length
-                }
-            };
-            const dataStr = JSON.stringify(dataToExport, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            const exportFileDefaultName = `朋友圈数据_${new Date().toISOString().split('T')[0]}.json`;
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.style.display = 'none';
-            document.body.appendChild(linkElement);
-            linkElement.click();
-            document.body.removeChild(linkElement);
-            // 显示成功提示
-            showNotification('数据导出成功！');
-        }
-
-        // ==================== 通知功能 ====================
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 80px;
-                right: 20px;
-                background: ${type === 'success' ? 'rgba(0, 201, 167, 0.9)' : 'rgba(255, 107, 107, 0.9)'};
-                color: white;
-                padding: 12px 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                z-index: 10000;
-                animation: slideIn 0.3s ease;
-            `;
-            document.body.appendChild(notification);
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
-            }, 3000);
-        }
-
-        // 添加通知动画样式
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
+            
+            // 启动应用
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
             }
-            @keyframes slideOut {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
+            
+            // 暴露全局接口
+            window.MomentsApp = { state, renderMoments, updatePagination };
+        })();
     </script>
+    
+    <!-- 外部数据文件异步加载 -->
+    <script src="data.js" async></script>
+    
+    <!-- 添加CSS动画 -->
+    <style>
+        @keyframes likeAnimation {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        /* 其他样式从style.css加载 */
+    </style>
 </body>
 </html>
