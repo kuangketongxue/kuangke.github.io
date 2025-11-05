@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
      {
+        id: 48,
+        date: '2025-11-05',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: 'API调用',
+            en: 'API call'
+        },
+        content: {
+            zh: '阅读19本书+。\n学习11小时+',
+            en: 'Read 19+ books.\nStudied for 11+ hours'
+        },
+        highlight: {
+            zh: '《山河旅探》好玩',
+            en: '"Traveling Through the Landscapes" is enjoyable'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
+     {
         id: 47,
         date: '2025-11-04',
         categories: ['study', 'creative'],
@@ -77,7 +102,7 @@ let successDiaryData = [
         },
         content: {
             zh: '阅读19本书+。\n学习12小时+\n创作100字\n视频剪辑',
-            en: 'Read 18+ books.\nStudied for 12+ hours\nWrite a piece of content totaling 100 words.\nVideo editing'
+            en: 'Read 19+ books.\nStudied for 12+ hours\nWrite a piece of content totaling 100 words.\nVideo editing'
         },
         highlight: {
             zh: '演讲➡️露脸直播；写作➡️公众号；视频剪辑➡️b站发布',
