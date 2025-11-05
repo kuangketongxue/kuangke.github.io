@@ -5,36 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    
     <!-- SEO优化 -->
     <meta name="description" content="狂客·银河 - 记录生活精彩瞬间，分享美好时刻">
     <meta name="keywords" content="狂客,银河,朋友圈,生活分享,成功日记">
     <meta name="author" content="狂客">
     <meta name="robots" content="index, follow">
-    
     <!-- Open Graph / 社交媒体分享 -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="狂客·银河">
     <meta property="og:description" content="记录生活精彩瞬间，分享美好时刻">
     <meta property="og:site_name" content="狂客·银河">
-    
     <!-- 网站图标 -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="images/favicon.ico">
-    
     <!-- 预连接外部资源 -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    
     <title>狂客·银河 - 记录生活精彩瞬间</title>
-    
     <!-- 样式表 - 使用defer属性优化加载 -->
     <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="style.css"></noscript>
-    
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin="anonymous">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous"></noscript>
-    
     <style>
         /* ==================== CSS变量定义 ==================== */
         :root {
@@ -47,38 +39,32 @@
             --text-primary: rgba(255, 255, 255, 0.9);
             --text-secondary: rgba(255, 255, 255, 0.7);
             --border-color: rgba(255, 255, 255, 0.1);
-            
             /* 间距变量 */
             --spacing-xs: 4px;
             --spacing-sm: 8px;
             --spacing-md: 16px;
             --spacing-lg: 24px;
             --spacing-xl: 32px;
-            
             /* 圆角变量 */
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
             --radius-xl: 20px;
-            
             /* 过渡变量 */
             --transition-fast: 0.2s ease;
             --transition-base: 0.3s ease;
             --transition-slow: 0.5s ease;
-            
             /* 阴影变量 */
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
             --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.2);
             --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
-
         /* ==================== 重置和基础样式 ==================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         /* ==================== 星空主题背景 ==================== */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
@@ -88,7 +74,6 @@
             position: relative;
             will-change: scroll-position;
         }
-
         /* 使用单个伪元素合并遮罩和星空效果 */
         body::before {
             content: '';
@@ -97,7 +82,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: 
+            background:
                 linear-gradient(135deg, var(--bg-overlay) 0%, rgba(25, 25, 60, 0.6) 50%, rgba(15, 15, 45, 0.7) 100%),
                 radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.8), transparent),
                 radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.6), transparent),
@@ -113,17 +98,14 @@
             transform: translateZ(0);
             backface-visibility: hidden;
         }
-
         @keyframes stars {
             from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
             to { background-position: 0 0, -250px 0, -250px 0, -250px 0, -250px 0, -250px 0, -250px 0; }
         }
-
         @keyframes twinkle {
             0%, 100% { opacity: 0.8; }
             50% { opacity: 1; }
         }
-
         /* ==================== 顶部导航栏 ==================== */
         .header {
             position: fixed;
@@ -139,7 +121,6 @@
             box-shadow: var(--shadow-md);
             transform: translateZ(0);
         }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -149,12 +130,43 @@
             justify-content: space-between;
             height: 100%;
         }
-
         .header-left {
             display: flex;
             align-items: center;
         }
-
+        /* ==================== 返回主页按钮 ==================== */
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: var(--spacing-sm) var(--spacing-md);
+            margin-right: var(--spacing-md);
+            background: rgba(102, 126, 234, 0.15);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: var(--radius-sm);
+            color: #a8b2ff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition-base);
+            transform: translateZ(0);
+        }
+        .home-button:hover {
+            background: rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .home-button i {
+            font-size: 16px;
+            transition: transform var(--transition-base);
+        }
+        .home-button:hover i {
+            transform: scale(1.1);
+        }
+        .home-button span {
+            white-space: nowrap;
+        }
         .logo {
             font-size: 20px;
             font-weight: 700;
@@ -166,7 +178,6 @@
             background-clip: text;
             text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
         }
-
         .primary-nav {
             display: flex;
             align-items: center;
@@ -174,7 +185,6 @@
             flex: 1;
             justify-content: center;
         }
-
         .primary-nav a {
             display: flex;
             align-items: center;
@@ -188,19 +198,16 @@
             font-weight: 500;
             transform: translateZ(0);
         }
-
         .primary-nav a:hover {
             background: rgba(102, 126, 234, 0.2);
             color: #a8b2ff;
             transform: translateY(-2px);
         }
-
         .controls {
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
         }
-
         /* 通用按钮样式 */
         .nav-button-base {
             display: inline-flex;
@@ -222,7 +229,6 @@
             box-shadow: var(--shadow-md);
             transform: translateZ(0);
         }
-
         .nav-button-base::before {
             content: '';
             position: absolute;
@@ -233,16 +239,13 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.5s ease;
         }
-
         .nav-button-base:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
-
         .nav-button-base:hover::before {
             left: 100%;
         }
-
         .button-icon {
             display: flex;
             align-items: center;
@@ -254,42 +257,35 @@
             border-radius: 6px;
             transition: var(--transition-base);
         }
-
         /* 各类按钮样式 */
         .ai-nav-button {
             background: var(--primary-gradient);
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-
         .health-nav-button {
             background: var(--secondary-gradient);
             box-shadow: 0 4px 15px rgba(0, 201, 167, 0.4);
         }
-
         .meal-nav-button {
             background: var(--danger-gradient);
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
-
         .crypto-nav-button {
             background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%);
             box-shadow: 0 4px 15px rgba(247, 147, 26, 0.4);
         }
-
         /* 搜索框 */
         .search-box {
             position: relative;
             display: flex;
             align-items: center;
         }
-
         .search-box i {
             position: absolute;
             left: 12px;
             color: var(--text-secondary);
             pointer-events: none;
         }
-
         .search-box input {
             padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) 36px;
             border: 1px solid var(--border-color);
@@ -300,14 +296,12 @@
             width: 200px;
             transition: var(--transition-base);
         }
-
         .search-box input:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
             width: 250px;
         }
-
         /* 主题切换按钮 */
         .theme-toggle {
             display: flex;
@@ -322,13 +316,11 @@
             cursor: pointer;
             transition: var(--transition-base);
         }
-
         .theme-toggle:hover {
             border-color: #667eea;
             color: #a8b2ff;
             background: rgba(102, 126, 234, 0.2);
         }
-
         /* ==================== 分类导航 ==================== */
         .category-nav {
             background: rgba(20, 20, 50, 0.9);
@@ -338,7 +330,6 @@
             margin-top: var(--spacing-lg);
             box-shadow: var(--shadow-md);
         }
-
         .category-scroll {
             display: flex;
             gap: var(--spacing-sm);
@@ -348,20 +339,16 @@
             scrollbar-color: rgba(102, 126, 234, 0.5) transparent;
             -webkit-overflow-scrolling: touch;
         }
-
         .category-scroll::-webkit-scrollbar {
             height: 4px;
         }
-
         .category-scroll::-webkit-scrollbar-track {
             background: transparent;
         }
-
         .category-scroll::-webkit-scrollbar-thumb {
             background: rgba(102, 126, 234, 0.5);
             border-radius: 2px;
         }
-
         .category-btn {
             padding: var(--spacing-sm) var(--spacing-md);
             border: 1px solid var(--border-color);
@@ -376,21 +363,18 @@
             flex-shrink: 0;
             transform: translateZ(0);
         }
-
         .category-btn:hover {
             border-color: #667eea;
             color: #a8b2ff;
             background: rgba(102, 126, 234, 0.2);
             transform: translateY(-2px);
         }
-
         .category-btn.active {
             background: var(--primary-gradient);
             color: white;
             border-color: transparent;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-
         /* ==================== 排序控件 ==================== */
         .sort-nav {
             background: rgba(20, 20, 50, 0.9);
@@ -402,7 +386,6 @@
             z-index: 100;
             box-shadow: var(--shadow-md);
         }
-
         .sort-controls {
             display: flex;
             align-items: center;
@@ -410,20 +393,17 @@
             flex-wrap: wrap;
             gap: var(--spacing-md);
         }
-
         .sort-group {
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
         }
-
         .sort-label {
             font-size: 14px;
             font-weight: 500;
             color: var(--text-secondary);
             white-space: nowrap;
         }
-
         .sort-select {
             padding: var(--spacing-sm) var(--spacing-md);
             border: 1px solid var(--border-color);
@@ -435,24 +415,20 @@
             transition: var(--transition-base);
             min-width: 160px;
         }
-
         .sort-select option {
             background: #1a1a3e;
             color: #fff;
         }
-
         .sort-select:hover, .sort-select:focus {
             border-color: #667eea;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
             background: rgba(255, 255, 255, 0.15);
             outline: none;
         }
-
         .view-options {
             display: flex;
             gap: var(--spacing-xs);
         }
-
         .view-btn {
             display: flex;
             align-items: center;
@@ -466,19 +442,16 @@
             cursor: pointer;
             transition: var(--transition-base);
         }
-
         .view-btn:hover {
             border-color: #667eea;
             color: #a8b2ff;
             background: rgba(102, 126, 234, 0.2);
         }
-
         .view-btn.active {
             background: #667eea;
             border-color: #667eea;
             color: white;
         }
-
         .export-btn {
             display: flex;
             align-items: center;
@@ -493,30 +466,25 @@
             font-size: 14px;
             font-weight: 500;
         }
-
         .export-btn:hover {
             border-color: #667eea;
             color: #a8b2ff;
             background: rgba(102, 126, 234, 0.2);
         }
-
         /* ==================== 主要内容区域 ==================== */
         .main-content {
             padding: 30px 0;
             min-height: calc(100vh - 300px);
         }
-
         /* 统计卡片 */
         .moments-stats {
             margin-bottom: 30px;
         }
-
         .stat-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: var(--spacing-lg);
         }
-
         .stat-card {
             background: var(--bg-card);
             backdrop-filter: blur(15px);
@@ -528,19 +496,16 @@
             box-shadow: var(--shadow-lg);
             transform: translateZ(0);
         }
-
         .stat-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
             border-color: rgba(102, 126, 234, 0.3);
         }
-
         .stat-card.highlight {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
             border-color: rgba(102, 126, 234, 0.4);
             box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
         }
-
         .stat-number {
             font-size: 32px;
             font-weight: 700;
@@ -548,13 +513,11 @@
             margin-bottom: var(--spacing-sm);
             text-shadow: 0 0 10px rgba(168, 178, 255, 0.5);
         }
-
         .stat-label {
             font-size: 14px;
             color: var(--text-secondary);
             font-weight: 500;
         }
-
         .sort-hint {
             text-align: center;
             margin-top: var(--spacing-md);
@@ -564,7 +527,6 @@
             font-size: 13px;
             color: rgba(255, 255, 255, 0.6);
         }
-
         /* 朋友圈网格 */
         .moments-grid {
             display: grid;
@@ -572,7 +534,6 @@
             gap: var(--spacing-lg);
             margin-bottom: 40px;
         }
-
         .moment-card {
             background: var(--bg-card);
             backdrop-filter: blur(15px);
@@ -585,11 +546,9 @@
             transform: translateZ(0);
             will-change: transform, opacity;
         }
-
         .moment-card.visible {
             animation: fadeInUp 0.5s ease forwards;
         }
-
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -600,30 +559,25 @@
                 transform: translateY(0);
             }
         }
-
         .moment-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 16px 40px rgba(102, 126, 234, 0.3);
             border-color: rgba(102, 126, 234, 0.3);
         }
-
         .moment-header {
             margin-bottom: var(--spacing-md);
         }
-
         .moment-meta {
             display: flex;
             align-items: center;
             gap: var(--spacing-md);
             flex-wrap: wrap;
         }
-
         .moment-date {
             font-size: 13px;
             color: var(--text-secondary);
             font-weight: 500;
         }
-
         .moment-category {
             font-size: 12px;
             padding: var(--spacing-xs) var(--spacing-sm);
@@ -633,7 +587,6 @@
             font-weight: 500;
             border: 1px solid rgba(102, 126, 234, 0.3);
         }
-
         .value-badge {
             font-size: 12px;
             padding: var(--spacing-xs) var(--spacing-sm);
@@ -642,7 +595,6 @@
             color: white;
             box-shadow: var(--shadow-sm);
         }
-
         /* 内容折叠样式 */
         .moment-content {
             margin-bottom: var(--spacing-md);
@@ -653,11 +605,9 @@
             transition: max-height 0.4s ease, opacity var(--transition-base);
             overflow: hidden;
         }
-
         .moment-content.collapsed {
             max-height: 120px;
         }
-
         .moment-content.collapsed::after {
             content: '';
             position: absolute;
@@ -668,7 +618,6 @@
             background: linear-gradient(to bottom, transparent, var(--bg-card));
             pointer-events: none;
         }
-
         .expand-toggle-btn {
             display: inline-flex;
             align-items: center;
@@ -684,7 +633,6 @@
             border-radius: var(--radius-sm);
             transition: var(--transition-base);
         }
-
         .expand-toggle-btn:hover {
             background: rgba(102, 126, 234, 0.25);
             border-color: rgba(102, 126, 234, 0.5);
@@ -692,24 +640,19 @@
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
-
         .toggle-icon {
             transition: transform var(--transition-base);
             font-size: 12px;
         }
-
         .expand-toggle-btn.expanded .toggle-icon {
             transform: rotate(180deg);
         }
-
         .moment-content.expanded {
             max-height: none;
         }
-
         .moment-content.expanded::after {
             display: none;
         }
-
         /* 图片网格 */
         .moment-images {
             display: grid;
@@ -718,19 +661,15 @@
             border-radius: var(--radius-md);
             overflow: hidden;
         }
-
         .moment-images.single {
             grid-template-columns: 1fr;
         }
-
         .moment-images.double {
             grid-template-columns: repeat(2, 1fr);
         }
-
         .moment-images.multiple {
             grid-template-columns: repeat(3, 1fr);
         }
-
         .moment-images img {
             width: 100%;
             height: 120px;
@@ -739,15 +678,12 @@
             border-radius: var(--radius-sm);
             cursor: pointer;
         }
-
         .moment-images.single img {
             height: 200px;
         }
-
         .moment-images img:hover {
             transform: scale(1.05);
         }
-
         /* 操作按钮 */
         .moment-actions {
             display: flex;
@@ -756,13 +692,11 @@
             padding-top: var(--spacing-md);
             border-top: 1px solid var(--border-color);
         }
-
         .action-group {
             display: flex;
             align-items: center;
             gap: var(--spacing-md);
         }
-
         .action-btn {
             display: flex;
             align-items: center;
@@ -777,24 +711,20 @@
             border-radius: var(--radius-sm);
             min-height: 40px;
         }
-
         .action-btn:hover {
             background: rgba(102, 126, 234, 0.2);
             color: #a8b2ff;
             transform: translateY(-2px);
         }
-
         .action-btn.liked {
             color: #ff6b6b;
         }
-
         .action-count {
             font-size: 13px;
             font-weight: 500;
             min-width: 20px;
             text-align: center;
         }
-
         .share-btn {
             display: flex;
             align-items: center;
@@ -809,14 +739,12 @@
             font-weight: 500;
             transition: var(--transition-base);
         }
-
         .share-btn:hover {
             background: rgba(102, 126, 234, 0.3);
             border-color: rgba(102, 126, 234, 0.5);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
-
         /* ==================== 分页控件 ==================== */
         .pagination-container {
             background: var(--bg-card);
@@ -831,18 +759,15 @@
             gap: var(--spacing-lg);
             box-shadow: var(--shadow-lg);
         }
-
         .pagination-info {
             font-size: 14px;
             color: var(--text-secondary);
         }
-
         .pagination-controls {
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
         }
-
         .pagination-btn {
             display: flex;
             align-items: center;
@@ -856,23 +781,19 @@
             cursor: pointer;
             transition: var(--transition-base);
         }
-
         .pagination-btn:hover:not(:disabled) {
             border-color: #667eea;
             color: #a8b2ff;
             background: rgba(102, 126, 234, 0.2);
         }
-
         .pagination-btn:disabled {
             opacity: 0.4;
             cursor: not-allowed;
         }
-
         .page-numbers {
             display: flex;
             gap: var(--spacing-xs);
         }
-
         .page-number {
             display: flex;
             align-items: center;
@@ -888,31 +809,26 @@
             font-size: 14px;
             font-weight: 500;
         }
-
         .page-number:hover {
             border-color: #667eea;
             color: #a8b2ff;
             background: rgba(102, 126, 234, 0.2);
         }
-
         .page-number.active {
             background: #667eea;
             border-color: #667eea;
             color: white;
         }
-
         .pagination-settings {
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
         }
-
         .pagination-settings label {
             font-size: 14px;
             color: var(--text-secondary);
             font-weight: 500;
         }
-
         .pagination-settings select {
             padding: 6px var(--spacing-md);
             border: 1px solid var(--border-color);
@@ -922,12 +838,10 @@
             color: var(--text-primary);
             cursor: pointer;
         }
-
         .pagination-settings select option {
             background: #1a1a3e;
             color: #fff;
         }
-
         /* ==================== 底部 ==================== */
         .social-footer {
             background: rgba(20, 20, 50, 0.9);
@@ -937,7 +851,6 @@
             margin-top: 60px;
             box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
         }
-
         .social-footer .container {
             display: flex;
             align-items: center;
@@ -945,12 +858,10 @@
             flex-wrap: wrap;
             gap: var(--spacing-lg);
         }
-
         .social-links {
             display: flex;
             gap: var(--spacing-md);
         }
-
         .social-link {
             display: flex;
             align-items: center;
@@ -964,26 +875,22 @@
             border: 1px solid var(--border-color);
             background: rgba(255, 255, 255, 0.1);
         }
-
         .social-link:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
             border-color: #667eea;
             color: #a8b2ff;
         }
-
         .copyright {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
         }
-
         /* ==================== 列表视图 ==================== */
         .moments-grid.list-view {
             display: flex;
             flex-direction: column;
             gap: var(--spacing-lg);
         }
-
         /* ==================== 背景模式返回按钮 ==================== */
         .background-mode-return {
             position: fixed;
@@ -1005,21 +912,17 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
         }
-
         .background-mode-return:hover {
             background: rgba(102, 126, 234, 1);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
-
         .background-mode-return i {
             transition: transform var(--transition-base);
         }
-
         .background-mode-return:hover i {
             transform: translateX(-3px);
         }
-
         /* ==================== 加载指示器 ==================== */
         .loading-indicator {
             text-align: center;
@@ -1027,20 +930,16 @@
             color: rgba(255, 255, 255, 0.6);
             display: none;
         }
-
         .loading-indicator.active {
             display: block;
         }
-
         .loading-indicator i {
             animation: spin 1s linear infinite;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
         /* ==================== 通知样式 ==================== */
         @keyframes slideIn {
             from {
@@ -1052,7 +951,6 @@
                 opacity: 1;
             }
         }
-
         @keyframes slideOut {
             from {
                 transform: translateX(0);
@@ -1063,66 +961,69 @@
                 opacity: 0;
             }
         }
-
         /* ==================== 响应式设计 ==================== */
         @media (max-width: 1200px) {
             .moments-grid {
                 grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             }
         }
-
         @media (max-width: 992px) {
             .primary-nav {
                 display: none;
             }
-            
             .nav-button-base span:not(.button-icon) {
                 display: none;
             }
-            
             .button-icon {
                 margin-right: 0;
             }
+            .home-button span {
+                display: none;
+            }
+            .home-button {
+                padding: var(--spacing-sm);
+                min-width: 36px;
+                justify-content: center;
+                margin-right: var(--spacing-sm);
+            }
         }
-
         @media (max-width: 768px) {
             :root {
                 --spacing-lg: 16px;
                 --spacing-md: 12px;
             }
-            
             .container {
                 padding: 0 var(--spacing-md);
             }
-            
             .sort-controls {
                 flex-direction: column;
                 align-items: stretch;
             }
-            
             .moments-grid {
                 grid-template-columns: 1fr;
             }
-            
             .stat-cards {
                 grid-template-columns: 1fr;
             }
-            
             .pagination-container {
                 flex-direction: column;
             }
         }
-
         @media (max-width: 576px) {
             .moment-card {
                 padding: var(--spacing-md);
             }
-            
             .category-btn {
                 min-height: 40px;
             }
+            .home-button {
+                padding: 6px;
+                margin-right: 6px;
+            }
+            .home-button i {
+                font-size: 14px;
+            }
         }
-
         /* ==================== 工具类 ==================== */
         .sr-only {
             position: absolute;
@@ -1135,7 +1036,6 @@
             white-space: nowrap;
             border: 0;
         }
-
         /* ==================== 骨架屏 ==================== */
         .skeleton {
             background: linear-gradient(
@@ -1148,7 +1048,6 @@
             animation: loading 1.5s ease-in-out infinite;
             border-radius: var(--radius-sm);
         }
-
         @keyframes loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
@@ -1161,16 +1060,19 @@
         <i class="fas fa-arrow-left" aria-hidden="true"></i>
         <span>返回正常视图</span>
     </button>
-
     <!-- 顶部导航栏 -->
     <header class="header" role="banner">
         <div class="container">
             <div class="header-left">
+                <!-- 返回主页按钮 -->
+                <a href="index.html" class="home-button" title="返回主页" aria-label="返回主页">
+                    <i class="fas fa-home"></i>
+                    <span>主页</span>
+                </a>
                 <h1 class="logo">
                     <a href="index.html" aria-label="返回首页">狂客·银河</a>
                 </h1>
             </div>
-
             <nav class="primary-nav" role="navigation" aria-label="主导航">
                 <a class="success-link" href="success.html" title="查看成功日记">
                     <span class="success-icon" aria-hidden="true">
@@ -1197,7 +1099,6 @@
                     <span class="video-text">视频矩阵</span>
                 </a>
             </nav>
-
             <div class="controls">
                 <a href="ai.html" class="nav-button-base ai-nav-button" title="探索AI赋能工具">
                     <span class="button-icon">
@@ -1205,41 +1106,35 @@
                     </span>
                     <span>AI赋能</span>
                 </a>
-
                 <a href="health.html" class="nav-button-base health-nav-button" title="查看健康提醒">
                     <span class="button-icon">
                         <i class="fas fa-heartbeat"></i>
                     </span>
                     <span>健康提醒</span>
                 </a>
-
                 <a href="https://kuangketongxue.github.io/meal-planner/" class="nav-button-base meal-nav-button" target="_blank" rel="noopener noreferrer" title="美食聚餐计划">
                     <span class="button-icon">
                         <i class="fas fa-utensils"></i>
                     </span>
                     <span>美食聚餐</span>
                 </a>
-
                 <a href="CryptoVision.html" class="nav-button-base crypto-nav-button" title="进入加密货币交易分析系统">
                     <span class="button-icon">
                         <i class="fas fa-chart-line"></i>
                     </span>
                     <span>加密货币分析</span>
                 </a>
-
                 <div class="search-box" role="search">
                     <label for="searchInput" class="sr-only">搜索内容</label>
                     <i class="fas fa-search" aria-hidden="true"></i>
                     <input type="search" id="searchInput" placeholder="搜索银河中..." autocomplete="off" aria-label="搜索朋友圈内容">
                 </div>
-
                 <button id="themeToggle" class="theme-toggle" aria-label="切换深色/浅色主题" title="切换主题">
                     <i class="fas fa-moon" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
     </header>
-
     <!-- 分类导航 -->
     <nav class="category-nav" role="navigation" aria-label="内容分类">
         <div class="container">
@@ -1263,7 +1158,6 @@
             </div>
         </div>
     </nav>
-
     <!-- 排序控件 -->
     <nav class="sort-nav" role="navigation" aria-label="内容排序">
         <div class="container">
@@ -1277,7 +1171,6 @@
                         <option value="value-asc">价值最低</option>
                     </select>
                 </div>
-
                 <div class="view-options">
                     <button id="gridView" class="view-btn active" title="网格视图" aria-label="网格视图">
                         <i class="fas fa-th" aria-hidden="true"></i>
@@ -1286,7 +1179,6 @@
                         <i class="fas fa-list" aria-hidden="true"></i>
                     </button>
                 </div>
-
                 <button class="export-btn" id="exportBtn" title="导出数据">
                     <i class="fas fa-download"></i>
                     <span>导出数据</span>
@@ -1294,7 +1186,6 @@
             </div>
         </div>
     </nav>
-
     <!-- 主要内容区域 -->
     <main class="main-content" role="main">
         <div class="container">
@@ -1316,18 +1207,15 @@
                 </div>
                 <div class="sort-hint" id="sortHint"></div>
             </section>
-
             <!-- 朋友圈内容列表 -->
             <section id="momentsContainer" class="moments-grid" role="feed" aria-label="朋友圈内容列表" aria-live="polite" aria-busy="false">
                 <!-- 内容由JavaScript动态加载 -->
             </section>
-
             <!-- 加载指示器 -->
             <div class="loading-indicator" id="loadingIndicator">
                 <i class="fas fa-spinner"></i>
                 <p>正在加载更多内容...</p>
             </div>
-
             <!-- 分页控件 -->
             <nav class="pagination-container" role="navigation" aria-label="分页导航">
                 <div class="pagination-info">
@@ -1336,7 +1224,6 @@
                         共 <strong id="totalItems">0</strong> 条
                     </span>
                 </div>
-
                 <div class="pagination-controls">
                     <button id="firstPage" class="pagination-btn" aria-label="第一页" title="第一页">
                         <i class="fas fa-angle-double-left"></i>
@@ -1352,7 +1239,6 @@
                         <i class="fas fa-angle-double-right"></i>
                     </button>
                 </div>
-
                 <div class="pagination-settings">
                     <label for="itemsPerPage">每页显示：</label>
                     <select id="itemsPerPage" aria-label="选择每页显示条数">
@@ -1365,7 +1251,6 @@
             </nav>
         </div>
     </main>
-
     <!-- 页面底部 -->
     <footer class="social-footer" role="contentinfo">
         <div class="container">
@@ -1387,12 +1272,10 @@
             </p>
         </div>
     </footer>
-
     <!-- JavaScript文件 -->
     <script src="data.js" defer></script>
     <script>
         // ==================== 性能优化工具函数 ====================
-        
         // 防抖函数
         function debounce(func, wait) {
             let timeout;
@@ -1405,7 +1288,6 @@
                 timeout = setTimeout(later, wait);
             };
         }
-
         // 节流函数
         function throttle(func, limit) {
             let inThrottle;
@@ -1417,32 +1299,26 @@
                 }
             };
         }
-
         // requestAnimationFrame优化的滚动处理
         const rafThrottle = (callback) => {
             let requestId = null;
             let lastArgs;
-            
             const later = (context) => () => {
                 requestId = null;
                 callback.apply(context, lastArgs);
             };
-            
             const throttled = function(...args) {
                 lastArgs = args;
                 if (requestId === null) {
                     requestId = requestAnimationFrame(later(this));
                 }
             };
-            
             throttled.cancel = () => {
                 cancelAnimationFrame(requestId);
                 requestId = null;
             };
-            
             return throttled;
         };
-
         // Intersection Observer用于懒加载
         const createObserver = (callback, options = {}) => {
             return new IntersectionObserver((entries, observer) => {
@@ -1458,7 +1334,6 @@
                 ...options
             });
         };
-
         // ==================== 全局变量 ====================
         let currentSortMethod = 'date-desc';
         let currentViewMode = 'grid';
@@ -1468,10 +1343,8 @@
         let userLikes = {};
         let userBookmarks = {};
         let backgroundOnlyMode = false;
-        
         // 性能优化：缓存DOM元素
         const DOM = {};
-        
         // ==================== DOM缓存初始化 ====================
         function cacheDOMElements() {
             DOM.momentsContainer = document.getElementById('momentsContainer');
@@ -1497,7 +1370,6 @@
             DOM.nextPage = document.getElementById('nextPage');
             DOM.lastPage = document.getElementById('lastPage');
         }
-
         // ==================== 初始化 ====================
         document.addEventListener('DOMContentLoaded', function() {
             cacheDOMElements();
@@ -1506,77 +1378,59 @@
             initializeBackgroundModeReturn();
             initializeEventListeners();
             restoreUserPreferences();
-            
             setTimeout(() => {
                 initializePage();
             }, 100);
         });
-
         // ==================== 事件监听器初始化（优化版） ====================
         function initializeEventListeners() {
             // 使用事件委托处理分类按钮
             document.querySelector('.category-scroll')?.addEventListener('click', handleCategoryClick);
-            
             // 排序控件
             DOM.sortBy?.addEventListener('change', handleSortChange);
-            
             // 搜索框 - 使用防抖
             DOM.searchInput?.addEventListener('input', debounce(handleSearch, 300));
-            
             // 视图切换
             DOM.gridView?.addEventListener('click', () => switchViewMode('grid'));
             DOM.listView?.addEventListener('click', () => switchViewMode('list'));
-            
             // 导出按钮
             DOM.exportBtn?.addEventListener('click', exportMomentsData);
-            
             // 分页控件
             DOM.firstPage?.addEventListener('click', () => goToPage(1));
             DOM.prevPage?.addEventListener('click', () => goToPage(Math.max(1, currentPage - 1)));
             DOM.nextPage?.addEventListener('click', () => goToPage(Math.min(getTotalPages(), currentPage + 1)));
             DOM.lastPage?.addEventListener('click', () => goToPage(getTotalPages()));
             DOM.itemsPerPage?.addEventListener('change', handleItemsPerPageChange);
-            
             // 使用事件委托处理点赞、评论、分享等操作
             DOM.momentsContainer?.addEventListener('click', handleMomentAction);
-            
             // 无限滚动 - 使用RAF优化
             window.addEventListener('scroll', rafThrottle(handleScroll));
-            
             // 页面可见性变化处理
             document.addEventListener('visibilitychange', handleVisibilityChange);
         }
-
         // ==================== 事件处理函数 ====================
         function handleCategoryClick(e) {
             const btn = e.target.closest('.category-btn');
             if (!btn) return;
-            
             const category = btn.dataset.category;
-            
             // 更新UI
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
             // 筛选数据
-            currentFilteredMoments = category === 'all' 
-                ? window.momentsData 
+            currentFilteredMoments = category === 'all'
+                ? window.momentsData
                 : window.momentsData.filter(m => m.category === category);
-            
             currentPage = 1;
             sortAndRenderMoments();
             updatePagination();
         }
-
         function handleSortChange(e) {
             currentSortMethod = e.target.value;
             sortAndRenderMoments();
             updateSortUI();
         }
-
         function handleSearch(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
-            
             if (searchTerm.length >= 2) {
                 currentFilteredMoments = window.momentsData.filter(m =>
                     (m.content && m.content.toLowerCase().includes(searchTerm)) ||
@@ -1584,28 +1438,24 @@
                 );
             } else if (searchTerm.length === 0) {
                 const activeCategory = document.querySelector('.category-btn.active')?.dataset.category;
-                currentFilteredMoments = activeCategory === 'all' 
-                    ? window.momentsData 
+                currentFilteredMoments = activeCategory === 'all'
+                    ? window.momentsData
                     : window.momentsData.filter(m => m.category === activeCategory);
             }
-            
             currentPage = 1;
             sortAndRenderMoments();
             updatePagination();
         }
-
         function switchViewMode(mode) {
             currentViewMode = mode;
             updateViewMode();
             localStorage.setItem('preferredViewMode', mode);
         }
-
         function handleItemsPerPageChange() {
             currentPage = 1;
             renderMoments();
             updatePagination();
         }
-
         function handleMomentAction(e) {
             // 处理展开/收起按钮
             const toggleBtn = e.target.closest('.expand-toggle-btn');
@@ -1613,21 +1463,18 @@
                 handleToggleContent(toggleBtn);
                 return;
             }
-            
             // 处理点赞按钮
             const likeBtn = e.target.closest('.action-btn');
             if (likeBtn && likeBtn.querySelector('.fa-heart')) {
                 handleLike(likeBtn);
                 return;
             }
-            
             // 处理分享按钮
             const shareBtn = e.target.closest('.share-btn');
             if (shareBtn) {
                 handleShare(shareBtn);
                 return;
             }
-            
             // 处理图片点击
             const img = e.target.closest('.moment-images img');
             if (img) {
@@ -1635,12 +1482,10 @@
                 return;
             }
         }
-
         function handleToggleContent(btn) {
             const card = btn.closest('.moment-card');
             const contentBox = card.querySelector('.moment-content');
             const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-            
             if (isExpanded) {
                 contentBox.classList.add('collapsed');
                 contentBox.classList.remove('expanded');
@@ -1657,14 +1502,12 @@
                 btn.querySelector('.toggle-icon').className = 'fas fa-chevron-up toggle-icon';
             }
         }
-
         function handleLike(btn) {
             const card = btn.closest('.moment-card');
             const momentId = card.dataset.id;
             const icon = btn.querySelector('.fa-heart');
             const countSpan = btn.querySelector('.action-count');
             let count = parseInt(countSpan.textContent, 10) || 0;
-            
             if (userLikes[momentId]) {
                 userLikes[momentId] = false;
                 icon.classList.remove('fas', 'liked');
@@ -1677,22 +1520,18 @@
                 icon.classList.add('fas', 'liked');
                 btn.classList.add('liked');
                 count++;
-                
                 // 动画效果
                 requestAnimationFrame(() => {
                     btn.style.transform = 'scale(1.2)';
                     setTimeout(() => btn.style.transform = '', 200);
                 });
             }
-            
             countSpan.textContent = count;
             saveUserData();
         }
-
         function handleShare(btn) {
             const card = btn.closest('.moment-card');
             const content = card.querySelector('.moment-content p')?.textContent || '';
-            
             if (navigator.share) {
                 navigator.share({
                     title: '狂客·银河',
@@ -1703,29 +1542,23 @@
                 showNotification('已复制链接到剪贴板', 'success');
             }
         }
-
         function handleImageClick(img) {
             // 可以实现图片预览功能
             console.log('查看图片:', img.src);
         }
-
         function handleScroll() {
             if (isLoading) return;
-            
             const scrollPosition = window.innerHeight + window.scrollY;
             const pageHeight = document.body.offsetHeight;
-            
             if (scrollPosition >= pageHeight - 500) {
                 const perPage = parseInt(DOM.itemsPerPage.value, 10);
                 const totalFiltered = currentFilteredMoments.length;
                 const currentlyShowing = currentPage * perPage;
-                
                 if (currentlyShowing < totalFiltered) {
                     loadMoreContent();
                 }
             }
         }
-
         function handleVisibilityChange() {
             if (document.hidden) {
                 // 页面隐藏时暂停动画
@@ -1735,7 +1568,6 @@
                 document.body.style.setProperty('--animation-play-state', 'running');
             }
         }
-
         // ==================== 页面初始化 ====================
         function initializePage() {
             if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
@@ -1747,7 +1579,6 @@
                 setTimeout(initializePage, 500);
             }
         }
-
         // ==================== 排序和渲染 ====================
         function sortAndRenderMoments() {
             const sortedMoments = sortMoments(currentFilteredMoments, currentSortMethod);
@@ -1759,10 +1590,8 @@
             localStorage.setItem('preferredSortMethod', currentSortMethod);
             animateSortChange();
         }
-
         function sortMoments(moments, method) {
             const sorted = [...moments];
-            
             switch (method) {
                 case 'date-desc':
                     sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -1777,48 +1606,36 @@
                     sorted.sort((a, b) => (a.value || 0) - (b.value || 0));
                     break;
             }
-            
             return sorted;
         }
-
         // ==================== 渲染优化（使用DocumentFragment） ====================
         function renderMoments() {
             if (!DOM.momentsContainer) return;
-            
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             const startIndex = (currentPage - 1) * perPage;
             const endIndex = startIndex + perPage;
             const pageMoments = currentFilteredMoments.slice(startIndex, endIndex);
-            
             DOM.momentsContainer.innerHTML = '';
             DOM.momentsContainer.setAttribute('aria-busy', 'true');
-            
             // 使用DocumentFragment批量插入
             const fragment = document.createDocumentFragment();
-            
             pageMoments.forEach((moment, index) => {
                 const card = createMomentCard(moment, startIndex + index);
                 fragment.appendChild(card);
             });
-            
             DOM.momentsContainer.appendChild(fragment);
-            
             // 使用Intersection Observer实现懒加载动画
             const observer = createObserver((element) => {
                 element.classList.add('visible');
             });
-            
             DOM.momentsContainer.querySelectorAll('.moment-card').forEach(card => {
                 observer.observe(card);
             });
-            
             setTimeout(() => {
                 DOM.momentsContainer.setAttribute('aria-busy', 'false');
             }, 100);
-            
             updatePaginationInfo();
         }
-
         // ==================== 创建朋友圈卡片（优化版） ====================
         function createMomentCard(moment, index) {
             const card = document.createElement('article');
@@ -1826,20 +1643,16 @@
             card.setAttribute('role', 'article');
             card.setAttribute('aria-label', `朋友圈内容 ${index + 1}`);
             card.dataset.id = moment.id || `moment-${index}`;
-            
             const isLiked = userLikes[card.dataset.id];
             const rawDate = new Date(moment.date);
             const hasValidDate = rawDate instanceof Date && !isNaN(rawDate);
             const formattedDate = hasValidDate ? formatDate(rawDate) : (moment.date || '未知时间');
-            
             const content = moment.content || '';
             const COLLAPSE_THRESHOLD = 300;
             const shouldCollapse = content.length > COLLAPSE_THRESHOLD;
             const previewContent = shouldCollapse ? content.substring(0, COLLAPSE_THRESHOLD) + '...' : content;
-            
             const valueColor = getValueGradient(moment.value);
             const valueLabel = moment.value ? `<span class="value-badge" style="background: ${valueColor}">价值 ${moment.value}</span>` : '';
-            
             card.innerHTML = `
                 <div class="moment-header">
                     <div class="moment-meta">
@@ -1881,10 +1694,8 @@
                     </button>
                 </div>
             `;
-            
             return card;
         }
-
         // ==================== 辅助函数 ====================
         function formatDate(date) {
             const now = new Date();
@@ -1893,7 +1704,6 @@
             const hour = 60 * minute;
             const day = 24 * hour;
             const diffDays = Math.floor(diffTime / day);
-            
             if (diffDays === 0) {
                 const diffHours = Math.floor(diffTime / hour);
                 if (diffHours === 0) {
@@ -1909,13 +1719,11 @@
                 return date.toLocaleDateString('zh-CN');
             }
         }
-
         function getImageClass(count) {
             if (count === 1) return 'single';
             if (count === 2) return 'double';
             return 'multiple';
         }
-
         function getValueGradient(value) {
             if (value >= 9) return 'linear-gradient(135deg, #ff6b6b, #ff8e53)';
             if (value >= 7) return 'linear-gradient(135deg, #667eea, #764ba2)';
@@ -1923,35 +1731,29 @@
             if (value >= 3) return 'linear-gradient(135deg, #ffc107, #ff9800)';
             return 'linear-gradient(135deg, #868e96, #495057)';
         }
-
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
-
         function decodeHtml(html) {
             const txt = document.createElement('textarea');
             txt.innerHTML = html;
             return txt.value;
         }
-
         // ==================== 统计更新 ====================
         function updateStats(moments) {
             const totalMoments = moments.length;
             const highValueMoments = moments.filter(m => (m.value || 0) >= 9).length;
             const today = new Date().toISOString().split('T')[0];
             const todayMoments = moments.filter(m => m.date && String(m.date).startsWith(today)).length;
-            
             animateNumber('totalMoments', totalMoments);
             animateNumber('highValueMoments', highValueMoments);
             animateNumber('todayMoments', todayMoments);
-            
             if (DOM.sortHint) {
                 DOM.sortHint.textContent = getSortDescription(currentSortMethod);
             }
         }
-
         function getSortDescription(method) {
             const descriptions = {
                 'date-desc': '按最新发布时间排序',
@@ -1961,21 +1763,17 @@
             };
             return descriptions[method] || '按最新发布时间排序';
         }
-
         function animateNumber(elementId, targetValue) {
             const element = document.getElementById(elementId);
             if (!element) return;
-            
             const currentValue = parseInt(element.textContent, 10) || 0;
             const steps = 20;
             const increment = (targetValue - currentValue) / steps;
             let current = currentValue;
             let step = 0;
-            
             const animate = () => {
                 step++;
                 current += increment;
-                
                 if (step >= steps) {
                     element.textContent = String(targetValue);
                 } else {
@@ -1983,10 +1781,8 @@
                     requestAnimationFrame(animate);
                 }
             };
-            
             requestAnimationFrame(animate);
         }
-
         // ==================== 分页功能 ====================
         function goToPage(page) {
             currentPage = page;
@@ -1994,30 +1790,24 @@
             updatePagination();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
         function getTotalPages() {
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             return Math.max(1, Math.ceil(currentFilteredMoments.length / perPage));
         }
-
         function updatePagination() {
             const totalPages = getTotalPages();
             currentPage = Math.min(Math.max(1, currentPage), totalPages);
-            
             DOM.firstPage.disabled = currentPage === 1;
             DOM.prevPage.disabled = currentPage === 1;
             DOM.nextPage.disabled = currentPage === totalPages;
             DOM.lastPage.disabled = currentPage === totalPages;
-            
             // 生成页码
             DOM.pageNumbers.innerHTML = '';
             const maxButtons = 5;
             let start = Math.max(1, currentPage - Math.floor(maxButtons / 2));
             let end = Math.min(totalPages, start + maxButtons - 1);
             start = Math.max(1, end - maxButtons + 1);
-            
             const fragment = document.createDocumentFragment();
-            
             for (let i = start; i <= end; i++) {
                 const btn = document.createElement('button');
                 btn.className = `page-number ${i === currentPage ? 'active' : ''}`;
@@ -2028,28 +1818,22 @@
                 btn.addEventListener('click', () => goToPage(i));
                 fragment.appendChild(btn);
             }
-            
             DOM.pageNumbers.appendChild(fragment);
             updatePaginationInfo();
         }
-
         function updatePaginationInfo() {
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             const total = currentFilteredMoments.length;
             const start = total === 0 ? 0 : (currentPage - 1) * perPage + 1;
             const end = Math.min(total, currentPage * perPage);
-            
             DOM.showingStart.textContent = String(start);
             DOM.showingEnd.textContent = String(end);
             DOM.totalItems.textContent = String(total);
         }
-
         function loadMoreContent() {
             if (isLoading) return;
             isLoading = true;
-            
             DOM.loadingIndicator.classList.add('active');
-            
             setTimeout(() => {
                 currentPage++;
                 renderMoreMoments();
@@ -2058,31 +1842,24 @@
                 isLoading = false;
             }, 800);
         }
-
         function renderMoreMoments() {
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             const startIndex = (currentPage - 1) * perPage;
             const endIndex = startIndex + perPage;
             const pageMoments = currentFilteredMoments.slice(startIndex, endIndex);
-            
             const fragment = document.createDocumentFragment();
-            
             pageMoments.forEach((moment, index) => {
                 const card = createMomentCard(moment, startIndex + index);
                 fragment.appendChild(card);
             });
-            
             DOM.momentsContainer.appendChild(fragment);
-            
             const observer = createObserver((element) => {
                 element.classList.add('visible');
             });
-            
             Array.from(DOM.momentsContainer.querySelectorAll('.moment-card:not(.visible)')).forEach(card => {
                 observer.observe(card);
             });
         }
-
         // ==================== 视图模式 ====================
         function updateViewMode() {
             if (currentViewMode === 'list') {
@@ -2097,22 +1874,18 @@
                 DOM.listView.classList.remove('active');
             }
         }
-
         function updateSortUI() {
             DOM.sortBy.value = currentSortMethod;
-            
             const sortNav = document.querySelector('.sort-nav');
             if (sortNav) {
                 sortNav.classList.add('sorting');
                 setTimeout(() => sortNav.classList.remove('sorting'), 300);
             }
         }
-
         function animateSortChange() {
             requestAnimationFrame(() => {
                 DOM.momentsContainer.style.opacity = '0.5';
                 DOM.momentsContainer.style.transform = 'scale(0.98)';
-                
                 requestAnimationFrame(() => {
                     setTimeout(() => {
                         DOM.momentsContainer.style.opacity = '1';
@@ -2121,7 +1894,6 @@
                 });
             });
         }
-
         // ==================== 数据持久化 ====================
         function saveUserData() {
             const userData = {
@@ -2133,14 +1905,12 @@
                     theme: document.body.getAttribute('data-theme')
                 }
             };
-            
             try {
                 localStorage.setItem('userData', JSON.stringify(userData));
             } catch (e) {
                 console.error('保存用户数据失败:', e);
             }
         }
-
         function restoreUserData() {
             try {
                 const savedData = localStorage.getItem('userData');
@@ -2148,14 +1918,11 @@
                     const userData = JSON.parse(savedData);
                     userLikes = userData.likes || {};
                     userBookmarks = userData.bookmarks || {};
-                    
                     if (userData.preferences) {
                         currentSortMethod = userData.preferences.sortMethod || 'date-desc';
                         currentViewMode = userData.preferences.viewMode || 'grid';
-                        
                         const savedTheme = userData.preferences.theme || 'dark';
                         document.body.setAttribute('data-theme', savedTheme);
-                        
                         if (DOM.themeToggle) {
                             DOM.themeToggle.innerHTML = savedTheme === 'light'
                                 ? '<i class="fas fa-sun" aria-hidden="true"></i>'
@@ -2167,7 +1934,6 @@
                 console.error('恢复用户数据失败:', e);
             }
         }
-
         function restoreUserPreferences() {
             const savedSortMethod = localStorage.getItem('preferredSortMethod');
             if (savedSortMethod) {
@@ -2176,13 +1942,11 @@
                     DOM.sortBy.value = savedSortMethod;
                 }
             }
-            
             const savedViewMode = localStorage.getItem('preferredViewMode');
             if (savedViewMode) {
                 currentViewMode = savedViewMode;
             }
         }
-
         // ==================== 主题切换 ====================
         function initializeTheme() {
             DOM.themeToggle.addEventListener('click', function() {
@@ -2193,36 +1957,28 @@
                 }
             });
         }
-
         function enterBackgroundMode() {
             backgroundOnlyMode = true;
             document.body.classList.add('background-only');
-            
             DOM.themeToggle.innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i>';
             DOM.themeToggle.title = '显示全部内容';
-            
             hideAllContent();
             DOM.backgroundModeReturn.style.display = 'flex';
         }
-
         function exitBackgroundMode() {
             backgroundOnlyMode = false;
             document.body.classList.remove('background-only');
-            
             const currentTheme = document.body.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             document.body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            
             DOM.themeToggle.innerHTML = newTheme === 'light'
                 ? '<i class="fas fa-sun" aria-hidden="true"></i>'
                 : '<i class="fas fa-moon" aria-hidden="true"></i>';
             DOM.themeToggle.title = '切换主题';
-            
             showAllContent();
             DOM.backgroundModeReturn.style.display = 'none';
         }
-
         function hideAllContent() {
             const selectors = ['.header', '.category-nav', '.sort-nav', '.main-content', '.social-footer'];
             selectors.forEach(selector => {
@@ -2231,7 +1987,6 @@
                 });
             });
         }
-
         function showAllContent() {
             const selectors = ['.header', '.category-nav', '.sort-nav', '.main-content', '.social-footer'];
             selectors.forEach(selector => {
@@ -2240,11 +1995,9 @@
                 });
             });
         }
-
         function initializeBackgroundModeReturn() {
             DOM.backgroundModeReturn.addEventListener('click', exitBackgroundMode);
         }
-
         // ==================== 导出功能 ====================
         function exportMomentsData() {
             const dataToExport = {
@@ -2258,11 +2011,9 @@
                     totalBookmarks: Object.keys(userBookmarks).length
                 }
             };
-            
             const dataStr = JSON.stringify(dataToExport, null, 2);
             const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
             const exportFileDefaultName = `朋友圈数据_${new Date().toISOString().split('T')[0]}.json`;
-            
             const linkElement = document.createElement('a');
             linkElement.setAttribute('href', dataUri);
             linkElement.setAttribute('download', exportFileDefaultName);
@@ -2270,10 +2021,8 @@
             document.body.appendChild(linkElement);
             linkElement.click();
             document.body.removeChild(linkElement);
-            
             showNotification('数据导出成功！');
         }
-
         // ==================== 通知功能 ====================
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
@@ -2291,9 +2040,7 @@
                 z-index: 10000;
                 animation: slideIn 0.3s ease;
             `;
-            
             document.body.appendChild(notification);
-            
             setTimeout(() => {
                 notification.style.animation = 'slideOut 0.3s ease';
                 setTimeout(() => {
@@ -2303,12 +2050,10 @@
                 }, 300);
             }, 3000);
         }
-
         // ==================== 内存清理 ====================
         window.addEventListener('beforeunload', () => {
             // 清理事件监听器
             window.removeEventListener('scroll', handleScroll);
-            
             // 保存用户数据
             saveUserData();
         });
