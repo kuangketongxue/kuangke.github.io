@@ -34,6 +34,41 @@
         body.dark-mode .weekly-title p {
             color: #aaa;
         }
+        
+        /* 分类标签样式 */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 50px 0 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid rgba(102, 126, 234, 0.3);
+        }
+        .section-icon {
+            font-size: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #333;
+        }
+        body.dark-mode .section-title {
+            color: #fff;
+        }
+        .section-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
         /* 周刊列表 */
         .weekly-list {
             display: flex;
@@ -46,6 +81,8 @@
             padding: 40px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         body.dark-mode .weekly-item {
             background: #2d3748;
@@ -54,6 +91,29 @@
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
+        
+        /* 本周标签 */
+        .current-week-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
         .weekly-item-header {
             display: flex;
             align-items: center;
@@ -66,6 +126,7 @@
             font-size: 1.8em;
             font-weight: 700;
             color: #333;
+            max-width: 70%;
         }
         body.dark-mode .weekly-item-title {
             color: #fff;
@@ -98,7 +159,7 @@
         .video-container {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* 16:9 宽高比 */
+            padding-bottom: 56.25%;
             background: #000;
             border-radius: 12px;
             overflow: hidden;
@@ -129,6 +190,7 @@
             font-size: 1.2em;
             margin: 0;
         }
+        
         /* 空状态 */
         .empty-weekly {
             text-align: center;
@@ -154,6 +216,33 @@
         body.dark-mode .empty-weekly p {
             color: #aaa;
         }
+        
+        /* 加载状态 */
+        .loading-container {
+            text-align: center;
+            padding: 100px 20px;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(102, 126, 234, 0.2);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-text {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #666;
+        }
+        body.dark-mode .loading-text {
+            color: #aaa;
+        }
+        
         /* 返回按钮 */
         .back-button {
             position: fixed;
@@ -178,6 +267,7 @@
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
         }
+        
         /* 响应式设计 */
         @media (max-width: 768px) {
             .weekly-title h1 {
@@ -188,14 +278,26 @@
             }
             .weekly-item-title {
                 font-size: 1.5em;
+                max-width: 100%;
             }
             .weekly-item-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
             }
+            .current-week-badge {
+                top: 10px;
+                right: 10px;
+                font-size: 0.8em;
+                padding: 6px 12px;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
-        /* 导航按钮样式（与主页面一致） */
+        
+        /* 导航按钮样式 */
         .breakthrough-link {
             display: flex;
             align-items: center;
@@ -327,7 +429,7 @@
                     </span>
                     <span class="game-text">自制游戏</span>
                 </a>
-                <a class="https://kuangketongxue.github.io/kuangke.github.io/weeklykuangke.html" href="weekly.html">
+                <a class="weekly-link" href="weekly.html">
                     <span class="weekly-icon">
                         <i class="fas fa-newspaper"></i>
                     </span>
@@ -348,89 +450,43 @@
             <p>每周分享最新AI资讯、技术趋势与深度思考</p>
         </div>
 
-        <div class="weekly-list" id="weeklyList">
-            <!-- 示例：第一期周刊 -->
-            <div class="weekly-item">
-                <div class="weekly-item-header">
-                    <h2 class="weekly-item-title">第1期 - AI时代的学习革命</h2>
-                    <div class="weekly-item-date">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>2024年1月1日</span>
-                    </div>
-                </div>
-                <div class="weekly-item-content">
-                    <div class="weekly-item-text">
-<!-- 在这里填写您的文稿内容 -->
-本期主题：AI如何改变我们的学习方式
+        <!-- 加载动画 -->
+        <div class="loading-container" id="loadingContainer">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">正在加载周刊内容...</p>
+        </div>
 
-1. AI工具推荐
-- Claude：最强思考型AI
-- ChatGPT：通用型AI助手
-- Kimi：长文本处理专家
-
-2. 学习技巧分享
-- 如何用AI提升学习效率
-- AI辅助知识整理的方法
-- 构建个人知识体系
-
-3. 本周AI新闻
-- GPT-5即将发布
-- 国产AI大模型新进展
-                    </div>
-                </div>
-                <div class="weekly-item-video">
-                    <!-- 视频区域：填写视频URL或留空 -->
-                    <div class="video-container">
-                        <!-- 方式1：直接嵌入视频（例如B站、YouTube） -->
-                        <!-- <iframe src="您的视频URL" frameborder="0" allowfullscreen></iframe> -->
-                        
-                        <!-- 方式2：暂无视频时显示占位符 -->
-                        <div class="video-placeholder">
-                            <i class="fas fa-video"></i>
-                            <p>视频内容待添加</p>
-                        </div>
-                    </div>
-                </div>
+        <!-- 本周周刊区域 -->
+        <div id="currentWeekSection" style="display: none;">
+            <div class="section-header">
+                <i class="fas fa-fire section-icon"></i>
+                <h2 class="section-title">本周周刊</h2>
+                <span class="section-badge">NEW</span>
             </div>
+            <div class="weekly-list" id="currentWeekList"></div>
+        </div>
 
-            <!-- 更多周刊内容模板（可复制以下结构添加新的周刊） -->
-            <!--
-            <div class="weekly-item">
-                <div class="weekly-item-header">
-                    <h2 class="weekly-item-title">第X期 - 标题</h2>
-                    <div class="weekly-item-date">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>日期</span>
-                    </div>
-                </div>
-                <div class="weekly-item-content">
-                    <div class="weekly-item-text">
-文稿内容...
-                    </div>
-                </div>
-                <div class="weekly-item-video">
-                    <div class="video-container">
-                        <iframe src="视频URL" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                </div>
+        <!-- 往期周刊区域 -->
+        <div id="pastWeekSection" style="display: none;">
+            <div class="section-header">
+                <i class="fas fa-archive section-icon"></i>
+                <h2 class="section-title">往期回顾</h2>
             </div>
-            -->
+            <div class="weekly-list" id="pastWeekList"></div>
+        </div>
 
-            <!-- 空状态提示（当没有内容时显示） -->
-            <!--
-            <div class="empty-weekly">
-                <div class="empty-weekly-icon">
-                    <i class="fas fa-newspaper"></i>
-                </div>
-                <h2>敬请期待</h2>
-                <p>【狂客】极客周刊即将上线，每周为您带来精彩的AI内容分享</p>
+        <!-- 空状态 -->
+        <div class="empty-weekly" id="emptyState" style="display: none;">
+            <div class="empty-weekly-icon">
+                <i class="fas fa-newspaper"></i>
             </div>
-            -->
+            <h2>敬请期待</h2>
+            <p>【狂客】极客周刊即将上线，每周为您带来精彩的AI内容分享</p>
         </div>
     </div>
 
     <!-- 返回按钮 -->
-    <a href="index.html" class="back-button" title="返回首页">
+    <a href="https://kuangketongxue.github.io/kuangke.github.io/ai.html" class="back-button" title="返回首页">
         <i class="fas fa-home"></i>
     </a>
 
@@ -449,7 +505,6 @@
         
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
-            
             if (body.classList.contains('dark-mode')) {
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
@@ -460,6 +515,134 @@
                 localStorage.setItem('theme', 'light');
             }
         });
+
+        // 获取当前周的周一和周日
+        function getCurrentWeekRange() {
+            const now = new Date();
+            const dayOfWeek = now.getDay();
+            const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // 周日为0，需要调整
+            
+            const monday = new Date(now);
+            monday.setDate(now.getDate() + diff);
+            monday.setHours(0, 0, 0, 0);
+            
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            sunday.setHours(23, 59, 59, 999);
+            
+            return { monday, sunday };
+        }
+
+        // 判断日期是否在本周
+        function isCurrentWeek(dateString) {
+            const date = new Date(dateString);
+            const { monday, sunday } = getCurrentWeekRange();
+            return date >= monday && date <= sunday;
+        }
+
+        // 创建周刊项HTML
+        function createWeeklyItem(weekly, isCurrent = false) {
+            const videoHTML = weekly.videoUrl 
+                ? `<iframe src="${weekly.videoUrl}" frameborder="0" allowfullscreen></iframe>`
+                : `<div class="video-placeholder">
+                    <i class="fas fa-video"></i>
+                    <p>视频内容待添加</p>
+                   </div>`;
+
+            const currentBadge = isCurrent 
+                ? `<div class="current-week-badge">
+                    <i class="fas fa-fire"></i>
+                    <span>本周</span>
+                   </div>`
+                : '';
+
+            return `
+                <div class="weekly-item">
+                    ${currentBadge}
+                    <div class="weekly-item-header">
+                        <h2 class="weekly-item-title">${weekly.title}</h2>
+                        <div class="weekly-item-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>${weekly.date}</span>
+                        </div>
+                    </div>
+                    <div class="weekly-item-content">
+                        <div class="weekly-item-text">${weekly.content}</div>
+                    </div>
+                    <div class="weekly-item-video">
+                        <div class="video-container">
+                            ${videoHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 加载周刊数据
+        async function loadWeeklyData() {
+            try {
+                const response = await fetch('weekly-data.json');
+                const data = await response.json();
+                
+                const currentWeekList = [];
+                const pastWeekList = [];
+
+                // 按日期排序（最新的在前）
+                data.weeklies.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                // 分类周刊
+                data.weeklies.forEach(weekly => {
+                    if (isCurrentWeek(weekly.date)) {
+                        currentWeekList.push(weekly);
+                    } else {
+                        pastWeekList.push(weekly);
+                    }
+                });
+
+                // 隐藏加载动画
+                document.getElementById('loadingContainer').style.display = 'none';
+
+                // 显示内容
+                if (currentWeekList.length === 0 && pastWeekList.length === 0) {
+                    // 显示空状态
+                    document.getElementById('emptyState').style.display = 'block';
+                } else {
+                    // 显示本周周刊
+                    if (currentWeekList.length > 0) {
+                        const currentSection = document.getElementById('currentWeekSection');
+                        const currentListDiv = document.getElementById('currentWeekList');
+                        currentListDiv.innerHTML = currentWeekList
+                            .map(weekly => createWeeklyItem(weekly, true))
+                            .join('');
+                        currentSection.style.display = 'block';
+                    }
+
+                    // 显示往期周刊
+                    if (pastWeekList.length > 0) {
+                        const pastSection = document.getElementById('pastWeekSection');
+                        const pastListDiv = document.getElementById('pastWeekList');
+                        pastListDiv.innerHTML = pastWeekList
+                            .map(weekly => createWeeklyItem(weekly, false))
+                            .join('');
+                        pastSection.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('加载周刊数据失败:', error);
+                document.getElementById('loadingContainer').innerHTML = `
+                    <div class="empty-weekly">
+                        <div class="empty-weekly-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <h2>加载失败</h2>
+                        <p>无法加载周刊内容，请稍后重试</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 页面加载时执行
+        window.addEventListener('DOMContentLoaded', loadWeeklyData);
     </script>
 </body>
 </html>
