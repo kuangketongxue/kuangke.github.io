@@ -429,6 +429,9 @@
             align-items: center;
             gap: 16px;
             letter-spacing: -0.5px;
+            position: relative;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
             /* 超清标题 */
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
@@ -438,8 +441,14 @@
         }
         .chart-container {
             position: relative;
-            height: 400px;
+            height: 450px;
             margin-top: 30px;
+            padding: 20px;
+        }
+        .chart-container canvas {
+            max-height: 100%;
+            width: 100% !important;
+            height: auto !important;
         }
         /* ==================== 今日报告优化 ==================== */
         .today-report {
@@ -809,7 +818,8 @@
                 grid-template-columns: 1fr;
             }
             .chart-container {
-                height: 300px;
+                height: 350px;
+                padding: 10px;
             }
             .today-report {
                 grid-template-columns: 1fr;
@@ -859,6 +869,9 @@
             }
             .logo {
                 font-size: 1.5rem;
+            }
+            .chart-container {
+                height: 300px;
             }
         }
         /* ==================== 性能优化 ==================== */
@@ -1164,9 +1177,27 @@
             if (window.uiRenderer) {
                 Object.values(window.uiRenderer.dm.charts).forEach(chart => {
                     if (chart) {
-                        chart.options.plugins.legend.labels.color = getComputedStyle(document.body).color;
-                        chart.options.scales.y.ticks.color = getComputedStyle(document.body).color;
-                        chart.options.scales.x.ticks.color = getComputedStyle(document.body).color;
+                        const textColor = getComputedStyle(document.body).color;
+                        const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)';
+                        
+                        chart.options.plugins.legend.labels.color = textColor;
+                        if (chart.options.scales.y) {
+                            chart.options.scales.y.ticks.color = textColor;
+                            chart.options.scales.y.grid.color = gridColor;
+                            if (chart.options.scales.y.title) {
+                                chart.options.scales.y.title.color = textColor;
+                            }
+                        }
+                        if (chart.options.scales.y1) {
+                            chart.options.scales.y1.ticks.color = textColor;
+                            if (chart.options.scales.y1.title) {
+                                chart.options.scales.y1.title.color = textColor;
+                            }
+                        }
+                        if (chart.options.scales.x) {
+                            chart.options.scales.x.ticks.color = textColor;
+                            chart.options.scales.x.grid.color = gridColor;
+                        }
                         chart.update();
                     }
                 });
@@ -1218,20 +1249,16 @@
             // 计算今日运动达标情况
             calculateExerciseGoals(record) {
                 if (!record?.exerciseGoals) return null;
-                
                 const goals = record.exerciseGoals;
                 const results = [];
                 let completedCount = 0;
                 let totalCount = 0;
-                
                 for (const [key, targetInfo] of Object.entries(this.exerciseTargets)) {
                     const actual = goals[key] || 0;
                     const target = targetInfo.target;
                     const completed = actual >= target;
-                    
                     if (completed) completedCount++;
                     totalCount++;
-                    
                     results.push({
                         name: targetInfo.name,
                         icon: targetInfo.icon,
@@ -1242,7 +1269,6 @@
                         percentage: Math.min((actual / target) * 100, 100).toFixed(0)
                     });
                 }
-                
                 return {
                     goals: results,
                     completedCount: completedCount,
@@ -1386,54 +1412,13 @@
                     </div>
                 `;
             }
-            renderOverviewChart() {
-                const records = this.dm.getRecentRecords(14);
-                const ctx = document.getElementById('overviewChart');
-                if (this.dm.charts.overview) {
-                    this.dm.charts.overview.destroy();
-                }
-                this.dm.charts.overview = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: records.map(r => r.date),
-                        datasets: [
-                            {
-                                label: '睡眠质量',
-                                data: records.map(r => r.sleep?.quality || 0),
-                                borderColor: 'rgb(102, 126, 234)',
-                                backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                                tension: 0.4,
-                                borderWidth: 3,
-                                pointRadius: 5,
-                                pointHoverRadius: 7
-                            },
-                            {
-                                label: '心情评分',
-                                data: records.map(r => r.mood?.score || 0),
-                                borderColor: 'rgb(255, 159, 64)',
-                                backgroundColor: 'rgba(255, 159, 64, 0.1)',
-                                tension: 0.4,
-                                borderWidth: 3,
-                                pointRadius: 5,
-                                pointHoverRadius: 7
-                            },
-                            {
-                                label: '精力水平',
-                                data: records.map(r => r.physical?.energy || 0),
-                                borderColor: 'rgb(75, 192, 192)',
-                                backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                                tension: 0.4,
-                                borderWidth: 3,
-                                pointRadius: 5,
-                                pointHoverRadius: 7
-                            }
-                        ]
-                    },
-                    options: this.getChartOptions()
-                });
-            }
-            getChartOptions() {
+            
+            // 【核心优化】改进的图表配置选项
+            getChartOptions(yAxisMax = null, yAxisLabel = '') {
                 const textColor = getComputedStyle(document.body).color;
+                const isDark = body.classList.contains('dark-mode');
+                const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)';
+                
                 return {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -1443,34 +1428,47 @@
                     },
                     plugins: {
                         legend: {
+                            display: true,
+                            position: 'top',
+                            align: 'center',
                             labels: {
                                 color: textColor,
                                 font: {
-                                    size: 15,
+                                    size: 14,
                                     weight: '700'
                                 },
-                                padding: 24
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
                             }
                         },
                         tooltip: {
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                            titleColor: '#333',
-                            bodyColor: '#666',
-                            borderColor: '#ddd',
-                            borderWidth: 1,
+                            enabled: true,
+                            backgroundColor: isDark ? 'rgba(45, 55, 72, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                            titleColor: textColor,
+                            bodyColor: textColor,
+                            borderColor: gridColor,
+                            borderWidth: 2,
                             padding: 16,
                             cornerRadius: 12,
                             displayColors: true,
                             titleFont: {
-                                size: 14,
+                                size: 15,
                                 weight: 'bold'
                             },
                             bodyFont: {
-                                size: 13
+                                size: 14
                             },
                             callbacks: {
                                 label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y;
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(1);
+                                    }
+                                    return label;
                                 }
                             }
                         }
@@ -1478,35 +1476,441 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: 10,
+                            max: yAxisMax,
                             ticks: {
                                 color: textColor,
                                 font: {
                                     size: 13,
                                     weight: '600'
+                                },
+                                stepSize: yAxisMax ? yAxisMax / 10 : undefined,
+                                callback: function(value) {
+                                    return value.toFixed(0);
                                 }
                             },
                             grid: {
-                                color: 'rgba(0, 0, 0, 0.05)',
-                                drawBorder: false
+                                color: gridColor,
+                                drawBorder: false,
+                                lineWidth: 1
+                            },
+                            title: {
+                                display: !!yAxisLabel,
+                                text: yAxisLabel,
+                                color: textColor,
+                                font: {
+                                    size: 13,
+                                    weight: '700'
+                                }
                             }
                         },
                         x: {
                             ticks: {
                                 color: textColor,
                                 font: {
-                                    size: 13,
+                                    size: 12,
                                     weight: '600'
-                                }
+                                },
+                                maxRotation: 45,
+                                minRotation: 45
                             },
                             grid: {
-                                color: 'rgba(0, 0, 0, 0.05)',
-                                drawBorder: false
+                                color: gridColor,
+                                drawBorder: false,
+                                lineWidth: 1
                             }
+                        }
+                    },
+                    elements: {
+                        line: {
+                            tension: 0.4,
+                            borderWidth: 3
+                        },
+                        point: {
+                            radius: 5,
+                            hoverRadius: 8,
+                            borderWidth: 2,
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            hitRadius: 10
                         }
                     }
                 };
             }
+
+            // 【核心优化】改进的总览图表 - 显示更多指标
+            renderOverviewChart() {
+                const records = this.dm.getRecentRecords(14);
+                const ctx = document.getElementById('overviewChart');
+                
+                if (this.dm.charts.overview) {
+                    this.dm.charts.overview.destroy();
+                }
+
+                this.dm.charts.overview = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: records.map(r => r.date.slice(5)), // 只显示月-日
+                        datasets: [
+                            {
+                                label: '睡眠质量',
+                                data: records.map(r => r.sleep?.quality || 0),
+                                borderColor: 'rgb(102, 126, 234)',
+                                backgroundColor: 'rgba(102, 126, 234, 0.15)',
+                                fill: true,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: '心情评分',
+                                data: records.map(r => r.mood?.score || 0),
+                                borderColor: 'rgb(255, 159, 64)',
+                                backgroundColor: 'rgba(255, 159, 64, 0.15)',
+                                fill: true,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: '精力水平',
+                                data: records.map(r => r.physical?.energy || 0),
+                                borderColor: 'rgb(75, 192, 192)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.15)',
+                                fill: true,
+                                yAxisID: 'y'
+                            }
+                        ]
+                    },
+                    options: this.getChartOptions(10, '评分 (0-10)')
+                });
+            }
+
+            // 【核心优化】改进的单项图表渲染
+            renderSingleChart(config, records) {
+                const ctx = document.getElementById(config.id);
+                
+                if (this.dm.charts[config.id]) {
+                    this.dm.charts[config.id].destroy();
+                }
+
+                const textColor = getComputedStyle(document.body).color;
+                const isDark = body.classList.contains('dark-mode');
+                const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)';
+
+                // 特殊处理运动图表（显示时长和步数 - 双Y轴）
+                if (config.id === 'exerciseChart') {
+                    this.dm.charts[config.id] = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: records.map(r => r.date.slice(5)),
+                            datasets: [
+                                {
+                                    label: '运动时长(min)',
+                                    data: records.map(r => r.exercise?.minutes || 0),
+                                    borderColor: 'rgb(75, 192, 192)',
+                                    backgroundColor: 'rgba(75, 192, 192, 0.15)',
+                                    fill: true,
+                                    yAxisID: 'y',
+                                    tension: 0.4,
+                                    borderWidth: 3,
+                                    pointRadius: 5,
+                                    pointHoverRadius: 8
+                                },
+                                {
+                                    label: '步数',
+                                    data: records.map(r => r.exercise?.steps || 0),
+                                    borderColor: 'rgb(255, 99, 132)',
+                                    backgroundColor: 'rgba(255, 99, 132, 0.15)',
+                                    fill: true,
+                                    yAxisID: 'y1',
+                                    tension: 0.4,
+                                    borderWidth: 3,
+                                    pointRadius: 5,
+                                    pointHoverRadius: 8
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            interaction: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top',
+                                    labels: {
+                                        color: textColor,
+                                        font: { size: 14, weight: '700' },
+                                        padding: 20,
+                                        usePointStyle: true
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: isDark ? 'rgba(45, 55, 72, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                                    titleColor: textColor,
+                                    bodyColor: textColor,
+                                    borderColor: gridColor,
+                                    borderWidth: 2,
+                                    padding: 16,
+                                    cornerRadius: 12
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'left',
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: '运动时长(min)',
+                                        color: textColor,
+                                        font: { size: 13, weight: '700' }
+                                    },
+                                    ticks: {
+                                        color: textColor,
+                                        font: { size: 13, weight: '600' }
+                                    },
+                                    grid: {
+                                        color: gridColor,
+                                        drawBorder: false
+                                    }
+                                },
+                                y1: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'right',
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: '步数',
+                                        color: textColor,
+                                        font: { size: 13, weight: '700' }
+                                    },
+                                    ticks: {
+                                        color: textColor,
+                                        font: { size: 13, weight: '600' }
+                                    },
+                                    grid: {
+                                        drawOnChartArea: false
+                                    }
+                                },
+                                x: {
+                                    ticks: {
+                                        color: textColor,
+                                        font: { size: 12, weight: '600' },
+                                        maxRotation: 45,
+                                        minRotation: 45
+                                    },
+                                    grid: {
+                                        color: gridColor,
+                                        drawBorder: false
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    return;
+                }
+
+                // 特殊处理饮食图表（显示多项数据 - 双Y轴）
+                if (config.id === 'dietChart') {
+                    this.dm.charts[config.id] = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: records.map(r => r.date.slice(5)),
+                            datasets: [
+                                {
+                                    label: '饮水量(ml)',
+                                    data: records.map(r => r.diet?.waterIntake || 0),
+                                    borderColor: 'rgb(54, 162, 235)',
+                                    backgroundColor: 'rgba(54, 162, 235, 0.15)',
+                                    fill: true,
+                                    yAxisID: 'y',
+                                    tension: 0.4,
+                                    borderWidth: 3,
+                                    pointRadius: 5,
+                                    pointHoverRadius: 8
+                                },
+                                {
+                                    label: '蔬菜(g)',
+                                    data: records.map(r => r.diet?.vegetables || 0),
+                                    borderColor: 'rgb(75, 192, 192)',
+                                    backgroundColor: 'rgba(75, 192, 192, 0.15)',
+                                    fill: true,
+                                    yAxisID: 'y1',
+                                    tension: 0.4,
+                                    borderWidth: 3,
+                                    pointRadius: 5,
+                                    pointHoverRadius: 8
+                                },
+                                {
+                                    label: '水果(g)',
+                                    data: records.map(r => r.diet?.fruits || 0),
+                                    borderColor: 'rgb(255, 159, 64)',
+                                    backgroundColor: 'rgba(255, 159, 64, 0.15)',
+                                    fill: true,
+                                    yAxisID: 'y1',
+                                    tension: 0.4,
+                                    borderWidth: 3,
+                                    pointRadius: 5,
+                                    pointHoverRadius: 8
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            interaction: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top',
+                                    labels: {
+                                        color: textColor,
+                                        font: { size: 14, weight: '700' },
+                                        padding: 20,
+                                        usePointStyle: true
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: isDark ? 'rgba(45, 55, 72, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                                    titleColor: textColor,
+                                    bodyColor: textColor,
+                                    borderColor: gridColor,
+                                    borderWidth: 2,
+                                    padding: 16,
+                                    cornerRadius: 12
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'left',
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: '饮水量(ml)',
+                                        color: textColor,
+                                        font: { size: 13, weight: '700' }
+                                    },
+                                    ticks: {
+                                        color: textColor,
+                                        font: { size: 13, weight: '600' }
+                                    },
+                                    grid: {
+                                        color: gridColor,
+                                        drawBorder: false
+                                    }
+                                },
+                                y1: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'right',
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: '蔬菜/水果(g)',
+                                        color: textColor,
+                                        font: { size: 13, weight: '700' }
+                                    },
+                                    ticks: {
+                                        color: textColor,
+                                        font: { size: 13, weight: '600' }
+                                    },
+                                    grid: {
+                                        drawOnChartArea: false
+                                    }
+                                },
+                                x: {
+                                    ticks: {
+                                        color: textColor,
+                                        font: { size: 12, weight: '600' },
+                                        maxRotation: 45,
+                                        minRotation: 45
+                                    },
+                                    grid: {
+                                        color: gridColor,
+                                        drawBorder: false
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    return;
+                }
+
+                // 其他图表的标准渲染
+                const data = {
+                    labels: records.map(r => r.date.slice(5)),
+                    datasets: [{
+                        label: config.label,
+                        data: records.map(r => r[config.field]?.[config.subfield] || 0),
+                        borderColor: config.color,
+                        backgroundColor: config.color.replace('rgb', 'rgba').replace(')', ', 0.15)'),
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointHoverRadius: 8
+                    }]
+                };
+
+                this.dm.charts[config.id] = new Chart(ctx, {
+                    type: 'line',
+                    data: data,
+                    options: this.getChartOptions(config.yMax, config.yLabel)
+                });
+            }
+
+            // 【核心优化】改进的趋势分析渲染
+            renderTrends() {
+                this.queueRender(() => {
+                    const records = this.dm.getRecentRecords(30);
+                    
+                    const chartConfigs = [
+                        { 
+                            id: 'sleepChart', 
+                            label: '睡眠时长(h)', 
+                            field: 'sleep', 
+                            subfield: 'hours', 
+                            color: 'rgb(102, 126, 234)',
+                            yMax: 12,
+                            yLabel: '小时'
+                        },
+                        { 
+                            id: 'exerciseChart', 
+                            label: '运动时长(min)', 
+                            field: 'exercise', 
+                            subfield: 'minutes', 
+                            color: 'rgb(75, 192, 192)'
+                        },
+                        { 
+                            id: 'dietChart', 
+                            label: '饮水量(ml)', 
+                            field: 'diet', 
+                            subfield: 'waterIntake', 
+                            color: 'rgb(54, 162, 235)'
+                        },
+                        { 
+                            id: 'moodChart', 
+                            label: '心情评分', 
+                            field: 'mood', 
+                            subfield: 'score', 
+                            color: 'rgb(255, 159, 64)',
+                            yMax: 10,
+                            yLabel: '评分'
+                        }
+                    ];
+
+                    chartConfigs.forEach(config => {
+                        this.renderSingleChart(config, records);
+                    });
+                });
+            }
+
             // 渲染运动达标面板
             renderExerciseGoals(goalData) {
                 if (!goalData) {
@@ -1525,7 +1929,6 @@
                         </div>
                     `;
                 }
-                
                 const goalsHTML = goalData.goals.map(goal => `
                     <div class="goal-item ${goal.completed ? 'completed' : 'incomplete'}">
                         <div class="goal-info">
@@ -1544,7 +1947,6 @@
                         </div>
                     </div>
                 `).join('');
-                
                 return `
                     <div class="exercise-goals-panel">
                         <h3 class="panel-title">
@@ -1566,6 +1968,7 @@
                     </div>
                 `;
             }
+            
             renderToday() {
                 this.queueRender(() => {
                     const latest = this.dm.getLatestRecord();
@@ -1574,11 +1977,9 @@
                         return;
                     }
                     document.getElementById('todayDate').textContent = latest.date;
-                    
                     // 计算运动达标情况
                     const exerciseGoals = this.dm.calculateExerciseGoals(latest);
                     const exerciseHTML = this.renderExerciseGoals(exerciseGoals);
-                    
                     // 新增：明日最紧急的一件事
                     const urgent = this.computeUrgentAction(latest);
                     const urgentHTML = this.createUrgentActionHTML(urgent);
@@ -1586,6 +1987,7 @@
                     document.getElementById('todayContent').innerHTML = exerciseHTML + urgentHTML + html;
                 });
             }
+            
             // 新增:根据今日数据计算明日最紧急事项
             computeUrgentAction(latest) {
                 const sleepH = latest.sleep?.hours ?? 0;
@@ -1676,6 +2078,7 @@
                     reason: '今日指标总体稳定，无明显紧急项。'
                 };
             }
+            
             // 新增：渲染紧急事项面板
             createUrgentActionHTML(suggestion) {
                 return `
@@ -1694,6 +2097,7 @@
                     </div>
                 `;
             }
+            
             createTodayHTML(latest) {
                 return `
                     <div class="today-report">
@@ -1730,6 +2134,7 @@
                     </div>
                 `;
             }
+            
             createReportCard(title, icon, metrics) {
                 const metricsHTML = metrics.map(metric => `
                     <div class="metric-item">
@@ -1744,47 +2149,7 @@
                     </div>
                 `;
             }
-            renderTrends() {
-                this.queueRender(() => {
-                    const records = this.dm.getRecentRecords(30);
-                    const chartConfigs = [
-                        { id: 'sleepChart', label: '睡眠时长(h)', field: 'sleep', subfield: 'hours', color: 'rgb(102, 126, 234)' },
-                        { id: 'exerciseChart', label: '运动时长(min)', field: 'exercise', subfield: 'minutes', color: 'rgb(75, 192, 192)' },
-                        { id: 'dietChart', label: '饮水量(ml)', field: 'diet', subfield: 'waterIntake', color: 'rgb(54, 162, 235)' },
-                        { id: 'moodChart', label: '心情评分', field: 'mood', subfield: 'score', color: 'rgb(255, 159, 64)' }
-                    ];
-                    chartConfigs.forEach(config => {
-                        this.renderSingleChart(config, records);
-                    });
-                });
-            }
-            renderSingleChart(config, records) {
-                const ctx = document.getElementById(config.id);
-                if (this.dm.charts[config.id]) {
-                    this.dm.charts[config.id].destroy();
-                }
-                const data = {
-                    labels: records.map(r => r.date),
-                    datasets: [
-                        {
-                            label: config.label,
-                            data: records.map(r => r[config.field]?.[config.subfield] || 0),
-                            borderColor: config.color,
-                            backgroundColor: config.color.replace('rgb', 'rgba').replace(')', ', 0.1)'),
-                            tension: 0.4,
-                            borderWidth: 3,
-                            pointRadius: 5,
-                            pointHoverRadius: 7,
-                            fill: true
-                        }
-                    ]
-                };
-                this.dm.charts[config.id] = new Chart(ctx, {
-                    type: 'line',
-                    data: data,
-                    options: this.getChartOptions()
-                });
-            }
+            
             renderHistory() {
                 this.queueRender(() => {
                     const records = this.dm.data.records || [];
@@ -1804,6 +2169,7 @@
                     tbody.innerHTML = html;
                 });
             }
+            
             translateIntensity(intensity) {
                 const intensityMap = {
                     'light': '轻度',
@@ -1813,6 +2179,7 @@
                 return intensityMap[intensity] || intensity || '-';
             }
         }
+        
         // 视图切换函数
         function switchView(view) {
             document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -1853,6 +2220,7 @@
                 }
             }
         }
+        
         // 初始化应用
         async function init() {
             try {
@@ -1870,12 +2238,14 @@
                 `;
             }
         }
+        
         // 清理资源
         window.addEventListener('beforeunload', () => {
             if (window.dataManager) {
                 window.dataManager.destroyCharts();
             }
         });
+        
         // 响应式处理
         const handleResize = debounce(() => {
             if (window.uiRenderer) {
@@ -1885,6 +2255,7 @@
             }
         }, 250);
         window.addEventListener('resize', handleResize);
+        
         // 键盘导航支持
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Tab') {
@@ -1894,6 +2265,7 @@
         document.addEventListener('mousedown', () => {
             document.body.classList.remove('keyboard-navigation');
         });
+        
         // 页面加载完成后初始化
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
