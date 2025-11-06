@@ -595,15 +595,16 @@
             color: white;
             box-shadow: var(--shadow-sm);
         }
-        /* 内容折叠样式 */
+        /* 内容折叠样式 - 关键修复 */
         .moment-content {
             margin-bottom: var(--spacing-md);
             line-height: 1.6;
             color: var(--text-primary);
             font-size: 14px;
             position: relative;
-            transition: max-height 0.4s ease, opacity var(--transition-base);
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
             overflow: hidden;
+            will-change: max-height, opacity;
         }
         .moment-content.collapsed {
             max-height: 120px;
@@ -617,6 +618,18 @@
             height: 40px;
             background: linear-gradient(to bottom, transparent, var(--bg-card));
             pointer-events: none;
+        }
+        .moment-content.expanded {
+            max-height: none;
+            overflow: visible;
+        }
+        .moment-content.expanded::after {
+            display: none;
+        }
+        .moment-content p {
+            transition: opacity 0.2s ease;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         .expand-toggle-btn {
             display: inline-flex;
@@ -646,12 +659,6 @@
         }
         .expand-toggle-btn.expanded .toggle-icon {
             transform: rotate(180deg);
-        }
-        .moment-content.expanded {
-            max-height: none;
-        }
-        .moment-content.expanded::after {
-            display: none;
         }
         /* 图片网格 */
         .moment-images {
@@ -1063,7 +1070,6 @@
     <!-- 顶部导航栏 -->
     <header class="header" role="banner">
         <div class="container">
-           
             <nav class="primary-nav" role="navigation" aria-label="主导航">
                 <a class="success-link" href="success.html" title="查看成功日记">
                     <span class="success-icon" aria-hidden="true">
@@ -1448,7 +1454,7 @@
             updatePagination();
         }
         function handleMomentAction(e) {
-            // 处理展开/收起按钮
+            // 处理展开/收起按钮 - 修复版
             const toggleBtn = e.target.closest('.expand-toggle-btn');
             if (toggleBtn) {
                 handleToggleContent(toggleBtn);
@@ -1473,20 +1479,47 @@
                 return;
             }
         }
+        // ==================== 修复的展开/收起功能 ====================
         function handleToggleContent(btn) {
             const card = btn.closest('.moment-card');
             const contentBox = card.querySelector('.moment-content');
+            const contentParagraph = contentBox.querySelector('p');
             const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+            
+            // 获取完整内容和预览内容
+            const fullContent = decodeHtml(contentBox.dataset.fullContent);
+            const previewContent = decodeHtml(contentBox.dataset.previewContent);
+            
+            // 平滑过渡动画
+            contentBox.style.transition = 'max-height 0.4s ease, opacity 0.3s ease';
+            
             if (isExpanded) {
-                contentBox.classList.add('collapsed');
-                contentBox.classList.remove('expanded');
+                // 收起：显示预览内容
+                contentBox.style.opacity = '0.7';
+                setTimeout(() => {
+                    contentBox.classList.add('collapsed');
+                    contentBox.classList.remove('expanded');
+                    contentParagraph.textContent = previewContent; // 恢复预览文本
+                    contentBox.style.opacity = '1';
+                }, 150);
+                
                 btn.setAttribute('aria-expanded', 'false');
                 btn.classList.remove('expanded');
                 btn.querySelector('.toggle-text').textContent = '展开全文';
                 btn.querySelector('.toggle-icon').className = 'fas fa-chevron-down toggle-icon';
+                
+                // 滚动到卡片顶部
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } else {
-                contentBox.classList.remove('collapsed');
-                contentBox.classList.add('expanded');
+                // 展开：显示完整内容
+                contentBox.style.opacity = '0.7';
+                setTimeout(() => {
+                    contentBox.classList.remove('collapsed');
+                    contentBox.classList.add('expanded');
+                    contentParagraph.textContent = fullContent; // ✅ 关键修复：更新为完整内容
+                    contentBox.style.opacity = '1';
+                }, 150);
+                
                 btn.setAttribute('aria-expanded', 'true');
                 btn.classList.add('expanded');
                 btn.querySelector('.toggle-text').textContent = '收起';
@@ -1627,23 +1660,27 @@
             }, 100);
             updatePaginationInfo();
         }
-        // ==================== 创建朋友圈卡片（优化版） ====================
+        // ==================== 创建朋友圈卡片（修复版） ====================
         function createMomentCard(moment, index) {
             const card = document.createElement('article');
             card.className = 'moment-card';
             card.setAttribute('role', 'article');
             card.setAttribute('aria-label', `朋友圈内容 ${index + 1}`);
             card.dataset.id = moment.id || `moment-${index}`;
+            
             const isLiked = userLikes[card.dataset.id];
             const rawDate = new Date(moment.date);
             const hasValidDate = rawDate instanceof Date && !isNaN(rawDate);
             const formattedDate = hasValidDate ? formatDate(rawDate) : (moment.date || '未知时间');
+            
             const content = moment.content || '';
             const COLLAPSE_THRESHOLD = 300;
             const shouldCollapse = content.length > COLLAPSE_THRESHOLD;
             const previewContent = shouldCollapse ? content.substring(0, COLLAPSE_THRESHOLD) + '...' : content;
+            
             const valueColor = getValueGradient(moment.value);
             const valueLabel = moment.value ? `<span class="value-badge" style="background: ${valueColor}">价值 ${moment.value}</span>` : '';
+            
             card.innerHTML = `
                 <div class="moment-header">
                     <div class="moment-meta">
@@ -1652,7 +1689,9 @@
                         ${valueLabel}
                     </div>
                 </div>
-                <div class="moment-content ${shouldCollapse ? 'collapsed' : ''}" data-full-content="${escapeHtml(content)}">
+                <div class="moment-content ${shouldCollapse ? 'collapsed' : ''}" 
+                     data-full-content="${escapeHtml(content)}"
+                     data-preview-content="${escapeHtml(previewContent)}">
                     <p>${escapeHtml(previewContent)}</p>
                 </div>
                 ${shouldCollapse ? `
@@ -1685,6 +1724,7 @@
                     </button>
                 </div>
             `;
+            
             return card;
         }
         // ==================== 辅助函数 ====================
