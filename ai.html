@@ -18,7 +18,7 @@
         }
         .matrix-title {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
         }
         .matrix-title h1 {
             font-size: 2.5em;
@@ -32,6 +32,54 @@
             font-size: 1.1em;
             color: #666;
             opacity: 0.8;
+        }
+        /* 知识体系按钮 */
+        .knowledge-system-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 300px;
+            margin: 30px auto 50px;
+            padding: 18px 40px;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            box-shadow: 0 8px 25px rgba(255, 216, 155, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        body.dark-mode .knowledge-system-btn {
+            background: linear-gradient(135deg, #f39c12 0%, #1a5490 100%);
+        }
+        .knowledge-system-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        .knowledge-system-btn:hover::before {
+            left: 100%;
+        }
+        .knowledge-system-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(255, 216, 155, 0.5);
+        }
+        .knowledge-system-btn i {
+            margin-right: 12px;
+            font-size: 1.3em;
+            animation: starPulse 2s infinite;
+        }
+        @keyframes starPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
         }
         /* 矩阵网格布局 */
         .matrix-grid {
@@ -155,27 +203,6 @@
         .ai-card:hover .ai-arrow {
             transform: translateX(5px);
         }
-        /* 概念合集卡片样式 */
-        .concept-card {
-            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
-            border: 3px solid #ffd700;
-            position: relative;
-        }
-        .concept-card::after {
-            content: '⭐';
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            animation: starPulse 2s infinite;
-        }
-        @keyframes starPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-        body.dark-mode .concept-card {
-            background: linear-gradient(135deg, #f39c12 0%, #1a5490 100%);
-        }
         /* 各科目专属颜色 */
         .chinese-bg {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
@@ -194,9 +221,6 @@
         }
         .politics-bg {
             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-        }
-        .concept-bg {
-            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
         }
         /* 响应式设计 */
         @media (max-width: 768px) {
@@ -218,6 +242,10 @@
             }
             .ai-name {
                 font-size: 1.1em;
+            }
+            .knowledge-system-btn {
+                font-size: 1em;
+                padding: 15px 30px;
             }
         }
         /* 返回按钮 */
@@ -973,13 +1001,18 @@
             </div>
         </div>
     </header>
-
     <div class="ai-matrix-container">
         <div class="matrix-title">
             <h1>🎯 高考AI助手</h1>
             <p>精准覆盖各科目知识点,助力高考提分</p>
         </div>
-
+        
+        <!-- 知识体系按钮 -->
+        <a href="" class="knowledge-system-btn" id="knowledgeSystemBtn">
+            <i class="fas fa-brain"></i>
+            知识体系
+        </a>
+        
         <!-- 主科目页面 -->
         <div id="mainView" class="matrix-grid">
             <!-- 语文 -->
@@ -989,17 +1022,6 @@
                     <p class="subtitle">阅读、写作、文化传承</p>
                 </div>
                 <div class="ai-cards">
-                    <!-- 概念合集 -->
-                    <a href="#" class="ai-card concept-card" data-concept-link="">
-                        <div class="ai-icon concept-bg">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <div class="ai-info">
-                            <div class="ai-name">📚 概念合集</div>
-                            <div class="ai-desc">系统学习语文核心概念</div>
-                        </div>
-                        <i class="fas fa-arrow-right ai-arrow"></i>
-                    </a>
                     <div class="ai-card" onclick="showSubjects('chinese')">
                         <div class="ai-icon chinese-bg">
                             <i class="fas fa-book"></i>
@@ -1012,7 +1034,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- 数学 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1020,17 +1041,6 @@
                     <p class="subtitle">函数、几何、概率</p>
                 </div>
                 <div class="ai-cards">
-                    <!-- 概念合集 -->
-                    <a href="#" class="ai-card concept-card" data-concept-link="">
-                        <div class="ai-icon concept-bg">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <div class="ai-info">
-                            <div class="ai-name">📚 概念合集</div>
-                            <div class="ai-desc">系统学习数学核心概念</div>
-                        </div>
-                        <i class="fas fa-arrow-right ai-arrow"></i>
-                    </a>
                     <div class="ai-card" onclick="showSubjects('math')">
                         <div class="ai-icon math-bg">
                             <i class="fas fa-calculator"></i>
@@ -1043,7 +1053,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- 英语 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1051,17 +1060,6 @@
                     <p class="subtitle">听说读写综合能力</p>
                 </div>
                 <div class="ai-cards">
-                    <!-- 概念合集 -->
-                    <a href="#" class="ai-card concept-card" data-concept-link="">
-                        <div class="ai-icon concept-bg">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <div class="ai-info">
-                            <div class="ai-name">📚 概念合集</div>
-                            <div class="ai-desc">系统学习英语核心概念</div>
-                        </div>
-                        <i class="fas fa-arrow-right ai-arrow"></i>
-                    </a>
                     <div class="ai-card" onclick="showSubjects('english')">
                         <div class="ai-icon english-bg">
                             <i class="fas fa-globe"></i>
@@ -1074,7 +1072,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- 物理 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1082,17 +1079,6 @@
                     <p class="subtitle">力、电、热、光、现代</p>
                 </div>
                 <div class="ai-cards">
-                    <!-- 概念合集 -->
-                    <a href="#" class="ai-card concept-card" data-concept-link="">
-                        <div class="ai-icon concept-bg">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <div class="ai-info">
-                            <div class="ai-name">📚 概念合集</div>
-                            <div class="ai-desc">系统学习物理核心概念</div>
-                        </div>
-                        <i class="fas fa-arrow-right ai-arrow"></i>
-                    </a>
                     <div class="ai-card" onclick="showSubjects('physics')">
                         <div class="ai-icon physics-bg">
                             <i class="fas fa-bolt"></i>
@@ -1105,7 +1091,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- 化学 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1113,17 +1098,6 @@
                     <p class="subtitle">物质、反应、平衡</p>
                 </div>
                 <div class="ai-cards">
-                    <!-- 概念合集 -->
-                    <a href="chemistry-concepts.html" class="ai-card concept-card" data-concept-link="chemistry-concepts.html">
-                        <div class="ai-icon concept-bg">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <div class="ai-info">
-                            <div class="ai-name">📚 概念合集</div>
-                            <div class="ai-desc">系统学习化学核心概念</div>
-                        </div>
-                        <i class="fas fa-arrow-right ai-arrow"></i>
-                    </a>
                     <div class="ai-card" onclick="showSubjects('chemistry')">
                         <div class="ai-icon chemistry-bg">
                             <i class="fas fa-flask"></i>
@@ -1136,7 +1110,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- 政治 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1144,17 +1117,6 @@
                     <p class="subtitle">经济、政治、文化、哲学</p>
                 </div>
                 <div class="ai-cards">
-                    <!-- 概念合集 -->
-                    <a href="#" class="ai-card concept-card" data-concept-link="">
-                        <div class="ai-icon concept-bg">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <div class="ai-info">
-                            <div class="ai-name">📚 概念合集</div>
-                            <div class="ai-desc">系统学习政治核心概念</div>
-                        </div>
-                        <i class="fas fa-arrow-right ai-arrow"></i>
-                    </a>
                     <div class="ai-card" onclick="showSubjects('politics')">
                         <div class="ai-icon politics-bg">
                             <i class="fas fa-balance-scale"></i>
@@ -1168,7 +1130,6 @@
                 </div>
             </div>
         </div>
-
         <!-- 子题目页面 -->
         <div id="subtopicView" style="display: none;">
             <div style="margin-bottom: 30px;">
@@ -1190,7 +1151,6 @@
             </div>
         </div>
     </div>
-
     <!-- AI工具模态框 -->
     <div id="aiModal" class="modal">
         <div class="modal-content">
@@ -1206,7 +1166,6 @@
             </div>
         </div>
     </div>
-
     <!-- 优化后的文稿模态框 -->
     <div id="manuscriptModal" class="modal">
         <div class="modal-content manuscript-modal-content">
@@ -1239,14 +1198,13 @@
                     </div>
                 </div>
                 <div class="github-note">
-                    <strong>📌 更新说明：</strong>
-                    文稿内容存储在 <code>breakthrough-manuscript.md</code> 文件中，使用 Markdown 格式编写。
+                    <strong>📌 更新说明:</strong>
+                    文稿内容存储在 <code>breakthrough-manuscript.md</code> 文件中,使用 Markdown 格式编写。
                     修改该文件即可更新显示内容。支持标题、段落、列表、代码等 Markdown 语法。
                 </div>
             </div>
         </div>
     </div>
-
     <!-- 进度模态框 -->
     <div id="progressModal" class="modal">
         <div class="modal-content progress-modal-content">
@@ -1265,351 +1223,337 @@
             </div>
         </div>
     </div>
-
     <!-- 返回按钮 -->
     <a href="index.html" class="back-button" title="返回首页">
         <i class="fas fa-home"></i>
     </a>
-
     <script>
         // ===== 科目数据 =====
-        const subjects = {
-            chinese: {
-                title: '📖 语文',
-                icon: '📚',
-                color: '#f5576c',
-                topics: [
-                    { name: '论述类文本', icon: '📄', key: 'chinese_lunsu' },
-                    { name: '文学类文本', icon: '📖', key: 'chinese_wenxue' },
-                    { name: '古文阅读', icon: '🖋️', key: 'chinese_guwen' },
-                    { name: '古诗词', icon: '✍️', key: 'chinese_shici' },
-                    { name: '默写填空', icon: '📝', key: 'chinese_moxie' },
-                    { name: '语言应用', icon: '🗣️', key: 'chinese_yingyang' },
-                    { name: '作文写作', icon: '📑', key: 'chinese_zuowen' }
-                ]
-            },
-            math: {
-                title: '🧮 数学',
-                icon: '🔢',
-                color: '#00f2fe',
-                topics: [
-                    { name: '集合与逻辑', icon: '∅', key: 'math_jihe' },
-                    { name: '函数', icon: 'ƒ', key: 'math_function' },
-                    { name: '数列', icon: '1,2,3', key: 'math_shuslie' },
-                    { name: '三角函数', icon: '∠', key: 'math_trigonometry' },
-                    { name: '平面向量', icon: '⃗', key: 'math_vector' },
-                    { name: '不等式', icon: '≥', key: 'math_inequality' },
-                    { name: '立体几何', icon: '🎲', key: 'math_lititi' },
-                    { name: '解析几何', icon: '📊', key: 'math_jiexi' },
-                    { name: '概率统计', icon: '📈', key: 'math_probability' },
-                    { name: '导数应用', icon: '∫', key: 'math_derivative' }
-                ]
-            },
-            english: {
-                title: '🌍 英语',
-                icon: '🌐',
-                color: '#38f9d7',
-                topics: [
-                    { name: '阅读理解', icon: '📚', key: 'english_reading' },
-                    { name: '七选五', icon: '5️⃣', key: 'english_sevenfive' },
-                    { name: '完形填空', icon: '🔤', key: 'english_cloze' },
-                    { name: '语法填空', icon: '📝', key: 'english_grammar' },
-                    { name: '应用文写作', icon: '💌', key: 'english_writing' },
-                    { name: '读后续写', icon: '📖', key: 'english_continuation' }
-                ]
-            },
-            physics: {
-                title: '⚡ 物理',
-                icon: '⚛️',
-                color: '#fee140',
-                topics: [
-                    { name: '力学', icon: '💪', key: 'physics_mechanics' },
-                    { name: '电磁学', icon: '🧲', key: 'physics_electromagnetism' },
-                    { name: '热学', icon: '🔥', key: 'physics_thermology' },
-                    { name: '振动和波', icon: '〰️', key: 'physics_wave' },
-                    { name: '光学', icon: '💡', key: 'physics_optics' },
-                    { name: '近代物理', icon: '☢️', key: 'physics_modern' },
-                    { name: '实验题', icon: '🔬', key: 'physics_experiment' }
-                ]
-            },
-            chemistry: {
-                title: '⚗️ 化学',
-                icon: '🧪',
-                color: '#330867',
-                topics: [
-                    { name: '物质变化', icon: '⚛️', key: 'chem_substance' },
-                    { name: '化学计量', icon: '⚖️', key: 'chem_stoichiometry' },
-                    { name: '金属及化合物', icon: '🔩', key: 'chem_metal' },
-                    { name: '非金属及化合物', icon: '💎', key: 'chem_nonmetal' },
-                    { name: '物质结构', icon: '🧬', key: 'chem_structure' },
-                    { name: '化学能量', icon: '⚡', key: 'chem_energy' },
-                    { name: '反应速率平衡', icon: '⚔️', key: 'chem_equilibrium' },
-                    { name: '离子平衡', icon: '💧', key: 'chem_ionbalance' },
-                    { name: '有机化学', icon: '🌿', key: 'chem_organic' },
-                    { name: '实验探究', icon: '🔭', key: 'chem_experiment' }
-                ]
-            },
-            politics: {
-                title: '🏛️ 政治',
-                icon: '⚖️',
-                color: '#fed6e3',
-                topics: [
-                    { name: '中国特色社会主义', icon: '🇨🇳', key: 'poli_socialism' },
-                    { name: '经济与社会', icon: '💰', key: 'poli_economy' },
-                    { name: '政治与法治', icon: '⚖️', key: 'poli_politics' },
-                    { name: '哲学与文化', icon: '🧠', key: 'poli_philosophy' },
-                    { name: '国际经济', icon: '🌍', key: 'poli_international' },
-                    { name: '法律生活', icon: '📜', key: 'poli_law' },
-                    { name: '逻辑思维', icon: '🔗', key: 'poli_logic' }
-                ]
-            }
-        };
+const subjects = {
+    chinese: {
+        title: '📖 语文',
+        icon: '📚',
+        color: '#f5576c',
+        topics: [
+            { name: '论述类文本', icon: '📄', key: 'chinese_lunsu' },
+            { name: '文学类文本', icon: '📖', key: 'chinese_wenxue' },
+            { name: '古文阅读', icon: '🖋️', key: 'chinese_guwen' },
+            { name: '古诗词', icon: '✍️', key: 'chinese_shici' },
+            { name: '默写填空', icon: '📝', key: 'chinese_moxie' },
+            { name: '语言应用', icon: '🗣️', key: 'chinese_yingyang' },
+            { name: '作文写作', icon: '📑', key: 'chinese_zuowen' }
+        ]
+    },
+    math: {
+        title: '🧮 数学',
+        icon: '🔢',
+        color: '#00f2fe',
+        topics: [
+            { name: '集合与逻辑', icon: '∅', key: 'math_jihe' },
+            { name: '函数', icon: 'ƒ', key: 'math_function' },
+            { name: '数列', icon: '1,2,3', key: 'math_shuslie' },
+            { name: '三角函数', icon: '∠', key: 'math_trigonometry' },
+            { name: '平面向量', icon: '⃗', key: 'math_vector' },
+            { name: '不等式', icon: '≥', key: 'math_inequality' },
+            { name: '立体几何', icon: '🎲', key: 'math_lititi' },
+            { name: '解析几何', icon: '📊', key: 'math_jiexi' },
+            { name: '概率统计', icon: '📈', key: 'math_probability' },
+            { name: '导数应用', icon: '∫', key: 'math_derivative' }
+        ]
+    },
+    english: {
+        title: '🌍 英语',
+        icon: '🌐',
+        color: '#38f9d7',
+        topics: [
+            { name: '阅读理解', icon: '📚', key: 'english_reading' },
+            { name: '七选五', icon: '5️⃣', key: 'english_sevenfive' },
+            { name: '完形填空', icon: '🔤', key: 'english_cloze' },
+            { name: '语法填空', icon: '📝', key: 'english_grammar' },
+            { name: '应用文写作', icon: '💌', key: 'english_writing' },
+            { name: '读后续写', icon: '📖', key: 'english_continuation' }
+        ]
+    },
+    physics: {
+        title: '⚡ 物理',
+        icon: '⚛️',
+        color: '#fee140',
+        topics: [
+            { name: '力学', icon: '💪', key: 'physics_mechanics' },
+            { name: '电磁学', icon: '🧲', key: 'physics_electromagnetism' },
+            { name: '热学', icon: '🔥', key: 'physics_thermology' },
+            { name: '振动和波', icon: '〰️', key: 'physics_wave' },
+            { name: '光学', icon: '💡', key: 'physics_optics' },
+            { name: '近代物理', icon: '☢️', key: 'physics_modern' },
+            { name: '实验题', icon: '🔬', key: 'physics_experiment' }
+        ]
+    },
+    chemistry: {
+        title: '⚗️ 化学',
+        icon: '🧪',
+        color: '#330867',
+        topics: [
+            { name: '物质变化', icon: '⚛️', key: 'chem_substance' },
+            { name: '化学计量', icon: '⚖️', key: 'chem_stoichiometry' },
+            { name: '金属及化合物', icon: '🔩', key: 'chem_metal' },
+            { name: '非金属及化合物', icon: '💎', key: 'chem_nonmetal' },
+            { name: '物质结构', icon: '🧬', key: 'chem_structure' },
+            { name: '化学能量', icon: '⚡', key: 'chem_energy' },
+            { name: '反应速率平衡', icon: '⚔️', key: 'chem_equilibrium' },
+            { name: '离子平衡', icon: '💧', key: 'chem_ionbalance' },
+            { name: '有机化学', icon: '🌿', key: 'chem_organic' },
+            { name: '实验探究', icon: '🔭', key: 'chem_experiment' }
+        ]
+    },
+    politics: {
+        title: '🏛️ 政治',
+        icon: '⚖️',
+        color: '#fed6e3',
+        topics: [
+            { name: '中国特色社会主义', icon: '🇨🇳', key: 'poli_socialism' },
+            { name: '经济与社会', icon: '💰', key: 'poli_economy' },
+            { name: '政治与法治', icon: '⚖️', key: 'poli_politics' },
+            { name: '哲学与文化', icon: '🧠', key: 'poli_philosophy' },
+            { name: '国际经济', icon: '🌍', key: 'poli_international' },
+            { name: '法律生活', icon: '📜', key: 'poli_law' },
+            { name: '逻辑思维', icon: '🔗', key: 'poli_logic' }
+        ]
+    }
+};
 
-        // AI工具配置（示例，需要完整配置）
-        const aiTools = {
-            chinese_lunsu: {
-                title: '论述类文本',
-                tools: []
-            }
-            // ... 其他配置
-        };
+// ===== 从 JSON 文件加载 AI 工具配置 =====
+let aiTools = {};
 
-        // ===== 从 Markdown 文件加载文稿 =====
-        async function loadManuscriptData() {
-            const manuscriptText = document.getElementById('manuscriptText');
-            
-            try {
-                const response = await fetch('breakthrough-manuscript.md');
-                if (!response.ok) {
-                    throw new Error('文件加载失败');
-                }
-                
-                const markdown = await response.text();
-                
-                if (!markdown.trim()) {
-                    manuscriptText.innerHTML = `
-                        <div class="empty-manuscript">
-                            <i class="fas fa-file-alt"></i>
-                            <p>暂无文稿内容</p>
-                            <p style="font-size: 0.9em; margin-top: 10px;">请在 breakthrough-manuscript.md 中添加内容</p>
-                        </div>
-                    `;
-                    updateStats(0, 0, 0);
-                    return;
-                }
-                
-                // 使用 marked.js 解析 Markdown
-                manuscriptText.innerHTML = marked.parse(markdown);
-                
-                // 计算统计数据
-                const wordCount = markdown.replace(/[^\u4e00-\u9fa5]/g, '').length;
-                const dayMatches = markdown.match(/##\s*\d{4}-\d{2}-\d{2}/g);
-                const totalDays = dayMatches ? dayMatches.length : 0;
-                const avgWords = totalDays > 0 ? Math.round(wordCount / totalDays) : wordCount;
-                
-                updateStats(wordCount, totalDays, avgWords);
-                
-            } catch (error) {
-                console.error('加载文稿失败:', error);
-                manuscriptText.innerHTML = `
-                    <div class="empty-manuscript">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <p>文稿加载失败</p>
-                        <p style="font-size: 0.9em; margin-top: 10px;">请确保 breakthrough-manuscript.md 文件存在</p>
-                    </div>
-                `;
-                updateStats(0, 0, 0);
-            }
+async function loadAIToolsConfig() {
+    try {
+        const response = await fetch('ai-tools-config.json');
+        if (!response.ok) {
+            throw new Error('配置文件加载失败');
         }
+        aiTools = await response.json();
+        console.log('AI工具配置加载成功');
+    } catch (error) {
+        console.error('加载AI工具配置失败:', error);
+        // 使用默认空配置
+        aiTools = {};
+    }
+}
 
-        function updateStats(totalWords, totalDays, avgWords) {
-            document.getElementById('totalWords').textContent = totalWords.toLocaleString();
-            document.getElementById('totalDays').textContent = totalDays;
-            document.getElementById('avgWords').textContent = avgWords;
+// 页面加载时立即加载配置
+loadAIToolsConfig();
+
+// ===== 从 Markdown 文件加载文稿 =====
+async function loadManuscriptData() {
+    const manuscriptText = document.getElementById('manuscriptText');
+    try {
+        const response = await fetch('breakthrough-manuscript.md');
+        if (!response.ok) {
+            throw new Error('文件加载失败');
         }
-
-        function showManuscriptModal(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            document.getElementById('manuscriptModal').style.display = 'block';
-            loadManuscriptData();
-        }
-
-        function closeManuscriptModal() {
-            document.getElementById('manuscriptModal').style.display = 'none';
-        }
-
-        // ===== 从 Markdown 文件加载进度 =====
-        async function loadProgressData() {
-            const progressContent = document.getElementById('progressContent');
-            
-            try {
-                const response = await fetch('breakthrough-progress.md');
-                if (!response.ok) {
-                    throw new Error('文件加载失败');
-                }
-                
-                const markdown = await response.text();
-                
-                if (!markdown.trim()) {
-                    progressContent.innerHTML = `
-                        <div class="empty-state">
-                            <div class="empty-state-icon">📊</div>
-                            <p>暂无进度数据</p>
-                            <p style="font-size: 0.9em;">请在 breakthrough-progress.md 中添加内容</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // 使用 marked.js 解析 Markdown
-                progressContent.innerHTML = marked.parse(markdown);
-                
-            } catch (error) {
-                console.error('加载进度失败:', error);
-                progressContent.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">❌</div>
-                        <p>进度加载失败</p>
-                        <p style="font-size: 0.9em;">请确保 breakthrough-progress.md 文件存在</p>
-                    </div>
-                `;
-            }
-        }
-
-        function showProgressModal(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            document.getElementById('progressModal').style.display = 'block';
-            loadProgressData();
-        }
-
-        function closeProgressModal() {
-            document.getElementById('progressModal').style.display = 'none';
-        }
-
-        // ===== 科目相关函数 =====
-        function showSubjects(subject) {
-            const subjectData = subjects[subject];
-            const subtopicGrid = document.getElementById('subtopicGrid');
-            
-            subtopicGrid.innerHTML = subjectData.topics.map(topic => `
-                <div class="subtopic-card" onclick="openModal('${topic.key}')">
-                    <div class="subtopic-icon">${topic.icon}</div>
-                    <div class="subtopic-name">${topic.name}</div>
+        const markdown = await response.text();
+        if (!markdown.trim()) {
+            manuscriptText.innerHTML = `
+                <div class="empty-manuscript">
+                    <i class="fas fa-file-alt"></i>
+                    <p>暂无文稿内容</p>
+                    <p style="font-size: 0.9em; margin-top: 10px;">请在 breakthrough-manuscript.md 中添加内容</p>
                 </div>
-            `).join('');
-            
-            document.getElementById('mainView').style.display = 'none';
-            document.getElementById('subtopicView').style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            `;
+            updateStats(0, 0, 0);
+            return;
         }
+        // 使用 marked.js 解析 Markdown
+        manuscriptText.innerHTML = marked.parse(markdown);
+        // 计算统计数据
+        const wordCount = markdown.replace(/[^\u4e00-\u9fa5]/g, '').length;
+        const dayMatches = markdown.match(/##\s*\d{4}-\d{2}-\d{2}/g);
+        const totalDays = dayMatches ? dayMatches.length : 0;
+        const avgWords = totalDays > 0 ? Math.round(wordCount / totalDays) : wordCount;
+        updateStats(wordCount, totalDays, avgWords);
+    } catch (error) {
+        console.error('加载文稿失败:', error);
+        manuscriptText.innerHTML = `
+            <div class="empty-manuscript">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>文稿加载失败</p>
+                <p style="font-size: 0.9em; margin-top: 10px;">请确保 breakthrough-manuscript.md 文件存在</p>
+            </div>
+        `;
+        updateStats(0, 0, 0);
+    }
+}
 
-        function backToMain() {
-            document.getElementById('mainView').style.display = 'grid';
-            document.getElementById('subtopicView').style.display = 'none';
+function updateStats(totalWords, totalDays, avgWords) {
+    document.getElementById('totalWords').textContent = totalWords.toLocaleString();
+    document.getElementById('totalDays').textContent = totalDays;
+    document.getElementById('avgWords').textContent = avgWords;
+}
+
+function showManuscriptModal(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById('manuscriptModal').style.display = 'block';
+    loadManuscriptData();
+}
+
+function closeManuscriptModal() {
+    document.getElementById('manuscriptModal').style.display = 'none';
+}
+
+// ===== 从 Markdown 文件加载进度 =====
+async function loadProgressData() {
+    const progressContent = document.getElementById('progressContent');
+    try {
+        const response = await fetch('breakthrough-progress.md');
+        if (!response.ok) {
+            throw new Error('文件加载失败');
         }
-
-        function openModal(topicKey) {
-            const modal = document.getElementById('aiModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalTools = document.getElementById('modalTools');
-            
-            const toolData = aiTools[topicKey];
-            
-            if (!toolData) {
-                alert('该考点数据配置出错');
-                return;
-            }
-            
-            modalTitle.textContent = toolData.title + ' - AI工具';
-            
-            if (toolData.tools.length === 0) {
-                modalTools.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">🛠️</div>
-                        <p>暂无工具配置</p>
-                        <p style="font-size: 0.9em;">该考点正在完善中...</p>
-                    </div>
-                `;
-            } else {
-                modalTools.innerHTML = toolData.tools.map(tool => `
-                    <a href="${tool.url}" target="_blank" class="tool-item">
-                        <div class="tool-icon" style="background: ${tool.color}">
-                            ${tool.icon}
-                        </div>
-                        <div class="tool-info">
-                            <h3>${tool.name}</h3>
-                            <p>${tool.desc}</p>
-                        </div>
-                    </a>
-                `).join('');
-            }
-            
-            modal.style.display = 'block';
+        const markdown = await response.text();
+        if (!markdown.trim()) {
+            progressContent.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📊</div>
+                    <p>暂无进度数据</p>
+                    <p style="font-size: 0.9em;">请在 breakthrough-progress.md 中添加内容</p>
+                </div>
+            `;
+            return;
         }
+        // 使用 marked.js 解析 Markdown
+        progressContent.innerHTML = marked.parse(markdown);
+    } catch (error) {
+        console.error('加载进度失败:', error);
+        progressContent.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">❌</div>
+                <p>进度加载失败</p>
+                <p style="font-size: 0.9em;">请确保 breakthrough-progress.md 文件存在</p>
+            </div>
+        `;
+    }
+}
 
-        function closeModal() {
-            document.getElementById('aiModal').style.display = 'none';
-        }
+function showProgressModal(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById('progressModal').style.display = 'block';
+    loadProgressData();
+}
 
-        // ===== 模态框外部点击关闭 =====
-        window.onclick = function(event) {
-            const aiModal = document.getElementById('aiModal');
-            const progressModal = document.getElementById('progressModal');
-            const manuscriptModal = document.getElementById('manuscriptModal');
-            
-            if (event.target == aiModal) {
-                closeModal();
-            }
-            if (event.target == progressModal) {
-                closeProgressModal();
-            }
-            if (event.target == manuscriptModal) {
-                closeManuscriptModal();
-            }
-        }
+function closeProgressModal() {
+    document.getElementById('progressModal').style.display = 'none';
+}
 
-        // ===== 主题切换 =====
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        const icon = themeToggle.querySelector('i');
-        
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        if (currentTheme === 'dark') {
-            body.classList.add('dark-mode');
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
-        }
-        
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            
-            if (body.classList.contains('dark-mode')) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'light');
-            }
-        });
+// ===== 科目相关函数 =====
+function showSubjects(subject) {
+    const subjectData = subjects[subject];
+    const subtopicGrid = document.getElementById('subtopicGrid');
+    subtopicGrid.innerHTML = subjectData.topics.map(topic => `
+        <div class="subtopic-card" onclick="openModal('${topic.key}')">
+            <div class="subtopic-icon">${topic.icon}</div>
+            <div class="subtopic-name">${topic.name}</div>
+        </div>
+    `).join('');
+    document.getElementById('mainView').style.display = 'none';
+    document.getElementById('subtopicView').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-        // ===== 概念合集链接处理 =====
-        document.addEventListener('DOMContentLoaded', function() {
-            const conceptCards = document.querySelectorAll('.concept-card[data-concept-link]');
-            
-            conceptCards.forEach(card => {
-                const link = card.getAttribute('data-concept-link');
-                if (!link || link === '') {
-                    card.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        alert('该科目概念合集正在建设中,敬请期待!');
-                    });
-                }
-            });
-        });
+function backToMain() {
+    document.getElementById('mainView').style.display = 'grid';
+    document.getElementById('subtopicView').style.display = 'none';
+}
+
+async function openModal(topicKey) {
+    const modal = document.getElementById('aiModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalTools = document.getElementById('modalTools');
+    
+    // 确保配置已加载
+    if (Object.keys(aiTools).length === 0) {
+        await loadAIToolsConfig();
+    }
+    
+    const toolData = aiTools[topicKey];
+    
+    if (!toolData) {
+        alert('该考点数据配置出错');
+        return;
+    }
+    
+    modalTitle.textContent = toolData.title + ' - AI工具';
+    
+    if (!toolData.tools || toolData.tools.length === 0) {
+        modalTools.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">🛠️</div>
+                <p>暂无工具配置</p>
+                <p style="font-size: 0.9em;">该考点正在完善中...</p>
+            </div>
+        `;
+    } else {
+        modalTools.innerHTML = toolData.tools.map(tool => `
+            <a href="${tool.url}" target="_blank" class="tool-item">
+                <div class="tool-icon" style="background: ${tool.color}">
+                    ${tool.icon}
+                </div>
+                <div class="tool-info">
+                    <h3>${tool.name}</h3>
+                    <p>${tool.desc}</p>
+                </div>
+            </a>
+        `).join('');
+    }
+    
+    modal.style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('aiModal').style.display = 'none';
+}
+
+// ===== 模态框外部点击关闭 =====
+window.onclick = function(event) {
+    const aiModal = document.getElementById('aiModal');
+    const progressModal = document.getElementById('progressModal');
+    const manuscriptModal = document.getElementById('manuscriptModal');
+    if (event.target == aiModal) {
+        closeModal();
+    }
+    if (event.target == progressModal) {
+        closeProgressModal();
+    }
+    if (event.target == manuscriptModal) {
+        closeManuscriptModal();
+    }
+}
+
+// ===== 主题切换 =====
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
+const icon = themeToggle.querySelector('i');
+const currentTheme = localStorage.getItem('theme') || 'light';
+
+if (currentTheme === 'dark') {
+    body.classList.add('dark-mode');
+    icon.classList.remove('fa-moon');
+    icon.classList.add('fa-sun');
+}
+
+themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    if (body.classList.contains('dark-mode')) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+    }
+});
+           
+              
     </script>
 </body>
 </html>
