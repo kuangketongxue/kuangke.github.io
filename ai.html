@@ -7,6 +7,8 @@
     <title>高考AI助手 - 狂客·银河</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Marked.js 用于解析 Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         /* AI矩阵专属样式 */
         .ai-matrix-container {
@@ -434,7 +436,6 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
         }
-        
         /* 优化后的自学突围子菜单样式 */
         .breakthrough-submenu {
             display: none;
@@ -465,17 +466,14 @@
                 transform: translateY(0);
             }
         }
-        
         /* 优化子菜单项的点击区域 */
         .breakthrough-link:hover .breakthrough-submenu {
             display: block;
         }
-        
         /* 保持子菜单显示状态 */
         .breakthrough-submenu:hover {
             display: block;
         }
-        
         .breakthrough-submenu .submenu-item {
             display: flex;
             align-items: center;
@@ -485,25 +483,20 @@
             cursor: pointer;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
-        
         body.dark-mode .breakthrough-submenu .submenu-item {
             border-bottom-color: rgba(255, 255, 255, 0.1);
         }
-        
         .breakthrough-submenu .submenu-item:last-child {
             border-bottom: none;
         }
-        
         .breakthrough-submenu .submenu-item:hover {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
             padding-left: 25px;
         }
-        
         .breakthrough-submenu .submenu-item:hover .submenu-text,
         .breakthrough-submenu .submenu-item:hover .submenu-icon {
             color: white;
         }
-        
         .submenu-icon {
             color: #ff6b6b;
             font-size: 18px;
@@ -511,7 +504,6 @@
             transition: color 0.2s ease;
             min-width: 20px;
         }
-        
         .submenu-text {
             color: #333;
             font-weight: 600;
@@ -519,11 +511,9 @@
             transition: color 0.2s ease;
             white-space: nowrap;
         }
-        
         body.dark-mode .submenu-text {
             color: #fff;
         }
-        
         /* 进度模态框样式 */
         .progress-modal-content {
             max-width: 800px;
@@ -728,24 +718,20 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
         }
-        
         /* 优化后的文稿模态框样式 */
         .manuscript-modal-content {
             max-width: 900px;
             max-height: 85vh;
         }
-        
         .manuscript-section {
             margin-bottom: 30px;
         }
-        
         .manuscript-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             margin-bottom: 30px;
         }
-        
         .stat-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
@@ -754,22 +740,18 @@
             color: white;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
-        
         body.dark-mode .stat-card {
             background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
         }
-        
         .stat-card .stat-number {
             font-size: 2em;
             font-weight: bold;
             margin-bottom: 5px;
         }
-        
         .stat-card .stat-label {
             font-size: 0.9em;
             opacity: 0.9;
         }
-        
         /* 优化文稿内容显示 */
         .manuscript-content {
             background: #f8f9fa;
@@ -778,93 +760,66 @@
             max-height: 500px;
             overflow-y: auto;
         }
-        
         body.dark-mode .manuscript-content {
             background: #1a202c;
         }
-        
-        /* 每日更新条目 */
-        .daily-entry {
-            margin-bottom: 20px;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-        
-        body.dark-mode .daily-entry {
-            background: #2d3748;
-            border-left-color: #a8b5ff;
-        }
-        
-        .daily-entry:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .daily-entry-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        body.dark-mode .daily-entry-header {
-            border-bottom-color: #4a5568;
-        }
-        
-        .daily-date {
-            font-size: 1.1em;
-            font-weight: 700;
+        /* Markdown 渲染样式 */
+        .manuscript-content h1,
+        .manuscript-content h2,
+        .manuscript-content h3 {
             color: #667eea;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin-top: 20px;
+            margin-bottom: 10px;
         }
-        
-        body.dark-mode .daily-date {
+        body.dark-mode .manuscript-content h1,
+        body.dark-mode .manuscript-content h2,
+        body.dark-mode .manuscript-content h3 {
             color: #a8b5ff;
         }
-        
-        .daily-word-count {
-            font-size: 0.9em;
-            color: #999;
-            background: #f0f0f0;
-            padding: 4px 12px;
-            border-radius: 20px;
-        }
-        
-        body.dark-mode .daily-word-count {
-            background: #4a5568;
-            color: #cbd5e0;
-        }
-        
-        .daily-preview {
-            color: #333;
+        .manuscript-content p {
             line-height: 1.8;
-            font-size: 0.95em;
+            margin-bottom: 15px;
+            color: #333;
         }
-        
-        body.dark-mode .daily-preview {
+        body.dark-mode .manuscript-content p {
             color: #e2e8f0;
         }
-        
+        .manuscript-content ul,
+        .manuscript-content ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        .manuscript-content li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        .manuscript-content code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        .manuscript-content blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #666;
+            font-style: italic;
+        }
+        body.dark-mode .manuscript-content blockquote {
+            border-left-color: #a8b5ff;
+            color: #aaa;
+        }
         .empty-manuscript {
             text-align: center;
             padding: 60px 20px;
             color: #999;
         }
-        
         .empty-manuscript i {
             font-size: 64px;
             margin-bottom: 20px;
             opacity: 0.5;
         }
-        
         .github-note {
             margin-top: 25px;
             padding: 18px;
@@ -874,19 +829,16 @@
             font-size: 0.9em;
             color: #0d47a1;
         }
-        
         body.dark-mode .github-note {
             background: linear-gradient(135deg, #1a3a52 0%, #234560 100%);
             border-left-color: #64b5f6;
             color: #90caf9;
         }
-        
         .github-note strong {
             display: block;
             margin-bottom: 8px;
             font-size: 1.05em;
         }
-        
         .github-note code {
             background: rgba(255, 255, 255, 0.5);
             padding: 2px 6px;
@@ -894,25 +846,16 @@
             font-family: 'Courier New', monospace;
             color: #c7254e;
         }
-        
         body.dark-mode .github-note code {
             background: rgba(0, 0, 0, 0.3);
             color: #ff6b6b;
         }
-        
         @media (max-width: 768px) {
             .manuscript-stats {
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
-            
-            .daily-entry-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
         }
-        
         /* 模态框顶部返回按钮 */
         .modal-back-button {
             position: absolute;
@@ -937,6 +880,20 @@
         }
         body.dark-mode .modal-back-button {
             background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        }
+        /* 加载提示 */
+        .loading-indicator {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+        .loading-indicator i {
+            font-size: 48px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -1016,11 +973,13 @@
             </div>
         </div>
     </header>
+
     <div class="ai-matrix-container">
         <div class="matrix-title">
             <h1>🎯 高考AI助手</h1>
             <p>精准覆盖各科目知识点,助力高考提分</p>
         </div>
+
         <!-- 主科目页面 -->
         <div id="mainView" class="matrix-grid">
             <!-- 语文 -->
@@ -1053,6 +1012,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- 数学 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1083,6 +1043,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- 英语 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1113,6 +1074,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- 物理 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1143,6 +1105,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- 化学 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1173,6 +1136,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- 政治 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1204,6 +1168,7 @@
                 </div>
             </div>
         </div>
+
         <!-- 子题目页面 -->
         <div id="subtopicView" style="display: none;">
             <div style="margin-bottom: 30px;">
@@ -1225,7 +1190,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- AI工具模态框 -->
     <div id="aiModal" class="modal">
         <div class="modal-content">
@@ -1241,7 +1206,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- 优化后的文稿模态框 -->
     <div id="manuscriptModal" class="modal">
         <div class="modal-content manuscript-modal-content">
@@ -1267,30 +1232,21 @@
                         <div class="stat-label">日均字数</div>
                     </div>
                 </div>
-                
-                <div class="manuscript-content" id="dailyEntries">
-                    <!-- 每日更新内容将动态加载到这里 -->
-                    <div class="empty-manuscript">
-                        <i class="fas fa-file-alt"></i>
-                        <p>暂无文稿内容</p>
-                        <p style="font-size: 0.9em; margin-top: 10px;">请在GitHub仓库中添加每日更新</p>
+                <div class="manuscript-content" id="manuscriptText">
+                    <div class="loading-indicator">
+                        <i class="fas fa-spinner"></i>
+                        <p>加载中...</p>
                     </div>
                 </div>
-                
                 <div class="github-note">
                     <strong>📌 更新说明：</strong>
-                    文稿内容通过修改 <code>manuscriptData</code> 对象来更新。每天添加新条目格式如下：
-                    <pre style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.1); border-radius: 5px; overflow-x: auto;">
-"2025-01-10": {
-    content: "今天写了关于自学方法的内容...",
-    wordCount: 1200
-}</pre>
-                    系统会自动截取前50字显示预览。
+                    文稿内容存储在 <code>breakthrough-manuscript.md</code> 文件中，使用 Markdown 格式编写。
+                    修改该文件即可更新显示内容。支持标题、段落、列表、代码等 Markdown 语法。
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- 进度模态框 -->
     <div id="progressModal" class="modal">
         <div class="modal-content progress-modal-content">
@@ -1302,107 +1258,20 @@
                 <h2>📊 《自学突围》写作进度</h2>
             </div>
             <div id="progressContent">
-                <div class="progress-section">
-                    <h3>📝 总体进度</h3>
-                    <div class="progress-item">
-                        <span class="progress-label">整体完成度</span>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: 45%;">
-                            </div>
-                        </div>
-                        <span class="progress-percent">45%</span>
-                    </div>
-                    <div class="progress-item">
-                        <span class="progress-label">已完成章节</span>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: 35%;">
-                            </div>
-                        </div>
-                        <span class="progress-percent">7/20 章</span>
-                    </div>
-                    <div class="progress-item">
-                        <span class="progress-label">总字数</span>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: 50%;">
-                            </div>
-                        </div>
-                        <span class="progress-percent">45,000字</span>
-                    </div>
-                </div>
-                <div class="progress-section">
-                    <h3>📚 章节进度</h3>
-                    <div class="progress-item">
-                        <span class="progress-label">第一章：自学之道</span>
-                        <span class="progress-status status-complete">✅ 已完成</span>
-                    </div>
-                    <div class="progress-item">
-                        <span class="progress-label">第二章：学习方法论</span>
-                        <span class="progress-status status-complete">✅ 已完成</span>
-                    </div>
-                    <div class="progress-item">
-                        <span class="progress-label">第三章：时间管理</span>
-                        <span class="progress-status status-complete">✅ 已完成</span>
-                    </div>
-                    <div class="progress-item">
-                        <span class="progress-label">第四章：知识体系构建</span>
-                        <span class="progress-status status-in-progress">🔄 进行中</span>
-                    </div>
-                    <div class="progress-item">
-                        <span class="progress-label">第五章：学习工具箱</span>
-                        <span class="progress-status status-in-progress">🔄 进行中</span>
-                    </div>
-                    <div class="progress-item">
-                        <span class="progress-label">第六章：心态调整</span>
-                        <span class="progress-status status-pending">⏳ 待开始</span>
-                    </div>
-                    <div class="progress-item">
-                        <span class="progress-label">第七章：实战案例</span>
-                        <span class="progress-status status-pending">⏳ 待开始</span>
-                    </div>
-                </div>
-                <div class="progress-section">
-                    <h3>🎯 近期目标</h3>
-                    <div class="progress-item">
-                        <span class="progress-label">本周目标</span>
-                        <span style="color: #667eea; font-weight: 600;">完成第四章并开始第五章</span>
-                    </div>
-                    <div class="progress-item">
-                        <span class="progress-label">本月目标</span>
-                        <span style="color: #667eea; font-weight: 600;">完成前八章,达到50,000字</span>
-                    </div>
-                    <div class="progress-item">
-                        <span class="progress-label">预计完成时间</span>
-                        <span style="color: #667eea; font-weight: 600;">2025年6月</span>
-                    </div>
-                </div>
-                <div class="progress-note">
-                    <strong>📌 说明：</strong> 进度数据仅能在GitHub仓库中修改更新。如需调整进度信息，请前往对应的HTML源文件进行编辑。
+                <div class="loading-indicator">
+                    <i class="fas fa-spinner"></i>
+                    <p>加载中...</p>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- 返回按钮 -->
     <a href="index.html" class="back-button" title="返回首页">
         <i class="fas fa-home"></i>
     </a>
-    
+
     <script>
-        // ===== 文稿数据 =====
-        // 在这里添加每日更新内容，格式：日期: { content: "内容", wordCount: 字数 }
-        const manuscriptData = {
-            // 示例数据，请替换为实际内容
-            "2025-01-08": {
-                content: "",
-                wordCount: 0
-            },
-            "2025-01-09": {
-                content: "",
-                wordCount: 0
-            }
-            // 继续添加更多日期...
-        };
-        
         // ===== 科目数据 =====
         const subjects = {
             chinese: {
@@ -1495,130 +1364,157 @@
                 ]
             }
         };
-        
-        // AI工具配置
+
+        // AI工具配置（示例，需要完整配置）
         const aiTools = {
-            // 这里应包含完整的工具配置
-            // 示例：
             chinese_lunsu: {
                 title: '论述类文本',
                 tools: []
             }
             // ... 其他配置
         };
-        
-        // ===== 文稿相关函数 =====
-        function loadManuscriptData() {
-            const dailyEntriesContainer = document.getElementById('dailyEntries');
-            const dates = Object.keys(manuscriptData).sort().reverse(); // 按日期降序排列
+
+        // ===== 从 Markdown 文件加载文稿 =====
+        async function loadManuscriptData() {
+            const manuscriptText = document.getElementById('manuscriptText');
             
-            if (dates.length === 0 || dates.every(date => !manuscriptData[date].content)) {
-                dailyEntriesContainer.innerHTML = `
+            try {
+                const response = await fetch('breakthrough-manuscript.md');
+                if (!response.ok) {
+                    throw new Error('文件加载失败');
+                }
+                
+                const markdown = await response.text();
+                
+                if (!markdown.trim()) {
+                    manuscriptText.innerHTML = `
+                        <div class="empty-manuscript">
+                            <i class="fas fa-file-alt"></i>
+                            <p>暂无文稿内容</p>
+                            <p style="font-size: 0.9em; margin-top: 10px;">请在 breakthrough-manuscript.md 中添加内容</p>
+                        </div>
+                    `;
+                    updateStats(0, 0, 0);
+                    return;
+                }
+                
+                // 使用 marked.js 解析 Markdown
+                manuscriptText.innerHTML = marked.parse(markdown);
+                
+                // 计算统计数据
+                const wordCount = markdown.replace(/[^\u4e00-\u9fa5]/g, '').length;
+                const dayMatches = markdown.match(/##\s*\d{4}-\d{2}-\d{2}/g);
+                const totalDays = dayMatches ? dayMatches.length : 0;
+                const avgWords = totalDays > 0 ? Math.round(wordCount / totalDays) : wordCount;
+                
+                updateStats(wordCount, totalDays, avgWords);
+                
+            } catch (error) {
+                console.error('加载文稿失败:', error);
+                manuscriptText.innerHTML = `
                     <div class="empty-manuscript">
-                        <i class="fas fa-file-alt"></i>
-                        <p>暂无文稿内容</p>
-                        <p style="font-size: 0.9em; margin-top: 10px;">请在GitHub仓库中添加每日更新</p>
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>文稿加载失败</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">请确保 breakthrough-manuscript.md 文件存在</p>
                     </div>
                 `;
                 updateStats(0, 0, 0);
-                return;
             }
-            
-            let totalWords = 0;
-            let validDays = 0;
-            let entriesHTML = '';
-            
-            dates.forEach(date => {
-                const entry = manuscriptData[date];
-                if (entry.content && entry.wordCount > 0) {
-                    totalWords += entry.wordCount;
-                    validDays++;
-                    
-                    // 截取前50字
-                    const preview = entry.content.length > 50 
-                        ? entry.content.substring(0, 50) + '...' 
-                        : entry.content;
-                    
-                    entriesHTML += `
-                        <div class="daily-entry">
-                            <div class="daily-entry-header">
-                                <div class="daily-date">
-                                    <i class="fas fa-calendar-day"></i>
-                                    ${date}
-                                </div>
-                                <div class="daily-word-count">
-                                    <i class="fas fa-file-word"></i> ${entry.wordCount} 字
-                                </div>
-                            </div>
-                            <div class="daily-preview">${preview}</div>
-                        </div>
-                    `;
-                }
-            });
-            
-            dailyEntriesContainer.innerHTML = entriesHTML || `
-                <div class="empty-manuscript">
-                    <i class="fas fa-file-alt"></i>
-                    <p>暂无文稿内容</p>
-                </div>
-            `;
-            
-            const avgWords = validDays > 0 ? Math.round(totalWords / validDays) : 0;
-            updateStats(totalWords, validDays, avgWords);
         }
-        
+
         function updateStats(totalWords, totalDays, avgWords) {
             document.getElementById('totalWords').textContent = totalWords.toLocaleString();
             document.getElementById('totalDays').textContent = totalDays;
             document.getElementById('avgWords').textContent = avgWords;
         }
-        
+
         function showManuscriptModal(event) {
             event.preventDefault();
             event.stopPropagation();
-            loadManuscriptData();
             document.getElementById('manuscriptModal').style.display = 'block';
+            loadManuscriptData();
         }
-        
+
         function closeManuscriptModal() {
             document.getElementById('manuscriptModal').style.display = 'none';
         }
-        
-        // ===== 进度模态框函数 =====
+
+        // ===== 从 Markdown 文件加载进度 =====
+        async function loadProgressData() {
+            const progressContent = document.getElementById('progressContent');
+            
+            try {
+                const response = await fetch('breakthrough-progress.md');
+                if (!response.ok) {
+                    throw new Error('文件加载失败');
+                }
+                
+                const markdown = await response.text();
+                
+                if (!markdown.trim()) {
+                    progressContent.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <p>暂无进度数据</p>
+                            <p style="font-size: 0.9em;">请在 breakthrough-progress.md 中添加内容</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // 使用 marked.js 解析 Markdown
+                progressContent.innerHTML = marked.parse(markdown);
+                
+            } catch (error) {
+                console.error('加载进度失败:', error);
+                progressContent.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">❌</div>
+                        <p>进度加载失败</p>
+                        <p style="font-size: 0.9em;">请确保 breakthrough-progress.md 文件存在</p>
+                    </div>
+                `;
+            }
+        }
+
         function showProgressModal(event) {
             event.preventDefault();
             event.stopPropagation();
             document.getElementById('progressModal').style.display = 'block';
+            loadProgressData();
         }
-        
+
         function closeProgressModal() {
             document.getElementById('progressModal').style.display = 'none';
         }
-        
+
         // ===== 科目相关函数 =====
         function showSubjects(subject) {
             const subjectData = subjects[subject];
             const subtopicGrid = document.getElementById('subtopicGrid');
+            
             subtopicGrid.innerHTML = subjectData.topics.map(topic => `
                 <div class="subtopic-card" onclick="openModal('${topic.key}')">
                     <div class="subtopic-icon">${topic.icon}</div>
                     <div class="subtopic-name">${topic.name}</div>
                 </div>
             `).join('');
+            
             document.getElementById('mainView').style.display = 'none';
             document.getElementById('subtopicView').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        
+
         function backToMain() {
             document.getElementById('mainView').style.display = 'grid';
             document.getElementById('subtopicView').style.display = 'none';
         }
-        
+
         function openModal(topicKey) {
             const modal = document.getElementById('aiModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalTools = document.getElementById('modalTools');
+            
             const toolData = aiTools[topicKey];
             
             if (!toolData) {
@@ -1652,11 +1548,11 @@
             
             modal.style.display = 'block';
         }
-        
+
         function closeModal() {
             document.getElementById('aiModal').style.display = 'none';
         }
-        
+
         // ===== 模态框外部点击关闭 =====
         window.onclick = function(event) {
             const aiModal = document.getElementById('aiModal');
@@ -1673,13 +1569,13 @@
                 closeManuscriptModal();
             }
         }
-        
+
         // ===== 主题切换 =====
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
-        const currentTheme = localStorage.getItem('theme') || 'light';
         
+        const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
@@ -1688,6 +1584,7 @@
         
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
+            
             if (body.classList.contains('dark-mode')) {
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
@@ -1698,10 +1595,11 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-        
+
         // ===== 概念合集链接处理 =====
         document.addEventListener('DOMContentLoaded', function() {
             const conceptCards = document.querySelectorAll('.concept-card[data-concept-link]');
+            
             conceptCards.forEach(card => {
                 const link = card.getAttribute('data-concept-link');
                 if (!link || link === '') {
