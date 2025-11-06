@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+      {
+        id: 49,
+        date: '2025-11-06',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '万维刚精英日课6',
+            en: 'Wan Weigang Elite Daily Lesson 6'
+        },
+        content: {
+            zh: '阅读19本书+。\n学习11小时+\n零点前睡',
+            en: 'Read 19+ books.\nStudied for 11+ hours\nGo to bed before midnight.'
+        },
+        highlight: {
+            zh: '泡脚；感冒好了头不晕了可以继续高强度工作运动了',
+            en: 'Soaking feet; After recovering from a cold, there is no more dizziness, allowing for continued high-intensity work and physical activities.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
      {
         id: 48,
         date: '2025-11-05',
