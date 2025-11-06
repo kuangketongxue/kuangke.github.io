@@ -16,7 +16,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
             --primary-color: #667eea;
             --secondary-color: #764ba2;
@@ -28,32 +27,27 @@
             --line-color: #e0e0e0;
             --line-color-dark: #4a5568;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
-
         body.dark-mode {
             background: linear-gradient(135deg, var(--dark-bg) 0%, #2d3748 100%);
         }
-
         /* ========== 容器 ========== */
         .mindmap-page {
             max-width: 100%;
             margin: 80px auto 60px;
             padding: 40px 20px;
         }
-
         /* ========== 页面头部 ========== */
         .page-header {
             text-align: center;
             margin-bottom: 40px;
             animation: fadeInDown 0.8s ease;
         }
-
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -64,7 +58,6 @@
                 transform: translateY(0);
             }
         }
-
         .page-header h1 {
             font-size: 3em;
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -74,28 +67,23 @@
             margin-bottom: 15px;
             animation: titleGlow 3s ease-in-out infinite;
         }
-
         @keyframes titleGlow {
             0%, 100% { filter: brightness(1); }
             50% { filter: brightness(1.3); }
         }
-
         .page-header p {
             font-size: 1.2em;
             color: #666;
             margin-bottom: 10px;
         }
-
         body.dark-mode .page-header p {
             color: #aaa;
         }
-
         .page-header .subtitle {
             font-size: 0.95em;
             color: #999;
             font-style: italic;
         }
-
         /* ========== 统计信息 ========== */
         .stats-bar {
             display: flex;
@@ -104,7 +92,6 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
         }
-
         .stat-item {
             background: white;
             padding: 15px 30px;
@@ -115,35 +102,28 @@
             gap: 12px;
             transition: all 0.3s ease;
         }
-
         body.dark-mode .stat-item {
             background: var(--dark-card);
         }
-
         .stat-item:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
-
         .stat-icon {
             font-size: 1.8em;
         }
-
         .stat-label {
             font-size: 0.9em;
             color: #666;
         }
-
         body.dark-mode .stat-label {
             color: #aaa;
         }
-
         .stat-value {
             font-size: 1.5em;
             font-weight: bold;
             color: var(--primary-color);
         }
-
         /* ========== 工具栏 ========== */
         .toolbar {
             display: flex;
@@ -158,16 +138,13 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
             animation: fadeIn 1s ease;
         }
-
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
         body.dark-mode .toolbar {
             background: var(--dark-card);
         }
-
         .tool-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -185,7 +162,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .tool-btn::before {
             content: '';
             position: absolute;
@@ -198,29 +174,24 @@
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
-
         .tool-btn:hover::before {
             width: 300px;
             height: 300px;
         }
-
         .tool-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
         }
-
         .tool-btn i, .tool-btn span {
             position: relative;
             z-index: 1;
         }
-
         .search-box {
             display: flex;
             gap: 10px;
             flex: 1;
             max-width: 500px;
         }
-
         .search-input {
             flex: 1;
             padding: 12px 20px;
@@ -230,18 +201,15 @@
             outline: none;
             transition: all 0.3s ease;
         }
-
         .search-input:focus {
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
             border-color: var(--secondary-color);
         }
-
         body.dark-mode .search-input {
             background: var(--dark-bg);
             color: #fff;
             border-color: var(--primary-color);
         }
-
         .zoom-control {
             display: flex;
             align-items: center;
@@ -251,11 +219,9 @@
             border-radius: 12px;
             border: 2px solid var(--success-color);
         }
-
         body.dark-mode .zoom-control {
             background: linear-gradient(135deg, var(--dark-bg) 0%, #2d3748 100%);
         }
-
         .zoom-btn {
             background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%);
             color: white;
@@ -268,12 +234,10 @@
             font-size: 1.1em;
             box-shadow: 0 2px 8px rgba(67, 233, 123, 0.3);
         }
-
         .zoom-btn:hover {
             transform: scale(1.15);
             box-shadow: 0 4px 12px rgba(67, 233, 123, 0.5);
         }
-
         .zoom-display {
             font-weight: 700;
             color: var(--success-color);
@@ -281,33 +245,68 @@
             text-align: center;
             font-size: 1.1em;
         }
-
+        /* ========== 优化后的收藏计数器样式 ========== */
         .favorite-count {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
-            border-radius: 12px;
-            color: var(--warning-color);
+            gap: 10px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #fff9e6 0%, #ffe5a0 100%);
+            border-radius: 14px;
+            color: #d97706;
             font-weight: 700;
-            border: 2px solid var(--warning-color);
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+            font-size: 1.05em;
+            border: 2px solid #fbbf24;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.25);
+            transition: all 0.3s ease;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
         }
-
         body.dark-mode .favorite-count {
             background: linear-gradient(135deg, #3a3520 0%, #4a4228 100%);
+            color: #fbbf24;
+            border-color: #d97706;
         }
-
+        .favorite-count:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.35);
+        }
+        .favorite-count::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         .favorite-count i {
+            font-size: 1.3em;
             animation: starPulse 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 2px 4px rgba(217, 119, 6, 0.3));
         }
-
         @keyframes starPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+            0%, 100% { 
+                transform: scale(1);
+            }
+            50% { 
+                transform: scale(1.25) rotate(10deg);
+            }
         }
-
+        .favorite-count span {
+            position: relative;
+            z-index: 1;
+            min-width: 24px;
+            text-align: center;
+        }
         /* ========== 思维导图画布 ========== */
         .mindmap-canvas {
             background: white;
@@ -318,11 +317,9 @@
             position: relative;
             min-height: 800px;
         }
-
         body.dark-mode .mindmap-canvas {
             background: var(--dark-card);
         }
-
         .mindmap-wrapper {
             position: relative;
             transform-origin: center top;
@@ -331,7 +328,6 @@
             flex-direction: column;
             align-items: center;
         }
-
         /* ========== 根节点 ========== */
         .root-node {
             text-align: center;
@@ -340,7 +336,6 @@
             z-index: 10;
             animation: scaleIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
-
         @keyframes scaleIn {
             from {
                 opacity: 0;
@@ -351,7 +346,6 @@
                 transform: scale(1);
             }
         }
-
         .root-bubble {
             display: inline-flex;
             flex-direction: column;
@@ -369,7 +363,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .root-bubble::before {
             content: '';
             position: absolute;
@@ -380,22 +373,18 @@
             background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
             animation: rotate 8s linear infinite;
         }
-
         @keyframes rotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
         .root-bubble:hover {
             transform: scale(1.08) rotate(2deg);
             box-shadow: 0 20px 60px rgba(102, 126, 234, 0.6);
         }
-
         .root-title {
             position: relative;
             z-index: 1;
         }
-
         .root-description {
             font-size: 0.4em;
             opacity: 0.9;
@@ -403,7 +392,6 @@
             position: relative;
             z-index: 1;
         }
-
         /* ========== 分支容器 ========== */
         .branches-container {
             display: grid;
@@ -413,7 +401,6 @@
             width: 100%;
             max-width: 1600px;
         }
-
         /* ========== 主分支 ========== */
         .main-branch {
             display: flex;
@@ -423,7 +410,6 @@
             animation: fadeInUp 0.8s ease;
             animation-fill-mode: both;
         }
-
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -434,7 +420,6 @@
                 transform: translateY(0);
             }
         }
-
         /* 为每个分支添加延迟动画 */
         .main-branch:nth-child(1) { animation-delay: 0.1s; }
         .main-branch:nth-child(2) { animation-delay: 0.2s; }
@@ -448,7 +433,6 @@
         .main-branch:nth-child(10) { animation-delay: 1s; }
         .main-branch:nth-child(11) { animation-delay: 1.1s; }
         .main-branch:nth-child(12) { animation-delay: 1.2s; }
-
         /* 连接线到根节点 */
         .main-branch::before {
             content: '';
@@ -460,11 +444,9 @@
             background: linear-gradient(180deg, var(--line-color) 0%, transparent 100%);
             transform: translateX(-50%);
         }
-
         body.dark-mode .main-branch::before {
             background: linear-gradient(180deg, var(--line-color-dark) 0%, transparent 100%);
         }
-
         .branch-header {
             background: white;
             border-radius: 20px;
@@ -484,16 +466,13 @@
             margin-bottom: 40px;
             min-width: 280px;
         }
-
         body.dark-mode .branch-header {
             background: var(--dark-bg);
         }
-
         .branch-header:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
         }
-
         .branch-title-line {
             display: flex;
             align-items: center;
@@ -501,11 +480,9 @@
             width: 100%;
             justify-content: center;
         }
-
         .branch-icon {
             font-size: 1.4em;
         }
-
         .branch-award {
             font-size: 0.45em;
             opacity: 0.75;
@@ -513,21 +490,17 @@
             color: #666;
             text-align: center;
         }
-
         body.dark-mode .branch-award {
             color: #aaa;
         }
-
         .branch-toggle {
             transition: transform 0.3s ease;
             font-size: 0.7em;
             opacity: 0.6;
         }
-
         .main-branch.collapsed .branch-toggle {
             transform: rotate(-90deg);
         }
-
         /* ========== 子分支容器 ========== */
         .sub-branches {
             display: flex;
@@ -539,12 +512,10 @@
             opacity: 1;
             width: 100%;
         }
-
         .main-branch.collapsed .sub-branches {
             max-height: 0;
             opacity: 0;
         }
-
         /* ========== 子分支 ========== */
         .sub-branch {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -556,17 +527,14 @@
             position: relative;
             border-left: 4px solid var(--primary-color);
         }
-
         body.dark-mode .sub-branch {
             background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
         }
-
         .sub-branch:hover {
             transform: translateX(8px);
             box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
             border-left-width: 6px;
         }
-
         .sub-branch-title {
             display: flex;
             align-items: center;
@@ -576,15 +544,12 @@
             margin-bottom: 15px;
             color: #333;
         }
-
         body.dark-mode .sub-branch-title {
             color: #fff;
         }
-
         .sub-branch-icon {
             font-size: 1.2em;
         }
-
         /* ========== 概念列表 ========== */
         .concepts-list {
             display: flex;
@@ -594,11 +559,9 @@
             overflow: hidden;
             transition: max-height 0.5s ease;
         }
-
         .sub-branch.expanded .concepts-list {
             max-height: 3000px;
         }
-
         /* ========== 概念卡片 ========== */
         .concept-card {
             background: white;
@@ -609,87 +572,122 @@
             position: relative;
             border: 2px solid transparent;
         }
-
         body.dark-mode .concept-card {
             background: var(--dark-card);
         }
-
         .concept-card:hover {
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
             transform: translateY(-2px);
             border-color: var(--primary-color);
         }
-
         .concept-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
         }
-
         .concept-name {
             font-weight: 600;
             color: var(--primary-color);
             font-size: 1.05em;
         }
-
+        /* ========== 优化后的收藏按钮样式 ========== */
         .favorite-btn {
-            background: none;
-            border: none;
-            color: #ccc;
-            font-size: 1.3em;
+            background: linear-gradient(135deg, #fff9e6 0%, #ffe5a0 100%);
+            border: 2px solid #fbbf24;
+            color: #d97706;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            font-size: 1.2em;
             cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 5px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.15);
+            position: relative;
+            overflow: hidden;
         }
-
+        body.dark-mode .favorite-btn {
+            background: linear-gradient(135deg, #3a3520 0%, #4a4228 100%);
+            border-color: #d97706;
+            color: #fbbf24;
+        }
+        .favorite-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(251, 191, 36, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+        .favorite-btn:hover::before {
+            width: 100px;
+            height: 100px;
+        }
         .favorite-btn:hover {
-            color: var(--warning-color);
-            transform: scale(1.3) rotate(15deg);
+            transform: scale(1.15) rotate(15deg);
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.35);
+            border-color: #d97706;
         }
-
+        .favorite-btn i {
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
         .concept-card.favorited .favorite-btn {
-            color: var(--warning-color);
-            animation: starBounce 0.6s ease;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            border-color: #d97706;
+            animation: favoriteAdded 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.5);
         }
-
-        @keyframes starBounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.3); }
+        body.dark-mode .concept-card.favorited .favorite-btn {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            color: #fff;
         }
-
+        @keyframes favoriteAdded {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.3) rotate(-15deg); }
+            50% { transform: scale(1.2) rotate(15deg); }
+            75% { transform: scale(1.25) rotate(-10deg); }
+        }
         .concept-card.favorited .favorite-btn i::before {
             content: "\f005";
             font-weight: 900;
         }
-
+        .concept-card.favorited .favorite-btn:hover {
+            transform: scale(1.2) rotate(-15deg);
+        }
         .concept-definition {
             color: #666;
             line-height: 1.7;
             font-size: 0.95em;
         }
-
         body.dark-mode .concept-definition {
             color: #aaa;
         }
-
         /* ========== 高亮动画 ========== */
         .highlight {
             animation: highlightPulse 1.5s ease-in-out 3;
         }
-
         @keyframes highlightPulse {
-            0%, 100% { 
+            0%, 100% {
                 box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
                 border-color: transparent;
             }
-            50% { 
+            50% {
                 box-shadow: 0 0 35px rgba(255, 235, 59, 0.9);
                 transform: scale(1.03);
                 border-color: #ffeb3b;
             }
         }
-
         /* ========== 固定按钮 ========== */
         .fixed-buttons {
             position: fixed;
@@ -700,7 +698,6 @@
             gap: 15px;
             z-index: 1000;
         }
-
         .back-button, .back-to-top {
             width: 60px;
             height: 60px;
@@ -719,7 +716,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .back-button::before, .back-to-top::before {
             content: '';
             position: absolute;
@@ -732,27 +728,22 @@
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
-
         .back-button:hover::before, .back-to-top:hover::before {
             width: 150px;
             height: 150px;
         }
-
         .back-to-top {
             background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%);
             display: none;
         }
-
         .back-button:hover, .back-to-top:hover {
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
         }
-
         .back-button i, .back-to-top i {
             position: relative;
             z-index: 1;
         }
-
         /* ========== 加载动画 ========== */
         .loading-overlay {
             position: fixed;
@@ -767,33 +758,27 @@
             z-index: 9999;
             backdrop-filter: blur(10px);
         }
-
         body.dark-mode .loading-overlay {
             background: rgba(26, 32, 44, 0.95);
         }
-
         .loading-content {
             text-align: center;
         }
-
         .loading-content i {
             font-size: 4em;
             color: var(--primary-color);
             animation: spin 1.5s linear infinite;
         }
-
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
         .loading-content p {
             margin-top: 20px;
             font-size: 1.3em;
             color: var(--primary-color);
             font-weight: 600;
         }
-
         /* ========== 进度条 ========== */
         .reading-progress {
             position: fixed;
@@ -806,7 +791,6 @@
             width: 0%;
             box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
         }
-
         /* ========== 响应式设计 ========== */
         @media (max-width: 1400px) {
             .branches-container {
@@ -814,104 +798,89 @@
                 gap: 60px 40px;
             }
         }
-
         @media (max-width: 1024px) {
             .branches-container {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 50px 30px;
             }
         }
-
         @media (max-width: 768px) {
             .page-header h1 {
                 font-size: 2.2em;
             }
-
             .page-header p {
                 font-size: 1em;
             }
-
             .root-bubble {
                 padding: 25px 45px;
                 font-size: 2em;
             }
-
             .toolbar {
                 flex-direction: column;
                 padding: 15px;
             }
-
             .search-box {
                 max-width: 100%;
                 width: 100%;
             }
-
             .branches-container {
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
-
             .main-branch::before {
                 display: none;
             }
-
             .branch-header {
                 min-width: auto;
                 width: 100%;
             }
-
             .stats-bar {
                 gap: 15px;
             }
-
             .stat-item {
                 padding: 12px 20px;
             }
-
             .fixed-buttons {
                 bottom: 20px;
                 right: 20px;
                 gap: 12px;
             }
-
             .back-button, .back-to-top {
                 width: 50px;
                 height: 50px;
                 font-size: 20px;
             }
         }
-
         @media (max-width: 480px) {
             .mindmap-page {
                 padding: 30px 15px;
             }
-
             .page-header h1 {
                 font-size: 1.8em;
             }
-
             .root-bubble {
                 padding: 20px 35px;
                 font-size: 1.6em;
             }
-
             .mindmap-canvas {
                 padding: 30px 20px;
             }
-
             .branch-header {
                 padding: 20px 25px;
                 font-size: 1.2em;
             }
-
             .tool-btn {
                 width: 100%;
                 justify-content: center;
             }
-
             .zoom-control {
                 width: 100%;
                 justify-content: center;
+            }
+            .favorite-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1em;
             }
         }
     </style>
@@ -919,7 +888,6 @@
 <body>
     <!-- 阅读进度条 -->
     <div class="reading-progress"></div>
-
     <!-- 加载遮罩 -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
@@ -927,7 +895,6 @@
             <p>正在加载知识体系...</p>
         </div>
     </div>
-
     <!-- 头部导航 -->
     <header class="header">
         <div class="container">
@@ -965,7 +932,6 @@
             </div>
         </div>
     </header>
-
     <!-- 主体内容 -->
     <div class="mindmap-page">
         <!-- 页面头部 -->
@@ -974,7 +940,6 @@
             <p>基于顶级学术奖项的全领域知识分类体系</p>
             <p class="subtitle">诺贝尔奖 · 菲尔兹奖 · 图灵奖 · 普利策奖等</p>
         </div>
-
         <!-- 统计信息 -->
         <div class="stats-bar">
             <div class="stat-item">
@@ -999,7 +964,6 @@
                 </div>
             </div>
         </div>
-
         <!-- 工具栏 -->
         <div class="toolbar">
             <div class="search-box">
@@ -1008,20 +972,16 @@
                     <i class="fas fa-search"></i> <span>搜索</span>
                 </button>
             </div>
-
             <button class="tool-btn" onclick="expandAll()">
                 <i class="fas fa-expand-alt"></i> <span>展开全部</span>
             </button>
-
             <button class="tool-btn" onclick="collapseAll()">
                 <i class="fas fa-compress-alt"></i> <span>收起全部</span>
             </button>
-
             <div class="favorite-count">
                 <i class="fas fa-star"></i>
                 <span id="favoriteCount">0</span>
             </div>
-
             <div class="zoom-control">
                 <button class="zoom-btn" onclick="zoomOut()">
                     <i class="fas fa-minus"></i>
@@ -1031,12 +991,10 @@
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
-
             <button class="tool-btn" onclick="resetZoom()">
                 <i class="fas fa-redo"></i> <span>重置</span>
             </button>
         </div>
-
         <!-- 思维导图画布 -->
         <div class="mindmap-canvas">
             <div class="mindmap-wrapper" id="mindmapWrapper">
@@ -1044,7 +1002,6 @@
                 <div class="root-node" id="rootNode">
                     <!-- 动态生成 -->
                 </div>
-
                 <!-- 分支容器 -->
                 <div class="branches-container" id="branchesContainer">
                     <!-- 动态生成 -->
@@ -1052,7 +1009,6 @@
             </div>
         </div>
     </div>
-
     <!-- 固定按钮 -->
     <div class="fixed-buttons">
         <button class="back-to-top" id="backToTopBtn">
@@ -1062,28 +1018,23 @@
             <i class="fas fa-arrow-left"></i>
         </a>
     </div>
-
     <script>
         // ========== 配置 ==========
         const DATA_FILE = 'knowledge-data.json';
         let knowledgeData = null;
         let currentZoom = 100;
-
         // ========== 主函数 ==========
         async function loadMindmap() {
             try {
                 const response = await fetch(DATA_FILE);
                 if (!response.ok) throw new Error('无法加载数据文件');
-                
                 knowledgeData = await response.json();
                 renderMindmap();
                 updateStatistics();
-                
                 setTimeout(() => {
                     restoreFavorites();
                     updateFavoriteCount();
                 }, 300);
-                
                 document.getElementById('loadingOverlay').style.display = 'none';
             } catch (error) {
                 console.error('加载失败:', error);
@@ -1098,39 +1049,32 @@
                 document.getElementById('loadingOverlay').style.display = 'none';
             }
         }
-
         // ========== 更新统计信息 ==========
         function updateStatistics() {
             if (!knowledgeData) return;
-
             let branchCount = knowledgeData.branches.length;
             let categoryCount = 0;
             let conceptCount = 0;
-
             knowledgeData.branches.forEach(branch => {
                 categoryCount += branch.children.length;
                 branch.children.forEach(category => {
                     conceptCount += category.concepts.length;
                 });
             });
-
             document.getElementById('branchCount').textContent = branchCount;
             document.getElementById('categoryCount').textContent = categoryCount;
             document.getElementById('conceptCount').textContent = conceptCount;
-
             // 添加数字动画
             animateNumber('branchCount', 0, branchCount, 1000);
             animateNumber('categoryCount', 0, categoryCount, 1200);
             animateNumber('conceptCount', 0, conceptCount, 1500);
         }
-
         // 数字动画
         function animateNumber(elementId, start, end, duration) {
             const element = document.getElementById(elementId);
             const range = end - start;
             const increment = range / (duration / 16);
             let current = start;
-
             const timer = setInterval(() => {
                 current += increment;
                 if (current >= end) {
@@ -1141,11 +1085,9 @@
                 }
             }, 16);
         }
-
         // ========== 渲染思维导图 ==========
         function renderMindmap() {
             if (!knowledgeData) return;
-
             // 渲染根节点
             const rootNode = document.getElementById('rootNode');
             rootNode.innerHTML = `
@@ -1157,23 +1099,19 @@
                     <div class="root-description">${knowledgeData.root.description}</div>
                 </div>
             `;
-
             // 渲染分支
             const container = document.getElementById('branchesContainer');
             container.innerHTML = '';
-
             knowledgeData.branches.forEach(branch => {
                 const branchEl = createBranchElement(branch);
                 container.appendChild(branchEl);
             });
         }
-
         // ========== 创建分支元素 ==========
         function createBranchElement(branch) {
             const branchDiv = document.createElement('div');
             branchDiv.className = 'main-branch';
             branchDiv.setAttribute('data-branch-id', branch.id);
-
             // 分支头部
             const headerDiv = document.createElement('div');
             headerDiv.className = 'branch-header';
@@ -1187,23 +1125,18 @@
                 </div>
                 <div class="branch-award">${branch.award}</div>
             `;
-
             // 子分支容器
             const subBranchesDiv = document.createElement('div');
             subBranchesDiv.className = 'sub-branches';
-
             // 创建子分支
             branch.children.forEach(subBranch => {
                 const subBranchEl = createSubBranchElement(subBranch, branch.color);
                 subBranchesDiv.appendChild(subBranchEl);
             });
-
             branchDiv.appendChild(headerDiv);
             branchDiv.appendChild(subBranchesDiv);
-
             return branchDiv;
         }
-
         // ========== 创建子分支元素 ==========
         function createSubBranchElement(subBranch, branchColor) {
             const subBranchDiv = document.createElement('div');
@@ -1214,7 +1147,6 @@
                     toggleSubBranch(subBranchDiv);
                 }
             };
-
             // 子分支标题
             const titleDiv = document.createElement('div');
             titleDiv.className = 'sub-branch-title';
@@ -1222,28 +1154,22 @@
                 <span class="sub-branch-icon">${subBranch.icon}</span>
                 <span>${subBranch.name}</span>
             `;
-
             // 概念列表
             const conceptsDiv = document.createElement('div');
             conceptsDiv.className = 'concepts-list';
-
             subBranch.concepts.forEach(concept => {
                 const conceptEl = createConceptElement(concept);
                 conceptsDiv.appendChild(conceptEl);
             });
-
             subBranchDiv.appendChild(titleDiv);
             subBranchDiv.appendChild(conceptsDiv);
-
             return subBranchDiv;
         }
-
         // ========== 创建概念元素 ==========
         function createConceptElement(concept) {
             const conceptDiv = document.createElement('div');
             conceptDiv.className = 'concept-card';
             conceptDiv.setAttribute('data-concept', concept.name);
-
             conceptDiv.innerHTML = `
                 <div class="concept-header">
                     <div class="concept-name">${concept.name}</div>
@@ -1253,19 +1179,15 @@
                 </div>
                 <div class="concept-definition">${concept.definition}</div>
             `;
-
             return conceptDiv;
         }
-
         // ========== 展开/收起功能 ==========
         function toggleBranch(branchEl) {
             branchEl.classList.toggle('collapsed');
         }
-
         function toggleSubBranch(subBranchEl) {
             subBranchEl.classList.toggle('expanded');
         }
-
         function expandAll() {
             document.querySelectorAll('.main-branch').forEach(el => {
                 el.classList.remove('collapsed');
@@ -1274,7 +1196,6 @@
                 el.classList.add('expanded');
             });
         }
-
         function collapseAll() {
             document.querySelectorAll('.main-branch').forEach(el => {
                 el.classList.add('collapsed');
@@ -1283,56 +1204,44 @@
                 el.classList.remove('expanded');
             });
         }
-
         // ========== 缩放功能 ==========
         const wrapper = document.getElementById('mindmapWrapper');
         const zoomDisplay = document.getElementById('zoomDisplay');
-
         function zoomIn() {
             if (currentZoom < 200) {
                 currentZoom += 10;
                 updateZoom();
             }
         }
-
         function zoomOut() {
             if (currentZoom > 50) {
                 currentZoom -= 10;
                 updateZoom();
             }
         }
-
         function resetZoom() {
             currentZoom = 100;
             updateZoom();
         }
-
         function updateZoom() {
             wrapper.style.transform = `scale(${currentZoom / 100})`;
             zoomDisplay.textContent = currentZoom + '%';
         }
-
         // ========== 搜索功能 ==========
         function search() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            
             // 移除之前的高亮
             document.querySelectorAll('.highlight').forEach(el => {
                 el.classList.remove('highlight');
             });
-
             if (!searchTerm) return;
-
             let matchCount = 0;
             const concepts = document.querySelectorAll('.concept-card');
-
             concepts.forEach(concept => {
                 const name = concept.querySelector('.concept-name').textContent.toLowerCase();
                 const definition = concept.querySelector('.concept-definition').textContent.toLowerCase();
-
                 if (name.includes(searchTerm) || definition.includes(searchTerm)) {
                     matchCount++;
-
                     // 展开所有父节点
                     const subBranch = concept.closest('.sub-branch');
                     if (subBranch) {
@@ -1342,12 +1251,10 @@
                             mainBranch.classList.remove('collapsed');
                         }
                     }
-
                     // 高亮
                     concept.classList.add('highlight');
                 }
             });
-
             // 滚动到第一个结果
             if (matchCount > 0) {
                 const firstMatch = document.querySelector('.highlight');
@@ -1360,17 +1267,14 @@
                 alert('未找到匹配的概念');
             }
         }
-
         // 回车搜索
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') search();
         });
-
         // ========== 收藏功能 ==========
         function toggleFavorite(conceptEl) {
             const conceptName = conceptEl.getAttribute('data-concept');
             let favorites = JSON.parse(localStorage.getItem('knowledgeFavorites')) || [];
-
             if (favorites.includes(conceptName)) {
                 favorites = favorites.filter(name => name !== conceptName);
                 conceptEl.classList.remove('favorited');
@@ -1378,16 +1282,13 @@
                 favorites.push(conceptName);
                 conceptEl.classList.add('favorited');
             }
-
             localStorage.setItem('knowledgeFavorites', JSON.stringify(favorites));
             updateFavoriteCount();
         }
-
         function updateFavoriteCount() {
             const favorites = JSON.parse(localStorage.getItem('knowledgeFavorites')) || [];
             document.getElementById('favoriteCount').textContent = favorites.length;
         }
-
         function restoreFavorites() {
             const favorites = JSON.parse(localStorage.getItem('knowledgeFavorites')) || [];
             document.querySelectorAll('.concept-card').forEach(item => {
@@ -1397,19 +1298,16 @@
                 }
             });
         }
-
         // ========== 主题切换 ==========
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
         const currentTheme = localStorage.getItem('theme') || 'light';
-
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
-
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
             if (body.classList.contains('dark-mode')) {
@@ -1422,10 +1320,8 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-
         // ========== 返回顶部 ==========
         const backToTopBtn = document.getElementById('backToTopBtn');
-
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
                 backToTopBtn.style.display = 'flex';
@@ -1433,20 +1329,16 @@
                 backToTopBtn.style.display = 'none';
             }
         });
-
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-
         // ========== 阅读进度条 ==========
         const progressBar = document.querySelector('.reading-progress');
-
         window.addEventListener('scroll', () => {
             const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (window.pageYOffset / windowHeight) * 100;
             progressBar.style.width = scrolled + '%';
         });
-
         // ========== 页面加载 ==========
         window.addEventListener('load', loadMindmap);
     </script>
