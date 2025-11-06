@@ -544,7 +544,7 @@
         }
         /* 进度模态框样式 */
         .progress-modal-content {
-            max-width: 800px;
+            max-width: 900px;
         }
         .progress-section {
             margin-bottom: 30px;
@@ -575,6 +575,7 @@
         .progress-label {
             font-weight: 600;
             color: #333;
+            min-width: 120px;
         }
         body.dark-mode .progress-label {
             color: #fff;
@@ -604,8 +605,9 @@
         .progress-percent {
             color: #333;
             font-weight: 600;
-            min-width: 50px;
+            min-width: 80px;
             text-align: right;
+            font-size: 0.95em;
         }
         body.dark-mode .progress-percent {
             color: #fff;
@@ -650,11 +652,37 @@
             border-radius: 5px;
             font-size: 0.9em;
             color: #0d47a1;
+            line-height: 1.6;
         }
         body.dark-mode .progress-note {
             background: #1a3a52;
             border-left-color: #64b5f6;
             color: #90caf9;
+        }
+        .progress-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .progress-stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+        }
+        body.dark-mode .progress-stat-card {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        }
+        .progress-stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .progress-stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
         }
         .game-link {
             display: flex;
@@ -883,6 +911,9 @@
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
+            .progress-stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
         /* 模态框顶部返回按钮 */
         .modal-back-button {
@@ -1006,13 +1037,11 @@
             <h1>🎯 高考AI助手</h1>
             <p>精准覆盖各科目知识点,助力高考提分</p>
         </div>
-        
         <!-- 知识体系按钮 -->
         <a href="concepts.html" class="knowledge-system-btn" id="knowledgeSystemBtn">
             <i class="fas fa-brain"></i>
             知识体系
         </a>
-        
         <!-- 主科目页面 -->
         <div id="mainView" class="matrix-grid">
             <!-- 语文 -->
@@ -1323,7 +1352,6 @@ const subjects = {
 
 // ===== 从 JSON 文件加载 AI 工具配置 =====
 let aiTools = {};
-
 async function loadAIToolsConfig() {
     try {
         const response = await fetch('ai-tools-config.json');
@@ -1400,44 +1428,212 @@ function closeManuscriptModal() {
     document.getElementById('manuscriptModal').style.display = 'none';
 }
 
-// ===== 从 Markdown 文件加载进度 =====
-async function loadProgressData() {
-    const progressContent = document.getElementById('progressContent');
+// ===== 根据文稿字数自动计算进度 =====
+async function calculateProgress() {
     try {
-        const response = await fetch('breakthrough-progress.md');
+        const response = await fetch('breakthrough-manuscript.md');
         if (!response.ok) {
             throw new Error('文件加载失败');
         }
         const markdown = await response.text();
-        if (!markdown.trim()) {
-            progressContent.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-state-icon">📊</div>
-                    <p>暂无进度数据</p>
-                    <p style="font-size: 0.9em;">请在 breakthrough-progress.md 中添加内容</p>
-                </div>
-            `;
-            return;
+        
+        // 计算当前字数
+        const currentWords = markdown.replace(/[^\u4e00-\u9fa5]/g, '').length;
+        
+        // 目标字数
+        const targetWords = 7000000;
+        
+        // 完成百分比
+        const completionPercent = (currentWords / targetWords * 100).toFixed(2);
+        
+        // 目标日期: 2025年12月8日
+        const targetDate = new Date('2025-12-08');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // 重置时间到当天开始
+        
+        // 计算总天数和已过天数(从今天开始计算)
+        const totalDays = Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24));
+        
+        // 计算实际写作天数
+        const dayMatches = markdown.match(/##\s*\d{4}-\d{2}-\d{2}/g);
+        const writingDays = dayMatches ? dayMatches.length : 0;
+        
+        // 计算日均字数
+        const avgWordsPerDay = writingDays > 0 ? Math.round(currentWords / writingDays) : 0;
+        
+        // 每天需要的字数(6小时)
+        const requiredWordsPerDay = Math.ceil((targetWords - currentWords) / totalDays);
+        
+        // 每小时需要的字数
+        const requiredWordsPerHour = Math.ceil(requiredWordsPerDay / 6);
+        
+        // 按当前进度预计完成时间
+        let estimatedCompletionDate = '保持当前速度';
+        if (avgWordsPerDay > 0) {
+            const daysNeeded = Math.ceil((targetWords - currentWords) / avgWordsPerDay);
+            const estimatedDate = new Date();
+            estimatedDate.setDate(estimatedDate.getDate() + daysNeeded);
+            estimatedCompletionDate = estimatedDate.toLocaleDateString('zh-CN');
         }
-        // 使用 marked.js 解析 Markdown
-        progressContent.innerHTML = marked.parse(markdown);
+        
+        // 时间进度
+        const startDate = new Date(); // 从今天开始
+        const timeElapsed = Math.max(0, (today - startDate) / (1000 * 60 * 60 * 24));
+        const totalProjectDays = (targetDate - startDate) / (1000 * 60 * 60 * 24);
+        const timePercent = Math.min(100, (timeElapsed / totalProjectDays * 100)).toFixed(2);
+        
+        return {
+            currentWords,
+            targetWords,
+            completionPercent,
+            totalDays,
+            writingDays,
+            avgWordsPerDay,
+            requiredWordsPerDay,
+            requiredWordsPerHour,
+            estimatedCompletionDate,
+            timePercent,
+            remainingWords: targetWords - currentWords
+        };
     } catch (error) {
-        console.error('加载进度失败:', error);
+        console.error('计算进度失败:', error);
+        return null;
+    }
+}
+
+async function showProgressModal(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById('progressModal').style.display = 'block';
+    
+    const progressContent = document.getElementById('progressContent');
+    progressContent.innerHTML = `
+        <div class="loading-indicator">
+            <i class="fas fa-spinner"></i>
+            <p>计算进度中...</p>
+        </div>
+    `;
+    
+    const progress = await calculateProgress();
+    
+    if (!progress) {
         progressContent.innerHTML = `
             <div class="empty-state">
                 <div class="empty-state-icon">❌</div>
                 <p>进度加载失败</p>
-                <p style="font-size: 0.9em;">请确保 breakthrough-progress.md 文件存在</p>
+                <p style="font-size: 0.9em;">请确保 breakthrough-manuscript.md 文件存在</p>
             </div>
         `;
+        return;
     }
-}
-
-function showProgressModal(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    document.getElementById('progressModal').style.display = 'block';
-    loadProgressData();
+    
+    // 判断进度状态
+    let progressStatus = 'status-in-progress';
+    let statusText = '进行中';
+    let statusIcon = '🚀';
+    
+    if (progress.completionPercent >= 100) {
+        progressStatus = 'status-complete';
+        statusText = '已完成';
+        statusIcon = '✅';
+    } else if (progress.avgWordsPerDay < progress.requiredWordsPerDay * 0.8) {
+        progressStatus = 'status-pending';
+        statusText = '需加速';
+        statusIcon = '⚠️';
+    }
+    
+    progressContent.innerHTML = `
+        <div class="progress-stats-grid">
+            <div class="progress-stat-card">
+                <div class="progress-stat-number">${progress.completionPercent}%</div>
+                <div class="progress-stat-label">完成进度</div>
+            </div>
+            <div class="progress-stat-card">
+                <div class="progress-stat-number">${progress.totalDays}</div>
+                <div class="progress-stat-label">剩余天数</div>
+            </div>
+            <div class="progress-stat-card">
+                <div class="progress-stat-number">${progress.writingDays}</div>
+                <div class="progress-stat-label">已写天数</div>
+            </div>
+        </div>
+        
+        <div class="progress-section">
+            <h3>📊 写作进度总览</h3>
+            <div class="progress-item">
+                <span class="progress-label">字数进度</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: ${Math.min(100, progress.completionPercent)}%"></div>
+                </div>
+                <span class="progress-percent">${progress.currentWords.toLocaleString()} / ${progress.targetWords.toLocaleString()}</span>
+            </div>
+            <div class="progress-item">
+                <span class="progress-label">时间进度</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: ${progress.timePercent}%"></div>
+                </div>
+                <span class="progress-percent">${progress.timePercent}%</span>
+            </div>
+            <div style="text-align: center; margin-top: 15px;">
+                <span class="progress-status ${progressStatus}">${statusIcon} ${statusText}</span>
+            </div>
+        </div>
+        
+        <div class="progress-section">
+            <h3>📈 每日目标</h3>
+            <div class="progress-item">
+                <span class="progress-label">日均已写</span>
+                <span class="progress-percent" style="color: #667eea; font-size: 1.2em;">
+                    ${progress.avgWordsPerDay.toLocaleString()} 字/天
+                </span>
+            </div>
+            <div class="progress-item">
+                <span class="progress-label">每日需写(6小时)</span>
+                <span class="progress-percent" style="color: #f5576c; font-size: 1.2em;">
+                    ${progress.requiredWordsPerDay.toLocaleString()} 字/天
+                </span>
+            </div>
+            <div class="progress-item">
+                <span class="progress-label">每小时需写</span>
+                <span class="progress-percent" style="color: #38f9d7; font-size: 1.2em;">
+                    ${progress.requiredWordsPerHour.toLocaleString()} 字/时
+                </span>
+            </div>
+        </div>
+        
+        <div class="progress-section">
+            <h3>🎯 里程碑</h3>
+            <div class="progress-item">
+                <span class="progress-label">剩余字数</span>
+                <span class="progress-percent" style="font-size: 1.1em;">
+                    ${progress.remainingWords.toLocaleString()} 字
+                </span>
+            </div>
+            <div class="progress-item">
+                <span class="progress-label">目标日期</span>
+                <span class="progress-percent" style="font-size: 1.1em;">
+                    2025年12月8日
+                </span>
+            </div>
+            <div class="progress-item">
+                <span class="progress-label">预计完成</span>
+                <span class="progress-percent" style="font-size: 1.1em;">
+                    ${progress.estimatedCompletionDate}
+                </span>
+            </div>
+        </div>
+        
+        <div class="progress-note">
+            <strong>💡 写作建议:</strong><br>
+            • 目标: 2025年12月8日完成700万字创作<br>
+            • 计划: 每天投入6小时写作<br>
+            • 当前日均: ${progress.avgWordsPerDay.toLocaleString()} 字 ${progress.avgWordsPerDay >= progress.requiredWordsPerDay ? '✅ (达标)' : '⚠️ (需加速)'}<br>
+            • 建议每小时写作: ${progress.requiredWordsPerHour.toLocaleString()} 字<br>
+            ${progress.avgWordsPerDay < progress.requiredWordsPerDay ? 
+                '• ⚠️ 当前进度略慢于计划,建议适当提升每日写作量!' : 
+                '• ✅ 当前进度良好,继续保持!'}
+        </div>
+    `;
 }
 
 function closeProgressModal() {
@@ -1468,21 +1664,16 @@ async function openModal(topicKey) {
     const modal = document.getElementById('aiModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalTools = document.getElementById('modalTools');
-    
     // 确保配置已加载
     if (Object.keys(aiTools).length === 0) {
         await loadAIToolsConfig();
     }
-    
     const toolData = aiTools[topicKey];
-    
     if (!toolData) {
         alert('该考点数据配置出错');
         return;
     }
-    
     modalTitle.textContent = toolData.title + ' - AI工具';
-    
     if (!toolData.tools || toolData.tools.length === 0) {
         modalTools.innerHTML = `
             <div class="empty-state">
@@ -1504,7 +1695,6 @@ async function openModal(topicKey) {
             </a>
         `).join('');
     }
-    
     modal.style.display = 'block';
 }
 
@@ -1552,8 +1742,6 @@ themeToggle.addEventListener('click', () => {
         localStorage.setItem('theme', 'light');
     }
 });
-           
-              
     </script>
 </body>
 </html>
