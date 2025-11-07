@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+     {
+        id: 50,
+        date: '2025-11-07',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '读完《beyondfeeling》和《富爸爸穷爸爸》',
+            en: 'After reading "Beyondfeeling" and "Rich Dad, Poor Dad"'
+        },
+        content: {
+            zh: '阅读19本书+。\n学习8小时+\n跑3公里\n创作261字',
+            en: 'Read 19+ books.\nStudied for 8+ hours\nRun for 3 kilometers.\nCreate a piece of text of 261 words.'
+        },
+        highlight: {
+            zh: '整理马斯克播客内容',
+            en: 'Organizing content from Musk's podcasts'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 2,
+        coverImage: '',
+        attachments: []
+    },
       {
         id: 49,
         date: '2025-11-06',
