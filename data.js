@@ -81,7 +81,7 @@ let successDiaryData = [
         },
         highlight: {
             zh: '整理马斯克播客内容',
-            en: 'Organizing content from Musk's podcasts'
+            en: 'Organizing content from Musk is podcasts'
         },
         notes: {
             zh: '',
