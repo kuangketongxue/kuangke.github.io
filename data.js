@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+      {
+        id: 51,
+        date: '2025-11-08',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '报名NCEE-CA',
+            en: 'Sign up for NCEE-CA'
+        },
+        content: {
+            zh: '阅读18本书+。\n学习7小时+\n跑3公里\n创作261字',
+            en: 'Read 19+ books.\nStudied for 7+ hours\nRun for 3 kilometers.\nCreate a piece of text of 261 words.'
+        },
+        highlight: {
+            zh: '阅读第一阶段快速完成；城际不错',
+            en: 'The initial phase of reading can be completed quickly; the inter-city service is quite good.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 2,
+        coverImage: '',
+        attachments: []
+    },
      {
         id: 50,
         date: '2025-11-07',
