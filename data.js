@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+       {
+        id: 50,
+        date: '2025-11-09',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '读完《我们终将变富》和《让时间陪你慢慢变富》',
+            en: 'After reading "We Will Ultimately Become Wealthy" and "Let Time Accompany You to Gradually Become Wealthy"'
+        },
+        content: {
+            zh: '阅读18本书+。\n学习6小时+\n周刊功能-每周优化一个点',
+            en: 'Read 19+ books.\nStudied for 6+ hours\nWeekly Feature - Optimizing a Point Every Week'
+        },
+        highlight: {
+            zh: '睡眠质量奇高',
+            en: 'The quality of sleep is exceptionally high.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 0,
+        coverImage: '',
+        attachments: []
+    },
       {
         id: 51,
         date: '2025-11-08',
