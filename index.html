@@ -65,6 +65,278 @@
             padding: 0;
             box-sizing: border-box;
         }
+        /* ==================== 罗小黑加载画面样式 ==================== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0f2e 0%, #1a1a3e 50%, #0f0f2e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        /* 罗小黑角色动画 */
+        .lxh-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 30px;
+        }
+        /* 罗小黑身体 */
+        .lxh-body {
+            position: absolute;
+            width: 120px;
+            height: 140px;
+            background: #1a1a1a;
+            border-radius: 50% 50% 45% 45%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: lxhFloat 2s ease-in-out infinite;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        /* 罗小黑头部 */
+        .lxh-head {
+            position: absolute;
+            width: 100px;
+            height: 90px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        /* 耳朵 */
+        .lxh-ear {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 35px solid #1a1a1a;
+            top: -25px;
+        }
+        .lxh-ear.left {
+            left: 10px;
+            transform: rotate(-15deg);
+        }
+        .lxh-ear.right {
+            right: 10px;
+            transform: rotate(15deg);
+        }
+        /* 眼睛 */
+        .lxh-eyes {
+            position: absolute;
+            width: 100%;
+            top: 35px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+        .lxh-eye {
+            width: 18px;
+            height: 18px;
+            background: #fff;
+            border-radius: 50%;
+            position: relative;
+            animation: lxhBlink 3s infinite;
+        }
+        .lxh-eye::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        /* 鼻子 */
+        .lxh-nose {
+            position: absolute;
+            width: 8px;
+            height: 6px;
+            background: #4a4a4a;
+            border-radius: 50%;
+            top: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        /* 嘴巴 */
+        .lxh-mouth {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            border: 2px solid #4a4a4a;
+            border-top: none;
+            border-radius: 0 0 50% 50%;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        /* 尾巴 */
+        .lxh-tail {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            bottom: 20px;
+            right: -20px;
+            transform-origin: center;
+            animation: lxhTailWag 1s ease-in-out infinite;
+            box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        /* 尾巴尖 */
+        .lxh-tail::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            top: -15px;
+            right: -10px;
+        }
+        /* 脚 */
+        .lxh-feet {
+            position: absolute;
+            bottom: -15px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 0 20px;
+        }
+        .lxh-foot {
+            width: 30px;
+            height: 20px;
+            background: #1a1a1a;
+            border-radius: 50% 50% 40% 40%;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+        /* 旋转光环 */
+        .lxh-ring {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border: 3px solid transparent;
+            border-top-color: #667eea;
+            border-right-color: #764ba2;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: lxhRingRotate 1.5s linear infinite;
+        }
+        .lxh-ring::before {
+            content: '';
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border: 2px solid transparent;
+            border-bottom-color: #00c9a7;
+            border-left-color: #8b5cf6;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: lxhRingRotate 2s linear infinite reverse;
+        }
+        /* 星星装饰 */
+        .lxh-stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .lxh-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: lxhStarTwinkle 2s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        .lxh-star:nth-child(1) { top: 10%; left: 15%; animation-delay: 0s; }
+        .lxh-star:nth-child(2) { top: 20%; right: 20%; animation-delay: 0.5s; }
+        .lxh-star:nth-child(3) { bottom: 15%; left: 20%; animation-delay: 1s; }
+        .lxh-star:nth-child(4) { bottom: 25%; right: 15%; animation-delay: 1.5s; }
+        .lxh-star:nth-child(5) { top: 40%; left: 10%; animation-delay: 0.3s; }
+        .lxh-star:nth-child(6) { top: 35%; right: 10%; animation-delay: 0.8s; }
+        /* 加载文本 */
+        .loading-text {
+            font-size: 20px;
+            color: var(--text-primary);
+            font-weight: 600;
+            letter-spacing: 2px;
+            animation: loadingTextPulse 1.5s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+        .loading-progress {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        /* 进度条 */
+        .loading-bar-container {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2, #00c9a7);
+            background-size: 200% 100%;
+            border-radius: 2px;
+            animation: loadingBarProgress 2s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+        /* ==================== 罗小黑动画关键帧 ==================== */
+        @keyframes lxhFloat {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-10px); }
+        }
+        @keyframes lxhBlink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+        @keyframes lxhTailWag {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(15deg); }
+        }
+        @keyframes lxhRingRotate {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        @keyframes lxhStarTwinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+        @keyframes loadingTextPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        @keyframes loadingBarProgress {
+            0% { width: 0%; background-position: 0% 0%; }
+            50% { width: 100%; background-position: 100% 0%; }
+            100% { width: 100%; background-position: 200% 0%; }
+        }
         /* ==================== 星空主题背景 ==================== */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
@@ -1015,6 +1287,16 @@
             .pagination-container {
                 flex-direction: column;
             }
+            .lxh-container {
+                width: 150px;
+                height: 150px;
+            }
+            .loading-text {
+                font-size: 16px;
+            }
+            .loading-bar-container {
+                width: 250px;
+            }
         }
         @media (max-width: 576px) {
             .moment-card {
@@ -1062,6 +1344,64 @@
     </style>
 </head>
 <body data-page="moments">
+    <!-- 罗小黑加载画面 -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="lxh-container">
+            <!-- 旋转光环 -->
+            <div class="lxh-ring"></div>
+            
+            <!-- 星星装饰 -->
+            <div class="lxh-stars">
+                <div class="lxh-star"></div>
+                <div class="lxh-star"></div>
+                <div class="lxh-star"></div>
+                <div class="lxh-star"></div>
+                <div class="lxh-star"></div>
+                <div class="lxh-star"></div>
+            </div>
+            
+            <!-- 罗小黑主体 -->
+            <div class="lxh-body">
+                <!-- 头部 -->
+                <div class="lxh-head">
+                    <!-- 耳朵 -->
+                    <div class="lxh-ear left"></div>
+                    <div class="lxh-ear right"></div>
+                    
+                    <!-- 眼睛 -->
+                    <div class="lxh-eyes">
+                        <div class="lxh-eye"></div>
+                        <div class="lxh-eye"></div>
+                    </div>
+                    
+                    <!-- 鼻子 -->
+                    <div class="lxh-nose"></div>
+                    
+                    <!-- 嘴巴 -->
+                    <div class="lxh-mouth"></div>
+                </div>
+                
+                <!-- 尾巴 -->
+                <div class="lxh-tail"></div>
+                
+                <!-- 脚 -->
+                <div class="lxh-feet">
+                    <div class="lxh-foot"></div>
+                    <div class="lxh-foot"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 加载文本 -->
+        <div class="loading-text">正在加载银河中...</div>
+        <div class="loading-progress" id="loadingProgress">0%</div>
+        
+        <!-- 进度条 -->
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loadingBar"></div>
+        </div>
+    </div>
+
     <!-- 背景模式返回按钮 -->
     <button id="backgroundModeReturn" class="background-mode-return" aria-label="退出背景模式">
         <i class="fas fa-arrow-left" aria-hidden="true"></i>
@@ -1272,6 +1612,76 @@
     <!-- JavaScript文件 -->
     <script src="data.js" defer></script>
     <script>
+        // ==================== 加载进度管理 ====================
+        let loadingProgress = 0;
+        let dataLoaded = false;
+        let pageReady = false;
+        
+        // 更新加载进度
+        function updateLoadingProgress(progress) {
+            loadingProgress = Math.min(progress, 100);
+            const loadingBar = document.getElementById('loadingBar');
+            const loadingProgressText = document.getElementById('loadingProgress');
+            
+            if (loadingBar) {
+                loadingBar.style.width = loadingProgress + '%';
+            }
+            if (loadingProgressText) {
+                loadingProgressText.textContent = Math.round(loadingProgress) + '%';
+            }
+        }
+        
+        // 隐藏加载画面
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen && dataLoaded && pageReady) {
+                setTimeout(() => {
+                    loadingScreen.classList.add('hidden');
+                    // 动画结束后移除元素
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                }, 300);
+            }
+        }
+        
+        // 模拟加载进度
+        function simulateLoading() {
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 90) {
+                    progress = 90;
+                    clearInterval(interval);
+                }
+                updateLoadingProgress(progress);
+            }, 200);
+            
+            return interval;
+        }
+        
+        // 检查数据是否加载完成
+        function checkDataLoaded() {
+            if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
+                dataLoaded = true;
+                updateLoadingProgress(95);
+                checkAllLoaded();
+                return true;
+            }
+            return false;
+        }
+        
+        // 检查所有资源是否加载完成
+        function checkAllLoaded() {
+            if (dataLoaded && pageReady) {
+                updateLoadingProgress(100);
+                setTimeout(hideLoadingScreen, 500);
+            }
+        }
+        
+        // 启动加载模拟
+        const loadingInterval = simulateLoading();
+        
         // ==================== 性能优化工具函数 ====================
         // 防抖函数
         function debounce(func, wait) {
@@ -1375,10 +1785,48 @@
             initializeBackgroundModeReturn();
             initializeEventListeners();
             restoreUserPreferences();
-            setTimeout(() => {
+            
+            // 检查数据是否已加载
+            if (checkDataLoaded()) {
+                pageReady = true;
+                checkAllLoaded();
                 initializePage();
-            }, 100);
+            } else {
+                // 定期检查数据加载状态
+                const dataCheckInterval = setInterval(() => {
+                    if (checkDataLoaded()) {
+                        clearInterval(dataCheckInterval);
+                        clearInterval(loadingInterval);
+                        pageReady = true;
+                        checkAllLoaded();
+                        initializePage();
+                    }
+                }, 100);
+                
+                // 超时处理（10秒后强制显示）
+                setTimeout(() => {
+                    clearInterval(dataCheckInterval);
+                    clearInterval(loadingInterval);
+                    if (!dataLoaded) {
+                        console.warn('数据加载超时');
+                        // 使用空数据初始化
+                        window.momentsData = [];
+                        dataLoaded = true;
+                    }
+                    pageReady = true;
+                    updateLoadingProgress(100);
+                    hideLoadingScreen();
+                    initializePage();
+                }, 10000);
+            }
         });
+        
+        // 页面加载完成事件
+        window.addEventListener('load', function() {
+            pageReady = true;
+            checkAllLoaded();
+        });
+        
         // ==================== 事件监听器初始化（优化版） ====================
         function initializeEventListeners() {
             // 使用事件委托处理分类按钮
@@ -1485,14 +1933,11 @@
             const contentBox = card.querySelector('.moment-content');
             const contentParagraph = contentBox.querySelector('p');
             const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-            
             // 获取完整内容和预览内容
             const fullContent = decodeHtml(contentBox.dataset.fullContent);
             const previewContent = decodeHtml(contentBox.dataset.previewContent);
-            
             // 平滑过渡动画
             contentBox.style.transition = 'max-height 0.4s ease, opacity 0.3s ease';
-            
             if (isExpanded) {
                 // 收起：显示预览内容
                 contentBox.style.opacity = '0.7';
@@ -1502,12 +1947,10 @@
                     contentParagraph.textContent = previewContent; // 恢复预览文本
                     contentBox.style.opacity = '1';
                 }, 150);
-                
                 btn.setAttribute('aria-expanded', 'false');
                 btn.classList.remove('expanded');
                 btn.querySelector('.toggle-text').textContent = '展开全文';
                 btn.querySelector('.toggle-icon').className = 'fas fa-chevron-down toggle-icon';
-                
                 // 滚动到卡片顶部
                 card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } else {
@@ -1519,7 +1962,6 @@
                     contentParagraph.textContent = fullContent; // ✅ 关键修复：更新为完整内容
                     contentBox.style.opacity = '1';
                 }, 150);
-                
                 btn.setAttribute('aria-expanded', 'true');
                 btn.classList.add('expanded');
                 btn.querySelector('.toggle-text').textContent = '收起';
@@ -1600,7 +2042,10 @@
                 sortAndRenderMoments();
                 updateViewMode();
             } else {
-                setTimeout(initializePage, 500);
+                console.warn('未找到朋友圈数据，使用空数组');
+                window.momentsData = [];
+                currentFilteredMoments = [];
+                renderMoments();
             }
         }
         // ==================== 排序和渲染 ====================
@@ -1667,20 +2112,16 @@
             card.setAttribute('role', 'article');
             card.setAttribute('aria-label', `朋友圈内容 ${index + 1}`);
             card.dataset.id = moment.id || `moment-${index}`;
-            
             const isLiked = userLikes[card.dataset.id];
             const rawDate = new Date(moment.date);
             const hasValidDate = rawDate instanceof Date && !isNaN(rawDate);
             const formattedDate = hasValidDate ? formatDate(rawDate) : (moment.date || '未知时间');
-            
             const content = moment.content || '';
             const COLLAPSE_THRESHOLD = 300;
             const shouldCollapse = content.length > COLLAPSE_THRESHOLD;
             const previewContent = shouldCollapse ? content.substring(0, COLLAPSE_THRESHOLD) + '...' : content;
-            
             const valueColor = getValueGradient(moment.value);
             const valueLabel = moment.value ? `<span class="value-badge" style="background: ${valueColor}">价值 ${moment.value}</span>` : '';
-            
             card.innerHTML = `
                 <div class="moment-header">
                     <div class="moment-meta">
@@ -1689,7 +2130,7 @@
                         ${valueLabel}
                     </div>
                 </div>
-                <div class="moment-content ${shouldCollapse ? 'collapsed' : ''}" 
+                <div class="moment-content ${shouldCollapse ? 'collapsed' : ''}"
                      data-full-content="${escapeHtml(content)}"
                      data-preview-content="${escapeHtml(previewContent)}">
                     <p>${escapeHtml(previewContent)}</p>
@@ -1724,7 +2165,6 @@
                     </button>
                 </div>
             `;
-            
             return card;
         }
         // ==================== 辅助函数 ====================
