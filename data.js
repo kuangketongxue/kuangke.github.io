@@ -1567,8 +1567,8 @@ let momentsData = [
     content: '最重要的：让自己坚信,自己真的能靠自己,获得成长和进步。——2025.7.27.21:30',
     value: 10,
     category: '学习成长',
-    date: '2025-11-10T21:50:00+08:00',
-    images: [],
+    date: '2025-11-10T22:00:00+08:00',
+    images: ["images/a637ed8e2dc9c818541818126b240232.png"],
     likes: 0,
     comments: []
   },
