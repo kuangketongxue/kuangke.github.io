@@ -405,6 +405,42 @@
         .header-left {
             display: flex;
             align-items: center;
+            gap: var(--spacing-lg);
+        }
+        /* ==================== 网站Logo标识 ==================== */
+        .site-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            text-decoration: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: var(--radius-md);
+            transition: var(--transition-base);
+        }
+        .site-brand:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .site-brand-icon {
+            font-size: 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .site-brand-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            white-space: nowrap;
         }
         /* ==================== 返回主页按钮 ==================== */
         .home-button {
@@ -412,7 +448,6 @@
             align-items: center;
             gap: 6px;
             padding: var(--spacing-sm) var(--spacing-md);
-            margin-right: var(--spacing-md);
             background: rgba(102, 126, 234, 0.15);
             border: 1px solid rgba(102, 126, 234, 0.3);
             border-radius: var(--radius-sm);
@@ -867,7 +902,7 @@
             color: white;
             box-shadow: var(--shadow-sm);
         }
-        /* 内容折叠样式 - 关键修复 */
+        /* 内容折叠样式 - 修复版 */
         .moment-content {
             margin-bottom: var(--spacing-md);
             line-height: 1.6;
@@ -891,12 +926,13 @@
             background: linear-gradient(to bottom, transparent, var(--bg-card));
             pointer-events: none;
         }
+        /* ✅ 修复：增加优先级确保展开时移除限制 */
         .moment-content.expanded {
-            max-height: none;
-            overflow: visible;
+            max-height: none !important;
+            overflow: visible !important;
         }
         .moment-content.expanded::after {
-            display: none;
+            display: none !important;
         }
         .moment-content p {
             transition: opacity 0.2s ease;
@@ -1265,6 +1301,9 @@
                 justify-content: center;
                 margin-right: var(--spacing-sm);
             }
+            .site-brand-text {
+                display: none;
+            }
         }
         @media (max-width: 768px) {
             :root {
@@ -1312,6 +1351,12 @@
             .home-button i {
                 font-size: 14px;
             }
+            .site-brand {
+                padding: 6px 10px;
+            }
+            .site-brand-icon {
+                font-size: 20px;
+            }
         }
         /* ==================== 工具类 ==================== */
         .sr-only {
@@ -1349,7 +1394,6 @@
         <div class="lxh-container">
             <!-- 旋转光环 -->
             <div class="lxh-ring"></div>
-            
             <!-- 星星装饰 -->
             <div class="lxh-stars">
                 <div class="lxh-star"></div>
@@ -1359,7 +1403,6 @@
                 <div class="lxh-star"></div>
                 <div class="lxh-star"></div>
             </div>
-            
             <!-- 罗小黑主体 -->
             <div class="lxh-body">
                 <!-- 头部 -->
@@ -1367,23 +1410,18 @@
                     <!-- 耳朵 -->
                     <div class="lxh-ear left"></div>
                     <div class="lxh-ear right"></div>
-                    
                     <!-- 眼睛 -->
                     <div class="lxh-eyes">
                         <div class="lxh-eye"></div>
                         <div class="lxh-eye"></div>
                     </div>
-                    
                     <!-- 鼻子 -->
                     <div class="lxh-nose"></div>
-                    
                     <!-- 嘴巴 -->
                     <div class="lxh-mouth"></div>
                 </div>
-                
                 <!-- 尾巴 -->
                 <div class="lxh-tail"></div>
-                
                 <!-- 脚 -->
                 <div class="lxh-feet">
                     <div class="lxh-foot"></div>
@@ -1391,17 +1429,14 @@
                 </div>
             </div>
         </div>
-        
         <!-- 加载文本 -->
         <div class="loading-text">正在加载银河中...</div>
         <div class="loading-progress" id="loadingProgress">0%</div>
-        
         <!-- 进度条 -->
         <div class="loading-bar-container">
             <div class="loading-bar" id="loadingBar"></div>
         </div>
     </div>
-
     <!-- 背景模式返回按钮 -->
     <button id="backgroundModeReturn" class="background-mode-return" aria-label="退出背景模式">
         <i class="fas fa-arrow-left" aria-hidden="true"></i>
@@ -1410,6 +1445,19 @@
     <!-- 顶部导航栏 -->
     <header class="header" role="banner">
         <div class="container">
+            <div class="header-left">
+                <!-- ✅ 网站Logo标识 -->
+                <a href="#" class="site-brand" title="狂客·银河">
+                    <i class="fas fa-galaxy site-brand-icon" aria-hidden="true"></i>
+                    <span class="site-brand-text">狂客·银河</span>
+                </a>
+                
+                <a href="index.html" class="home-button" title="返回主页">
+                    <i class="fas fa-home" aria-hidden="true"></i>
+                    <span>返回主页</span>
+                </a>
+            </div>
+            
             <nav class="primary-nav" role="navigation" aria-label="主导航">
                 <a class="success-link" href="success.html" title="查看成功日记">
                     <span class="success-icon" aria-hidden="true">
@@ -1616,13 +1664,11 @@
         let loadingProgress = 0;
         let dataLoaded = false;
         let pageReady = false;
-        
         // 更新加载进度
         function updateLoadingProgress(progress) {
             loadingProgress = Math.min(progress, 100);
             const loadingBar = document.getElementById('loadingBar');
             const loadingProgressText = document.getElementById('loadingProgress');
-            
             if (loadingBar) {
                 loadingBar.style.width = loadingProgress + '%';
             }
@@ -1630,7 +1676,6 @@
                 loadingProgressText.textContent = Math.round(loadingProgress) + '%';
             }
         }
-        
         // 隐藏加载画面
         function hideLoadingScreen() {
             const loadingScreen = document.getElementById('loadingScreen');
@@ -1644,7 +1689,6 @@
                 }, 300);
             }
         }
-        
         // 模拟加载进度
         function simulateLoading() {
             let progress = 0;
@@ -1656,10 +1700,8 @@
                 }
                 updateLoadingProgress(progress);
             }, 200);
-            
             return interval;
         }
-        
         // 检查数据是否加载完成
         function checkDataLoaded() {
             if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
@@ -1670,7 +1712,6 @@
             }
             return false;
         }
-        
         // 检查所有资源是否加载完成
         function checkAllLoaded() {
             if (dataLoaded && pageReady) {
@@ -1678,10 +1719,8 @@
                 setTimeout(hideLoadingScreen, 500);
             }
         }
-        
         // 启动加载模拟
         const loadingInterval = simulateLoading();
-        
         // ==================== 性能优化工具函数 ====================
         // 防抖函数
         function debounce(func, wait) {
@@ -1785,7 +1824,6 @@
             initializeBackgroundModeReturn();
             initializeEventListeners();
             restoreUserPreferences();
-            
             // 检查数据是否已加载
             if (checkDataLoaded()) {
                 pageReady = true;
@@ -1802,7 +1840,6 @@
                         initializePage();
                     }
                 }, 100);
-                
                 // 超时处理（10秒后强制显示）
                 setTimeout(() => {
                     clearInterval(dataCheckInterval);
@@ -1820,13 +1857,11 @@
                 }, 10000);
             }
         });
-        
         // 页面加载完成事件
         window.addEventListener('load', function() {
             pageReady = true;
             checkAllLoaded();
         });
-        
         // ==================== 事件监听器初始化（优化版） ====================
         function initializeEventListeners() {
             // 使用事件委托处理分类按钮
@@ -1927,41 +1962,42 @@
                 return;
             }
         }
-        // ==================== 修复的展开/收起功能 ====================
+        // ==================== ✅ 修复的展开/收起功能 ====================
         function handleToggleContent(btn) {
             const card = btn.closest('.moment-card');
             const contentBox = card.querySelector('.moment-content');
             const contentParagraph = contentBox.querySelector('p');
             const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+            
             // 获取完整内容和预览内容
             const fullContent = decodeHtml(contentBox.dataset.fullContent);
             const previewContent = decodeHtml(contentBox.dataset.previewContent);
-            // 平滑过渡动画
-            contentBox.style.transition = 'max-height 0.4s ease, opacity 0.3s ease';
+            
             if (isExpanded) {
-                // 收起：显示预览内容
-                contentBox.style.opacity = '0.7';
-                setTimeout(() => {
-                    contentBox.classList.add('collapsed');
-                    contentBox.classList.remove('expanded');
-                    contentParagraph.textContent = previewContent; // 恢复预览文本
-                    contentBox.style.opacity = '1';
-                }, 150);
+                // 收起：恢复折叠状态
+                contentBox.classList.add('collapsed');
+                contentBox.classList.remove('expanded');
+                contentParagraph.textContent = previewContent;
+                
                 btn.setAttribute('aria-expanded', 'false');
                 btn.classList.remove('expanded');
                 btn.querySelector('.toggle-text').textContent = '展开全文';
                 btn.querySelector('.toggle-icon').className = 'fas fa-chevron-down toggle-icon';
-                // 滚动到卡片顶部
+                
                 card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } else {
-                // 展开：显示完整内容
-                contentBox.style.opacity = '0.7';
-                setTimeout(() => {
-                    contentBox.classList.remove('collapsed');
-                    contentBox.classList.add('expanded');
-                    contentParagraph.textContent = fullContent; // ✅ 关键修复：更新为完整内容
-                    contentBox.style.opacity = '1';
-                }, 150);
+                // 展开：移除折叠限制
+                contentBox.classList.remove('collapsed');
+                contentBox.classList.add('expanded');
+                
+                // ✅ 关键修复：使用requestAnimationFrame确保正确更新
+                requestAnimationFrame(() => {
+                    contentParagraph.textContent = fullContent;
+                    // 强制触发重排以确保高度计算正确
+                    contentBox.style.maxHeight = 'none';
+                    contentBox.offsetHeight; // 触发重排
+                });
+                
                 btn.setAttribute('aria-expanded', 'true');
                 btn.classList.add('expanded');
                 btn.querySelector('.toggle-text').textContent = '收起';
