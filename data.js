@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
        {
+        id: 53,
+        date: '2025-11-10',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '阅读快速完成',
+            en: 'The reading task can be completed quickly.'
+        },
+        content: {
+            zh: '阅读20本书+。\n学习6小时+',
+            en: 'Read 20+ books.\nStudied for 6+ hours'
+        },
+        highlight: {
+            zh: '寿司不错；菠萝不错',
+            en: 'The sushi is quite good; the pineapple is also pleasant.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 2,
+        coverImage: '',
+        attachments: []
+    },
+       {
         id: 52,
         date: '2025-11-09',
         categories: ['study', 'creative'],
