@@ -747,6 +747,7 @@
             </div>
         </div>
     </header>
+
     <div class="review-container">
         <div class="review-title">
             <h1>📊 【狂客】每周复盘</h1>
@@ -756,11 +757,13 @@
                 <span>查看整体统计</span>
             </button>
         </div>
+
         <!-- 加载动画 -->
         <div class="loading-container" id="loadingContainer">
             <div class="loading-spinner"></div>
             <p class="loading-text">正在加载复盘数据...</p>
         </div>
+
         <!-- 本周复盘区域 -->
         <div id="currentWeekSection" style="display: none;">
             <div class="section-header">
@@ -770,6 +773,7 @@
             </div>
             <div class="review-list" id="currentWeekList"></div>
         </div>
+
         <!-- 往期复盘区域 -->
         <div id="pastWeekSection" style="display: none;">
             <div class="section-header">
@@ -784,6 +788,7 @@
                 <div class="review-list" id="pastWeekList"></div>
             </div>
         </div>
+
         <!-- 空状态 -->
         <div class="empty-review" id="emptyState" style="display: none;">
             <div class="empty-review-icon">
@@ -793,6 +798,7 @@
             <p>还没有复盘记录，开始您的第一周目标吧！</p>
         </div>
     </div>
+
     <!-- 统计弹窗 -->
     <div class="stats-modal" id="statsModal">
         <div class="stats-content">
@@ -813,21 +819,25 @@
             </div>
         </div>
     </div>
+
     <!-- 返回按钮 -->
     <a href="https://kuangketongxue.github.io/kuangke.github.io/ai.html" class="back-button" title="返回首页">
         <i class="fas fa-home"></i>
     </a>
+
     <script>
         // 主题切换功能
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
         const currentTheme = localStorage.getItem('theme') || 'light';
+
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
+
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
             if (body.classList.contains('dark-mode')) {
@@ -844,6 +854,7 @@
         // 折叠按钮功能
         const collapseButton = document.getElementById('collapseButton');
         const collapsibleContent = document.getElementById('collapsibleContent');
+
         collapseButton.addEventListener('click', () => {
             collapsibleContent.classList.toggle('expanded');
             collapseButton.classList.toggle('expanded');
@@ -859,12 +870,15 @@
         const statsButton = document.getElementById('statsButton');
         const statsModal = document.getElementById('statsModal');
         const statsClose = document.getElementById('statsClose');
+
         statsButton.addEventListener('click', () => {
             statsModal.classList.add('active');
         });
+
         statsClose.addEventListener('click', () => {
             statsModal.classList.remove('active');
         });
+
         statsModal.addEventListener('click', (e) => {
             if (e.target === statsModal) {
                 statsModal.classList.remove('active');
@@ -879,14 +893,17 @@
             const monday = new Date(now);
             monday.setDate(now.getDate() + diff);
             monday.setHours(0, 0, 0, 0);
+            
             const sunday = new Date(monday);
             sunday.setDate(monday.getDate() + 6);
             sunday.setHours(23, 59, 59, 999);
+            
             return { monday, sunday };
         }
 
         // 判断日期是否在本周
         function isCurrentWeek(dateString) {
+            if (!dateString) return false;
             const date = new Date(dateString);
             const { monday, sunday } = getCurrentWeekRange();
             return date >= monday && date <= sunday;
@@ -953,7 +970,7 @@
                         <h2 class="review-item-title">${review.weekTitle}</h2>
                         <div class="review-item-date">
                             <i class="fas fa-calendar-alt"></i>
-                            <span>${review.weekRange}</span>
+                            <span>${review.weekRange || '待填写'}</span>
                         </div>
                     </div>
                     ${createCompletionRing(completionRate)}
@@ -1036,25 +1053,22 @@
             `;
         }
 
-        // 加载复盘数据（改进版，增加错误处理）
+        // 加载复盘数据
         async function loadReviewData() {
             try {
                 const response = await fetch('weekly-data.json');
                 
-                // 检查响应状态
                 if (!response.ok) {
                     throw new Error(`HTTP 错误! 状态: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
-                
-                // 检查数据结构
+
                 if (!data || !data.reviews || !Array.isArray(data.reviews)) {
                     console.error('数据格式错误:', data);
                     throw new Error('JSON数据格式不正确，缺少reviews数组');
                 }
-                
-                // 如果没有数据，显示空状态
+
                 if (data.reviews.length === 0) {
                     document.getElementById('loadingContainer').style.display = 'none';
                     document.getElementById('emptyState').style.display = 'block';
@@ -1066,6 +1080,7 @@
 
                 // 按日期排序（最新的在前）
                 data.reviews.sort((a, b) => {
+                    if (!a.weekRange || !b.weekRange) return 0;
                     const dateA = new Date(a.weekRange.split(' - ')[0]);
                     const dateB = new Date(b.weekRange.split(' - ')[0]);
                     return dateB - dateA;
@@ -1073,6 +1088,10 @@
 
                 // 分类复盘
                 data.reviews.forEach(review => {
+                    if (!review.weekRange) {
+                        pastWeekList.push(review);
+                        return;
+                    }
                     const weekStart = review.weekRange.split(' - ')[0];
                     if (isCurrentWeek(weekStart)) {
                         currentWeekList.push(review);
@@ -1117,7 +1136,6 @@
                 console.error('加载复盘数据失败:', error);
                 document.getElementById('loadingContainer').style.display = 'none';
                 
-                // 显示详细错误信息
                 const errorHTML = `
                     <div class="empty-review">
                         <div class="empty-review-icon">
@@ -1139,7 +1157,6 @@
                         </p>
                     </div>
                 `;
-                
                 document.getElementById('loadingContainer').innerHTML = errorHTML;
             }
         }
