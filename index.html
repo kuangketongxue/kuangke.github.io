@@ -865,37 +865,54 @@
             color: #ff6b6b;
         }
 
-        /* 侧边栏触发按钮 */
+        /* ==================== 侧边栏触发按钮 - 优化位置 ==================== */
         .sidebar-toggle-btn {
             position: fixed;
-            top: 90px;
+            top: 200px;
             left: 0;
-            z-index: 1000;
+            z-index: 999;
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
-            padding: var(--spacing-md) var(--spacing-lg);
-            padding-left: var(--spacing-md);
-            background: rgba(102, 126, 234, 0.9);
+            padding: 14px 18px;
+            padding-left: 12px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95), rgba(118, 75, 162, 0.95));
             backdrop-filter: blur(10px);
             color: white;
-            border: none;
-            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-left: none;
+            border-radius: 0 50px 50px 0;
             cursor: pointer;
-            transition: var(--transition-base);
-            box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.3);
-            font-weight: 600;
-            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.4);
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 1px;
+            transform-origin: left center;
         }
 
         .sidebar-toggle-btn:hover {
-            background: rgba(102, 126, 234, 1);
-            padding-left: calc(var(--spacing-md) + 4px);
-            box-shadow: 4px 4px 16px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 1), rgba(118, 75, 162, 1));
+            padding-left: 18px;
+            padding-right: 24px;
+            box-shadow: 5px 5px 20px rgba(102, 126, 234, 0.6);
+            transform: translateX(3px) scale(1.05);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         .sidebar-toggle-btn i {
-            font-size: 18px;
+            font-size: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .sidebar-toggle-btn .toggle-text {
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .category-sidebar.open ~ .sidebar-toggle-btn {
@@ -904,7 +921,26 @@
             pointer-events: none;
         }
 
-        /* ==================== 排序控件 ==================== */
+        .sidebar-toggle-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+            border-radius: inherit;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .sidebar-toggle-btn:hover::before {
+            transform: translate(-50%, -50%) scale(1.5);
+            opacity: 1;
+        }
+
+        /* ==================== 优化的排序控件 - 按钮组样式 ==================== */
         .sort-nav {
             background: rgba(20, 20, 50, 0.9);
             backdrop-filter: blur(15px);
@@ -922,38 +958,105 @@
             flex-wrap: wrap;
             gap: var(--spacing-md);
         }
-        .sort-group {
+        
+        /* 排序按钮组 */
+        .sort-button-group {
             display: flex;
             align-items: center;
-            gap: var(--spacing-sm);
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
         }
-        .sort-label {
+        
+        .sort-group-label {
             font-size: 14px;
-            font-weight: 500;
-            color: var(--text-secondary);
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
             white-space: nowrap;
         }
-        .sort-select {
-            padding: var(--spacing-sm) var(--spacing-md);
+        
+        .sort-group-label i {
+            font-size: 16px;
+            color: #667eea;
+        }
+        
+        .sort-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px;
+            border-radius: var(--radius-md);
             border: 1px solid var(--border-color);
+        }
+        
+        .sort-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-secondary);
             border-radius: var(--radius-sm);
-            background: rgba(255, 255, 255, 0.1);
-            font-size: 14px;
-            color: var(--text-primary);
             cursor: pointer;
             transition: var(--transition-base);
-            min-width: 160px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
         }
-        .sort-select option {
-            background: #1a1a3e;
+        
+        .sort-btn i {
+            font-size: 14px;
+            transition: transform var(--transition-base);
+        }
+        
+        .sort-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
+            color: #a8b2ff;
+        }
+        
+        .sort-btn.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4));
+            border-color: rgba(102, 126, 234, 0.6);
             color: #fff;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
-        .sort-select:hover, .sort-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
-            background: rgba(255, 255, 255, 0.15);
-            outline: none;
+        
+        .sort-btn.active i {
+            transform: scale(1.1);
         }
+        
+        .sort-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+        
+        .sort-btn:active::before {
+            width: 200px;
+            height: 200px;
+        }
+        
+        /* 右侧控制组 */
+        .sort-right-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+        
         .view-options {
             display: flex;
             gap: var(--spacing-xs);
@@ -1687,7 +1790,19 @@
             }
             
             .sidebar-toggle-btn {
-                top: 80px;
+                top: 180px;
+                font-size: 14px;
+                padding: 12px 16px;
+                padding-left: 10px;
+            }
+            
+            .sort-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .sort-btn {
+                font-size: 12px;
+                padding: 6px 12px;
             }
         }
         @media (max-width: 768px) {
@@ -1718,6 +1833,21 @@
                 flex-direction: column;
                 align-items: stretch;
             }
+            
+            .sort-button-group {
+                width: 100%;
+            }
+            
+            .sort-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .sort-right-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
             .moments-grid {
                 grid-template-columns: 1fr;
             }
@@ -1746,13 +1876,18 @@
             }
             
             .sidebar-toggle-btn {
-                top: 75px;
+                top: 150px;
                 font-size: 13px;
                 padding: 10px 14px;
+                padding-left: 8px;
             }
             
             .sidebar-toggle-btn .toggle-text {
                 display: none;
+            }
+            
+            .sidebar-toggle-btn i {
+                font-size: 18px;
             }
         }
         @media (max-width: 576px) {
@@ -1764,6 +1899,21 @@
             }
             .site-brand-icon {
                 font-size: 20px;
+            }
+            .sidebar-toggle-btn {
+                top: 130px;
+                padding: 8px 12px;
+            }
+            
+            .sort-btn span {
+                display: none;
+            }
+            
+            .sort-btn {
+                padding: 8px;
+                width: 40px;
+                height: 40px;
+                justify-content: center;
             }
         }
         /* ==================== 工具类 ==================== */
@@ -1974,15 +2124,16 @@
         <i class="fas fa-arrow-left" aria-hidden="true"></i>
         <span>返回正常视图</span>
     </button>
+    
     <!-- 顶部导航栏 -->
     <header class="header" role="banner">
         <div class="container">
             <div class="header-left">
-                <a href="#" class="site-brand" title="狂客·银河">
+                <a href="https://kuangketongxue.github.io/kuangke.github.io/index.html" class="site-brand" title="狂客·银河">
                     <i class="fas fa-galaxy site-brand-icon" aria-hidden="true"></i>
                     <span class="site-brand-text">狂客·银河</span>
                 </a>
-                <a href="index.html" class="home-button" title="返回主页">
+                <a href="https://kuangketongxue.github.io/tongxuekuangke/" class="home-button" title="返回主页">
                     <i class="fas fa-home" aria-hidden="true"></i>
                     <span>返回主页</span>
                 </a>
@@ -2050,34 +2201,55 @@
         </div>
     </header>
     
-    <!-- 排序控件 -->
+    <!-- 优化的排序控件 - 按钮组样式 -->
     <nav class="sort-nav" role="navigation" aria-label="内容排序">
         <div class="container">
             <div class="sort-controls">
-                <div class="sort-group">
-                    <label for="sortBy" class="sort-label">排序方式:</label>
-                    <select id="sortBy" class="sort-select" aria-label="选择排序方式">
-                        <option value="date-desc">最新发布</option>
-                        <option value="date-asc">最早发布</option>
-                        <option value="value-desc">价值最高</option>
-                        <option value="value-asc">价值最低</option>
-                    </select>
+                <!-- 左侧排序按钮组 -->
+                <div class="sort-button-group">
+                    <span class="sort-group-label">
+                        <i class="fas fa-sort-amount-down"></i>
+                        排序方式:
+                    </span>
+                    <div class="sort-buttons" role="group" aria-label="排序选项">
+                        <button class="sort-btn active" data-sort="date-desc" title="按最新发布时间排序">
+                            <i class="far fa-clock"></i>
+                            <span>最新发布</span>
+                        </button>
+                        <button class="sort-btn" data-sort="date-asc" title="按最早发布时间排序">
+                            <i class="fas fa-history"></i>
+                            <span>最早发布</span>
+                        </button>
+                        <button class="sort-btn" data-sort="value-desc" title="按内容价值从高到低排序">
+                            <i class="fas fa-star"></i>
+                            <span>价值最高</span>
+                        </button>
+                        <button class="sort-btn" data-sort="value-asc" title="按内容价值从低到高排序">
+                            <i class="far fa-star"></i>
+                            <span>价值最低</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="view-options">
-                    <button id="gridView" class="view-btn active" title="网格视图" aria-label="网格视图">
-                        <i class="fas fa-th" aria-hidden="true"></i>
-                    </button>
-                    <button id="listView" class="view-btn" title="列表视图" aria-label="列表视图">
-                        <i class="fas fa-list" aria-hidden="true"></i>
+                
+                <!-- 右侧视图和导出控制 -->
+                <div class="sort-right-controls">
+                    <div class="view-options">
+                        <button id="gridView" class="view-btn active" title="网格视图" aria-label="网格视图">
+                            <i class="fas fa-th" aria-hidden="true"></i>
+                        </button>
+                        <button id="listView" class="view-btn" title="列表视图" aria-label="列表视图">
+                            <i class="fas fa-list" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <button class="export-btn" id="exportBtn" title="导出数据">
+                        <i class="fas fa-download"></i>
+                        <span>导出数据</span>
                     </button>
                 </div>
-                <button class="export-btn" id="exportBtn" title="导出数据">
-                    <i class="fas fa-download"></i>
-                    <span>导出数据</span>
-                </button>
             </div>
         </div>
     </nav>
+    
     <!-- 主要内容区域 -->
     <main class="main-content" role="main">
         <div class="container">
@@ -2102,15 +2274,18 @@
                         </div>
                         <div class="sort-hint" id="sortHint"></div>
                     </section>
+                    
                     <!-- 朋友圈内容列表 -->
                     <section id="momentsContainer" class="moments-grid" role="feed" aria-label="朋友圈内容列表" aria-live="polite" aria-busy="false">
                         <!-- 内容由JavaScript动态加载 -->
                     </section>
+                    
                     <!-- 加载指示器 -->
                     <div class="loading-indicator" id="loadingIndicator">
                         <i class="fas fa-spinner"></i>
                         <p>正在加载更多内容...</p>
                     </div>
+                    
                     <!-- 分页控件 -->
                     <nav class="pagination-container" role="navigation" aria-label="分页导航">
                         <div class="pagination-info">
@@ -2145,6 +2320,7 @@
                         </div>
                     </nav>
                 </div>
+                
                 <!-- 右侧最新内容区 -->
                 <aside class="latest-sidebar" aria-label="最新发布内容">
                     <div class="sidebar-header">
@@ -2158,6 +2334,7 @@
             </div>
         </div>
     </main>
+    
     <!-- 页面底部 -->
     <footer class="social-footer" role="contentinfo">
         <div class="container">
@@ -2179,6 +2356,7 @@
             </p>
         </div>
     </footer>
+    
     <!-- JavaScript文件 -->
     <script src="data.js" defer></script>
     <script>
@@ -2304,7 +2482,6 @@
         // ==================== DOM缓存初始化 ====================
         function cacheDOMElements() {
             DOM.momentsContainer = document.getElementById('momentsContainer');
-            DOM.sortBy = document.getElementById('sortBy');
             DOM.searchInput = document.getElementById('searchInput');
             DOM.themeToggle = document.getElementById('themeToggle');
             DOM.gridView = document.getElementById('gridView');
@@ -2333,6 +2510,7 @@
             DOM.categorySearch = document.getElementById('categorySearch');
             DOM.sidebarResetBtn = document.getElementById('sidebarResetBtn');
             DOM.categoryListContainer = document.querySelector('.category-list-container');
+            DOM.sortButtons = document.querySelectorAll('.sort-btn');
         }
         // ==================== 初始化 ====================
         document.addEventListener('DOMContentLoaded', function() {
@@ -2377,7 +2555,14 @@
         });
         // ==================== 事件监听器初始化 ====================
         function initializeEventListeners() {
-            DOM.sortBy?.addEventListener('change', handleSortChange);
+            // 排序按钮组
+            DOM.sortButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const sortMethod = this.dataset.sort;
+                    handleSortChange(sortMethod);
+                });
+            });
+            
             DOM.searchInput?.addEventListener('input', debounce(handleSearch, 300));
             DOM.gridView?.addEventListener('click', () => switchViewMode('grid'));
             DOM.listView?.addEventListener('click', () => switchViewMode('list'));
@@ -2495,12 +2680,23 @@
         }
         
         // ==================== 事件处理函数 ====================
-        function handleSortChange(e) {
-            currentSortMethod = e.target.value;
+        function handleSortChange(method) {
+            currentSortMethod = method;
+            
+            // 更新按钮激活状态
+            DOM.sortButtons.forEach(btn => {
+                if (btn.dataset.sort === method) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
             sortAndRenderMoments();
             updateSortUI();
             updateLatestSidebar();
         }
+        
         function handleSearch(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
             if (searchTerm.length >= 2) {
@@ -3005,7 +3201,6 @@
             }
         }
         function updateSortUI() {
-            DOM.sortBy.value = currentSortMethod;
             const sortNav = document.querySelector('.sort-nav');
             if (sortNav) {
                 sortNav.classList.add('sorting');
@@ -3068,9 +3263,13 @@
             const savedSortMethod = localStorage.getItem('preferredSortMethod');
             if (savedSortMethod) {
                 currentSortMethod = savedSortMethod;
-                if (DOM.sortBy) {
-                    DOM.sortBy.value = savedSortMethod;
-                }
+                DOM.sortButtons.forEach(btn => {
+                    if (btn.dataset.sort === savedSortMethod) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
             }
             const savedViewMode = localStorage.getItem('preferredViewMode');
             if (savedViewMode) {
