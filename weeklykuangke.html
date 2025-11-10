@@ -1092,7 +1092,6 @@
             </div>
         </div>
     </header>
-
     <div class="review-container">
         <div class="review-title">
             <h1>📊 【狂客】每周复盘</h1>
@@ -1112,13 +1111,11 @@
                 </button>
             </div>
         </div>
-
         <!-- 加载动画 -->
         <div class="loading-container" id="loadingContainer">
             <div class="loading-spinner"></div>
             <p class="loading-text">正在加载复盘数据...</p>
         </div>
-
         <!-- 本周复盘区域 -->
         <div id="currentWeekSection" style="display: none;">
             <div class="section-header">
@@ -1128,7 +1125,6 @@
             </div>
             <div class="review-list" id="currentWeekList"></div>
         </div>
-
         <!-- 往期复盘区域 -->
         <div id="pastWeekSection" style="display: none;">
             <div class="section-header">
@@ -1143,7 +1139,6 @@
                 <div class="review-list" id="pastWeekList"></div>
             </div>
         </div>
-
         <!-- 空状态 -->
         <div class="empty-review" id="emptyState" style="display: none;">
             <div class="empty-review-icon">
@@ -1153,7 +1148,6 @@
             <p>还没有复盘记录,开始您的第一周目标吧!</p>
         </div>
     </div>
-
     <!-- 整体统计弹窗 -->
     <div class="stats-modal" id="statsModal">
         <div class="stats-content">
@@ -1174,7 +1168,6 @@
             </div>
         </div>
     </div>
-
     <!-- 每日任务弹窗 -->
     <div class="stats-modal daily-modal" id="dailyModal">
         <div class="stats-content">
@@ -1203,7 +1196,6 @@
             </div>
         </div>
     </div>
-
     <!-- 每天优化弹窗 -->
     <div class="stats-modal optimize-modal" id="optimizeModal">
         <div class="stats-content">
@@ -1232,25 +1224,21 @@
             </div>
         </div>
     </div>
-
     <!-- 返回按钮 -->
     <a href="https://kuangketongxue.github.io/kuangke.github.io/ai.html" class="back-button" title="返回首页">
         <i class="fas fa-home"></i>
     </a>
-
     <script>
         // ==================== 主题切换功能 ====================
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
-        
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
-        
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
             if (body.classList.contains('dark-mode')) {
@@ -1263,11 +1251,9 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-
         // ==================== 折叠按钮功能 ====================
         const collapseButton = document.getElementById('collapseButton');
         const collapsibleContent = document.getElementById('collapsibleContent');
-        
         collapseButton.addEventListener('click', () => {
             collapsibleContent.classList.toggle('expanded');
             collapseButton.classList.toggle('expanded');
@@ -1278,54 +1264,44 @@
                 buttonText.textContent = '展开往期复盘';
             }
         });
-
         // ==================== 整体统计弹窗功能 ====================
         const statsButton = document.getElementById('statsButton');
         const statsModal = document.getElementById('statsModal');
         const statsClose = document.getElementById('statsClose');
-        
         statsButton.addEventListener('click', () => {
             statsModal.classList.add('active');
         });
-        
         statsClose.addEventListener('click', () => {
             statsModal.classList.remove('active');
         });
-        
         statsModal.addEventListener('click', (e) => {
             if (e.target === statsModal) {
                 statsModal.classList.remove('active');
             }
         });
-
         // ==================== 每日任务弹窗功能 ====================
         const dailyButton = document.getElementById('dailyButton');
         const dailyModal = document.getElementById('dailyModal');
         const dailyClose = document.getElementById('dailyClose');
         let currentDailyDate = new Date();
-        
         dailyButton.addEventListener('click', () => {
             currentDailyDate = new Date();
             loadDailyTasks(currentDailyDate);
             dailyModal.classList.add('active');
         });
-        
         dailyClose.addEventListener('click', () => {
             dailyModal.classList.remove('active');
         });
-        
         dailyModal.addEventListener('click', (e) => {
             if (e.target === dailyModal) {
                 dailyModal.classList.remove('active');
             }
         });
-
         // 日期导航
         document.getElementById('prevDay').addEventListener('click', () => {
             currentDailyDate.setDate(currentDailyDate.getDate() - 1);
             loadDailyTasks(currentDailyDate);
         });
-        
         document.getElementById('nextDay').addEventListener('click', () => {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -1336,13 +1312,11 @@
                 loadDailyTasks(currentDailyDate);
             }
         });
-
         // ==================== 每天优化弹窗功能 ====================
         const optimizeButton = document.getElementById('optimizeButton');
         const optimizeModal = document.getElementById('optimizeModal');
         const optimizeClose = document.getElementById('optimizeClose');
         let currentOptimizeDate = new Date();
-
         // 优化数据配置 - 请在这里添加每天的优化内容和链接
         const optimizeData = {
             // 格式: "YYYY-MM-DD": { title: "标题", content: "内容描述", link: "链接URL" }
@@ -1352,29 +1326,24 @@
                 link: "https://kuangketongxue.github.io/kuangke.github.io/index.html"
             },
         };
-
         optimizeButton.addEventListener('click', () => {
             currentOptimizeDate = new Date();
             loadOptimizeContent(currentOptimizeDate);
             optimizeModal.classList.add('active');
         });
-        
         optimizeClose.addEventListener('click', () => {
             optimizeModal.classList.remove('active');
         });
-        
         optimizeModal.addEventListener('click', (e) => {
             if (e.target === optimizeModal) {
                 optimizeModal.classList.remove('active');
             }
         });
-
         // 优化日期导航
         document.getElementById('prevOptimizeDay').addEventListener('click', () => {
             currentOptimizeDate.setDate(currentOptimizeDate.getDate() - 1);
             loadOptimizeContent(currentOptimizeDate);
         });
-        
         document.getElementById('nextOptimizeDay').addEventListener('click', () => {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -1385,15 +1354,12 @@
                 loadOptimizeContent(currentOptimizeDate);
             }
         });
-
         // ==================== 加载优化内容 ====================
         function loadOptimizeContent(date) {
             const dateKey = formatDateKey(date);
             document.getElementById('currentOptimizeDate').textContent = formatDate(date);
-            
             const optimizeList = document.getElementById('optimizeContentList');
             const optimizeItem = optimizeData[dateKey];
-            
             if (!optimizeItem) {
                 optimizeList.innerHTML = `
                     <div class="empty-tasks">
@@ -1426,51 +1392,42 @@
                 `;
             }
         }
-
         // ==================== 日期工具函数 ====================
         function getCurrentWeekRange() {
             const now = new Date();
             const dayOfWeek = now.getDay();
             const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-            
             const monday = new Date(now);
             monday.setDate(now.getDate() + diff);
             monday.setHours(0, 0, 0, 0);
-            
             const sunday = new Date(monday);
             sunday.setDate(monday.getDate() + 6);
             sunday.setHours(23, 59, 59, 999);
-            
             return { monday, sunday };
         }
-
         function isCurrentWeek(dateString) {
             if (!dateString) return false;
             const date = new Date(dateString);
             const { monday, sunday } = getCurrentWeekRange();
             return date >= monday && date <= sunday;
         }
-
         function formatDate(date) {
             const year = date.getFullYear();
             const month = date.getMonth() + 1;
             const day = date.getDate();
             return `${year}年${month}月${day}日`;
         }
-
         function formatDateKey(date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
         }
-
-        // ==================== 完成率环形图（修复数学运算）====================
+        // ==================== 完成率环形图 ====================
         function createCompletionRing(percentage) {
             const radius = 60;
-            const circumference = 2 * Math.PI * radius; // 修复：使用正确的乘法运算符
+            const circumference = 2 * Math.PI * radius;
             const offset = circumference - (percentage / 100) * circumference;
-            
             return `
                 <div class="completion-ring">
                     <div class="ring-container">
@@ -1493,25 +1450,19 @@
                 </div>
             `;
         }
-
         // ==================== 解析Markdown ====================
         function parseMarkdownToJSON(markdown) {
             const reviews = [];
             const weekSections = markdown.split(/^## 第(\d+)周$/gm);
-            
             for (let i = 1; i < weekSections.length; i += 2) {
                 const weekNum = weekSections[i];
                 const weekContent = weekSections[i + 1];
-                
                 if (!weekContent) continue;
-                
                 const timeMatch = weekContent.match(/\*\*时间范围:\*\*\s*(.+)/);
                 const weekRange = timeMatch ? timeMatch[1].trim() : '';
-                
                 const goals = [];
                 const goalRegex = /####\s+\d+\.\s+(.+?)\n-\s+\[([ x])\].*?\n-\s+\*\*说明:\*\*\s*(.*?)(?=\n####|\n###|$)/gs;
                 let goalMatch;
-                
                 while ((goalMatch = goalRegex.exec(weekContent)) !== null) {
                     goals.push({
                         title: goalMatch[1].trim(),
@@ -1519,7 +1470,6 @@
                         completed: goalMatch[2] === 'x'
                     });
                 }
-                
                 const summaryMatch = weekContent.match(/### 本周总结\s+([\s\S]*?)(?=\n---|\n## |$)/);
                 let summary = '';
                 if (summaryMatch) {
@@ -1527,7 +1477,6 @@
                         .replace(/####\s+/g, '')
                         .replace(/\n\n+/g, '\n\n');
                 }
-                
                 reviews.push({
                     weekTitle: `第${weekNum}周`,
                     weekRange: weekRange,
@@ -1535,25 +1484,19 @@
                     summary: summary
                 });
             }
-            
             return { reviews };
         }
-
         // ==================== 解析每日任务Markdown ====================
         function parseDailyTasksMarkdown(markdown) {
             const dailyTasks = {};
             const dateSections = markdown.split(/^## (\d{4}-\d{2}-\d{2})$/gm);
-            
             for (let i = 1; i < dateSections.length; i += 2) {
                 const dateKey = dateSections[i];
                 const dateContent = dateSections[i + 1];
-                
                 if (!dateContent) continue;
-                
                 const tasks = [];
                 const taskRegex = /### (\d+)\.\s+(.+?)\n-\s+\*\*重要性:\*\*\s+(.+?)\n-\s+\*\*熟练度:\*\*\s+(.+?)\n-\s+\*\*完成情况:\*\*\s+\[([ x])\]\s*(已完成|未完成)\n-\s+\*\*说明:\*\*\s*(.*?)(?=\n###|\n##|$)/gs;
                 let taskMatch;
-                
                 while ((taskMatch = taskRegex.exec(dateContent)) !== null) {
                     tasks.push({
                         number: taskMatch[1].trim(),
@@ -1564,26 +1507,21 @@
                         description: taskMatch[7].trim()
                     });
                 }
-                
                 dailyTasks[dateKey] = tasks;
             }
-            
             return dailyTasks;
         }
-
         // ==================== 创建复盘项HTML ====================
         function createReviewItem(review, isCurrent = false) {
             const completedGoals = review.goals.filter(g => g.completed).length;
             const totalGoals = review.goals.length;
             const completionRate = totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0;
-            
             const currentBadge = isCurrent
                 ? `<div class="current-week-badge">
                     <i class="fas fa-fire"></i>
                     <span>本周</span>
                    </div>`
                 : '';
-            
             const goalsHTML = review.goals.map(goal => `
                 <div class="goal-item">
                     <div class="goal-icon ${goal.completed ? 'completed' : 'incomplete'}">
@@ -1595,7 +1533,6 @@
                     </div>
                 </div>
             `).join('');
-            
             return `
                 <div class="review-item">
                     ${currentBadge}
@@ -1622,13 +1559,11 @@
                 </div>
             `;
         }
-
         // ==================== 创建任务卡片HTML ====================
         function createTaskCard(task) {
             const importanceClass = task.importance === '高' ? 'importance-high' :
                                    task.importance === '中' ? 'importance-medium' : 'importance-low';
             const stars = '★'.repeat(parseInt(task.proficiency)) + '☆'.repeat(5 - parseInt(task.proficiency));
-            
             return `
                 <div class="task-card ${task.completed ? 'completed' : 'incomplete'}">
                     <div class="task-header">
@@ -1660,29 +1595,24 @@
                 </div>
             `;
         }
-
         // ==================== 生成整体统计 ====================
         function generateOverallStats(data) {
             const totalWeeks = data.reviews.length;
             let totalGoals = 0;
             let completedGoals = 0;
             const weeklyRates = [];
-            
             data.reviews.forEach(review => {
                 totalGoals += review.goals.length;
                 const completed = review.goals.filter(g => g.completed).length;
                 completedGoals += completed;
-                
                 const rate = review.goals.length > 0 ? Math.round((completed / review.goals.length) * 100) : 0;
                 weeklyRates.push({
                     week: review.weekTitle,
                     rate: rate
                 });
             });
-            
             const overallRate = totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0;
             const incompleteGoals = totalGoals - completedGoals;
-            
             document.getElementById('statsCards').innerHTML = `
                 <div class="stats-card">
                     <div class="stats-card-value">${totalWeeks}</div>
@@ -1701,7 +1631,6 @@
                     <div class="stats-card-label">总完成率</div>
                 </div>
             `;
-            
             const recentWeeks = weeklyRates.slice(-8).reverse();
             const chartHTML = recentWeeks.map(item => `
                 <div class="chart-bar">
@@ -1716,29 +1645,24 @@
                     </div>
                 </div>
             `).join('');
-            
             document.getElementById('statsChart').innerHTML = `
                 <h3 class="chart-title">📈 最近完成率趋势</h3>
                 ${chartHTML}
             `;
         }
-
-        // ==================== 加载每日任务（修复模板字符串）====================
+        // ==================== 加载每日任务 ====================
         async function loadDailyTasks(date) {
             try {
                 const response = await fetch('daily-tasks.md');
                 if (!response.ok) {
-                    throw new Error(`HTTP错误! 状态: ${response.status}`); // 修复：使用正确的模板字符串语法
+                    throw new Error(`HTTP错误! 状态: ${response.status}`);
                 }
                 const markdown = await response.text();
                 const dailyTasks = parseDailyTasksMarkdown(markdown);
-                
                 const dateKey = formatDateKey(date);
                 document.getElementById('currentDate').textContent = formatDate(date);
-                
                 const tasks = dailyTasks[dateKey] || [];
                 const tasksList = document.getElementById('dailyTasksList');
-                
                 if (tasks.length === 0) {
                     tasksList.innerHTML = `
                         <div class="empty-tasks">
@@ -1769,31 +1693,26 @@
                 `;
             }
         }
-
-        // ==================== 加载复盘数据（修复模板字符串）====================
+        // ==================== 加载复盘数据 ====================
         async function loadReviewData() {
             try {
                 const response = await fetch('weekly-data.md');
                 if (!response.ok) {
-                    throw new Error(`HTTP错误! 状态: ${response.status}`); // 修复：使用正确的模板字符串语法
+                    throw new Error(`HTTP错误! 状态: ${response.status}`);
                 }
                 const markdown = await response.text();
                 const data = parseMarkdownToJSON(markdown);
-                
                 if (!data || !data.reviews || !Array.isArray(data.reviews)) {
                     console.error('数据格式错误:', data);
                     throw new Error('Markdown数据格式不正确');
                 }
-                
                 if (data.reviews.length === 0) {
                     document.getElementById('loadingContainer').style.display = 'none';
                     document.getElementById('emptyState').style.display = 'block';
                     return;
                 }
-                
                 const currentWeekList = [];
                 const pastWeekList = [];
-                
                 // 排序：最新的在前
                 data.reviews.sort((a, b) => {
                     if (!a.weekRange || !b.weekRange) return 0;
@@ -1801,7 +1720,6 @@
                     const dateB = new Date(b.weekRange.split(' - ')[0]);
                     return dateB - dateA;
                 });
-                
                 // 分类：本周和往期
                 data.reviews.forEach(review => {
                     if (!review.weekRange) {
@@ -1815,15 +1733,12 @@
                         pastWeekList.push(review);
                     }
                 });
-                
                 // 生成统计
                 if (data.reviews.length > 0) {
                     generateOverallStats(data);
                 }
-                
                 // 隐藏加载动画
                 document.getElementById('loadingContainer').style.display = 'none';
-                
                 // 渲染内容
                 if (currentWeekList.length === 0 && pastWeekList.length === 0) {
                     document.getElementById('emptyState').style.display = 'block';
@@ -1836,7 +1751,6 @@
                             .join('');
                         currentSection.style.display = 'block';
                     }
-                    
                     if (pastWeekList.length > 0) {
                         const pastSection = document.getElementById('pastWeekSection');
                         const pastListDiv = document.getElementById('pastWeekList');
@@ -1849,7 +1763,6 @@
             } catch (error) {
                 console.error('加载复盘数据失败:', error);
                 document.getElementById('loadingContainer').style.display = 'none';
-                
                 const errorHTML = `
                     <div class="empty-review">
                         <div class="empty-review-icon">
@@ -1873,7 +1786,6 @@
                 document.getElementById('loadingContainer').innerHTML = errorHTML;
             }
         }
-
         // ==================== 页面加载 ====================
         window.addEventListener('DOMContentLoaded', loadReviewData);
     </script>
