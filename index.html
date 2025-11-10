@@ -22,7 +22,7 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <title>狂客·银河 - 记录生活精彩瞬间</title>
-    <!-- 样式表 - 使用defer属性优化加载 -->
+    <!-- 样式表 -->
     <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="style.css"></noscript>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin="anonymous">
@@ -92,7 +92,6 @@
             height: 200px;
             margin-bottom: 30px;
         }
-        /* 罗小黑身体 */
         .lxh-body {
             position: absolute;
             width: 120px;
@@ -105,7 +104,6 @@
             animation: lxhFloat 2s ease-in-out infinite;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
-        /* 罗小黑头部 */
         .lxh-head {
             position: absolute;
             width: 100px;
@@ -117,7 +115,6 @@
             transform: translateX(-50%);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
-        /* 耳朵 */
         .lxh-ear {
             position: absolute;
             width: 0;
@@ -135,7 +132,6 @@
             right: 10px;
             transform: rotate(15deg);
         }
-        /* 眼睛 */
         .lxh-eyes {
             position: absolute;
             width: 100%;
@@ -163,7 +159,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
-        /* 鼻子 */
         .lxh-nose {
             position: absolute;
             width: 8px;
@@ -174,7 +169,6 @@
             left: 50%;
             transform: translateX(-50%);
         }
-        /* 嘴巴 */
         .lxh-mouth {
             position: absolute;
             width: 20px;
@@ -186,7 +180,6 @@
             left: 50%;
             transform: translateX(-50%);
         }
-        /* 尾巴 */
         .lxh-tail {
             position: absolute;
             width: 60px;
@@ -199,7 +192,6 @@
             animation: lxhTailWag 1s ease-in-out infinite;
             box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.3);
         }
-        /* 尾巴尖 */
         .lxh-tail::after {
             content: '';
             position: absolute;
@@ -210,7 +202,6 @@
             top: -15px;
             right: -10px;
         }
-        /* 脚 */
         .lxh-feet {
             position: absolute;
             bottom: -15px;
@@ -226,7 +217,6 @@
             border-radius: 50% 50% 40% 40%;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
         }
-        /* 旋转光环 */
         .lxh-ring {
             position: absolute;
             width: 180px;
@@ -254,7 +244,6 @@
             transform: translate(-50%, -50%);
             animation: lxhRingRotate 2s linear infinite reverse;
         }
-        /* 星星装饰 */
         .lxh-stars {
             position: absolute;
             width: 100%;
@@ -275,7 +264,6 @@
         .lxh-star:nth-child(4) { bottom: 25%; right: 15%; animation-delay: 1.5s; }
         .lxh-star:nth-child(5) { top: 40%; left: 10%; animation-delay: 0.3s; }
         .lxh-star:nth-child(6) { top: 35%; right: 10%; animation-delay: 0.8s; }
-        /* 加载文本 */
         .loading-text {
             font-size: 20px;
             color: var(--text-primary);
@@ -290,7 +278,6 @@
             color: var(--text-secondary);
             font-weight: 500;
         }
-        /* 进度条 */
         .loading-bar-container {
             width: 300px;
             height: 4px;
@@ -342,11 +329,10 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
             background: url('images/53ddd6ae5983053a99f8388b3aaa5266.png') center center/cover fixed;
             min-height: 100vh;
-            padding-top: 60px;
+            padding-top: 80px; /* 增加顶部间距 */
             position: relative;
             will-change: scroll-position;
         }
-        /* 使用单个伪元素合并遮罩和星空效果 */
         body::before {
             content: '';
             position: fixed;
@@ -378,13 +364,14 @@
             0%, 100% { opacity: 0.8; }
             50% { opacity: 1; }
         }
-        /* ==================== 顶部导航栏 ==================== */
+        
+        /* ==================== ✅ 优化的顶部导航栏 ==================== */
         .header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 60px;
+            min-height: 70px; /* 增加最小高度 */
             background: rgba(15, 15, 45, 0.95);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border-color);
@@ -392,32 +379,38 @@
             transition: var(--transition-base);
             box-shadow: var(--shadow-md);
             transform: translateZ(0);
+            padding: 10px 0; /* 添加上下内边距 */
         }
         .container {
-            max-width: 1400px;
+            max-width: 1600px; /* 增加最大宽度 */
             margin: 0 auto;
             padding: 0 var(--spacing-lg);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 100%;
+            min-height: 50px; /* 确保最小高度 */
+            gap: var(--spacing-md); /* 添加子元素间距 */
+            flex-wrap: wrap; /* 允许换行 */
         }
         .header-left {
             display: flex;
             align-items: center;
-            gap: var(--spacing-lg);
+            gap: var(--spacing-md); /* 减小间距 */
+            flex-shrink: 0; /* 防止收缩 */
         }
-        /* ==================== 网站Logo标识 ==================== */
+        
+        /* ==================== 优化的网站Logo标识 ==================== */
         .site-brand {
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
             text-decoration: none;
-            padding: var(--spacing-sm) var(--spacing-md);
+            padding: 10px 16px; /* 增加内边距 */
             background: rgba(102, 126, 234, 0.1);
             border: 1px solid rgba(102, 126, 234, 0.3);
             border-radius: var(--radius-md);
             transition: var(--transition-base);
+            white-space: nowrap; /* 防止换行 */
         }
         .site-brand:hover {
             background: rgba(102, 126, 234, 0.2);
@@ -431,6 +424,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            flex-shrink: 0;
         }
         .site-brand-text {
             font-size: 18px;
@@ -442,12 +436,13 @@
             background-clip: text;
             white-space: nowrap;
         }
-        /* ==================== 返回主页按钮 ==================== */
+        
+        /* ==================== 优化的返回主页按钮 ==================== */
         .home-button {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: var(--spacing-sm) var(--spacing-md);
+            padding: 10px 16px; /* 增加内边距 */
             background: rgba(102, 126, 234, 0.15);
             border: 1px solid rgba(102, 126, 234, 0.3);
             border-radius: var(--radius-sm);
@@ -457,6 +452,7 @@
             font-weight: 600;
             transition: var(--transition-base);
             transform: translateZ(0);
+            white-space: nowrap;
         }
         .home-button:hover {
             background: rgba(102, 126, 234, 0.3);
@@ -471,9 +467,7 @@
         .home-button:hover i {
             transform: scale(1.1);
         }
-        .home-button span {
-            white-space: nowrap;
-        }
+        
         .logo {
             font-size: 20px;
             font-weight: 700;
@@ -485,18 +479,22 @@
             background-clip: text;
             text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
         }
+        
+        /* ==================== 优化的主导航 ==================== */
         .primary-nav {
             display: flex;
             align-items: center;
-            gap: var(--spacing-lg);
+            gap: var(--spacing-md); /* 增加间距 */
             flex: 1;
             justify-content: center;
+            flex-wrap: wrap; /* 允许换行 */
+            padding: 5px 0; /* 添加上下内边距 */
         }
         .primary-nav a {
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
-            padding: var(--spacing-sm) var(--spacing-md);
+            padding: 10px 16px; /* 增加内边距 */
             color: var(--text-secondary);
             text-decoration: none;
             border-radius: var(--radius-sm);
@@ -504,23 +502,28 @@
             font-size: 14px;
             font-weight: 500;
             transform: translateZ(0);
+            white-space: nowrap;
         }
         .primary-nav a:hover {
             background: rgba(102, 126, 234, 0.2);
             color: #a8b2ff;
             transform: translateY(-2px);
         }
+        
+        /* ==================== 优化的控制按钮区 ==================== */
         .controls {
             display: flex;
             align-items: center;
-            gap: var(--spacing-sm);
+            gap: var(--spacing-md); /* 增加间距 */
+            flex-wrap: wrap; /* 允许换行 */
         }
-        /* 通用按钮样式 */
+        
+        /* ==================== 优化的通用按钮样式 ==================== */
         .nav-button-base {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: var(--spacing-sm) var(--spacing-md);
+            padding: 10px 16px; /* 增加内边距 */
             color: #fff;
             text-decoration: none;
             border: none;
@@ -564,6 +567,7 @@
             border-radius: 6px;
             transition: var(--transition-base);
         }
+        
         /* 各类按钮样式 */
         .ai-nav-button {
             background: var(--primary-gradient);
@@ -581,6 +585,7 @@
             background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%);
             box-shadow: 0 4px 15px rgba(247, 147, 26, 0.4);
         }
+        
         /* 搜索框 */
         .search-box {
             position: relative;
@@ -594,7 +599,7 @@
             pointer-events: none;
         }
         .search-box input {
-            padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) 36px;
+            padding: 10px 10px 10px 38px; /* 增加内边距 */
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
             background: rgba(255, 255, 255, 0.1);
@@ -609,13 +614,14 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
             width: 250px;
         }
+        
         /* 主题切换按钮 */
         .theme-toggle {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
+            width: 40px; /* 增加尺寸 */
+            height: 40px;
             border: 1px solid var(--border-color);
             background: rgba(255, 255, 255, 0.1);
             border-radius: var(--radius-sm);
@@ -628,6 +634,7 @@
             color: #a8b2ff;
             background: rgba(102, 126, 234, 0.2);
         }
+        
         /* ==================== 分类导航 ==================== */
         .category-nav {
             background: rgba(20, 20, 50, 0.9);
@@ -682,6 +689,7 @@
             border-color: transparent;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
+        
         /* ==================== 排序控件 ==================== */
         .sort-nav {
             background: rgba(20, 20, 50, 0.9);
@@ -689,7 +697,7 @@
             border-bottom: 1px solid var(--border-color);
             padding: var(--spacing-md) 0;
             position: sticky;
-            top: 60px;
+            top: 70px; /* 调整sticky位置 */
             z-index: 100;
             box-shadow: var(--shadow-md);
         }
@@ -778,11 +786,13 @@
             color: #a8b2ff;
             background: rgba(102, 126, 234, 0.2);
         }
+        
         /* ==================== 主要内容区域 ==================== */
         .main-content {
             padding: 30px 0;
             min-height: calc(100vh - 300px);
         }
+        
         /* 统计卡片 */
         .moments-stats {
             margin-bottom: 30px;
@@ -834,6 +844,7 @@
             font-size: 13px;
             color: rgba(255, 255, 255, 0.6);
         }
+        
         /* 朋友圈网格 */
         .moments-grid {
             display: grid;
@@ -902,20 +913,23 @@
             color: white;
             box-shadow: var(--shadow-sm);
         }
-        /* 内容折叠样式 - 修复版 */
+        
+        /* ==================== ✅ 完全重写的内容折叠样式 ==================== */
         .moment-content {
             margin-bottom: var(--spacing-md);
             line-height: 1.6;
             color: var(--text-primary);
             font-size: 14px;
             position: relative;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-            overflow: hidden;
-            will-change: max-height, opacity;
+            overflow: visible; /* 改为visible确保展开时不被裁剪 */
         }
+        
+        /* 折叠状态 */
         .moment-content.collapsed {
             max-height: 120px;
+            overflow: hidden;
         }
+        
         .moment-content.collapsed::after {
             content: '';
             position: absolute;
@@ -925,20 +939,28 @@
             height: 40px;
             background: linear-gradient(to bottom, transparent, var(--bg-card));
             pointer-events: none;
+            z-index: 1;
         }
-        /* ✅ 修复：增加优先级确保展开时移除限制 */
+        
+        /* 展开状态 - 完全移除所有限制 */
         .moment-content.expanded {
             max-height: none !important;
             overflow: visible !important;
         }
+        
         .moment-content.expanded::after {
+            content: none !important;
             display: none !important;
         }
+        
         .moment-content p {
-            transition: opacity 0.2s ease;
+            margin: 0;
             white-space: pre-wrap;
             word-wrap: break-word;
+            word-break: break-word;
         }
+        
+        /* 展开按钮样式 */
         .expand-toggle-btn {
             display: inline-flex;
             align-items: center;
@@ -968,6 +990,7 @@
         .expand-toggle-btn.expanded .toggle-icon {
             transform: rotate(180deg);
         }
+        
         /* 图片网格 */
         .moment-images {
             display: grid;
@@ -999,6 +1022,7 @@
         .moment-images img:hover {
             transform: scale(1.05);
         }
+        
         /* 操作按钮 */
         .moment-actions {
             display: flex;
@@ -1060,6 +1084,7 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
+        
         /* ==================== 分页控件 ==================== */
         .pagination-container {
             background: var(--bg-card);
@@ -1157,6 +1182,7 @@
             background: #1a1a3e;
             color: #fff;
         }
+        
         /* ==================== 底部 ==================== */
         .social-footer {
             background: rgba(20, 20, 50, 0.9);
@@ -1200,12 +1226,14 @@
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
         }
+        
         /* ==================== 列表视图 ==================== */
         .moments-grid.list-view {
             display: flex;
             flex-direction: column;
             gap: var(--spacing-lg);
         }
+        
         /* ==================== 背景模式返回按钮 ==================== */
         .background-mode-return {
             position: fixed;
@@ -1238,6 +1266,7 @@
         .background-mode-return:hover i {
             transform: translateX(-3px);
         }
+        
         /* ==================== 加载指示器 ==================== */
         .loading-indicator {
             text-align: center;
@@ -1255,6 +1284,7 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
         /* ==================== 通知样式 ==================== */
         @keyframes slideIn {
             from {
@@ -1276,15 +1306,31 @@
                 opacity: 0;
             }
         }
-        /* ==================== 响应式设计 ==================== */
+        
+        /* ==================== ✅ 优化的响应式设计 ==================== */
         @media (max-width: 1200px) {
             .moments-grid {
                 grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             }
+            .controls {
+                gap: var(--spacing-sm);
+            }
         }
+        
         @media (max-width: 992px) {
+            body {
+                padding-top: 100px; /* 为换行后的header增加空间 */
+            }
+            .header {
+                min-height: auto;
+            }
             .primary-nav {
-                display: none;
+                order: 3; /* 移到最下面 */
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .controls {
+                order: 2;
             }
             .nav-button-base span:not(.button-icon) {
                 display: none;
@@ -1292,26 +1338,37 @@
             .button-icon {
                 margin-right: 0;
             }
-            .home-button span {
-                display: none;
+            .search-box input {
+                width: 150px;
             }
-            .home-button {
-                padding: var(--spacing-sm);
-                min-width: 36px;
-                justify-content: center;
-                margin-right: var(--spacing-sm);
-            }
-            .site-brand-text {
-                display: none;
+            .search-box input:focus {
+                width: 180px;
             }
         }
+        
         @media (max-width: 768px) {
             :root {
                 --spacing-lg: 16px;
                 --spacing-md: 12px;
             }
+            body {
+                padding-top: 140px; /* 进一步增加空间 */
+            }
             .container {
                 padding: 0 var(--spacing-md);
+            }
+            .header-left {
+                gap: var(--spacing-sm);
+            }
+            .home-button span {
+                display: none;
+            }
+            .home-button {
+                padding: 10px;
+                min-width: 40px;
+            }
+            .site-brand-text {
+                display: none;
             }
             .sort-controls {
                 flex-direction: column;
@@ -1337,6 +1394,7 @@
                 width: 250px;
             }
         }
+        
         @media (max-width: 576px) {
             .moment-card {
                 padding: var(--spacing-md);
@@ -1344,20 +1402,14 @@
             .category-btn {
                 min-height: 40px;
             }
-            .home-button {
-                padding: 6px;
-                margin-right: 6px;
-            }
-            .home-button i {
-                font-size: 14px;
-            }
             .site-brand {
-                padding: 6px 10px;
+                padding: 8px 12px;
             }
             .site-brand-icon {
                 font-size: 20px;
             }
         }
+        
         /* ==================== 工具类 ==================== */
         .sr-only {
             position: absolute;
@@ -1370,6 +1422,7 @@
             white-space: nowrap;
             border: 0;
         }
+        
         /* ==================== 骨架屏 ==================== */
         .skeleton {
             background: linear-gradient(
@@ -1392,9 +1445,7 @@
     <!-- 罗小黑加载画面 -->
     <div class="loading-screen" id="loadingScreen">
         <div class="lxh-container">
-            <!-- 旋转光环 -->
             <div class="lxh-ring"></div>
-            <!-- 星星装饰 -->
             <div class="lxh-stars">
                 <div class="lxh-star"></div>
                 <div class="lxh-star"></div>
@@ -1403,50 +1454,41 @@
                 <div class="lxh-star"></div>
                 <div class="lxh-star"></div>
             </div>
-            <!-- 罗小黑主体 -->
             <div class="lxh-body">
-                <!-- 头部 -->
                 <div class="lxh-head">
-                    <!-- 耳朵 -->
                     <div class="lxh-ear left"></div>
                     <div class="lxh-ear right"></div>
-                    <!-- 眼睛 -->
                     <div class="lxh-eyes">
                         <div class="lxh-eye"></div>
                         <div class="lxh-eye"></div>
                     </div>
-                    <!-- 鼻子 -->
                     <div class="lxh-nose"></div>
-                    <!-- 嘴巴 -->
                     <div class="lxh-mouth"></div>
                 </div>
-                <!-- 尾巴 -->
                 <div class="lxh-tail"></div>
-                <!-- 脚 -->
                 <div class="lxh-feet">
                     <div class="lxh-foot"></div>
                     <div class="lxh-foot"></div>
                 </div>
             </div>
         </div>
-        <!-- 加载文本 -->
         <div class="loading-text">正在加载银河中...</div>
         <div class="loading-progress" id="loadingProgress">0%</div>
-        <!-- 进度条 -->
         <div class="loading-bar-container">
             <div class="loading-bar" id="loadingBar"></div>
         </div>
     </div>
+    
     <!-- 背景模式返回按钮 -->
     <button id="backgroundModeReturn" class="background-mode-return" aria-label="退出背景模式">
         <i class="fas fa-arrow-left" aria-hidden="true"></i>
         <span>返回正常视图</span>
     </button>
+    
     <!-- 顶部导航栏 -->
     <header class="header" role="banner">
         <div class="container">
             <div class="header-left">
-                <!-- ✅ 网站Logo标识 -->
                 <a href="#" class="site-brand" title="狂客·银河">
                     <i class="fas fa-galaxy site-brand-icon" aria-hidden="true"></i>
                     <span class="site-brand-text">狂客·银河</span>
@@ -1484,6 +1526,7 @@
                     <span class="video-text">视频矩阵</span>
                 </a>
             </nav>
+            
             <div class="controls">
                 <a href="ai.html" class="nav-button-base ai-nav-button" title="探索AI赋能工具">
                     <span class="button-icon">
@@ -1520,6 +1563,7 @@
             </div>
         </div>
     </header>
+    
     <!-- 分类导航 -->
     <nav class="category-nav" role="navigation" aria-label="内容分类">
         <div class="container">
@@ -1543,6 +1587,7 @@
             </div>
         </div>
     </nav>
+    
     <!-- 排序控件 -->
     <nav class="sort-nav" role="navigation" aria-label="内容排序">
         <div class="container">
@@ -1571,6 +1616,7 @@
             </div>
         </div>
     </nav>
+    
     <!-- 主要内容区域 -->
     <main class="main-content" role="main">
         <div class="container">
@@ -1592,15 +1638,18 @@
                 </div>
                 <div class="sort-hint" id="sortHint"></div>
             </section>
+            
             <!-- 朋友圈内容列表 -->
             <section id="momentsContainer" class="moments-grid" role="feed" aria-label="朋友圈内容列表" aria-live="polite" aria-busy="false">
                 <!-- 内容由JavaScript动态加载 -->
             </section>
+            
             <!-- 加载指示器 -->
             <div class="loading-indicator" id="loadingIndicator">
                 <i class="fas fa-spinner"></i>
                 <p>正在加载更多内容...</p>
             </div>
+            
             <!-- 分页控件 -->
             <nav class="pagination-container" role="navigation" aria-label="分页导航">
                 <div class="pagination-info">
@@ -1636,6 +1685,7 @@
             </nav>
         </div>
     </main>
+    
     <!-- 页面底部 -->
     <footer class="social-footer" role="contentinfo">
         <div class="container">
@@ -1657,6 +1707,7 @@
             </p>
         </div>
     </footer>
+    
     <!-- JavaScript文件 -->
     <script src="data.js" defer></script>
     <script>
@@ -1664,7 +1715,7 @@
         let loadingProgress = 0;
         let dataLoaded = false;
         let pageReady = false;
-        // 更新加载进度
+        
         function updateLoadingProgress(progress) {
             loadingProgress = Math.min(progress, 100);
             const loadingBar = document.getElementById('loadingBar');
@@ -1676,20 +1727,19 @@
                 loadingProgressText.textContent = Math.round(loadingProgress) + '%';
             }
         }
-        // 隐藏加载画面
+        
         function hideLoadingScreen() {
             const loadingScreen = document.getElementById('loadingScreen');
             if (loadingScreen && dataLoaded && pageReady) {
                 setTimeout(() => {
                     loadingScreen.classList.add('hidden');
-                    // 动画结束后移除元素
                     setTimeout(() => {
                         loadingScreen.style.display = 'none';
                     }, 500);
                 }, 300);
             }
         }
-        // 模拟加载进度
+        
         function simulateLoading() {
             let progress = 0;
             const interval = setInterval(() => {
@@ -1702,7 +1752,7 @@
             }, 200);
             return interval;
         }
-        // 检查数据是否加载完成
+        
         function checkDataLoaded() {
             if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
                 dataLoaded = true;
@@ -1712,17 +1762,17 @@
             }
             return false;
         }
-        // 检查所有资源是否加载完成
+        
         function checkAllLoaded() {
             if (dataLoaded && pageReady) {
                 updateLoadingProgress(100);
                 setTimeout(hideLoadingScreen, 500);
             }
         }
-        // 启动加载模拟
+        
         const loadingInterval = simulateLoading();
+        
         // ==================== 性能优化工具函数 ====================
-        // 防抖函数
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -1734,7 +1784,7 @@
                 timeout = setTimeout(later, wait);
             };
         }
-        // 节流函数
+        
         function throttle(func, limit) {
             let inThrottle;
             return function(...args) {
@@ -1745,7 +1795,7 @@
                 }
             };
         }
-        // requestAnimationFrame优化的滚动处理
+        
         const rafThrottle = (callback) => {
             let requestId = null;
             let lastArgs;
@@ -1765,7 +1815,7 @@
             };
             return throttled;
         };
-        // Intersection Observer用于懒加载
+        
         const createObserver = (callback, options = {}) => {
             return new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
@@ -1780,6 +1830,7 @@
                 ...options
             });
         };
+        
         // ==================== 全局变量 ====================
         let currentSortMethod = 'date-desc';
         let currentViewMode = 'grid';
@@ -1789,8 +1840,9 @@
         let userLikes = {};
         let userBookmarks = {};
         let backgroundOnlyMode = false;
-        // 性能优化：缓存DOM元素
+        
         const DOM = {};
+        
         // ==================== DOM缓存初始化 ====================
         function cacheDOMElements() {
             DOM.momentsContainer = document.getElementById('momentsContainer');
@@ -1816,6 +1868,7 @@
             DOM.nextPage = document.getElementById('nextPage');
             DOM.lastPage = document.getElementById('lastPage');
         }
+        
         // ==================== 初始化 ====================
         document.addEventListener('DOMContentLoaded', function() {
             cacheDOMElements();
@@ -1824,13 +1877,12 @@
             initializeBackgroundModeReturn();
             initializeEventListeners();
             restoreUserPreferences();
-            // 检查数据是否已加载
+            
             if (checkDataLoaded()) {
                 pageReady = true;
                 checkAllLoaded();
                 initializePage();
             } else {
-                // 定期检查数据加载状态
                 const dataCheckInterval = setInterval(() => {
                     if (checkDataLoaded()) {
                         clearInterval(dataCheckInterval);
@@ -1840,13 +1892,12 @@
                         initializePage();
                     }
                 }, 100);
-                // 超时处理（10秒后强制显示）
+                
                 setTimeout(() => {
                     clearInterval(dataCheckInterval);
                     clearInterval(loadingInterval);
                     if (!dataLoaded) {
                         console.warn('数据加载超时');
-                        // 使用空数据初始化
                         window.momentsData = [];
                         dataLoaded = true;
                     }
@@ -1857,46 +1908,37 @@
                 }, 10000);
             }
         });
-        // 页面加载完成事件
+        
         window.addEventListener('load', function() {
             pageReady = true;
             checkAllLoaded();
         });
-        // ==================== 事件监听器初始化（优化版） ====================
+        
+        // ==================== 事件监听器初始化 ====================
         function initializeEventListeners() {
-            // 使用事件委托处理分类按钮
             document.querySelector('.category-scroll')?.addEventListener('click', handleCategoryClick);
-            // 排序控件
             DOM.sortBy?.addEventListener('change', handleSortChange);
-            // 搜索框 - 使用防抖
             DOM.searchInput?.addEventListener('input', debounce(handleSearch, 300));
-            // 视图切换
             DOM.gridView?.addEventListener('click', () => switchViewMode('grid'));
             DOM.listView?.addEventListener('click', () => switchViewMode('list'));
-            // 导出按钮
             DOM.exportBtn?.addEventListener('click', exportMomentsData);
-            // 分页控件
             DOM.firstPage?.addEventListener('click', () => goToPage(1));
             DOM.prevPage?.addEventListener('click', () => goToPage(Math.max(1, currentPage - 1)));
             DOM.nextPage?.addEventListener('click', () => goToPage(Math.min(getTotalPages(), currentPage + 1)));
             DOM.lastPage?.addEventListener('click', () => goToPage(getTotalPages()));
             DOM.itemsPerPage?.addEventListener('change', handleItemsPerPageChange);
-            // 使用事件委托处理点赞、评论、分享等操作
             DOM.momentsContainer?.addEventListener('click', handleMomentAction);
-            // 无限滚动 - 使用RAF优化
             window.addEventListener('scroll', rafThrottle(handleScroll));
-            // 页面可见性变化处理
             document.addEventListener('visibilitychange', handleVisibilityChange);
         }
+        
         // ==================== 事件处理函数 ====================
         function handleCategoryClick(e) {
             const btn = e.target.closest('.category-btn');
             if (!btn) return;
             const category = btn.dataset.category;
-            // 更新UI
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            // 筛选数据
             currentFilteredMoments = category === 'all'
                 ? window.momentsData
                 : window.momentsData.filter(m => m.category === category);
@@ -1904,11 +1946,13 @@
             sortAndRenderMoments();
             updatePagination();
         }
+        
         function handleSortChange(e) {
             currentSortMethod = e.target.value;
             sortAndRenderMoments();
             updateSortUI();
         }
+        
         function handleSearch(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
             if (searchTerm.length >= 2) {
@@ -1926,55 +1970,58 @@
             sortAndRenderMoments();
             updatePagination();
         }
+        
         function switchViewMode(mode) {
             currentViewMode = mode;
             updateViewMode();
             localStorage.setItem('preferredViewMode', mode);
         }
+        
         function handleItemsPerPageChange() {
             currentPage = 1;
             renderMoments();
             updatePagination();
         }
+        
         function handleMomentAction(e) {
-            // 处理展开/收起按钮 - 修复版
             const toggleBtn = e.target.closest('.expand-toggle-btn');
             if (toggleBtn) {
                 handleToggleContent(toggleBtn);
                 return;
             }
-            // 处理点赞按钮
+            
             const likeBtn = e.target.closest('.action-btn');
             if (likeBtn && likeBtn.querySelector('.fa-heart')) {
                 handleLike(likeBtn);
                 return;
             }
-            // 处理分享按钮
+            
             const shareBtn = e.target.closest('.share-btn');
             if (shareBtn) {
                 handleShare(shareBtn);
                 return;
             }
-            // 处理图片点击
+            
             const img = e.target.closest('.moment-images img');
             if (img) {
                 handleImageClick(img);
                 return;
             }
         }
-        // ==================== ✅ 修复的展开/收起功能 ====================
+        
+        // ==================== ✅ 完全重写的展开/收起功能 ====================
         function handleToggleContent(btn) {
             const card = btn.closest('.moment-card');
             const contentBox = card.querySelector('.moment-content');
             const contentParagraph = contentBox.querySelector('p');
             const isExpanded = btn.getAttribute('aria-expanded') === 'true';
             
-            // 获取完整内容和预览内容
-            const fullContent = decodeHtml(contentBox.dataset.fullContent);
-            const previewContent = decodeHtml(contentBox.dataset.previewContent);
+            // 直接从data属性获取内容（已经是解码后的）
+            const fullContent = contentBox.dataset.fullContent || '';
+            const previewContent = contentBox.dataset.previewContent || '';
             
             if (isExpanded) {
-                // 收起：恢复折叠状态
+                // 收起
                 contentBox.classList.add('collapsed');
                 contentBox.classList.remove('expanded');
                 contentParagraph.textContent = previewContent;
@@ -1984,32 +2031,41 @@
                 btn.querySelector('.toggle-text').textContent = '展开全文';
                 btn.querySelector('.toggle-icon').className = 'fas fa-chevron-down toggle-icon';
                 
+                // 平滑滚动到卡片顶部
                 card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } else {
-                // 展开：移除折叠限制
+                // 展开
                 contentBox.classList.remove('collapsed');
                 contentBox.classList.add('expanded');
                 
-                // ✅ 关键修复：使用requestAnimationFrame确保正确更新
-                requestAnimationFrame(() => {
-                    contentParagraph.textContent = fullContent;
-                    // 强制触发重排以确保高度计算正确
-                    contentBox.style.maxHeight = 'none';
-                    contentBox.offsetHeight; // 触发重排
-                });
+                // ✅ 关键修复：直接更新内容，不使用HTML编码
+                contentParagraph.textContent = fullContent;
+                
+                // 强制移除高度限制
+                contentBox.style.maxHeight = 'none';
+                contentBox.style.overflow = 'visible';
                 
                 btn.setAttribute('aria-expanded', 'true');
                 btn.classList.add('expanded');
                 btn.querySelector('.toggle-text').textContent = '收起';
                 btn.querySelector('.toggle-icon').className = 'fas fa-chevron-up toggle-icon';
+                
+                console.log('展开后的内容长度:', fullContent.length);
+                console.log('展开后的样式:', {
+                    maxHeight: contentBox.style.maxHeight,
+                    overflow: contentBox.style.overflow,
+                    classList: contentBox.className
+                });
             }
         }
+        
         function handleLike(btn) {
             const card = btn.closest('.moment-card');
             const momentId = card.dataset.id;
             const icon = btn.querySelector('.fa-heart');
             const countSpan = btn.querySelector('.action-count');
             let count = parseInt(countSpan.textContent, 10) || 0;
+            
             if (userLikes[momentId]) {
                 userLikes[momentId] = false;
                 icon.classList.remove('fas', 'liked');
@@ -2022,18 +2078,20 @@
                 icon.classList.add('fas', 'liked');
                 btn.classList.add('liked');
                 count++;
-                // 动画效果
                 requestAnimationFrame(() => {
                     btn.style.transform = 'scale(1.2)';
                     setTimeout(() => btn.style.transform = '', 200);
                 });
             }
+            
             countSpan.textContent = count;
             saveUserData();
         }
+        
         function handleShare(btn) {
             const card = btn.closest('.moment-card');
             const content = card.querySelector('.moment-content p')?.textContent || '';
+            
             if (navigator.share) {
                 navigator.share({
                     title: '狂客·银河',
@@ -2044,32 +2102,36 @@
                 showNotification('已复制链接到剪贴板', 'success');
             }
         }
+        
         function handleImageClick(img) {
-            // 可以实现图片预览功能
             console.log('查看图片:', img.src);
         }
+        
         function handleScroll() {
             if (isLoading) return;
+            
             const scrollPosition = window.innerHeight + window.scrollY;
             const pageHeight = document.body.offsetHeight;
+            
             if (scrollPosition >= pageHeight - 500) {
                 const perPage = parseInt(DOM.itemsPerPage.value, 10);
                 const totalFiltered = currentFilteredMoments.length;
                 const currentlyShowing = currentPage * perPage;
+                
                 if (currentlyShowing < totalFiltered) {
                     loadMoreContent();
                 }
             }
         }
+        
         function handleVisibilityChange() {
             if (document.hidden) {
-                // 页面隐藏时暂停动画
                 document.body.style.setProperty('--animation-play-state', 'paused');
             } else {
-                // 页面显示时恢复动画
                 document.body.style.setProperty('--animation-play-state', 'running');
             }
         }
+        
         // ==================== 页面初始化 ====================
         function initializePage() {
             if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
@@ -2084,6 +2146,7 @@
                 renderMoments();
             }
         }
+        
         // ==================== 排序和渲染 ====================
         function sortAndRenderMoments() {
             const sortedMoments = sortMoments(currentFilteredMoments, currentSortMethod);
@@ -2095,6 +2158,7 @@
             localStorage.setItem('preferredSortMethod', currentSortMethod);
             animateSortChange();
         }
+        
         function sortMoments(moments, method) {
             const sorted = [...moments];
             switch (method) {
@@ -2113,51 +2177,64 @@
             }
             return sorted;
         }
-        // ==================== 渲染优化（使用DocumentFragment） ====================
+        
+        // ==================== 渲染函数 ====================
         function renderMoments() {
             if (!DOM.momentsContainer) return;
+            
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             const startIndex = (currentPage - 1) * perPage;
             const endIndex = startIndex + perPage;
             const pageMoments = currentFilteredMoments.slice(startIndex, endIndex);
+            
             DOM.momentsContainer.innerHTML = '';
             DOM.momentsContainer.setAttribute('aria-busy', 'true');
-            // 使用DocumentFragment批量插入
+            
             const fragment = document.createDocumentFragment();
             pageMoments.forEach((moment, index) => {
                 const card = createMomentCard(moment, startIndex + index);
                 fragment.appendChild(card);
             });
+            
             DOM.momentsContainer.appendChild(fragment);
-            // 使用Intersection Observer实现懒加载动画
+            
             const observer = createObserver((element) => {
                 element.classList.add('visible');
             });
+            
             DOM.momentsContainer.querySelectorAll('.moment-card').forEach(card => {
                 observer.observe(card);
             });
+            
             setTimeout(() => {
                 DOM.momentsContainer.setAttribute('aria-busy', 'false');
             }, 100);
+            
             updatePaginationInfo();
         }
-        // ==================== 创建朋友圈卡片（修复版） ====================
+        
+        // ==================== ✅ 创建朋友圈卡片（修复版） ====================
         function createMomentCard(moment, index) {
             const card = document.createElement('article');
             card.className = 'moment-card';
             card.setAttribute('role', 'article');
             card.setAttribute('aria-label', `朋友圈内容 ${index + 1}`);
             card.dataset.id = moment.id || `moment-${index}`;
+            
             const isLiked = userLikes[card.dataset.id];
             const rawDate = new Date(moment.date);
             const hasValidDate = rawDate instanceof Date && !isNaN(rawDate);
             const formattedDate = hasValidDate ? formatDate(rawDate) : (moment.date || '未知时间');
+            
             const content = moment.content || '';
             const COLLAPSE_THRESHOLD = 300;
             const shouldCollapse = content.length > COLLAPSE_THRESHOLD;
             const previewContent = shouldCollapse ? content.substring(0, COLLAPSE_THRESHOLD) + '...' : content;
+            
             const valueColor = getValueGradient(moment.value);
             const valueLabel = moment.value ? `<span class="value-badge" style="background: ${valueColor}">价值 ${moment.value}</span>` : '';
+            
+            // ✅ 关键修复：不使用HTML编码，直接存储原始内容
             card.innerHTML = `
                 <div class="moment-header">
                     <div class="moment-meta">
@@ -2167,9 +2244,9 @@
                     </div>
                 </div>
                 <div class="moment-content ${shouldCollapse ? 'collapsed' : ''}"
-                     data-full-content="${escapeHtml(content)}"
-                     data-preview-content="${escapeHtml(previewContent)}">
-                    <p>${escapeHtml(previewContent)}</p>
+                     data-full-content="${content.replace(/"/g, '&quot;')}"
+                     data-preview-content="${previewContent.replace(/"/g, '&quot;')}">
+                    <p>${previewContent}</p>
                 </div>
                 ${shouldCollapse ? `
                     <button class="expand-toggle-btn" aria-expanded="false" type="button" title="展开查看完整内容">
@@ -2201,8 +2278,17 @@
                     </button>
                 </div>
             `;
+            
+            // ✅ 创建卡片后立即修正data属性（移除HTML编码）
+            const contentBox = card.querySelector('.moment-content');
+            if (contentBox) {
+                contentBox.dataset.fullContent = content; // 存储原始内容
+                contentBox.dataset.previewContent = previewContent; // 存储预览内容
+            }
+            
             return card;
         }
+        
         // ==================== 辅助函数 ====================
         function formatDate(date) {
             const now = new Date();
@@ -2211,6 +2297,7 @@
             const hour = 60 * minute;
             const day = 24 * hour;
             const diffDays = Math.floor(diffTime / day);
+            
             if (diffDays === 0) {
                 const diffHours = Math.floor(diffTime / hour);
                 if (diffHours === 0) {
@@ -2226,11 +2313,13 @@
                 return date.toLocaleDateString('zh-CN');
             }
         }
+        
         function getImageClass(count) {
             if (count === 1) return 'single';
             if (count === 2) return 'double';
             return 'multiple';
         }
+        
         function getValueGradient(value) {
             if (value >= 9) return 'linear-gradient(135deg, #ff6b6b, #ff8e53)';
             if (value >= 7) return 'linear-gradient(135deg, #667eea, #764ba2)';
@@ -2238,29 +2327,23 @@
             if (value >= 3) return 'linear-gradient(135deg, #ffc107, #ff9800)';
             return 'linear-gradient(135deg, #868e96, #495057)';
         }
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        function decodeHtml(html) {
-            const txt = document.createElement('textarea');
-            txt.innerHTML = html;
-            return txt.value;
-        }
+        
         // ==================== 统计更新 ====================
         function updateStats(moments) {
             const totalMoments = moments.length;
             const highValueMoments = moments.filter(m => (m.value || 0) >= 9).length;
             const today = new Date().toISOString().split('T')[0];
             const todayMoments = moments.filter(m => m.date && String(m.date).startsWith(today)).length;
+            
             animateNumber('totalMoments', totalMoments);
             animateNumber('highValueMoments', highValueMoments);
             animateNumber('todayMoments', todayMoments);
+            
             if (DOM.sortHint) {
                 DOM.sortHint.textContent = getSortDescription(currentSortMethod);
             }
         }
+        
         function getSortDescription(method) {
             const descriptions = {
                 'date-desc': '按最新发布时间排序',
@@ -2270,14 +2353,17 @@
             };
             return descriptions[method] || '按最新发布时间排序';
         }
+        
         function animateNumber(elementId, targetValue) {
             const element = document.getElementById(elementId);
             if (!element) return;
+            
             const currentValue = parseInt(element.textContent, 10) || 0;
             const steps = 20;
             const increment = (targetValue - currentValue) / steps;
             let current = currentValue;
             let step = 0;
+            
             const animate = () => {
                 step++;
                 current += increment;
@@ -2288,8 +2374,10 @@
                     requestAnimationFrame(animate);
                 }
             };
+            
             requestAnimationFrame(animate);
         }
+        
         // ==================== 分页功能 ====================
         function goToPage(page) {
             currentPage = page;
@@ -2297,23 +2385,27 @@
             updatePagination();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        
         function getTotalPages() {
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             return Math.max(1, Math.ceil(currentFilteredMoments.length / perPage));
         }
+        
         function updatePagination() {
             const totalPages = getTotalPages();
             currentPage = Math.min(Math.max(1, currentPage), totalPages);
+            
             DOM.firstPage.disabled = currentPage === 1;
             DOM.prevPage.disabled = currentPage === 1;
             DOM.nextPage.disabled = currentPage === totalPages;
             DOM.lastPage.disabled = currentPage === totalPages;
-            // 生成页码
+            
             DOM.pageNumbers.innerHTML = '';
             const maxButtons = 5;
             let start = Math.max(1, currentPage - Math.floor(maxButtons / 2));
             let end = Math.min(totalPages, start + maxButtons - 1);
             start = Math.max(1, end - maxButtons + 1);
+            
             const fragment = document.createDocumentFragment();
             for (let i = start; i <= end; i++) {
                 const btn = document.createElement('button');
@@ -2326,21 +2418,26 @@
                 fragment.appendChild(btn);
             }
             DOM.pageNumbers.appendChild(fragment);
+            
             updatePaginationInfo();
         }
+        
         function updatePaginationInfo() {
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             const total = currentFilteredMoments.length;
             const start = total === 0 ? 0 : (currentPage - 1) * perPage + 1;
             const end = Math.min(total, currentPage * perPage);
+            
             DOM.showingStart.textContent = String(start);
             DOM.showingEnd.textContent = String(end);
             DOM.totalItems.textContent = String(total);
         }
+        
         function loadMoreContent() {
             if (isLoading) return;
             isLoading = true;
             DOM.loadingIndicator.classList.add('active');
+            
             setTimeout(() => {
                 currentPage++;
                 renderMoreMoments();
@@ -2349,24 +2446,30 @@
                 isLoading = false;
             }, 800);
         }
+        
         function renderMoreMoments() {
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             const startIndex = (currentPage - 1) * perPage;
             const endIndex = startIndex + perPage;
             const pageMoments = currentFilteredMoments.slice(startIndex, endIndex);
+            
             const fragment = document.createDocumentFragment();
             pageMoments.forEach((moment, index) => {
                 const card = createMomentCard(moment, startIndex + index);
                 fragment.appendChild(card);
             });
+            
             DOM.momentsContainer.appendChild(fragment);
+            
             const observer = createObserver((element) => {
                 element.classList.add('visible');
             });
+            
             Array.from(DOM.momentsContainer.querySelectorAll('.moment-card:not(.visible)')).forEach(card => {
                 observer.observe(card);
             });
         }
+        
         // ==================== 视图模式 ====================
         function updateViewMode() {
             if (currentViewMode === 'list') {
@@ -2381,6 +2484,7 @@
                 DOM.listView.classList.remove('active');
             }
         }
+        
         function updateSortUI() {
             DOM.sortBy.value = currentSortMethod;
             const sortNav = document.querySelector('.sort-nav');
@@ -2389,6 +2493,7 @@
                 setTimeout(() => sortNav.classList.remove('sorting'), 300);
             }
         }
+        
         function animateSortChange() {
             requestAnimationFrame(() => {
                 DOM.momentsContainer.style.opacity = '0.5';
@@ -2401,6 +2506,7 @@
                 });
             });
         }
+        
         // ==================== 数据持久化 ====================
         function saveUserData() {
             const userData = {
@@ -2418,6 +2524,7 @@
                 console.error('保存用户数据失败:', e);
             }
         }
+        
         function restoreUserData() {
             try {
                 const savedData = localStorage.getItem('userData');
@@ -2441,6 +2548,7 @@
                 console.error('恢复用户数据失败:', e);
             }
         }
+        
         function restoreUserPreferences() {
             const savedSortMethod = localStorage.getItem('preferredSortMethod');
             if (savedSortMethod) {
@@ -2449,11 +2557,13 @@
                     DOM.sortBy.value = savedSortMethod;
                 }
             }
+            
             const savedViewMode = localStorage.getItem('preferredViewMode');
             if (savedViewMode) {
                 currentViewMode = savedViewMode;
             }
         }
+        
         // ==================== 主题切换 ====================
         function initializeTheme() {
             DOM.themeToggle.addEventListener('click', function() {
@@ -2464,6 +2574,7 @@
                 }
             });
         }
+        
         function enterBackgroundMode() {
             backgroundOnlyMode = true;
             document.body.classList.add('background-only');
@@ -2472,6 +2583,7 @@
             hideAllContent();
             DOM.backgroundModeReturn.style.display = 'flex';
         }
+        
         function exitBackgroundMode() {
             backgroundOnlyMode = false;
             document.body.classList.remove('background-only');
@@ -2486,6 +2598,7 @@
             showAllContent();
             DOM.backgroundModeReturn.style.display = 'none';
         }
+        
         function hideAllContent() {
             const selectors = ['.header', '.category-nav', '.sort-nav', '.main-content', '.social-footer'];
             selectors.forEach(selector => {
@@ -2494,6 +2607,7 @@
                 });
             });
         }
+        
         function showAllContent() {
             const selectors = ['.header', '.category-nav', '.sort-nav', '.main-content', '.social-footer'];
             selectors.forEach(selector => {
@@ -2502,9 +2616,11 @@
                 });
             });
         }
+        
         function initializeBackgroundModeReturn() {
             DOM.backgroundModeReturn.addEventListener('click', exitBackgroundMode);
         }
+        
         // ==================== 导出功能 ====================
         function exportMomentsData() {
             const dataToExport = {
@@ -2518,9 +2634,11 @@
                     totalBookmarks: Object.keys(userBookmarks).length
                 }
             };
+            
             const dataStr = JSON.stringify(dataToExport, null, 2);
             const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
             const exportFileDefaultName = `朋友圈数据_${new Date().toISOString().split('T')[0]}.json`;
+            
             const linkElement = document.createElement('a');
             linkElement.setAttribute('href', dataUri);
             linkElement.setAttribute('download', exportFileDefaultName);
@@ -2528,8 +2646,10 @@
             document.body.appendChild(linkElement);
             linkElement.click();
             document.body.removeChild(linkElement);
+            
             showNotification('数据导出成功！');
         }
+        
         // ==================== 通知功能 ====================
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
@@ -2548,6 +2668,7 @@
                 animation: slideIn 0.3s ease;
             `;
             document.body.appendChild(notification);
+            
             setTimeout(() => {
                 notification.style.animation = 'slideOut 0.3s ease';
                 setTimeout(() => {
@@ -2557,11 +2678,10 @@
                 }, 300);
             }, 3000);
         }
+        
         // ==================== 内存清理 ====================
         window.addEventListener('beforeunload', () => {
-            // 清理事件监听器
             window.removeEventListener('scroll', handleScroll);
-            // 保存用户数据
             saveUserData();
         });
     </script>
