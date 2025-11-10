@@ -4,21 +4,21 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>【狂客】极客周刊 - 狂客·银河</title>
+    <title>【狂客】每周复盘 - 狂客·银河</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 周刊容器样式 */
-        .weekly-container {
+        /* 复盘容器样式 */
+        .review-container {
             max-width: 1200px;
             margin: 80px auto 60px;
             padding: 40px 20px;
         }
-        .weekly-title {
+        .review-title {
             text-align: center;
             margin-bottom: 50px;
         }
-        .weekly-title h1 {
+        .review-title h1 {
             font-size: 2.5em;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
@@ -26,16 +26,16 @@
             background-clip: text;
             margin-bottom: 15px;
         }
-        .weekly-title p {
+        .review-title p {
             font-size: 1.1em;
             color: #666;
             opacity: 0.8;
         }
-        body.dark-mode .weekly-title p {
+        body.dark-mode .review-title p {
             color: #aaa;
         }
-        /* 进度按钮样式 */
-        .progress-button {
+        /* 统计按钮样式 */
+        .stats-button {
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -51,12 +51,12 @@
             transition: all 0.3s ease;
             margin-top: 20px;
         }
-        .progress-button:hover {
+        .stats-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
         }
-        /* 进度弹窗样式 */
-        .progress-modal {
+        /* 统计弹窗样式 */
+        .stats-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -68,24 +68,24 @@
             align-items: center;
             justify-content: center;
         }
-        .progress-modal.active {
+        .stats-modal.active {
             display: flex;
         }
-        .progress-content {
+        .stats-content {
             background: white;
             border-radius: 20px;
             padding: 40px;
-            max-width: 600px;
+            max-width: 700px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             position: relative;
         }
-        body.dark-mode .progress-content {
+        body.dark-mode .stats-content {
             background: #2d3748;
         }
-        .progress-header {
+        .stats-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -93,7 +93,7 @@
             padding-bottom: 20px;
             border-bottom: 3px solid rgba(102, 126, 234, 0.3);
         }
-        .progress-title {
+        .stats-title {
             font-size: 1.8em;
             font-weight: 700;
             color: #333;
@@ -101,10 +101,10 @@
             align-items: center;
             gap: 12px;
         }
-        body.dark-mode .progress-title {
+        body.dark-mode .stats-title {
             color: #fff;
         }
-        .progress-close {
+        .stats-close {
             background: none;
             border: none;
             font-size: 24px;
@@ -118,69 +118,96 @@
             justify-content: center;
             border-radius: 50%;
         }
-        .progress-close:hover {
+        .stats-close:hover {
             background: rgba(102, 126, 234, 0.1);
             color: #667eea;
         }
-        body.dark-mode .progress-close {
+        body.dark-mode .stats-close {
             color: #aaa;
         }
-        .progress-info {
-            margin-bottom: 25px;
+        /* 统计卡片 */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
         }
-        .progress-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            background: rgba(102, 126, 234, 0.05);
-            border-radius: 12px;
-            margin-bottom: 15px;
-        }
-        body.dark-mode .progress-item {
-            background: rgba(102, 126, 234, 0.1);
-        }
-        .progress-item-icon {
-            font-size: 24px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .progress-item-icon.complete {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-        }
-        .progress-item-icon.incomplete {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-        }
-        .progress-item-text {
-            flex: 1;
-            color: #333;
-            font-size: 1.1em;
-        }
-        body.dark-mode .progress-item-text {
-            color: #ccc;
-        }
-        .progress-stats {
+        .stats-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 25px;
             color: white;
-            padding: 20px;
-            border-radius: 12px;
             text-align: center;
         }
-        .progress-stats-number {
+        .stats-card-value {
             font-size: 2.5em;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
-        .progress-stats-text {
+        .stats-card-label {
             font-size: 1em;
             opacity: 0.9;
+        }
+        .stats-card.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        .stats-card.incomplete {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        .stats-card.rate {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        /* 图表区域 */
+        .stats-chart {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 15px;
+        }
+        body.dark-mode .stats-chart {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        body.dark-mode .chart-title {
+            color: #fff;
+        }
+        .chart-bar {
+            margin-bottom: 15px;
+        }
+        .chart-bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            color: #555;
+        }
+        body.dark-mode .chart-bar-label {
+            color: #ccc;
+        }
+        .chart-bar-bg {
+            height: 30px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .chart-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
         }
         /* 分类标签样式 */
         .section-header {
@@ -252,13 +279,13 @@
         .collapsible-content.expanded {
             max-height: 10000px;
         }
-        /* 周刊列表 */
-        .weekly-list {
+        /* 复盘列表 */
+        .review-list {
             display: flex;
             flex-direction: column;
             gap: 30px;
         }
-        .weekly-item {
+        .review-item {
             background: white;
             border-radius: 20px;
             padding: 40px;
@@ -267,10 +294,10 @@
             position: relative;
             overflow: hidden;
         }
-        body.dark-mode .weekly-item {
+        body.dark-mode .review-item {
             background: #2d3748;
         }
-        .weekly-item:hover {
+        .review-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
@@ -295,105 +322,196 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
-        .weekly-item-header {
+        .review-item-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             padding-bottom: 20px;
             border-bottom: 2px solid rgba(102, 126, 234, 0.2);
         }
-        .weekly-item-title {
+        .review-item-title {
             font-size: 1.8em;
             font-weight: 700;
             color: #333;
             max-width: 70%;
         }
-        body.dark-mode .weekly-item-title {
+        body.dark-mode .review-item-title {
             color: #fff;
         }
-        .weekly-item-date {
+        .review-item-date {
             font-size: 1em;
             color: #666;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        body.dark-mode .weekly-item-date {
+        body.dark-mode .review-item-date {
             color: #aaa;
         }
-        .weekly-item-content {
-            margin-bottom: 25px;
+        /* 完成率环 */
+        .completion-ring {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
         }
-        .weekly-item-text {
+        .ring-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+        .ring-svg {
+            transform: rotate(-90deg);
+        }
+        .ring-background {
+            fill: none;
+            stroke: rgba(102, 126, 234, 0.1);
+            stroke-width: 12;
+        }
+        .ring-progress {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+        .ring-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .ring-percentage {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .ring-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        body.dark-mode .ring-label {
+            color: #aaa;
+        }
+        /* 目标列表 */
+        .goals-list {
+            margin-top: 25px;
+        }
+        .goal-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .goal-item {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        .goal-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        body.dark-mode .goal-item:hover {
+            background: rgba(102, 126, 234, 0.15);
+        }
+        .goal-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .goal-icon.completed {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        .goal-icon.incomplete {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        .goal-content {
+            flex: 1;
+        }
+        .goal-title {
             font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        body.dark-mode .goal-title {
+            color: #fff;
+        }
+        .goal-description {
+            font-size: 0.95em;
+            color: #666;
+            line-height: 1.6;
+        }
+        body.dark-mode .goal-description {
+            color: #aaa;
+        }
+        /* 总结区域 */
+        .summary-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+        body.dark-mode .summary-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+        .summary-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        body.dark-mode .summary-title {
+            color: #fff;
+        }
+        .summary-text {
+            font-size: 1em;
             line-height: 1.8;
             color: #555;
             white-space: pre-wrap;
         }
-        body.dark-mode .weekly-item-text {
+        body.dark-mode .summary-text {
             color: #ccc;
         }
-        .weekly-item-video {
-            margin-top: 20px;
-        }
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .video-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
-            color: white;
-            text-align: center;
-        }
-        .video-placeholder i {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-        .video-placeholder p {
-            font-size: 1.2em;
-            margin: 0;
-        }
         /* 空状态 */
-        .empty-weekly {
+        .empty-review {
             text-align: center;
             padding: 80px 20px;
         }
-        .empty-weekly-icon {
+        .empty-review-icon {
             font-size: 64px;
             color: #667eea;
             margin-bottom: 20px;
         }
-        .empty-weekly h2 {
+        .empty-review h2 {
             font-size: 2em;
             color: #333;
             margin-bottom: 10px;
         }
-        body.dark-mode .empty-weekly h2 {
+        body.dark-mode .empty-review h2 {
             color: #fff;
         }
-        .empty-weekly p {
+        .empty-review p {
             font-size: 1.1em;
             color: #666;
         }
-        body.dark-mode .empty-weekly p {
+        body.dark-mode .empty-review p {
             color: #aaa;
         }
         /* 加载状态 */
@@ -447,17 +565,17 @@
         }
         /* 响应式设计 */
         @media (max-width: 768px) {
-            .weekly-title h1 {
+            .review-title h1 {
                 font-size: 2em;
             }
-            .weekly-item {
+            .review-item {
                 padding: 25px;
             }
-            .weekly-item-title {
+            .review-item-title {
                 font-size: 1.5em;
                 max-width: 100%;
             }
-            .weekly-item-header {
+            .review-item-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
@@ -472,11 +590,14 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .progress-content {
+            .stats-content {
                 padding: 25px;
             }
-            .progress-title {
+            .stats-title {
                 font-size: 1.5em;
+            }
+            .stats-cards {
+                grid-template-columns: 1fr;
             }
         }
         /* 导航按钮样式 */
@@ -570,7 +691,7 @@
         }
     </style>
 </head>
-<body data-page="weekly">
+<body data-page="review">
     <header class="header">
         <div class="container">
             <div class="header-left">
@@ -613,9 +734,9 @@
                 </a>
                 <a class="weekly-link" href="weekly.html">
                     <span class="weekly-icon">
-                        <i class="fas fa-newspaper"></i>
+                        <i class="fas fa-tasks"></i>
                     </span>
-                    <span class="weekly-text">【狂客】极客周刊</span>
+                    <span class="weekly-text">每周复盘</span>
                 </a>
             </div>
             <div class="controls">
@@ -625,94 +746,87 @@
             </div>
         </div>
     </header>
-
-    <div class="weekly-container">
-        <div class="weekly-title">
-            <h1>📰 【狂客】极客周刊</h1>
-            <p>每周分享最新AI资讯、技术趋势与深度思考</p>
-            <button class="progress-button" id="progressButton">
-                <i class="fas fa-chart-line"></i>
-                <span>查看本周进度</span>
+    <div class="review-container">
+        <div class="review-title">
+            <h1>📊 【狂客】每周复盘</h1>
+            <p>记录每周目标完成情况，持续改进与成长</p>
+            <button class="stats-button" id="statsButton">
+                <i class="fas fa-chart-bar"></i>
+                <span>查看整体统计</span>
             </button>
         </div>
-
         <!-- 加载动画 -->
         <div class="loading-container" id="loadingContainer">
             <div class="loading-spinner"></div>
-            <p class="loading-text">正在加载周刊内容...</p>
+            <p class="loading-text">正在加载复盘数据...</p>
         </div>
-
-        <!-- 本周周刊区域 -->
+        <!-- 本周复盘区域 -->
         <div id="currentWeekSection" style="display: none;">
             <div class="section-header">
                 <i class="fas fa-fire section-icon"></i>
-                <h2 class="section-title">本周周刊</h2>
+                <h2 class="section-title">本周复盘</h2>
                 <span class="section-badge">NEW</span>
             </div>
-            <div class="weekly-list" id="currentWeekList"></div>
+            <div class="review-list" id="currentWeekList"></div>
         </div>
-
-        <!-- 往期周刊区域 -->
+        <!-- 往期复盘区域 -->
         <div id="pastWeekSection" style="display: none;">
             <div class="section-header">
                 <i class="fas fa-archive section-icon"></i>
                 <h2 class="section-title">往期回顾</h2>
             </div>
             <button class="collapse-button" id="collapseButton">
-                <span>展开往期周刊</span>
+                <span>展开往期复盘</span>
                 <i class="fas fa-chevron-down"></i>
             </button>
             <div class="collapsible-content" id="collapsibleContent">
-                <div class="weekly-list" id="pastWeekList"></div>
+                <div class="review-list" id="pastWeekList"></div>
             </div>
         </div>
-
         <!-- 空状态 -->
-        <div class="empty-weekly" id="emptyState" style="display: none;">
-            <div class="empty-weekly-icon">
-                <i class="fas fa-newspaper"></i>
+        <div class="empty-review" id="emptyState" style="display: none;">
+            <div class="empty-review-icon">
+                <i class="fas fa-tasks"></i>
             </div>
-            <h2>敬请期待</h2>
-            <p>【狂客】极客周刊即将上线，每周为您带来精彩的AI内容分享</p>
+            <h2>开始记录</h2>
+            <p>还没有复盘记录，开始您的第一周目标吧！</p>
         </div>
     </div>
-
-    <!-- 进度弹窗 -->
-    <div class="progress-modal" id="progressModal">
-        <div class="progress-content">
-            <div class="progress-header">
-                <h2 class="progress-title">
-                    <i class="fas fa-chart-line"></i>
-                    本周周刊进度
+    <!-- 统计弹窗 -->
+    <div class="stats-modal" id="statsModal">
+        <div class="stats-content">
+            <div class="stats-header">
+                <h2 class="stats-title">
+                    <i class="fas fa-chart-bar"></i>
+                    整体统计
                 </h2>
-                <button class="progress-close" id="progressClose">
+                <button class="stats-close" id="statsClose">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="progress-info" id="progressInfo">
-                <!-- 动态生成进度信息 -->
+            <div class="stats-cards" id="statsCards">
+                <!-- 动态生成统计卡片 -->
+            </div>
+            <div class="stats-chart" id="statsChart">
+                <!-- 动态生成图表 -->
             </div>
         </div>
     </div>
-
     <!-- 返回按钮 -->
     <a href="https://kuangketongxue.github.io/kuangke.github.io/ai.html" class="back-button" title="返回首页">
         <i class="fas fa-home"></i>
     </a>
-
     <script>
         // 主题切换功能
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
         const currentTheme = localStorage.getItem('theme') || 'light';
-        
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
-        
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
             if (body.classList.contains('dark-mode')) {
@@ -729,34 +843,30 @@
         // 折叠按钮功能
         const collapseButton = document.getElementById('collapseButton');
         const collapsibleContent = document.getElementById('collapsibleContent');
-        
         collapseButton.addEventListener('click', () => {
             collapsibleContent.classList.toggle('expanded');
             collapseButton.classList.toggle('expanded');
             const buttonText = collapseButton.querySelector('span');
             if (collapsibleContent.classList.contains('expanded')) {
-                buttonText.textContent = '收起往期周刊';
+                buttonText.textContent = '收起往期复盘';
             } else {
-                buttonText.textContent = '展开往期周刊';
+                buttonText.textContent = '展开往期复盘';
             }
         });
 
-        // 进度弹窗功能
-        const progressButton = document.getElementById('progressButton');
-        const progressModal = document.getElementById('progressModal');
-        const progressClose = document.getElementById('progressClose');
-        
-        progressButton.addEventListener('click', () => {
-            progressModal.classList.add('active');
+        // 统计弹窗功能
+        const statsButton = document.getElementById('statsButton');
+        const statsModal = document.getElementById('statsModal');
+        const statsClose = document.getElementById('statsClose');
+        statsButton.addEventListener('click', () => {
+            statsModal.classList.add('active');
         });
-        
-        progressClose.addEventListener('click', () => {
-            progressModal.classList.remove('active');
+        statsClose.addEventListener('click', () => {
+            statsModal.classList.remove('active');
         });
-        
-        progressModal.addEventListener('click', (e) => {
-            if (e.target === progressModal) {
-                progressModal.classList.remove('active');
+        statsModal.addEventListener('click', (e) => {
+            if (e.target === statsModal) {
+                statsModal.classList.remove('active');
             }
         });
 
@@ -765,15 +875,12 @@
             const now = new Date();
             const dayOfWeek = now.getDay();
             const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-            
             const monday = new Date(now);
             monday.setDate(now.getDate() + diff);
             monday.setHours(0, 0, 0, 0);
-            
             const sunday = new Date(monday);
             sunday.setDate(monday.getDate() + 6);
             sunday.setHours(23, 59, 59, 999);
-            
             return { monday, sunday };
         }
 
@@ -784,209 +891,224 @@
             return date >= monday && date <= sunday;
         }
 
-        // 计算周数（从2025年1月8日开始）
-        function getWeekNumber(date) {
-            const startDate = new Date('2025-01-08');
-            const currentDate = new Date(date);
-            const diffTime = currentDate - startDate;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            return Math.floor(diffDays / 7) + 1;
-        }
-
-        // 生成进度信息
-        function generateProgressInfo(data) {
-            const { monday, sunday } = getCurrentWeekRange();
-            const currentWeekNumber = getWeekNumber(monday);
-            const currentWeekly = data.weeklies.find(w => isCurrentWeek(w.date));
-            
-            const progressInfo = document.getElementById('progressInfo');
-            
-            if (currentWeekly) {
-                const hasVideo = currentWeekly.videoUrl && currentWeekly.videoUrl.trim() !== '';
-                const wordCount = currentWeekly.content ? currentWeekly.content.length : 0;
-                
-                progressInfo.innerHTML = `
-                    <div class="progress-item">
-                        <div class="progress-item-icon complete">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div class="progress-item-text">
-                            <strong>标题：</strong>${currentWeekly.title}
-                        </div>
-                    </div>
-                    <div class="progress-item">
-                        <div class="progress-item-icon complete">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div class="progress-item-text">
-                            <strong>日期：</strong>${currentWeekly.date}
-                        </div>
-                    </div>
-                    <div class="progress-item">
-                        <div class="progress-item-icon complete">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div class="progress-item-text">
-                            <strong>内容：</strong>已完成（共${wordCount}字）
-                        </div>
-                    </div>
-                    <div class="progress-item">
-                        <div class="progress-item-icon ${hasVideo ? 'complete' : 'incomplete'}">
-                            <i class="fas fa-${hasVideo ? 'check' : 'times'}"></i>
-                        </div>
-                        <div class="progress-item-text">
-                            <strong>视频：</strong>${hasVideo ? '已添加' : '待添加'}
-                        </div>
-                    </div>
-                    <div class="progress-stats">
-                        <div class="progress-stats-number">${hasVideo ? '100' : '75'}%</div>
-                        <div class="progress-stats-text">本周完成度</div>
-                    </div>
-                `;
-            } else {
-                progressInfo.innerHTML = `
-                    <div class="progress-item">
-                        <div class="progress-item-icon incomplete">
-                            <i class="fas fa-times"></i>
-                        </div>
-                        <div class="progress-item-text">
-                            <strong>标题：</strong>待添加
-                        </div>
-                    </div>
-                    <div class="progress-item">
-                        <div class="progress-item-icon incomplete">
-                            <i class="fas fa-times"></i>
-                        </div>
-                        <div class="progress-item-text">
-                            <strong>内容：</strong>待创作
-                        </div>
-                    </div>
-                    <div class="progress-item">
-                        <div class="progress-item-icon incomplete">
-                            <i class="fas fa-times"></i>
-                        </div>
-                        <div class="progress-item-text">
-                            <strong>视频：</strong>待添加
-                        </div>
-                    </div>
-                    <div class="progress-stats">
-                        <div class="progress-stats-number">0%</div>
-                        <div class="progress-stats-text">本周完成度</div>
-                    </div>
-                    <p style="text-align: center; margin-top: 20px; color: #666;">
-                        💡 本周是第 ${currentWeekNumber} 周<br>
-                        目标：自2025年1月8日起，每周发布一期周刊
-                    </p>
-                `;
-            }
-        }
-
-        // 创建周刊项HTML
-        function createWeeklyItem(weekly, isCurrent = false) {
-            const videoHTML = weekly.videoUrl
-                ? `<iframe src="${weekly.videoUrl}" frameborder="0" allowfullscreen></iframe>`
-                : `<div class="video-placeholder">
-                    <i class="fas fa-video"></i>
-                    <p>视频内容待添加</p>
-                   </div>`;
-            
-            const currentBadge = isCurrent
-                ? `<div class="current-week-badge">
-                    <i class="fas fa-fire"></i>
-                    <span>本周</span>
-                   </div>`
-                : '';
+        // 生成完成率环形图
+        function createCompletionRing(percentage) {
+            const radius = 60;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (percentage / 100) * circumference;
             
             return `
-                <div class="weekly-item">
-                    ${currentBadge}
-                    <div class="weekly-item-header">
-                        <h2 class="weekly-item-title">${weekly.title}</h2>
-                        <div class="weekly-item-date">
-                            <i class="fas fa-calendar-alt"></i>
-                            <span>${weekly.date}</span>
-                        </div>
-                    </div>
-                    <div class="weekly-item-content">
-                        <div class="weekly-item-text">${weekly.content}</div>
-                    </div>
-                    <div class="weekly-item-video">
-                        <div class="video-container">
-                            ${videoHTML}
+                <div class="completion-ring">
+                    <div class="ring-container">
+                        <svg class="ring-svg" width="150" height="150">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="ring-background" cx="75" cy="75" r="${radius}"></circle>
+                            <circle class="ring-progress" cx="75" cy="75" r="${radius}"
+                                style="stroke-dasharray: ${circumference}; stroke-dashoffset: ${offset};"></circle>
+                        </svg>
+                        <div class="ring-text">
+                            <div class="ring-percentage">${percentage}%</div>
+                            <div class="ring-label">完成率</div>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        // 加载周刊数据
-        async function loadWeeklyData() {
+        // 创建复盘项HTML
+        function createReviewItem(review, isCurrent = false) {
+            const completedGoals = review.goals.filter(g => g.completed).length;
+            const totalGoals = review.goals.length;
+            const completionRate = totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0;
+
+            const currentBadge = isCurrent
+                ? `<div class="current-week-badge">
+                    <i class="fas fa-fire"></i>
+                    <span>本周</span>
+                   </div>`
+                : '';
+
+            const goalsHTML = review.goals.map(goal => `
+                <div class="goal-item">
+                    <div class="goal-icon ${goal.completed ? 'completed' : 'incomplete'}">
+                        <i class="fas fa-${goal.completed ? 'check' : 'times'}"></i>
+                    </div>
+                    <div class="goal-content">
+                        <div class="goal-title">${goal.title}</div>
+                        ${goal.description ? `<div class="goal-description">${goal.description}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="review-item">
+                    ${currentBadge}
+                    <div class="review-item-header">
+                        <h2 class="review-item-title">${review.weekTitle}</h2>
+                        <div class="review-item-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>${review.weekRange}</span>
+                        </div>
+                    </div>
+                    ${createCompletionRing(completionRate)}
+                    <div class="goals-list">
+                        ${goalsHTML}
+                    </div>
+                    ${review.summary ? `
+                        <div class="summary-section">
+                            <div class="summary-title">
+                                <i class="fas fa-lightbulb"></i>
+                                本周总结
+                            </div>
+                            <div class="summary-text">${review.summary}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // 生成整体统计
+        function generateOverallStats(data) {
+            const totalWeeks = data.reviews.length;
+            let totalGoals = 0;
+            let completedGoals = 0;
+            const weeklyRates = [];
+
+            data.reviews.forEach(review => {
+                totalGoals += review.goals.length;
+                const completed = review.goals.filter(g => g.completed).length;
+                completedGoals += completed;
+                const rate = review.goals.length > 0 ? Math.round((completed / review.goals.length) * 100) : 0;
+                weeklyRates.push({
+                    week: review.weekTitle,
+                    rate: rate
+                });
+            });
+
+            const overallRate = totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0;
+            const incompleteGoals = totalGoals - completedGoals;
+
+            // 生成统计卡片
+            document.getElementById('statsCards').innerHTML = `
+                <div class="stats-card">
+                    <div class="stats-card-value">${totalWeeks}</div>
+                    <div class="stats-card-label">总周数</div>
+                </div>
+                <div class="stats-card success">
+                    <div class="stats-card-value">${completedGoals}</div>
+                    <div class="stats-card-label">已完成目标</div>
+                </div>
+                <div class="stats-card incomplete">
+                    <div class="stats-card-value">${incompleteGoals}</div>
+                    <div class="stats-card-label">未完成目标</div>
+                </div>
+                <div class="stats-card rate">
+                    <div class="stats-card-value">${overallRate}%</div>
+                    <div class="stats-card-label">总完成率</div>
+                </div>
+            `;
+
+            // 生成图表（最近8周）
+            const recentWeeks = weeklyRates.slice(-8).reverse();
+            const chartHTML = recentWeeks.map(item => `
+                <div class="chart-bar">
+                    <div class="chart-bar-label">
+                        <span>${item.week}</span>
+                        <span><strong>${item.rate}%</strong></span>
+                    </div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill" style="width: ${item.rate}%;">
+                            ${item.rate > 15 ? item.rate + '%' : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('statsChart').innerHTML = `
+                <h3 class="chart-title">📈 最近完成率趋势</h3>
+                ${chartHTML}
+            `;
+        }
+
+        // 加载复盘数据
+        async function loadReviewData() {
             try {
                 const response = await fetch('weekly-data.json');
                 const data = await response.json();
-                
+
                 const currentWeekList = [];
                 const pastWeekList = [];
-                
+
                 // 按日期排序（最新的在前）
-                data.weeklies.sort((a, b) => new Date(b.date) - new Date(a.date));
-                
-                // 分类周刊
-                data.weeklies.forEach(weekly => {
-                    if (isCurrentWeek(weekly.date)) {
-                        currentWeekList.push(weekly);
+                data.reviews.sort((a, b) => {
+                    const dateA = new Date(a.weekRange.split(' - ')[0]);
+                    const dateB = new Date(b.weekRange.split(' - ')[0]);
+                    return dateB - dateA;
+                });
+
+                // 分类复盘
+                data.reviews.forEach(review => {
+                    const weekStart = review.weekRange.split(' - ')[0];
+                    if (isCurrentWeek(weekStart)) {
+                        currentWeekList.push(review);
                     } else {
-                        pastWeekList.push(weekly);
+                        pastWeekList.push(review);
                     }
                 });
-                
-                // 生成进度信息
-                generateProgressInfo(data);
-                
+
+                // 生成整体统计
+                if (data.reviews.length > 0) {
+                    generateOverallStats(data);
+                }
+
                 // 隐藏加载动画
                 document.getElementById('loadingContainer').style.display = 'none';
-                
+
                 // 显示内容
                 if (currentWeekList.length === 0 && pastWeekList.length === 0) {
-                    // 显示空状态
                     document.getElementById('emptyState').style.display = 'block';
                 } else {
-                    // 显示本周周刊
+                    // 显示本周复盘
                     if (currentWeekList.length > 0) {
                         const currentSection = document.getElementById('currentWeekSection');
                         const currentListDiv = document.getElementById('currentWeekList');
                         currentListDiv.innerHTML = currentWeekList
-                            .map(weekly => createWeeklyItem(weekly, true))
+                            .map(review => createReviewItem(review, true))
                             .join('');
                         currentSection.style.display = 'block';
                     }
-                    
-                    // 显示往期周刊
+
+                    // 显示往期复盘
                     if (pastWeekList.length > 0) {
                         const pastSection = document.getElementById('pastWeekSection');
                         const pastListDiv = document.getElementById('pastWeekList');
                         pastListDiv.innerHTML = pastWeekList
-                            .map(weekly => createWeeklyItem(weekly, false))
+                            .map(review => createReviewItem(review, false))
                             .join('');
                         pastSection.style.display = 'block';
                     }
                 }
             } catch (error) {
-                console.error('加载周刊数据失败:', error);
+                console.error('加载复盘数据失败:', error);
                 document.getElementById('loadingContainer').innerHTML = `
-                    <div class="empty-weekly">
-                        <div class="empty-weekly-icon">
+                    <div class="empty-review">
+                        <div class="empty-review-icon">
                             <i class="fas fa-exclamation-circle"></i>
                         </div>
                         <h2>加载失败</h2>
-                        <p>无法加载周刊内容，请稍后重试</p>
+                        <p>无法加载复盘内容，请稍后重试</p>
                     </div>
                 `;
             }
         }
 
         // 页面加载时执行
-        window.addEventListener('DOMContentLoaded', loadWeeklyData);
+        window.addEventListener('DOMContentLoaded', loadReviewData);
     </script>
 </body>
 </html>
