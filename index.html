@@ -15,6 +15,11 @@
     <meta property="og:title" content="狂客·银河">
     <meta property="og:description" content="记录生活精彩瞬间，分享美好时刻">
     <meta property="og:site_name" content="狂客·银河">
+    <!-- PWA支持 -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <!-- 网站图标 -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="images/favicon.ico">
@@ -594,6 +599,14 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
             width: 250px;
         }
+        /* 搜索高亮样式 */
+        .search-highlight {
+            background: rgba(255, 235, 59, 0.4);
+            color: #fff;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
         /* 主题切换按钮 */
         .theme-toggle {
             display: flex;
@@ -612,6 +625,68 @@
             border-color: #667eea;
             color: #a8b2ff;
             background: rgba(102, 126, 234, 0.2);
+        }
+        /* ==================== 导出按钮样式 ==================== */
+        .export-dropdown {
+            position: relative;
+        }
+        .export-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: var(--transition-base);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        .export-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--bg-card);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-sm);
+            min-width: 180px;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--transition-base);
+            z-index: 1001;
+        }
+        .export-dropdown:hover .export-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .export-menu button {
+            display: block;
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            text-align: left;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            font-size: 13px;
+        }
+        .export-menu button:hover {
+            background: rgba(102, 126, 234, 0.2);
+            color: #a8b2ff;
         }
         /* ==================== 左侧分类侧边栏样式 ==================== */
         .category-sidebar {
@@ -734,14 +809,12 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
             background: rgba(255, 255, 255, 0.15);
         }
-        
         /* ==================== 排序区域样式 ==================== */
         .sidebar-sort-section {
             padding: var(--spacing-md) var(--spacing-lg);
             border-bottom: 2px solid rgba(102, 126, 234, 0.3);
             background: rgba(102, 126, 234, 0.05);
         }
-        
         .sidebar-sort-title {
             display: flex;
             align-items: center;
@@ -751,18 +824,15 @@
             color: var(--text-primary);
             margin-bottom: var(--spacing-md);
         }
-        
         .sidebar-sort-title i {
             font-size: 16px;
             color: #667eea;
         }
-        
         .sidebar-sort-buttons {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: var(--spacing-sm);
         }
-        
         .sidebar-sort-btn {
             display: flex;
             align-items: center;
@@ -781,30 +851,25 @@
             position: relative;
             overflow: hidden;
         }
-        
         .sidebar-sort-btn i {
             font-size: 14px;
             transition: transform var(--transition-base);
         }
-        
         .sidebar-sort-btn:hover {
             background: rgba(102, 126, 234, 0.2);
             border-color: rgba(102, 126, 234, 0.3);
             color: #a8b2ff;
             transform: translateY(-1px);
         }
-        
         .sidebar-sort-btn.active {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4));
             border-color: rgba(102, 126, 234, 0.6);
             color: #fff;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
-        
         .sidebar-sort-btn.active i {
             transform: scale(1.1);
         }
-        
         .sidebar-sort-btn::before {
             content: '';
             position: absolute;
@@ -817,12 +882,10 @@
             transform: translate(-50%, -50%);
             transition: width 0.3s ease, height 0.3s ease;
         }
-        
         .sidebar-sort-btn:active::before {
             width: 200px;
             height: 200px;
         }
-        
         .category-list-container {
             flex: 1;
             overflow-y: auto;
@@ -991,7 +1054,6 @@
             transform: translate(-50%, -50%) scale(1.5);
             opacity: 1;
         }
-        
         /* ==================== 主要内容区域 - 两栏布局 ==================== */
         .main-content {
             padding: 30px 0;
@@ -1344,6 +1406,17 @@
         .moment-images img:hover {
             transform: scale(1.05);
         }
+        /* 懒加载图片样式 */
+        .lazy-image {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .lazy-image.loaded {
+            opacity: 1;
+        }
+        .lazy-image.error {
+            opacity: 0.5;
+        }
         /* 操作按钮 */
         .moment-actions {
             display: flex;
@@ -1404,6 +1477,52 @@
             border-color: rgba(102, 126, 234, 0.5);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        /* ==================== 骨架屏样式 ==================== */
+        .skeleton-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            border: 1px solid var(--border-color);
+        }
+        .skeleton-header {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        .skeleton-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.1) 25%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.1) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        .skeleton-line {
+            height: 14px;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.1) 25%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.1) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        .skeleton-line:last-child {
+            width: 60%;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
         /* ==================== 分页控件 ==================== */
         .pagination-container {
@@ -1601,6 +1720,24 @@
             100% { transform: rotate(360deg); }
         }
         /* ==================== 通知样式 ==================== */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .notification.success {
+            background: rgba(0, 201, 167, 0.9);
+        }
+        .notification.error {
+            background: rgba(255, 107, 107, 0.9);
+        }
         @keyframes slideIn {
             from {
                 transform: translateX(100%);
@@ -1620,6 +1757,103 @@
                 transform: translateX(100%);
                 opacity: 0;
             }
+        }
+        /* ==================== 错误提示样式 ==================== */
+        .error-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 107, 107, 0.95);
+            color: white;
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+        }
+        .error-toast i {
+            font-size: 20px;
+        }
+        /* ==================== 键盘快捷键帮助样式 ==================== */
+        .shortcuts-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+        .shortcuts-content {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+        }
+        .shortcuts-content h2 {
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+            font-size: 24px;
+        }
+        .shortcuts-content ul {
+            list-style: none;
+            margin-bottom: var(--spacing-lg);
+        }
+        .shortcuts-content li {
+            padding: var(--spacing-sm) 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        .shortcuts-content kbd {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-family: monospace;
+            color: var(--text-primary);
+        }
+        .close-shortcuts {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition-base);
+        }
+        .close-shortcuts:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        /* ==================== ARIA辅助区域 ==================== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
         /* ==================== 优化的响应式设计 ==================== */
         @media (max-width: 1400px) {
@@ -1756,53 +1990,12 @@
                 padding: 8px 12px;
             }
         }
-        /* ==================== 工具类 ==================== */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-        /* ==================== 骨架屏 ==================== */
-        .skeleton {
-            background: linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0.1) 25%,
-                rgba(255, 255, 255, 0.2) 50%,
-                rgba(255, 255, 255, 0.1) 75%
-            );
-            background-size: 200% 100%;
-            animation: loading 1.5s ease-in-out infinite;
-            border-radius: var(--radius-sm);
-        }
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        /* ==================== 性能优化 ==================== */
-        .moments-grid {
-            contain: layout style paint;
-        }
-        .moment-card {
-            contain: layout style paint;
-        }
-        /* ==================== 无障碍优化 ==================== */
-        .moment-content:focus-within {
-            outline: 2px solid #667eea;
-            outline-offset: 2px;
-        }
-        button:focus-visible {
-            outline: 2px solid #667eea;
-            outline-offset: 2px;
-        }
     </style>
 </head>
 <body data-page="moments">
+    <!-- ARIA辅助区域 -->
+    <div id="ariaLiveRegion" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+    
     <!-- 罗小黑加载画面 -->
     <div class="loading-screen" id="loadingScreen">
         <div class="lxh-container">
@@ -1857,7 +2050,6 @@
                     <i class="fas fa-search"></i>
                     <input type="text" id="categorySearch" placeholder="搜索分类..." aria-label="搜索分类">
                 </div>
-                
                 <!-- 排序区域 -->
                 <div class="sidebar-sort-section">
                     <div class="sidebar-sort-title">
@@ -1883,7 +2075,6 @@
                         </button>
                     </div>
                 </div>
-                
                 <div class="category-list-container">
                     <button class="category-list-btn active" data-category="all" role="tab" aria-selected="true">
                         <i class="fas fa-th-large"></i>
@@ -2049,6 +2240,18 @@
                     </span>
                     <span>加密货币分析</span>
                 </a>
+                <!-- 导出按钮 -->
+                <div class="export-dropdown">
+                    <button class="export-btn" title="导出数据">
+                        <i class="fas fa-download"></i>
+                        <span>导出</span>
+                    </button>
+                    <div class="export-menu">
+                        <button data-format="json">导出为 JSON</button>
+                        <button data-format="csv">导出为 CSV</button>
+                        <button data-format="markdown">导出为 Markdown</button>
+                    </div>
+                </div>
                 <div class="search-box" role="search">
                     <label for="searchInput" class="sr-only">搜索内容</label>
                     <i class="fas fa-search" aria-hidden="true"></i>
@@ -2060,7 +2263,6 @@
             </div>
         </div>
     </header>
-    
     <!-- 主要内容区域 -->
     <main class="main-content" role="main">
         <div class="container">
@@ -2219,6 +2421,7 @@
             }
         }
         const loadingInterval = simulateLoading();
+        
         // ==================== 性能优化工具函数 ====================
         function debounce(func, wait) {
             let timeout;
@@ -2274,16 +2477,309 @@
                 ...options
             });
         };
+        
+        // ==================== 懒加载图片类 ====================
+        class LazyImageLoader {
+            constructor(options = {}) {
+                this.options = {
+                    root: null,
+                    rootMargin: '50px',
+                    threshold: 0.01,
+                    ...options
+                };
+                this.observer = null;
+                this.init();
+            }
+            init() {
+                if ('IntersectionObserver' in window) {
+                    this.observer = new IntersectionObserver(
+                        this.handleIntersection.bind(this),
+                        this.options
+                    );
+                }
+            }
+            handleIntersection(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        this.loadImage(img);
+                        this.observer.unobserve(img);
+                    }
+                });
+            }
+            loadImage(img) {
+                const src = img.dataset.src;
+                if (!src) return;
+                const tempImg = new Image();
+                tempImg.onload = () => {
+                    img.src = src;
+                    img.classList.add('loaded');
+                    img.removeAttribute('data-src');
+                };
+                tempImg.onerror = () => {
+                    img.classList.add('error');
+                };
+                tempImg.src = src;
+            }
+            observe(img) {
+                if (this.observer) {
+                    this.observer.observe(img);
+                } else {
+                    this.loadImage(img);
+                }
+            }
+            disconnect() {
+                if (this.observer) {
+                    this.observer.disconnect();
+                }
+            }
+        }
+        
+        // ==================== 模糊搜索类 ====================
+        class FuzzySearch {
+            constructor(data, keys) {
+                this.data = data;
+                this.keys = keys;
+            }
+            similarity(str1, str2) {
+                const longer = str1.length > str2.length ? str1 : str2;
+                const shorter = str1.length > str2.length ? str2 : str1;
+                if (longer.length === 0) return 1.0;
+                const editDistance = this.getEditDistance(longer, shorter);
+                return (longer.length - editDistance) / longer.length;
+            }
+            getEditDistance(str1, str2) {
+                str1 = str1.toLowerCase();
+                str2 = str2.toLowerCase();
+                const costs = [];
+                for (let i = 0; i <= str1.length; i++) {
+                    let lastValue = i;
+                    for (let j = 0; j <= str2.length; j++) {
+                        if (i === 0) {
+                            costs[j] = j;
+                        } else if (j > 0) {
+                            let newValue = costs[j - 1];
+                            if (str1.charAt(i - 1) !== str2.charAt(j - 1)) {
+                                newValue = Math.min(
+                                    Math.min(newValue, lastValue),
+                                    costs[j]
+                                ) + 1;
+                            }
+                            costs[j - 1] = lastValue;
+                            lastValue = newValue;
+                        }
+                    }
+                    if (i > 0) costs[str2.length] = lastValue;
+                }
+                return costs[str2.length];
+            }
+            search(query, threshold = 0.4) {
+                if (!query || query.length < 2) return this.data;
+                const results = this.data.map(item => {
+                    let maxScore = 0;
+                    this.keys.forEach(key => {
+                        const value = String(item[key] || '');
+                        const score = this.similarity(query, value);
+                        if (value.toLowerCase().includes(query.toLowerCase())) {
+                            maxScore = Math.max(maxScore, score + 0.3);
+                        } else {
+                            maxScore = Math.max(maxScore, score);
+                        }
+                    });
+                    return { item, score: maxScore };
+                });
+                return results
+                    .filter(result => result.score >= threshold)
+                    .sort((a, b) => b.score - a.score)
+                    .map(result => result.item);
+            }
+            highlight(text, query) {
+                if (!query || query.length < 2) return text;
+                const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+            }
+        }
+        
+        // ==================== 数据导出类 ====================
+        class DataExporter {
+            constructor(data) {
+                this.data = data;
+            }
+            exportJSON() {
+                const dataStr = JSON.stringify(this.data, null, 2);
+                this.download(dataStr, 'moments-export.json', 'application/json');
+            }
+            exportCSV() {
+                const headers = ['日期', '分类', '内容', '价值', '点赞数', '评论数'];
+                const rows = this.data.map(item => [
+                    item.date,
+                    item.category,
+                    `"${(item.content || '').replace(/"/g, '""')}"`,
+                    item.value || 0,
+                    item.likes || 0,
+                    item.comments || 0
+                ]);
+                const csv = [
+                    headers.join(','),
+                    ...rows.map(row => row.join(','))
+                ].join('\n');
+                const BOM = '\uFEFF';
+                this.download(BOM + csv, 'moments-export.csv', 'text/csv;charset=utf-8;');
+            }
+            exportMarkdown() {
+                const md = this.data.map(item => {
+                    return `## ${item.category || '未分类'} - ${item.date}\n\n` +
+                           `${item.content || ''}\n\n` +
+                           `**价值:** ${item.value || 0} | **点赞:** ${item.likes || 0} | **评论:** ${item.comments || 0}\n\n` +
+                           `---\n\n`;
+                }).join('');
+                this.download(md, 'moments-export.md', 'text/markdown');
+            }
+            download(content, filename, type) {
+                const blob = new Blob([content], { type });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }
+        }
+        
+        // ==================== 键盘快捷键类 ====================
+        class KeyboardShortcuts {
+            constructor() {
+                this.shortcuts = {
+                    'ctrl+k': () => DOM.searchInput.focus(),
+                    'ctrl+/': () => this.showShortcutsHelp(),
+                    'ArrowUp': () => this.navigateCards('prev'),
+                    'ArrowDown': () => this.navigateCards('next'),
+                    'Escape': () => this.closeActiveModal(),
+                    'ctrl+f': (e) => {
+                        e.preventDefault();
+                        openSidebar();
+                    }
+                };
+                this.currentCardIndex = -1;
+                this.init();
+            }
+            init() {
+                document.addEventListener('keydown', this.handleKeydown.bind(this));
+            }
+            handleKeydown(e) {
+                const key = this.getKeyString(e);
+                const handler = this.shortcuts[key];
+                if (handler) {
+                    e.preventDefault();
+                    handler(e);
+                }
+            }
+            getKeyString(e) {
+                const parts = [];
+                if (e.ctrlKey) parts.push('ctrl');
+                if (e.altKey) parts.push('alt');
+                if (e.shiftKey) parts.push('shift');
+                parts.push(e.key);
+                return parts.join('+');
+            }
+            navigateCards(direction) {
+                const cards = Array.from(document.querySelectorAll('.moment-card'));
+                if (cards.length === 0) return;
+                if (direction === 'next') {
+                    this.currentCardIndex = Math.min(this.currentCardIndex + 1, cards.length - 1);
+                } else {
+                    this.currentCardIndex = Math.max(this.currentCardIndex - 1, 0);
+                }
+                const targetCard = cards[this.currentCardIndex];
+                if (targetCard) {
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetCard.focus();
+                }
+            }
+            showShortcutsHelp() {
+                const modal = document.createElement('div');
+                modal.className = 'shortcuts-modal';
+                modal.innerHTML = `
+                    <div class="shortcuts-content">
+                        <h2>键盘快捷键</h2>
+                        <ul>
+                            <li><kbd>Ctrl</kbd> + <kbd>K</kbd> - 聚焦搜索框</li>
+                            <li><kbd>Ctrl</kbd> + <kbd>F</kbd> - 打开分类侧边栏</li>
+                            <li><kbd>↑</kbd> / <kbd>↓</kbd> - 导航卡片</li>
+                            <li><kbd>Esc</kbd> - 关闭弹窗</li>
+                            <li><kbd>Ctrl</kbd> + <kbd>/</kbd> - 显示此帮助</li>
+                        </ul>
+                        <button class="close-shortcuts">关闭</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                modal.querySelector('.close-shortcuts').addEventListener('click', () => {
+                    modal.remove();
+                });
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.remove();
+                });
+            }
+            closeActiveModal() {
+                const modal = document.querySelector('.shortcuts-modal');
+                if (modal) modal.remove();
+                if (DOM.categorySidebar?.classList.contains('open')) {
+                    closeSidebar();
+                }
+            }
+        }
+        
+        // ==================== 错误边界类 ====================
+        class ErrorBoundary {
+            constructor() {
+                this.init();
+            }
+            init() {
+                window.addEventListener('error', this.handleError.bind(this));
+                window.addEventListener('unhandledrejection', this.handlePromiseRejection.bind(this));
+            }
+            handleError(event) {
+                console.error('捕获到错误:', event.error);
+                this.showErrorUI(event.error.message);
+            }
+            handlePromiseRejection(event) {
+                console.error('未处理的Promise拒绝:', event.reason);
+                this.showErrorUI('操作失败，请稍后重试');
+            }
+            showErrorUI(message) {
+                const errorToast = document.createElement('div');
+                errorToast.className = 'error-toast';
+                errorToast.innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>${message}</span>
+                `;
+                document.body.appendChild(errorToast);
+                setTimeout(() => {
+                    errorToast.remove();
+                }, 5000);
+            }
+        }
+        
         // ==================== 全局变量 ====================
         let currentSortMethod = 'date-desc';
         let currentViewMode = 'grid';
         let currentPage = 1;
         let currentFilteredMoments = [];
+        let currentSearchTerm = '';
         let isLoading = false;
         let userLikes = {};
         let userBookmarks = {};
         let backgroundOnlyMode = false;
         const DOM = {};
+        
+        // 初始化工具类
+        const lazyLoader = new LazyImageLoader();
+        const errorBoundary = new ErrorBoundary();
+        let fuzzySearch;
+        let keyboardShortcuts;
+        
         // ==================== DOM缓存初始化 ====================
         function cacheDOMElements() {
             DOM.momentsContainer = document.getElementById('momentsContainer');
@@ -2313,7 +2809,9 @@
             DOM.sidebarResetBtn = document.getElementById('sidebarResetBtn');
             DOM.categoryListContainer = document.querySelector('.category-list-container');
             DOM.sidebarSortButtons = document.querySelectorAll('.sidebar-sort-btn');
+            DOM.exportMenu = document.querySelector('.export-menu');
         }
+        
         // ==================== 初始化 ====================
         document.addEventListener('DOMContentLoaded', function() {
             cacheDOMElements();
@@ -2322,6 +2820,7 @@
             initializeBackgroundModeReturn();
             initializeEventListeners();
             restoreUserPreferences();
+            
             if (checkDataLoaded()) {
                 pageReady = true;
                 checkAllLoaded();
@@ -2355,16 +2854,15 @@
             pageReady = true;
             checkAllLoaded();
         });
+        
         // ==================== 事件监听器初始化 ====================
         function initializeEventListeners() {
-            // 侧边栏排序按钮
             DOM.sidebarSortButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const sortMethod = this.dataset.sort;
                     handleSortChange(sortMethod);
                 });
             });
-            
             DOM.searchInput?.addEventListener('input', debounce(handleSearch, 300));
             DOM.firstPage?.addEventListener('click', () => goToPage(1));
             DOM.prevPage?.addEventListener('click', () => goToPage(Math.max(1, currentPage - 1)));
@@ -2374,20 +2872,34 @@
             DOM.momentsContainer?.addEventListener('click', handleMomentAction);
             window.addEventListener('scroll', rafThrottle(handleScroll));
             document.addEventListener('visibilitychange', handleVisibilityChange);
-            // 侧边栏控制
             DOM.sidebarToggleBtn?.addEventListener('click', openSidebar);
             DOM.sidebarCloseBtn?.addEventListener('click', closeSidebar);
             DOM.sidebarOverlay?.addEventListener('click', closeSidebar);
             DOM.categoryListContainer?.addEventListener('click', handleSidebarCategoryClick);
             DOM.categorySearch?.addEventListener('input', debounce(handleCategorySearch, 300));
             DOM.sidebarResetBtn?.addEventListener('click', resetCategoryFilter);
-            // ESC键关闭侧边栏
+            
+            // 导出功能
+            DOM.exportMenu?.addEventListener('click', (e) => {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+                const format = btn.dataset.format;
+                const exporter = new DataExporter(currentFilteredMoments);
+                switch(format) {
+                    case 'json': exporter.exportJSON(); break;
+                    case 'csv': exporter.exportCSV(); break;
+                    case 'markdown': exporter.exportMarkdown(); break;
+                }
+                showNotification(`已导出为 ${format.toUpperCase()} 格式`, 'success');
+            });
+            
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && DOM.categorySidebar?.classList.contains('open')) {
                     closeSidebar();
                 }
             });
         }
+        
         // ==================== 侧边栏控制 ====================
         function openSidebar() {
             DOM.categorySidebar.classList.add('open');
@@ -2402,14 +2914,12 @@
             const btn = e.target.closest('.category-list-btn');
             if (!btn) return;
             const category = btn.dataset.category;
-            // 更新激活状态
             document.querySelectorAll('.category-list-btn').forEach(b => {
                 b.classList.remove('active');
                 b.setAttribute('aria-selected', 'false');
             });
             btn.classList.add('active');
             btn.setAttribute('aria-selected', 'true');
-            // 筛选数据
             currentFilteredMoments = category === 'all'
                 ? window.momentsData
                 : window.momentsData.filter(m => m.category === category);
@@ -2417,7 +2927,7 @@
             sortAndRenderMoments();
             updatePagination();
             updateLatestSidebar();
-            // 移动端自动关闭侧边栏
+            updateAriaLive(`已切换到${category === 'all' ? '全部内容' : category}分类，共${currentFilteredMoments.length}条`, 'polite');
             if (window.innerWidth <= 768) {
                 setTimeout(closeSidebar, 300);
             }
@@ -2435,18 +2945,17 @@
             });
         }
         function resetCategoryFilter() {
-            // 重置到"全部内容"
             const allBtn = document.querySelector('.category-list-btn[data-category="all"]');
             if (allBtn) {
                 allBtn.click();
             }
-            // 清空搜索
             if (DOM.categorySearch) {
                 DOM.categorySearch.value = '';
                 document.querySelectorAll('.category-list-btn').forEach(btn => {
                     btn.classList.remove('hidden');
                 });
             }
+            updateAriaLive('已重置所有筛选条件', 'polite');
         }
         function updateCategoryCounts() {
             const counts = {};
@@ -2460,10 +2969,10 @@
                 countEl.textContent = counts[category] || 0;
             });
         }
+        
         // ==================== 事件处理函数 ====================
         function handleSortChange(method) {
             currentSortMethod = method;
-            // 更新侧边栏排序按钮激活状态
             DOM.sidebarSortButtons.forEach(btn => {
                 if (btn.dataset.sort === method) {
                     btn.classList.add('active');
@@ -2474,19 +2983,21 @@
             sortAndRenderMoments();
             updateSortUI();
             updateLatestSidebar();
+            updateAriaLive(`已切换排序方式：${getSortDescription(method)}`, 'polite');
         }
         function handleSearch(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
+            currentSearchTerm = searchTerm;
+            
             if (searchTerm.length >= 2) {
-                currentFilteredMoments = window.momentsData.filter(m =>
-                    (m.content && m.content.toLowerCase().includes(searchTerm)) ||
-                    (m.category && m.category.toLowerCase().includes(searchTerm))
-                );
+                currentFilteredMoments = fuzzySearch.search(searchTerm, 0.4);
+                updateAriaLive(`搜索到${currentFilteredMoments.length}条结果`, 'polite');
             } else if (searchTerm.length === 0) {
                 const activeCategory = document.querySelector('.category-list-btn.active')?.dataset.category;
                 currentFilteredMoments = activeCategory === 'all'
                     ? window.momentsData
                     : window.momentsData.filter(m => m.category === activeCategory);
+                currentSearchTerm = '';
             }
             currentPage = 1;
             sortAndRenderMoments();
@@ -2520,6 +3031,7 @@
                 return;
             }
         }
+        
         // ==================== 优化的展开/收起功能 ====================
         function handleToggleContent(btn) {
             const card = btn.closest('.moment-card');
@@ -2528,10 +3040,13 @@
             const isExpanded = btn.getAttribute('aria-expanded') === 'true';
             const fullContent = contentBox.dataset.fullContent || '';
             const previewContent = contentBox.dataset.previewContent || '';
+            
             if (isExpanded) {
                 contentBox.classList.add('collapsed');
                 contentBox.classList.remove('expanded');
-                contentParagraph.textContent = previewContent;
+                contentParagraph.innerHTML = currentSearchTerm 
+                    ? fuzzySearch.highlight(previewContent, currentSearchTerm)
+                    : previewContent;
                 btn.setAttribute('aria-expanded', 'false');
                 btn.classList.remove('expanded');
                 btn.querySelector('.toggle-text').textContent = '展开全文';
@@ -2540,7 +3055,9 @@
             } else {
                 contentBox.classList.remove('collapsed');
                 contentBox.classList.add('expanded');
-                contentParagraph.textContent = fullContent;
+                contentParagraph.innerHTML = currentSearchTerm 
+                    ? fuzzySearch.highlight(fullContent, currentSearchTerm)
+                    : fullContent;
                 contentBox.style.maxHeight = 'none';
                 contentBox.style.overflow = 'visible';
                 btn.setAttribute('aria-expanded', 'true');
@@ -2611,11 +3128,14 @@
                 document.body.style.setProperty('--animation-play-state', 'running');
             }
         }
+        
         // ==================== 页面初始化 ====================
         function initializePage() {
             if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
                 window.momentsData = momentsData;
                 currentFilteredMoments = momentsData;
+                fuzzySearch = new FuzzySearch(momentsData, ['content', 'category']);
+                keyboardShortcuts = new KeyboardShortcuts();
                 sortAndRenderMoments();
                 updateLatestSidebar();
                 updateCategoryCounts();
@@ -2623,10 +3143,13 @@
                 console.warn('未找到朋友圈数据,使用空数组');
                 window.momentsData = [];
                 currentFilteredMoments = [];
+                fuzzySearch = new FuzzySearch([], ['content', 'category']);
+                keyboardShortcuts = new KeyboardShortcuts();
                 renderMoments();
                 updateLatestSidebar();
             }
         }
+        
         // ==================== 右侧最新内容更新 ====================
         function updateLatestSidebar() {
             if (!DOM.latestList) return;
@@ -2683,6 +3206,7 @@
                 });
             });
         }
+        
         // ==================== 排序和渲染 ====================
         function sortAndRenderMoments() {
             const sortedMoments = sortMoments(currentFilteredMoments, currentSortMethod);
@@ -2712,6 +3236,7 @@
             }
             return sorted;
         }
+        
         // ==================== 渲染函数 ====================
         function renderMoments() {
             if (!DOM.momentsContainer) return;
@@ -2721,6 +3246,18 @@
             const pageMoments = currentFilteredMoments.slice(startIndex, endIndex);
             DOM.momentsContainer.innerHTML = '';
             DOM.momentsContainer.setAttribute('aria-busy', 'true');
+            
+            if (pageMoments.length === 0) {
+                DOM.momentsContainer.innerHTML = `
+                    <div class="latest-empty" style="grid-column: 1/-1;">
+                        <i class="fas fa-search"></i>
+                        <p>未找到匹配的内容</p>
+                    </div>
+                `;
+                DOM.momentsContainer.setAttribute('aria-busy', 'false');
+                return;
+            }
+            
             const fragment = document.createDocumentFragment();
             pageMoments.forEach((moment, index) => {
                 const card = createMomentCard(moment, startIndex + index);
@@ -2732,12 +3269,16 @@
             });
             DOM.momentsContainer.querySelectorAll('.moment-card').forEach(card => {
                 observer.observe(card);
+                card.querySelectorAll('.lazy-image').forEach(img => {
+                    lazyLoader.observe(img);
+                });
             });
             setTimeout(() => {
                 DOM.momentsContainer.setAttribute('aria-busy', 'false');
             }, 100);
             updatePaginationInfo();
         }
+        
         // ==================== 创建朋友圈卡片 ====================
         function createMomentCard(moment, index) {
             const card = document.createElement('article');
@@ -2753,8 +3294,32 @@
             const COLLAPSE_THRESHOLD = 300;
             const shouldCollapse = content.length > COLLAPSE_THRESHOLD;
             const previewContent = shouldCollapse ? content.substring(0, COLLAPSE_THRESHOLD) + '...' : content;
+            
+            // 应用搜索高亮
+            const displayPreview = currentSearchTerm 
+                ? fuzzySearch.highlight(previewContent, currentSearchTerm)
+                : previewContent;
+            const displayFull = currentSearchTerm 
+                ? fuzzySearch.highlight(content, currentSearchTerm)
+                : content;
+            
             const valueColor = getValueGradient(moment.value);
             const valueLabel = moment.value ? `<span class="value-badge" style="background: ${valueColor}">价值 ${moment.value}</span>` : '';
+            
+            // 处理图片
+            const imagesHTML = moment.images && moment.images.length > 0 ? `
+                <div class="moment-images ${getImageClass(moment.images.length)}">
+                    ${moment.images.map((img, imgIndex) => `
+                        <img 
+                            data-src="${img}" 
+                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3C/svg%3E"
+                            alt="朋友圈图片 ${imgIndex + 1}"
+                            class="lazy-image"
+                        >
+                    `).join('')}
+                </div>
+            ` : '';
+            
             card.innerHTML = `
                 <div class="moment-header">
                     <div class="moment-meta">
@@ -2766,7 +3331,7 @@
                 <div class="moment-content ${shouldCollapse ? 'collapsed' : ''}"
                      data-full-content="${content.replace(/"/g, '&quot;')}"
                      data-preview-content="${previewContent.replace(/"/g, '&quot;')}">
-                    <p>${previewContent}</p>
+                    <p>${displayPreview}</p>
                 </div>
                 ${shouldCollapse ? `
                     <button class="expand-toggle-btn" aria-expanded="false" type="button" title="展开查看完整内容">
@@ -2774,13 +3339,7 @@
                         <i class="fas fa-chevron-down toggle-icon" aria-hidden="true"></i>
                     </button>
                 ` : ''}
-                ${moment.images && moment.images.length > 0 ? `
-                    <div class="moment-images ${getImageClass(moment.images.length)}">
-                        ${moment.images.map((img, imgIndex) => `
-                            <img src="${img}" alt="朋友圈图片 ${imgIndex + 1}" loading="lazy">
-                        `).join('')}
-                    </div>
-                ` : ''}
+                ${imagesHTML}
                 <div class="moment-actions">
                     <div class="action-group">
                         <button class="action-btn ${isLiked ? 'liked' : ''}" aria-label="点赞">
@@ -2805,6 +3364,7 @@
             }
             return card;
         }
+        
         // ==================== 辅助函数 ====================
         function formatDate(date) {
             const now = new Date();
@@ -2840,6 +3400,7 @@
             if (value >= 3) return 'linear-gradient(135deg, #ffc107, #ff9800)';
             return 'linear-gradient(135deg, #868e96, #495057)';
         }
+        
         // ==================== 统计更新 ====================
         function updateStats(moments) {
             const totalMoments = moments.length;
@@ -2882,6 +3443,7 @@
             };
             requestAnimationFrame(animate);
         }
+        
         // ==================== 分页功能 ====================
         function goToPage(page) {
             currentPage = page;
@@ -2956,9 +3518,11 @@
             });
             Array.from(DOM.momentsContainer.querySelectorAll('.moment-card:not(.visible)')).forEach(card => {
                 observer.observe(card);
+                card.querySelectorAll('.lazy-image').forEach(img => {
+                    lazyLoader.observe(img);
+                });
             });
         }
-        
         function updateSortUI() {
             const sortNav = document.querySelector('.sort-nav');
             if (sortNav) {
@@ -2978,6 +3542,16 @@
                 });
             });
         }
+        
+        // ==================== ARIA辅助功能 ====================
+        function updateAriaLive(message, priority = 'polite') {
+            const liveRegion = document.getElementById('ariaLiveRegion');
+            if (liveRegion) {
+                liveRegion.setAttribute('aria-live', priority);
+                liveRegion.textContent = message;
+            }
+        }
+        
         // ==================== 数据持久化 ====================
         function saveUserData() {
             const userData = {
@@ -3035,6 +3609,7 @@
                 currentViewMode = savedViewMode;
             }
         }
+        
         // ==================== 主题切换 ====================
         function initializeTheme() {
             DOM.themeToggle.addEventListener('click', function() {
@@ -3086,24 +3661,14 @@
         function initializeBackgroundModeReturn() {
             DOM.backgroundModeReturn.addEventListener('click', exitBackgroundMode);
         }
+        
         // ==================== 通知功能 ====================
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
-            notification.className = 'notification';
+            notification.className = `notification ${type}`;
             notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 80px;
-                right: 20px;
-                background: ${type === 'success' ? 'rgba(0, 201, 167, 0.9)' : 'rgba(255, 107, 107, 0.9)'};
-                color: white;
-                padding: 12px 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                z-index: 10000;
-                animation: slideIn 0.3s ease;
-            `;
             document.body.appendChild(notification);
+            notification.style.animation = 'slideIn 0.3s ease';
             setTimeout(() => {
                 notification.style.animation = 'slideOut 0.3s ease';
                 setTimeout(() => {
@@ -3113,9 +3678,20 @@
                 }, 300);
             }, 3000);
         }
+        
+        // ==================== Service Worker注册 ====================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered:', registration))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+        
         // ==================== 内存清理 ====================
         window.addEventListener('beforeunload', () => {
             window.removeEventListener('scroll', handleScroll);
+            if (lazyLoader) lazyLoader.disconnect();
             saveUserData();
         });
     </script>
