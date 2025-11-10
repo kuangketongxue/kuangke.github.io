@@ -510,6 +510,7 @@
         .empty-review p {
             font-size: 1.1em;
             color: #666;
+            line-height: 1.6;
         }
         body.dark-mode .empty-review p {
             color: #aaa;
@@ -1035,11 +1036,30 @@
             `;
         }
 
-        // 加载复盘数据
+        // 加载复盘数据（改进版，增加错误处理）
         async function loadReviewData() {
             try {
                 const response = await fetch('weekly-data.json');
+                
+                // 检查响应状态
+                if (!response.ok) {
+                    throw new Error(`HTTP 错误! 状态: ${response.status}`);
+                }
+                
                 const data = await response.json();
+                
+                // 检查数据结构
+                if (!data || !data.reviews || !Array.isArray(data.reviews)) {
+                    console.error('数据格式错误:', data);
+                    throw new Error('JSON数据格式不正确，缺少reviews数组');
+                }
+                
+                // 如果没有数据，显示空状态
+                if (data.reviews.length === 0) {
+                    document.getElementById('loadingContainer').style.display = 'none';
+                    document.getElementById('emptyState').style.display = 'block';
+                    return;
+                }
 
                 const currentWeekList = [];
                 const pastWeekList = [];
@@ -1095,15 +1115,32 @@
                 }
             } catch (error) {
                 console.error('加载复盘数据失败:', error);
-                document.getElementById('loadingContainer').innerHTML = `
+                document.getElementById('loadingContainer').style.display = 'none';
+                
+                // 显示详细错误信息
+                const errorHTML = `
                     <div class="empty-review">
                         <div class="empty-review-icon">
                             <i class="fas fa-exclamation-circle"></i>
                         </div>
                         <h2>加载失败</h2>
-                        <p>无法加载复盘内容，请稍后重试</p>
+                        <p style="color: #ef4444; margin-bottom: 20px;"><strong>错误信息:</strong> ${error.message}</p>
+                        <p style="color: #666; font-size: 0.95em; line-height: 1.8; max-width: 600px; margin: 0 auto;">
+                            <strong>可能的原因：</strong><br>
+                            1. weekly-data.json 文件不存在或路径错误<br>
+                            2. JSON 格式不正确（缺少逗号、括号等）<br>
+                            3. 文件编码问题<br>
+                            4. 浏览器安全策略限制（需使用本地服务器）<br><br>
+                            <strong>建议：</strong><br>
+                            • 检查文件是否与HTML在同一目录<br>
+                            • 使用JSON验证工具检查格式<br>
+                            • 使用本地服务器运行（如Live Server）<br>
+                            • 查看浏览器控制台获取详细信息
+                        </p>
                     </div>
                 `;
+                
+                document.getElementById('loadingContainer').innerHTML = errorHTML;
             }
         }
 
