@@ -7,6 +7,8 @@
     <title>【狂客】每周复盘 - 狂客·银河</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Marked.js 用于解析 Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         /* 复盘容器样式 */
         .review-container {
@@ -733,7 +735,7 @@
                     </span>
                     <span class="game-text">自制游戏</span>
                 </a>
-                <a class="weekly-link" href="weekly.html">
+                <a class="weekly-link" href="weeklykuangke.html">
                     <span class="weekly-icon">
                         <i class="fas fa-tasks"></i>
                     </span>
@@ -938,6 +940,58 @@
             `;
         }
 
+        // 解析Markdown为JSON格式
+        function parseMarkdownToJSON(markdown) {
+            const reviews = [];
+            
+            // 分割各周的内容
+            const weekSections = markdown.split(/^## 第(\d+)周$/gm);
+            
+            // 跳过第一个元素（标题之前的内容）
+            for (let i = 1; i < weekSections.length; i += 2) {
+                const weekNum = weekSections[i];
+                const weekContent = weekSections[i + 1];
+                
+                if (!weekContent) continue;
+                
+                // 提取时间范围
+                const timeMatch = weekContent.match(/\*\*时间范围：\*\*\s*(.+)/);
+                const weekRange = timeMatch ? timeMatch[1].trim() : '';
+                
+                // 提取目标
+                const goals = [];
+                const goalRegex = /####\s+\d+\.\s+(.+?)\n-\s+\[([ x])\].*?\n-\s+\*\*说明：\*\*\s*(.*?)(?=\n####|\n###|$)/gs;
+                let goalMatch;
+                
+                while ((goalMatch = goalRegex.exec(weekContent)) !== null) {
+                    goals.push({
+                        title: goalMatch[1].trim(),
+                        description: goalMatch[3].trim(),
+                        completed: goalMatch[2] === 'x'
+                    });
+                }
+                
+                // 提取总结
+                const summaryMatch = weekContent.match(/### 本周总结\s+([\s\S]*?)(?=\n---|\n## |$)/);
+                let summary = '';
+                
+                if (summaryMatch) {
+                    summary = summaryMatch[1].trim()
+                        .replace(/####\s+/g, '')
+                        .replace(/\n\n+/g, '\n\n');
+                }
+                
+                reviews.push({
+                    weekTitle: `第${weekNum}周`,
+                    weekRange: weekRange,
+                    goals: goals,
+                    summary: summary
+                });
+            }
+            
+            return { reviews };
+        }
+
         // 创建复盘项HTML
         function createReviewItem(review, isCurrent = false) {
             const completedGoals = review.goals.filter(g => g.completed).length;
@@ -1053,20 +1107,21 @@
             `;
         }
 
-        // 加载复盘数据
+        // 加载复盘数据（从Markdown文件）
         async function loadReviewData() {
             try {
-                const response = await fetch('weekly-data.json');
+                const response = await fetch('weekly-data.md');
                 
                 if (!response.ok) {
                     throw new Error(`HTTP 错误! 状态: ${response.status}`);
                 }
 
-                const data = await response.json();
+                const markdown = await response.text();
+                const data = parseMarkdownToJSON(markdown);
 
                 if (!data || !data.reviews || !Array.isArray(data.reviews)) {
                     console.error('数据格式错误:', data);
-                    throw new Error('JSON数据格式不正确，缺少reviews数组');
+                    throw new Error('Markdown数据格式不正确');
                 }
 
                 if (data.reviews.length === 0) {
@@ -1145,15 +1200,15 @@
                         <p style="color: #ef4444; margin-bottom: 20px;"><strong>错误信息:</strong> ${error.message}</p>
                         <p style="color: #666; font-size: 0.95em; line-height: 1.8; max-width: 600px; margin: 0 auto;">
                             <strong>可能的原因：</strong><br>
-                            1. weekly-data.json 文件不存在或路径错误<br>
-                            2. JSON 格式不正确（缺少逗号、括号等）<br>
-                            3. 文件编码问题<br>
+                            1. weekly-data.md 文件不存在或路径错误<br>
+                            2. Markdown 格式不正确<br>
+                            3. 文件编码问题（请使用UTF-8）<br>
                             4. 浏览器安全策略限制（需使用本地服务器）<br><br>
                             <strong>建议：</strong><br>
                             • 检查文件是否与HTML在同一目录<br>
-                            • 使用JSON验证工具检查格式<br>
                             • 使用本地服务器运行（如Live Server）<br>
-                            • 查看浏览器控制台获取详细信息
+                            • 查看浏览器控制台获取详细信息<br>
+                            • 参考下方模板创建 weekly-data.md 文件
                         </p>
                     </div>
                 `;
