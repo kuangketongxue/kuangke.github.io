@@ -734,12 +734,14 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
             background: rgba(255, 255, 255, 0.15);
         }
+        
         /* ==================== 排序区域样式 ==================== */
         .sidebar-sort-section {
             padding: var(--spacing-md) var(--spacing-lg);
             border-bottom: 2px solid rgba(102, 126, 234, 0.3);
             background: rgba(102, 126, 234, 0.05);
         }
+        
         .sidebar-sort-title {
             display: flex;
             align-items: center;
@@ -749,15 +751,18 @@
             color: var(--text-primary);
             margin-bottom: var(--spacing-md);
         }
+        
         .sidebar-sort-title i {
             font-size: 16px;
             color: #667eea;
         }
+        
         .sidebar-sort-buttons {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: var(--spacing-sm);
         }
+        
         .sidebar-sort-btn {
             display: flex;
             align-items: center;
@@ -776,25 +781,30 @@
             position: relative;
             overflow: hidden;
         }
+        
         .sidebar-sort-btn i {
             font-size: 14px;
             transition: transform var(--transition-base);
         }
+        
         .sidebar-sort-btn:hover {
             background: rgba(102, 126, 234, 0.2);
             border-color: rgba(102, 126, 234, 0.3);
             color: #a8b2ff;
             transform: translateY(-1px);
         }
+        
         .sidebar-sort-btn.active {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4));
             border-color: rgba(102, 126, 234, 0.6);
             color: #fff;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
+        
         .sidebar-sort-btn.active i {
             transform: scale(1.1);
         }
+        
         .sidebar-sort-btn::before {
             content: '';
             position: absolute;
@@ -807,10 +817,12 @@
             transform: translate(-50%, -50%);
             transition: width 0.3s ease, height 0.3s ease;
         }
+        
         .sidebar-sort-btn:active::before {
             width: 200px;
             height: 200px;
         }
+        
         .category-list-container {
             flex: 1;
             overflow-y: auto;
@@ -979,6 +991,7 @@
             transform: translate(-50%, -50%) scale(1.5);
             opacity: 1;
         }
+        
         /* ==================== 主要内容区域 - 两栏布局 ==================== */
         .main-content {
             padding: 30px 0;
@@ -1844,6 +1857,7 @@
                     <i class="fas fa-search"></i>
                     <input type="text" id="categorySearch" placeholder="搜索分类..." aria-label="搜索分类">
                 </div>
+                
                 <!-- 排序区域 -->
                 <div class="sidebar-sort-section">
                     <div class="sidebar-sort-title">
@@ -1869,6 +1883,7 @@
                         </button>
                     </div>
                 </div>
+                
                 <div class="category-list-container">
                     <button class="category-list-btn active" data-category="all" role="tab" aria-selected="true">
                         <i class="fas fa-th-large"></i>
@@ -2045,6 +2060,7 @@
             </div>
         </div>
     </header>
+    
     <!-- 主要内容区域 -->
     <main class="main-content" role="main">
         <div class="container">
@@ -2348,6 +2364,7 @@
                     handleSortChange(sortMethod);
                 });
             });
+            
             DOM.searchInput?.addEventListener('input', debounce(handleSearch, 300));
             DOM.firstPage?.addEventListener('click', () => goToPage(1));
             DOM.prevPage?.addEventListener('click', () => goToPage(Math.max(1, currentPage - 1)));
@@ -2655,7 +2672,7 @@
             DOM.latestList.querySelectorAll('.latest-item').forEach(item => {
                 item.addEventListener('click', function() {
                     const momentId = this.dataset.momentId;
-                    const momentCard = document.querySelector`.moment-card[data-id="${momentId}"]`);
+                    const momentCard = document.querySelector(`.moment-card[data-id="${momentId}"]`);
                     if (momentCard) {
                         momentCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         momentCard.style.boxShadow = '0 0 30px rgba(102, 126, 234, 0.6)';
@@ -2941,6 +2958,7 @@
                 observer.observe(card);
             });
         }
+        
         function updateSortUI() {
             const sortNav = document.querySelector('.sort-nav');
             if (sortNav) {
