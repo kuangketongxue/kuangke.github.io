@@ -69,6 +69,31 @@ const momentCategories = [
 let successDiaryData = [
        {
         id: 53,
+        date: '2025-11-11',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '读完《乔布斯传》',
+            en: 'Finished reading "The Life of Steve Jobs"'
+        },
+        content: {
+            zh: '阅读20本书+且快速完成\n学习11小时+\n公众号文章《一篇文章带你搞定GitHub》',
+            en: 'Reading and quickly completing 20 books.\nStudied for 11+ hours.\nWeChat article titled "Master GitHub with Just One Read"'
+        },
+        highlight: {
+            zh: '罗永浩*刘谦播客；榴莲不错',
+            en: 'Luo Hongbo*Liu Qian Podcast; Durian is quite good'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 4,
+        coverImage: '',
+        attachments: []
+    },
+       {
+        id: 53,
         date: '2025-11-10',
         categories: ['study', 'creative'],
         headline: {
