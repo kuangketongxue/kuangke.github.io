@@ -68,20 +68,20 @@ const momentCategories = [
  */
 let successDiaryData = [
      {
-        id: 54,
+        id: 55,
         date: '2025-11-12',
         categories: ['study', 'creative'],
         headline: {
-            zh: '《历史垃圾时间躺平⽣存指南》',
-            en: '"Guide to Surviving the Lazy Period in History: A Survival Manual"'
+            zh: '整理',
+            en: 'Arrangement'
         },
         content: {
-            zh: '阅读18本书\n学习11小时+',
-            en: 'Reading  18 books.\nStudied for 11+ hours.'
+            zh: '阅读12本书\n学习11小时+\n公众号创作1w+',
+            en: 'Reading  18 books.\nStudied for 11+ hours.\nCreating content for the WeChat public platform with over 10,000 pieces.'
         },
         highlight: {
-            zh: '前哨战关于与ai沟通的建议性小册子',
-            en: 'A suggestive booklet on communication with AI, part of a preliminary effort'
+            zh: '❌',
+            en: '❌'
         },
         notes: {
             zh: '',
