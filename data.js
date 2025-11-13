@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+     {
+        id: 54,
+        date: '2025-11-12',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '《历史垃圾时间躺平⽣存指南》',
+            en: '"Guide to Surviving the Lazy Period in History: A Survival Manual"'
+        },
+        content: {
+            zh: '阅读18本书\n学习11小时+',
+            en: 'Reading  18 books.\nStudied for 11+ hours.'
+        },
+        highlight: {
+            zh: '前哨战关于与ai沟通的建议性小册子',
+            en: 'A suggestive booklet on communication with AI, part of a preliminary effort'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 0,
+        coverImage: '',
+        attachments: []
+    },
        {
         id: 53,
         date: '2025-11-11',
