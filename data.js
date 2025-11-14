@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
      {
+        id: 56,
+        date: '2025-11-14',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '高强度运动+早睡',
+            en: 'High-intensity exercise combined with early bedtime.'
+        },
+        content: {
+            zh: '阅读18本书\n学习12小时+\n公众号创作1w+',
+            en: 'Reading  18 books.\nStudied for 12+ hours.\nCreating content for the WeChat public platform with over 10,000 pieces.'
+        },
+        highlight: {
+            zh: '我的思维宫殿',
+            en: 'My Mental Palace'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
+     {
         id: 55,
         date: '2025-11-13',
         categories: ['study', 'creative'],
