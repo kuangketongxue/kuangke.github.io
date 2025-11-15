@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+      {
+        id: 57,
+        date: '2025-11-15',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '高强度运动',
+            en: 'High-intensity exercise '
+        },
+        content: {
+            zh: '阅读15本书\n学习8小时+\n公众号创作1w+',
+            en: 'Reading  18 books.\nStudied for 8+ hours.\nCreating content for the WeChat public platform with over 10,000 pieces.'
+        },
+        highlight: {
+            zh: '发了公众号文章《Information Management》',
+            en: 'The article "Information Management" was published on the WeChat account.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
      {
         id: 56,
         date: '2025-11-14',
