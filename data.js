@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
       {
+        id: 59,
+        date: '2025-11-17',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '读完《animal farm》',
+            en: 'After reading "Animal Farm"'
+        },
+        content: {
+            zh: '阅读19本书\n学习10小时+\n公众号创作1w+',
+            en: 'Reading  19 books.\nStudied for 10+ hours.\nCreating content for the WeChat public platform with over 10,000 pieces.'
+        },
+        highlight: {
+            zh: '实验，科学家',
+            en: 'Experimentation, scientists'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
+      {
         id: 58,
         date: '2025-11-16',
         categories: ['study', 'creative'],
@@ -1687,6 +1712,26 @@ function getMomentsStats(moments) {
  * @type {Array<Object>}
  */
 let momentsData = [
+     {
+    id: 40,
+    content: '造成可得性偏差的根本原因是你没有考虑全面的信息。在现代世界掌握一点信息并不难，掌握全面信息——不但知道都有哪些事例，而且知道每个事例发生的*频率*——才是科学判断的关键。计算机科学有句话叫「垃圾进，垃圾出（garbage in, garbage out）」，意思是如果你的输入信息不对，你这个计算模型再好也没用。我感觉想要获得一个好模型还是比较容易的，得到全面有效的信息更难。从这个角度讲，人与人认知的差异，最重要的可能不是思考能力，而是对信息的掌握。这就是为什么你再聪明也得听专家的意见，为什么没有调查就没有发言权，为什么人必须多读书。',
+    value: 8,
+    category: '学习成长',
+    date: '2025-11-17T23:50:00+08:00',
+    images: [],
+    likes: 0,
+    comments: []
+  },
+     {
+    id: 39,
+    content: '用AI辅助读完了整篇研究,个人觉得最有价值/反直觉的结论是使用时长和频率几乎不影响心理健康,真正关键的是"成瘾程度"。数据上来看,成瘾与心理健康的相关性(r=-0.32)远强于频率(r =-0.05)和使用时长(r=-0.10)。研究中使用测量"成瘾"的工具是Bergen Facebook Addiction Scale (BFAS)改编的社交媒体成瘾量表,主要包括六个核心维度:1.Salience(显著性):短视频在你生活中的心理占据程度,典型场景是无聊时第一反应是打开短视频App。2. Tolerance(耐受性):需要越来越多的使用才能获得同样的满足感,典型场景是以前刷10分钟就满足,现在要刷1小时。3.Mood Modification(心境调节):使用短视频来改变情绪状态,典型场景是焦虑时用短视频来麻痹自己。4. Relapse(自控失败):试图减少使用但反复失败,典型场景是设置使用时间限制但总是想再刷五分钟。5.Withdrawal(戒断症状):不能使用时的负面身体/心理反应,电场景是手机没电或无网络时感到焦躁不安。6.Conflict(冲突):使用短视频导致的实际生活问题,典型场景是因刷短视频熬夜影响第二天工作/学习。以往的评价标准过于侧重使用时长和频率,忽视了成瘾的深层影响。真正影响心理健康的不是刷多少短视频(数量),而是怎么刷短视频(方式)',
+    value: 8,
+    category: '学习成长',
+    date: '2025-11-17T223:50:00+08:00',
+    images: [],
+    likes: 0,
+    comments: []
+  },
     {
     id: 38,
     content: '超一线城市中央的CBD一天的工位价格为100元左右，每周大概50小时，而位于CBD的市图书馆同样条件每周可以待54小时左右，免费水厕所超高效率的学习氛围，最重要是完全免费，完全属于你，你只要早到，早起又是一件极高价值的事情，不懂为什么有人没搞懂，1天白赚100还有图书馆服务+断档顶级的学习环境，去图书馆学习赚麻了',
