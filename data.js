@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+      {
+        id: 61,
+        date: '2025-11-19',
+        categories: ['study', 'creative','film'],
+        headline: {
+            zh: '高强度工作',
+            en: 'high-intensity work'
+        },
+        content: {
+            zh: '阅读19本书\n学习10小时+\n公众号创作1w+',
+            en: 'Reading  19 books.\nStudied for 10+ hours.\nCreating content for the WeChat public platform with over 10,000 pieces.'
+        },
+        highlight: {
+            zh: 'gemini3来啦；罗小黑战记；蓝溪镇；泡脚',
+            en: 'gemini3 is here; Luo Xiaohui is Battle Chronicles; Lanxi Town; Foot Soak'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 3,
+        coverImage: '',
+        attachments: []
+    },
      {
         id: 60,
         date: '2025-11-18',
