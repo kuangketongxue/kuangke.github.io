@@ -1762,6 +1762,16 @@ function getMomentsStats(moments) {
  * @type {Array<Object>}
  */
 let momentsData = [
+       {
+    id: 42,
+    content: '老君赢了，没想到真的赢了',
+    value: 0,
+    category: '艺术文化',
+    date: '2025-11-20T3:35:00+08:00',
+    images: ["images/8b844156eeb07fc1230c914da390bf4c.jpg"],
+    likes: 99+,
+    comments: []
+  },
       {
     id: 41,
     content: 'gemini 3 pro 终于来啦',
