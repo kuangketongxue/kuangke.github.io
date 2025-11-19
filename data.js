@@ -1769,7 +1769,7 @@ let momentsData = [
     category: '艺术文化',
     date: '2025-11-20T3:35:00+08:00',
     images: ["images/8b844156eeb07fc1230c914da390bf4c.jpg"],
-    likes: 99+,
+    likes: 99,
     comments: []
   },
       {
