@@ -1050,6 +1050,15 @@
             </div>
             <div class="chart-panel">
                 <h3 class="panel-title">
+                    <i class="fas fa-spa"></i>
+                    冥想趋势
+                </h3>
+                <div class="chart-container">
+                    <canvas id="meditationChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-panel">
+                <h3 class="panel-title">
                     <i class="fas fa-brain"></i>
                     心理状态趋势
                 </h3>
@@ -1077,6 +1086,8 @@
                                 <th>睡眠(h)</th>
                                 <th>运动(min)</th>
                                 <th>步数</th>
+                                <th>冥想(min)</th>
+                                <th>冥想效果</th>
                                 <th>饮水(ml)</th>
                                 <th>心情</th>
                                 <th>精力</th>
@@ -1127,6 +1138,10 @@
     "plank": 1.0,       // 平板支撑 (目标1分钟)
     "hiit": 2.0,        // HIIT (目标2分钟)
     "burpees": 10       // 波比跳 (目标10个)
+  },
+  "meditation": {
+    "minutes": 10,      // 冥想时长(分钟)
+    "effect": 7         // 冥想效果(0-10)
   }
 }</div>
                 </div>
@@ -1179,7 +1194,6 @@
                     if (chart) {
                         const textColor = getComputedStyle(document.body).color;
                         const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)';
-                        
                         chart.options.plugins.legend.labels.color = textColor;
                         if (chart.options.scales.y) {
                             chart.options.scales.y.ticks.color = textColor;
@@ -1286,6 +1300,8 @@
                     avgWater: 0,
                     avgMood: 0,
                     avgEnergy: 0,
+                    avgMeditationMinutes: 0,
+                    avgMeditationEffect: 0,
                     totalRecords: records.length
                 };
                 const sums = records.reduce((acc, record) => {
@@ -1295,8 +1311,10 @@
                     acc.water += record.diet?.waterIntake || 0;
                     acc.mood += record.mood?.score || 0;
                     acc.energy += record.physical?.energy || 0;
+                    acc.meditationMinutes += record.meditation?.minutes || 0;
+                    acc.meditationEffect += record.meditation?.effect || 0;
                     return acc;
-                }, { sleep: 0, exercise: 0, steps: 0, water: 0, mood: 0, energy: 0 });
+                }, { sleep: 0, exercise: 0, steps: 0, water: 0, mood: 0, energy: 0, meditationMinutes: 0, meditationEffect: 0 });
                 const count = records.length;
                 stats.avgSleep = (sums.sleep / count).toFixed(1);
                 stats.avgExercise = Math.round(sums.exercise / count);
@@ -1304,6 +1322,8 @@
                 stats.avgWater = Math.round(sums.water / count);
                 stats.avgMood = (sums.mood / count).toFixed(1);
                 stats.avgEnergy = (sums.energy / count).toFixed(1);
+                stats.avgMeditationMinutes = Math.round(sums.meditationMinutes / count);
+                stats.avgMeditationEffect = (sums.meditationEffect / count).toFixed(1);
                 return stats;
             }
             calculateTrend(field, subfield, days = 7) {
@@ -1388,6 +1408,18 @@
                         <div class="stat-label">平均饮水</div>
                     </div>
                     <div class="stat-card will-change-transform">
+                        <div class="stat-icon">🧘</div>
+                        <div class="stat-value">${stats.avgMeditationMinutes}min</div>
+                        <div class="stat-label">平均冥想时长</div>
+                        ${this.createTrendHTML(this.dm.calculateTrend('meditation', 'minutes'))}
+                    </div>
+                    <div class="stat-card will-change-transform">
+                        <div class="stat-icon">🌟</div>
+                        <div class="stat-value">${stats.avgMeditationEffect}/10</div>
+                        <div class="stat-label">平均冥想效果</div>
+                        ${this.createTrendHTML(this.dm.calculateTrend('meditation', 'effect'))}
+                    </div>
+                    <div class="stat-card will-change-transform">
                         <div class="stat-icon">😊</div>
                         <div class="stat-value">${stats.avgMood}/10</div>
                         <div class="stat-label">平均心情</div>
@@ -1412,13 +1444,11 @@
                     </div>
                 `;
             }
-            
             // 【核心优化】改进的图表配置选项
             getChartOptions(yAxisMax = null, yAxisLabel = '') {
                 const textColor = getComputedStyle(document.body).color;
                 const isDark = body.classList.contains('dark-mode');
                 const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)';
-                
                 return {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -1535,16 +1565,13 @@
                     }
                 };
             }
-
             // 【核心优化】改进的总览图表 - 显示更多指标
             renderOverviewChart() {
                 const records = this.dm.getRecentRecords(14);
                 const ctx = document.getElementById('overviewChart');
-                
                 if (this.dm.charts.overview) {
                     this.dm.charts.overview.destroy();
                 }
-
                 this.dm.charts.overview = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -1579,19 +1606,15 @@
                     options: this.getChartOptions(10, '评分 (0-10)')
                 });
             }
-
             // 【核心优化】改进的单项图表渲染
             renderSingleChart(config, records) {
                 const ctx = document.getElementById(config.id);
-                
                 if (this.dm.charts[config.id]) {
                     this.dm.charts[config.id].destroy();
                 }
-
                 const textColor = getComputedStyle(document.body).color;
                 const isDark = body.classList.contains('dark-mode');
                 const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)';
-
                 // 特殊处理运动图表（显示时长和步数 - 双Y轴）
                 if (config.id === 'exerciseChart') {
                     this.dm.charts[config.id] = new Chart(ctx, {
@@ -1710,7 +1733,6 @@
                     });
                     return;
                 }
-
                 // 特殊处理饮食图表（显示多项数据 - 双Y轴）
                 if (config.id === 'dietChart') {
                     this.dm.charts[config.id] = new Chart(ctx, {
@@ -1841,7 +1863,86 @@
                     });
                     return;
                 }
-
+                // 特殊处理冥想图表（时长+效果 双Y轴）
+                if (config.id === 'meditationChart') {
+                    this.dm.charts[config.id] = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: records.map(r => r.date.slice(5)),
+                            datasets: [
+                                {
+                                    label: '冥想时长(min)',
+                                    data: records.map(r => r.meditation?.minutes || 0),
+                                    borderColor: 'rgb(153, 102, 255)',
+                                    backgroundColor: 'rgba(153, 102, 255, 0.15)',
+                                    fill: true,
+                                    yAxisID: 'y',
+                                    tension: 0.4,
+                                    borderWidth: 3,
+                                    pointRadius: 5,
+                                    pointHoverRadius: 8
+                                },
+                                {
+                                    label: '冥想效果(0-10)',
+                                    data: records.map(r => r.meditation?.effect || 0),
+                                    borderColor: 'rgb(255, 205, 86)',
+                                    backgroundColor: 'rgba(255, 205, 86, 0.15)',
+                                    fill: true,
+                                    yAxisID: 'y1',
+                                    tension: 0.4,
+                                    borderWidth: 3,
+                                    pointRadius: 5,
+                                    pointHoverRadius: 8
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            interaction: { mode: 'index', intersect: false },
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top',
+                                    labels: { color: textColor, font: { size: 14, weight: '700' }, padding: 20, usePointStyle: true }
+                                },
+                                tooltip: {
+                                    backgroundColor: isDark ? 'rgba(45, 55, 72, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                                    titleColor: textColor,
+                                    bodyColor: textColor,
+                                    borderColor: gridColor,
+                                    borderWidth: 2,
+                                    padding: 16,
+                                    cornerRadius: 12
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    type: 'linear',
+                                    position: 'left',
+                                    beginAtZero: true,
+                                    title: { display: true, text: '时长(min)', color: textColor, font: { size: 13, weight: '700' } },
+                                    ticks: { color: textColor, font: { size: 13, weight: '600' } },
+                                    grid: { color: gridColor, drawBorder: false }
+                                },
+                                y1: {
+                                    type: 'linear',
+                                    position: 'right',
+                                    beginAtZero: true,
+                                    suggestedMax: 10,
+                                    title: { display: true, text: '效果(0-10)', color: textColor, font: { size: 13, weight: '700' } },
+                                    ticks: { color: textColor, font: { size: 13, weight: '600' } },
+                                    grid: { drawOnChartArea: false }
+                                },
+                                x: {
+                                    ticks: { color: textColor, font: { size: 12, weight: '600' }, maxRotation: 45, minRotation: 45 },
+                                    grid: { color: gridColor, drawBorder: false }
+                                }
+                            }
+                        }
+                    });
+                    return;
+                }
                 // 其他图表的标准渲染
                 const data = {
                     labels: records.map(r => r.date.slice(5)),
@@ -1857,60 +1958,62 @@
                         pointHoverRadius: 8
                     }]
                 };
-
                 this.dm.charts[config.id] = new Chart(ctx, {
                     type: 'line',
                     data: data,
                     options: this.getChartOptions(config.yMax, config.yLabel)
                 });
             }
-
             // 【核心优化】改进的趋势分析渲染
             renderTrends() {
                 this.queueRender(() => {
                     const records = this.dm.getRecentRecords(30);
-                    
                     const chartConfigs = [
-                        { 
-                            id: 'sleepChart', 
-                            label: '睡眠时长(h)', 
-                            field: 'sleep', 
-                            subfield: 'hours', 
+                        {
+                            id: 'sleepChart',
+                            label: '睡眠时长(h)',
+                            field: 'sleep',
+                            subfield: 'hours',
                             color: 'rgb(102, 126, 234)',
                             yMax: 12,
                             yLabel: '小时'
                         },
-                        { 
-                            id: 'exerciseChart', 
-                            label: '运动时长(min)', 
-                            field: 'exercise', 
-                            subfield: 'minutes', 
+                        {
+                            id: 'exerciseChart',
+                            label: '运动时长(min)',
+                            field: 'exercise',
+                            subfield: 'minutes',
                             color: 'rgb(75, 192, 192)'
                         },
-                        { 
-                            id: 'dietChart', 
-                            label: '饮水量(ml)', 
-                            field: 'diet', 
-                            subfield: 'waterIntake', 
+                        {
+                            id: 'dietChart',
+                            label: '饮水量(ml)',
+                            field: 'diet',
+                            subfield: 'waterIntake',
                             color: 'rgb(54, 162, 235)'
                         },
-                        { 
-                            id: 'moodChart', 
-                            label: '心情评分', 
-                            field: 'mood', 
-                            subfield: 'score', 
+                        {
+                            id: 'meditationChart',
+                            label: '冥想',
+                            field: 'meditation',
+                            subfield: 'minutes',
+                            color: 'rgb(153, 102, 255)'
+                        },
+                        {
+                            id: 'moodChart',
+                            label: '心情评分',
+                            field: 'mood',
+                            subfield: 'score',
                             color: 'rgb(255, 159, 64)',
                             yMax: 10,
                             yLabel: '评分'
                         }
                     ];
-
                     chartConfigs.forEach(config => {
                         this.renderSingleChart(config, records);
                     });
                 });
             }
-
             // 渲染运动达标面板
             renderExerciseGoals(goalData) {
                 if (!goalData) {
@@ -1968,7 +2071,6 @@
                     </div>
                 `;
             }
-            
             renderToday() {
                 this.queueRender(() => {
                     const latest = this.dm.getLatestRecord();
@@ -1987,7 +2089,6 @@
                     document.getElementById('todayContent').innerHTML = exerciseHTML + urgentHTML + html;
                 });
             }
-            
             // 新增:根据今日数据计算明日最紧急事项
             computeUrgentAction(latest) {
                 const sleepH = latest.sleep?.hours ?? 0;
@@ -2078,7 +2179,6 @@
                     reason: '今日指标总体稳定，无明显紧急项。'
                 };
             }
-            
             // 新增：渲染紧急事项面板
             createUrgentActionHTML(suggestion) {
                 return `
@@ -2097,7 +2197,6 @@
                     </div>
                 `;
             }
-            
             createTodayHTML(latest) {
                 return `
                     <div class="today-report">
@@ -2110,6 +2209,10 @@
                             { label: '运动时长', value: `${latest.exercise?.minutes || 0}分钟` },
                             { label: '步数', value: `${latest.exercise?.steps || 0}步` },
                             { label: '运动强度', value: this.translateIntensity(latest.exercise?.intensity) }
+                        ])}
+                        ${this.createReportCard('冥想', 'fa-spa', [
+                            { label: '冥想时长', value: `${latest.meditation?.minutes || 0}分钟` },
+                            { label: '冥想效果', value: `${latest.meditation?.effect || 0}/10` }
                         ])}
                         ${this.createReportCard('饮食', 'fa-utensils', [
                             { label: '饮水量', value: `${latest.diet?.waterIntake || 0}ml` },
@@ -2134,7 +2237,6 @@
                     </div>
                 `;
             }
-            
             createReportCard(title, icon, metrics) {
                 const metricsHTML = metrics.map(metric => `
                     <div class="metric-item">
@@ -2149,7 +2251,6 @@
                     </div>
                 `;
             }
-            
             renderHistory() {
                 this.queueRender(() => {
                     const records = this.dm.data.records || [];
@@ -2160,6 +2261,8 @@
                             <td>${record.sleep?.hours || '-'}</td>
                             <td>${record.exercise?.minutes || '-'}</td>
                             <td>${record.exercise?.steps || '-'}</td>
+                            <td>${record.meditation?.minutes || '-'}</td>
+                            <td>${record.meditation?.effect || '-'}/10</td>
                             <td>${record.diet?.waterIntake || '-'}</td>
                             <td>${record.mood?.score || '-'}/10</td>
                             <td>${record.physical?.energy || '-'}/10</td>
@@ -2169,7 +2272,6 @@
                     tbody.innerHTML = html;
                 });
             }
-            
             translateIntensity(intensity) {
                 const intensityMap = {
                     'light': '轻度',
@@ -2179,7 +2281,6 @@
                 return intensityMap[intensity] || intensity || '-';
             }
         }
-        
         // 视图切换函数
         function switchView(view) {
             document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -2220,7 +2321,6 @@
                 }
             }
         }
-        
         // 初始化应用
         async function init() {
             try {
@@ -2238,14 +2338,12 @@
                 `;
             }
         }
-        
         // 清理资源
         window.addEventListener('beforeunload', () => {
             if (window.dataManager) {
                 window.dataManager.destroyCharts();
             }
         });
-        
         // 响应式处理
         const handleResize = debounce(() => {
             if (window.uiRenderer) {
@@ -2255,7 +2353,6 @@
             }
         }, 250);
         window.addEventListener('resize', handleResize);
-        
         // 键盘导航支持
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Tab') {
@@ -2265,7 +2362,6 @@
         document.addEventListener('mousedown', () => {
             document.body.classList.remove('keyboard-navigation');
         });
-        
         // 页面加载完成后初始化
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
