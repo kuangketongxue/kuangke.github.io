@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+     {
+        id: 63,
+        date: '2025-11-21',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '高强度工作',
+            en: 'high-intensity work'
+        },
+        content: {
+            zh: '阅读19本书\n学习10小时+\n公众号创作1w+\n完成五作1-1',
+            en: 'Reading  19 books.\nStudied for 10+ hours.\nCreating content for the WeChat public platform with over 10,000 pieces.\nComplete Task 1-1 of the five tasks.'
+        },
+        highlight: {
+            zh: '空洞骑士丝之歌好玩',
+            en: 'The Hollow Knight: Silk Song is an enjoyable game.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
        {
         id: 62,
         date: '2025-11-20',
