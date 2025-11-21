@@ -15,7 +15,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
             --primary-color: #667eea;
             --secondary-color: #764ba2;
@@ -27,34 +26,31 @@
             --dark-card: #2d3748;
             --line-color: #e0e0e0;
             --line-color-dark: #4a5568;
+            --highlight-color: #ffd700;
+            --highlight-text: #000;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
-
         body.dark-mode {
             background: linear-gradient(135deg, var(--dark-bg) 0%, #2d3748 100%);
             color: #e2e8f0;
         }
-
         /* ========== 容器 ========== */
         .knowledge-page {
             max-width: 1400px;
             margin: 80px auto 60px;
             padding: 40px 20px;
         }
-
         /* ========== 页面头部 ========== */
         .page-header {
             text-align: center;
             margin-bottom: 40px;
             animation: fadeInDown 0.8s ease;
         }
-
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -65,7 +61,6 @@
                 transform: translateY(0);
             }
         }
-
         .page-header h1 {
             font-size: 3em;
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -75,28 +70,23 @@
             margin-bottom: 15px;
             animation: titleGlow 3s ease-in-out infinite;
         }
-
         @keyframes titleGlow {
             0%, 100% { filter: brightness(1); }
             50% { filter: brightness(1.3); }
         }
-
         .page-header p {
             font-size: 1.2em;
             color: #666;
             margin-bottom: 10px;
         }
-
         body.dark-mode .page-header p {
             color: #aaa;
         }
-
         .page-header .subtitle {
             font-size: 0.95em;
             color: #999;
             font-style: italic;
         }
-
         /* ========== 统计面板 ========== */
         .stats-dashboard {
             background: white;
@@ -106,23 +96,19 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
             animation: fadeIn 1s ease;
         }
-
         body.dark-mode .stats-dashboard {
             background: var(--dark-card);
         }
-
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 25px;
         }
-
         .stat-card {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             padding: 20px;
@@ -133,11 +119,9 @@
             position: relative;
             overflow: hidden;
         }
-
         body.dark-mode .stat-card {
             background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
         }
-
         .stat-card::before {
             content: '';
             position: absolute;
@@ -150,29 +134,24 @@
             opacity: 0;
             transition: opacity 0.3s;
         }
-
         .stat-card:hover::before {
             opacity: 1;
         }
-
         @keyframes rotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
         .stat-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             border-color: var(--primary-color);
         }
-
         .stat-icon {
             font-size: 2.5em;
             margin-bottom: 10px;
             position: relative;
             z-index: 1;
         }
-
         .stat-label {
             font-size: 0.9em;
             color: #666;
@@ -180,11 +159,9 @@
             position: relative;
             z-index: 1;
         }
-
         body.dark-mode .stat-label {
             color: #aaa;
         }
-
         .stat-value {
             font-size: 2em;
             font-weight: bold;
@@ -192,7 +169,6 @@
             position: relative;
             z-index: 1;
         }
-
         .last-update {
             text-align: center;
             padding: 15px;
@@ -202,16 +178,13 @@
             font-weight: 600;
             border: 2px solid #fbbf24;
         }
-
         body.dark-mode .last-update {
             background: linear-gradient(135deg, #3a3520 0%, #4a4228 100%);
             color: #fbbf24;
         }
-
         .last-update i {
             margin-right: 8px;
         }
-
         /* ========== 工具栏 ========== */
         .toolbar {
             display: flex;
@@ -225,11 +198,9 @@
             border-radius: 20px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
         }
-
         body.dark-mode .toolbar {
             background: var(--dark-card);
         }
-
         .tool-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -247,7 +218,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .tool-btn::before {
             content: '';
             position: absolute;
@@ -260,41 +230,40 @@
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
-
         .tool-btn:hover::before {
             width: 300px;
             height: 300px;
         }
-
         .tool-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
         }
-
         .tool-btn i, .tool-btn span {
             position: relative;
             z-index: 1;
         }
-
         .tool-btn.success {
             background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%);
         }
-
         .tool-btn.warning {
             background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
         }
-
         .tool-btn.info {
             background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
         }
-
+        .tool-btn.danger {
+            background: linear-gradient(135deg, var(--danger-color) 0%, #e53e3e 100%);
+        }
+        .tool-btn.active {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+            transform: scale(1.05);
+        }
         .search-box {
             display: flex;
             gap: 10px;
             flex: 1;
             max-width: 500px;
         }
-
         .search-input {
             flex: 1;
             padding: 12px 20px;
@@ -304,18 +273,32 @@
             outline: none;
             transition: all 0.3s ease;
         }
-
         .search-input:focus {
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
             border-color: var(--secondary-color);
         }
-
         body.dark-mode .search-input {
             background: var(--dark-bg);
             color: #fff;
             border-color: var(--primary-color);
         }
-
+        /* ========== 高亮样式 ========== */
+        .highlight {
+            background: var(--highlight-color);
+            color: var(--highlight-text);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+            animation: highlightPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes highlightPulse {
+            0%, 100% { background: var(--highlight-color); }
+            50% { background: #ffed4e; }
+        }
+        body.dark-mode .highlight {
+            background: #fbbf24;
+            color: #1a202c;
+        }
         /* ========== 知识列表 ========== */
         .knowledge-container {
             background: white;
@@ -324,17 +307,14 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             min-height: 600px;
         }
-
         body.dark-mode .knowledge-container {
             background: var(--dark-card);
         }
-
         .knowledge-list {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
-
         .knowledge-item {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 15px;
@@ -344,11 +324,9 @@
             cursor: pointer;
             animation: slideIn 0.5s ease;
         }
-
         body.dark-mode .knowledge-item {
             background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
         }
-
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -359,19 +337,16 @@
                 transform: translateX(0);
             }
         }
-
         .knowledge-item:hover {
             transform: translateX(10px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
-
         .knowledge-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
-
         .knowledge-number {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
@@ -384,12 +359,10 @@
             font-weight: bold;
             font-size: 1.1em;
         }
-
         .knowledge-badges {
             display: flex;
             gap: 10px;
         }
-
         .badge {
             padding: 6px 14px;
             border-radius: 20px;
@@ -399,53 +372,49 @@
             align-items: center;
             gap: 5px;
         }
-
         .badge.difficulty {
             background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
             color: white;
         }
-
         .badge.importance {
             background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
             color: white;
         }
-
         .badge.inspiration {
             background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%);
             color: white;
         }
-
         .knowledge-content {
             color: #333;
             line-height: 1.8;
             font-size: 1.05em;
         }
-
         body.dark-mode .knowledge-content {
             color: #e2e8f0;
         }
-
         .empty-state {
             text-align: center;
             padding: 80px 20px;
             color: #999;
         }
-
         .empty-state i {
             font-size: 5em;
             margin-bottom: 20px;
             opacity: 0.5;
         }
-
         .empty-state h3 {
             font-size: 1.8em;
             margin-bottom: 10px;
         }
-
         .empty-state p {
             font-size: 1.1em;
         }
-
+        /* ========== 排序指示器 ========== */
+        .sort-indicator {
+            display: inline-block;
+            margin-left: 5px;
+            font-size: 0.8em;
+        }
         /* ========== 固定按钮 ========== */
         .fixed-buttons {
             position: fixed;
@@ -456,7 +425,6 @@
             gap: 15px;
             z-index: 1000;
         }
-
         .back-button, .back-to-top {
             width: 60px;
             height: 60px;
@@ -475,7 +443,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .back-button::before, .back-to-top::before {
             content: '';
             position: absolute;
@@ -488,27 +455,22 @@
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
-
         .back-button:hover::before, .back-to-top:hover::before {
             width: 150px;
             height: 150px;
         }
-
         .back-to-top {
             background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%);
             display: none;
         }
-
         .back-button:hover, .back-to-top:hover {
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
         }
-
         .back-button i, .back-to-top i {
             position: relative;
             z-index: 1;
         }
-
         /* ========== 加载动画 ========== */
         .loading-overlay {
             position: fixed;
@@ -523,33 +485,27 @@
             z-index: 9999;
             backdrop-filter: blur(10px);
         }
-
         body.dark-mode .loading-overlay {
             background: rgba(26, 32, 44, 0.95);
         }
-
         .loading-content {
             text-align: center;
         }
-
         .loading-content i {
             font-size: 4em;
             color: var(--primary-color);
             animation: spin 1.5s linear infinite;
         }
-
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
         .loading-content p {
             margin-top: 20px;
             font-size: 1.3em;
             color: var(--primary-color);
             font-weight: 600;
         }
-
         /* ========== 进度条 ========== */
         .reading-progress {
             position: fixed;
@@ -562,56 +518,48 @@
             width: 0%;
             box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
         }
-
         /* ========== 响应式设计 ========== */
         @media (max-width: 768px) {
             .page-header h1 {
                 font-size: 2.2em;
             }
-
             .knowledge-page {
                 padding: 30px 15px;
             }
-
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
             }
-
             .toolbar {
                 flex-direction: column;
                 padding: 15px;
             }
-
             .search-box {
                 max-width: 100%;
                 width: 100%;
             }
-
             .tool-btn {
                 width: 100%;
                 justify-content: center;
             }
-
             .knowledge-container {
                 padding: 20px;
             }
-
             .knowledge-item {
                 padding: 20px;
             }
-
             .knowledge-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 12px;
             }
-
+            .knowledge-badges {
+                flex-wrap: wrap;
+            }
             .fixed-buttons {
                 bottom: 20px;
                 right: 20px;
             }
-
             .back-button, .back-to-top {
                 width: 50px;
                 height: 50px;
@@ -623,7 +571,7 @@
 <body>
     <!-- 阅读进度条 -->
     <div class="reading-progress"></div>
-
+    
     <!-- 加载遮罩 -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
@@ -631,7 +579,7 @@
             <p>正在加载知识数据...</p>
         </div>
     </div>
-
+    
     <!-- 头部导航 -->
     <header class="header">
         <div class="container">
@@ -669,7 +617,7 @@
             </div>
         </div>
     </header>
-
+    
     <!-- 主体内容 -->
     <div class="knowledge-page">
         <!-- 页面头部 -->
@@ -678,7 +626,7 @@
             <p>记录每一次学习的内容与感悟</p>
             <p class="subtitle">从 GitHub map.md 自动同步</p>
         </div>
-
+        
         <!-- 统计面板 -->
         <div class="stats-dashboard">
             <div class="stats-grid">
@@ -708,7 +656,7 @@
                 <span id="lastUpdate">暂无更新记录</span>
             </div>
         </div>
-
+        
         <!-- 工具栏 -->
         <div class="toolbar">
             <div class="search-box">
@@ -720,14 +668,20 @@
             <button class="tool-btn success" onclick="refreshData()">
                 <i class="fas fa-sync-alt"></i> <span>刷新数据</span>
             </button>
-            <button class="tool-btn warning" onclick="sortByDifficulty()">
-                <i class="fas fa-sort-amount-down"></i> <span>难度排序</span>
+            <button class="tool-btn warning" id="sortDifficultyBtn" onclick="toggleSort('difficulty')">
+                <i class="fas fa-chart-line"></i> 
+                <span>难度排序<span class="sort-indicator" id="difficultyIndicator"></span></span>
             </button>
-            <button class="tool-btn info" onclick="sortByImportance()">
-                <i class="fas fa-star"></i> <span>重要性排序</span>
+            <button class="tool-btn info" id="sortImportanceBtn" onclick="toggleSort('importance')">
+                <i class="fas fa-star"></i> 
+                <span>重要性<span class="sort-indicator" id="importanceIndicator"></span></span>
+            </button>
+            <button class="tool-btn danger" id="sortInspirationBtn" onclick="toggleSort('inspiration')">
+                <i class="fas fa-lightbulb"></i> 
+                <span>启发值<span class="sort-indicator" id="inspirationIndicator"></span></span>
             </button>
         </div>
-
+        
         <!-- 知识列表容器 -->
         <div class="knowledge-container">
             <div class="knowledge-list" id="knowledgeList">
@@ -735,7 +689,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- 固定按钮 -->
     <div class="fixed-buttons">
         <button class="back-to-top" id="backToTopBtn">
@@ -745,30 +699,34 @@
             <i class="fas fa-arrow-left"></i>
         </a>
     </div>
-
+    
     <script>
         // ========== 配置 ==========
         const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/kuangketongxue/kuangke.github.io/main/map.md';
         let knowledgeData = [];
         let filteredData = [];
-
+        let currentSearchTerm = '';
+        
+        // 排序状态管理
+        let sortState = {
+            difficulty: null,  // null: 未排序, 'asc': 升序, 'desc': 降序
+            importance: null,
+            inspiration: null
+        };
+        
         // ========== 主函数 ==========
         async function loadKnowledgeData() {
             try {
                 // 从 GitHub 加载 map.md
                 const response = await fetch(GITHUB_RAW_URL);
-                
                 if (!response.ok) {
-                    throw new Error('无法加载数据文件，请检查 GitHub 仓库设置');
+                    throw new Error('无法加载数据文件,请检查 GitHub 仓库设置');
                 }
-
                 const text = await response.text();
                 knowledgeData = parseMarkdown(text);
                 filteredData = [...knowledgeData];
-                
                 renderKnowledgeList();
                 updateStatistics();
-                
                 document.getElementById('loadingOverlay').style.display = 'none';
             } catch (error) {
                 console.error('加载失败:', error);
@@ -776,13 +734,13 @@
                 document.getElementById('loadingOverlay').style.display = 'none';
             }
         }
-
+        
         // ========== 解析 Markdown ==========
         function parseMarkdown(text) {
             const lines = text.split('\n');
             const data = [];
             let currentItem = null;
-
+            
             lines.forEach(line => {
                 line = line.trim();
                 
@@ -802,20 +760,20 @@
                     };
                     return;
                 }
-
+                
                 if (currentItem) {
                     // 匹配难度: **难度**: 8
                     const diffMatch = line.match(/\*\*难度\*\*[:\s]*(\d+(?:\.\d+)?)/);
                     if (diffMatch) {
                         currentItem.difficulty = parseFloat(diffMatch[1]);
                     }
-
+                    
                     // 匹配重要性: **重要性**: 9
                     const impMatch = line.match(/\*\*重要性\*\*[:\s]*(\d+(?:\.\d+)?)/);
                     if (impMatch) {
                         currentItem.importance = parseFloat(impMatch[1]);
                     }
-
+                    
                     // 匹配启发值: **启发值**: 10
                     const inspMatch = line.match(/\*\*启发值\*\*[:\s]*(\d+(?:\.\d+)?)/);
                     if (inspMatch) {
@@ -823,36 +781,45 @@
                     }
                 }
             });
-
+            
             if (currentItem) {
                 data.push(currentItem);
             }
-
+            
             return data.sort((a, b) => b.number - a.number);
         }
-
+        
         // ========== 渲染知识列表 ==========
         function renderKnowledgeList() {
             const container = document.getElementById('knowledgeList');
             
             if (filteredData.length === 0) {
-                showEmptyState('暂无知识记录，快去 GitHub 提交你的第一条学习笔记吧！');
+                if (currentSearchTerm) {
+                    showEmptyState(`未找到包含 "${currentSearchTerm}" 的知识记录`);
+                } else {
+                    showEmptyState('暂无知识记录,快去 GitHub 提交你的第一条学习笔记吧!');
+                }
                 return;
             }
-
-            container.innerHTML = '';
             
+            container.innerHTML = '';
             filteredData.forEach((item, index) => {
                 const itemEl = createKnowledgeItem(item, index);
                 container.appendChild(itemEl);
             });
         }
-
+        
         // ========== 创建知识项 ==========
         function createKnowledgeItem(item, index) {
             const div = document.createElement('div');
             div.className = 'knowledge-item';
             div.style.animationDelay = `${index * 0.1}s`;
+            
+            // 高亮处理内容
+            let displayContent = item.content;
+            if (currentSearchTerm) {
+                displayContent = highlightText(item.content, currentSearchTerm);
+            }
             
             div.innerHTML = `
                 <div class="knowledge-header">
@@ -869,12 +836,23 @@
                         </span>
                     </div>
                 </div>
-                <div class="knowledge-content">${item.content}</div>
+                <div class="knowledge-content">${displayContent}</div>
             `;
             
             return div;
         }
-
+        
+        // ========== 文本高亮函数 ==========
+        function highlightText(text, searchTerm) {
+            if (!searchTerm) return text;
+            
+            // 转义特殊字符以避免正则表达式错误
+            const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(`(${escapedTerm})`, 'gi');
+            
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+        
         // ========== 更新统计信息 ==========
         function updateStatistics() {
             const totalCount = knowledgeData.length;
@@ -887,7 +865,7 @@
                 document.getElementById('lastUpdate').textContent = '暂无更新记录';
                 return;
             }
-
+            
             const avgDifficulty = (knowledgeData.reduce((sum, item) => sum + item.difficulty, 0) / totalCount).toFixed(1);
             const avgImportance = (knowledgeData.reduce((sum, item) => sum + item.importance, 0) / totalCount).toFixed(1);
             const avgInspiration = (knowledgeData.reduce((sum, item) => sum + item.inspiration, 0) / totalCount).toFixed(1);
@@ -895,7 +873,7 @@
             // 获取最新一条的时间戳
             const latestItem = knowledgeData[0];
             const lastUpdateTime = new Date(latestItem.timestamp).toLocaleString('zh-CN');
-
+            
             animateNumber('totalCount', 0, totalCount, 1000);
             animateNumber('avgDifficulty', 0, parseFloat(avgDifficulty), 1200, 1);
             animateNumber('avgImportance', 0, parseFloat(avgImportance), 1400, 1);
@@ -903,14 +881,14 @@
             
             document.getElementById('lastUpdate').innerHTML = `最近更新: ${lastUpdateTime}`;
         }
-
+        
         // ========== 数字动画 ==========
         function animateNumber(elementId, start, end, duration, decimals = 0) {
             const element = document.getElementById(elementId);
             const range = end - start;
             const increment = range / (duration / 16);
             let current = start;
-
+            
             const timer = setInterval(() => {
                 current += increment;
                 if (current >= end) {
@@ -921,48 +899,107 @@
                 }
             }, 16);
         }
-
+        
         // ========== 搜索功能 ==========
         function search() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            currentSearchTerm = searchTerm;
             
             if (!searchTerm) {
                 filteredData = [...knowledgeData];
             } else {
-                filteredData = knowledgeData.filter(item => 
+                filteredData = knowledgeData.filter(item =>
                     item.content.toLowerCase().includes(searchTerm)
                 );
             }
             
+            // 重置排序状态
+            resetSortButtons();
             renderKnowledgeList();
-            
-            if (filteredData.length === 0 && searchTerm) {
-                showEmptyState(`未找到包含 "${searchTerm}" 的知识记录`);
-            }
         }
-
+        
         // 回车搜索
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') search();
         });
-
-        // ========== 排序功能 ==========
-        function sortByDifficulty() {
-            filteredData.sort((a, b) => b.difficulty - a.difficulty);
+        
+        // 实时搜索(可选)
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            // 如果想要实时搜索,取消下面的注释
+            // search();
+        });
+        
+        // ========== 排序功能优化 ==========
+        function toggleSort(type) {
+            // 重置其他排序状态
+            Object.keys(sortState).forEach(key => {
+                if (key !== type) {
+                    sortState[key] = null;
+                }
+            });
+            
+            // 切换当前排序状态
+            if (sortState[type] === null) {
+                sortState[type] = 'desc'; // 首次点击:降序(从高到低)
+            } else if (sortState[type] === 'desc') {
+                sortState[type] = 'asc';  // 第二次点击:升序(从低到高)
+            } else {
+                sortState[type] = null;    // 第三次点击:取消排序
+            }
+            
+            // 执行排序
+            if (sortState[type] === null) {
+                // 恢复原始顺序
+                filteredData = [...knowledgeData];
+            } else {
+                const order = sortState[type] === 'desc' ? -1 : 1;
+                filteredData.sort((a, b) => (b[type] - a[type]) * order);
+            }
+            
+            // 更新按钮状态
+            updateSortButtons(type);
             renderKnowledgeList();
         }
-
-        function sortByImportance() {
-            filteredData.sort((a, b) => b.importance - a.importance);
-            renderKnowledgeList();
+        
+        // ========== 更新排序按钮显示 ==========
+        function updateSortButtons(activeType) {
+            // 清除所有按钮的active状态
+            ['difficulty', 'importance', 'inspiration'].forEach(type => {
+                const btn = document.getElementById(`sort${capitalize(type)}Btn`);
+                const indicator = document.getElementById(`${type}Indicator`);
+                
+                if (type === activeType && sortState[type] !== null) {
+                    btn.classList.add('active');
+                    indicator.innerHTML = sortState[type] === 'desc' ? '↓' : '↑';
+                } else {
+                    btn.classList.remove('active');
+                    indicator.innerHTML = '';
+                }
+            });
         }
-
+        
+        // ========== 重置排序按钮 ==========
+        function resetSortButtons() {
+            Object.keys(sortState).forEach(key => {
+                sortState[key] = null;
+            });
+            updateSortButtons(null);
+        }
+        
+        // ========== 工具函数:首字母大写 ==========
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+        
         // ========== 刷新数据 ==========
         function refreshData() {
             document.getElementById('loadingOverlay').style.display = 'flex';
+            currentSearchTerm = '';
+            document.getElementById('searchInput').value = '';
+            resetSortButtons();
             loadKnowledgeData();
         }
-
+        
         // ========== 空状态 ==========
         function showEmptyState(message) {
             const container = document.getElementById('knowledgeList');
@@ -974,19 +1011,19 @@
                 </div>
             `;
         }
-
+        
         // ========== 主题切换 ==========
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
         const currentTheme = localStorage.getItem('theme') || 'light';
-
+        
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
-
+        
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
             
@@ -1000,10 +1037,10 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-
+        
         // ========== 返回顶部 ==========
         const backToTopBtn = document.getElementById('backToTopBtn');
-
+        
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
                 backToTopBtn.style.display = 'flex';
@@ -1011,20 +1048,20 @@
                 backToTopBtn.style.display = 'none';
             }
         });
-
+        
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-
+        
         // ========== 阅读进度条 ==========
         const progressBar = document.querySelector('.reading-progress');
-
+        
         window.addEventListener('scroll', () => {
             const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (window.pageYOffset / windowHeight) * 100;
             progressBar.style.width = scrolled + '%';
         });
-
+        
         // ========== 页面加载 ==========
         window.addEventListener('load', loadKnowledgeData);
     </script>
