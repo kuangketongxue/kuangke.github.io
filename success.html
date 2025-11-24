@@ -123,7 +123,7 @@
             color: #f8fafc !important;
         }
         body.dark-theme .success-subtitle {
-            color: rgba(226, 232, 240, 0.95) !重要;
+            color: rgba(226, 232, 240, 0.95) !important;
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) !important;
         }
         body.dark-theme .search-box {
@@ -806,6 +806,161 @@
             font-size: 1.25rem;
             margin-bottom: 0.5rem;
         }
+        
+        /* ==================== 新增：本周复盘按钮与模态框样式 ==================== */
+        .review-btn {
+            background: linear-gradient(135deg, #f43f5e, #e11d48);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+            transition: all 0.3s ease;
+            margin-right: 1rem;
+        }
+        .review-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(225, 29, 72, 0.4);
+        }
+        
+        /* 模态框背景 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* 模态框内容 */
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            max-height: 85vh;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        
+        /* 暗色模式模态框 */
+        body.dark-theme .modal-content {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #f1f5f9;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        body.dark-theme .modal-header {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .modal-close:hover {
+            opacity: 1;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        .review-section {
+            margin-bottom: 1.5rem;
+        }
+        .review-section h4 {
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .review-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .review-stat-item {
+            background: rgba(99, 102, 241, 0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        body.dark-theme .review-stat-item {
+            background: rgba(255,255,255,0.05);
+        }
+        .review-stat-val {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #6366f1;
+            margin-bottom: 0.2rem;
+        }
+        body.dark-theme .review-stat-val {
+            color: #818cf8;
+        }
+        
+        .review-highlight {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1));
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            padding: 1rem;
+            border-radius: 12px;
+        }
+        .review-advice {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 1rem;
+            border-radius: 12px;
+            line-height: 1.6;
+        }
+        
         /* 响应式设计 */
         @media (max-width: 768px) {
             .stats-panel {
@@ -845,6 +1000,13 @@
             .controls {
                 width: 100%;
                 justify-content: center;
+                flex-wrap: wrap;
+            }
+            .review-btn {
+                width: 100%;
+                justify-content: center;
+                margin-right: 0;
+                margin-bottom: 0.5rem;
             }
         }
         @media (max-width: 480px) {
@@ -893,487 +1055,3 @@
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <defs>
             <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
-            </linearGradient>
-            <linearGradient id="luxuryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
-            </linearGradient>
-            <filter id="luxuryShadow">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
-                <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
-            </filter>
-        </defs>
-        <symbol id="icon-arrow-left" viewBox="0 0 24 24">
-            <g stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
-                <path d="M19 12H5" stroke-width="2.5"/>
-                <path d="M5 12L11 18"/>
-                <path d="M5 12L11 6"/>
-            </g>
-        </symbol>
-        <symbol id="icon-book-open" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 3H22V21H2Z" stroke-width="2"/>
-                <path d="M12 3V21"/>
-                <path d="M6 8H10"/>
-                <path d="M6 12H10"/>
-                <path d="M6 16H10"/>
-                <path d="M14 8H18"/>
-                <path d="M14 12H18"/>
-                <path d="M14 16H18"/>
-                <circle cx="8" cy="5.5" r="0.5" fill="currentColor"/>
-                <circle cx="16" cy="5.5" r="0.5" fill="currentColor"/>
-            </g>
-        </symbol>
-        <symbol id="icon-quote-left" viewBox="0 0 24 24">
-            <g fill="currentColor" opacity="0.7">
-                <path d="M3 21C3 21 7 16 11 16C14.866 16 17 19 17 21M9 8C9 8 13 3 17 3C20.866 3 23 6 23 8"/>
-                <circle cx="5" cy="12" r="2" opacity="0.4"/>
-                <circle cx="19" cy="12" r="2" opacity="0.4"/>
-            </g>
-        </symbol>
-        <symbol id="icon-quote-right" viewBox="0 0 24 24">
-            <g fill="currentColor" opacity="0.7">
-                <path d="M21 3C21 3 17 8 13 8C9.134 8 7 5 7 3M15 16C15 16 11 21 7 21C3.134 21 1 18 1 16"/>
-                <circle cx="19" cy="12" r="2" opacity="0.4"/>
-                <circle cx="5" cy="12" r="2" opacity="0.4"/>
-            </g>
-        </symbol>
-        <symbol id="icon-search" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="M21 21L17 17" stroke-width="2.5"/>
-                <circle cx="11" cy="11" r="6" stroke-width="1.5" opacity="0.3"/>
-            </g>
-        </symbol>
-        <symbol id="icon-times" viewBox="0 0 24 24">
-            <g stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                <path d="M18 6L6 18"/>
-                <path d="M6 6L18 18"/>
-            </g>
-        </symbol>
-        <symbol id="icon-language" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path d="M2 12H22"/>
-                <path d="M12 2C15.5 5.5 17.5 10.5 17.5 12C17.5 13.5 15.5 18.5 12 22C8.5 18.5 6.5 13.5 6.5 12C6.5 10.5 8.5 5.5 12 2Z"/>
-                <circle cx="12" cy="12" r="3" stroke-width="1.5" opacity="0.5"/>
-            </g>
-        </symbol>
-        <symbol id="icon-moon" viewBox="0 0 24 24">
-            <g fill="currentColor">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" opacity="0.9"/>
-                <circle cx="18" cy="6" r="1.5" fill="white" opacity="0.6"/>
-                <circle cx="16" cy="10" r="1" fill="white" opacity="0.4"/>
-            </g>
-        </symbol>
-        <symbol id="icon-sun" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <circle cx="12" cy="12" r="5" stroke-width="2.5"/>
-                <path d="M12 1V4M12 20V23M4 12H1M23 12H20" stroke-width="2.5"/>
-                <path d="M4.22 4.22L6.34 6.34M17.66 17.66L19.78 19.78M4.22 19.78L6.34 17.66M17.66 6.34L19.78 4.22" stroke-width="2"/>
-                <circle cx="12" cy="12" r="7" stroke-width="0.5" opacity="0.2"/>
-            </g>
-        </symbol>
-        <symbol id="icon-tags" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 5H3V11C3 11.5 3.5 12 4 12L11 19L18 12C18.5 11.5 19 11 19 10V4C19 3.5 18.5 3 18 3H13"/>
-                <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
-                <path d="M16 8L20 4" stroke-width="2"/>
-            </g>
-        </symbol>
-        <symbol id="icon-smile" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" stroke-width="2.5"/>
-                <path d="M8 14C8.5 16 10 17 12 17C14 17 15.5 16 16 14" stroke-width="2"/>
-                <circle cx="9" cy="9" r="1.2" fill="currentColor"/>
-                <circle cx="15" cy="9" r="1.2" fill="currentColor"/>
-                <circle cx="12" cy="12" r="8" stroke-width="0.5" opacity="0.2"/>
-            </g>
-        </symbol>
-        <symbol id="icon-sort" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                <path d="M3 6H21"/>
-                <path d="M3 12H15"/>
-                <path d="M3 18H9"/>
-                <path d="M21 9L19 11L17 9" fill="none"/>
-                <path d="M21 15L19 17L17 15" fill="none"/>
-            </g>
-        </symbol>
-        <symbol id="icon-redo" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M23 4V10H17"/>
-                <path d="M20.49 15C19.8 17.9 17.3 20 14.3 20C11.8 20 9.6 18.5 8.5 16.5L1 9"/>
-                <path d="M5 8L1 9L2 13"/>
-            </g>
-        </symbol>
-        <symbol id="icon-chart" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                <rect x="3" y="3" width="18" height="18" stroke-width="1.5" opacity="0.2"/>
-                <path d="M18 20V10"/>
-                <path d="M12 20V4"/>
-                <path d="M6 20V14"/>
-                <circle cx="18" cy="10" r="2" fill="currentColor"/>
-                <circle cx="12" cy="4" r="2" fill="currentColor"/>
-                <circle cx="6" cy="14" r="2" fill="currentColor"/>
-            </g>
-        </symbol>
-        <symbol id="icon-stream" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <path d="M4 4H20"/>
-                <path d="M4 12H20"/>
-                <path d="M4 20H20"/>
-                <path d="M2 4L4 6L6 4" stroke-width="1.5" opacity="0.5"/>
-                <path d="M2 12L4 14L6 12" stroke-width="1.5" opacity="0.5"/>
-                <path d="M2 20L4 22L6 20" stroke-width="1.5" opacity="0.5"/>
-            </g>
-        </symbol>
-        <symbol id="icon-th" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="7" stroke-width="2"/>
-                <rect x="14" y="3" width="7" height="7" stroke-width="2"/>
-                <rect x="3" y="14" width="7" height="7" stroke-width="2"/>
-                <rect x="14" y="14" width="7" height="7" stroke-width="2"/>
-                <circle cx="6.5" cy="6.5" r="0.5" fill="currentColor" opacity="0.5"/>
-                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" opacity="0.5"/>
-                <circle cx="6.5" cy="17.5" r="0.5" fill="currentColor" opacity="0.5"/>
-                <circle cx="17.5" cy="17.5" r="0.5" fill="currentColor" opacity="0.5"/>
-            </g>
-        </symbol>
-        <symbol id="icon-arrow-up" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 19V5"/>
-                <path d="M5 12L12 5L19 12"/>
-                <path d="M12 7L12 5" stroke-width="1.5" opacity="0.5"/>
-            </g>
-        </symbol>
-    </svg>
-
-    <!-- 背景装饰 -->
-    <div class="bg-decoration">
-        <div class="circle circle-1"></div>
-        <div class="circle circle-2"></div>
-        <div class="circle circle-3"></div>
-    </div>
-
-    <!-- 顶部头部 -->
-    <header class="header">
-        <div class="container success-header">
-            <div class="header-left">
-                <a class="back-link" href="index.html" aria-label="返回首页">
-                    <svg class="icon"><use href="#icon-arrow-left"></use></svg>
-                </a>
-                <div class="header-text">
-                    <div class="title-wrapper">
-                        <svg class="icon title-icon"><use href="#icon-book-open"></use></svg>
-                        <h1 class="logo" data-i18n="successTitle">成功日记时间轴</h1>
-                    </div>
-                    <p class="success-subtitle" data-i18n="successSubtitle">
-                        <svg class="icon quote-icon"><use href="#icon-quote-left"></use></svg>
-                        当你写成功日记的时候,你会对自己,对世界,还有对成功的规律作更深入的思考,会越来越多地了解自己和自己的愿望,这样你才会有能力去理解别人。彻底了解自己和世界上的所有秘密,是我们无法完全实现的一种理想,但我们可以一步一步地慢慢接近这种理想。一个人挣钱的多少是和他的自信心联系在一起的。另外,他的精力究竟是集中在自己的能力范围之内,还是放到了他力所不能及的事情上,这也是很重要的一点。没有我的成功日记本,我就不会去思考自己适合在哪些方面赚钱。
-                        <svg class="icon quote-icon"><use href="#icon-quote-right"></use></svg>
-                    </p>
-                </div>
-            </div>
-
-            <div class="controls success-controls">
-                <div class="search-box diary-search">
-                    <svg class="icon"><use href="#icon-search"></use></svg>
-                    <input type="text" id="diarySearchInput" placeholder="搜索标题、标签、心情..." aria-label="搜索日记">
-                    <button class="search-clear" id="searchClear" style="display: none;" aria-label="清除搜索">
-                        <svg class="icon"><use href="#icon-times"></use></svg>
-                    </button>
-                </div>
-                <button id="languageToggle" class="language-toggle" aria-label="切换语言">
-                    <svg class="icon"><use href="#icon-language"></use></svg>
-                    <span>中 → EN</span>
-                </button>
-                <button id="themeToggle" class="theme-toggle" aria-label="切换主题">
-                    <svg class="icon theme-icon"><use href="#icon-moon"></use></svg>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- 统计面板 -->
-    <section class="stats-panel" role="region" aria-label="数据统计概览">
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="stat-icon">
-                        <svg class="icon"><use href="#icon-book-open"></use></svg>
-                    </div>
-                    <span class="stat-label" data-i18n="totalRecords">总记录数</span>
-                </div>
-                <div class="stat-value" id="totalRecordsValue">0</div>
-                <div class="stat-description">
-                    <span data-i18n="recordsDesc">已记录的成功时刻</span>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="stat-icon">
-                        <svg class="icon"><use href="#icon-chart"></use></svg>
-                    </div>
-                    <span class="stat-label" data-i18n="avgAchievement">平均成就值</span>
-                </div>
-                <div class="stat-value" id="avgAchievementValue">0</div>
-                <div class="stat-description">
-                    <span data-i18n="achievementDesc">综合评估指数</span>
-                    <span class="stat-badge" id="achievementLevel">
-                        <svg class="icon" style="width: 12px; height: 12px;"><use href="#icon-chart"></use></svg>
-                        <span>计算中</span>
-                    </span>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="stat-icon">
-                        <svg class="icon"><use href="#icon-stream"></use></svg>
-                    </div>
-                    <span class="stat-label" data-i18n="latestDate">最新发布</span>
-                </div>
-                <div class="stat-value" id="latestDateValue">--</div>
-                <div class="stat-description">
-                    <span data-i18n="daysAgo" id="daysAgoText">距今天数</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 日记工具栏 -->
-    <section class="diary-toolbar" role="region" aria-label="日记筛选工具栏">
-        <div class="container diary-toolbar-inner">
-            <div class="filter-group">
-                <div class="filter-header">
-                    <svg class="icon"><use href="#icon-tags"></use></svg>
-                    <span class="filter-title" data-i18n="tagLabel">分类标签</span>
-                </div>
-                <div id="diaryTagFilter" class="filter-chips" role="group" aria-label="标签筛选"></div>
-            </div>
-            <div class="filter-row">
-                <div class="filter-item">
-                    <svg class="icon"><use href="#icon-smile"></use></svg>
-                    <label class="filter-label" data-i18n="moodLabel" for="diaryMoodSelect">心情</label>
-                    <select id="diaryMoodSelect" class="filter-select" aria-label="选择心情筛选">
-                        <option value="all">全部心情</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <svg class="icon"><use href="#icon-sort"></use></svg>
-                    <label class="filter-label" data-i18n="sortLabel" for="diarySortSelect">排序</label>
-                    <select id="diarySortSelect" class="filter-select" aria-label="选择排序方式">
-                        <option value="dateDesc">🆕日期:最新优先</option>
-                        <option value="dateAsc">🕰️日期:最旧优先</option>
-                        <option value="achievementDesc">🏆成就值:最高优先</option>
-                        <option value="achievementAsc">📉成就值:最低优先</option>
-                    </select>
-                </div>
-                <button id="diaryResetFilters" class="ghost-btn reset-btn" data-i18n="resetFilters" aria-label="重置所有筛选条件">
-                    <svg class="icon"><use href="#icon-redo"></use></svg>
-                    <span>重置筛选</span>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- 主内容区 -->
-    <main class="main-content success-main">
-        <div class="container">
-            <div class="stats-bar">
-                <div class="diary-counter" id="diaryCounter">
-                    <svg class="icon"><use href="#icon-chart"></use></svg>
-                    <span>共 <strong>0</strong> 条记录</span>
-                </div>
-                <div class="view-toggle" role="group" aria-label="切换视图">
-                    <button class="view-btn active" data-view="timeline" aria-label="时间轴视图" aria-pressed="true">
-                        <svg class="icon"><use href="#icon-stream"></use></svg>
-                    </button>
-                    <button class="view-btn" data-view="grid" aria-label="网格视图" aria-pressed="false">
-                        <svg class="icon"><use href="#icon-th"></use></svg>
-                    </button>
-                </div>
-            </div>
-
-            <div id="diaryTimeline" class="timeline"></div>
-
-            <div class="empty-state hidden">
-                <svg class="icon empty-icon"><use href="#icon-search"></use></svg>
-                <h3>未找到匹配的记录</h3>
-                <p>试试调整筛选条件或搜索关键词</p>
-            </div>
-        </div>
-    </main>
-
-    <!-- 返回顶部按钮 -->
-    <button id="backToTop" class="back-to-top" aria-label="返回顶部">
-        <svg class="icon"><use href="#icon-arrow-up"></use></svg>
-    </button>
-
-    <!-- 脚本文件（加版本号避免缓存可选） -->
-    <script src="data.js"></script>
-    <script src="script.js"></script>
-
-    <!-- 核心功能脚本（已修复与增强） -->
-    <script>
-        // 兼容不同键名的成就值读取
-        function getAchievementValue(item) {
-            const raw = item?.achievementLevel ?? item?.achievement ?? item?.achievementScore ?? item?.score ?? item?.rating;
-            const n = Number(raw);
-            return Number.isFinite(n) ? n : null;
-        }
-
-        // 统计功能（增强鲁棒性 + 修复天数计算）
-        function updateStatistics() {
-            console.log('📊 更新统计数据...');
-            const diaryData = Array.isArray(window.successDiaryData) ? window.successDiaryData : [];
-
-            if (!diaryData.length) {
-                console.warn('⚠️ 暂无日记数据');
-                document.getElementById('totalRecordsValue').textContent = '0';
-                document.getElementById('avgAchievementValue').textContent = '0.0';
-                document.getElementById('latestDateValue').textContent = '--';
-                document.getElementById('daysAgoText').textContent = '暂无记录';
-                document.getElementById('achievementLevel').innerHTML =
-                    '<svg class="icon" style="width: 12px; height: 12px;"><use href="#icon-chart"></use></svg><span>暂无数据</span>';
-                return;
-            }
-
-            // 总记录
-            const totalRecords = diaryData.length;
-            document.getElementById('totalRecordsValue').textContent = String(totalRecords);
-
-            // 成就值集合
-            const achievementValues = diaryData.map(getAchievementValue).filter(v => v != null);
-            console.log('🧮 参与平均的条数:', achievementValues.length, '示例:', achievementValues.slice(0, 10));
-
-            let avgAchievement = 0;
-            let achievementLevel = '暂无数据';
-
-            if (achievementValues.length > 0) {
-                avgAchievement = achievementValues.reduce((sum, val) => sum + val, 0) / achievementValues.length;
-                avgAchievement = Number(avgAchievement.toFixed(1));
-
-                if (avgAchievement >= 9) achievementLevel = '🌟 卓越';
-                else if (avgAchievement >= 8) achievementLevel = '🎯 优秀';
-                else if (avgAchievement >= 7) achievementLevel = '👍 良好';
-                else if (avgAchievement >= 6) achievementLevel = '📈 合格';
-                else if (avgAchievement >= 5) achievementLevel = '💪 努力中';
-                else achievementLevel = '🔥 加油';
-            }
-
-            document.getElementById('avgAchievementValue').textContent = avgAchievement.toFixed(1);
-            document.getElementById('achievementLevel').innerHTML =
-                '<svg class="icon" style="width: 12px; height: 12px;"><use href="#icon-chart"></use></svg><span>' + achievementLevel + '</span>';
-
-            // 最新日期 + 距今天数（修正乘法）
-            const dates = diaryData
-                .map(item => item?.date ? new Date(item.date) : null)
-                .filter(date => date && !isNaN(date.getTime()))
-                .sort((a, b) => b - a);
-
-            if (dates.length > 0) {
-                const latestDate = dates[0];
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                latestDate.setHours(0, 0, 0, 0);
-
-                const diffDays = Math.floor(Math.abs(today - latestDate) / (1000 * 60 * 60 * 24));
-                const formattedDate = `${latestDate.getFullYear()}-${String(latestDate.getMonth() + 1).padStart(2, '0')}-${String(latestDate.getDate()).padStart(2, '0')}`;
-
-                document.getElementById('latestDateValue').textContent = formattedDate;
-
-                let daysAgoText = '';
-                if (diffDays === 0) daysAgoText = '🎉 今天更新';
-                else if (diffDays === 1) daysAgoText = '📝 昨天更新';
-                else if (diffDays <= 7) daysAgoText = `📅 ${diffDays} 天前`;
-                else if (diffDays <= 30) daysAgoText = `🗓️ ${Math.floor(diffDays / 7)} 周前`;
-                else if (diffDays <= 365) daysAgoText = `📆 ${Math.floor(diffDays / 30)} 个月前`;
-                else daysAgoText = `🗓️ ${Math.floor(diffDays / 365)} 年前`;
-                document.getElementById('daysAgoText').textContent = daysAgoText;
-            }
-
-            console.log('✅ 统计数据更新完成');
-        }
-
-        // 首次加载后稍延时计算（等数据挂载）
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => updateStatistics(), 150);
-        });
-
-        // 外部更新数据时主动刷新
-        document.addEventListener('diaryDataUpdated', updateStatistics);
-
-        // 回到顶部功能
-        document.addEventListener('DOMContentLoaded', function() {
-            const backToTopBtn = document.getElementById('backToTop');
-            if (!backToTopBtn) return;
-
-            let ticking = false;
-
-            function updateBackToTopButton(scrollPos) {
-                if (scrollPos > 300) backToTopBtn.classList.add('show');
-                else backToTopBtn.classList.remove('show');
-            }
-
-            function onScroll() {
-                const scrollPos = window.scrollY || document.documentElement.scrollTop;
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        updateBackToTopButton(scrollPos);
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            }
-
-            window.addEventListener('scroll', onScroll, { passive: true });
-
-            backToTopBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-
-            updateBackToTopButton(window.scrollY || document.documentElement.scrollTop);
-        });
-
-        // 主题切换
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('.theme-icon');
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        if (currentTheme === 'dark') {
-            document.body.classList.add('dark-theme');
-            themeIcon.querySelector('use').setAttribute('href', '#icon-sun');
-        }
-        themeToggle.addEventListener('click', function() {
-            document.body.classList.toggle('dark-theme');
-            const isDark = document.body.classList.contains('dark-theme');
-            themeIcon.querySelector('use').setAttribute('href', isDark ? '#icon-sun' : '#icon-moon');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        });
-
-        // 语言切换
-        const languageToggle = document.getElementById('languageToggle');
-        let currentLang = localStorage.getItem('language') || 'zh';
-        function updateLanguage(lang) {
-            const elements = document.querySelectorAll('[data-i18n]');
-            elements.forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (window.translations && window.translations[lang] && window.translations[lang][key]) {
-                    el.textContent = window.translations[lang][key];
-                }
-            });
-            languageToggle.querySelector('span').textContent = lang === 'zh' ? '中 → EN' : 'EN → 中';
-            localStorage.setItem('language', lang);
-            currentLang = lang;
-        }
-        languageToggle.addEventListener('click', function() {
-            updateLanguage(currentLang === 'zh' ? 'en' : 'zh');
-        });
-        updateLanguage(currentLang);
-    </script>
-</body>
-</html>
