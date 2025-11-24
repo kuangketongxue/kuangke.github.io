@@ -229,8 +229,8 @@
         /* ==================== 导航按钮超清优化 ==================== */
         .nav-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 28px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* Adjusted width */
+            gap: 20px;
             margin-bottom: 60px;
         }
         .nav-btn {
@@ -760,6 +760,57 @@
             background: rgba(0, 0, 0, 0.35);
             color: #a5b4fc;
         }
+        /* ==================== 复盘分数样式 ==================== */
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            box-shadow: var(--shadow-luxury);
+            border: 4px solid transparent;
+            background-image: linear-gradient(white, white), var(--primary-gradient);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+        }
+        body.dark-mode .score-circle {
+            background-image: linear-gradient(#2d3748, #2d3748), var(--primary-gradient);
+        }
+        .score-value {
+            font-size: 4rem;
+            font-weight: 900;
+            background: var(--luxury-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+        .score-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-top: 5px;
+        }
+        .review-advice ul {
+            list-style: none;
+            padding: 0;
+        }
+        .review-advice li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+        .review-advice li::before {
+            content: '👉';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
         /* ==================== 状态消息 ==================== */
         .loading,
         .error {
@@ -981,6 +1032,10 @@
                 <i class="fas fa-chart-line"></i>
                 <span>趋势分析</span>
             </button>
+            <button class="nav-btn" onclick="switchView('weekly')" role="tab" aria-selected="false">
+                <i class="fas fa-clipboard-check"></i>
+                <span>本周复盘</span>
+            </button>
             <button class="nav-btn" onclick="switchView('history')" role="tab" aria-selected="false">
                 <i class="fas fa-history"></i>
                 <span>历史记录</span>
@@ -1066,6 +1121,14 @@
                     <canvas id="moodChart"></canvas>
                 </div>
             </div>
+        </section>
+        <!-- 本周复盘视图 -->
+        <section id="weeklyView" class="view" role="tabpanel">
+            <div class="page-title">
+                <h1>本周复盘 & 智能建议</h1>
+                <p>基于最近7天数据的深度分析</p>
+            </div>
+            <div id="weeklyContent"></div>
         </section>
         <!-- 历史记录视图 -->
         <section id="historyView" class="view" role="tabpanel">
@@ -1195,20 +1258,26 @@
                         const textColor = getComputedStyle(document.body).color;
                         const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)';
                         chart.options.plugins.legend.labels.color = textColor;
-                        if (chart.options.scales.y) {
+                        if (chart.options.scales && chart.options.scales.y) {
                             chart.options.scales.y.ticks.color = textColor;
                             chart.options.scales.y.grid.color = gridColor;
                             if (chart.options.scales.y.title) {
                                 chart.options.scales.y.title.color = textColor;
                             }
                         }
-                        if (chart.options.scales.y1) {
+                        // 处理雷达图特殊的 scales.r
+                        if (chart.options.scales && chart.options.scales.r) {
+                             chart.options.scales.r.pointLabels.color = textColor;
+                             chart.options.scales.r.grid.color = gridColor;
+                             chart.options.scales.r.angleLines.color = gridColor;
+                        }
+                        if (chart.options.scales && chart.options.scales.y1) {
                             chart.options.scales.y1.ticks.color = textColor;
                             if (chart.options.scales.y1.title) {
                                 chart.options.scales.y1.title.color = textColor;
                             }
                         }
-                        if (chart.options.scales.x) {
+                        if (chart.options.scales && chart.options.scales.x) {
                             chart.options.scales.x.ticks.color = textColor;
                             chart.options.scales.x.grid.color = gridColor;
                         }
@@ -1336,6 +1405,70 @@
                 const previousAvg = getAvg(previous);
                 return previousAvg ? ((recentAvg - previousAvg) / previousAvg * 100).toFixed(1) : 0;
             }
+            // 【新增】计算本周复盘数据
+            calculateWeeklyAnalysis() {
+                const records = this.getRecentRecords(7); // 取最近7条记录作为本周参考
+                if (records.length === 0) return null;
+
+                const sums = records.reduce((acc, r) => {
+                    acc.sleepDuration += r.sleep?.hours || 0;
+                    acc.sleepQuality += r.sleep?.quality || 0;
+                    acc.exerciseMins += r.exercise?.minutes || 0;
+                    acc.mood += r.mood?.score || 0;
+                    acc.stress += r.mood?.stress || 0;
+                    acc.water += r.diet?.waterIntake || 0;
+                    acc.junkFood += r.diet?.junkFood || 0;
+                    acc.energy += r.physical?.energy || 0;
+                    return acc;
+                }, {sleepDuration:0, sleepQuality:0, exerciseMins:0, mood:0, stress:0, water:0, junkFood:0, energy:0});
+
+                const count = records.length;
+                const avgs = {
+                    sleepDuration: sums.sleepDuration / count,
+                    sleepQuality: sums.sleepQuality / count,
+                    exerciseMins: sums.exerciseMins / count,
+                    mood: sums.mood / count,
+                    stress: sums.stress / count,
+                    water: sums.water / count,
+                    junkFood: sums.junkFood / count,
+                    energy: sums.energy / count
+                };
+
+                // 维度打分 (0-100分)
+                // 1. 睡眠分：理想8小时，质量10分
+                let sleepScore = (Math.min(avgs.sleepDuration, 8.5) / 8 * 50) + (avgs.sleepQuality / 10 * 50);
+                // 2. 运动分：理想每天45分钟
+                let exerciseScore = (Math.min(avgs.exerciseMins, 60) / 45 * 100);
+                // 3. 饮食分：饮水2000ml满分，垃圾食品扣分
+                let dietScore = (Math.min(avgs.water, 2500) / 2000 * 80) + (Math.max(0, 5 - avgs.junkFood) * 4);
+                // 4. 心态分：心情高分，压力低分
+                let moodScore = (avgs.mood / 10 * 60) + (Math.max(0, 10 - avgs.stress) / 10 * 40);
+                // 5. 精力分
+                let energyScore = (avgs.energy / 10 * 100);
+
+                // 综合评分
+                const totalScore = Math.round(
+                    (sleepScore * 0.3) + 
+                    (exerciseScore * 0.25) + 
+                    (moodScore * 0.2) + 
+                    (dietScore * 0.15) + 
+                    (energyScore * 0.1)
+                );
+
+                return {
+                    totalScore,
+                    radarData: [
+                        Math.min(100, Math.round(sleepScore)),
+                        Math.min(100, Math.round(exerciseScore)),
+                        Math.min(100, Math.round(dietScore)),
+                        Math.min(100, Math.round(moodScore)),
+                        Math.min(100, Math.round(energyScore))
+                    ],
+                    averages: avgs,
+                    count
+                };
+            }
+
             destroyCharts() {
                 Object.values(this.charts).forEach(chart => {
                     if (chart) chart.destroy();
@@ -2014,6 +2147,122 @@
                     });
                 });
             }
+
+            // 【新增】渲染本周复盘视图
+            renderWeekly() {
+                this.queueRender(() => {
+                    const weeklyData = this.dm.calculateWeeklyAnalysis();
+                    const container = document.getElementById('weeklyContent');
+                    
+                    if (!weeklyData) {
+                        container.innerHTML = '<p class="loading">暂无足够数据进行周复盘（需要至少1条记录）</p>';
+                        return;
+                    }
+
+                    // 生成分析建议
+                    const advice = [];
+                    const avgs = weeklyData.averages;
+                    
+                    if (avgs.sleepDuration < 7) advice.push("😴 睡眠不足：本周平均睡眠不到7小时，建议下周尝试提前30分钟上床，睡前远离手机。");
+                    if (avgs.exerciseMins < 30) advice.push("🏃 运动缺乏：本周运动较少，建议下周每天增加15分钟快走，从简单的活动开始。");
+                    if (avgs.water < 1500) advice.push("💧 饮水过少：身体处于缺水状态，建议下周准备大容量水杯，设定定时喝水提醒。");
+                    if (avgs.stress > 6) advice.push("🧘 压力偏大：检测到压力值较高，建议每天进行5-10分钟正念冥想或深呼吸练习。");
+                    if (avgs.junkFood > 2) advice.push("🍔 饮食控制：本周垃圾食品摄入次数较多，下周请尝试用水果或坚果代替零食。");
+                    if (advice.length === 0) advice.push("🌟 完美状态：本周表现非常出色，请继续保持这种健康的生活方式！");
+
+                    const adviceHTML = advice.map(item => `<li>${item.substring(2)}</li>`).join('');
+
+                    container.innerHTML = `
+                        <div class="score-circle">
+                            <div class="score-value">${weeklyData.totalScore}</div>
+                            <div class="score-label">本周健康分</div>
+                        </div>
+
+                        <div class="stats-grid" style="margin-bottom: 40px;">
+                            <div class="chart-panel" style="margin-bottom:0;">
+                                <h3 class="panel-title">
+                                    <i class="fas fa-bullseye"></i>
+                                    五维健康雷达
+                                </h3>
+                                <div class="chart-container" style="height: 350px;">
+                                    <canvas id="weeklyRadarChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-panel" style="margin-bottom:0;">
+                                <h3 class="panel-title">
+                                    <i class="fas fa-user-md"></i>
+                                    下周行动建议
+                                </h3>
+                                <div class="info-box review-advice">
+                                    <ul>
+                                        ${adviceHTML}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // 渲染雷达图
+                    const ctx = document.getElementById('weeklyRadarChart');
+                    const textColor = getComputedStyle(document.body).color;
+                    const isDark = body.classList.contains('dark-mode');
+                    const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+
+                    if (this.dm.charts.weeklyRadar) {
+                        this.dm.charts.weeklyRadar.destroy();
+                    }
+
+                    this.dm.charts.weeklyRadar = new Chart(ctx, {
+                        type: 'radar',
+                        data: {
+                            labels: ['睡眠', '运动', '饮食', '心态', '精力'],
+                            datasets: [{
+                                label: '本周表现',
+                                data: weeklyData.radarData,
+                                fill: true,
+                                backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                                borderColor: 'rgba(102, 126, 234, 1)',
+                                pointBackgroundColor: 'rgba(102, 126, 234, 1)',
+                                pointBorderColor: '#fff',
+                                pointHoverBackgroundColor: '#fff',
+                                pointHoverBorderColor: 'rgba(102, 126, 234, 1)'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                r: {
+                                    angleLines: {
+                                        color: gridColor
+                                    },
+                                    grid: {
+                                        color: gridColor
+                                    },
+                                    pointLabels: {
+                                        color: textColor,
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    suggestedMin: 0,
+                                    suggestedMax: 100,
+                                    ticks: {
+                                        backdropColor: 'transparent',
+                                        color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)' 
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: { display: false }
+                            }
+                        }
+                    });
+                });
+            }
+
             // 渲染运动达标面板
             renderExerciseGoals(goalData) {
                 if (!goalData) {
@@ -2296,6 +2545,7 @@
                 'overview': 'overviewView',
                 'today': 'todayView',
                 'trends': 'trendsView',
+                'weekly': 'weeklyView',
                 'history': 'historyView',
                 'guide': 'guideView'
             };
@@ -2314,6 +2564,9 @@
                         break;
                     case 'trends':
                         window.uiRenderer.renderTrends();
+                        break;
+                    case 'weekly':
+                        window.uiRenderer.renderWeekly();
                         break;
                     case 'history':
                         window.uiRenderer.renderHistory();
