@@ -103,7 +103,8 @@
             backdrop-filter: blur(8px) !important;
         }
         body:not(.dark-theme) .language-toggle,
-        body:not(.dark-theme) .theme-toggle {
+        body:not(.dark-theme) .theme-toggle,
+        body:not(.dark-theme) .review-btn {
             background: rgba(255, 255, 255, 0.2) !important;
             border: 1px solid rgba(255, 255, 255, 0.3) !important;
             color: #ffffff !important;
@@ -149,7 +150,8 @@
             backdrop-filter: blur(10px) !important;
         }
         body.dark-theme .language-toggle,
-        body.dark-theme .theme-toggle {
+        body.dark-theme .theme-toggle,
+        body.dark-theme .review-btn {
             background: rgba(30, 41, 59, 0.6) !important;
             border: 1px solid rgba(100, 116, 139, 0.4) !important;
             color: #f1f5f9 !important;
@@ -369,6 +371,194 @@
         .language-toggle span {
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
+        /* 复盘按钮样式 */
+        .review-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+        .review-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.3) !important;
+        }
+        body.dark-theme .review-btn:hover {
+            background: rgba(30, 41, 59, 0.8) !important;
+        }
+        .review-btn span {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        /* 模态框样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none; /* 默认隐藏 */
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 85vh;
+        }
+        body.dark-theme .modal-content {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(100, 116, 139, 0.4);
+            color: #f1f5f9;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(124, 58, 237, 0.1));
+        }
+        body.dark-theme .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .modal-close:hover {
+            opacity: 1;
+        }
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+        .review-section {
+            margin-bottom: 1.5rem;
+        }
+        .review-section h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: var(--accent-color, #6366f1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .review-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .review-stat-item {
+            background: rgba(99, 102, 241, 0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        body.dark-theme .review-stat-item {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .review-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6366f1;
+            margin-bottom: 0.25rem;
+        }
+        body.dark-theme .review-stat-value {
+            color: #818cf8;
+        }
+        .review-stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        .review-text-box {
+            background: rgba(0, 0, 0, 0.03);
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+        }
+        body.dark-theme .review-text-box {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .review-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .review-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.2rem;
+        }
+        .review-list li::before {
+            content: "•";
+            color: #6366f1;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: right;
+        }
+        body.dark-theme .modal-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #7c3aed);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+        }
+
         /* 回到顶部按钮 */
         #backToTop {
             position: fixed;
@@ -806,227 +996,6 @@
             font-size: 1.25rem;
             margin-bottom: 0.5rem;
         }
-
-        /* ==================== 本周数据分析按钮 ==================== */
-        .weekly-analysis-btn {
-            position: fixed;
-            top: 100px;
-            right: 30px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #f59e0b, #fbbf24);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
-            z-index: 10001;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        .weekly-analysis-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 12px 32px rgba(245, 158, 11, 0.5);
-        }
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4); }
-            50% { box-shadow: 0 8px 32px rgba(245, 158, 11, 0.6); }
-        }
-
-        /* ==================== 模态框样式 ==================== */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 20000;
-            animation: fadeIn 0.3s ease;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-        .analysis-modal {
-            background: white;
-            border-radius: 24px;
-            max-width: 900px;
-            width: 90%;
-            max-height: 85vh;
-            overflow: hidden;
-            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        body.dark-theme .analysis-modal {
-            background: rgba(30, 41, 59, 0.98);
-            border: 1px solid rgba(100, 116, 139, 0.3);
-        }
-        @keyframes slideUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        .modal-header {
-            padding: 2rem;
-            background: linear-gradient(135deg, #f59e0b, #fbbf24);
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .modal-header h2 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .modal-close {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: rotate(90deg);
-        }
-        .modal-body {
-            padding: 2rem;
-            overflow-y: auto;
-            max-height: calc(85vh - 100px);
-        }
-        body.dark-theme .modal-body {
-            color: #e2e8f0;
-        }
-        .analysis-section {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: rgba(99, 102, 241, 0.05);
-            border-radius: 16px;
-            border-left: 4px solid;
-            border-image: linear-gradient(180deg, #6366f1, #7c3aed) 1;
-        }
-        body.dark-theme .analysis-section {
-            background: rgba(99, 102, 241, 0.1);
-        }
-        .analysis-section h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: linear-gradient(135deg, #6366f1, #7c3aed);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        body.dark-theme .analysis-section h3 {
-            color: #c4b5fd;
-            -webkit-text-fill-color: #c4b5fd;
-        }
-        .metric-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-        .metric-item {
-            padding: 1rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-        body.dark-theme .metric-item {
-            background: rgba(30, 41, 59, 0.7);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-        .metric-label {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-bottom: 0.25rem;
-        }
-        body.dark-theme .metric-label {
-            color: #94a3b8;
-        }
-        .metric-value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #6366f1;
-        }
-        body.dark-theme .metric-value {
-            color: #a5b4fc;
-        }
-        .suggestion-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .suggestion-list li {
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.75rem;
-            background: white;
-            border-radius: 12px;
-            border-left: 3px solid #6366f1;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            line-height: 1.6;
-        }
-        body.dark-theme .suggestion-list li {
-            background: rgba(30, 41, 59, 0.7);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            border-left-color: #818cf8;
-        }
-        .trend-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .trend-up {
-            background: rgba(34, 197, 94, 0.1);
-            color: #22c55e;
-        }
-        .trend-down {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-        }
-        .trend-stable {
-            background: rgba(99, 102, 241, 0.1);
-            color: #6366f1;
-        }
-        body.dark-theme .trend-up {
-            background: rgba(34, 197, 94, 0.2);
-            color: #4ade80;
-        }
-        body.dark-theme .trend-down {
-            background: rgba(239, 68, 68, 0.2);
-            color: #f87171;
-        }
-        body.dark-theme .trend-stable {
-            background: rgba(99, 102, 241, 0.2);
-            color: #818cf8;
-        }
-
         /* 响应式设计 */
         @media (max-width: 768px) {
             .stats-panel {
@@ -1056,13 +1025,6 @@
                 height: 45px;
                 font-size: 1.1rem;
             }
-            .weekly-analysis-btn {
-                top: 80px;
-                right: 20px;
-                width: 50px;
-                height: 50px;
-                font-size: 1.2rem;
-            }
             .header .container {
                 flex-direction: column;
                 gap: 1rem;
@@ -1074,17 +1036,7 @@
                 width: 100%;
                 justify-content: center;
             }
-            .analysis-modal {
-                width: 95%;
-                max-height: 90vh;
-            }
-            .modal-header {
-                padding: 1.5rem;
-            }
-            .modal-body {
-                padding: 1.5rem;
-            }
-            .metric-grid {
+            .review-stat-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -1104,19 +1056,12 @@
                 height: 40px;
                 font-size: 1rem;
             }
-            .weekly-analysis-btn {
-                top: 70px;
-                right: 15px;
-                width: 45px;
-                height: 45px;
-                font-size: 1.1rem;
-            }
             .success-subtitle {
                 font-size: 0.85rem;
                 line-height: 1.5;
             }
-            .modal-header h2 {
-                font-size: 1.4rem;
+            .review-btn span {
+                display: none; /* 移动端隐藏文字只留图标 */
             }
         }
         /* 加载动画 */
@@ -1156,6 +1101,15 @@
                 <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
             </filter>
         </defs>
+        <!-- 复盘剪贴板图标 -->
+        <symbol id="icon-clipboard" viewBox="0 0 24 24">
+            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                <path d="M9 14l2 2 4-4"/>
+            </g>
+        </symbol>
+        <!-- 现有图标 -->
         <symbol id="icon-arrow-left" viewBox="0 0 24 24">
             <g stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
                 <path d="M19 12H5" stroke-width="2.5"/>
@@ -1299,34 +1253,6 @@
                 <path d="M12 7L12 5" stroke-width="1.5" opacity="0.5"/>
             </g>
         </symbol>
-        <symbol id="icon-analytics" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" stroke-width="2"/>
-                <path d="M3 9H21"/>
-                <path d="M9 21V9"/>
-                <circle cx="6" cy="6" r="1" fill="currentColor"/>
-                <circle cx="18" cy="6" r="1" fill="currentColor"/>
-            </g>
-        </symbol>
-        <symbol id="icon-lightbulb" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 18H15"/>
-                <path d="M10 22H14"/>
-                <path d="M15.09 14C16.27 13.31 17 11.81 17 10C17 7.24 14.76 5 12 5S7 7.24 7 10C7 11.81 7.73 13.31 8.91 14"/>
-                <path d="M12 2V3"/>
-                <circle cx="12" cy="10" r="3" opacity="0.3"/>
-            </g>
-        </symbol>
-        <symbol id="icon-trophy" viewBox="0 0 24 24">
-            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 9H4.5C3.67 9 3 8.33 3 7.5V5.5C3 4.67 3.67 4 4.5 4H6"/>
-                <path d="M18 9H19.5C20.33 9 21 8.33 21 7.5V5.5C21 4.67 20.33 4 19.5 4H18"/>
-                <path d="M6 9C6 15 9 18 12 18C15 18 18 15 18 9"/>
-                <path d="M6 4H18V9H6V4Z"/>
-                <path d="M12 18V22"/>
-                <path d="M8 22H16"/>
-            </g>
-        </symbol>
     </svg>
     <!-- 背景装饰 -->
     <div class="bg-decoration">
@@ -1334,50 +1260,6 @@
         <div class="circle circle-2"></div>
         <div class="circle circle-3"></div>
     </div>
-    
-    <!-- 本周数据分析按钮 -->
-    <button id="weeklyAnalysisBtn" class="weekly-analysis-btn" aria-label="查看本周数据分析" title="本周复盘 📊">
-        📊
-    </button>
-
-    <!-- 本周数据分析模态框 -->
-    <div id="analysisModal" class="modal-overlay">
-        <div class="analysis-modal">
-            <div class="modal-header">
-                <h2>
-                    <svg class="icon" style="width: 1.5em; height: 1.5em;"><use href="#icon-analytics"></use></svg>
-                    本周成功日记复盘分析
-                </h2>
-                <button class="modal-close" id="modalClose" aria-label="关闭模态框">
-                    <svg class="icon" style="width: 1.2em; height: 1.2em;"><use href="#icon-times"></use></svg>
-                </button>
-            </div>
-            <div class="modal-body" id="analysisContent">
-                <div class="analysis-section">
-                    <h3>
-                        <svg class="icon"><use href="#icon-chart"></use></svg>
-                        数据概览
-                    </h3>
-                    <div class="metric-grid" id="metricsGrid"></div>
-                </div>
-                <div class="analysis-section">
-                    <h3>
-                        <svg class="icon"><use href="#icon-trophy"></use></svg>
-                        成就趋势分析
-                    </h3>
-                    <div id="trendAnalysis"></div>
-                </div>
-                <div class="analysis-section">
-                    <h3>
-                        <svg class="icon"><use href="#icon-lightbulb"></use></svg>
-                        优化建议
-                    </h3>
-                    <ul class="suggestion-list" id="suggestionList"></ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- 顶部头部 -->
     <header class="header">
         <div class="container success-header">
@@ -1398,6 +1280,12 @@
                 </div>
             </div>
             <div class="controls success-controls">
+                <!-- 新增：本周复盘按钮 -->
+                <button id="weeklyReviewBtn" class="review-btn" aria-label="本周复盘">
+                    <svg class="icon"><use href="#icon-clipboard"></use></svg>
+                    <span>本周复盘</span>
+                </button>
+
                 <div class="search-box diary-search">
                     <svg class="icon"><use href="#icon-search"></use></svg>
                     <input type="text" id="diarySearchInput" placeholder="搜索标题、标签、心情..." aria-label="搜索日记">
@@ -1524,6 +1412,44 @@
     <button id="backToTop" class="back-to-top" aria-label="返回顶部">
         <svg class="icon"><use href="#icon-arrow-up"></use></svg>
     </button>
+
+    <!-- 新增：复盘总结模态框 -->
+    <div id="reviewModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <svg class="icon" style="color:#6366f1"><use href="#icon-clipboard"></use></svg>
+                    <span>本周成功日记复盘</span>
+                </div>
+                <button class="modal-close" id="closeReviewModal" aria-label="关闭">
+                    <svg class="icon"><use href="#icon-times"></use></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="review-stat-grid" id="reviewStats">
+                    <!-- 动态生成 -->
+                </div>
+                
+                <div class="review-section">
+                    <h4><svg class="icon"><use href="#icon-chart"></use></svg> 本周洞察</h4>
+                    <div class="review-text-box" id="reviewInsight">
+                        正在分析您的数据...
+                    </div>
+                </div>
+
+                <div class="review-section">
+                    <h4><svg class="icon"><use href="#icon-redo"></use></svg> 下周优化建议</h4>
+                    <ul class="review-list" id="reviewOptimization">
+                        <!-- 动态生成 -->
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="confirmReview">我收到了，下周继续加油！</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 脚本文件（加版本号避免缓存可选） -->
     <script src="data.js"></script>
     <script src="script.js"></script>
@@ -1594,269 +1520,9 @@
             }
             console.log('✅ 统计数据更新完成');
         }
-
-        // ==================== 本周数据分析功能 ====================
-        function getWeekData() {
-            const diaryData = Array.isArray(window.successDiaryData) ? window.successDiaryData : [];
-            const today = new Date();
-            const weekStart = new Date(today);
-            weekStart.setDate(today.getDate() - today.getDay()); // 本周日
-            weekStart.setHours(0, 0, 0, 0);
-            
-            const weekEnd = new Date(weekStart);
-            weekEnd.setDate(weekStart.getDate() + 7);
-            
-            return diaryData.filter(item => {
-                if (!item.date) return false;
-                const itemDate = new Date(item.date);
-                return itemDate >= weekStart && itemDate < weekEnd;
-            });
-        }
-
-        function analyzeWeekData() {
-            const weekData = getWeekData();
-            const allData = Array.isArray(window.successDiaryData) ? window.successDiaryData : [];
-            
-            // 上周数据对比
-            const today = new Date();
-            const lastWeekStart = new Date(today);
-            lastWeekStart.setDate(today.getDate() - today.getDay() - 7);
-            lastWeekStart.setHours(0, 0, 0, 0);
-            const lastWeekEnd = new Date(lastWeekStart);
-            lastWeekEnd.setDate(lastWeekStart.getDate() + 7);
-            
-            const lastWeekData = allData.filter(item => {
-                if (!item.date) return false;
-                const itemDate = new Date(item.date);
-                return itemDate >= lastWeekStart && itemDate < lastWeekEnd;
-            });
-
-            // 计算本周指标
-            const weekCount = weekData.length;
-            const lastWeekCount = lastWeekData.length;
-            
-            const weekAchievements = weekData.map(getAchievementValue).filter(v => v != null);
-            const lastWeekAchievements = lastWeekData.map(getAchievementValue).filter(v => v != null);
-            
-            const avgAchievement = weekAchievements.length > 0 
-                ? weekAchievements.reduce((sum, v) => sum + v, 0) / weekAchievements.length 
-                : 0;
-            const lastAvgAchievement = lastWeekAchievements.length > 0
-                ? lastWeekAchievements.reduce((sum, v) => sum + v, 0) / lastWeekAchievements.length
-                : 0;
-
-            // 统计标签
-            const tagMap = {};
-            weekData.forEach(item => {
-                const tags = item.tags || [];
-                tags.forEach(tag => {
-                    tagMap[tag] = (tagMap[tag] || 0) + 1;
-                });
-            });
-            const topTags = Object.entries(tagMap)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 5);
-
-            // 统计心情
-            const moodMap = {};
-            weekData.forEach(item => {
-                const mood = item.mood || '未知';
-                moodMap[mood] = (moodMap[mood] || 0) + 1;
-            });
-            const topMood = Object.entries(moodMap)
-                .sort((a, b) => b[1] - a[1])[0];
-
-            return {
-                weekCount,
-                lastWeekCount,
-                avgAchievement: avgAchievement.toFixed(1),
-                lastAvgAchievement: lastAvgAchievement.toFixed(1),
-                topTags,
-                topMood,
-                weekData,
-                lastWeekData
-            };
-        }
-
-        function getTrendIndicator(current, previous) {
-            const diff = current - previous;
-            if (Math.abs(diff) < 0.1) return { class: 'trend-stable', icon: '➡️', text: '持平' };
-            if (diff > 0) return { class: 'trend-up', icon: '📈', text: `上升 ${Math.abs(diff).toFixed(1)}` };
-            return { class: 'trend-down', icon: '📉', text: `下降 ${Math.abs(diff).toFixed(1)}` };
-        }
-
-        function generateSuggestions(analysis) {
-            const suggestions = [];
-            
-            // 记录数量建议
-            if (analysis.weekCount < 3) {
-                suggestions.push('🎯 本周记录偏少,建议每天至少记录1-2个成功时刻,持续积累正向反馈');
-            } else if (analysis.weekCount > 10) {
-                suggestions.push('🌟 本周记录非常充实!保持这个频率,同时可以尝试深度挖掘每个成功背后的关键要素');
-            } else {
-                suggestions.push('👍 本周记录频率良好,继续保持这个节奏,建议设定固定记录时间(如晚上睡前)');
-            }
-
-            // 成就值建议
-            const avgScore = parseFloat(analysis.avgAchievement);
-            if (avgScore < 7) {
-                suggestions.push('💪 成就值有提升空间,建议重点关注: ①完成具有挑战性的任务 ②突破舒适区 ③获得他人认可');
-            } else if (avgScore >= 8.5) {
-                suggestions.push('🏆 成就值表现优异!可以尝试设定更高难度的目标,持续突破自我上限');
-            }
-
-            // 趋势建议
-            const countTrend = analysis.weekCount - analysis.lastWeekCount;
-            if (countTrend < -2) {
-                suggestions.push('📊 记录频率下降明显,分析原因: ①是否太忙? ②是否缺乏动力? ③建议设置每日提醒');
-            }
-
-            // 标签多样性建议
-            if (analysis.topTags.length < 3) {
-                suggestions.push('🔖 成功领域较为集中,建议拓展: ①尝试新技能学习 ②发展兴趣爱好 ③增加社交活动');
-            } else if (analysis.topTags.length >= 5) {
-                suggestions.push('🎨 成功领域多样化发展良好,可以选择1-2个核心领域深耕,形成专业优势');
-            }
-
-            // 心情建议
-            if (analysis.topMood && analysis.topMood[0] !== '开心' && analysis.topMood[0] !== '兴奋') {
-                suggestions.push('😊 建议增加能带来积极情绪的活动,如: ①与朋友聚会 ②户外运动 ③学习新知识');
-            }
-
-            // 通用建议
-            suggestions.push('📝 定期回顾成功日记,总结规律: ①什么类型的任务让你最有成就感? ②哪些策略最有效? ③如何复制成功经验?');
-            suggestions.push('🎯 下周目标建议: ①设定3-5个明确的小目标 ②每天留出15分钟回顾当天成功 ③尝试一项新的挑战');
-
-            return suggestions;
-        }
-
-        function showWeeklyAnalysis() {
-            const analysis = analyzeWeekData();
-            const modal = document.getElementById('analysisModal');
-            
-            // 数据概览
-            const metricsGrid = document.getElementById('metricsGrid');
-            const countTrend = getTrendIndicator(analysis.weekCount, analysis.lastWeekCount);
-            const achievementTrend = getTrendIndicator(
-                parseFloat(analysis.avgAchievement), 
-                parseFloat(analysis.lastAvgAchievement)
-            );
-            
-            metricsGrid.innerHTML = `
-                <div class="metric-item">
-                    <div class="metric-label">本周记录数</div>
-                    <div class="metric-value">${analysis.weekCount}</div>
-                    <span class="trend-indicator ${countTrend.class}">
-                        ${countTrend.icon} ${countTrend.text}
-                    </span>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">平均成就值</div>
-                    <div class="metric-value">${analysis.avgAchievement}</div>
-                    <span class="trend-indicator ${achievementTrend.class}">
-                        ${achievementTrend.icon} ${achievementTrend.text}
-                    </span>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">主要心情</div>
-                    <div class="metric-value" style="font-size: 1.5rem;">
-                        ${analysis.topMood ? analysis.topMood[0] : '无数据'}
-                    </div>
-                    <span style="font-size: 0.85rem; color: #64748b;">
-                        ${analysis.topMood ? `出现${analysis.topMood[1]}次` : ''}
-                    </span>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">活跃标签</div>
-                    <div class="metric-value" style="font-size: 1.3rem;">
-                        ${analysis.topTags.length}
-                    </div>
-                    <span style="font-size: 0.85rem; color: #64748b;">
-                        领域涉猎
-                    </span>
-                </div>
-            `;
-
-            // 趋势分析
-            const trendAnalysis = document.getElementById('trendAnalysis');
-            let trendHTML = '<div style="margin-bottom: 1rem;">';
-            
-            if (analysis.topTags.length > 0) {
-                trendHTML += '<p style="margin-bottom: 0.75rem;"><strong>📊 本周热门标签:</strong></p>';
-                trendHTML += '<div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;">';
-                analysis.topTags.forEach(([tag, count]) => {
-                    trendHTML += `
-                        <span style="padding: 0.4rem 0.9rem; background: rgba(99, 102, 241, 0.1); 
-                              color: #6366f1; border-radius: 999px; font-size: 0.9rem; font-weight: 600;">
-                            ${tag} (${count}次)
-                        </span>
-                    `;
-                });
-                trendHTML += '</div>';
-            }
-
-            // 周度对比
-            const countChange = analysis.weekCount - analysis.lastWeekCount;
-            const achievementChange = parseFloat(analysis.avgAchievement) - parseFloat(analysis.lastAvgAchievement);
-            
-            trendHTML += `
-                <p style="line-height: 1.8; margin-bottom: 0.5rem;">
-                    📈 <strong>记录频率:</strong> 相比上周${countChange > 0 ? '增加' : countChange < 0 ? '减少' : '持平'}
-                    ${Math.abs(countChange)}条 ${countChange > 0 ? '🎉' : countChange < 0 ? '⚠️' : '➡️'}
-                </p>
-                <p style="line-height: 1.8; margin-bottom: 0.5rem;">
-                    🎯 <strong>成就质量:</strong> 平均成就值${achievementChange > 0 ? '提升' : achievementChange < 0 ? '下降' : '保持稳定'}
-                    ${Math.abs(achievementChange).toFixed(1)}分 ${achievementChange > 0 ? '🌟' : achievementChange < 0 ? '📉' : '➡️'}
-                </p>
-            `;
-
-            if (analysis.weekCount >= 5) {
-                trendHTML += `
-                    <p style="line-height: 1.8; margin-top: 1rem; padding: 1rem; background: rgba(34, 197, 94, 0.1); 
-                          border-radius: 12px; color: #22c55e; font-weight: 600;">
-                        ✨ 本周保持高频记录,成功习惯养成良好!继续保持!
-                    </p>
-                `;
-            }
-            
-            trendHTML += '</div>';
-            trendAnalysis.innerHTML = trendHTML;
-
-            // 优化建议
-            const suggestionList = document.getElementById('suggestionList');
-            const suggestions = generateSuggestions(analysis);
-            suggestionList.innerHTML = suggestions.map(s => `<li>${s}</li>`).join('');
-
-            modal.classList.add('active');
-        }
-
         // 首次加载后稍延时计算（等数据挂载）
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => updateStatistics(), 150);
-
-            // 本周分析按钮事件
-            const weeklyBtn = document.getElementById('weeklyAnalysisBtn');
-            const modal = document.getElementById('analysisModal');
-            const modalClose = document.getElementById('modalClose');
-
-            weeklyBtn.addEventListener('click', showWeeklyAnalysis);
-            
-            modalClose.addEventListener('click', () => {
-                modal.classList.remove('active');
-            });
-
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                }
-            });
-
-            // ESC键关闭
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && modal.classList.contains('active')) {
-                    modal.classList.remove('active');
-                }
-            });
         });
         // 外部更新数据时主动刷新
         document.addEventListener('diaryDataUpdated', updateStatistics);
@@ -1919,6 +1585,154 @@
             updateLanguage(currentLang === 'zh' ? 'en' : 'zh');
         });
         updateLanguage(currentLang);
+
+        /* ==================== 本周复盘功能逻辑 ==================== */
+        document.addEventListener('DOMContentLoaded', function() {
+            const reviewBtn = document.getElementById('weeklyReviewBtn');
+            const modal = document.getElementById('reviewModal');
+            const closeModalBtn = document.getElementById('closeReviewModal');
+            const confirmBtn = document.getElementById('confirmReview');
+            const statsContainer = document.getElementById('reviewStats');
+            const insightContainer = document.getElementById('reviewInsight');
+            const optimizationContainer = document.getElementById('reviewOptimization');
+
+            // 工具：判断日期是否在本周（周一到周日）
+            function isThisWeek(dateObj) {
+                const now = new Date();
+                const todayDay = now.getDay() || 7; // 周日转为7
+                // 本周一的日期
+                const monday = new Date(now);
+                monday.setDate(now.getDate() - todayDay + 1);
+                monday.setHours(0,0,0,0);
+                
+                // 下周一的日期
+                const nextMonday = new Date(monday);
+                nextMonday.setDate(monday.getDate() + 7);
+
+                return dateObj >= monday && dateObj < nextMonday;
+            }
+
+            // 生成复盘内容
+            function generateReview() {
+                const diaryData = Array.isArray(window.successDiaryData) ? window.successDiaryData : [];
+                
+                // 筛选本周数据
+                const weeklyData = diaryData.filter(item => {
+                    const d = new Date(item.date);
+                    return !isNaN(d.getTime()) && isThisWeek(d);
+                });
+
+                const count = weeklyData.length;
+                let totalScore = 0;
+                let tagsMap = {};
+                
+                weeklyData.forEach(item => {
+                    totalScore += getAchievementValue(item) || 0;
+                    if(item.tags && Array.isArray(item.tags)) {
+                        item.tags.forEach(tag => {
+                            tagsMap[tag] = (tagsMap[tag] || 0) + 1;
+                        });
+                    }
+                });
+
+                const avgScore = count > 0 ? (totalScore / count).toFixed(1) : 0;
+                
+                // 排序标签
+                const sortedTags = Object.entries(tagsMap)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 3)
+                    .map(entry => entry[0]);
+
+                // 1. 渲染统计数据
+                statsContainer.innerHTML = `
+                    <div class="review-stat-item">
+                        <div class="review-stat-value">${count}</div>
+                        <div class="review-stat-label">本周记录</div>
+                    </div>
+                    <div class="review-stat-item">
+                        <div class="review-stat-value">${avgScore}</div>
+                        <div class="review-stat-label">平均成就</div>
+                    </div>
+                    <div class="review-stat-item">
+                        <div class="review-stat-value">${sortedTags.length > 0 ? sortedTags.length : 0}</div>
+                        <div class="review-stat-label">覆盖领域</div>
+                    </div>
+                `;
+
+                // 2. 渲染洞察文案
+                let insightText = "";
+                if (count === 0) {
+                    insightText = "本周暂时还没有记录任何成功日记哦。也许是你太忙了，或者是忘记了？<br>记住，哪怕是微小的进步，也值得被记录下来。";
+                } else {
+                    insightText = `太棒了！本周你已经记录了 <strong>${count}</strong> 个成功时刻。<br>`;
+                    if (sortedTags.length > 0) {
+                        insightText += `你的主要精力集中在 <span class="review-tags">${sortedTags.map(t => `<span class="tag-pill" style="background:rgba(99,102,241,0.1); font-size:0.8em;">#${t}</span>`).join('')}</span> 这些领域。<br>`;
+                    }
+                    if (avgScore >= 8) {
+                        insightText += `本周你的状态<strong>非常火热</strong>，成就感爆棚！保持这种自信！`;
+                    } else if (avgScore >= 6) {
+                        insightText += `本周表现<strong>稳扎稳打</strong>，你在持续进步中。`;
+                    } else {
+                        insightText += `本周似乎遇到了一些挑战，但记录本身就是一种反思和成长。`;
+                    }
+                }
+                insightContainer.innerHTML = insightText;
+
+                // 3. 渲染优化建议（基于分数和数量）
+                let optimizations = [];
+                if (count === 0) {
+                    optimizations.push("<strong>即刻行动：</strong> 不要等到这周结束，今天就写下第一条日记吧。");
+                    optimizations.push("<strong>降低门槛：</strong> 哪怕只是“按时吃早饭”这样的小事，也是成功。");
+                    optimizations.push("<strong>固定时间：</strong> 尝试在每晚睡前花5分钟进行记录。");
+                } else if (count < 3) {
+                    optimizations.push("<strong>增加频率：</strong> 试着每天捕捉至少一个亮点，培养“成功雷达”。");
+                    optimizations.push("<strong>丰富维度：</strong> 除了工作/学习，也可以记录生活、人际关系中的小确幸。");
+                } else {
+                    if (avgScore >= 8) {
+                        optimizations.push("<strong>挑战自我：</strong> 下周可以尝试设定一个稍微跳出舒适区的小目标。");
+                        optimizations.push("<strong>分享喜悦：</strong> 你的能量很高，试着去鼓励身边的一个人。");
+                    } else if (avgScore < 6) {
+                        optimizations.push("<strong>关注过程：</strong> 不要在意结果是否完美，专注于你付出的努力。");
+                        optimizations.push("<strong>自我关怀：</strong> 下周给自己安排一次放松的活动，充电很重要。");
+                    } else {
+                        optimizations.push("<strong>复盘规律：</strong> 看看本周得分最高的日记，思考是什么因素促成了成功？");
+                        optimizations.push("<strong>保持节奏：</strong> 你已经养成了很好的习惯，继续保持！");
+                    }
+                }
+                
+                optimizationContainer.innerHTML = optimizations.map(opt => `<li>${opt}</li>`).join('');
+            }
+
+            // 打开模态框
+            reviewBtn.addEventListener('click', function() {
+                generateReview();
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            });
+
+            // 关闭模态框函数
+            function closeModal() {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            closeModalBtn.addEventListener('click', closeModal);
+            confirmBtn.addEventListener('click', closeModal);
+            
+            // 点击背景关闭
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // ESC键关闭
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+        });
     </script>
 </body>
 </html>
