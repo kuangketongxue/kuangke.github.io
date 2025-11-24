@@ -128,6 +128,37 @@
             gap: 1rem;
             align-items: center;
         }
+        /* ========== 周复盘按钮样式 ========== */
+        .weekly-review-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.4rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.9), rgba(249, 115, 22, 0.85));
+            border: 1px solid rgba(236, 72, 153, 0.45);
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 22px rgba(236, 72, 153, 0.28);
+            white-space: nowrap;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        body.light-mode .weekly-review-btn {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.95), rgba(249, 115, 22, 0.9));
+            box-shadow: 0 8px 18px rgba(236, 72, 153, 0.25);
+        }
+        .weekly-review-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 32px rgba(236, 72, 153, 0.35);
+            background: linear-gradient(135deg, rgba(236, 72, 153, 1), rgba(249, 115, 22, 0.98));
+        }
+        .weekly-review-btn i {
+            font-size: 1.1rem;
+        }
         /* ========== 思维导图按钮样式 ========== */
         .mindmap-btn {
             display: inline-flex;
@@ -165,6 +196,186 @@
         .reading-container {
             max-width: 1400px;
             margin: 0 auto;
+        }
+        /* ========== 周复盘模态框 ========== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            transform: rotate(90deg);
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(249, 115, 22, 0.2));
+            color: #ec4899;
+            font-size: 1.8rem;
+        }
+        .modal-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        .review-section {
+            margin-bottom: 2rem;
+        }
+        .review-section h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        .review-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .review-stat-card {
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .review-stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        .review-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .review-score {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(249, 115, 22, 0.1));
+            border-radius: 16px;
+            margin: 1.5rem 0;
+        }
+        .review-score-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ec4899, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .review-score-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+        .review-suggestions {
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        .review-suggestions ul {
+            margin: 0;
+            padding-left: 1.5rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+        .review-suggestions li {
+            margin-bottom: 0.8rem;
+        }
+        .review-books-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .review-book-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .review-book-name {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+        .review-book-count {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
         /* ========== 书摘精选区域 ========== */
         .reading-digest {
@@ -230,37 +441,25 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 80px;  /* 增大尺寸 */
+            width: 80px;
             height: 80px;
             flex-shrink: 0;
             border-radius: 50%;
-            
-            /* 多层渐变背景 */
-            background: 
+            background:
                 radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), transparent 50%),
                 linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
-            
-            /* 增强阴影效果 */
-            box-shadow: 
+            box-shadow:
                 0 0 0 4px rgba(255, 193, 7, 0.2),
                 0 0 20px rgba(255, 193, 7, 0.6),
                 0 15px 35px rgba(255, 152, 0, 0.4),
                 inset 0 -8px 20px rgba(255, 140, 0, 0.3);
-            
             color: #fff;
             font-size: 2rem;
-            
-            /* 添加动画 */
             animation: starGlow 3s ease-in-out infinite, starFloat 4s ease-in-out infinite;
-            
             position: relative;
             overflow: visible;
-            
-            /* 平滑过渡 */
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
-        /* 添加光晕效果 */
         .digest-icon::before {
             content: '';
             position: absolute;
@@ -271,8 +470,6 @@
             animation: pulseGlow 2s ease-in-out infinite;
             z-index: -1;
         }
-
-        /* 添加内部光点 */
         .digest-icon::after {
             content: '';
             position: absolute;
@@ -285,50 +482,39 @@
             filter: blur(4px);
             animation: sparkle 2.5s ease-in-out infinite;
         }
-
-        /* 星星图标本身 */
         .digest-icon i {
             position: relative;
             z-index: 1;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
             animation: starRotate 8s linear infinite;
         }
-
-        /* 鼠标悬停效果 */
         .digest-icon:hover {
             transform: scale(1.15) translateY(-5px);
-            box-shadow: 
+            box-shadow:
                 0 0 0 6px rgba(255, 193, 7, 0.3),
                 0 0 30px rgba(255, 193, 7, 0.8),
                 0 20px 45px rgba(255, 152, 0, 0.5),
                 inset 0 -10px 25px rgba(255, 140, 0, 0.4);
         }
-
         .digest-icon:hover i {
             animation: starRotate 2s linear infinite;
         }
-
-        /* ========== 动画关键帧 ========== */
-
-        /* 发光动画 */
         @keyframes starGlow {
             0%, 100% {
-                box-shadow: 
+                box-shadow:
                     0 0 0 4px rgba(255, 193, 7, 0.2),
                     0 0 20px rgba(255, 193, 7, 0.6),
                     0 15px 35px rgba(255, 152, 0, 0.4),
                     inset 0 -8px 20px rgba(255, 140, 0, 0.3);
             }
             50% {
-                box-shadow: 
+                box-shadow:
                     0 0 0 6px rgba(255, 193, 7, 0.3),
                     0 0 35px rgba(255, 193, 7, 0.8),
                     0 18px 40px rgba(255, 152, 0, 0.5),
                     inset 0 -10px 25px rgba(255, 140, 0, 0.4);
             }
         }
-
-        /* 浮动动画 */
         @keyframes starFloat {
             0%, 100% {
                 transform: translateY(0) rotate(0deg);
@@ -340,8 +526,6 @@
                 transform: translateY(-5px) rotate(-3deg);
             }
         }
-
-        /* 光晕脉动 */
         @keyframes pulseGlow {
             0%, 100% {
                 opacity: 0.6;
@@ -352,8 +536,6 @@
                 transform: scale(1.1);
             }
         }
-
-        /* 闪烁效果 */
         @keyframes sparkle {
             0%, 100% {
                 opacity: 0.4;
@@ -364,8 +546,6 @@
                 transform: scale(1.3);
             }
         }
-
-        /* 星星旋转 */
         @keyframes starRotate {
             from {
                 transform: rotate(0deg);
@@ -374,7 +554,6 @@
                 transform: rotate(360deg);
             }
         }
-
         .reading-digest-header > div {
             flex: 1;
             min-width: 280px;
@@ -510,24 +689,7 @@
             flex-direction: column;
             gap: 0.8rem;
             margin-top: 2rem;
-            max-height: 700px;
-            overflow-y: auto;
-            padding-right: 0.5rem;
-        }
-        /* 自定义滚动条 */
-        .reading-digest-table::-webkit-scrollbar {
-            width: 8px;
-        }
-        .reading-digest-table::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-        }
-        .reading-digest-table::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.3);
-            border-radius: 4px;
-        }
-        .reading-digest-table::-webkit-scrollbar-thumb:hover {
-            background: rgba(139, 92, 246, 0.5);
+            min-height: 400px;
         }
         .digest-row {
             display: grid;
@@ -606,7 +768,6 @@
             background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.12));
             pointer-events: none;
         }
-        /* 10-9分：金色 */
         .rating-value-10, .rating-value-9 {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #fff;
@@ -616,7 +777,6 @@
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(255, 215, 0, 0.55);
         }
-        /* 8-7分：绿色 */
         .rating-value-8, .rating-value-7 {
             background: linear-gradient(135deg, #4CAF50, #45a049);
             color: #fff;
@@ -626,7 +786,6 @@
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(76, 175, 80, 0.45);
         }
-        /* 6-5分：蓝色 */
         .rating-value-6, .rating-value-5 {
             background: linear-gradient(135deg, #2196F3, #1976D2);
             color: #fff;
@@ -636,7 +795,6 @@
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(33, 150, 243, 0.45);
         }
-        /* 4-3分：橙色 */
         .rating-value-4, .rating-value-3 {
             background: linear-gradient(135deg, #FF9800, #F57C00);
             color: #fff;
@@ -646,7 +804,6 @@
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(255, 152, 0, 0.45);
         }
-        /* 2-1分：红色 */
         .rating-value-2, .rating-value-1 {
             background: linear-gradient(135deg, #F44336, #D32F2F);
             color: #fff;
@@ -656,13 +813,70 @@
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(244, 67, 54, 0.45);
         }
-        /* 空评分 */
         .rating-empty {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
             color: var(--text-secondary);
             border: 1.5px dashed rgba(255, 255, 255, 0.25);
             font-style: italic;
             font-size: 0.85rem;
+        }
+        /* ========== 分页器样式 ========== */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 2.5rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+        .pagination-info {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0 1rem;
+        }
+        .pagination-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 1rem;
+            border-radius: 10px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .pagination-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(99, 102, 241, 0.3);
+        }
+        .pagination-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .pagination-btn.active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
+            color: #fff;
+            border-color: transparent;
+        }
+        .pagination-pages {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .pagination-ellipsis {
+            color: var(--text-secondary);
+            padding: 0 0.5rem;
         }
         /* ========== 返回顶部按钮 ========== */
         .back-to-top {
@@ -833,12 +1047,12 @@
                 width: 100%;
                 flex-wrap: wrap;
             }
-            .mindmap-btn {
+            .mindmap-btn, .weekly-review-btn {
                 flex: 1;
                 justify-content: center;
-                min-width: 150px;
+                min-width: 140px;
             }
-            .mindmap-btn .btn-text {
+            .mindmap-btn .btn-text, .weekly-review-btn .btn-text {
                 display: inline;
             }
             .reading-main {
@@ -856,23 +1070,18 @@
                 font-size: 1.4rem;
                 margin-bottom: 0.3rem;
             }
-            
-            /* ========== 响应式星星图标优化 ========== */
             .digest-icon {
                 width: 64px;
                 height: 64px;
                 font-size: 1.6rem;
             }
-            
             .digest-icon::before {
                 inset: -12px;
             }
-            
             .digest-icon::after {
                 width: 16px;
                 height: 16px;
             }
-            
             .digest-stats {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1rem;
@@ -931,10 +1140,30 @@
                 height: 40px;
                 font-size: 0.9rem;
             }
-            .reading-digest-table {
-                max-height: none;
-                gap: 0.6rem;
-                margin-top: 1.5rem;
+            .pagination {
+                padding: 1rem;
+                gap: 0.5rem;
+            }
+            .pagination-btn {
+                min-width: 36px;
+                height: 36px;
+                padding: 0 0.8rem;
+                font-size: 0.85rem;
+            }
+            .pagination-info {
+                width: 100%;
+                text-align: center;
+                order: -1;
+            }
+            .modal-content {
+                padding: 2rem;
+                max-height: 90vh;
+            }
+            .modal-header h2 {
+                font-size: 1.5rem;
+            }
+            .review-stats {
+                grid-template-columns: repeat(2, 1fr);
             }
             .back-to-top {
                 bottom: 20px;
@@ -967,10 +1196,10 @@
             .reading-title-group .logo {
                 font-size: 1.3rem;
             }
-            .mindmap-btn .btn-text {
+            .mindmap-btn .btn-text, .weekly-review-btn .btn-text {
                 display: none;
             }
-            .mindmap-btn {
+            .mindmap-btn, .weekly-review-btn {
                 padding: 0.7rem;
                 width: 44px;
                 height: 44px;
@@ -993,23 +1222,18 @@
             .reading-digest-header > div {
                 min-width: 100%;
             }
-            
-            /* ========== 小屏幕星星图标优化 ========== */
             .digest-icon {
                 width: 56px;
                 height: 56px;
                 font-size: 1.4rem;
             }
-            
             .digest-icon::before {
                 inset: -10px;
             }
-            
             .digest-icon::after {
                 width: 14px;
                 height: 14px;
             }
-            
             .digest-stats {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.8rem;
@@ -1028,6 +1252,27 @@
                 font-size: 0.8rem;
                 padding: 0 6px;
             }
+            .pagination {
+                padding: 0.8rem;
+            }
+            .pagination-btn {
+                min-width: 32px;
+                height: 32px;
+                padding: 0 0.6rem;
+                font-size: 0.8rem;
+            }
+            .modal-content {
+                padding: 1.5rem;
+            }
+            .modal-close {
+                top: 1rem;
+                right: 1rem;
+                width: 36px;
+                height: 36px;
+            }
+            .review-score-number {
+                font-size: 2.5rem;
+            }
             .back-to-top {
                 bottom: 15px;
                 right: 15px;
@@ -1044,26 +1289,21 @@
                 font-size: 0.9rem;
             }
         }
-
-        /* ========== 浅色模式星星图标适配 ========== */
         body.light-mode .digest-icon {
-            background: 
+            background:
                 radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), transparent 50%),
                 linear-gradient(135deg, #FFD700 0%, #FFC107 50%, #FF9800 100%);
-            
-            box-shadow: 
+            box-shadow:
                 0 0 0 4px rgba(255, 193, 7, 0.25),
                 0 0 25px rgba(255, 193, 7, 0.5),
                 0 12px 30px rgba(255, 152, 0, 0.35),
                 inset 0 -6px 18px rgba(255, 140, 0, 0.25);
         }
-
         body.light-mode .digest-icon::before {
             background: radial-gradient(circle, rgba(255, 215, 0, 0.25), transparent 60%);
         }
-
         body.light-mode .digest-icon:hover {
-            box-shadow: 
+            box-shadow:
                 0 0 0 6px rgba(255, 193, 7, 0.35),
                 0 0 35px rgba(255, 193, 7, 0.6),
                 0 15px 40px rgba(255, 152, 0, 0.4),
@@ -1086,7 +1326,12 @@
                 </div>
             </div>
             <div class="controls">
-                <!-- 新增：思维导图按钮 -->
+                <!-- 周复盘按钮 -->
+                <button class="weekly-review-btn" id="weeklyReviewBtn" aria-label="查看本周复盘" title="本周阅读复盘">
+                    <i class="fas fa-calendar-week"></i>
+                    <span class="btn-text">周复盘</span>
+                </button>
+                <!-- 思维导图按钮 -->
                 <a href="mindmap.html" class="mindmap-btn" aria-label="打开思维导图" title="思维导图梳理">
                     <i class="fas fa-project-diagram"></i>
                     <span class="btn-text">思维导图</span>
@@ -1097,6 +1342,60 @@
             </div>
         </div>
     </header>
+    
+    <!-- 周复盘模态框 -->
+    <div class="modal-overlay" id="weeklyReviewModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose" aria-label="关闭">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h2>本周阅读复盘</h2>
+            </div>
+            
+            <div class="review-section">
+                <h3><i class="fas fa-book-open"></i> 阅读概况</h3>
+                <div class="review-stats" id="weeklyStats">
+                    <div class="review-stat-card">
+                        <span class="review-stat-value" id="weeklyDigests">0</span>
+                        <span class="review-stat-label">本周书摘</span>
+                    </div>
+                    <div class="review-stat-card">
+                        <span class="review-stat-value" id="weeklyBooks">0</span>
+                        <span class="review-stat-label">涉及书籍</span>
+                    </div>
+                    <div class="review-stat-card">
+                        <span class="review-stat-value" id="weeklyAvgRating">0.0</span>
+                        <span class="review-stat-label">平均启发值</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="review-section">
+                <h3><i class="fas fa-star"></i> 综合评分</h3>
+                <div class="review-score">
+                    <span class="review-score-number" id="weeklyScore">0</span>
+                    <span class="review-score-label">/ 100分</span>
+                </div>
+            </div>
+            
+            <div class="review-section">
+                <h3><i class="fas fa-books"></i> 本周热读书籍</h3>
+                <div class="review-books-list" id="weeklyBooksList"></div>
+            </div>
+            
+            <div class="review-section">
+                <h3><i class="fas fa-lightbulb"></i> 阅读建议</h3>
+                <div class="review-suggestions">
+                    <ul id="weeklySuggestions"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- 主内容区 -->
     <main class="reading-main">
         <div class="reading-container">
@@ -1158,13 +1457,33 @@
                         <div class="digest-col digest-col--rating" role="columnheader">启发值</div>
                     </div>
                 </div>
+                
+                <!-- 分页器 -->
+                <div class="pagination" id="pagination">
+                    <button class="pagination-btn" id="firstPage" aria-label="第一页">
+                        <i class="fas fa-angle-double-left"></i>
+                    </button>
+                    <button class="pagination-btn" id="prevPage" aria-label="上一页">
+                        <i class="fas fa-angle-left"></i>
+                    </button>
+                    <div class="pagination-pages" id="pageNumbers"></div>
+                    <button class="pagination-btn" id="nextPage" aria-label="下一页">
+                        <i class="fas fa-angle-right"></i>
+                    </button>
+                    <button class="pagination-btn" id="lastPage" aria-label="最后一页">
+                        <i class="fas fa-angle-double-right"></i>
+                    </button>
+                    <span class="pagination-info" id="paginationInfo">第 1 页，共 1 页</span>
+                </div>
             </section>
         </div>
     </main>
+    
     <!-- 返回顶部按钮 -->
     <button id="backToTop" class="back-to-top" aria-label="返回顶部" title="返回顶部">
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
+    
     <!-- 页脚 -->
     <footer class="social-footer">
         <div class="container">
@@ -1185,11 +1504,19 @@
             <p class="copyright">© 2025 狂客·银河 版权所有 | 精选书摘 · 启迪人生</p>
         </div>
     </footer>
+    
     <script>
+        // ========== 全局变量 ==========
         let digestData = [];
         let currentDigestData = [];
         let sortOrder = 'default';
-        // 加载数据的函数
+        
+        // 分页相关
+        const ITEMS_PER_PAGE = 10;
+        let currentPage = 1;
+        let totalPages = 1;
+        
+        // ========== 数据加载 ==========
         async function loadDigestData() {
             try {
                 const response = await fetch('data/digests.json');
@@ -1199,45 +1526,192 @@
                 digestData = await response.json();
                 console.log(`✅ 成功加载 ${digestData.length} 条书摘数据`);
             } catch (error) {
-                console.error('加载失败:', error);
+                console.error('❌ 加载失败:', error);
                 showLoadingError();
             }
         }
-        // 初始化页面
+        
+        // ========== 页面初始化 ==========
         document.addEventListener('DOMContentLoaded', async function() {
             document.body.setAttribute('data-page', 'reading');
             initializeTheme();
             await loadDigestData();
+            
             if (digestData.length > 0) {
                 currentDigestData = [...digestData];
+                calculatePagination();
                 renderDigestTable();
                 updateDigestStats();
             }
+            
             bindSearchEvents();
             bindSortEvents();
+            bindPaginationEvents();
+            bindModalEvents();
             initBackToTop();
         });
-        // 初始化主题
+        
+        // ========== 主题管理 ==========
         function initializeTheme() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.body.classList.toggle('light-mode', savedTheme === 'light');
             updateThemeIcon(savedTheme);
         }
-        // 更新主题图标
+        
         function updateThemeIcon(theme) {
             const themeIcon = document.querySelector('#themeToggle i');
             if (themeIcon) {
                 themeIcon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
             }
         }
-        // 主题切换
+        
         document.getElementById('themeToggle')?.addEventListener('click', function() {
             const isLight = document.body.classList.toggle('light-mode');
             const newTheme = isLight ? 'light' : 'dark';
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
         });
-        // 创建评分徽章
+        
+        // ========== 分页计算 ==========
+        function calculatePagination() {
+            totalPages = Math.ceil(currentDigestData.length / ITEMS_PER_PAGE);
+            if (currentPage > totalPages) {
+                currentPage = totalPages || 1;
+            }
+        }
+        
+        // ========== 获取当前页数据 ==========
+        function getCurrentPageData() {
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            return currentDigestData.slice(start, end);
+        }
+        
+        // ========== 渲染分页器 ==========
+        function renderPagination() {
+            const pageNumbersContainer = document.getElementById('pageNumbers');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const firstPageBtn = document.getElementById('firstPage');
+            const prevPageBtn = document.getElementById('prevPage');
+            const nextPageBtn = document.getElementById('nextPage');
+            const lastPageBtn = document.getElementById('lastPage');
+            
+            // 更新按钮状态
+            firstPageBtn.disabled = currentPage === 1;
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages;
+            lastPageBtn.disabled = currentPage === totalPages;
+            
+            // 更新页码信息
+            paginationInfo.textContent = `第 ${currentPage} 页，共 ${totalPages} 页 (总计 ${currentDigestData.length} 条)`;
+            
+            // 渲染页码按钮
+            pageNumbersContainer.innerHTML = '';
+            
+            const maxButtons = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+            let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+            
+            if (endPage - startPage + 1 < maxButtons) {
+                startPage = Math.max(1, endPage - maxButtons + 1);
+            }
+            
+            // 第一页 + 省略号
+            if (startPage > 1) {
+                const btn = createPageButton(1);
+                pageNumbersContainer.appendChild(btn);
+                if (startPage > 2) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.className = 'pagination-ellipsis';
+                    ellipsis.textContent = '...';
+                    pageNumbersContainer.appendChild(ellipsis);
+                }
+            }
+            
+            // 中间页码
+            for (let i = startPage; i <= endPage; i++) {
+                const btn = createPageButton(i);
+                pageNumbersContainer.appendChild(btn);
+            }
+            
+            // 省略号 + 最后一页
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.className = 'pagination-ellipsis';
+                    ellipsis.textContent = '...';
+                    pageNumbersContainer.appendChild(ellipsis);
+                }
+                const btn = createPageButton(totalPages);
+                pageNumbersContainer.appendChild(btn);
+            }
+        }
+        
+        // ========== 创建页码按钮 ==========
+        function createPageButton(pageNum) {
+            const btn = document.createElement('button');
+            btn.className = 'pagination-btn';
+            btn.textContent = pageNum;
+            btn.setAttribute('aria-label', `第${pageNum}页`);
+            
+            if (pageNum === currentPage) {
+                btn.classList.add('active');
+            }
+            
+            btn.addEventListener('click', () => {
+                currentPage = pageNum;
+                renderDigestTable();
+                renderPagination();
+                scrollToTop();
+            });
+            
+            return btn;
+        }
+        
+        // ========== 绑定分页事件 ==========
+        function bindPaginationEvents() {
+            document.getElementById('firstPage')?.addEventListener('click', () => {
+                currentPage = 1;
+                renderDigestTable();
+                renderPagination();
+                scrollToTop();
+            });
+            
+            document.getElementById('prevPage')?.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderDigestTable();
+                    renderPagination();
+                    scrollToTop();
+                }
+            });
+            
+            document.getElementById('nextPage')?.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderDigestTable();
+                    renderPagination();
+                    scrollToTop();
+                }
+            });
+            
+            document.getElementById('lastPage')?.addEventListener('click', () => {
+                currentPage = totalPages;
+                renderDigestTable();
+                renderPagination();
+                scrollToTop();
+            });
+        }
+        
+        // ========== 滚动到表格顶部 ==========
+        function scrollToTop() {
+            const tableTop = document.querySelector('.reading-digest-table');
+            if (tableTop) {
+                tableTop.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        // ========== 评分徽章 ==========
         function createRatingBadge(rating) {
             if (!rating || rating === 0) {
                 return '<div class="rating-badge rating-empty">-</div>';
@@ -1245,28 +1719,36 @@
             const ratingClass = `rating-value-${rating}`;
             return `<div class="rating-badge ${ratingClass}">${rating}</div>`;
         }
-        // 渲染书摘表格
+        
+        // ========== 渲染书摘表格 ==========
         function renderDigestTable() {
             const tableBody = document.querySelector('.reading-digest-table');
             if (!tableBody) {
-                console.error('未找到表格容器');
+                console.error('❌ 未找到表格容器');
                 return;
             }
+            
             const headerRow = tableBody.querySelector('.digest-row--head');
             const headerClone = headerRow ? headerRow.cloneNode(true) : null;
+            
             tableBody.innerHTML = '';
             if (headerClone) {
                 tableBody.appendChild(headerClone);
             }
+            
             const loadingDiv = document.createElement('div');
             loadingDiv.className = 'loading';
             loadingDiv.innerHTML = '<div class="loading-spinner"></div>正在加载书摘数据...';
             tableBody.appendChild(loadingDiv);
+            
             setTimeout(() => {
                 if (loadingDiv.parentNode === tableBody) {
                     tableBody.removeChild(loadingDiv);
                 }
-                if (currentDigestData.length === 0) {
+                
+                const pageData = getCurrentPageData();
+                
+                if (pageData.length === 0) {
                     const emptyRow = document.createElement('div');
                     emptyRow.className = 'digest-row';
                     emptyRow.style.cssText = 'text-align: center; padding: 3rem 1.5rem; grid-column: 1/-1;';
@@ -1277,7 +1759,7 @@
                     `;
                     tableBody.appendChild(emptyRow);
                 } else {
-                    currentDigestData.forEach(digest => {
+                    pageData.forEach(digest => {
                         const row = document.createElement('div');
                         row.className = 'digest-row';
                         row.setAttribute('role', 'row');
@@ -1298,46 +1780,57 @@
                         tableBody.appendChild(row);
                     });
                 }
+                
+                renderPagination();
             }, 300);
         }
-        // HTML转义函数
+        
+        // ========== HTML转义 ==========
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
-        // 显示加载错误
+        
+        // ========== 加载错误提示 ==========
         function showLoadingError() {
             const tableBody = document.querySelector('.reading-digest-table');
             if (!tableBody) return;
+            
             const errorRow = document.createElement('div');
             errorRow.className = 'digest-row';
             errorRow.style.cssText = 'text-align: center; padding: 3rem 1.5rem; grid-column: 1/-1;';
             errorRow.innerHTML = `
                 <div class="digest-col" style="color: var(--text-secondary);">
-                    ❌ 数据加载失败，请刷新页面重试
+                    ❌ 数据加载失败,请刷新页面重试
                 </div>
             `;
             tableBody.appendChild(errorRow);
         }
-        // 更新书摘统计信息
+        
+        // ========== 更新统计信息 ==========
         function updateDigestStats() {
             document.getElementById('totalDigests').textContent = currentDigestData.length;
+            
             const uniqueBooks = [...new Set(currentDigestData.map(d => d.book))];
             document.getElementById('uniqueBooks').textContent = uniqueBooks.length;
+            
             const validRatings = currentDigestData.filter(d => d.rating && d.rating > 0);
             const avgRating = validRatings.length > 0
                 ? (validRatings.reduce((sum, d) => sum + d.rating, 0) / validRatings.length).toFixed(1)
                 : '0.0';
             document.getElementById('avgInspiration').textContent = avgRating;
+            
             const highInspiration = currentDigestData.filter(d => d.rating && d.rating >= 7).length;
             document.getElementById('highInspiration').textContent = highInspiration;
         }
-        // 绑定搜索事件
+        
+        // ========== 搜索功能 ==========
         function bindSearchEvents() {
             const searchInput = document.getElementById('digestSearchInput');
             const searchButton = document.getElementById('digestSearchButton');
             const resetButton = document.getElementById('digestSearchReset');
+            
             const performSearch = () => {
                 const searchTerm = searchInput.value.trim().toLowerCase();
                 currentDigestData = searchTerm === ''
@@ -1346,41 +1839,53 @@
                         digest.book.toLowerCase().includes(searchTerm) ||
                         digest.content.toLowerCase().includes(searchTerm)
                     );
+                
+                currentPage = 1;
                 applyCurrentSort();
+                calculatePagination();
                 renderDigestTable();
                 updateDigestStats();
             };
+            
             searchButton?.addEventListener('click', performSearch);
             searchInput?.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') performSearch();
             });
+            
             resetButton?.addEventListener('click', () => {
                 searchInput.value = '';
                 currentDigestData = [...digestData];
                 sortOrder = 'default';
+                currentPage = 1;
+                calculatePagination();
                 renderDigestTable();
                 updateDigestStats();
                 updateSortButton();
             });
+            
             let searchTimeout;
             searchInput?.addEventListener('input', () => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(performSearch, 500);
             });
         }
-        // 绑定排序事件
+        
+        // ========== 排序功能 ==========
         function bindSortEvents() {
             const sortButton = document.getElementById('digestSortToggle');
             sortButton?.addEventListener('click', () => {
                 const orders = ['default', 'rating-desc', 'rating-asc', 'date-desc', 'date-asc'];
                 const currentIndex = orders.indexOf(sortOrder);
                 sortOrder = orders[(currentIndex + 1) % orders.length];
+                
+                currentPage = 1;
                 applyCurrentSort();
+                calculatePagination();
                 renderDigestTable();
                 updateSortButton();
             });
         }
-        // 应用当前排序
+        
         function applyCurrentSort() {
             switch (sortOrder) {
                 case 'rating-desc':
@@ -1399,12 +1904,14 @@
                     currentDigestData.sort((a, b) => digestData.indexOf(a) - digestData.indexOf(b));
             }
         }
-        // 更新排序按钮状态
+        
         function updateSortButton() {
             const sortButton = document.getElementById('digestSortToggle');
             if (!sortButton) return;
+            
             const icon = sortButton.querySelector('i');
             const text = sortButton.querySelector('span');
+            
             const labels = {
                 'default': { icon: 'fas fa-sort-numeric-down', text: '排序' },
                 'rating-desc': { icon: 'fas fa-sort-numeric-down', text: '启发值↓' },
@@ -1412,17 +1919,157 @@
                 'date-desc': { icon: 'fas fa-calendar-alt', text: '日期↓' },
                 'date-asc': { icon: 'fas fa-calendar', text: '日期↑' }
             };
+            
             const label = labels[sortOrder] || labels['default'];
             icon.className = label.icon;
             text.textContent = label.text;
         }
-        // 初始化返回顶部按钮
+        
+        // ========== 周复盘功能 ==========
+        function bindModalEvents() {
+            const modal = document.getElementById('weeklyReviewModal');
+            const openBtn = document.getElementById('weeklyReviewBtn');
+            const closeBtn = document.getElementById('modalClose');
+            
+            openBtn?.addEventListener('click', () => {
+                generateWeeklyReview();
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            closeBtn?.addEventListener('click', () => {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            modal?.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+        
+        // ========== 生成周复盘 ==========
+        function generateWeeklyReview() {
+            const now = new Date();
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            
+            // 筛选本周数据
+            const weeklyData = digestData.filter(digest => {
+                const digestDate = new Date(digest.date);
+                return digestDate >= weekAgo && digestDate <= now;
+            });
+            
+            // 基础统计
+            document.getElementById('weeklyDigests').textContent = weeklyData.length;
+            
+            const weeklyBooks = [...new Set(weeklyData.map(d => d.book))];
+            document.getElementById('weeklyBooks').textContent = weeklyBooks.length;
+            
+            const validRatings = weeklyData.filter(d => d.rating && d.rating > 0);
+            const avgRating = validRatings.length > 0
+                ? (validRatings.reduce((sum, d) => sum + d.rating, 0) / validRatings.length).toFixed(1)
+                : '0.0';
+            document.getElementById('weeklyAvgRating').textContent = avgRating;
+            
+            // 计算综合评分 (基于数量、平均启发值、高质量占比)
+            const highQuality = weeklyData.filter(d => d.rating >= 7).length;
+            const qualityRatio = weeklyData.length > 0 ? (highQuality / weeklyData.length) : 0;
+            
+            let score = 0;
+            score += Math.min(weeklyData.length * 3, 40); // 数量分(最高40分)
+            score += parseFloat(avgRating) * 4; // 平均分(最高40分)
+            score += qualityRatio * 20; // 质量分(最高20分)
+            score = Math.min(Math.round(score), 100);
+            
+            document.getElementById('weeklyScore').textContent = score;
+            
+            // 热读书籍
+            const bookCounts = {};
+            weeklyData.forEach(d => {
+                bookCounts[d.book] = (bookCounts[d.book] || 0) + 1;
+            });
+            
+            const topBooks = Object.entries(bookCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            const booksListHtml = topBooks.length > 0
+                ? topBooks.map(([book, count]) => `
+                    <div class="review-book-item">
+                        <span class="review-book-name">${escapeHtml(book)}</span>
+                        <span class="review-book-count">${count} 条摘录</span>
+                    </div>
+                `).join('')
+                : '<div class="review-book-item"><span class="review-book-name">本周暂无书摘</span></div>';
+            
+            document.getElementById('weeklyBooksList').innerHTML = booksListHtml;
+            
+            // 生成建议
+            const suggestions = generateSuggestions(weeklyData.length, avgRating, qualityRatio, weeklyBooks.length);
+            const suggestionsHtml = suggestions.map(s => `<li>${s}</li>`).join('');
+            document.getElementById('weeklySuggestions').innerHTML = suggestionsHtml;
+        }
+        
+        // ========== 生成阅读建议 ==========
+        function generateSuggestions(count, avgRating, qualityRatio, booksCount) {
+            const suggestions = [];
+            
+            // 基于数量的建议
+            if (count === 0) {
+                suggestions.push('本周尚未记录书摘,建议开始阅读并摘录有启发的内容');
+            } else if (count < 5) {
+                suggestions.push('本周书摘数量较少,建议增加阅读时间,每天至少记录1-2条');
+            } else if (count >= 20) {
+                suggestions.push('本周书摘数量充沛!保持这个阅读节奏,同时注重质量');
+            }
+            
+            // 基于平均启发值的建议
+            if (avgRating < 5) {
+                suggestions.push('平均启发值偏低,建议选择更符合当前需求的书籍,或深入思考内容');
+            } else if (avgRating >= 7) {
+                suggestions.push('高启发值表现优秀!这些内容值得定期复习和实践');
+            }
+            
+            // 基于质量占比的建议
+            if (qualityRatio < 0.3) {
+                suggestions.push('高质量摘录占比较低,可以更有选择性地摘录最有价值的内容');
+            } else if (qualityRatio >= 0.6) {
+                suggestions.push('高质量摘录占比优秀!继续保持高标准的筛选');
+            }
+            
+            // 基于书籍多样性的建议
+            if (booksCount === 1 && count > 5) {
+                suggestions.push('本周专注于单本书籍,适合深度阅读;也可以尝试其他领域的书籍');
+            } else if (booksCount >= 5) {
+                suggestions.push('涉猎多本书籍,拓宽了知识面;可以选择1-2本进行深度阅读');
+            }
+            
+            // 默认鼓励
+            if (suggestions.length === 0) {
+                suggestions.push('继续保持良好的阅读习惯,每周复盘帮助你更好地成长');
+            }
+            
+            // 周末建议
+            const now = new Date();
+            const dayOfWeek = now.getDay();
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                suggestions.push('周末时光,可以整理本周书摘,尝试输出一篇读书笔记');
+            }
+            
+            return suggestions;
+        }
+        
+        // ========== 返回顶部 ==========
         function initBackToTop() {
             const backToTopButton = document.getElementById('backToTop');
             if (!backToTopButton) return;
+            
             window.addEventListener('scroll', () => {
                 backToTopButton.classList.toggle('visible', window.pageYOffset > 300);
             });
+            
             backToTopButton.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
