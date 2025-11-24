@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [
+     {
+        id: 65,
+        date: '2025-11-23',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '整理',
+            en: 'Arrangement'
+        },
+        content: {
+            zh: '整理飞书精简',
+            en: 'Streamlining Feishu for efficiency'
+        },
+        highlight: {
+            zh: '前哨战关于平庸——人有抗熵增，每天保证一定时间（如3 - 4小时）专门做让自己变得不平庸的事',
+            en: 'The prelude to addressing mediocrity—individuals can resist the entropy-increasing trend by dedicating a specific amount of time each day (e.g., 3-4 hours) to activities that help them avoid becoming ordinary.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 0,
+        coverImage: '',
+        attachments: []
+    },
        {
         id: 64,
         date: '2025-11-22',
