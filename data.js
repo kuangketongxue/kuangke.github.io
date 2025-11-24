@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
      {
+        id: 66,
+        date: '2025-11-24',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '高强度工作',
+            en: 'high-intensity work'
+        },
+        content: {
+            zh: '阅读10本书\n学习10小时+\n使用知识体系+学习老友记+网站优化新增周复盘功能',
+            en: 'Reading  10 books.\nStudied for 10+ hours.\nUtilize a knowledge framework, incorporate learning from "Friends," and introduce a new weekly review feature for website optimization.'
+        },
+        highlight: {
+            zh: '运动跑步',
+            en: 'Physical exercise through running'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 3,
+        coverImage: '',
+        attachments: []
+    },
+     {
         id: 65,
         date: '2025-11-23',
         categories: ['study', 'creative'],
