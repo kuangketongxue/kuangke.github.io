@@ -14,15 +14,18 @@
         * {
             box-sizing: border-box;
         }
+        
         html {
             scroll-behavior: smooth;
             font-size: 16px;
         }
+        
         @media (max-width: 768px) {
             html {
                 font-size: 14px;
             }
         }
+        
         body[data-page="reading"] {
             background: url("images/reading-bg.jpg") center/cover no-repeat fixed;
             color: #f5f7ff;
@@ -32,6 +35,7 @@
             margin: 0;
             padding: 0;
         }
+        
         body[data-page="reading"]::before,
         body[data-page="reading"]::after {
             content: "";
@@ -40,26 +44,56 @@
             pointer-events: none;
             z-index: -1;
         }
+        
         body[data-page="reading"]::before {
             background: linear-gradient(135deg, rgba(25, 51, 120, 0.45), rgba(15, 18, 60, 0.65));
             mix-blend-mode: screen;
         }
+        
         body[data-page="reading"]::after {
             background:
                 radial-gradient(circle at 20% 15%, rgba(120, 160, 255, 0.27), transparent 55%),
                 radial-gradient(circle at 78% 10%, rgba(255, 150, 255, 0.2), transparent 60%),
                 rgba(6, 10, 42, 0.35);
         }
+
+        /* ========== 关键词高亮样式 ========== */
+        .search-highlight {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.4), rgba(255, 152, 0, 0.5));
+            color: #fff;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+            animation: highlightPulse 2s ease-in-out infinite;
+        }
+
+        body.light-mode .search-highlight {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.6), rgba(255, 152, 0, 0.7));
+            color: #1a1a1a;
+        }
+
+        @keyframes highlightPulse {
+            0%, 100% {
+                box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+            }
+            50% {
+                box-shadow: 0 2px 12px rgba(255, 193, 7, 0.6);
+            }
+        }
+
         /* ========== 头部样式 ========== */
         .reading-header {
-            background: rgba(10, 15, 40, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 15, 40, 0.85);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(139, 92, 246, 0.2);
             padding: 1.2rem 0;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
+        
         .reading-header .container {
             display: flex;
             align-items: center;
@@ -70,6 +104,7 @@
             margin: 0 auto;
             padding: 0 1.5rem;
         }
+        
         .reading-header-left {
             display: flex;
             align-items: center;
@@ -78,6 +113,7 @@
             flex: 1;
             min-width: 250px;
         }
+        
         .reading-return {
             display: inline-flex;
             align-items: center;
@@ -94,11 +130,13 @@
             box-shadow: 0 10px 22px rgba(99, 102, 241, 0.28);
             white-space: nowrap;
         }
+        
         body.light-mode .reading-return {
             background: rgba(99, 102, 241, 0.08);
             color: var(--accent-hover);
             box-shadow: none;
         }
+        
         .reading-return:hover {
             transform: translateY(-3px);
             background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
@@ -106,28 +144,33 @@
             border-color: transparent;
             box-shadow: 0 16px 32px rgba(99, 102, 241, 0.35);
         }
+        
         .reading-title-group {
             display: flex;
             flex-direction: column;
             gap: 0.3rem;
         }
+        
         .reading-title-group .logo {
             font-size: 1.8rem;
             font-weight: 700;
             margin: 0;
             letter-spacing: 0.05em;
         }
+        
         .reading-subtitle {
             color: var(--text-secondary);
             font-size: 0.9rem;
             letter-spacing: 0.05em;
             margin: 0;
         }
+        
         .controls {
             display: flex;
             gap: 1rem;
             align-items: center;
         }
+
         /* ========== 周复盘按钮样式 ========== */
         .weekly-review-btn {
             display: inline-flex;
@@ -147,18 +190,22 @@
             font-weight: 500;
             cursor: pointer;
         }
+        
         body.light-mode .weekly-review-btn {
             background: linear-gradient(135deg, rgba(236, 72, 153, 0.95), rgba(249, 115, 22, 0.9));
             box-shadow: 0 8px 18px rgba(236, 72, 153, 0.25);
         }
+        
         .weekly-review-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 16px 32px rgba(236, 72, 153, 0.35);
             background: linear-gradient(135deg, rgba(236, 72, 153, 1), rgba(249, 115, 22, 0.98));
         }
+        
         .weekly-review-btn i {
             font-size: 1.1rem;
         }
+
         /* ========== 思维导图按钮样式 ========== */
         .mindmap-btn {
             display: inline-flex;
@@ -177,26 +224,32 @@
             white-space: nowrap;
             font-weight: 500;
         }
+        
         body.light-mode .mindmap-btn {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.95), rgba(56, 189, 248, 0.9));
             box-shadow: 0 8px 18px rgba(99, 102, 241, 0.25);
         }
+        
         .mindmap-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 16px 32px rgba(99, 102, 241, 0.35);
             background: linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(56, 189, 248, 0.98));
         }
+        
         .mindmap-btn i {
             font-size: 1.1rem;
         }
+
         /* ========== 主内容区域 ========== */
         .reading-main {
             padding: 3rem 1.5rem 5rem;
         }
+        
         .reading-container {
             max-width: 1400px;
             margin: 0 auto;
         }
+
         /* ========== 周复盘模态框 ========== */
         .modal-overlay {
             display: none;
@@ -207,25 +260,47 @@
             z-index: 1000;
             animation: fadeIn 0.3s ease;
         }
+        
         .modal-overlay.active {
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
         }
+        
         .modal-content {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 2.5rem;
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
-            max-height: 85vh;
+            max-height: 90vh;
             overflow-y: auto;
             position: relative;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+
+        /* 自定义滚动条 */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.5);
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.7);
+        }
+        
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -236,6 +311,7 @@
                 transform: translateY(0);
             }
         }
+        
         .modal-close {
             position: absolute;
             top: 1.5rem;
@@ -252,12 +328,15 @@
             justify-content: center;
             font-size: 1.2rem;
             transition: all 0.3s ease;
+            z-index: 10;
         }
+        
         .modal-close:hover {
             background: rgba(239, 68, 68, 0.2);
             color: #ef4444;
             transform: rotate(90deg);
         }
+        
         .modal-header {
             display: flex;
             align-items: center;
@@ -266,6 +345,7 @@
             padding-bottom: 1.5rem;
             border-bottom: 1px solid var(--border-color);
         }
+        
         .modal-icon {
             display: flex;
             align-items: center;
@@ -277,15 +357,18 @@
             color: #ec4899;
             font-size: 1.8rem;
         }
+        
         .modal-header h2 {
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--text-primary);
             margin: 0;
         }
+        
         .review-section {
             margin-bottom: 2rem;
         }
+        
         .review-section h3 {
             display: flex;
             align-items: center;
@@ -294,19 +377,28 @@
             color: var(--accent-color);
             margin-bottom: 1rem;
         }
+        
         .review-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
+        
         .review-stat-card {
             background: rgba(139, 92, 246, 0.08);
             border: 1px solid rgba(139, 92, 246, 0.25);
             border-radius: 12px;
             padding: 1rem;
             text-align: center;
+            transition: all 0.3s ease;
         }
+
+        .review-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
+        }
+        
         .review-stat-value {
             font-size: 1.8rem;
             font-weight: 700;
@@ -314,52 +406,146 @@
             display: block;
             margin-bottom: 0.3rem;
         }
+        
         .review-stat-label {
             font-size: 0.85rem;
             color: var(--text-secondary);
         }
+        
         .review-score {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 1rem;
-            padding: 1.5rem;
+            padding: 2rem;
             background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(249, 115, 22, 0.1));
             border-radius: 16px;
             margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
         }
+
+        .review-score::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent 70%);
+            animation: scoreShine 3s ease-in-out infinite;
+        }
+
+        @keyframes scoreShine {
+            0%, 100% {
+                transform: translate(0, 0);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(25%, 25%);
+                opacity: 1;
+            }
+        }
+        
         .review-score-number {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 700;
             background: linear-gradient(135deg, #ec4899, #f97316);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            position: relative;
+            z-index: 1;
         }
+        
         .review-score-label {
             font-size: 1rem;
             color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
         }
+
+        /* ========== 趋势图表样式 ========== */
+        .review-trend {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 12px;
+        }
+
+        .trend-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 120px;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .trend-bar {
+            flex: 1;
+            background: linear-gradient(180deg, rgba(56, 189, 248, 0.8), rgba(56, 189, 248, 0.3));
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            transition: all 0.3s ease;
+            min-height: 10px;
+        }
+
+        .trend-bar:hover {
+            background: linear-gradient(180deg, rgba(56, 189, 248, 1), rgba(56, 189, 248, 0.5));
+            transform: translateY(-3px);
+        }
+
+        .trend-bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .trend-bar-value {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+        
         .review-suggestions {
             background: rgba(56, 189, 248, 0.08);
             border: 1px solid rgba(56, 189, 248, 0.25);
             border-radius: 12px;
             padding: 1.5rem;
         }
+        
         .review-suggestions ul {
             margin: 0;
             padding-left: 1.5rem;
             color: var(--text-primary);
             line-height: 1.8;
         }
+        
         .review-suggestions li {
             margin-bottom: 0.8rem;
+            position: relative;
         }
+
+        .review-suggestions li::marker {
+            color: var(--accent-color);
+        }
+        
         .review-books-list {
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
         }
+        
         .review-book-item {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
@@ -368,15 +554,24 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.3s ease;
         }
+
+        .review-book-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+        
         .review-book-name {
             color: var(--accent-color);
             font-weight: 600;
         }
+        
         .review-book-count {
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
+
         /* ========== 书摘精选区域 ========== */
         .reading-digest {
             position: relative;
@@ -388,6 +583,7 @@
             animation: fadeIn 0.6s ease-out;
             z-index: 1;
         }
+        
         .reading-digest::before {
             content: "";
             position: absolute;
@@ -397,6 +593,7 @@
             pointer-events: none;
             border-radius: 24px;
         }
+        
         .reading-digest::after {
             content: "";
             position: absolute;
@@ -409,6 +606,7 @@
             animation: float 16s ease-in-out infinite;
             pointer-events: none;
         }
+        
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -419,6 +617,7 @@
                 transform: translateY(0);
             }
         }
+        
         @keyframes float {
             0%, 100% {
                 transform: translateY(0) rotate(0deg);
@@ -427,6 +626,7 @@
                 transform: translateY(25px) rotate(6deg);
             }
         }
+        
         .reading-digest-header {
             position: relative;
             z-index: 1;
@@ -436,6 +636,7 @@
             margin-bottom: 2.5rem;
             flex-wrap: wrap;
         }
+
         /* ========== 优化后的星星图标样式 ========== */
         .digest-icon {
             display: inline-flex;
@@ -460,6 +661,7 @@
             overflow: visible;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+        
         .digest-icon::before {
             content: '';
             position: absolute;
@@ -470,6 +672,7 @@
             animation: pulseGlow 2s ease-in-out infinite;
             z-index: -1;
         }
+        
         .digest-icon::after {
             content: '';
             position: absolute;
@@ -482,12 +685,14 @@
             filter: blur(4px);
             animation: sparkle 2.5s ease-in-out infinite;
         }
+        
         .digest-icon i {
             position: relative;
             z-index: 1;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
             animation: starRotate 8s linear infinite;
         }
+        
         .digest-icon:hover {
             transform: scale(1.15) translateY(-5px);
             box-shadow:
@@ -496,9 +701,11 @@
                 0 20px 45px rgba(255, 152, 0, 0.5),
                 inset 0 -10px 25px rgba(255, 140, 0, 0.4);
         }
+        
         .digest-icon:hover i {
             animation: starRotate 2s linear infinite;
         }
+        
         @keyframes starGlow {
             0%, 100% {
                 box-shadow:
@@ -515,6 +722,7 @@
                     inset 0 -10px 25px rgba(255, 140, 0, 0.4);
             }
         }
+        
         @keyframes starFloat {
             0%, 100% {
                 transform: translateY(0) rotate(0deg);
@@ -526,6 +734,7 @@
                 transform: translateY(-5px) rotate(-3deg);
             }
         }
+        
         @keyframes pulseGlow {
             0%, 100% {
                 opacity: 0.6;
@@ -536,6 +745,7 @@
                 transform: scale(1.1);
             }
         }
+        
         @keyframes sparkle {
             0%, 100% {
                 opacity: 0.4;
@@ -546,6 +756,7 @@
                 transform: scale(1.3);
             }
         }
+        
         @keyframes starRotate {
             from {
                 transform: rotate(0deg);
@@ -554,10 +765,12 @@
                 transform: rotate(360deg);
             }
         }
+        
         .reading-digest-header > div {
             flex: 1;
             min-width: 280px;
         }
+        
         .reading-digest-header h2 {
             font-size: 1.8rem;
             font-weight: 700;
@@ -565,12 +778,14 @@
             letter-spacing: 0.05em;
             margin: 0 0 0.5rem 0;
         }
+        
         .reading-digest-header p {
             color: var(--text-secondary);
             font-size: 1rem;
             line-height: 1.6;
             margin: 0;
         }
+        
         .bookcase-btn {
             color: var(--accent-color);
             text-decoration: none;
@@ -578,9 +793,11 @@
             transition: all 0.3s ease;
             border-bottom: 2px solid transparent;
         }
+        
         .bookcase-btn:hover {
             border-bottom-color: var(--accent-color);
         }
+
         /* ========== 书摘统计信息 ========== */
         .digest-stats {
             display: grid;
@@ -592,10 +809,12 @@
             border-radius: 16px;
             border: 1px solid rgba(255, 193, 7, 0.25);
         }
+        
         .digest-stat {
             text-align: center;
             padding: 0.5rem 0;
         }
+        
         .digest-stat-number {
             font-size: 1.8rem;
             font-weight: 700;
@@ -604,12 +823,14 @@
             line-height: 1.2;
             margin-bottom: 0.5rem;
         }
+        
         .digest-stat-label {
             color: var(--text-secondary);
             font-size: 0.85rem;
             letter-spacing: 0.05em;
             white-space: nowrap;
         }
+
         /* ========== 搜索栏 ========== */
         .digest-search {
             margin: 1.5rem 0 0;
@@ -618,6 +839,7 @@
             flex-wrap: wrap;
             align-items: stretch;
         }
+        
         .digest-search-wrapper {
             display: flex;
             gap: 0.8rem;
@@ -625,6 +847,7 @@
             min-width: 280px;
             flex-wrap: wrap;
         }
+        
         .digest-search input {
             flex: 1;
             min-width: 200px;
@@ -637,21 +860,26 @@
             transition: all 0.3s ease;
             font-size: 0.95rem;
         }
+        
         body.light-mode .digest-search input {
             background: rgba(255, 255, 255, 0.92);
             color: var(--text-primary);
             border-color: rgba(139, 92, 246, 0.25);
         }
+        
         .digest-search input:focus {
             border-color: rgba(99, 102, 241, 0.7);
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
         }
+        
         .digest-search input::placeholder {
             color: rgba(245, 247, 255, 0.5);
         }
+        
         body.light-mode .digest-search input::placeholder {
             color: rgba(0, 0, 0, 0.4);
         }
+        
         .digest-search button {
             padding: 0.8rem 1.6rem;
             border: none;
@@ -668,19 +896,24 @@
             white-space: nowrap;
             font-weight: 500;
         }
+        
         .digest-search button:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 28px rgba(99, 102, 241, 0.4);
         }
+        
         .digest-search button:active {
             transform: translateY(0);
         }
+        
         body.light-mode .digest-search button {
             box-shadow: 0 8px 18px rgba(99, 102, 241, 0.25);
         }
+        
         body.light-mode .digest-search button:hover {
             box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
         }
+
         /* ========== 书摘表格 ========== */
         .reading-digest-table {
             position: relative;
@@ -691,6 +924,7 @@
             margin-top: 2rem;
             min-height: 400px;
         }
+        
         .digest-row {
             display: grid;
             grid-template-columns: 1.2fr 2fr 0.9fr 0.7fr;
@@ -702,6 +936,7 @@
             border-radius: 16px;
             transition: all 0.3s ease;
         }
+        
         .digest-row--head {
             background: linear-gradient(135deg, rgba(255, 193, 7, 0.18), rgba(255, 152, 0, 0.12));
             font-weight: 700;
@@ -714,11 +949,13 @@
             padding: 1.2rem 1.6rem;
             font-size: 0.95rem;
         }
+        
         .digest-row:hover:not(.digest-row--head) {
             transform: translateY(-3px);
             box-shadow: 0 10px 24px rgba(99, 102, 241, 0.18);
             border-color: rgba(139, 92, 246, 0.3);
         }
+        
         .digest-col {
             word-wrap: break-word;
             word-break: break-word;
@@ -726,23 +963,28 @@
             line-height: 1.6;
             font-size: 0.95rem;
         }
+        
         .digest-col--book {
             color: var(--accent-color);
             font-weight: 600;
         }
+        
         .digest-col--content {
             color: var(--text-primary);
             font-size: 0.95rem;
         }
+        
         .digest-col--date {
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
+        
         .digest-col--rating {
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         /* ========== 评分徽章 ========== */
         .rating-badge {
             display: flex;
@@ -758,6 +1000,7 @@
             position: relative;
             overflow: hidden;
         }
+        
         .rating-badge::before {
             content: '';
             position: absolute;
@@ -768,51 +1011,62 @@
             background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.12));
             pointer-events: none;
         }
+        
         .rating-value-10, .rating-value-9 {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #fff;
             box-shadow: 0 4px 14px rgba(255, 215, 0, 0.45);
         }
+        
         .rating-value-10:hover, .rating-value-9:hover {
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(255, 215, 0, 0.55);
         }
+        
         .rating-value-8, .rating-value-7 {
             background: linear-gradient(135deg, #4CAF50, #45a049);
             color: #fff;
             box-shadow: 0 4px 14px rgba(76, 175, 80, 0.35);
         }
+        
         .rating-value-8:hover, .rating-value-7:hover {
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(76, 175, 80, 0.45);
         }
+        
         .rating-value-6, .rating-value-5 {
             background: linear-gradient(135deg, #2196F3, #1976D2);
             color: #fff;
             box-shadow: 0 4px 14px rgba(33, 150, 243, 0.35);
         }
+        
         .rating-value-6:hover, .rating-value-5:hover {
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(33, 150, 243, 0.45);
         }
+        
         .rating-value-4, .rating-value-3 {
             background: linear-gradient(135deg, #FF9800, #F57C00);
             color: #fff;
             box-shadow: 0 4px 14px rgba(255, 152, 0, 0.35);
         }
+        
         .rating-value-4:hover, .rating-value-3:hover {
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(255, 152, 0, 0.45);
         }
+        
         .rating-value-2, .rating-value-1 {
             background: linear-gradient(135deg, #F44336, #D32F2F);
             color: #fff;
             box-shadow: 0 4px 14px rgba(244, 67, 54, 0.35);
         }
+        
         .rating-value-2:hover, .rating-value-1:hover {
             transform: scale(1.08);
             box-shadow: 0 6px 18px rgba(244, 67, 54, 0.45);
         }
+        
         .rating-empty {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
             color: var(--text-secondary);
@@ -820,6 +1074,7 @@
             font-style: italic;
             font-size: 0.85rem;
         }
+
         /* ========== 分页器样式 ========== */
         .pagination {
             display: flex;
@@ -833,11 +1088,13 @@
             border: 1px solid var(--border-color);
             flex-wrap: wrap;
         }
+        
         .pagination-info {
             color: var(--text-secondary);
             font-size: 0.9rem;
             margin: 0 1rem;
         }
+        
         .pagination-btn {
             display: inline-flex;
             align-items: center;
@@ -854,30 +1111,36 @@
             font-size: 0.9rem;
             font-weight: 600;
         }
+        
         .pagination-btn:hover:not(:disabled) {
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
             color: #fff;
             transform: translateY(-2px);
             box-shadow: 0 8px 18px rgba(99, 102, 241, 0.3);
         }
+        
         .pagination-btn:disabled {
             opacity: 0.4;
             cursor: not-allowed;
         }
+        
         .pagination-btn.active {
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(56, 189, 248, 0.85));
             color: #fff;
             border-color: transparent;
         }
+        
         .pagination-pages {
             display: flex;
             gap: 0.5rem;
             align-items: center;
         }
+        
         .pagination-ellipsis {
             color: var(--text-secondary);
             padding: 0 0.5rem;
         }
+
         /* ========== 返回顶部按钮 ========== */
         .back-to-top {
             position: fixed;
@@ -902,22 +1165,27 @@
             z-index: 9999;
             backdrop-filter: blur(10px);
         }
+        
         .back-to-top:hover {
             transform: translateY(-6px) scale(1.05);
             box-shadow: 0 16px 40px rgba(139, 92, 246, 0.65);
             background: linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(56, 189, 248, 0.98));
         }
+        
         .back-to-top:active {
             transform: translateY(-2px) scale(0.95);
         }
+        
         .back-to-top.visible {
             opacity: 1;
             visibility: visible;
             transform: scale(1);
         }
+        
         .back-to-top i {
             animation: bounce 2s infinite;
         }
+        
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% {
                 transform: translateY(0);
@@ -929,13 +1197,16 @@
                 transform: translateY(-4px);
             }
         }
+        
         body.light-mode .back-to-top {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.95), rgba(56, 189, 248, 0.9));
             box-shadow: 0 8px 28px rgba(99, 102, 241, 0.45);
         }
+        
         body.light-mode .back-to-top:hover {
             box-shadow: 0 16px 40px rgba(99, 102, 241, 0.55);
         }
+
         /* ========== 社交页脚样式 ========== */
         .social-footer {
             background: var(--bg-card);
@@ -943,6 +1214,7 @@
             padding: 2.5rem 1.5rem;
             margin-top: 4rem;
         }
+        
         .social-footer .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -951,12 +1223,14 @@
             align-items: center;
             gap: 1.5rem;
         }
+        
         .social-links {
             display: flex;
             gap: 1.2rem;
             align-items: center;
             flex-wrap: wrap;
         }
+        
         .social-link {
             display: inline-flex;
             align-items: center;
@@ -969,17 +1243,20 @@
             transition: all 0.3s ease;
             background: rgba(255, 255, 255, 0.08);
         }
+        
         .social-link:hover {
             transform: translateY(-4px);
             color: var(--accent-color);
             background: rgba(99, 102, 241, 0.15);
         }
+        
         .copyright {
             color: var(--text-secondary);
             font-size: 0.9rem;
             margin: 0;
             text-align: center;
         }
+
         /* ========== 加载动画 ========== */
         .loading {
             text-align: center;
@@ -987,6 +1264,7 @@
             color: var(--text-secondary);
             grid-column: 1/-1;
         }
+        
         .loading-spinner {
             display: inline-block;
             width: 32px;
@@ -997,133 +1275,203 @@
             animation: spin 1s ease-in-out infinite;
             margin-right: 0.8rem;
         }
+        
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* ========== 骨架屏样式 ========== */
+        .skeleton-row {
+            display: grid;
+            grid-template-columns: 1.2fr 2fr 0.9fr 0.7fr;
+            gap: 1.5rem;
+            align-items: start;
+            padding: 1.4rem 1.6rem;
+            background: var(--bg-card-soft);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+
+        .skeleton-text {
+            height: 1rem;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s ease-in-out infinite;
+            border-radius: 4px;
+        }
+
+        .skeleton-text--short {
+            width: 60%;
+        }
+
+        .skeleton-text--long {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
         /* ========== 响应式设计 ========== */
         @media (max-width: 1024px) {
             .reading-header .container {
                 padding: 0 1rem;
                 gap: 1rem;
             }
+            
             .reading-main {
                 padding: 2.5rem 1rem 4rem;
             }
+            
             .reading-digest {
                 padding: 2rem;
             }
+            
             .digest-row {
                 grid-template-columns: 1.1fr 1.8fr 0.8fr 0.6fr;
                 gap: 1.2rem;
                 padding: 1.2rem 1.4rem;
             }
+            
             .reading-digest-header h2 {
                 font-size: 1.6rem;
             }
         }
+        
         @media (max-width: 768px) {
             .reading-header {
                 padding: 1rem 0;
             }
+            
             .reading-header .container {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 1rem;
             }
+            
             .reading-header-left {
                 gap: 1rem;
                 width: 100%;
             }
+            
             .reading-return {
                 width: 100%;
                 justify-content: center;
                 font-size: 0.9rem;
                 padding: 0.65rem 1.2rem;
             }
+            
             .reading-title-group .logo {
                 font-size: 1.5rem;
             }
+            
             .controls {
                 width: 100%;
                 flex-wrap: wrap;
             }
+            
             .mindmap-btn, .weekly-review-btn {
                 flex: 1;
                 justify-content: center;
                 min-width: 140px;
             }
+            
             .mindmap-btn .btn-text, .weekly-review-btn .btn-text {
                 display: inline;
             }
+            
             .reading-main {
                 padding: 2rem 1rem 3.5rem;
             }
+            
             .reading-digest {
                 padding: 1.5rem;
                 border-radius: 20px;
             }
+            
             .reading-digest-header {
                 gap: 1rem;
                 margin-bottom: 1.8rem;
             }
+            
             .reading-digest-header h2 {
                 font-size: 1.4rem;
                 margin-bottom: 0.3rem;
             }
+            
             .digest-icon {
                 width: 64px;
                 height: 64px;
                 font-size: 1.6rem;
             }
+            
             .digest-icon::before {
                 inset: -12px;
             }
+            
             .digest-icon::after {
                 width: 16px;
                 height: 16px;
             }
+            
             .digest-stats {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1rem;
                 padding: 1.2rem;
                 margin: 1.5rem 0;
             }
+            
             .digest-stat-number {
                 font-size: 1.5rem;
                 margin-bottom: 0.3rem;
             }
+            
             .digest-stat-label {
                 font-size: 0.8rem;
             }
+            
             .digest-search {
                 flex-direction: column;
                 gap: 0.8rem;
             }
+            
             .digest-search-wrapper {
                 min-width: unset;
                 width: 100%;
             }
+            
             .digest-search input,
             .digest-search button {
                 width: 100%;
             }
+            
             .digest-search button {
                 justify-content: center;
                 padding: 0.75rem 1.2rem;
             }
+            
             .digest-row {
                 grid-template-columns: 1fr;
                 gap: 0.8rem;
                 padding: 1.2rem;
                 margin-bottom: 0.4rem;
             }
+            
             .digest-row--head {
                 display: none;
             }
+            
             .digest-col {
                 width: 100%;
                 font-size: 0.9rem;
             }
+            
             .digest-col::before {
                 content: attr(data-label);
                 font-weight: 700;
@@ -1132,39 +1480,52 @@
                 margin-bottom: 0.3rem;
                 font-size: 0.85rem;
             }
+            
             .digest-col--rating {
                 justify-content: flex-start;
             }
+            
             .rating-badge {
                 min-width: 40px;
                 height: 40px;
                 font-size: 0.9rem;
             }
+            
             .pagination {
                 padding: 1rem;
                 gap: 0.5rem;
             }
+            
             .pagination-btn {
                 min-width: 36px;
                 height: 36px;
                 padding: 0 0.8rem;
                 font-size: 0.85rem;
             }
+            
             .pagination-info {
                 width: 100%;
                 text-align: center;
                 order: -1;
             }
+            
             .modal-content {
                 padding: 2rem;
                 max-height: 90vh;
             }
+            
             .modal-header h2 {
                 font-size: 1.5rem;
             }
+            
             .review-stats {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .trend-chart {
+                height: 100px;
+            }
+            
             .back-to-top {
                 bottom: 20px;
                 right: 20px;
@@ -1172,33 +1533,42 @@
                 height: 50px;
                 font-size: 1.1rem;
             }
+            
             .social-footer {
                 padding: 2rem 1rem;
             }
         }
+        
         @media (max-width: 480px) {
             html {
                 font-size: 13px;
             }
+            
             .reading-header .container {
                 padding: 0 0.8rem;
             }
+            
             .reading-return {
                 font-size: 0.85rem;
                 padding: 0.6rem 1rem;
             }
+            
             .reading-return span {
                 display: none;
             }
+            
             .reading-return::after {
                 content: '返回';
             }
+            
             .reading-title-group .logo {
                 font-size: 1.3rem;
             }
+            
             .mindmap-btn .btn-text, .weekly-review-btn .btn-text {
                 display: none;
             }
+            
             .mindmap-btn, .weekly-review-btn {
                 padding: 0.7rem;
                 width: 44px;
@@ -1207,72 +1577,98 @@
                 min-width: unset;
                 flex: unset;
             }
+            
             .reading-main {
                 padding: 1.5rem 0.8rem 3rem;
             }
+            
             .reading-digest {
                 padding: 1.2rem;
             }
+            
             .reading-digest-header {
                 gap: 0.8rem;
             }
+            
             .reading-digest-header h2 {
                 font-size: 1.2rem;
             }
+            
             .reading-digest-header > div {
                 min-width: 100%;
             }
+            
             .digest-icon {
                 width: 56px;
                 height: 56px;
                 font-size: 1.4rem;
             }
+            
             .digest-icon::before {
                 inset: -10px;
             }
+            
             .digest-icon::after {
                 width: 14px;
                 height: 14px;
             }
+            
             .digest-stats {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.8rem;
                 padding: 1rem;
                 margin: 1rem 0;
             }
+            
             .digest-stat-number {
                 font-size: 1.3rem;
             }
+            
             .digest-col {
                 font-size: 0.85rem;
             }
+            
             .rating-badge {
                 min-width: 36px;
                 height: 36px;
                 font-size: 0.8rem;
                 padding: 0 6px;
             }
+            
             .pagination {
                 padding: 0.8rem;
             }
+            
             .pagination-btn {
                 min-width: 32px;
                 height: 32px;
                 padding: 0 0.6rem;
                 font-size: 0.8rem;
             }
+            
             .modal-content {
                 padding: 1.5rem;
             }
+            
             .modal-close {
                 top: 1rem;
                 right: 1rem;
                 width: 36px;
                 height: 36px;
             }
+            
             .review-score-number {
                 font-size: 2.5rem;
             }
+
+            .trend-chart {
+                height: 80px;
+            }
+
+            .trend-bar-label {
+                font-size: 0.6rem;
+            }
+            
             .back-to-top {
                 bottom: 15px;
                 right: 15px;
@@ -1280,15 +1676,18 @@
                 height: 45px;
                 font-size: 1rem;
             }
+            
             .social-links {
                 gap: 0.8rem;
             }
+            
             .social-link {
                 width: 40px;
                 height: 40px;
                 font-size: 0.9rem;
             }
         }
+        
         body.light-mode .digest-icon {
             background:
                 radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), transparent 50%),
@@ -1299,9 +1698,11 @@
                 0 12px 30px rgba(255, 152, 0, 0.35),
                 inset 0 -6px 18px rgba(255, 140, 0, 0.25);
         }
+        
         body.light-mode .digest-icon::before {
             background: radial-gradient(circle, rgba(255, 215, 0, 0.25), transparent 60%);
         }
+        
         body.light-mode .digest-icon:hover {
             box-shadow:
                 0 0 0 6px rgba(255, 193, 7, 0.35),
@@ -1342,13 +1743,14 @@
             </div>
         </div>
     </header>
-    
+
     <!-- 周复盘模态框 -->
     <div class="modal-overlay" id="weeklyReviewModal">
         <div class="modal-content">
             <button class="modal-close" id="modalClose" aria-label="关闭">
                 <i class="fas fa-times"></i>
             </button>
+            
             <div class="modal-header">
                 <div class="modal-icon">
                     <i class="fas fa-chart-line"></i>
@@ -1371,6 +1773,17 @@
                         <span class="review-stat-value" id="weeklyAvgRating">0.0</span>
                         <span class="review-stat-label">平均启发值</span>
                     </div>
+                    <div class="review-stat-card">
+                        <span class="review-stat-value" id="weeklyHighQuality">0</span>
+                        <span class="review-stat-label">高质量摘录</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-section">
+                <h3><i class="fas fa-chart-bar"></i> 每日摘录趋势</h3>
+                <div class="review-trend">
+                    <div class="trend-chart" id="trendChart"></div>
                 </div>
             </div>
             
@@ -1395,7 +1808,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- 主内容区 -->
     <main class="reading-main">
         <div class="reading-container">
@@ -1408,6 +1821,7 @@
                     <div>
                         <h2>书摘精选集</h2>
                         <p>访问 <a href="books.html" class="bookcase-btn" target="_blank">星空书柜</a> 了解更多书籍</p>
+                        
                         <!-- 书摘统计信息 -->
                         <div class="digest-stats">
                             <div class="digest-stat">
@@ -1427,9 +1841,15 @@
                                 <span class="digest-stat-label">高启发摘录</span>
                             </div>
                         </div>
+                        
                         <!-- 搜索和排序工具栏 -->
                         <div class="digest-search">
-                            <input type="search" id="digestSearchInput" placeholder="搜索书名或摘录关键词..." aria-label="搜索书摘">
+                            <input 
+                                type="search" 
+                                id="digestSearchInput" 
+                                placeholder="搜索书名或摘录关键词..." 
+                                aria-label="搜索书摘"
+                            >
                             <div class="digest-search-wrapper" style="display: flex; gap: 0.8rem; width: auto;">
                                 <button type="button" id="digestSearchButton" aria-label="执行搜索">
                                     <i class="fas fa-search" aria-hidden="true"></i>
@@ -1447,6 +1867,7 @@
                         </div>
                     </div>
                 </header>
+                
                 <!-- 书摘表格 -->
                 <div class="reading-digest-table" role="table" aria-label="书摘列表">
                     <!-- 表头 -->
@@ -1473,17 +1894,17 @@
                     <button class="pagination-btn" id="lastPage" aria-label="最后一页">
                         <i class="fas fa-angle-double-right"></i>
                     </button>
-                    <span class="pagination-info" id="paginationInfo">第 1 页，共 1 页</span>
+                    <span class="pagination-info" id="paginationInfo">第 1 页,共 1 页</span>
                 </div>
             </section>
         </div>
     </main>
-    
+
     <!-- 返回顶部按钮 -->
     <button id="backToTop" class="back-to-top" aria-label="返回顶部" title="返回顶部">
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
-    
+
     <!-- 页脚 -->
     <footer class="social-footer">
         <div class="container">
@@ -1504,18 +1925,19 @@
             <p class="copyright">© 2025 狂客·银河 版权所有 | 精选书摘 · 启迪人生</p>
         </div>
     </footer>
-    
+
     <script>
         // ========== 全局变量 ==========
         let digestData = [];
         let currentDigestData = [];
         let sortOrder = 'default';
+        let currentSearchTerm = '';
         
         // 分页相关
         const ITEMS_PER_PAGE = 10;
         let currentPage = 1;
         let totalPages = 1;
-        
+
         // ========== 数据加载 ==========
         async function loadDigestData() {
             try {
@@ -1530,11 +1952,15 @@
                 showLoadingError();
             }
         }
-        
+
         // ========== 页面初始化 ==========
         document.addEventListener('DOMContentLoaded', async function() {
             document.body.setAttribute('data-page', 'reading');
             initializeTheme();
+            
+            // 显示骨架屏
+            showSkeletonScreen();
+            
             await loadDigestData();
             
             if (digestData.length > 0) {
@@ -1550,7 +1976,37 @@
             bindModalEvents();
             initBackToTop();
         });
-        
+
+        // ========== 骨架屏 ==========
+        function showSkeletonScreen() {
+            const tableBody = document.querySelector('.reading-digest-table');
+            if (!tableBody) return;
+            
+            const headerRow = tableBody.querySelector('.digest-row--head');
+            const headerClone = headerRow ? headerRow.cloneNode(true) : null;
+            
+            tableBody.innerHTML = '';
+            if (headerClone) {
+                tableBody.appendChild(headerClone);
+            }
+            
+            // 添加3个骨架行
+            for (let i = 0; i < 3; i++) {
+                const skeletonRow = document.createElement('div');
+                skeletonRow.className = 'skeleton-row';
+                skeletonRow.innerHTML = `
+                    <div><div class="skeleton-text skeleton-text--short"></div></div>
+                    <div>
+                        <div class="skeleton-text skeleton-text--long"></div>
+                        <div class="skeleton-text skeleton-text--long"></div>
+                    </div>
+                    <div><div class="skeleton-text skeleton-text--short"></div></div>
+                    <div><div class="skeleton-text skeleton-text--short"></div></div>
+                `;
+                tableBody.appendChild(skeletonRow);
+            }
+        }
+
         // ========== 主题管理 ==========
         function initializeTheme() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -1571,7 +2027,7 @@
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
         });
-        
+
         // ========== 分页计算 ==========
         function calculatePagination() {
             totalPages = Math.ceil(currentDigestData.length / ITEMS_PER_PAGE);
@@ -1579,14 +2035,14 @@
                 currentPage = totalPages || 1;
             }
         }
-        
+
         // ========== 获取当前页数据 ==========
         function getCurrentPageData() {
             const start = (currentPage - 1) * ITEMS_PER_PAGE;
             const end = start + ITEMS_PER_PAGE;
             return currentDigestData.slice(start, end);
         }
-        
+
         // ========== 渲染分页器 ==========
         function renderPagination() {
             const pageNumbersContainer = document.getElementById('pageNumbers');
@@ -1603,11 +2059,10 @@
             lastPageBtn.disabled = currentPage === totalPages;
             
             // 更新页码信息
-            paginationInfo.textContent = `第 ${currentPage} 页，共 ${totalPages} 页 (总计 ${currentDigestData.length} 条)`;
+            paginationInfo.textContent = `第 ${currentPage} 页,共 ${totalPages} 页 (总计 ${currentDigestData.length} 条)`;
             
             // 渲染页码按钮
             pageNumbersContainer.innerHTML = '';
-            
             const maxButtons = 5;
             let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
             let endPage = Math.min(totalPages, startPage + maxButtons - 1);
@@ -1646,7 +2101,7 @@
                 pageNumbersContainer.appendChild(btn);
             }
         }
-        
+
         // ========== 创建页码按钮 ==========
         function createPageButton(pageNum) {
             const btn = document.createElement('button');
@@ -1667,7 +2122,7 @@
             
             return btn;
         }
-        
+
         // ========== 绑定分页事件 ==========
         function bindPaginationEvents() {
             document.getElementById('firstPage')?.addEventListener('click', () => {
@@ -1702,7 +2157,7 @@
                 scrollToTop();
             });
         }
-        
+
         // ========== 滚动到表格顶部 ==========
         function scrollToTop() {
             const tableTop = document.querySelector('.reading-digest-table');
@@ -1710,7 +2165,27 @@
                 tableTop.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
-        
+
+        // ========== 关键词高亮函数 ==========
+        function highlightText(text, searchTerm) {
+            if (!searchTerm) return escapeHtml(text);
+            
+            const terms = searchTerm.toLowerCase().split(/\s+/).filter(t => t.length > 0);
+            let result = escapeHtml(text);
+            
+            terms.forEach(term => {
+                const regex = new RegExp(`(${escapeRegex(term)})`, 'gi');
+                result = result.replace(regex, '<span class="search-highlight">$1</span>');
+            });
+            
+            return result;
+        }
+
+        // ========== 转义正则表达式特殊字符 ==========
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
         // ========== 评分徽章 ==========
         function createRatingBadge(rating) {
             if (!rating || rating === 0) {
@@ -1719,7 +2194,7 @@
             const ratingClass = `rating-value-${rating}`;
             return `<div class="rating-badge ${ratingClass}">${rating}</div>`;
         }
-        
+
         // ========== 渲染书摘表格 ==========
         function renderDigestTable() {
             const tableBody = document.querySelector('.reading-digest-table');
@@ -1763,12 +2238,13 @@
                         const row = document.createElement('div');
                         row.className = 'digest-row';
                         row.setAttribute('role', 'row');
+                        
                         row.innerHTML = `
                             <div class="digest-col digest-col--book" role="cell" data-label="📖 书名">
-                                ${escapeHtml(digest.book)}
+                                ${highlightText(digest.book, currentSearchTerm)}
                             </div>
                             <div class="digest-col digest-col--content" role="cell" data-label="📝 摘录">
-                                ${escapeHtml(digest.content)}
+                                ${highlightText(digest.content, currentSearchTerm)}
                             </div>
                             <div class="digest-col digest-col--date" role="cell" data-label="📅 日期">
                                 ${escapeHtml(digest.date)}
@@ -1777,6 +2253,7 @@
                                 ${createRatingBadge(digest.rating)}
                             </div>
                         `;
+                        
                         tableBody.appendChild(row);
                     });
                 }
@@ -1784,14 +2261,14 @@
                 renderPagination();
             }, 300);
         }
-        
+
         // ========== HTML转义 ==========
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
-        
+
         // ========== 加载错误提示 ==========
         function showLoadingError() {
             const tableBody = document.querySelector('.reading-digest-table');
@@ -1807,7 +2284,7 @@
             `;
             tableBody.appendChild(errorRow);
         }
-        
+
         // ========== 更新统计信息 ==========
         function updateDigestStats() {
             document.getElementById('totalDigests').textContent = currentDigestData.length;
@@ -1824,7 +2301,7 @@
             const highInspiration = currentDigestData.filter(d => d.rating && d.rating >= 7).length;
             document.getElementById('highInspiration').textContent = highInspiration;
         }
-        
+
         // ========== 搜索功能 ==========
         function bindSearchEvents() {
             const searchInput = document.getElementById('digestSearchInput');
@@ -1833,6 +2310,8 @@
             
             const performSearch = () => {
                 const searchTerm = searchInput.value.trim().toLowerCase();
+                currentSearchTerm = searchInput.value.trim(); // 保存原始搜索词用于高亮
+                
                 currentDigestData = searchTerm === ''
                     ? [...digestData]
                     : digestData.filter(digest =>
@@ -1848,12 +2327,14 @@
             };
             
             searchButton?.addEventListener('click', performSearch);
+            
             searchInput?.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') performSearch();
             });
             
             resetButton?.addEventListener('click', () => {
                 searchInput.value = '';
+                currentSearchTerm = '';
                 currentDigestData = [...digestData];
                 sortOrder = 'default';
                 currentPage = 1;
@@ -1863,16 +2344,18 @@
                 updateSortButton();
             });
             
+            // 实时搜索(防抖)
             let searchTimeout;
             searchInput?.addEventListener('input', () => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(performSearch, 500);
             });
         }
-        
+
         // ========== 排序功能 ==========
         function bindSortEvents() {
             const sortButton = document.getElementById('digestSortToggle');
+            
             sortButton?.addEventListener('click', () => {
                 const orders = ['default', 'rating-desc', 'rating-asc', 'date-desc', 'date-asc'];
                 const currentIndex = orders.indexOf(sortOrder);
@@ -1901,6 +2384,7 @@
                     currentDigestData.sort((a, b) => new Date(a.date) - new Date(b.date));
                     break;
                 default:
+                    // 恢复原始顺序
                     currentDigestData.sort((a, b) => digestData.indexOf(a) - digestData.indexOf(b));
             }
         }
@@ -1924,7 +2408,7 @@
             icon.className = label.icon;
             text.textContent = label.text;
         }
-        
+
         // ========== 周复盘功能 ==========
         function bindModalEvents() {
             const modal = document.getElementById('weeklyReviewModal');
@@ -1949,7 +2433,7 @@
                 }
             });
         }
-        
+
         // ========== 生成周复盘 ==========
         function generateWeeklyReview() {
             const now = new Date();
@@ -1973,16 +2457,33 @@
                 : '0.0';
             document.getElementById('weeklyAvgRating').textContent = avgRating;
             
-            // 计算综合评分 (基于数量、平均启发值、高质量占比)
             const highQuality = weeklyData.filter(d => d.rating >= 7).length;
-            const qualityRatio = weeklyData.length > 0 ? (highQuality / weeklyData.length) : 0;
+            document.getElementById('weeklyHighQuality').textContent = highQuality;
             
+            // 生成每日趋势图
+            generateTrendChart(weeklyData);
+            
+            // 计算综合评分 (更科学的算法)
             let score = 0;
-            score += Math.min(weeklyData.length * 3, 40); // 数量分(最高40分)
-            score += parseFloat(avgRating) * 4; // 平均分(最高40分)
-            score += qualityRatio * 20; // 质量分(最高20分)
-            score = Math.min(Math.round(score), 100);
             
+            // 1. 数量分 (0-35分) - 考虑递减效应
+            const countScore = Math.min(weeklyData.length * 2.5, 35);
+            score += countScore;
+            
+            // 2. 质量分 (0-35分) - 基于平均启发值
+            const qualityScore = parseFloat(avgRating) * 3.5;
+            score += qualityScore;
+            
+            // 3. 高质量占比分 (0-20分)
+            const qualityRatio = weeklyData.length > 0 ? (highQuality / weeklyData.length) : 0;
+            const ratioScore = qualityRatio * 20;
+            score += ratioScore;
+            
+            // 4. 多样性分 (0-10分) - 基于书籍种类
+            const diversityScore = Math.min(weeklyBooks.length * 2, 10);
+            score += diversityScore;
+            
+            score = Math.min(Math.round(score), 100);
             document.getElementById('weeklyScore').textContent = score;
             
             // 热读书籍
@@ -2007,60 +2508,131 @@
             document.getElementById('weeklyBooksList').innerHTML = booksListHtml;
             
             // 生成建议
-            const suggestions = generateSuggestions(weeklyData.length, avgRating, qualityRatio, weeklyBooks.length);
+            const suggestions = generateSuggestions(weeklyData.length, avgRating, qualityRatio, weeklyBooks.length, score);
             const suggestionsHtml = suggestions.map(s => `<li>${s}</li>`).join('');
             document.getElementById('weeklySuggestions').innerHTML = suggestionsHtml;
         }
-        
+
+        // ========== 生成趋势图表 ==========
+        function generateTrendChart(weeklyData) {
+            const chartContainer = document.getElementById('trendChart');
+            if (!chartContainer) return;
+            
+            // 按日期统计
+            const dailyCounts = {};
+            const now = new Date();
+            
+            // 初始化最近7天
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+                const dateStr = date.toISOString().split('T')[0];
+                dailyCounts[dateStr] = 0;
+            }
+            
+            // 统计实际数据
+            weeklyData.forEach(digest => {
+                const dateStr = digest.date;
+                if (dailyCounts.hasOwnProperty(dateStr)) {
+                    dailyCounts[dateStr]++;
+                }
+            });
+            
+            // 找出最大值用于比例计算
+            const maxCount = Math.max(...Object.values(dailyCounts), 1);
+            
+            // 生成图表HTML
+            const chartHtml = Object.entries(dailyCounts).map(([date, count]) => {
+                const height = (count / maxCount) * 100;
+                const dateObj = new Date(date);
+                const dayLabel = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][dateObj.getDay()];
+                
+                return `
+                    <div class="trend-bar" style="height: ${height}%">
+                        <span class="trend-bar-value">${count}</span>
+                        <span class="trend-bar-label">${dayLabel}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            chartContainer.innerHTML = chartHtml;
+        }
+
         // ========== 生成阅读建议 ==========
-        function generateSuggestions(count, avgRating, qualityRatio, booksCount) {
+        function generateSuggestions(count, avgRating, qualityRatio, booksCount, score) {
             const suggestions = [];
+            
+            // 基于综合评分的总体评价
+            if (score >= 80) {
+                suggestions.push('🎉 本周表现优异!阅读质量和数量都很出色,继续保持这个节奏');
+            } else if (score >= 60) {
+                suggestions.push('👍 本周阅读表现良好,在保持现有水平的基础上可以适当提升');
+            } else if (score >= 40) {
+                suggestions.push('📚 本周阅读有所积累,但还有较大提升空间');
+            } else if (score > 0) {
+                suggestions.push('💪 建议增加阅读时间,养成每天记录书摘的习惯');
+            }
             
             // 基于数量的建议
             if (count === 0) {
-                suggestions.push('本周尚未记录书摘,建议开始阅读并摘录有启发的内容');
-            } else if (count < 5) {
-                suggestions.push('本周书摘数量较少,建议增加阅读时间,每天至少记录1-2条');
-            } else if (count >= 20) {
-                suggestions.push('本周书摘数量充沛!保持这个阅读节奏,同时注重质量');
+                suggestions.push('📖 本周尚未记录书摘,建议开始阅读并摘录有启发的内容');
+            } else if (count < 3) {
+                suggestions.push('📈 本周书摘数量较少,建议增加阅读时间,目标每天至少记录1-2条');
+            } else if (count >= 15 && count < 25) {
+                suggestions.push('✨ 书摘数量适中,保持这个稳定的阅读节奏');
+            } else if (count >= 25) {
+                suggestions.push('🔥 本周书摘数量充沛!在保持数量的同时,也要注重深度思考');
             }
             
             // 基于平均启发值的建议
-            if (avgRating < 5) {
-                suggestions.push('平均启发值偏低,建议选择更符合当前需求的书籍,或深入思考内容');
-            } else if (avgRating >= 7) {
-                suggestions.push('高启发值表现优秀!这些内容值得定期复习和实践');
+            const avgRatingNum = parseFloat(avgRating);
+            if (avgRatingNum >= 8) {
+                suggestions.push('⭐ 平均启发值极高!这些精华内容值得定期复习和实践应用');
+            } else if (avgRatingNum >= 6.5) {
+                suggestions.push('💡 整体内容质量优秀,可以尝试整理成读书笔记或思维导图');
+            } else if (avgRatingNum >= 5 && avgRatingNum < 6.5) {
+                suggestions.push('🎯 平均启发值中等,可以更有选择性地摘录最触动你的内容');
+            } else if (avgRatingNum > 0 && avgRatingNum < 5) {
+                suggestions.push('🤔 平均启发值偏低,建议选择更符合当前需求和兴趣的书籍');
             }
             
             // 基于质量占比的建议
-            if (qualityRatio < 0.3) {
-                suggestions.push('高质量摘录占比较低,可以更有选择性地摘录最有价值的内容');
-            } else if (qualityRatio >= 0.6) {
-                suggestions.push('高质量摘录占比优秀!继续保持高标准的筛选');
+            if (qualityRatio >= 0.7) {
+                suggestions.push('🌟 高质量摘录占比达到70%以上,说明你的筛选标准很高');
+            } else if (qualityRatio >= 0.4 && qualityRatio < 0.7) {
+                suggestions.push('📊 高质量摘录占比适中,可以更有针对性地摘录最有价值的内容');
+            } else if (qualityRatio > 0 && qualityRatio < 0.4) {
+                suggestions.push('🔍 建议提高摘录标准,只记录那些真正触动你或有实用价值的内容');
             }
             
             // 基于书籍多样性的建议
-            if (booksCount === 1 && count > 5) {
-                suggestions.push('本周专注于单本书籍,适合深度阅读;也可以尝试其他领域的书籍');
-            } else if (booksCount >= 5) {
-                suggestions.push('涉猎多本书籍,拓宽了知识面;可以选择1-2本进行深度阅读');
+            if (booksCount === 1 && count >= 8) {
+                suggestions.push('📕 本周专注于单本书籍深度阅读,适合系统学习;也可尝试其他领域拓展视野');
+            } else if (booksCount >= 2 && booksCount <= 3) {
+                suggestions.push('📚 涉猎2-3本书籍,深度与广度兼顾,是很好的阅读结构');
+            } else if (booksCount >= 4) {
+                suggestions.push('🌈 涉猎多本书籍,知识面广泛;可选择1-2本进行重点深读');
             }
             
-            // 默认鼓励
-            if (suggestions.length === 0) {
-                suggestions.push('继续保持良好的阅读习惯,每周复盘帮助你更好地成长');
-            }
-            
-            // 周末建议
+            // 周末特殊建议
             const now = new Date();
             const dayOfWeek = now.getDay();
             if (dayOfWeek === 0 || dayOfWeek === 6) {
-                suggestions.push('周末时光,可以整理本周书摘,尝试输出一篇读书笔记');
+                suggestions.push('☕ 周末时光,可以整理本周书摘,尝试输出一篇读书笔记或心得');
+            }
+            
+            // 实践建议
+            if (count >= 10 && qualityRatio >= 0.5) {
+                suggestions.push('🚀 建议从本周摘录中选择1-2个观点尝试实践应用,知行合一');
+            }
+            
+            // 复习建议
+            if (avgRatingNum >= 7 && count >= 5) {
+                suggestions.push('🔄 这周收获的精华内容值得周末复习一遍,加深记忆和理解');
             }
             
             return suggestions;
         }
-        
+
         // ========== 返回顶部 ==========
         function initBackToTop() {
             const backToTopButton = document.getElementById('backToTop');
