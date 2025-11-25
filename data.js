@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [
      {
+        id: 67,
+        date: '2025-11-25',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '高强度工作',
+            en: 'high-intensity work'
+        },
+        content: {
+            zh: '阅读5本书\n学习10小时+\n网站优化优化阅读室功能',
+            en: 'Reading  5 books.\nStudied for 10+ hours.\n Optimizing the reading room feature of the website'
+        },
+        highlight: {
+            zh: '唐诡3；蛇之命',
+            en: 'Tang Guai 3; The Fate of the Snake'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 1,
+        coverImage: '',
+        attachments: []
+    },
+     {
         id: 66,
         date: '2025-11-24',
         categories: ['study', 'creative'],
