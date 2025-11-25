@@ -481,6 +481,7 @@
             height: 120px;
             gap: 0.5rem;
             margin: 1rem 0;
+            padding-top: 30px;
         }
 
         .trend-bar {
@@ -489,7 +490,7 @@
             border-radius: 4px 4px 0 0;
             position: relative;
             transition: all 0.3s ease;
-            min-height: 10px;
+            min-height: 5px;
         }
 
         .trend-bar:hover {
@@ -2513,48 +2514,94 @@
             document.getElementById('weeklySuggestions').innerHTML = suggestionsHtml;
         }
 
-        // ========== 生成趋势图表 ==========
+        // ========== 生成趋势图表（增强调试版）==========
         function generateTrendChart(weeklyData) {
             const chartContainer = document.getElementById('trendChart');
-            if (!chartContainer) return;
+            if (!chartContainer) {
+                console.error('❌ 找不到趋势图容器');
+                return;
+            }
+            
+            console.log('=== 开始生成趋势图 ===');
+            console.log(`本周数据条数: ${weeklyData.length}`);
             
             // 按日期统计
             const dailyCounts = {};
             const now = new Date();
             
+            // 格式化日期为 YYYY-MM-DD
+            function formatDate(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            
             // 初始化最近7天
+            const dateLabels = [];
+            console.log('📅 初始化最近7天:');
             for (let i = 6; i >= 0; i--) {
                 const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-                const dateStr = date.toISOString().split('T')[0];
+                const dateStr = formatDate(date);
                 dailyCounts[dateStr] = 0;
+                dateLabels.push({
+                    date: dateStr,
+                    dayOfWeek: date.getDay(),
+                    dateObj: date
+                });
+                console.log(`  ${dateStr} (${['周日', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()]})`);
             }
             
             // 统计实际数据
-            weeklyData.forEach(digest => {
-                const dateStr = digest.date;
-                if (dailyCounts.hasOwnProperty(dateStr)) {
-                    dailyCounts[dateStr]++;
-                }
+            console.log('\n📊 开始匹配书摘数据:');
+            if (weeklyData.length === 0) {
+                console.warn('⚠️ 本周没有书摘数据');
+            } else {
+                // 显示前3条数据样本
+                console.log('数据样本 (前3条):');
+                weeklyData.slice(0, 3).forEach((digest, index) => {
+                    console.log(`  [${index + 1}] 日期: "${digest.date}", 书名: "${digest.book}"`);
+                });
+                
+                console.log('\n开始统计...');
+                weeklyData.forEach((digest, index) => {
+                    const digestDate = digest.date;
+                    
+                    if (dailyCounts.hasOwnProperty(digestDate)) {
+                        dailyCounts[digestDate]++;
+                        console.log(`✅ [${index + 1}/${weeklyData.length}] ${digestDate} → 计数: ${dailyCounts[digestDate]}`);
+                    } else {
+                        console.log(`❌ [${index + 1}/${weeklyData.length}] ${digestDate} → 不在统计范围内`);
+                    }
+                });
+            }
+            
+            console.log('\n📈 最终统计结果:');
+            Object.entries(dailyCounts).forEach(([date, count]) => {
+                const dayName = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][dateLabels.find(d => d.date === date).dayOfWeek];
+                console.log(`  ${date} (${dayName}): ${count} 条`);
             });
             
             // 找出最大值用于比例计算
             const maxCount = Math.max(...Object.values(dailyCounts), 1);
+            console.log(`\n📊 最大值: ${maxCount}`);
             
             // 生成图表HTML
-            const chartHtml = Object.entries(dailyCounts).map(([date, count]) => {
-                const height = (count / maxCount) * 100;
-                const dateObj = new Date(date);
-                const dayLabel = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][dateObj.getDay()];
+            const chartHtml = dateLabels.map(({ date, dayOfWeek }) => {
+                const count = dailyCounts[date];
+                const height = count > 0 ? (count / maxCount) * 100 : 10;
+                const dayLabel = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][dayOfWeek];
                 
                 return `
-                    <div class="trend-bar" style="height: ${height}%">
-                        <span class="trend-bar-value">${count}</span>
+                    <div class="trend-bar" style="height: ${height}%" title="${date}: ${count}条书摘">
+                        ${count > 0 ? `<span class="trend-bar-value">${count}</span>` : ''}
                         <span class="trend-bar-label">${dayLabel}</span>
                     </div>
                 `;
             }).join('');
             
             chartContainer.innerHTML = chartHtml;
+            console.log('✅ 趋势图生成完成\n=== 结束 ===\n');
         }
 
         // ========== 生成阅读建议 ==========
