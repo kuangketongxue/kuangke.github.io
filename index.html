@@ -59,271 +59,380 @@
             --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.2);
             --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
+
         /* ==================== 重置和基础样式 ==================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        /* ==================== 罗小黑加载画面样式 ==================== */
+
+        /* ==================== 马斯克工作场景加载画面 ==================== */
         .loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0f0f2e 0%, #1a1a3e 50%, #0f0f2e 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 99999;
             transition: opacity 0.5s ease, visibility 0.5s ease;
+            overflow: hidden;
         }
+
         .loading-screen.hidden {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
         }
-        /* 罗小黑角色动画 */
-        .lxh-container {
+
+        /* 办公室场景 */
+        .office-scene {
             position: relative;
-            width: 200px;
-            height: 200px;
-            margin-bottom: 30px;
+            width: 400px;
+            height: 300px;
+            margin-bottom: 40px;
         }
-        .lxh-body {
+
+        /* 办公桌 */
+        .desk {
             position: absolute;
-            width: 120px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%);
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .desk::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 5%;
+            right: 5%;
+            height: 10px;
+            background: #505050;
+            border-radius: 4px 4px 0 0;
+        }
+
+        /* 显示器 */
+        .monitor {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
             height: 140px;
             background: #1a1a1a;
-            border-radius: 50% 50% 45% 45%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: lxhFloat 2s ease-in-out infinite;
+            border: 8px solid #2a2a2a;
+            border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
-        .lxh-head {
-            position: absolute;
-            width: 100px;
-            height: 90px;
-            background: #1a1a1a;
-            border-radius: 50%;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        .lxh-ear {
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-bottom: 35px solid #1a1a1a;
-            top: -25px;
-        }
-        .lxh-ear.left {
-            left: 10px;
-            transform: rotate(-15deg);
-        }
-        .lxh-ear.right {
-            right: 10px;
-            transform: rotate(15deg);
-        }
-        .lxh-eyes {
-            position: absolute;
-            width: 100%;
-            top: 35px;
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-        }
-        .lxh-eye {
-            width: 18px;
-            height: 18px;
-            background: #fff;
-            border-radius: 50%;
-            position: relative;
-            animation: lxhBlink 3s infinite;
-        }
-        .lxh-eye::after {
-            content: '';
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #1a1a1a;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .lxh-nose {
-            position: absolute;
-            width: 8px;
-            height: 6px;
-            background: #4a4a4a;
-            border-radius: 50%;
-            top: 55px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .lxh-mouth {
-            position: absolute;
-            width: 20px;
-            height: 10px;
-            border: 2px solid #4a4a4a;
-            border-top: none;
-            border-radius: 0 0 50% 50%;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .lxh-tail {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            background: #1a1a1a;
-            border-radius: 50%;
-            bottom: 20px;
-            right: -20px;
-            transform-origin: center;
-            animation: lxhTailWag 1s ease-in-out infinite;
-            box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        .lxh-tail::after {
-            content: '';
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background: #1a1a1a;
-            border-radius: 50%;
-            top: -15px;
-            right: -10px;
-        }
-        .lxh-feet {
-            position: absolute;
-            bottom: -15px;
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-            padding: 0 20px;
-        }
-        .lxh-foot {
-            width: 30px;
-            height: 20px;
-            background: #1a1a1a;
-            border-radius: 50% 50% 40% 40%;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-        }
-        .lxh-ring {
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            border: 3px solid transparent;
-            border-top-color: #667eea;
-            border-right-color: #764ba2;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: lxhRingRotate 1.5s linear infinite;
-        }
-        .lxh-ring::before {
-            content: '';
-            position: absolute;
-            width: 160px;
-            height: 160px;
-            border: 2px solid transparent;
-            border-bottom-color: #00c9a7;
-            border-left-color: #8b5cf6;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: lxhRingRotate 2s linear infinite reverse;
-        }
-        .lxh-stars {
-            position: absolute;
+
+        .monitor-screen {
             width: 100%;
             height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: screenGlow 2s ease-in-out infinite;
         }
-        .lxh-star {
+
+        .monitor-screen::before {
+            content: '';
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #fff;
+            width: 80%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            animation: loadingLine 1.5s ease-in-out infinite;
+        }
+
+        @keyframes screenGlow {
+            0%, 100% { box-shadow: inset 0 0 20px rgba(102, 126, 234, 0.5); }
+            50% { box-shadow: inset 0 0 30px rgba(118, 75, 162, 0.8); }
+        }
+
+        @keyframes loadingLine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .monitor-stand {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 20px;
+            background: #2a2a2a;
+            border-radius: 0 0 4px 4px;
+        }
+
+        /* 人物剪影 */
+        .person {
+            position: absolute;
+            bottom: 120px;
+            right: 80px;
+            width: 80px;
+            height: 120px;
+            animation: typing 2s ease-in-out infinite;
+        }
+
+        .person-head {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 35px;
+            height: 35px;
+            background: #667eea;
             border-radius: 50%;
-            animation: lxhStarTwinkle 2s ease-in-out infinite;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.5);
         }
-        .lxh-star:nth-child(1) { top: 10%; left: 15%; animation-delay: 0s; }
-        .lxh-star:nth-child(2) { top: 20%; right: 20%; animation-delay: 0.5s; }
-        .lxh-star:nth-child(3) { bottom: 15%; left: 20%; animation-delay: 1s; }
-        .lxh-star:nth-child(4) { bottom: 25%; right: 15%; animation-delay: 1.5s; }
-        .lxh-star:nth-child(5) { top: 40%; left: 10%; animation-delay: 0.3s; }
-        .lxh-star:nth-child(6) { top: 35%; right: 10%; animation-delay: 0.8s; }
-        .loading-text {
-            font-size: 20px;
-            color: var(--text-primary);
-            font-weight: 600;
-            letter-spacing: 2px;
-            animation: loadingTextPulse 1.5s ease-in-out infinite;
-            text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+
+        .person-body {
+            position: absolute;
+            top: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 45px;
+            height: 50px;
+            background: #764ba2;
+            border-radius: 8px 8px 0 0;
         }
-        .loading-progress {
-            margin-top: 15px;
-            font-size: 14px;
-            color: var(--text-secondary);
-            font-weight: 500;
+
+        .person-arm {
+            position: absolute;
+            width: 30px;
+            height: 8px;
+            background: #764ba2;
+            border-radius: 4px;
         }
-        .loading-bar-container {
-            width: 300px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
+
+        .person-arm.left {
+            top: 40px;
+            left: 5px;
+            transform: rotate(-45deg);
+            transform-origin: right center;
+        }
+
+        .person-arm.right {
+            top: 40px;
+            right: 5px;
+            transform: rotate(45deg);
+            transform-origin: left center;
+        }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* 键盘 */
+        .keyboard {
+            position: absolute;
+            bottom: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 40px;
+            background: #3a3a3a;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .keyboard-keys {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 2px;
+            padding: 4px;
+        }
+
+        .key {
+            background: #505050;
             border-radius: 2px;
-            margin-top: 20px;
+            height: 6px;
+            animation: keyPress 0.6s ease-in-out infinite;
+        }
+
+        .key:nth-child(3n) {
+            animation-delay: 0.1s;
+        }
+
+        .key:nth-child(3n+1) {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes keyPress {
+            0%, 100% { transform: translateY(0); background: #505050; }
+            50% { transform: translateY(2px); background: #667eea; }
+        }
+
+        /* 咖啡杯 */
+        .coffee {
+            position: absolute;
+            bottom: 50px;
+            left: 30px;
+            width: 35px;
+            height: 45px;
+            background: linear-gradient(180deg, #8b4513 0%, #654321 100%);
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .coffee::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 38px;
+            height: 5px;
+            background: #654321;
+            border-radius: 50%;
+        }
+
+        .coffee::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            right: -12px;
+            width: 15px;
+            height: 20px;
+            border: 3px solid #654321;
+            border-left: none;
+            border-radius: 0 50% 50% 0;
+        }
+
+        .steam {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: steam 2s ease-in-out infinite;
+        }
+
+        .steam:nth-child(2) {
+            left: 40%;
+            animation-delay: 0.5s;
+        }
+
+        .steam:nth-child(3) {
+            left: 60%;
+            animation-delay: 1s;
+        }
+
+        @keyframes steam {
+            0% { opacity: 0; transform: translateX(-50%) translateY(0); }
+            50% { opacity: 0.6; }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-15px); }
+        }
+
+        /* 窗户 */
+        .window {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            border: 4px solid #2a2a2a;
+            border-radius: 8px;
             overflow: hidden;
         }
+
+        .window-pane {
+            position: absolute;
+            width: 2px;
+            height: 100%;
+            background: #2a2a2a;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .window-pane.horizontal {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .stars {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        .stars:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+        .stars:nth-child(2) { top: 40%; right: 25%; animation-delay: 0.5s; }
+        .stars:nth-child(3) { top: 70%; left: 30%; animation-delay: 1s; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* 加载文本 */
+        .loading-text {
+            font-size: 24px;
+            color: var(--text-primary);
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            animation: textPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes textPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .loading-progress {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .loading-bar-container {
+            width: 350px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
         .loading-bar {
             height: 100%;
             background: linear-gradient(90deg, #667eea, #764ba2, #00c9a7);
             background-size: 200% 100%;
-            border-radius: 2px;
-            animation: loadingBarProgress 2s ease-in-out infinite;
+            border-radius: 3px;
+            animation: loadingProgress 2s ease-in-out infinite;
             box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
         }
-        /* ==================== 罗小黑动画关键帧 ==================== */
-        @keyframes lxhFloat {
-            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
-            50% { transform: translate(-50%, -50%) translateY(-10px); }
-        }
-        @keyframes lxhBlink {
-            0%, 90%, 100% { transform: scaleY(1); }
-            95% { transform: scaleY(0.1); }
-        }
-        @keyframes lxhTailWag {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(15deg); }
-        }
-        @keyframes lxhRingRotate {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-        @keyframes lxhStarTwinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.5); }
-        }
-        @keyframes loadingTextPulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
-        }
-        @keyframes loadingBarProgress {
+
+        @keyframes loadingProgress {
             0% { width: 0%; background-position: 0% 0%; }
             50% { width: 100%; background-position: 100% 0%; }
             100% { width: 100%; background-position: 200% 0%; }
         }
+
         /* ==================== 星空主题背景 ==================== */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
@@ -333,6 +442,7 @@
             position: relative;
             will-change: scroll-position;
         }
+
         body::before {
             content: '';
             position: fixed;
@@ -353,17 +463,18 @@
             animation: stars 120s linear infinite, twinkle 3s ease-in-out infinite;
             z-index: -1;
             pointer-events: none;
-            transform: translateZ(0);
-            backface-visibility: hidden;
         }
+
         @keyframes stars {
             from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
             to { background-position: 0 0, -250px 0, -250px 0, -250px 0, -250px 0, -250px 0, -250px 0; }
         }
+
         @keyframes twinkle {
             0%, 100% { opacity: 0.8; }
             50% { opacity: 1; }
         }
+
         /* ==================== 优化的顶部导航栏 ==================== */
         .header {
             position: fixed;
@@ -377,9 +488,9 @@
             z-index: 1000;
             transition: var(--transition-base);
             box-shadow: var(--shadow-md);
-            transform: translateZ(0);
             padding: 10px 0;
         }
+
         .container {
             max-width: 1600px;
             margin: 0 auto;
@@ -391,12 +502,14 @@
             gap: var(--spacing-md);
             flex-wrap: wrap;
         }
+
         .header-left {
             display: flex;
             align-items: center;
             gap: var(--spacing-md);
             flex-shrink: 0;
         }
+
         /* ==================== 优化的网站Logo标识 ==================== */
         .site-brand {
             display: flex;
@@ -410,12 +523,14 @@
             transition: var(--transition-base);
             white-space: nowrap;
         }
+
         .site-brand:hover {
             background: rgba(102, 126, 234, 0.2);
             border-color: rgba(102, 126, 234, 0.5);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
+
         .site-brand-icon {
             font-size: 24px;
             background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
@@ -424,6 +539,7 @@
             background-clip: text;
             flex-shrink: 0;
         }
+
         .site-brand-text {
             font-size: 18px;
             font-weight: 700;
@@ -434,6 +550,7 @@
             background-clip: text;
             white-space: nowrap;
         }
+
         /* ==================== 优化的返回主页按钮 ==================== */
         .home-button {
             display: inline-flex;
@@ -448,22 +565,25 @@
             font-size: 14px;
             font-weight: 600;
             transition: var(--transition-base);
-            transform: translateZ(0);
             white-space: nowrap;
         }
+
         .home-button:hover {
             background: rgba(102, 126, 234, 0.3);
             border-color: rgba(102, 126, 234, 0.5);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
+
         .home-button i {
             font-size: 16px;
             transition: transform var(--transition-base);
         }
+
         .home-button:hover i {
             transform: scale(1.1);
         }
+
         /* ==================== 优化的主导航 ==================== */
         .primary-nav {
             display: flex;
@@ -474,6 +594,7 @@
             flex-wrap: wrap;
             padding: 5px 0;
         }
+
         .primary-nav a {
             display: flex;
             align-items: center;
@@ -485,14 +606,15 @@
             transition: var(--transition-base);
             font-size: 14px;
             font-weight: 500;
-            transform: translateZ(0);
             white-space: nowrap;
         }
+
         .primary-nav a:hover {
             background: rgba(102, 126, 234, 0.2);
             color: #a8b2ff;
             transform: translateY(-2px);
         }
+
         /* ==================== 优化的控制按钮区 ==================== */
         .controls {
             display: flex;
@@ -500,6 +622,7 @@
             gap: var(--spacing-md);
             flex-wrap: wrap;
         }
+
         /* ==================== 优化的通用按钮样式 ==================== */
         .nav-button-base {
             display: inline-flex;
@@ -519,8 +642,8 @@
             cursor: pointer;
             white-space: nowrap;
             box-shadow: var(--shadow-md);
-            transform: translateZ(0);
         }
+
         .nav-button-base::before {
             content: '';
             position: absolute;
@@ -531,13 +654,16 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.5s ease;
         }
+
         .nav-button-base:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
+
         .nav-button-base:hover::before {
             left: 100%;
         }
+
         .button-icon {
             display: flex;
             align-items: center;
@@ -549,35 +675,42 @@
             border-radius: 6px;
             transition: var(--transition-base);
         }
+
         /* 各类按钮样式 */
         .ai-nav-button {
             background: var(--primary-gradient);
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
+
         .health-nav-button {
             background: var(--secondary-gradient);
             box-shadow: 0 4px 15px rgba(0, 201, 167, 0.4);
         }
+
         .meal-nav-button {
             background: var(--danger-gradient);
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
+
         .crypto-nav-button {
             background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%);
             box-shadow: 0 4px 15px rgba(247, 147, 26, 0.4);
         }
+
         /* 搜索框 */
         .search-box {
             position: relative;
             display: flex;
             align-items: center;
         }
+
         .search-box i {
             position: absolute;
             left: 12px;
             color: var(--text-secondary);
             pointer-events: none;
         }
+
         .search-box input {
             padding: 10px 10px 10px 38px;
             border: 1px solid var(--border-color);
@@ -588,14 +721,16 @@
             width: 200px;
             transition: var(--transition-base);
         }
+
         .search-box input:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
             width: 250px;
         }
-        /* 主题切换按钮 */
-        .theme-toggle {
+
+        /* 专注模式按钮（替代主题切换） */
+        .focus-toggle {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -608,11 +743,25 @@
             cursor: pointer;
             transition: var(--transition-base);
         }
-        .theme-toggle:hover {
+
+        .focus-toggle:hover {
             border-color: #667eea;
             color: #a8b2ff;
             background: rgba(102, 126, 234, 0.2);
         }
+
+        /* 专注模式样式 */
+        body.focus-mode .header,
+        body.focus-mode .social-footer,
+        body.focus-mode .latest-sidebar {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        body.focus-mode .moment-card {
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+
         /* ==================== 左侧分类侧边栏样式 ==================== */
         .category-sidebar {
             position: fixed;
@@ -620,14 +769,15 @@
             left: 0;
             bottom: 0;
             width: 320px;
-            z-index: 1001;
+            z-index: 999;
             transform: translateX(-100%);
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: transform;
         }
+
         .category-sidebar.open {
             transform: translateX(0);
         }
+
         .sidebar-overlay {
             position: fixed;
             top: 0;
@@ -641,10 +791,12 @@
             transition: opacity 0.3s ease, visibility 0.3s ease;
             z-index: -1;
         }
+
         .category-sidebar.open .sidebar-overlay {
             opacity: 1;
             visibility: visible;
         }
+
         .sidebar-content {
             position: relative;
             width: 100%;
@@ -656,12 +808,14 @@
             display: flex;
             flex-direction: column;
         }
+
         .sidebar-inner {
             display: flex;
             flex-direction: column;
             height: 100%;
             overflow: hidden;
         }
+
         .sidebar-header-section {
             display: flex;
             align-items: center;
@@ -670,6 +824,7 @@
             border-bottom: 2px solid rgba(102, 126, 234, 0.3);
             background: rgba(102, 126, 234, 0.1);
         }
+
         .sidebar-main-title {
             display: flex;
             align-items: center;
@@ -679,6 +834,7 @@
             color: var(--text-primary);
             margin: 0;
         }
+
         .sidebar-main-title i {
             font-size: 20px;
             background: linear-gradient(135deg, #667eea, #764ba2);
@@ -686,6 +842,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+
         .sidebar-close-btn {
             display: flex;
             align-items: center;
@@ -699,17 +856,20 @@
             cursor: pointer;
             transition: var(--transition-base);
         }
+
         .sidebar-close-btn:hover {
             background: rgba(255, 107, 107, 0.3);
             border-color: rgba(255, 107, 107, 0.5);
             color: #ff6b6b;
             transform: rotate(90deg);
         }
+
         .sidebar-search {
             position: relative;
             padding: var(--spacing-md) var(--spacing-lg);
             border-bottom: 1px solid var(--border-color);
         }
+
         .sidebar-search i {
             position: absolute;
             left: 32px;
@@ -718,6 +878,7 @@
             color: var(--text-secondary);
             pointer-events: none;
         }
+
         .sidebar-search input {
             width: 100%;
             padding: 10px 10px 10px 38px;
@@ -728,20 +889,21 @@
             font-size: 14px;
             transition: var(--transition-base);
         }
+
         .sidebar-search input:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
             background: rgba(255, 255, 255, 0.15);
         }
-        
+
         /* ==================== 排序区域样式 ==================== */
         .sidebar-sort-section {
             padding: var(--spacing-md) var(--spacing-lg);
             border-bottom: 2px solid rgba(102, 126, 234, 0.3);
             background: rgba(102, 126, 234, 0.05);
         }
-        
+
         .sidebar-sort-title {
             display: flex;
             align-items: center;
@@ -751,18 +913,18 @@
             color: var(--text-primary);
             margin-bottom: var(--spacing-md);
         }
-        
+
         .sidebar-sort-title i {
             font-size: 16px;
             color: #667eea;
         }
-        
+
         .sidebar-sort-buttons {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: var(--spacing-sm);
         }
-        
+
         .sidebar-sort-btn {
             display: flex;
             align-items: center;
@@ -781,30 +943,30 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .sidebar-sort-btn i {
             font-size: 14px;
             transition: transform var(--transition-base);
         }
-        
+
         .sidebar-sort-btn:hover {
             background: rgba(102, 126, 234, 0.2);
             border-color: rgba(102, 126, 234, 0.3);
             color: #a8b2ff;
             transform: translateY(-1px);
         }
-        
+
         .sidebar-sort-btn.active {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4));
             border-color: rgba(102, 126, 234, 0.6);
             color: #fff;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
-        
+
         .sidebar-sort-btn.active i {
             transform: scale(1.1);
         }
-        
+
         .sidebar-sort-btn::before {
             content: '';
             position: absolute;
@@ -817,12 +979,12 @@
             transform: translate(-50%, -50%);
             transition: width 0.3s ease, height 0.3s ease;
         }
-        
+
         .sidebar-sort-btn:active::before {
             width: 200px;
             height: 200px;
         }
-        
+
         .category-list-container {
             flex: 1;
             overflow-y: auto;
@@ -830,16 +992,20 @@
             scrollbar-width: thin;
             scrollbar-color: rgba(102, 126, 234, 0.5) transparent;
         }
+
         .category-list-container::-webkit-scrollbar {
             width: 6px;
         }
+
         .category-list-container::-webkit-scrollbar-track {
             background: transparent;
         }
+
         .category-list-container::-webkit-scrollbar-thumb {
             background: rgba(102, 126, 234, 0.5);
             border-radius: 3px;
         }
+
         .category-list-btn {
             display: flex;
             align-items: center;
@@ -857,15 +1023,18 @@
             font-weight: 500;
             text-align: left;
         }
+
         .category-list-btn i {
             font-size: 18px;
             width: 24px;
             text-align: center;
             flex-shrink: 0;
         }
+
         .category-list-btn span:not(.category-count) {
             flex: 1;
         }
+
         .category-count {
             display: inline-flex;
             align-items: center;
@@ -879,30 +1048,36 @@
             font-weight: 600;
             color: var(--text-secondary);
         }
+
         .category-list-btn:hover {
             background: rgba(102, 126, 234, 0.2);
             border-color: rgba(102, 126, 234, 0.4);
             color: #a8b2ff;
             transform: translateX(4px);
         }
+
         .category-list-btn.active {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
             border-color: rgba(102, 126, 234, 0.6);
             color: #fff;
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
+
         .category-list-btn.active .category-count {
             background: rgba(255, 255, 255, 0.2);
             color: #fff;
         }
+
         .category-list-btn.hidden {
             display: none;
         }
+
         .sidebar-footer {
             padding: var(--spacing-lg);
             border-top: 1px solid var(--border-color);
             background: rgba(0, 0, 0, 0.2);
         }
+
         .sidebar-reset-btn {
             display: flex;
             align-items: center;
@@ -919,17 +1094,19 @@
             font-size: 14px;
             font-weight: 600;
         }
+
         .sidebar-reset-btn:hover {
             background: rgba(255, 107, 107, 0.2);
             border-color: rgba(255, 107, 107, 0.4);
             color: #ff6b6b;
         }
+
         /* ==================== 侧边栏触发按钮 - 优化位置 ==================== */
         .sidebar-toggle-btn {
             position: fixed;
             top: 200px;
             left: 0;
-            z-index: 999;
+            z-index: 998;
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
@@ -949,6 +1126,7 @@
             letter-spacing: 1px;
             transform-origin: left center;
         }
+
         .sidebar-toggle-btn:hover {
             background: linear-gradient(135deg, rgba(102, 126, 234, 1), rgba(118, 75, 162, 1));
             padding-left: 18px;
@@ -957,61 +1135,52 @@
             transform: translateX(3px) scale(1.05);
             border-color: rgba(255, 255, 255, 0.5);
         }
+
         .sidebar-toggle-btn i {
             font-size: 20px;
             animation: pulse 2s ease-in-out infinite;
         }
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
         }
+
         .sidebar-toggle-btn .toggle-text {
             font-weight: 700;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
+
         .category-sidebar.open ~ .sidebar-toggle-btn {
             transform: translateX(-100%);
             opacity: 0;
             pointer-events: none;
         }
-        .sidebar-toggle-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
-            border-radius: inherit;
-            transform: translate(-50%, -50%) scale(0);
-            opacity: 0;
-            transition: all 0.5s ease;
-        }
-        .sidebar-toggle-btn:hover::before {
-            transform: translate(-50%, -50%) scale(1.5);
-            opacity: 1;
-        }
-        
+
         /* ==================== 主要内容区域 - 两栏布局 ==================== */
         .main-content {
             padding: 30px 0;
             min-height: calc(100vh - 300px);
         }
+
         .content-wrapper {
             display: grid;
             grid-template-columns: 1fr 320px;
             gap: var(--spacing-lg);
             align-items: start;
         }
+
         /* 左侧统计卡片 */
         .moments-stats {
             margin-bottom: 30px;
         }
+
         .stat-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: var(--spacing-lg);
         }
+
         .stat-card {
             background: var(--bg-card);
             backdrop-filter: blur(15px);
@@ -1021,18 +1190,20 @@
             border: 1px solid var(--border-color);
             transition: var(--transition-base);
             box-shadow: var(--shadow-lg);
-            transform: translateZ(0);
         }
+
         .stat-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
             border-color: rgba(102, 126, 234, 0.3);
         }
+
         .stat-card.highlight {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
             border-color: rgba(102, 126, 234, 0.4);
             box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
         }
+
         .stat-number {
             font-size: 32px;
             font-weight: 700;
@@ -1040,11 +1211,13 @@
             margin-bottom: var(--spacing-sm);
             text-shadow: 0 0 10px rgba(168, 178, 255, 0.5);
         }
+
         .stat-label {
             font-size: 14px;
             color: var(--text-secondary);
             font-weight: 500;
         }
+
         .sort-hint {
             text-align: center;
             margin-top: var(--spacing-md);
@@ -1054,6 +1227,7 @@
             font-size: 13px;
             color: rgba(255, 255, 255, 0.6);
         }
+
         /* ==================== 右侧最新内容区域 ==================== */
         .latest-sidebar {
             position: sticky;
@@ -1069,16 +1243,20 @@
             scrollbar-width: thin;
             scrollbar-color: rgba(102, 126, 234, 0.5) transparent;
         }
+
         .latest-sidebar::-webkit-scrollbar {
             width: 6px;
         }
+
         .latest-sidebar::-webkit-scrollbar-track {
             background: transparent;
         }
+
         .latest-sidebar::-webkit-scrollbar-thumb {
             background: rgba(102, 126, 234, 0.5);
             border-radius: 3px;
         }
+
         .sidebar-header {
             display: flex;
             align-items: center;
@@ -1087,10 +1265,12 @@
             padding-bottom: var(--spacing-md);
             border-bottom: 2px solid rgba(102, 126, 234, 0.3);
         }
+
         .sidebar-header i {
             font-size: 20px;
             color: #667eea;
         }
+
         .sidebar-title {
             font-size: 16px;
             font-weight: 700;
@@ -1100,11 +1280,13 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+
         .latest-list {
             display: flex;
             flex-direction: column;
             gap: var(--spacing-md);
         }
+
         .latest-item {
             padding: var(--spacing-md);
             background: rgba(102, 126, 234, 0.05);
@@ -1113,18 +1295,21 @@
             transition: var(--transition-base);
             cursor: pointer;
         }
+
         .latest-item:hover {
             background: rgba(102, 126, 234, 0.15);
             border-color: rgba(102, 126, 234, 0.4);
             transform: translateX(-4px);
             box-shadow: 4px 0 12px rgba(102, 126, 234, 0.3);
         }
+
         .latest-item-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: var(--spacing-sm);
         }
+
         .latest-item-date {
             font-size: 12px;
             color: var(--text-secondary);
@@ -1132,6 +1317,7 @@
             align-items: center;
             gap: 4px;
         }
+
         .latest-item-category {
             font-size: 11px;
             padding: 2px 8px;
@@ -1140,6 +1326,7 @@
             border-radius: var(--radius-sm);
             font-weight: 600;
         }
+
         .latest-item-content {
             font-size: 13px;
             line-height: 1.6;
@@ -1151,6 +1338,7 @@
             text-overflow: ellipsis;
             margin-bottom: var(--spacing-sm);
         }
+
         .latest-item-footer {
             display: flex;
             align-items: center;
@@ -1158,25 +1346,30 @@
             font-size: 12px;
             color: var(--text-secondary);
         }
+
         .latest-item-stat {
             display: flex;
             align-items: center;
             gap: 4px;
         }
+
         .latest-item-stat i {
             font-size: 14px;
         }
+
         .latest-empty {
             text-align: center;
             padding: var(--spacing-xl);
             color: var(--text-secondary);
             font-size: 14px;
         }
+
         .latest-empty i {
             font-size: 48px;
             margin-bottom: var(--spacing-md);
             opacity: 0.5;
         }
+
         /* 朋友圈网格 */
         .moments-grid {
             display: grid;
@@ -1184,6 +1377,7 @@
             gap: var(--spacing-lg);
             margin-bottom: 40px;
         }
+
         .moment-card {
             background: var(--bg-card);
             backdrop-filter: blur(15px);
@@ -1193,12 +1387,12 @@
             transition: var(--transition-base);
             opacity: 0;
             box-shadow: var(--shadow-lg);
-            transform: translateZ(0);
-            will-change: transform, opacity;
         }
+
         .moment-card.visible {
             animation: fadeInUp 0.5s ease forwards;
         }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -1209,25 +1403,30 @@
                 transform: translateY(0);
             }
         }
+
         .moment-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 16px 40px rgba(102, 126, 234, 0.3);
             border-color: rgba(102, 126, 234, 0.3);
         }
+
         .moment-header {
             margin-bottom: var(--spacing-md);
         }
+
         .moment-meta {
             display: flex;
             align-items: center;
             gap: var(--spacing-md);
             flex-wrap: wrap;
         }
+
         .moment-date {
             font-size: 13px;
             color: var(--text-secondary);
             font-weight: 500;
         }
+
         .moment-category {
             font-size: 12px;
             padding: var(--spacing-xs) var(--spacing-sm);
@@ -1237,6 +1436,7 @@
             font-weight: 500;
             border: 1px solid rgba(102, 126, 234, 0.3);
         }
+
         .value-badge {
             font-size: 12px;
             padding: var(--spacing-xs) var(--spacing-sm);
@@ -1245,6 +1445,7 @@
             color: white;
             box-shadow: var(--shadow-sm);
         }
+
         /* ==================== 优化的内容折叠样式 ==================== */
         .moment-content {
             margin-bottom: var(--spacing-md);
@@ -1255,10 +1456,12 @@
             overflow: visible;
             transition: all 0.3s ease;
         }
+
         .moment-content.collapsed {
             max-height: 120px;
             overflow: hidden;
         }
+
         .moment-content.collapsed::after {
             content: '';
             position: absolute;
@@ -1270,20 +1473,24 @@
             pointer-events: none;
             z-index: 1;
         }
+
         .moment-content.expanded {
             max-height: none !important;
             overflow: visible !important;
         }
+
         .moment-content.expanded::after {
             content: none !important;
             display: none !important;
         }
+
         .moment-content p {
             margin: 0;
             white-space: pre-wrap;
             word-wrap: break-word;
             word-break: break-word;
         }
+
         .expand-toggle-btn {
             display: inline-flex;
             align-items: center;
@@ -1299,6 +1506,7 @@
             border-radius: var(--radius-sm);
             transition: var(--transition-base);
         }
+
         .expand-toggle-btn:hover {
             background: rgba(102, 126, 234, 0.25);
             border-color: rgba(102, 126, 234, 0.5);
@@ -1306,13 +1514,16 @@
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
+
         .toggle-icon {
             transition: transform var(--transition-base);
             font-size: 12px;
         }
+
         .expand-toggle-btn.expanded .toggle-icon {
             transform: rotate(180deg);
         }
+
         /* 图片网格 */
         .moment-images {
             display: grid;
@@ -1321,15 +1532,19 @@
             border-radius: var(--radius-md);
             overflow: hidden;
         }
+
         .moment-images.single {
             grid-template-columns: 1fr;
         }
+
         .moment-images.double {
             grid-template-columns: repeat(2, 1fr);
         }
+
         .moment-images.multiple {
             grid-template-columns: repeat(3, 1fr);
         }
+
         .moment-images img {
             width: 100%;
             height: 120px;
@@ -1338,12 +1553,15 @@
             border-radius: var(--radius-sm);
             cursor: pointer;
         }
+
         .moment-images.single img {
             height: 200px;
         }
+
         .moment-images img:hover {
             transform: scale(1.05);
         }
+
         /* 操作按钮 */
         .moment-actions {
             display: flex;
@@ -1352,11 +1570,13 @@
             padding-top: var(--spacing-md);
             border-top: 1px solid var(--border-color);
         }
+
         .action-group {
             display: flex;
             align-items: center;
             gap: var(--spacing-md);
         }
+
         .action-btn {
             display: flex;
             align-items: center;
@@ -1371,20 +1591,24 @@
             border-radius: var(--radius-sm);
             min-height: 40px;
         }
+
         .action-btn:hover {
             background: rgba(102, 126, 234, 0.2);
             color: #a8b2ff;
             transform: translateY(-2px);
         }
+
         .action-btn.liked {
             color: #ff6b6b;
         }
+
         .action-count {
             font-size: 13px;
             font-weight: 500;
             min-width: 20px;
             text-align: center;
         }
+
         .share-btn {
             display: flex;
             align-items: center;
@@ -1399,12 +1623,14 @@
             font-weight: 500;
             transition: var(--transition-base);
         }
+
         .share-btn:hover {
             background: rgba(102, 126, 234, 0.3);
             border-color: rgba(102, 126, 234, 0.5);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
+
         /* ==================== 分页控件 ==================== */
         .pagination-container {
             background: var(--bg-card);
@@ -1419,15 +1645,18 @@
             gap: var(--spacing-lg);
             box-shadow: var(--shadow-lg);
         }
+
         .pagination-info {
             font-size: 14px;
             color: var(--text-secondary);
         }
+
         .pagination-controls {
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
         }
+
         .pagination-btn {
             display: flex;
             align-items: center;
@@ -1441,19 +1670,23 @@
             cursor: pointer;
             transition: var(--transition-base);
         }
+
         .pagination-btn:hover:not(:disabled) {
             border-color: #667eea;
             color: #a8b2ff;
             background: rgba(102, 126, 234, 0.2);
         }
+
         .pagination-btn:disabled {
             opacity: 0.4;
             cursor: not-allowed;
         }
+
         .page-numbers {
             display: flex;
             gap: var(--spacing-xs);
         }
+
         .page-number {
             display: flex;
             align-items: center;
@@ -1469,26 +1702,31 @@
             font-size: 14px;
             font-weight: 500;
         }
+
         .page-number:hover {
             border-color: #667eea;
             color: #a8b2ff;
             background: rgba(102, 126, 234, 0.2);
         }
+
         .page-number.active {
             background: #667eea;
             border-color: #667eea;
             color: white;
         }
+
         .pagination-settings {
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
         }
+
         .pagination-settings label {
             font-size: 14px;
             color: var(--text-secondary);
             font-weight: 500;
         }
+
         .pagination-settings select {
             padding: 6px var(--spacing-md);
             border: 1px solid var(--border-color);
@@ -1498,10 +1736,12 @@
             color: var(--text-primary);
             cursor: pointer;
         }
+
         .pagination-settings select option {
             background: #1a1a3e;
             color: #fff;
         }
+
         /* ==================== 底部 ==================== */
         .social-footer {
             background: rgba(20, 20, 50, 0.9);
@@ -1511,6 +1751,7 @@
             margin-top: 60px;
             box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
         }
+
         .social-footer .container {
             display: flex;
             align-items: center;
@@ -1518,10 +1759,12 @@
             flex-wrap: wrap;
             gap: var(--spacing-lg);
         }
+
         .social-links {
             display: flex;
             gap: var(--spacing-md);
         }
+
         .social-link {
             display: flex;
             align-items: center;
@@ -1535,54 +1778,19 @@
             border: 1px solid var(--border-color);
             background: rgba(255, 255, 255, 0.1);
         }
+
         .social-link:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
             border-color: #667eea;
             color: #a8b2ff;
         }
+
         .copyright {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
         }
-        /* ==================== 列表视图 ==================== */
-        .moments-grid.list-view {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-lg);
-        }
-        /* ==================== 背景模式返回按钮 ==================== */
-        .background-mode-return {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 10001;
-            display: none;
-            align-items: center;
-            gap: var(--spacing-sm);
-            padding: var(--spacing-md) var(--spacing-md);
-            background: rgba(102, 126, 234, 0.9);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: var(--transition-base);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-        }
-        .background-mode-return:hover {
-            background: rgba(102, 126, 234, 1);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-        .background-mode-return i {
-            transition: transform var(--transition-base);
-        }
-        .background-mode-return:hover i {
-            transform: translateX(-3px);
-        }
+
         /* ==================== 加载指示器 ==================== */
         .loading-indicator {
             text-align: center;
@@ -1590,16 +1798,20 @@
             color: rgba(255, 255, 255, 0.6);
             display: none;
         }
+
         .loading-indicator.active {
             display: block;
         }
+
         .loading-indicator i {
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
         /* ==================== 通知样式 ==================== */
         @keyframes slideIn {
             from {
@@ -1611,6 +1823,7 @@
                 opacity: 1;
             }
         }
+
         @keyframes slideOut {
             from {
                 transform: translateX(0);
@@ -1621,6 +1834,7 @@
                 opacity: 0;
             }
         }
+
         /* ==================== 优化的响应式设计 ==================== */
         @media (max-width: 1400px) {
             .content-wrapper {
@@ -1630,6 +1844,7 @@
                 padding: var(--spacing-md);
             }
         }
+
         @media (max-width: 1200px) {
             .content-wrapper {
                 grid-template-columns: 1fr;
@@ -1644,118 +1859,249 @@
                 gap: var(--spacing-sm);
             }
         }
+
         @media (max-width: 992px) {
             body {
-                padding-top: 70px;
+                padding-top: 140px;
             }
+            
             .header {
                 min-height: auto;
             }
+            
+            .container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .header-left {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
             .primary-nav {
-                order: 3;
                 width: 100%;
                 justify-content: flex-start;
+                padding: var(--spacing-sm) 0;
+                order: 3;
             }
+            
             .controls {
+                width: 100%;
                 order: 2;
+                justify-content: flex-start;
             }
+            
             .nav-button-base span:not(.button-icon) {
                 display: none;
             }
+            
             .button-icon {
                 margin-right: 0;
             }
+            
             .search-box input {
                 width: 150px;
             }
+            
             .search-box input:focus {
                 width: 180px;
             }
+            
             .category-sidebar {
                 width: 280px;
             }
+            
             .sidebar-toggle-btn {
-                top: 180px;
+                top: 160px;
                 font-size: 14px;
                 padding: 12px 16px;
                 padding-left: 10px;
             }
+            
+            .office-scene {
+                width: 300px;
+                height: 225px;
+            }
+            
+            .monitor {
+                width: 160px;
+                height: 112px;
+            }
+            
+            .keyboard {
+                width: 120px;
+                height: 32px;
+            }
+            
+            .loading-bar-container {
+                width: 280px;
+            }
         }
+
         @media (max-width: 768px) {
             :root {
                 --spacing-lg: 16px;
                 --spacing-md: 12px;
             }
+            
             body {
-                padding-top: 70px;
+                padding-top: 160px;
             }
+            
             .container {
                 padding: 0 var(--spacing-md);
             }
+            
             .header-left {
                 gap: var(--spacing-sm);
             }
+            
             .home-button span {
                 display: none;
             }
+            
             .home-button {
                 padding: 10px;
                 min-width: 40px;
             }
+            
             .site-brand-text {
                 display: none;
             }
+            
             .moments-grid {
                 grid-template-columns: 1fr;
+                gap: var(--spacing-md);
             }
+            
             .stat-cards {
                 grid-template-columns: 1fr;
+                gap: var(--spacing-md);
             }
+            
             .pagination-container {
                 flex-direction: column;
+                gap: var(--spacing-md);
             }
-            .lxh-container {
-                width: 150px;
-                height: 150px;
+            
+            .pagination-controls {
+                width: 100%;
+                justify-content: center;
             }
+            
+            .pagination-settings {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .office-scene {
+                width: 250px;
+                height: 188px;
+            }
+            
+            .monitor {
+                width: 130px;
+                height: 91px;
+            }
+            
+            .keyboard {
+                width: 100px;
+                height: 26px;
+            }
+            
+            .person {
+                width: 60px;
+                height: 90px;
+                right: 60px;
+            }
+            
             .loading-text {
-                font-size: 16px;
+                font-size: 18px;
             }
+            
             .loading-bar-container {
                 width: 250px;
             }
+            
             .category-sidebar {
                 width: 100%;
                 max-width: 320px;
             }
+            
             .sidebar-toggle-btn {
-                top: 150px;
+                top: 140px;
                 font-size: 13px;
                 padding: 10px 14px;
                 padding-left: 8px;
             }
+            
             .sidebar-toggle-btn .toggle-text {
                 display: none;
             }
+            
             .sidebar-toggle-btn i {
                 font-size: 18px;
             }
         }
+
         @media (max-width: 576px) {
             .moment-card {
                 padding: var(--spacing-md);
             }
+            
             .site-brand {
                 padding: 8px 12px;
             }
+            
             .site-brand-icon {
                 font-size: 20px;
             }
+            
             .sidebar-toggle-btn {
-                top: 130px;
+                top: 120px;
                 padding: 8px 12px;
             }
+            
+            .office-scene {
+                width: 200px;
+                height: 150px;
+            }
+            
+            .monitor {
+                width: 100px;
+                height: 70px;
+                bottom: 90px;
+            }
+            
+            .keyboard {
+                width: 80px;
+                height: 20px;
+                bottom: 35px;
+            }
+            
+            .person {
+                width: 50px;
+                height: 75px;
+                right: 40px;
+                bottom: 90px;
+            }
+            
+            .coffee {
+                width: 25px;
+                height: 35px;
+                bottom: 40px;
+                left: 20px;
+            }
+            
+            .window {
+                width: 60px;
+                height: 75px;
+                top: 15px;
+                right: 20px;
+            }
         }
+
         /* ==================== 工具类 ==================== */
         .sr-only {
             position: absolute;
@@ -1768,6 +2114,7 @@
             white-space: nowrap;
             border: 0;
         }
+
         /* ==================== 骨架屏 ==================== */
         .skeleton {
             background: linear-gradient(
@@ -1780,22 +2127,27 @@
             animation: loading 1.5s ease-in-out infinite;
             border-radius: var(--radius-sm);
         }
+
         @keyframes loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
+
         /* ==================== 性能优化 ==================== */
         .moments-grid {
             contain: layout style paint;
         }
+
         .moment-card {
             contain: layout style paint;
         }
+
         /* ==================== 无障碍优化 ==================== */
         .moment-content:focus-within {
             outline: 2px solid #667eea;
             outline-offset: 2px;
         }
+
         button:focus-visible {
             outline: 2px solid #667eea;
             outline-offset: 2px;
@@ -1803,42 +2155,66 @@
     </style>
 </head>
 <body data-page="moments">
-    <!-- 罗小黑加载画面 -->
+    <!-- 马斯克工作场景加载画面 -->
     <div class="loading-screen" id="loadingScreen">
-        <div class="lxh-container">
-            <div class="lxh-ring"></div>
-            <div class="lxh-stars">
-                <div class="lxh-star"></div>
-                <div class="lxh-star"></div>
-                <div class="lxh-star"></div>
-                <div class="lxh-star"></div>
-                <div class="lxh-star"></div>
-                <div class="lxh-star"></div>
+        <div class="office-scene">
+            <!-- 窗户 -->
+            <div class="window">
+                <div class="window-pane"></div>
+                <div class="window-pane horizontal"></div>
+                <div class="stars"></div>
+                <div class="stars"></div>
+                <div class="stars"></div>
             </div>
-            <div class="lxh-body">
-                <div class="lxh-head">
-                    <div class="lxh-ear left"></div>
-                    <div class="lxh-ear right"></div>
-                    <div class="lxh-eyes">
-                        <div class="lxh-eye"></div>
-                        <div class="lxh-eye"></div>
-                    </div>
-                    <div class="lxh-nose"></div>
-                    <div class="lxh-mouth"></div>
+            
+            <!-- 办公桌 -->
+            <div class="desk"></div>
+            
+            <!-- 显示器 -->
+            <div class="monitor">
+                <div class="monitor-screen"></div>
+                <div class="monitor-stand"></div>
+            </div>
+            
+            <!-- 人物 -->
+            <div class="person">
+                <div class="person-head"></div>
+                <div class="person-body"></div>
+                <div class="person-arm left"></div>
+                <div class="person-arm right"></div>
+            </div>
+            
+            <!-- 键盘 -->
+            <div class="keyboard">
+                <div class="keyboard-keys">
+                    <div class="key"></div>
+                    <div class="key"></div>
+                    <div class="key"></div>
+                    <div class="key"></div>
+                    <div class="key"></div>
+                    <div class="key"></div>
+                    <div class="key"></div>
+                    <div class="key"></div>
+                    <div class="key"></div>
+                    <div class="key"></div>
                 </div>
-                <div class="lxh-tail"></div>
-                <div class="lxh-feet">
-                    <div class="lxh-foot"></div>
-                    <div class="lxh-foot"></div>
-                </div>
+            </div>
+            
+            <!-- 咖啡杯 -->
+            <div class="coffee">
+                <div class="steam"></div>
+                <div class="steam"></div>
+                <div class="steam"></div>
             </div>
         </div>
+        
         <div class="loading-text">正在加载银河中...</div>
         <div class="loading-progress" id="loadingProgress">0%</div>
         <div class="loading-bar-container">
             <div class="loading-bar" id="loadingBar"></div>
         </div>
     </div>
+
     <!-- 左侧分类侧边栏 -->
     <aside class="category-sidebar" id="categorySidebar" aria-label="分类导航侧边栏">
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -1853,11 +2229,12 @@
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
+
                 <div class="sidebar-search">
                     <i class="fas fa-search"></i>
                     <input type="text" id="categorySearch" placeholder="搜索分类..." aria-label="搜索分类">
                 </div>
-                
+
                 <!-- 排序区域 -->
                 <div class="sidebar-sort-section">
                     <div class="sidebar-sort-title">
@@ -1883,7 +2260,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="category-list-container">
                     <button class="category-list-btn active" data-category="all" role="tab" aria-selected="true">
                         <i class="fas fa-th-large"></i>
@@ -1966,6 +2343,7 @@
                         <span class="category-count" data-count="问答互动">0</span>
                     </button>
                 </div>
+
                 <div class="sidebar-footer">
                     <button class="sidebar-reset-btn" id="sidebarResetBtn">
                         <i class="fas fa-redo"></i>
@@ -1975,16 +2353,13 @@
             </div>
         </div>
     </aside>
+
     <!-- 侧边栏触发按钮 -->
     <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="打开分类侧边栏" title="打开分类侧边栏">
         <i class="fas fa-bars"></i>
         <span class="toggle-text">分类</span>
     </button>
-    <!-- 背景模式返回按钮 -->
-    <button id="backgroundModeReturn" class="background-mode-return" aria-label="退出背景模式">
-        <i class="fas fa-arrow-left" aria-hidden="true"></i>
-        <span>返回正常视图</span>
-    </button>
+
     <!-- 顶部导航栏 -->
     <header class="header" role="banner">
         <div class="container">
@@ -1998,6 +2373,7 @@
                     <span>返回主页</span>
                 </a>
             </div>
+
             <nav class="primary-nav" role="navigation" aria-label="主导航">
                 <a class="success-link" href="success.html" title="查看成功日记">
                     <span class="success-icon" aria-hidden="true">
@@ -2024,6 +2400,7 @@
                     <span class="video-text">视频矩阵</span>
                 </a>
             </nav>
+
             <div class="controls">
                 <a href="ai.html" class="nav-button-base ai-nav-button" title="探索AI赋能工具">
                     <span class="button-icon">
@@ -2054,13 +2431,13 @@
                     <i class="fas fa-search" aria-hidden="true"></i>
                     <input type="search" id="searchInput" placeholder="搜索银河中..." autocomplete="off" aria-label="搜索朋友圈内容">
                 </div>
-                <button id="themeToggle" class="theme-toggle" aria-label="切换深色/浅色主题" title="切换主题">
-                    <i class="fas fa-moon" aria-hidden="true"></i>
+                <button id="focusToggle" class="focus-toggle" aria-label="切换专注模式" title="专注模式">
+                    <i class="fas fa-glasses" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
     </header>
-    
+
     <!-- 主要内容区域 -->
     <main class="main-content" role="main">
         <div class="container">
@@ -2085,15 +2462,18 @@
                         </div>
                         <div class="sort-hint" id="sortHint"></div>
                     </section>
+
                     <!-- 朋友圈内容列表 -->
                     <section id="momentsContainer" class="moments-grid" role="feed" aria-label="朋友圈内容列表" aria-live="polite" aria-busy="false">
                         <!-- 内容由JavaScript动态加载 -->
                     </section>
+
                     <!-- 加载指示器 -->
                     <div class="loading-indicator" id="loadingIndicator">
                         <i class="fas fa-spinner"></i>
                         <p>正在加载更多内容...</p>
                     </div>
+
                     <!-- 分页控件 -->
                     <nav class="pagination-container" role="navigation" aria-label="分页导航">
                         <div class="pagination-info">
@@ -2128,6 +2508,7 @@
                         </div>
                     </nav>
                 </div>
+
                 <!-- 右侧最新内容区 -->
                 <aside class="latest-sidebar" aria-label="最新发布内容">
                     <div class="sidebar-header">
@@ -2141,6 +2522,7 @@
             </div>
         </div>
     </main>
+
     <!-- 页面底部 -->
     <footer class="social-footer" role="contentinfo">
         <div class="container">
@@ -2162,6 +2544,7 @@
             </p>
         </div>
     </footer>
+
     <!-- JavaScript文件 -->
     <script src="data.js" defer></script>
     <script>
@@ -2169,6 +2552,7 @@
         let loadingProgress = 0;
         let dataLoaded = false;
         let pageReady = false;
+
         function updateLoadingProgress(progress) {
             loadingProgress = Math.min(progress, 100);
             const loadingBar = document.getElementById('loadingBar');
@@ -2180,6 +2564,7 @@
                 loadingProgressText.textContent = Math.round(loadingProgress) + '%';
             }
         }
+
         function hideLoadingScreen() {
             const loadingScreen = document.getElementById('loadingScreen');
             if (loadingScreen && dataLoaded && pageReady) {
@@ -2191,6 +2576,7 @@
                 }, 300);
             }
         }
+
         function simulateLoading() {
             let progress = 0;
             const interval = setInterval(() => {
@@ -2203,6 +2589,7 @@
             }, 200);
             return interval;
         }
+
         function checkDataLoaded() {
             if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
                 dataLoaded = true;
@@ -2212,13 +2599,16 @@
             }
             return false;
         }
+
         function checkAllLoaded() {
             if (dataLoaded && pageReady) {
                 updateLoadingProgress(100);
                 setTimeout(hideLoadingScreen, 500);
             }
         }
+
         const loadingInterval = simulateLoading();
+
         // ==================== 性能优化工具函数 ====================
         function debounce(func, wait) {
             let timeout;
@@ -2231,6 +2621,7 @@
                 timeout = setTimeout(later, wait);
             };
         }
+
         function throttle(func, limit) {
             let inThrottle;
             return function(...args) {
@@ -2241,6 +2632,7 @@
                 }
             };
         }
+
         const rafThrottle = (callback) => {
             let requestId = null;
             let lastArgs;
@@ -2260,6 +2652,7 @@
             };
             return throttled;
         };
+
         const createObserver = (callback, options = {}) => {
             return new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
@@ -2274,6 +2667,7 @@
                 ...options
             });
         };
+
         // ==================== 全局变量 ====================
         let currentSortMethod = 'date-desc';
         let currentViewMode = 'grid';
@@ -2282,15 +2676,15 @@
         let isLoading = false;
         let userLikes = {};
         let userBookmarks = {};
-        let backgroundOnlyMode = false;
+        let focusMode = false;
         const DOM = {};
+
         // ==================== DOM缓存初始化 ====================
         function cacheDOMElements() {
             DOM.momentsContainer = document.getElementById('momentsContainer');
             DOM.searchInput = document.getElementById('searchInput');
-            DOM.themeToggle = document.getElementById('themeToggle');
+            DOM.focusToggle = document.getElementById('focusToggle');
             DOM.loadingIndicator = document.getElementById('loadingIndicator');
-            DOM.backgroundModeReturn = document.getElementById('backgroundModeReturn');
             DOM.totalMoments = document.getElementById('totalMoments');
             DOM.highValueMoments = document.getElementById('highValueMoments');
             DOM.todayMoments = document.getElementById('todayMoments');
@@ -2314,14 +2708,15 @@
             DOM.categoryListContainer = document.querySelector('.category-list-container');
             DOM.sidebarSortButtons = document.querySelectorAll('.sidebar-sort-btn');
         }
+
         // ==================== 初始化 ====================
         document.addEventListener('DOMContentLoaded', function() {
             cacheDOMElements();
             restoreUserData();
-            initializeTheme();
-            initializeBackgroundModeReturn();
+            initializeFocusMode();
             initializeEventListeners();
             restoreUserPreferences();
+
             if (checkDataLoaded()) {
                 pageReady = true;
                 checkAllLoaded();
@@ -2336,6 +2731,7 @@
                         initializePage();
                     }
                 }, 100);
+
                 setTimeout(() => {
                     clearInterval(dataCheckInterval);
                     clearInterval(loadingInterval);
@@ -2351,10 +2747,12 @@
                 }, 10000);
             }
         });
+
         window.addEventListener('load', function() {
             pageReady = true;
             checkAllLoaded();
         });
+
         // ==================== 事件监听器初始化 ====================
         function initializeEventListeners() {
             // 侧边栏排序按钮
@@ -2364,7 +2762,7 @@
                     handleSortChange(sortMethod);
                 });
             });
-            
+
             DOM.searchInput?.addEventListener('input', debounce(handleSearch, 300));
             DOM.firstPage?.addEventListener('click', () => goToPage(1));
             DOM.prevPage?.addEventListener('click', () => goToPage(Math.max(1, currentPage - 1)));
@@ -2374,6 +2772,7 @@
             DOM.momentsContainer?.addEventListener('click', handleMomentAction);
             window.addEventListener('scroll', rafThrottle(handleScroll));
             document.addEventListener('visibilitychange', handleVisibilityChange);
+
             // 侧边栏控制
             DOM.sidebarToggleBtn?.addEventListener('click', openSidebar);
             DOM.sidebarCloseBtn?.addEventListener('click', closeSidebar);
@@ -2381,6 +2780,7 @@
             DOM.categoryListContainer?.addEventListener('click', handleSidebarCategoryClick);
             DOM.categorySearch?.addEventListener('input', debounce(handleCategorySearch, 300));
             DOM.sidebarResetBtn?.addEventListener('click', resetCategoryFilter);
+
             // ESC键关闭侧边栏
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && DOM.categorySidebar?.classList.contains('open')) {
@@ -2388,20 +2788,55 @@
                 }
             });
         }
+
+        // ==================== 专注模式 ====================
+        function initializeFocusMode() {
+            DOM.focusToggle?.addEventListener('click', function() {
+                focusMode = !focusMode;
+                if (focusMode) {
+                    document.body.classList.add('focus-mode');
+                    this.innerHTML = '<i class="fas fa-eye-slash" aria-hidden="true"></i>';
+                    this.title = '退出专注模式';
+                    showNotification('已进入专注模式', 'success');
+                } else {
+                    document.body.classList.remove('focus-mode');
+                    this.innerHTML = '<i class="fas fa-glasses" aria-hidden="true"></i>';
+                    this.title = '专注模式';
+                    showNotification('已退出专注模式', 'success');
+                }
+                localStorage.setItem('focusMode', focusMode);
+            });
+            
+            // 恢复专注模式状态
+            const savedFocusMode = localStorage.getItem('focusMode') === 'true';
+            if (savedFocusMode) {
+                focusMode = true;
+                document.body.classList.add('focus-mode');
+                if (DOM.focusToggle) {
+                    DOM.focusToggle.innerHTML = '<i class="fas fa-eye-slash" aria-hidden="true"></i>';
+                    DOM.focusToggle.title = '退出专注模式';
+                }
+            }
+        }
+
         // ==================== 侧边栏控制 ====================
         function openSidebar() {
             DOM.categorySidebar.classList.add('open');
             document.body.style.overflow = 'hidden';
             updateCategoryCounts();
         }
+
         function closeSidebar() {
             DOM.categorySidebar.classList.remove('open');
             document.body.style.overflow = '';
         }
+
         function handleSidebarCategoryClick(e) {
             const btn = e.target.closest('.category-list-btn');
             if (!btn) return;
+
             const category = btn.dataset.category;
+            
             // 更新激活状态
             document.querySelectorAll('.category-list-btn').forEach(b => {
                 b.classList.remove('active');
@@ -2409,22 +2844,27 @@
             });
             btn.classList.add('active');
             btn.setAttribute('aria-selected', 'true');
+
             // 筛选数据
             currentFilteredMoments = category === 'all'
                 ? window.momentsData
                 : window.momentsData.filter(m => m.category === category);
+            
             currentPage = 1;
             sortAndRenderMoments();
             updatePagination();
             updateLatestSidebar();
+
             // 移动端自动关闭侧边栏
             if (window.innerWidth <= 768) {
                 setTimeout(closeSidebar, 300);
             }
         }
+
         function handleCategorySearch(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
             const buttons = document.querySelectorAll('.category-list-btn');
+            
             buttons.forEach(btn => {
                 const text = btn.querySelector('span:not(.category-count)').textContent.toLowerCase();
                 if (text.includes(searchTerm)) {
@@ -2434,12 +2874,14 @@
                 }
             });
         }
+
         function resetCategoryFilter() {
             // 重置到"全部内容"
             const allBtn = document.querySelector('.category-list-btn[data-category="all"]');
             if (allBtn) {
                 allBtn.click();
             }
+            
             // 清空搜索
             if (DOM.categorySearch) {
                 DOM.categorySearch.value = '';
@@ -2448,21 +2890,26 @@
                 });
             }
         }
+
         function updateCategoryCounts() {
             const counts = {};
             counts['all'] = window.momentsData.length;
+            
             window.momentsData.forEach(moment => {
                 const category = moment.category || '未分类';
                 counts[category] = (counts[category] || 0) + 1;
             });
+
             document.querySelectorAll('.category-count').forEach(countEl => {
                 const category = countEl.dataset.count;
                 countEl.textContent = counts[category] || 0;
             });
         }
+
         // ==================== 事件处理函数 ====================
         function handleSortChange(method) {
             currentSortMethod = method;
+            
             // 更新侧边栏排序按钮激活状态
             DOM.sidebarSortButtons.forEach(btn => {
                 if (btn.dataset.sort === method) {
@@ -2471,12 +2918,15 @@
                     btn.classList.remove('active');
                 }
             });
+
             sortAndRenderMoments();
             updateSortUI();
             updateLatestSidebar();
         }
+
         function handleSearch(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
+            
             if (searchTerm.length >= 2) {
                 currentFilteredMoments = window.momentsData.filter(m =>
                     (m.content && m.content.toLowerCase().includes(searchTerm)) ||
@@ -2488,38 +2938,45 @@
                     ? window.momentsData
                     : window.momentsData.filter(m => m.category === activeCategory);
             }
+
             currentPage = 1;
             sortAndRenderMoments();
             updatePagination();
             updateLatestSidebar();
         }
+
         function handleItemsPerPageChange() {
             currentPage = 1;
             renderMoments();
             updatePagination();
         }
+
         function handleMomentAction(e) {
             const toggleBtn = e.target.closest('.expand-toggle-btn');
             if (toggleBtn) {
                 handleToggleContent(toggleBtn);
                 return;
             }
+
             const likeBtn = e.target.closest('.action-btn');
             if (likeBtn && likeBtn.querySelector('.fa-heart')) {
                 handleLike(likeBtn);
                 return;
             }
+
             const shareBtn = e.target.closest('.share-btn');
             if (shareBtn) {
                 handleShare(shareBtn);
                 return;
             }
+
             const img = e.target.closest('.moment-images img');
             if (img) {
                 handleImageClick(img);
                 return;
             }
         }
+
         // ==================== 优化的展开/收起功能 ====================
         function handleToggleContent(btn) {
             const card = btn.closest('.moment-card');
@@ -2528,6 +2985,7 @@
             const isExpanded = btn.getAttribute('aria-expanded') === 'true';
             const fullContent = contentBox.dataset.fullContent || '';
             const previewContent = contentBox.dataset.previewContent || '';
+
             if (isExpanded) {
                 contentBox.classList.add('collapsed');
                 contentBox.classList.remove('expanded');
@@ -2549,12 +3007,14 @@
                 btn.querySelector('.toggle-icon').className = 'fas fa-chevron-up toggle-icon';
             }
         }
+
         function handleLike(btn) {
             const card = btn.closest('.moment-card');
             const momentId = card.dataset.id;
             const icon = btn.querySelector('.fa-heart');
             const countSpan = btn.querySelector('.action-count');
             let count = parseInt(countSpan.textContent, 10) || 0;
+
             if (userLikes[momentId]) {
                 userLikes[momentId] = false;
                 icon.classList.remove('fas', 'liked');
@@ -2572,12 +3032,15 @@
                     setTimeout(() => btn.style.transform = '', 200);
                 });
             }
+
             countSpan.textContent = count;
             saveUserData();
         }
+
         function handleShare(btn) {
             const card = btn.closest('.moment-card');
             const content = card.querySelector('.moment-content p')?.textContent || '';
+            
             if (navigator.share) {
                 navigator.share({
                     title: '狂客·银河',
@@ -2588,22 +3051,28 @@
                 showNotification('已复制链接到剪贴板', 'success');
             }
         }
+
         function handleImageClick(img) {
             console.log('查看图片:', img.src);
         }
+
         function handleScroll() {
             if (isLoading) return;
+            
             const scrollPosition = window.innerHeight + window.scrollY;
             const pageHeight = document.body.offsetHeight;
+            
             if (scrollPosition >= pageHeight - 500) {
                 const perPage = parseInt(DOM.itemsPerPage.value, 10);
                 const totalFiltered = currentFilteredMoments.length;
                 const currentlyShowing = currentPage * perPage;
+                
                 if (currentlyShowing < totalFiltered) {
                     loadMoreContent();
                 }
             }
         }
+
         function handleVisibilityChange() {
             if (document.hidden) {
                 document.body.style.setProperty('--animation-play-state', 'paused');
@@ -2611,6 +3080,7 @@
                 document.body.style.setProperty('--animation-play-state', 'running');
             }
         }
+
         // ==================== 页面初始化 ====================
         function initializePage() {
             if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
@@ -2627,12 +3097,15 @@
                 updateLatestSidebar();
             }
         }
+
         // ==================== 右侧最新内容更新 ====================
         function updateLatestSidebar() {
             if (!DOM.latestList) return;
+
             const latestMoments = [...window.momentsData]
                 .sort((a, b) => new Date(b.date) - new Date(a.date))
                 .slice(0, 3);
+
             if (latestMoments.length === 0) {
                 DOM.latestList.innerHTML = `
                     <div class="latest-empty">
@@ -2642,10 +3115,12 @@
                 `;
                 return;
             }
+
             DOM.latestList.innerHTML = latestMoments.map((moment, index) => {
                 const content = moment.content || '';
                 const truncatedContent = content.length > 60 ? content.substring(0, 60) + '...' : content;
                 const date = formatDate(new Date(moment.date));
+                
                 return `
                     <div class="latest-item" data-moment-id="${moment.id || `moment-${index}`}">
                         <div class="latest-item-header">
@@ -2669,6 +3144,7 @@
                     </div>
                 `;
             }).join('');
+
             DOM.latestList.querySelectorAll('.latest-item').forEach(item => {
                 item.addEventListener('click', function() {
                     const momentId = this.dataset.momentId;
@@ -2683,6 +3159,7 @@
                 });
             });
         }
+
         // ==================== 排序和渲染 ====================
         function sortAndRenderMoments() {
             const sortedMoments = sortMoments(currentFilteredMoments, currentSortMethod);
@@ -2694,6 +3171,7 @@
             localStorage.setItem('preferredSortMethod', currentSortMethod);
             animateSortChange();
         }
+
         function sortMoments(moments, method) {
             const sorted = [...moments];
             switch (method) {
@@ -2712,32 +3190,42 @@
             }
             return sorted;
         }
+
         // ==================== 渲染函数 ====================
         function renderMoments() {
             if (!DOM.momentsContainer) return;
+
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             const startIndex = (currentPage - 1) * perPage;
             const endIndex = startIndex + perPage;
             const pageMoments = currentFilteredMoments.slice(startIndex, endIndex);
+
             DOM.momentsContainer.innerHTML = '';
             DOM.momentsContainer.setAttribute('aria-busy', 'true');
+
             const fragment = document.createDocumentFragment();
             pageMoments.forEach((moment, index) => {
                 const card = createMomentCard(moment, startIndex + index);
                 fragment.appendChild(card);
             });
+
             DOM.momentsContainer.appendChild(fragment);
+
             const observer = createObserver((element) => {
                 element.classList.add('visible');
             });
+
             DOM.momentsContainer.querySelectorAll('.moment-card').forEach(card => {
                 observer.observe(card);
             });
+
             setTimeout(() => {
                 DOM.momentsContainer.setAttribute('aria-busy', 'false');
             }, 100);
+
             updatePaginationInfo();
         }
+
         // ==================== 创建朋友圈卡片 ====================
         function createMomentCard(moment, index) {
             const card = document.createElement('article');
@@ -2745,16 +3233,20 @@
             card.setAttribute('role', 'article');
             card.setAttribute('aria-label', `朋友圈内容 ${index + 1}`);
             card.dataset.id = moment.id || `moment-${index}`;
+
             const isLiked = userLikes[card.dataset.id];
             const rawDate = new Date(moment.date);
             const hasValidDate = rawDate instanceof Date && !isNaN(rawDate);
             const formattedDate = hasValidDate ? formatDate(rawDate) : (moment.date || '未知时间');
+
             const content = moment.content || '';
             const COLLAPSE_THRESHOLD = 300;
             const shouldCollapse = content.length > COLLAPSE_THRESHOLD;
             const previewContent = shouldCollapse ? content.substring(0, COLLAPSE_THRESHOLD) + '...' : content;
+
             const valueColor = getValueGradient(moment.value);
             const valueLabel = moment.value ? `<span class="value-badge" style="background: ${valueColor}">价值 ${moment.value}</span>` : '';
+
             card.innerHTML = `
                 <div class="moment-header">
                     <div class="moment-meta">
@@ -2798,13 +3290,16 @@
                     </button>
                 </div>
             `;
+
             const contentBox = card.querySelector('.moment-content');
             if (contentBox) {
                 contentBox.dataset.fullContent = content;
                 contentBox.dataset.previewContent = previewContent;
             }
+
             return card;
         }
+
         // ==================== 辅助函数 ====================
         function formatDate(date) {
             const now = new Date();
@@ -2813,6 +3308,7 @@
             const hour = 60 * minute;
             const day = 24 * hour;
             const diffDays = Math.floor(diffTime / day);
+
             if (diffDays === 0) {
                 const diffHours = Math.floor(diffTime / hour);
                 if (diffHours === 0) {
@@ -2828,11 +3324,13 @@
                 return date.toLocaleDateString('zh-CN');
             }
         }
+
         function getImageClass(count) {
             if (count === 1) return 'single';
             if (count === 2) return 'double';
             return 'multiple';
         }
+
         function getValueGradient(value) {
             if (value >= 9) return 'linear-gradient(135deg, #ff6b6b, #ff8e53)';
             if (value >= 7) return 'linear-gradient(135deg, #667eea, #764ba2)';
@@ -2840,19 +3338,23 @@
             if (value >= 3) return 'linear-gradient(135deg, #ffc107, #ff9800)';
             return 'linear-gradient(135deg, #868e96, #495057)';
         }
+
         // ==================== 统计更新 ====================
         function updateStats(moments) {
             const totalMoments = moments.length;
             const highValueMoments = moments.filter(m => (m.value || 0) >= 9).length;
             const today = new Date().toISOString().split('T')[0];
             const todayMoments = moments.filter(m => m.date && String(m.date).startsWith(today)).length;
+
             animateNumber('totalMoments', totalMoments);
             animateNumber('highValueMoments', highValueMoments);
             animateNumber('todayMoments', todayMoments);
+
             if (DOM.sortHint) {
                 DOM.sortHint.textContent = getSortDescription(currentSortMethod);
             }
         }
+
         function getSortDescription(method) {
             const descriptions = {
                 'date-desc': '按最新发布时间排序',
@@ -2862,14 +3364,17 @@
             };
             return descriptions[method] || '按最新发布时间排序';
         }
+
         function animateNumber(elementId, targetValue) {
             const element = document.getElementById(elementId);
             if (!element) return;
+
             const currentValue = parseInt(element.textContent, 10) || 0;
             const steps = 20;
             const increment = (targetValue - currentValue) / steps;
             let current = currentValue;
             let step = 0;
+
             const animate = () => {
                 step++;
                 current += increment;
@@ -2882,6 +3387,7 @@
             };
             requestAnimationFrame(animate);
         }
+
         // ==================== 分页功能 ====================
         function goToPage(page) {
             currentPage = page;
@@ -2889,22 +3395,28 @@
             updatePagination();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
         function getTotalPages() {
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             return Math.max(1, Math.ceil(currentFilteredMoments.length / perPage));
         }
+
         function updatePagination() {
             const totalPages = getTotalPages();
             currentPage = Math.min(Math.max(1, currentPage), totalPages);
+
             DOM.firstPage.disabled = currentPage === 1;
             DOM.prevPage.disabled = currentPage === 1;
             DOM.nextPage.disabled = currentPage === totalPages;
             DOM.lastPage.disabled = currentPage === totalPages;
+
             DOM.pageNumbers.innerHTML = '';
+
             const maxButtons = 5;
             let start = Math.max(1, currentPage - Math.floor(maxButtons / 2));
             let end = Math.min(totalPages, start + maxButtons - 1);
             start = Math.max(1, end - maxButtons + 1);
+
             const fragment = document.createDocumentFragment();
             for (let i = start; i <= end; i++) {
                 const btn = document.createElement('button');
@@ -2916,22 +3428,28 @@
                 btn.addEventListener('click', () => goToPage(i));
                 fragment.appendChild(btn);
             }
+
             DOM.pageNumbers.appendChild(fragment);
             updatePaginationInfo();
         }
+
         function updatePaginationInfo() {
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             const total = currentFilteredMoments.length;
             const start = total === 0 ? 0 : (currentPage - 1) * perPage + 1;
             const end = Math.min(total, currentPage * perPage);
+
             DOM.showingStart.textContent = String(start);
             DOM.showingEnd.textContent = String(end);
             DOM.totalItems.textContent = String(total);
         }
+
         function loadMoreContent() {
             if (isLoading) return;
+            
             isLoading = true;
             DOM.loadingIndicator.classList.add('active');
+
             setTimeout(() => {
                 currentPage++;
                 renderMoreMoments();
@@ -2940,25 +3458,30 @@
                 isLoading = false;
             }, 800);
         }
+
         function renderMoreMoments() {
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             const startIndex = (currentPage - 1) * perPage;
             const endIndex = startIndex + perPage;
             const pageMoments = currentFilteredMoments.slice(startIndex, endIndex);
+
             const fragment = document.createDocumentFragment();
             pageMoments.forEach((moment, index) => {
                 const card = createMomentCard(moment, startIndex + index);
                 fragment.appendChild(card);
             });
+
             DOM.momentsContainer.appendChild(fragment);
+
             const observer = createObserver((element) => {
                 element.classList.add('visible');
             });
+
             Array.from(DOM.momentsContainer.querySelectorAll('.moment-card:not(.visible)')).forEach(card => {
                 observer.observe(card);
             });
         }
-        
+
         function updateSortUI() {
             const sortNav = document.querySelector('.sort-nav');
             if (sortNav) {
@@ -2966,6 +3489,7 @@
                 setTimeout(() => sortNav.classList.remove('sorting'), 300);
             }
         }
+
         function animateSortChange() {
             requestAnimationFrame(() => {
                 DOM.momentsContainer.style.opacity = '0.5';
@@ -2978,6 +3502,7 @@
                 });
             });
         }
+
         // ==================== 数据持久化 ====================
         function saveUserData() {
             const userData = {
@@ -2986,7 +3511,7 @@
                 preferences: {
                     sortMethod: currentSortMethod,
                     viewMode: currentViewMode,
-                    theme: document.body.getAttribute('data-theme')
+                    focusMode: focusMode
                 }
             };
             try {
@@ -2995,6 +3520,7 @@
                 console.error('保存用户数据失败:', e);
             }
         }
+
         function restoreUserData() {
             try {
                 const savedData = localStorage.getItem('userData');
@@ -3005,19 +3531,14 @@
                     if (userData.preferences) {
                         currentSortMethod = userData.preferences.sortMethod || 'date-desc';
                         currentViewMode = userData.preferences.viewMode || 'grid';
-                        const savedTheme = userData.preferences.theme || 'dark';
-                        document.body.setAttribute('data-theme', savedTheme);
-                        if (DOM.themeToggle) {
-                            DOM.themeToggle.innerHTML = savedTheme === 'light'
-                                ? '<i class="fas fa-sun" aria-hidden="true"></i>'
-                                : '<i class="fas fa-moon" aria-hidden="true"></i>';
-                        }
+                        focusMode = userData.preferences.focusMode || false;
                     }
                 }
             } catch (e) {
                 console.error('恢复用户数据失败:', e);
             }
         }
+
         function restoreUserPreferences() {
             const savedSortMethod = localStorage.getItem('preferredSortMethod');
             if (savedSortMethod) {
@@ -3030,62 +3551,13 @@
                     }
                 });
             }
+
             const savedViewMode = localStorage.getItem('preferredViewMode');
             if (savedViewMode) {
                 currentViewMode = savedViewMode;
             }
         }
-        // ==================== 主题切换 ====================
-        function initializeTheme() {
-            DOM.themeToggle.addEventListener('click', function() {
-                if (!backgroundOnlyMode) {
-                    enterBackgroundMode();
-                } else {
-                    exitBackgroundMode();
-                }
-            });
-        }
-        function enterBackgroundMode() {
-            backgroundOnlyMode = true;
-            document.body.classList.add('background-only');
-            DOM.themeToggle.innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i>';
-            DOM.themeToggle.title = '显示全部内容';
-            hideAllContent();
-            DOM.backgroundModeReturn.style.display = 'flex';
-        }
-        function exitBackgroundMode() {
-            backgroundOnlyMode = false;
-            document.body.classList.remove('background-only');
-            const currentTheme = document.body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            DOM.themeToggle.innerHTML = newTheme === 'light'
-                ? '<i class="fas fa-sun" aria-hidden="true"></i>'
-                : '<i class="fas fa-moon" aria-hidden="true"></i>';
-            DOM.themeToggle.title = '切换主题';
-            showAllContent();
-            DOM.backgroundModeReturn.style.display = 'none';
-        }
-        function hideAllContent() {
-            const selectors = ['.header', '.main-content', '.social-footer'];
-            selectors.forEach(selector => {
-                document.querySelectorAll(selector).forEach(el => {
-                    el.style.display = 'none';
-                });
-            });
-        }
-        function showAllContent() {
-            const selectors = ['.header', '.main-content', '.social-footer'];
-            selectors.forEach(selector => {
-                document.querySelectorAll(selector).forEach(el => {
-                    el.style.display = '';
-                });
-            });
-        }
-        function initializeBackgroundModeReturn() {
-            DOM.backgroundModeReturn.addEventListener('click', exitBackgroundMode);
-        }
+
         // ==================== 通知功能 ====================
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
@@ -3104,6 +3576,7 @@
                 animation: slideIn 0.3s ease;
             `;
             document.body.appendChild(notification);
+
             setTimeout(() => {
                 notification.style.animation = 'slideOut 0.3s ease';
                 setTimeout(() => {
@@ -3113,6 +3586,7 @@
                 }, 300);
             }, 3000);
         }
+
         // ==================== 内存清理 ====================
         window.addEventListener('beforeunload', () => {
             window.removeEventListener('scroll', handleScroll);
