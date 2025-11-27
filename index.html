@@ -553,6 +553,20 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
             width: 250px;
         }
+        /* ==================== 关键词高亮样式 ==================== */
+        .highlight {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+            animation: highlightPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes highlightPulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(255, 215, 0, 0.6); }
+            50% { box-shadow: 0 0 16px rgba(255, 215, 0, 0.9); }
+        }
         /* ==================== 导航弹窗样式 ==================== */
         .nav-modal {
             position: fixed;
@@ -701,6 +715,24 @@
             font-size: 13px;
             color: var(--text-secondary);
         }
+        /* ==================== 遮罩层（独立） ==================== */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 998;
+        }
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
         /* ==================== 左侧分类侧边栏样式 ==================== */
         .category-sidebar {
             position: fixed;
@@ -714,23 +746,6 @@
         }
         .category-sidebar.open {
             transform: translateX(0);
-        }
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            z-index: -1;
-        }
-        .category-sidebar.open .sidebar-overlay {
-            opacity: 1;
-            visibility: visible;
         }
         .sidebar-content {
             position: relative;
@@ -1242,6 +1257,80 @@
             font-size: 48px;
             margin-bottom: var(--spacing-md);
             opacity: 0.5;
+        }
+        /* ==================== 无结果提示样式 ==================== */
+        .no-results {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .no-results-icon {
+            font-size: 80px;
+            color: rgba(102, 126, 234, 0.3);
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .no-results-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .no-results-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+        .no-results-keyword {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(102, 126, 234, 0.2);
+            color: #a8b2ff;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            margin: 0 4px;
+        }
+        .no-results-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: 20px;
+        }
+        .no-results-btn {
+            padding: 12px 24px;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-base);
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .no-results-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .no-results-btn.primary {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+            border-color: rgba(102, 126, 234, 0.5);
         }
         /* 朋友圈网格 */
         .moments-grid {
@@ -1781,6 +1870,15 @@
             .sidebar-toggle-btn i {
                 font-size: 18px;
             }
+            .no-results-icon {
+                font-size: 60px;
+            }
+            .no-results-title {
+                font-size: 20px;
+            }
+            .no-results-text {
+                font-size: 14px;
+            }
         }
         @media (max-width: 576px) {
             .moment-card {
@@ -2019,9 +2117,11 @@
         </div>
     </div>
 
+    <!-- 遮罩层（独立） -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- 左侧分类侧边栏 -->
     <aside class="category-sidebar" id="categorySidebar" aria-label="分类导航侧边栏">
-        <div class="sidebar-overlay" id="sidebarOverlay"></div>
         <div class="sidebar-content">
             <div class="sidebar-inner">
                 <div class="sidebar-header-section">
@@ -2425,6 +2525,7 @@
         let isLoading = false;
         let userLikes = {};
         let userBookmarks = {};
+        let currentSearchKeyword = '';
         const DOM = {};
 
         // ==================== DOM缓存初始化 ====================
@@ -2457,6 +2558,18 @@
             DOM.navModal = document.getElementById('navModal');
             DOM.navToggleBtn = document.getElementById('navToggleBtn');
             DOM.navModalClose = document.getElementById('navModalClose');
+        }
+
+        // ==================== 关键词高亮函数 ====================
+        function highlightKeyword(text, keyword) {
+            if (!keyword || keyword.length < 2) return text;
+            
+            const regex = new RegExp(`(${escapeRegExp(keyword)})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
         // ==================== 初始化 ====================
@@ -2566,12 +2679,14 @@
         // ==================== 侧边栏控制 ====================
         function openSidebar() {
             DOM.categorySidebar.classList.add('open');
+            DOM.sidebarOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
             updateCategoryCounts();
         }
 
         function closeSidebar() {
             DOM.categorySidebar.classList.remove('open');
+            DOM.sidebarOverlay.classList.remove('active');
             document.body.style.overflow = '';
         }
 
@@ -2633,6 +2748,12 @@
                     btn.classList.remove('hidden');
                 });
             }
+
+            // 清空主搜索框
+            if (DOM.searchInput) {
+                DOM.searchInput.value = '';
+                currentSearchKeyword = '';
+            }
         }
 
         function updateCategoryCounts() {
@@ -2670,6 +2791,7 @@
 
         function handleSearch(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
+            currentSearchKeyword = searchTerm;
 
             if (searchTerm.length >= 2) {
                 currentFilteredMoments = window.momentsData.filter(m =>
@@ -2733,7 +2855,7 @@
             if (isExpanded) {
                 contentBox.classList.add('collapsed');
                 contentBox.classList.remove('expanded');
-                contentParagraph.textContent = previewContent;
+                contentParagraph.innerHTML = highlightKeyword(previewContent, currentSearchKeyword);
                 btn.setAttribute('aria-expanded', 'false');
                 btn.classList.remove('expanded');
                 btn.querySelector('.toggle-text').textContent = '展开全文';
@@ -2742,7 +2864,7 @@
             } else {
                 contentBox.classList.remove('collapsed');
                 contentBox.classList.add('expanded');
-                contentParagraph.textContent = fullContent;
+                contentParagraph.innerHTML = highlightKeyword(fullContent, currentSearchKeyword);
                 contentBox.style.maxHeight = 'none';
                 contentBox.style.overflow = 'visible';
                 btn.setAttribute('aria-expanded', 'true');
@@ -2949,6 +3071,13 @@
             DOM.momentsContainer.innerHTML = '';
             DOM.momentsContainer.setAttribute('aria-busy', 'true');
 
+            // 如果没有结果，显示无结果提示
+            if (pageMoments.length === 0) {
+                showNoResults();
+                DOM.momentsContainer.setAttribute('aria-busy', 'false');
+                return;
+            }
+
             const fragment = document.createDocumentFragment();
             pageMoments.forEach((moment, index) => {
                 const card = createMomentCard(moment, startIndex + index);
@@ -2972,6 +3101,32 @@
             updatePaginationInfo();
         }
 
+        // ==================== 无结果提示 ====================
+        function showNoResults() {
+            const noResultsHTML = `
+                <div class="no-results">
+                    <div class="no-results-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="no-results-title">未找到匹配结果</h3>
+                    <p class="no-results-text">
+                        ${currentSearchKeyword ? `搜索关键词<span class="no-results-keyword">"${currentSearchKeyword}"</span>没有找到匹配的内容` : '当前筛选条件下没有内容'}
+                    </p>
+                    <div class="no-results-actions">
+                        <button class="no-results-btn primary" onclick="resetCategoryFilter()">
+                            <i class="fas fa-redo"></i>
+                            <span>重置筛选</span>
+                        </button>
+                        <button class="no-results-btn" onclick="document.getElementById('searchInput').value = ''; currentSearchKeyword = ''; handleSearch({ target: { value: '' } });">
+                            <i class="fas fa-times"></i>
+                            <span>清除搜索</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            DOM.momentsContainer.innerHTML = noResultsHTML;
+        }
+
         // ==================== 创建朋友圈卡片 ====================
         function createMomentCard(moment, index) {
             const card = document.createElement('article');
@@ -2990,6 +3145,9 @@
             const shouldCollapse = content.length > COLLAPSE_THRESHOLD;
             const previewContent = shouldCollapse ? content.substring(0, COLLAPSE_THRESHOLD) + '...' : content;
 
+            // 对内容进行高亮处理
+            const highlightedPreview = highlightKeyword(previewContent, currentSearchKeyword);
+
             const valueColor = getValueGradient(moment.value);
             const valueLabel = moment.value ? `<span class="value-badge" style="background: ${valueColor}">价值 ${moment.value}</span>` : '';
 
@@ -3004,7 +3162,7 @@
                 <div class="moment-content ${shouldCollapse ? 'collapsed' : ''}"
                      data-full-content="${content.replace(/"/g, '&quot;')}"
                      data-preview-content="${previewContent.replace(/"/g, '&quot;')}">
-                    <p>${previewContent}</p>
+                    <p>${highlightedPreview}</p>
                 </div>
                 ${shouldCollapse ? `
                     <button class="expand-toggle-btn" aria-expanded="false" type="button" title="展开查看完整内容">
