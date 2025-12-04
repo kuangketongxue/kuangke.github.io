@@ -535,6 +535,32 @@
             left: 0;
             font-weight: bold;
         }
+        /* 新增：周报卡片样式 */
+        .weekly-review-card {
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        body.dark-theme .weekly-review-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .weekly-review-card:last-child {
+            margin-bottom: 0;
+        }
+        .weekly-review-header {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--accent-color, #6366f1);
+        }
+        body.dark-theme .weekly-review-header {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
         .modal-footer {
             padding: 1rem 1.5rem;
             border-top: 1px solid rgba(0, 0, 0, 0.1);
@@ -558,7 +584,6 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
         }
-
         /* 回到顶部按钮 */
         #backToTop {
             position: fixed;
@@ -1280,12 +1305,11 @@
                 </div>
             </div>
             <div class="controls success-controls">
-                <!-- 新增：本周复盘按钮 -->
-                <button id="weeklyReviewBtn" class="review-btn" aria-label="本周复盘">
+                <!-- 修改：本周复盘按钮 -->
+                <button id="weeklyReviewBtn" class="review-btn" aria-label="往期周报">
                     <svg class="icon"><use href="#icon-clipboard"></use></svg>
-                    <span>本周复盘</span>
+                    <span>往期周报</span>
                 </button>
-
                 <div class="search-box diary-search">
                     <svg class="icon"><use href="#icon-search"></use></svg>
                     <input type="text" id="diarySearchInput" placeholder="搜索标题、标签、心情..." aria-label="搜索日记">
@@ -1412,44 +1436,26 @@
     <button id="backToTop" class="back-to-top" aria-label="返回顶部">
         <svg class="icon"><use href="#icon-arrow-up"></use></svg>
     </button>
-
-    <!-- 新增：复盘总结模态框 -->
+    <!-- 修改：复盘总结模态框 -->
     <div id="reviewModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">
                     <svg class="icon" style="color:#6366f1"><use href="#icon-clipboard"></use></svg>
-                    <span>本周成功日记复盘</span>
+                    <span>往期成功日记周报</span>
                 </div>
                 <button class="modal-close" id="closeReviewModal" aria-label="关闭">
                     <svg class="icon"><use href="#icon-times"></use></svg>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="review-stat-grid" id="reviewStats">
-                    <!-- 动态生成 -->
-                </div>
-                
-                <div class="review-section">
-                    <h4><svg class="icon"><use href="#icon-chart"></use></svg> 本周洞察</h4>
-                    <div class="review-text-box" id="reviewInsight">
-                        正在分析您的数据...
-                    </div>
-                </div>
-
-                <div class="review-section">
-                    <h4><svg class="icon"><use href="#icon-redo"></use></svg> 下周优化建议</h4>
-                    <ul class="review-list" id="reviewOptimization">
-                        <!-- 动态生成 -->
-                    </ul>
-                </div>
+            <div class="modal-body" id="reviewModalBody">
+                <!-- 所有周报卡片将动态生成并插入此处 -->
             </div>
             <div class="modal-footer">
-                <button class="btn-primary" id="confirmReview">我收到了，下周继续加油！</button>
+                <button class="btn-primary" id="confirmReview">关闭</button>
             </div>
         </div>
     </div>
-
     <!-- 脚本文件（加版本号避免缓存可选） -->
     <script src="data.js"></script>
     <script src="script.js"></script>
@@ -1585,122 +1591,149 @@
             updateLanguage(currentLang === 'zh' ? 'en' : 'zh');
         });
         updateLanguage(currentLang);
-
-        /* ==================== 本周复盘功能逻辑 ==================== */
+        /* ==================== 往期周报功能逻辑 (已重构) ==================== */
         document.addEventListener('DOMContentLoaded', function() {
             const reviewBtn = document.getElementById('weeklyReviewBtn');
             const modal = document.getElementById('reviewModal');
             const closeModalBtn = document.getElementById('closeReviewModal');
             const confirmBtn = document.getElementById('confirmReview');
-            const statsContainer = document.getElementById('reviewStats');
-            const insightContainer = document.getElementById('reviewInsight');
-            const optimizationContainer = document.getElementById('reviewOptimization');
-
-            // 工具：判断日期是否在本周（周一到周日）
-            function isThisWeek(dateObj) {
-                const now = new Date();
-                const todayDay = now.getDay() || 7; // 周日转为7
-                // 本周一的日期
-                const monday = new Date(now);
-                monday.setDate(now.getDate() - todayDay + 1);
-                monday.setHours(0,0,0,0);
-                
-                // 下周一的日期
-                const nextMonday = new Date(monday);
-                nextMonday.setDate(monday.getDate() + 7);
-
-                return dateObj >= monday && dateObj < nextMonday;
+            
+            // 工具：获取日期所在周的周一
+            function getMonday(d) {
+                d = new Date(d);
+                const day = d.getDay() || 7; // 获取星期几, 周日为7
+                if (day !== 1) { // 如果不是周一
+                    d.setHours(-24 * (day - 1)); // 回退到周一
+                }
+                d.setHours(0, 0, 0, 0); // 设置时间为0点
+                return d;
             }
 
-            // 生成复盘内容
+            // 工具：格式化周的日期范围
+            function getWeekDateRange(monday) {
+                const sunday = new Date(monday);
+                sunday.setDate(monday.getDate() + 6);
+                const format = (date) => `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+                return `${format(monday)} - ${format(sunday)}`;
+            }
+
+            // 生成所有周报内容
             function generateReview() {
                 const diaryData = Array.isArray(window.successDiaryData) ? window.successDiaryData : [];
-                
-                // 筛选本周数据
-                const weeklyData = diaryData.filter(item => {
+                const modalBody = document.getElementById('reviewModalBody');
+
+                if (!diaryData || diaryData.length === 0) {
+                    modalBody.innerHTML = '<p style="text-align: center; padding: 2rem;">暂无任何成功日记记录。</p>';
+                    return;
+                }
+
+                // 1. 按周分组
+                const weeklyGroups = diaryData.reduce((acc, item) => {
                     const d = new Date(item.date);
-                    return !isNaN(d.getTime()) && isThisWeek(d);
-                });
-
-                const count = weeklyData.length;
-                let totalScore = 0;
-                let tagsMap = {};
-                
-                weeklyData.forEach(item => {
-                    totalScore += getAchievementValue(item) || 0;
-                    if(item.tags && Array.isArray(item.tags)) {
-                        item.tags.forEach(tag => {
-                            tagsMap[tag] = (tagsMap[tag] || 0) + 1;
-                        });
+                    if (isNaN(d.getTime())) return acc; // 跳过无效日期
+                    const monday = getMonday(d);
+                    const weekKey = monday.toISOString();
+                    if (!acc[weekKey]) {
+                        acc[weekKey] = { date: monday, entries: [] };
                     }
-                });
+                    acc[weekKey].entries.push(item);
+                    return acc;
+                }, {});
 
-                const avgScore = count > 0 ? (totalScore / count).toFixed(1) : 0;
-                
-                // 排序标签
-                const sortedTags = Object.entries(tagsMap)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 3)
-                    .map(entry => entry[0]);
+                // 2. 排序周（从新到旧）
+                const sortedWeeks = Object.values(weeklyGroups).sort((a, b) => b.date - a.date);
 
-                // 1. 渲染统计数据
-                statsContainer.innerHTML = `
-                    <div class="review-stat-item">
-                        <div class="review-stat-value">${count}</div>
-                        <div class="review-stat-label">本周记录</div>
-                    </div>
-                    <div class="review-stat-item">
-                        <div class="review-stat-value">${avgScore}</div>
-                        <div class="review-stat-label">平均成就</div>
-                    </div>
-                    <div class="review-stat-item">
-                        <div class="review-stat-value">${sortedTags.length > 0 ? sortedTags.length : 0}</div>
-                        <div class="review-stat-label">覆盖领域</div>
-                    </div>
-                `;
+                if (sortedWeeks.length === 0) {
+                    modalBody.innerHTML = '<p style="text-align: center; padding: 2rem;">暂无任何有效的成功日记记录。</p>';
+                    return;
+                }
 
-                // 2. 渲染洞察文案
-                let insightText = "";
-                if (count === 0) {
-                    insightText = "本周暂时还没有记录任何成功日记哦。也许是你太忙了，或者是忘记了？<br>记住，哪怕是微小的进步，也值得被记录下来。";
-                } else {
-                    insightText = `太棒了！本周你已经记录了 <strong>${count}</strong> 个成功时刻。<br>`;
+                // 3. 为每周生成HTML卡片
+                const allWeeksHtml = sortedWeeks.map(week => {
+                    const weeklyData = week.entries;
+                    const count = weeklyData.length;
+                    let totalScore = 0;
+                    let tagsMap = {};
+
+                    weeklyData.forEach(item => {
+                        totalScore += getAchievementValue(item) || 0;
+                        if(item.tags && Array.isArray(item.tags)) {
+                            item.tags.forEach(tag => {
+                                tagsMap[tag] = (tagsMap[tag] || 0) + 1;
+                            });
+                        }
+                    });
+
+                    const avgScore = count > 0 ? (totalScore / count).toFixed(1) : '0.0';
+                    const sortedTags = Object.entries(tagsMap)
+                        .sort((a, b) => b[1] - a[1])
+                        .slice(0, 3)
+                        .map(entry => entry[0]);
+
+                    // 生成洞察文案
+                    let insightText = `本周你记录了 <strong>${count}</strong> 个成功时刻。<br>`;
                     if (sortedTags.length > 0) {
-                        insightText += `你的主要精力集中在 <span class="review-tags">${sortedTags.map(t => `<span class="tag-pill" style="background:rgba(99,102,241,0.1); font-size:0.8em;">#${t}</span>`).join('')}</span> 这些领域。<br>`;
+                        insightText += `你的主要精力集中在 <span class="review-tags">${sortedTags.map(t =>` <span class="tag-pill" style="background:rgba(99,102,241,0.1); font-size:0.8em;">#${t}</span>`).join('')}</span> 这些领域。<br>`;
                     }
-                    if (avgScore >= 8) {
+                    if (parseFloat(avgScore) >= 8) {
                         insightText += `本周你的状态<strong>非常火热</strong>，成就感爆棚！保持这种自信！`;
-                    } else if (avgScore >= 6) {
+                    } else if (parseFloat(avgScore) >= 6) {
                         insightText += `本周表现<strong>稳扎稳打</strong>，你在持续进步中。`;
                     } else {
                         insightText += `本周似乎遇到了一些挑战，但记录本身就是一种反思和成长。`;
                     }
-                }
-                insightContainer.innerHTML = insightText;
 
-                // 3. 渲染优化建议（基于分数和数量）
-                let optimizations = [];
-                if (count === 0) {
-                    optimizations.push("<strong>即刻行动：</strong> 不要等到这周结束，今天就写下第一条日记吧。");
-                    optimizations.push("<strong>降低门槛：</strong> 哪怕只是“按时吃早饭”这样的小事，也是成功。");
-                    optimizations.push("<strong>固定时间：</strong> 尝试在每晚睡前花5分钟进行记录。");
-                } else if (count < 3) {
-                    optimizations.push("<strong>增加频率：</strong> 试着每天捕捉至少一个亮点，培养“成功雷达”。");
-                    optimizations.push("<strong>丰富维度：</strong> 除了工作/学习，也可以记录生活、人际关系中的小确幸。");
-                } else {
-                    if (avgScore >= 8) {
-                        optimizations.push("<strong>挑战自我：</strong> 下周可以尝试设定一个稍微跳出舒适区的小目标。");
-                        optimizations.push("<strong>分享喜悦：</strong> 你的能量很高，试着去鼓励身边的一个人。");
-                    } else if (avgScore < 6) {
-                        optimizations.push("<strong>关注过程：</strong> 不要在意结果是否完美，专注于你付出的努力。");
-                        optimizations.push("<strong>自我关怀：</strong> 下周给自己安排一次放松的活动，充电很重要。");
+                    // 生成优化建议
+                    let optimizations = [];
+                    if (count < 3) {
+                        optimizations.push("<strong>增加频率：</strong> 试着每天捕捉至少一个亮点，培养“成功雷达”。");
+                        optimizations.push("<strong>丰富维度：</strong> 除了工作/学习，也可以记录生活、人际关系中的小确幸。");
                     } else {
-                        optimizations.push("<strong>复盘规律：</strong> 看看本周得分最高的日记，思考是什么因素促成了成功？");
-                        optimizations.push("<strong>保持节奏：</strong> 你已经养成了很好的习惯，继续保持！");
+                        if (parseFloat(avgScore) >= 8) {
+                            optimizations.push("<strong>挑战自我：</strong> 下周可以尝试设定一个稍微跳出舒适区的小目标。");
+                            optimizations.push("<strong>分享喜悦：</strong> 你的能量很高，试着去鼓励身边的一个人。");
+                        } else if (parseFloat(avgScore) < 6) {
+                            optimizations.push("<strong>关注过程：</strong> 不要在意结果是否完美，专注于你付出的努力。");
+                            optimizations.push("<strong>自我关怀：</strong> 下周给自己安排一次放松的活动，充电很重要。");
+                        } else {
+                            optimizations.push("<strong>复盘规律：</strong> 看看本周得分最高的日记，思考是什么因素促成了成功？");
+                            optimizations.push("<strong>保持节奏：</strong> 你已经养成了很好的习惯，继续保持！");
+                        }
                     }
-                }
-                
-                optimizationContainer.innerHTML = optimizations.map(opt => `<li>${opt}</li>`).join('');
+                    const optimizationHtml = optimizations.map(opt => `<li>${opt}</li>`).join('');
+
+                    // 返回单周的卡片HTML
+                    return `
+                        <div class="weekly-review-card">
+                            <h3 class="weekly-review-header">${getWeekDateRange(week.date)}</h3>
+                            <div class="review-stat-grid">
+                                <div class="review-stat-item">
+                                    <div class="review-stat-value">${count}</div>
+                                    <div class="review-stat-label">本周记录</div>
+                                </div>
+                                <div class="review-stat-item">
+                                    <div class="review-stat-value">${avgScore}</div>
+                                    <div class="review-stat-label">平均成就</div>
+                                </div>
+                                <div class="review-stat-item">
+                                    <div class="review-stat-value">${sortedTags.length > 0 ? sortedTags.length : 0}</div>
+                                    <div class="review-stat-label">覆盖领域</div>
+                                </div>
+                            </div>
+                            <div class="review-section">
+                                <h4><svg class="icon"><use href="#icon-chart"></use></svg> 本周洞察</h4>
+                                <div class="review-text-box">${insightText}</div>
+                            </div>
+                            <div class="review-section">
+                                <h4><svg class="icon"><use href="#icon-redo"></use></svg> 优化建议</h4>
+                                <ul class="review-list">${optimizationHtml}</ul>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // 4. 渲染到模态框
+                modalBody.innerHTML = allWeeksHtml;
             }
 
             // 打开模态框
@@ -1709,23 +1742,19 @@
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden'; // 防止背景滚动
             });
-
             // 关闭模态框函数
             function closeModal() {
                 modal.classList.remove('active');
                 document.body.style.overflow = '';
             }
-
             closeModalBtn.addEventListener('click', closeModal);
             confirmBtn.addEventListener('click', closeModal);
-            
             // 点击背景关闭
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     closeModal();
                 }
             });
-
             // ESC键关闭
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && modal.classList.contains('active')) {
