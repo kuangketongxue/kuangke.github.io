@@ -9,7 +9,7 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 引入Chart.js库用于绘制雷达图 (已更换为更稳定的CDN) -->
+    <!-- 引入Chart.js库用于绘制雷达图 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         /* ========== 全局样式 ========== */
@@ -2133,10 +2133,10 @@
                     currentDigestData.sort((a, b) => (a.rating || 0) - (b.rating || 0));
                     break;
                 case 'date-desc':
-                    currentDigestData.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    currentDigestData.sort((a, b) => new Date(b.date.replace(/\//g, '-')) - new Date(a.date.replace(/\//g, '-')));
                     break;
                 case 'date-asc':
-                    currentDigestData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    currentDigestData.sort((a, b) => new Date(a.date.replace(/\//g, '-')) - new Date(b.date.replace(/\//g, '-')));
                     break;
                 default:
                     // 恢复原始顺序
@@ -2215,7 +2215,7 @@
             document.getElementById('nextWeekBtn').disabled = weekOffset >= 0;
             // 筛选本周数据
             const weeklyData = digestData.filter(digest => {
-                const digestDate = new Date(digest.date);
+                const digestDate = new Date(digest.date.replace(/\//g, '-'));
                 return digestDate >= startDate && digestDate <= endDate;
             });
             // 基础统计
@@ -2316,7 +2316,11 @@
             const dateLabels = [];
             const dayNames = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
             function formatDate(date) {
-                return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                // 将日期对象格式化为 YYYY-MM-DD
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
             }
             // 初始化本周7天
             for (let i = 0; i < 7; i++) {
@@ -2328,7 +2332,8 @@
             }
             // 统计数据
             weeklyData.forEach(digest => {
-                const digestDate = digest.date;
+                // 同样需要替换/为-来保证格式一致
+                const digestDate = digest.date.replace(/\//g, '-').substring(0, 10);
                 if (dailyCounts.hasOwnProperty(digestDate)) {
                     dailyCounts[digestDate]++;
                 }
