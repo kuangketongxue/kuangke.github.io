@@ -810,7 +810,6 @@
             left: 0;
             top: 0;
         }
-        
         /* ==================== 状态消息 ==================== */
         .loading,
         .error {
@@ -1034,7 +1033,7 @@
             </button>
             <button class="nav-btn" onclick="switchView('weekly')" role="tab" aria-selected="false">
                 <i class="fas fa-clipboard-check"></i>
-                <span>本周复盘</span>
+                <span>每周复盘</span>
             </button>
             <button class="nav-btn" onclick="switchView('history')" role="tab" aria-selected="false">
                 <i class="fas fa-history"></i>
@@ -1122,11 +1121,11 @@
                 </div>
             </div>
         </section>
-        <!-- 本周复盘视图 -->
+        <!-- 每周复盘视图 -->
         <section id="weeklyView" class="view" role="tabpanel">
             <div class="page-title">
-                <h1>本周复盘 & 智能建议</h1>
-                <p>基于最近7天数据的深度分析</p>
+                <h1>历史周度复盘 & 智能建议</h1>
+                <p>基于历史数据的深度分析回顾</p>
             </div>
             <div id="weeklyContent"></div>
         </section>
@@ -1405,28 +1404,30 @@
                 const previousAvg = getAvg(previous);
                 return previousAvg ? ((recentAvg - previousAvg) / previousAvg * 100).toFixed(1) : 0;
             }
-            // 【新增】计算本周复盘数据
-            calculateWeeklyAnalysis() {
-                const records = this.getRecentRecords(7); // 取最近7条记录作为本周参考
-                if (records.length === 0) return null;
+            
+            // 【优化】计算单个周期的复盘数据，评分模型更精细
+            calculateWeeklyAnalysis(recordsInWeek) {
+                if (recordsInWeek.length === 0) return null;
 
-                const sums = records.reduce((acc, r) => {
+                const sums = recordsInWeek.reduce((acc, r) => {
                     acc.sleepDuration += r.sleep?.hours || 0;
                     acc.sleepQuality += r.sleep?.quality || 0;
                     acc.exerciseMins += r.exercise?.minutes || 0;
+                    if ((r.exercise?.minutes || 0) > 0) acc.exerciseDays += 1;
                     acc.mood += r.mood?.score || 0;
                     acc.stress += r.mood?.stress || 0;
                     acc.water += r.diet?.waterIntake || 0;
                     acc.junkFood += r.diet?.junkFood || 0;
                     acc.energy += r.physical?.energy || 0;
                     return acc;
-                }, {sleepDuration:0, sleepQuality:0, exerciseMins:0, mood:0, stress:0, water:0, junkFood:0, energy:0});
+                }, {sleepDuration:0, sleepQuality:0, exerciseMins:0, exerciseDays:0, mood:0, stress:0, water:0, junkFood:0, energy:0});
 
-                const count = records.length;
+                const count = recordsInWeek.length;
                 const avgs = {
                     sleepDuration: sums.sleepDuration / count,
                     sleepQuality: sums.sleepQuality / count,
                     exerciseMins: sums.exerciseMins / count,
+                    exerciseDays: sums.exerciseDays,
                     mood: sums.mood / count,
                     stress: sums.stress / count,
                     water: sums.water / count,
@@ -1434,29 +1435,43 @@
                     energy: sums.energy / count
                 };
 
-                // 维度打分 (0-100分)
-                // 1. 睡眠分：理想8小时，质量10分
-                let sleepScore = (Math.min(avgs.sleepDuration, 8.5) / 8 * 50) + (avgs.sleepQuality / 10 * 50);
-                // 2. 运动分：理想每天45分钟
-                let exerciseScore = (Math.min(avgs.exerciseMins, 60) / 45 * 100);
-                // 3. 饮食分：饮水2000ml满分，垃圾食品扣分
-                let dietScore = (Math.min(avgs.water, 2500) / 2000 * 80) + (Math.max(0, 5 - avgs.junkFood) * 4);
-                // 4. 心态分：心情高分，压力低分
+                // 【优化】维度打分 (0-100分)
+                // 1. 睡眠分: 结合时长与质量, 7-9小时为佳
+                let durationScore;
+                if (avgs.sleepDuration >= 7 && avgs.sleepDuration <= 9) durationScore = 100;
+                else if (avgs.sleepDuration >= 6 && avgs.sleepDuration < 7) durationScore = 80;
+                else if (avgs.sleepDuration > 9 && avgs.sleepDuration <= 10) durationScore = 80;
+                else durationScore = 50;
+                let qualityScore = (avgs.sleepQuality / 10) * 100;
+                let sleepScore = (durationScore * 0.6) + (qualityScore * 0.4);
+
+                // 2. 运动分: 结合平均时长与频率
+                let exerciseDurationScore = Math.min(avgs.exerciseMins / 45, 1.2) * 100; // 超过45分钟有额外加分，上限120%
+                let exerciseConsistencyScore = (avgs.exerciseDays / Math.max(count, 4)) * 100; // 鼓励每周至少运动4天
+                let exerciseScore = (exerciseDurationScore * 0.6) + (exerciseConsistencyScore * 0.4);
+
+                // 3. 饮食分: 饮水达标加分，垃圾食品扣分
+                let waterScore = Math.min(avgs.water / 2000, 1.25) * 100; // 鼓励多喝水，上限2500ml
+                let junkFoodScore = Math.max(0, 1 - (avgs.junkFood / 2)) * 100; // 每周超过2次垃圾食品则为0分
+                let dietScore = (waterScore * 0.7) + (junkFoodScore * 0.3);
+
+                // 4. 心态分: 心情高分，压力低分
                 let moodScore = (avgs.mood / 10 * 60) + (Math.max(0, 10 - avgs.stress) / 10 * 40);
+
                 // 5. 精力分
                 let energyScore = (avgs.energy / 10 * 100);
 
                 // 综合评分
                 const totalScore = Math.round(
-                    (sleepScore * 0.3) + 
-                    (exerciseScore * 0.25) + 
-                    (moodScore * 0.2) + 
-                    (dietScore * 0.15) + 
+                    (sleepScore * 0.3) +
+                    (exerciseScore * 0.25) +
+                    (moodScore * 0.2) +
+                    (dietScore * 0.15) +
                     (energyScore * 0.1)
                 );
-
+                
                 return {
-                    totalScore,
+                    totalScore: Math.min(100, totalScore), // 确保总分不超过100
                     radarData: [
                         Math.min(100, Math.round(sleepScore)),
                         Math.min(100, Math.round(exerciseScore)),
@@ -1467,6 +1482,30 @@
                     averages: avgs,
                     count
                 };
+            }
+
+            // 【新增】获取所有周的复盘数据
+            getAllWeeklyAnalyses() {
+                const allRecords = this.data.records || [];
+                if (allRecords.length < 4) return []; // 至少有4条数据才开始计算周复盘
+
+                const weeklyAnalyses = [];
+                // 从后往前，每7天作为一个周期
+                for (let i = allRecords.length; i > 0; i -= 7) {
+                    const start = Math.max(0, i - 7);
+                    const weekRecords = allRecords.slice(start, i);
+                    if (weekRecords.length > 0) {
+                        const analysis = this.calculateWeeklyAnalysis(weekRecords);
+                        if(analysis) {
+                            weeklyAnalyses.push({
+                                startDate: weekRecords[0].date,
+                                endDate: weekRecords[weekRecords.length - 1].date,
+                                analysis: analysis
+                            });
+                        }
+                    }
+                }
+                return weeklyAnalyses;
             }
 
             destroyCharts() {
@@ -2147,122 +2186,129 @@
                     });
                 });
             }
-
-            // 【新增】渲染本周复盘视图
+            // 【优化】渲染所有周复盘视图
             renderWeekly() {
-                this.queueRender(() => {
-                    const weeklyData = this.dm.calculateWeeklyAnalysis();
+                this.queueRender(async () => {
+                    const allWeeklyData = this.dm.getAllWeeklyAnalyses();
                     const container = document.getElementById('weeklyContent');
                     
-                    if (!weeklyData) {
-                        container.innerHTML = '<p class="loading">暂无足够数据进行周复盘（需要至少1条记录）</p>';
+                    if (!allWeeklyData || allWeeklyData.length === 0) {
+                        container.innerHTML = '<p class="loading">暂无足够数据进行周复盘（需要至少4条记录）</p>';
                         return;
                     }
 
-                    // 生成分析建议
-                    const advice = [];
-                    const avgs = weeklyData.averages;
+                    const weeklyHTML = allWeeklyData.map((weeklyData, index) => {
+                        const { startDate, endDate, analysis } = weeklyData;
+                        const { totalScore, averages } = analysis;
+
+                        // 生成动态建议
+                        const advice = [];
+                        if (averages.sleepDuration < 7) advice.push("😴 睡眠不足：本周平均睡眠不到7小时，建议下周尝试提前30分钟上床，睡前远离手机。");
+                        if (averages.exerciseDays < 3) advice.push("🏃 运动缺乏：本周运动频率较低（少于3天），建议下周安排至少3次运动，从简单的活动开始。");
+                        if (averages.water < 1500) advice.push("💧 饮水过少：身体处于缺水状态，建议下周准备大容量水杯，设定定时喝水提醒。");
+                        if (averages.stress > 6) advice.push("🧘 压力偏大：检测到压力值较高，建议每天进行5-10分钟正念冥想或深呼吸练习。");
+                        if (averages.junkFood > 2) advice.push("🍔 饮食控制：本周垃圾食品摄入次数较多，下周请尝试用水果或坚果代替零食。");
+                        if (advice.length === 0) advice.push("🌟 完美状态：本周表现非常出色，请继续保持这种健康的生活方式！");
+                        
+                        const adviceHTML = advice.map(item => `<li>${item.substring(2)}</li>`).join('');
+
+                        return `
+                            <div class="chart-panel">
+                                <h3 class="panel-title" style="font-size: 1.5rem;">
+                                    <i class="fas fa-calendar-week"></i>
+                                    周度复盘 (${startDate} to ${endDate})
+                                </h3>
+                                <div class="score-circle">
+                                    <div class="score-value">${totalScore}</div>
+                                    <div class="score-label">本周健康分</div>
+                                </div>
+                                <div class="stats-grid" style="margin-bottom: 40px;">
+                                    <div class="chart-panel" style="margin-bottom:0;">
+                                        <h3 class="panel-title">
+                                            <i class="fas fa-bullseye"></i>
+                                            五维健康雷达
+                                        </h3>
+                                        <div class="chart-container" style="height: 350px;">
+                                            <canvas id="weeklyRadarChart-${index}"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="chart-panel" style="margin-bottom:0;">
+                                        <h3 class="panel-title">
+                                            <i class="fas fa-user-md"></i>
+                                            行动建议
+                                        </h3>
+                                        <div class="info-box review-advice">
+                                            <ul>${adviceHTML}</ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
                     
-                    if (avgs.sleepDuration < 7) advice.push("😴 睡眠不足：本周平均睡眠不到7小时，建议下周尝试提前30分钟上床，睡前远离手机。");
-                    if (avgs.exerciseMins < 30) advice.push("🏃 运动缺乏：本周运动较少，建议下周每天增加15分钟快走，从简单的活动开始。");
-                    if (avgs.water < 1500) advice.push("💧 饮水过少：身体处于缺水状态，建议下周准备大容量水杯，设定定时喝水提醒。");
-                    if (avgs.stress > 6) advice.push("🧘 压力偏大：检测到压力值较高，建议每天进行5-10分钟正念冥想或深呼吸练习。");
-                    if (avgs.junkFood > 2) advice.push("🍔 饮食控制：本周垃圾食品摄入次数较多，下周请尝试用水果或坚果代替零食。");
-                    if (advice.length === 0) advice.push("🌟 完美状态：本周表现非常出色，请继续保持这种健康的生活方式！");
+                    container.innerHTML = weeklyHTML;
 
-                    const adviceHTML = advice.map(item => `<li>${item.substring(2)}</li>`).join('');
+                    // 确保HTML渲染完成后再初始化图表
+                    await new Promise(resolve => requestAnimationFrame(resolve));
 
-                    container.innerHTML = `
-                        <div class="score-circle">
-                            <div class="score-value">${weeklyData.totalScore}</div>
-                            <div class="score-label">本周健康分</div>
-                        </div>
+                    // 渲染所有雷达图
+                    allWeeklyData.forEach((weeklyData, index) => {
+                        const ctx = document.getElementById(`weeklyRadarChart-${index}`);
+                        if(!ctx) return;
 
-                        <div class="stats-grid" style="margin-bottom: 40px;">
-                            <div class="chart-panel" style="margin-bottom:0;">
-                                <h3 class="panel-title">
-                                    <i class="fas fa-bullseye"></i>
-                                    五维健康雷达
-                                </h3>
-                                <div class="chart-container" style="height: 350px;">
-                                    <canvas id="weeklyRadarChart"></canvas>
-                                </div>
-                            </div>
-                            
-                            <div class="chart-panel" style="margin-bottom:0;">
-                                <h3 class="panel-title">
-                                    <i class="fas fa-user-md"></i>
-                                    下周行动建议
-                                </h3>
-                                <div class="info-box review-advice">
-                                    <ul>
-                                        ${adviceHTML}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-                    // 渲染雷达图
-                    const ctx = document.getElementById('weeklyRadarChart');
-                    const textColor = getComputedStyle(document.body).color;
-                    const isDark = body.classList.contains('dark-mode');
-                    const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-
-                    if (this.dm.charts.weeklyRadar) {
-                        this.dm.charts.weeklyRadar.destroy();
-                    }
-
-                    this.dm.charts.weeklyRadar = new Chart(ctx, {
-                        type: 'radar',
-                        data: {
-                            labels: ['睡眠', '运动', '饮食', '心态', '精力'],
-                            datasets: [{
-                                label: '本周表现',
-                                data: weeklyData.radarData,
-                                fill: true,
-                                backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                                borderColor: 'rgba(102, 126, 234, 1)',
-                                pointBackgroundColor: 'rgba(102, 126, 234, 1)',
-                                pointBorderColor: '#fff',
-                                pointHoverBackgroundColor: '#fff',
-                                pointHoverBorderColor: 'rgba(102, 126, 234, 1)'
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                r: {
-                                    angleLines: {
-                                        color: gridColor
-                                    },
-                                    grid: {
-                                        color: gridColor
-                                    },
-                                    pointLabels: {
-                                        color: textColor,
-                                        font: {
-                                            size: 14,
-                                            weight: 'bold'
-                                        }
-                                    },
-                                    suggestedMin: 0,
-                                    suggestedMax: 100,
-                                    ticks: {
-                                        backdropColor: 'transparent',
-                                        color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)' 
-                                    }
-                                }
-                            },
-                            plugins: {
-                                legend: { display: false }
-                            }
+                        const textColor = getComputedStyle(document.body).color;
+                        const isDark = body.classList.contains('dark-mode');
+                        const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+                        
+                        const chartKey = `weeklyRadar-${index}`;
+                        if (this.dm.charts[chartKey]) {
+                            this.dm.charts[chartKey].destroy();
                         }
+
+                        this.dm.charts[chartKey] = new Chart(ctx, {
+                            type: 'radar',
+                            data: {
+                                labels: ['睡眠', '运动', '饮食', '心态', '精力'],
+                                datasets: [{
+                                    label: `该周表现`,
+                                    data: weeklyData.analysis.radarData,
+                                    fill: true,
+                                    backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                                    borderColor: 'rgba(102, 126, 234, 1)',
+                                    pointBackgroundColor: 'rgba(102, 126, 234, 1)',
+                                    pointBorderColor: '#fff',
+                                    pointHoverBackgroundColor: '#fff',
+                                    pointHoverBorderColor: 'rgba(102, 126, 234, 1)'
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    r: {
+                                        angleLines: { color: gridColor },
+                                        grid: { color: gridColor },
+                                        pointLabels: {
+                                            color: textColor,
+                                            font: { size: 14, weight: 'bold' }
+                                        },
+                                        suggestedMin: 0,
+                                        suggestedMax: 100,
+                                        ticks: {
+                                            backdropColor: 'transparent',
+                                            color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)',
+                                            stepSize: 20
+                                        }
+                                    }
+                                },
+                                plugins: {
+                                    legend: { display: false }
+                                }
+                            }
+                        });
                     });
                 });
             }
-
             // 渲染运动达标面板
             renderExerciseGoals(goalData) {
                 if (!goalData) {
@@ -2536,11 +2582,13 @@
                 btn.classList.remove('active');
                 btn.setAttribute('aria-selected', 'false');
             });
-            event.target.classList.add('active');
-            event.target.setAttribute('aria-selected', 'true');
+            event.target.closest('.nav-btn').classList.add('active');
+            event.target.closest('.nav-btn').setAttribute('aria-selected', 'true');
+            
             document.querySelectorAll('.view').forEach(v => {
                 v.classList.remove('active');
             });
+
             const viewMap = {
                 'overview': 'overviewView',
                 'today': 'todayView',
@@ -2554,6 +2602,7 @@
                 targetView.classList.add('active');
                 targetView.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
+
             if (window.uiRenderer && window.dataManager?.data) {
                 switch(view) {
                     case 'overview':
