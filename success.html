@@ -1597,7 +1597,6 @@
             const modal = document.getElementById('reviewModal');
             const closeModalBtn = document.getElementById('closeReviewModal');
             const confirmBtn = document.getElementById('confirmReview');
-            
             // 工具：获取日期所在周的周一
             function getMonday(d) {
                 d = new Date(d);
@@ -1608,7 +1607,6 @@
                 d.setHours(0, 0, 0, 0); // 设置时间为0点
                 return d;
             }
-
             // 工具：格式化周的日期范围
             function getWeekDateRange(monday) {
                 const sunday = new Date(monday);
@@ -1616,17 +1614,14 @@
                 const format = (date) => `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
                 return `${format(monday)} - ${format(sunday)}`;
             }
-
             // 生成所有周报内容
             function generateReview() {
                 const diaryData = Array.isArray(window.successDiaryData) ? window.successDiaryData : [];
                 const modalBody = document.getElementById('reviewModalBody');
-
                 if (!diaryData || diaryData.length === 0) {
                     modalBody.innerHTML = '<p style="text-align: center; padding: 2rem;">暂无任何成功日记记录。</p>';
                     return;
                 }
-
                 // 1. 按周分组
                 const weeklyGroups = diaryData.reduce((acc, item) => {
                     const d = new Date(item.date);
@@ -1639,22 +1634,18 @@
                     acc[weekKey].entries.push(item);
                     return acc;
                 }, {});
-
                 // 2. 排序周（从新到旧）
                 const sortedWeeks = Object.values(weeklyGroups).sort((a, b) => b.date - a.date);
-
                 if (sortedWeeks.length === 0) {
                     modalBody.innerHTML = '<p style="text-align: center; padding: 2rem;">暂无任何有效的成功日记记录。</p>';
                     return;
                 }
-
                 // 3. 为每周生成HTML卡片
                 const allWeeksHtml = sortedWeeks.map(week => {
                     const weeklyData = week.entries;
                     const count = weeklyData.length;
                     let totalScore = 0;
                     let tagsMap = {};
-
                     weeklyData.forEach(item => {
                         totalScore += getAchievementValue(item) || 0;
                         if(item.tags && Array.isArray(item.tags)) {
@@ -1663,17 +1654,15 @@
                             });
                         }
                     });
-
                     const avgScore = count > 0 ? (totalScore / count).toFixed(1) : '0.0';
                     const sortedTags = Object.entries(tagsMap)
                         .sort((a, b) => b[1] - a[1])
                         .slice(0, 3)
                         .map(entry => entry[0]);
-
                     // 生成洞察文案
                     let insightText = `本周你记录了 <strong>${count}</strong> 个成功时刻。<br>`;
                     if (sortedTags.length > 0) {
-                        insightText += `你的主要精力集中在 <span class="review-tags">${sortedTags.map(t =>` <span class="tag-pill" style="background:rgba(99,102,241,0.1); font-size:0.8em;">#${t}</span>`).join('')}</span> 这些领域。<br>`;
+                        insightText += `你的主要精力集中在 <span class="review-tags">${sortedTags.map(t =>` <span class="tag-pill" style="background:rgba(99,102,241,0.1); font-size:0.8em;">#${t}</span`).join('')}</span> 这些领域。<br>`;
                     }
                     if (parseFloat(avgScore) >= 8) {
                         insightText += `本周你的状态<strong>非常火热</strong>，成就感爆棚！保持这种自信！`;
@@ -1682,7 +1671,6 @@
                     } else {
                         insightText += `本周似乎遇到了一些挑战，但记录本身就是一种反思和成长。`;
                     }
-
                     // 生成优化建议
                     let optimizations = [];
                     if (count < 3) {
@@ -1701,7 +1689,6 @@
                         }
                     }
                     const optimizationHtml = optimizations.map(opt => `<li>${opt}</li>`).join('');
-
                     // 返回单周的卡片HTML
                     return `
                         <div class="weekly-review-card">
@@ -1716,7 +1703,7 @@
                                     <div class="review-stat-label">平均成就</div>
                                 </div>
                                 <div class="review-stat-item">
-                                    <div class="review-stat-value">${sortedTags.length > 0 ? sortedTags.length : 0}</div>
+                                    <div class="review-stat-value">${Object.keys(tagsMap).length}</div>
                                     <div class="review-stat-label">覆盖领域</div>
                                 </div>
                             </div>
@@ -1731,11 +1718,9 @@
                         </div>
                     `;
                 }).join('');
-
                 // 4. 渲染到模态框
                 modalBody.innerHTML = allWeeksHtml;
             }
-
             // 打开模态框
             reviewBtn.addEventListener('click', function() {
                 generateReview();
