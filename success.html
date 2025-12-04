@@ -1648,10 +1648,10 @@
                     let tagsMap = {};
                     weeklyData.forEach(item => {
                         totalScore += getAchievementValue(item) || 0;
-                        if(item.tags && Array.isArray(item.tags)) {
-                            item.tags.forEach(tag => {
-                                tagsMap[tag] = (tagsMap[tag] || 0) + 1;
-                            });
+                       if(item.categories && Array.isArray(item.categories)) {
+                        item.categories.forEach(tag => {
+                         tagsMap[tag] = (tagsMap[tag] || 0) + 1;
+                          });
                         }
                     });
                     const avgScore = count > 0 ? (totalScore / count).toFixed(1) : '0.0';
