@@ -362,6 +362,7 @@
         .knowledge-badges {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
         .badge {
             padding: 6px 14px;
@@ -382,6 +383,11 @@
         }
         .badge.inspiration {
             background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%);
+            color: white;
+        }
+        /* 日期徽章 */
+        .badge.date {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             color: white;
         }
         .knowledge-content {
@@ -571,7 +577,6 @@
 <body>
     <!-- 阅读进度条 -->
     <div class="reading-progress"></div>
-    
     <!-- 加载遮罩 -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
@@ -579,7 +584,6 @@
             <p>正在加载知识数据...</p>
         </div>
     </div>
-    
     <!-- 头部导航 -->
     <header class="header">
         <div class="container">
@@ -617,7 +621,6 @@
             </div>
         </div>
     </header>
-    
     <!-- 主体内容 -->
     <div class="knowledge-page">
         <!-- 页面头部 -->
@@ -626,7 +629,6 @@
             <p>记录每一次学习的内容与感悟</p>
             <p class="subtitle">从 GitHub map.md 自动同步</p>
         </div>
-        
         <!-- 统计面板 -->
         <div class="stats-dashboard">
             <div class="stats-grid">
@@ -656,7 +658,6 @@
                 <span id="lastUpdate">暂无更新记录</span>
             </div>
         </div>
-        
         <!-- 工具栏 -->
         <div class="toolbar">
             <div class="search-box">
@@ -669,19 +670,18 @@
                 <i class="fas fa-sync-alt"></i> <span>刷新数据</span>
             </button>
             <button class="tool-btn warning" id="sortDifficultyBtn" onclick="toggleSort('difficulty')">
-                <i class="fas fa-chart-line"></i> 
+                <i class="fas fa-chart-line"></i>
                 <span>难度排序<span class="sort-indicator" id="difficultyIndicator"></span></span>
             </button>
             <button class="tool-btn info" id="sortImportanceBtn" onclick="toggleSort('importance')">
-                <i class="fas fa-star"></i> 
+                <i class="fas fa-star"></i>
                 <span>重要性<span class="sort-indicator" id="importanceIndicator"></span></span>
             </button>
             <button class="tool-btn danger" id="sortInspirationBtn" onclick="toggleSort('inspiration')">
-                <i class="fas fa-lightbulb"></i> 
+                <i class="fas fa-lightbulb"></i>
                 <span>启发值<span class="sort-indicator" id="inspirationIndicator"></span></span>
             </button>
         </div>
-        
         <!-- 知识列表容器 -->
         <div class="knowledge-container">
             <div class="knowledge-list" id="knowledgeList">
@@ -689,7 +689,6 @@
             </div>
         </div>
     </div>
-    
     <!-- 固定按钮 -->
     <div class="fixed-buttons">
         <button class="back-to-top" id="backToTopBtn">
@@ -699,25 +698,22 @@
             <i class="fas fa-arrow-left"></i>
         </a>
     </div>
-    
     <script>
         // ========== 配置 ==========
         const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/kuangketongxue/kuangke.github.io/main/map.md';
         let knowledgeData = [];
         let filteredData = [];
         let currentSearchTerm = '';
-        
         // 排序状态管理
         let sortState = {
             difficulty: null,  // null: 未排序, 'asc': 升序, 'desc': 降序
             importance: null,
             inspiration: null
         };
-        
+
         // ========== 主函数 ==========
         async function loadKnowledgeData() {
             try {
-                // 从 GitHub 加载 map.md
                 const response = await fetch(GITHUB_RAW_URL);
                 if (!response.ok) {
                     throw new Error('无法加载数据文件,请检查 GitHub 仓库设置');
@@ -734,17 +730,23 @@
                 document.getElementById('loadingOverlay').style.display = 'none';
             }
         }
-        
+
         // ========== 解析 Markdown ==========
+        // 支持格式:
+        // ## 12. 某一条内容
+        // **难度**: 8
+        // **重要性**: 9
+        // **启发值**: 10
+        // **日期**: 2024-12-06 13:20 (或 2024/12/06, 2024.12.06 13:20:45)
         function parseMarkdown(text) {
             const lines = text.split('\n');
             const data = [];
             let currentItem = null;
-            
+
             lines.forEach(line => {
                 line = line.trim();
-                
-                // 匹配格式: ## 编号. 内容
+
+                // 标题行: ## 编号. 内容
                 const headerMatch = line.match(/^##\s*(\d+)\.\s*(.+)$/);
                 if (headerMatch) {
                     if (currentItem) {
@@ -756,43 +758,68 @@
                         difficulty: 0,
                         importance: 0,
                         inspiration: 0,
-                        timestamp: new Date().toISOString()
+                        date: null,                 // 原始日期文本或标准化文本
+                        timestamp: new Date().toISOString() // 加载时间作为回退值
                     };
                     return;
                 }
-                
+
                 if (currentItem) {
-                    // 匹配难度: **难度**: 8
-                    const diffMatch = line.match(/\*\*难度\*\*[:\s]*(\d+(?:\.\d+)?)/);
-                    if (diffMatch) {
-                        currentItem.difficulty = parseFloat(diffMatch[1]);
-                    }
-                    
-                    // 匹配重要性: **重要性**: 9
-                    const impMatch = line.match(/\*\*重要性\*\*[:\s]*(\d+(?:\.\d+)?)/);
-                    if (impMatch) {
-                        currentItem.importance = parseFloat(impMatch[1]);
-                    }
-                    
-                    // 匹配启发值: **启发值**: 10
-                    const inspMatch = line.match(/\*\*启发值\*\*[:\s]*(\d+(?:\.\d+)?)/);
-                    if (inspMatch) {
-                        currentItem.inspiration = parseFloat(inspMatch[1]);
+                    // 难度
+                    const diffMatch = line.match(/\*\*?难度\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
+                    if (diffMatch) currentItem.difficulty = parseFloat(diffMatch[1]);
+
+                    // 重要性
+                    const impMatch = line.match(/\*\*?重要性\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
+                    if (impMatch) currentItem.importance = parseFloat(impMatch[1]);
+
+                    // 启发值
+                    const inspMatch = line.match(/\*\*?启发值\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
+                    if (inspMatch) currentItem.inspiration = parseFloat(inspMatch[1]);
+
+                    // 日期/时间
+                    const dateMatch = line.match(/\*\*?(?:日期|时间|Date)\*\*?[:：]\s*([0-9]{4}[./-][0-9]{1,2}[./-][0-9]{1,2}(?:\s+[0-9]{1,2}:[0-9]{2}(?::[0-9]{2})?)?)/i);
+                    if (dateMatch) {
+                        const iso = normalizeToISO(dateMatch[1]);
+                        if (iso) {
+                            currentItem.date = iso;
+                        } else {
+                            // 不可解析则保留原样
+                            currentItem.date = dateMatch[1];
+                        }
                     }
                 }
             });
-            
+
             if (currentItem) {
                 data.push(currentItem);
             }
-            
+
+            // 按编号倒序
             return data.sort((a, b) => b.number - a.number);
         }
-        
+
+        // ========== 工具: 将常见日期格式标准化为 ISO 字符串 ==========
+        function normalizeToISO(input) {
+            if (!input) return null;
+            // 将 yyyy/mm/dd 或 yyyy.mm.dd 替换为 yyyy-mm-dd
+            let s = input.trim().replace(/[./]/g, '-');
+            // 若只有日期无时间，补 00:00:00
+            if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(s)) {
+                s = s + ' 00:00:00';
+            }
+            // Safari 兼容: 将空格换为 'T'
+            s = s.replace(' ', 'T');
+
+            const d = new Date(s);
+            if (isNaN(d.getTime())) return null;
+            return d.toISOString();
+        }
+
         // ========== 渲染知识列表 ==========
         function renderKnowledgeList() {
             const container = document.getElementById('knowledgeList');
-            
+
             if (filteredData.length === 0) {
                 if (currentSearchTerm) {
                     showEmptyState(`未找到包含 "${currentSearchTerm}" 的知识记录`);
@@ -801,30 +828,36 @@
                 }
                 return;
             }
-            
+
             container.innerHTML = '';
             filteredData.forEach((item, index) => {
                 const itemEl = createKnowledgeItem(item, index);
                 container.appendChild(itemEl);
             });
         }
-        
+
         // ========== 创建知识项 ==========
         function createKnowledgeItem(item, index) {
             const div = document.createElement('div');
             div.className = 'knowledge-item';
             div.style.animationDelay = `${index * 0.1}s`;
-            
+
             // 高亮处理内容
             let displayContent = item.content;
             if (currentSearchTerm) {
                 displayContent = highlightText(item.content, currentSearchTerm);
             }
-            
+
+            // 计算展示日期: 优先 Markdown 提供的日期 (item.date), 其次使用 timestamp
+            const displayDate = formatDateTime(item.date || item.timestamp);
+
             div.innerHTML = `
                 <div class="knowledge-header">
                     <div class="knowledge-number">${item.number}</div>
                     <div class="knowledge-badges">
+                        <span class="badge date">
+                            <i class="fas fa-calendar-alt"></i> 日期: ${displayDate}
+                        </span>
                         <span class="badge difficulty">
                             <i class="fas fa-chart-line"></i> 难度: ${item.difficulty}
                         </span>
@@ -838,25 +871,40 @@
                 </div>
                 <div class="knowledge-content">${displayContent}</div>
             `;
-            
             return div;
         }
-        
+
         // ========== 文本高亮函数 ==========
         function highlightText(text, searchTerm) {
             if (!searchTerm) return text;
-            
-            // 转义特殊字符以避免正则表达式错误
             const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const regex = new RegExp(`(${escapedTerm})`, 'gi');
-            
             return text.replace(regex, '<span class="highlight">$1</span>');
         }
-        
+
+        // ========== 日期格式化 ==========
+        function formatDateTime(isoOrText) {
+            if (!isoOrText) return '未知';
+            // 如果是 ISO 字符串
+            const d = new Date(isoOrText);
+            if (!isNaN(d.getTime())) {
+                return d.toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                });
+            }
+            // 非日期则原样展示
+            return isoOrText;
+        }
+
         // ========== 更新统计信息 ==========
         function updateStatistics() {
             const totalCount = knowledgeData.length;
-            
             if (totalCount === 0) {
                 document.getElementById('totalCount').textContent = '0';
                 document.getElementById('avgDifficulty').textContent = '0.0';
@@ -865,33 +913,40 @@
                 document.getElementById('lastUpdate').textContent = '暂无更新记录';
                 return;
             }
-            
+
             const avgDifficulty = (knowledgeData.reduce((sum, item) => sum + item.difficulty, 0) / totalCount).toFixed(1);
             const avgImportance = (knowledgeData.reduce((sum, item) => sum + item.importance, 0) / totalCount).toFixed(1);
             const avgInspiration = (knowledgeData.reduce((sum, item) => sum + item.inspiration, 0) / totalCount).toFixed(1);
-            
-            // 获取最新一条的时间戳
-            const latestItem = knowledgeData[0];
-            const lastUpdateTime = new Date(latestItem.timestamp).toLocaleString('zh-CN');
-            
+
+            // 最近更新时间: 取所有 item 的 (item.date || item.timestamp) 最大值
+            const latestISO = knowledgeData
+                .map(i => i.date || i.timestamp)
+                .filter(Boolean)
+                .map(v => new Date(v))
+                .filter(d => !isNaN(d.getTime()))
+                .sort((a, b) => b - a)[0];
+
             animateNumber('totalCount', 0, totalCount, 1000);
             animateNumber('avgDifficulty', 0, parseFloat(avgDifficulty), 1200, 1);
             animateNumber('avgImportance', 0, parseFloat(avgImportance), 1400, 1);
             animateNumber('avgInspiration', 0, parseFloat(avgInspiration), 1600, 1);
-            
-            document.getElementById('lastUpdate').innerHTML = `最近更新: ${lastUpdateTime}`;
+
+            if (latestISO) {
+                document.getElementById('lastUpdate').innerHTML = `最近更新: ${formatDateTime(latestISO.toISOString())}`;
+            } else {
+                document.getElementById('lastUpdate').textContent = '暂无更新记录';
+            }
         }
-        
+
         // ========== 数字动画 ==========
         function animateNumber(elementId, start, end, duration, decimals = 0) {
             const element = document.getElementById(elementId);
             const range = end - start;
             const increment = range / (duration / 16);
             let current = start;
-            
             const timer = setInterval(() => {
                 current += increment;
-                if (current >= end) {
+                if ((increment >= 0 && current >= end) || (increment < 0 && current <= end)) {
                     element.textContent = decimals > 0 ? end.toFixed(decimals) : end;
                     clearInterval(timer);
                 } else {
@@ -899,12 +954,11 @@
                 }
             }, 16);
         }
-        
+
         // ========== 搜索功能 ==========
         function search() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             currentSearchTerm = searchTerm;
-            
             if (!searchTerm) {
                 filteredData = [...knowledgeData];
             } else {
@@ -912,24 +966,23 @@
                     item.content.toLowerCase().includes(searchTerm)
                 );
             }
-            
             // 重置排序状态
             resetSortButtons();
             renderKnowledgeList();
         }
-        
+
         // 回车搜索
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') search();
         });
-        
+
         // 实时搜索(可选)
         document.getElementById('searchInput').addEventListener('input', (e) => {
             // 如果想要实时搜索,取消下面的注释
             // search();
         });
-        
-        // ========== 排序功能优化 ==========
+
+        // ========== 排序功能 ==========
         function toggleSort(type) {
             // 重置其他排序状态
             Object.keys(sortState).forEach(key => {
@@ -937,37 +990,34 @@
                     sortState[key] = null;
                 }
             });
-            
+
             // 切换当前排序状态
             if (sortState[type] === null) {
                 sortState[type] = 'desc'; // 首次点击:降序(从高到低)
             } else if (sortState[type] === 'desc') {
                 sortState[type] = 'asc';  // 第二次点击:升序(从低到高)
             } else {
-                sortState[type] = null;    // 第三次点击:取消排序
+                sortState[type] = null;   // 第三次点击:取消排序
             }
-            
+
             // 执行排序
             if (sortState[type] === null) {
-                // 恢复原始顺序
-                filteredData = [...knowledgeData];
+                filteredData = [...knowledgeData]; // 恢复原始顺序
             } else {
                 const order = sortState[type] === 'desc' ? -1 : 1;
                 filteredData.sort((a, b) => (b[type] - a[type]) * order);
             }
-            
+
             // 更新按钮状态
             updateSortButtons(type);
             renderKnowledgeList();
         }
-        
+
         // ========== 更新排序按钮显示 ==========
         function updateSortButtons(activeType) {
-            // 清除所有按钮的active状态
             ['difficulty', 'importance', 'inspiration'].forEach(type => {
                 const btn = document.getElementById(`sort${capitalize(type)}Btn`);
                 const indicator = document.getElementById(`${type}Indicator`);
-                
                 if (type === activeType && sortState[type] !== null) {
                     btn.classList.add('active');
                     indicator.innerHTML = sortState[type] === 'desc' ? '↓' : '↑';
@@ -977,7 +1027,7 @@
                 }
             });
         }
-        
+
         // ========== 重置排序按钮 ==========
         function resetSortButtons() {
             Object.keys(sortState).forEach(key => {
@@ -985,12 +1035,12 @@
             });
             updateSortButtons(null);
         }
-        
+
         // ========== 工具函数:首字母大写 ==========
         function capitalize(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
         }
-        
+
         // ========== 刷新数据 ==========
         function refreshData() {
             document.getElementById('loadingOverlay').style.display = 'flex';
@@ -999,7 +1049,7 @@
             resetSortButtons();
             loadKnowledgeData();
         }
-        
+
         // ========== 空状态 ==========
         function showEmptyState(message) {
             const container = document.getElementById('knowledgeList');
@@ -1011,22 +1061,19 @@
                 </div>
             `;
         }
-        
+
         // ========== 主题切换 ==========
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
         const currentTheme = localStorage.getItem('theme') || 'light';
-        
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
-        
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
-            
             if (body.classList.contains('dark-mode')) {
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
@@ -1037,10 +1084,9 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-        
+
         // ========== 返回顶部 ==========
         const backToTopBtn = document.getElementById('backToTopBtn');
-        
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
                 backToTopBtn.style.display = 'flex';
@@ -1048,20 +1094,18 @@
                 backToTopBtn.style.display = 'none';
             }
         });
-        
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-        
+
         // ========== 阅读进度条 ==========
         const progressBar = document.querySelector('.reading-progress');
-        
         window.addEventListener('scroll', () => {
             const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (window.pageYOffset / windowHeight) * 100;
             progressBar.style.width = scrolled + '%';
         });
-        
+
         // ========== 页面加载 ==========
         window.addEventListener('load', loadKnowledgeData);
     </script>
