@@ -385,7 +385,6 @@
             background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%);
             color: white;
         }
-        /* 日期徽章 */
         .badge.date {
             background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             color: white;
@@ -524,6 +523,217 @@
             width: 0%;
             box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
         }
+        
+        /* ========== 知识点进度弹窗样式 ========== */
+        .progress-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10001;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .progress-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideInUp 0.4s ease;
+        }
+        
+        body.dark-mode .progress-modal-content {
+            background: var(--dark-card);
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--line-color);
+        }
+        
+        body.dark-mode .progress-header {
+            border-bottom-color: var(--line-color-dark);
+        }
+        
+        .progress-header h2 {
+            font-size: 2em;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .close-modal {
+            background: linear-gradient(135deg, var(--danger-color) 0%, #e53e3e 100%);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 5px 15px rgba(245, 101, 101, 0.4);
+        }
+        
+        .progress-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .progress-stat {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        body.dark-mode .progress-stat {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        }
+        
+        .progress-stat-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .progress-stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .progress-stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        body.dark-mode .progress-stat-label {
+            color: #aaa;
+        }
+        
+        .progress-bar-container {
+            background: #e9ecef;
+            border-radius: 20px;
+            height: 30px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        body.dark-mode .progress-bar-container {
+            background: #2d3748;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color) 0%, #38f9d7 100%);
+            border-radius: 20px;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .category-section {
+            margin-bottom: 30px;
+        }
+        
+        .category-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .knowledge-point {
+            padding: 12px 20px;
+            margin: 8px 0;
+            border-radius: 10px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode .knowledge-point {
+            background: #1a202c;
+        }
+        
+        .knowledge-point:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .knowledge-point.completed {
+            background: linear-gradient(135deg, rgba(67, 233, 123, 0.15) 0%, rgba(56, 249, 215, 0.15) 100%);
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .knowledge-point-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+        
+        .knowledge-point-text {
+            flex: 1;
+            color: #333;
+        }
+        
+        body.dark-mode .knowledge-point-text {
+            color: #e2e8f0;
+        }
+        
+        .knowledge-point.completed .knowledge-point-text {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        
         /* ========== 响应式设计 ========== */
         @media (max-width: 768px) {
             .page-header h1 {
@@ -571,12 +781,23 @@
                 height: 50px;
                 font-size: 20px;
             }
+            .progress-modal-content {
+                padding: 25px;
+                max-width: 95%;
+            }
+            .progress-header h2 {
+                font-size: 1.5em;
+            }
+            .progress-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
 <body>
     <!-- 阅读进度条 -->
     <div class="reading-progress"></div>
+    
     <!-- 加载遮罩 -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
@@ -584,6 +805,7 @@
             <p>正在加载知识数据...</p>
         </div>
     </div>
+    
     <!-- 头部导航 -->
     <header class="header">
         <div class="container">
@@ -621,6 +843,7 @@
             </div>
         </div>
     </header>
+    
     <!-- 主体内容 -->
     <div class="knowledge-page">
         <!-- 页面头部 -->
@@ -629,6 +852,7 @@
             <p>记录每一次学习的内容与感悟</p>
             <p class="subtitle">从 GitHub map.md 自动同步</p>
         </div>
+        
         <!-- 统计面板 -->
         <div class="stats-dashboard">
             <div class="stats-grid">
@@ -658,6 +882,7 @@
                 <span id="lastUpdate">暂无更新记录</span>
             </div>
         </div>
+        
         <!-- 工具栏 -->
         <div class="toolbar">
             <div class="search-box">
@@ -668,6 +893,9 @@
             </div>
             <button class="tool-btn success" onclick="refreshData()">
                 <i class="fas fa-sync-alt"></i> <span>刷新数据</span>
+            </button>
+            <button class="tool-btn info" onclick="openProgressModal()">
+                <i class="fas fa-tasks"></i> <span>知识点完成进度</span>
             </button>
             <button class="tool-btn warning" id="sortDifficultyBtn" onclick="toggleSort('difficulty')">
                 <i class="fas fa-chart-line"></i>
@@ -682,6 +910,7 @@
                 <span>启发值<span class="sort-indicator" id="inspirationIndicator"></span></span>
             </button>
         </div>
+        
         <!-- 知识列表容器 -->
         <div class="knowledge-container">
             <div class="knowledge-list" id="knowledgeList">
@@ -689,6 +918,50 @@
             </div>
         </div>
     </div>
+    
+    <!-- 知识点进度弹窗 -->
+    <div class="progress-modal" id="progressModal">
+        <div class="progress-modal-content">
+            <div class="progress-header">
+                <h2><i class="fas fa-graduation-cap"></i> 知识点完成进度</h2>
+                <button class="close-modal" onclick="closeProgressModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="progress-summary">
+                <div class="progress-stat">
+                    <div class="progress-stat-icon">📚</div>
+                    <div class="progress-stat-value" id="totalPoints">0</div>
+                    <div class="progress-stat-label">总知识点</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-icon">✅</div>
+                    <div class="progress-stat-value" id="completedPoints">0</div>
+                    <div class="progress-stat-label">已完成</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-icon">⏳</div>
+                    <div class="progress-stat-value" id="remainingPoints">0</div>
+                    <div class="progress-stat-label">未完成</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-icon">📈</div>
+                    <div class="progress-stat-value" id="progressPercent">0%</div>
+                    <div class="progress-stat-label">完成率</div>
+                </div>
+            </div>
+            
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBarFill">0%</div>
+            </div>
+            
+            <div id="progressCategories">
+                <!-- 动态生成分类知识点 -->
+            </div>
+        </div>
+    </div>
+    
     <!-- 固定按钮 -->
     <div class="fixed-buttons">
         <button class="back-to-top" id="backToTopBtn">
@@ -698,19 +971,24 @@
             <i class="fas fa-arrow-left"></i>
         </a>
     </div>
+    
     <script>
         // ========== 配置 ==========
         const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/kuangketongxue/kuangke.github.io/main/map.md';
+        const PROGRESS_URL = 'https://raw.githubusercontent.com/kuangketongxue/kuangke.github.io/main/progress.md';
+        
         let knowledgeData = [];
         let filteredData = [];
         let currentSearchTerm = '';
+        let progressData = {};
+        
         // 排序状态管理
         let sortState = {
-            difficulty: null,  // null: 未排序, 'asc': 升序, 'desc': 降序
+            difficulty: null,
             importance: null,
             inspiration: null
         };
-
+        
         // ========== 主函数 ==========
         async function loadKnowledgeData() {
             try {
@@ -730,23 +1008,64 @@
                 document.getElementById('loadingOverlay').style.display = 'none';
             }
         }
-
+        
+        // ========== 加载进度数据 ==========
+        async function loadProgressData() {
+            try {
+                const response = await fetch(PROGRESS_URL);
+                if (!response.ok) {
+                    console.warn('无法加载进度文件,将显示空进度');
+                    return {};
+                }
+                const text = await response.text();
+                return parseProgressMarkdown(text);
+            } catch (error) {
+                console.error('加载进度失败:', error);
+                return {};
+            }
+        }
+        
+        // ========== 解析进度 Markdown ==========
+        function parseProgressMarkdown(text) {
+            const lines = text.split('\n');
+            const data = {};
+            let currentCategory = null;
+            
+            lines.forEach(line => {
+                line = line.trim();
+                
+                // 分类标题
+                if (line.startsWith('##')) {
+                    currentCategory = line.replace(/^##\s*/, '').trim();
+                    data[currentCategory] = [];
+                    return;
+                }
+                
+                // 知识点
+                if (currentCategory && line.startsWith('- [')) {
+                    const match = line.match(/^- \[([ x])\]\s*(.+)$/);
+                    if (match) {
+                        const completed = match[1] === 'x';
+                        const content = match[2].trim();
+                        data[currentCategory].push({
+                            content: content,
+                            completed: completed
+                        });
+                    }
+                }
+            });
+            
+            return data;
+        }
+        
         // ========== 解析 Markdown ==========
-        // 支持格式:
-        // ## 12. 某一条内容
-        // **难度**: 8
-        // **重要性**: 9
-        // **启发值**: 10
-        // **日期**: 2024-12-06 13:20 (或 2024/12/06, 2024.12.06 13:20:45)
         function parseMarkdown(text) {
             const lines = text.split('\n');
             const data = [];
             let currentItem = null;
-
+            
             lines.forEach(line => {
                 line = line.trim();
-
-                // 标题行: ## 编号. 内容
                 const headerMatch = line.match(/^##\s*(\d+)\.\s*(.+)$/);
                 if (headerMatch) {
                     if (currentItem) {
@@ -758,68 +1077,57 @@
                         difficulty: 0,
                         importance: 0,
                         inspiration: 0,
-                        date: null,                 // 原始日期文本或标准化文本
-                        timestamp: new Date().toISOString() // 加载时间作为回退值
+                        date: null,
+                        timestamp: new Date().toISOString()
                     };
                     return;
                 }
-
+                
                 if (currentItem) {
-                    // 难度
                     const diffMatch = line.match(/\*\*?难度\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
                     if (diffMatch) currentItem.difficulty = parseFloat(diffMatch[1]);
-
-                    // 重要性
+                    
                     const impMatch = line.match(/\*\*?重要性\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
                     if (impMatch) currentItem.importance = parseFloat(impMatch[1]);
-
-                    // 启发值
+                    
                     const inspMatch = line.match(/\*\*?启发值\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
                     if (inspMatch) currentItem.inspiration = parseFloat(inspMatch[1]);
-
-                    // 日期/时间
+                    
                     const dateMatch = line.match(/\*\*?(?:日期|时间|Date)\*\*?[:：]\s*([0-9]{4}[./-][0-9]{1,2}[./-][0-9]{1,2}(?:\s+[0-9]{1,2}:[0-9]{2}(?::[0-9]{2})?)?)/i);
                     if (dateMatch) {
                         const iso = normalizeToISO(dateMatch[1]);
                         if (iso) {
                             currentItem.date = iso;
                         } else {
-                            // 不可解析则保留原样
                             currentItem.date = dateMatch[1];
                         }
                     }
                 }
             });
-
+            
             if (currentItem) {
                 data.push(currentItem);
             }
-
-            // 按编号倒序
+            
             return data.sort((a, b) => b.number - a.number);
         }
-
-        // ========== 工具: 将常见日期格式标准化为 ISO 字符串 ==========
+        
+        // ========== 标准化日期 ==========
         function normalizeToISO(input) {
             if (!input) return null;
-            // 将 yyyy/mm/dd 或 yyyy.mm.dd 替换为 yyyy-mm-dd
             let s = input.trim().replace(/[./]/g, '-');
-            // 若只有日期无时间，补 00:00:00
             if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(s)) {
                 s = s + ' 00:00:00';
             }
-            // Safari 兼容: 将空格换为 'T'
             s = s.replace(' ', 'T');
-
             const d = new Date(s);
             if (isNaN(d.getTime())) return null;
             return d.toISOString();
         }
-
+        
         // ========== 渲染知识列表 ==========
         function renderKnowledgeList() {
             const container = document.getElementById('knowledgeList');
-
             if (filteredData.length === 0) {
                 if (currentSearchTerm) {
                     showEmptyState(`未找到包含 "${currentSearchTerm}" 的知识记录`);
@@ -828,29 +1136,27 @@
                 }
                 return;
             }
-
+            
             container.innerHTML = '';
             filteredData.forEach((item, index) => {
                 const itemEl = createKnowledgeItem(item, index);
                 container.appendChild(itemEl);
             });
         }
-
+        
         // ========== 创建知识项 ==========
         function createKnowledgeItem(item, index) {
             const div = document.createElement('div');
             div.className = 'knowledge-item';
             div.style.animationDelay = `${index * 0.1}s`;
-
-            // 高亮处理内容
+            
             let displayContent = item.content;
             if (currentSearchTerm) {
                 displayContent = highlightText(item.content, currentSearchTerm);
             }
-
-            // 计算展示日期: 优先 Markdown 提供的日期 (item.date), 其次使用 timestamp
+            
             const displayDate = formatDateTime(item.date || item.timestamp);
-
+            
             div.innerHTML = `
                 <div class="knowledge-header">
                     <div class="knowledge-number">${item.number}</div>
@@ -873,19 +1179,18 @@
             `;
             return div;
         }
-
-        // ========== 文本高亮函数 ==========
+        
+        // ========== 文本高亮 ==========
         function highlightText(text, searchTerm) {
             if (!searchTerm) return text;
             const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const regex = new RegExp(`(${escapedTerm})`, 'gi');
             return text.replace(regex, '<span class="highlight">$1</span>');
         }
-
+        
         // ========== 日期格式化 ==========
         function formatDateTime(isoOrText) {
             if (!isoOrText) return '未知';
-            // 如果是 ISO 字符串
             const d = new Date(isoOrText);
             if (!isNaN(d.getTime())) {
                 return d.toLocaleString('zh-CN', {
@@ -898,11 +1203,10 @@
                     hour12: false
                 });
             }
-            // 非日期则原样展示
             return isoOrText;
         }
-
-        // ========== 更新统计信息 ==========
+        
+        // ========== 更新统计 ==========
         function updateStatistics() {
             const totalCount = knowledgeData.length;
             if (totalCount === 0) {
@@ -913,31 +1217,30 @@
                 document.getElementById('lastUpdate').textContent = '暂无更新记录';
                 return;
             }
-
+            
             const avgDifficulty = (knowledgeData.reduce((sum, item) => sum + item.difficulty, 0) / totalCount).toFixed(1);
             const avgImportance = (knowledgeData.reduce((sum, item) => sum + item.importance, 0) / totalCount).toFixed(1);
             const avgInspiration = (knowledgeData.reduce((sum, item) => sum + item.inspiration, 0) / totalCount).toFixed(1);
-
-            // 最近更新时间: 取所有 item 的 (item.date || item.timestamp) 最大值
+            
             const latestISO = knowledgeData
                 .map(i => i.date || i.timestamp)
                 .filter(Boolean)
                 .map(v => new Date(v))
                 .filter(d => !isNaN(d.getTime()))
                 .sort((a, b) => b - a)[0];
-
+            
             animateNumber('totalCount', 0, totalCount, 1000);
             animateNumber('avgDifficulty', 0, parseFloat(avgDifficulty), 1200, 1);
             animateNumber('avgImportance', 0, parseFloat(avgImportance), 1400, 1);
             animateNumber('avgInspiration', 0, parseFloat(avgInspiration), 1600, 1);
-
+            
             if (latestISO) {
                 document.getElementById('lastUpdate').innerHTML = `最近更新: ${formatDateTime(latestISO.toISOString())}`;
             } else {
                 document.getElementById('lastUpdate').textContent = '暂无更新记录';
             }
         }
-
+        
         // ========== 数字动画 ==========
         function animateNumber(elementId, start, end, duration, decimals = 0) {
             const element = document.getElementById(elementId);
@@ -954,8 +1257,8 @@
                 }
             }, 16);
         }
-
-        // ========== 搜索功能 ==========
+        
+        // ========== 搜索 ==========
         function search() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             currentSearchTerm = searchTerm;
@@ -966,54 +1269,41 @@
                     item.content.toLowerCase().includes(searchTerm)
                 );
             }
-            // 重置排序状态
             resetSortButtons();
             renderKnowledgeList();
         }
-
-        // 回车搜索
+        
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') search();
         });
-
-        // 实时搜索(可选)
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            // 如果想要实时搜索,取消下面的注释
-            // search();
-        });
-
-        // ========== 排序功能 ==========
+        
+        // ========== 排序 ==========
         function toggleSort(type) {
-            // 重置其他排序状态
             Object.keys(sortState).forEach(key => {
                 if (key !== type) {
                     sortState[key] = null;
                 }
             });
-
-            // 切换当前排序状态
+            
             if (sortState[type] === null) {
-                sortState[type] = 'desc'; // 首次点击:降序(从高到低)
+                sortState[type] = 'desc';
             } else if (sortState[type] === 'desc') {
-                sortState[type] = 'asc';  // 第二次点击:升序(从低到高)
+                sortState[type] = 'asc';
             } else {
-                sortState[type] = null;   // 第三次点击:取消排序
+                sortState[type] = null;
             }
-
-            // 执行排序
+            
             if (sortState[type] === null) {
-                filteredData = [...knowledgeData]; // 恢复原始顺序
+                filteredData = [...knowledgeData];
             } else {
                 const order = sortState[type] === 'desc' ? -1 : 1;
                 filteredData.sort((a, b) => (b[type] - a[type]) * order);
             }
-
-            // 更新按钮状态
+            
             updateSortButtons(type);
             renderKnowledgeList();
         }
-
-        // ========== 更新排序按钮显示 ==========
+        
         function updateSortButtons(activeType) {
             ['difficulty', 'importance', 'inspiration'].forEach(type => {
                 const btn = document.getElementById(`sort${capitalize(type)}Btn`);
@@ -1027,20 +1317,18 @@
                 }
             });
         }
-
-        // ========== 重置排序按钮 ==========
+        
         function resetSortButtons() {
             Object.keys(sortState).forEach(key => {
                 sortState[key] = null;
             });
             updateSortButtons(null);
         }
-
-        // ========== 工具函数:首字母大写 ==========
+        
         function capitalize(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
         }
-
+        
         // ========== 刷新数据 ==========
         function refreshData() {
             document.getElementById('loadingOverlay').style.display = 'flex';
@@ -1049,7 +1337,7 @@
             resetSortButtons();
             loadKnowledgeData();
         }
-
+        
         // ========== 空状态 ==========
         function showEmptyState(message) {
             const container = document.getElementById('knowledgeList');
@@ -1061,17 +1349,98 @@
                 </div>
             `;
         }
-
+        
+        // ========== 打开进度弹窗 ==========
+        async function openProgressModal() {
+            progressData = await loadProgressData();
+            renderProgressModal();
+            document.getElementById('progressModal').style.display = 'block';
+        }
+        
+        // ========== 关闭进度弹窗 ==========
+        function closeProgressModal() {
+            document.getElementById('progressModal').style.display = 'none';
+        }
+        
+        // ========== 渲染进度弹窗 ==========
+        function renderProgressModal() {
+            let totalPoints = 0;
+            let completedPoints = 0;
+            
+            // 统计总数和完成数
+            Object.values(progressData).forEach(category => {
+                category.forEach(point => {
+                    totalPoints++;
+                    if (point.completed) completedPoints++;
+                });
+            });
+            
+            const remainingPoints = totalPoints - completedPoints;
+            const progressPercent = totalPoints > 0 ? Math.round((completedPoints / totalPoints) * 100) : 0;
+            
+            // 更新统计数据
+            document.getElementById('totalPoints').textContent = totalPoints;
+            document.getElementById('completedPoints').textContent = completedPoints;
+            document.getElementById('remainingPoints').textContent = remainingPoints;
+            document.getElementById('progressPercent').textContent = progressPercent + '%';
+            
+            // 更新进度条
+            const progressBar = document.getElementById('progressBarFill');
+            progressBar.style.width = progressPercent + '%';
+            progressBar.textContent = progressPercent + '%';
+            
+            // 渲染分类知识点
+            const container = document.getElementById('progressCategories');
+            container.innerHTML = '';
+            
+            Object.keys(progressData).forEach(category => {
+                const section = document.createElement('div');
+                section.className = 'category-section';
+                
+                const categoryCompleted = progressData[category].filter(p => p.completed).length;
+                const categoryTotal = progressData[category].length;
+                
+                section.innerHTML = `
+                    <div class="category-title">
+                        ${category} (${categoryCompleted}/${categoryTotal})
+                    </div>
+                `;
+                
+                progressData[category].forEach((point, index) => {
+                    const pointDiv = document.createElement('div');
+                    pointDiv.className = 'knowledge-point' + (point.completed ? ' completed' : '');
+                    pointDiv.innerHTML = `
+                        <input type="checkbox" class="knowledge-point-checkbox" 
+                               ${point.completed ? 'checked' : ''} 
+                               onchange="togglePoint('${category}', ${index})"
+                               disabled title="请在 GitHub 的 progress.md 中修改">
+                        <span class="knowledge-point-text">${point.content}</span>
+                    `;
+                    section.appendChild(pointDiv);
+                });
+                
+                container.appendChild(section);
+            });
+        }
+        
+        // ========== 切换知识点状态(仅用于显示,实际修改需在GitHub) ==========
+        function togglePoint(category, index) {
+            // 这个函数保留但设为禁用,实际修改需要在 GitHub 中操作
+            alert('请在 GitHub 仓库的 progress.md 文件中修改知识点完成状态');
+        }
+        
         // ========== 主题切换 ==========
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
         const currentTheme = localStorage.getItem('theme') || 'light';
+        
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
+        
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
             if (body.classList.contains('dark-mode')) {
@@ -1084,7 +1453,7 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-
+        
         // ========== 返回顶部 ==========
         const backToTopBtn = document.getElementById('backToTopBtn');
         window.addEventListener('scroll', () => {
@@ -1094,10 +1463,11 @@
                 backToTopBtn.style.display = 'none';
             }
         });
+        
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-
+        
         // ========== 阅读进度条 ==========
         const progressBar = document.querySelector('.reading-progress');
         window.addEventListener('scroll', () => {
@@ -1105,7 +1475,14 @@
             const scrolled = (window.pageYOffset / windowHeight) * 100;
             progressBar.style.width = scrolled + '%';
         });
-
+        
+        // 点击弹窗外部关闭
+        document.getElementById('progressModal').addEventListener('click', (e) => {
+            if (e.target.id === 'progressModal') {
+                closeProgressModal();
+            }
+        });
+        
         // ========== 页面加载 ==========
         window.addEventListener('load', loadKnowledgeData);
     </script>
