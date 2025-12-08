@@ -13,7 +13,7 @@
     <!-- Open Graph / 社交媒体分享 -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="狂客·银河">
-    <meta property="og:description" content="记录生活精彩瞬间，分享美好时刻">
+    <meta property="og:description" content="记录生活精彩瞬间,分享美好时刻">
     <meta property="og:site_name" content="狂客·银河">
     <!-- 网站图标 -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
@@ -368,7 +368,7 @@
             color: var(--text-secondary);
             margin-bottom: 15px;
         }
-        /* ==================== 新增：加载时长显示 ==================== */
+        /* ==================== 新增：预估剩余时间显示 ==================== */
         .loading-time {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
@@ -380,12 +380,22 @@
         .loading-time i {
             font-size: 16px;
             color: #667eea;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
         }
         .time-value {
             font-weight: 600;
             color: #a8b2ff;
             font-family: 'Courier New', monospace;
-            min-width: 60px;
+            min-width: 100px;
+            text-align: left;
+        }
+        .time-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
         }
         /* ==================== 加载条容器 ==================== */
         .loading-bar-container {
@@ -745,7 +755,7 @@
             margin-bottom: var(--spacing-md);
             padding-left: 4px;
         }
-        /* ==================== 遮罩层（独立） ==================== */
+        /* ==================== 遮罩层(独立) ==================== */
         .sidebar-overlay {
             position: fixed;
             top: 0;
@@ -2055,10 +2065,11 @@
         <div class="loading-bar-container">
             <div class="loading-bar" id="loadingBar"></div>
         </div>
-        <!-- 新增：加载时长显示 -->
+        <!-- 新增:预估剩余时间显示 -->
         <div class="loading-time">
-            <i class="far fa-clock"></i>
-            <span>已加载 <span class="time-value" id="loadingTime">0.0s</span></span>
+            <i class="fas fa-hourglass-half"></i>
+            <span class="time-label">预计还需</span>
+            <span class="time-value" id="loadingTime">计算中...</span>
         </div>
     </div>
     <!-- 导航弹窗 -->
@@ -2278,7 +2289,7 @@
             </div>
         </div>
     </div>
-    <!-- 遮罩层（独立） -->
+    <!-- 遮罩层(独立) -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <!-- 左侧分类侧边栏 -->
     <aside class="category-sidebar" id="categorySidebar" aria-label="分类导航侧边栏">
@@ -2553,31 +2564,42 @@
         let dataLoaded = false;
         let pageReady = false;
         let loadingInterval = null;
-        let loadingStartTime = Date.now(); // 记录加载开始时间
-        let loadingTimeInterval = null; // 时间更新定时器
-
-        // 更新加载时长显示
-        function updateLoadingTime() {
-            const elapsed = (Date.now() - loadingStartTime) / 1000;
+        let loadingStartTime = Date.now();
+        let loadingTimeInterval = null;
+        
+        // 预估总加载时间(毫秒)
+        const ESTIMATED_LOAD_TIME = 3000; // 3秒
+        
+        // 更新剩余时间显示
+        function updateRemainingTime() {
+            const elapsed = Date.now() - loadingStartTime;
+            const remaining = Math.max(0, ESTIMATED_LOAD_TIME - elapsed);
+            const remainingSeconds = (remaining / 1000).toFixed(1);
+            
             const loadingTimeEl = document.getElementById('loadingTime');
             if (loadingTimeEl) {
-                loadingTimeEl.textContent = elapsed.toFixed(1) + 's';
+                if (remaining > 0) {
+                    loadingTimeEl.textContent = remainingSeconds + '秒';
+                } else {
+                    loadingTimeEl.textContent = '即将完成...';
+                }
             }
         }
-
-        // 启动加载时长计时器
+        
+        // 启动剩余时间计时器
         function startLoadingTimer() {
-            loadingTimeInterval = setInterval(updateLoadingTime, 100); // 每100ms更新一次
+            updateRemainingTime();
+            loadingTimeInterval = setInterval(updateRemainingTime, 100);
         }
-
-        // 停止加载时长计时器
+        
+        // 停止剩余时间计时器
         function stopLoadingTimer() {
             if (loadingTimeInterval) {
                 clearInterval(loadingTimeInterval);
                 loadingTimeInterval = null;
             }
         }
-
+        
         function updateLoadingProgress(progress) {
             loadingProgress = Math.min(progress, 100);
             const loadingBar = document.getElementById('loadingBar');
@@ -2589,11 +2611,11 @@
                 loadingProgressText.textContent = Math.round(loadingProgress) + '%';
             }
         }
-
+        
         function hideLoadingScreen() {
             const loadingScreen = document.getElementById('loadingScreen');
             if (loadingScreen && dataLoaded && pageReady) {
-                stopLoadingTimer(); // 停止计时
+                stopLoadingTimer();
                 setTimeout(() => {
                     loadingScreen.classList.add('hidden');
                     setTimeout(() => {
@@ -2602,7 +2624,7 @@
                 }, 300);
             }
         }
-
+        
         function simulateLoading() {
             let progress = 0;
             const interval = setInterval(() => {
@@ -2615,7 +2637,7 @@
             }, 200);
             return interval;
         }
-
+        
         function checkDataLoaded() {
             if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
                 dataLoaded = true;
@@ -2625,18 +2647,18 @@
             }
             return false;
         }
-
+        
         function checkAllLoaded() {
             if (dataLoaded && pageReady) {
                 updateLoadingProgress(100);
                 setTimeout(hideLoadingScreen, 500);
             }
         }
-
-        // 启动加载进度模拟和时间计时
+        
+        // 启动加载进度模拟和剩余时间计时
         startLoadingTimer();
         loadingInterval = simulateLoading();
-
+        
         // ==================== 性能优化工具函数 ====================
         function debounce(func, wait) {
             let timeout;
@@ -2649,7 +2671,7 @@
                 timeout = setTimeout(later, wait);
             };
         }
-
+        
         function throttle(func, limit) {
             let inThrottle;
             return function(...args) {
@@ -2660,7 +2682,7 @@
                 }
             };
         }
-
+        
         const rafThrottle = (callback) => {
             let requestId = null;
             let lastArgs;
@@ -2682,7 +2704,7 @@
             };
             return throttled;
         };
-
+        
         const createObserver = (callback, options = {}) => {
             return new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
@@ -2697,7 +2719,7 @@
                 ...options
             });
         };
-
+        
         // ==================== 全局变量 ====================
         let currentSortMethod = 'date-desc';
         let currentViewMode = 'grid';
@@ -2709,7 +2731,7 @@
         let currentSearchKeyword = '';
         const DOM = {};
         let throttledScrollHandler = null;
-
+        
         // ==================== DOM缓存初始化 ====================
         function cacheDOMElements() {
             DOM.momentsContainer = document.getElementById('momentsContainer');
@@ -2741,25 +2763,25 @@
             DOM.navToggleBtn = document.getElementById('navToggleBtn');
             DOM.navModalClose = document.getElementById('navModalClose');
         }
-
+        
         // ==================== 关键词高亮函数 ====================
         function highlightKeyword(text, keyword) {
             if (!keyword || keyword.length < 2) return text;
             const regex = new RegExp(`(${escapeRegExp(keyword)})`, 'gi');
             return text.replace(regex, '<span class="highlight">$1</span>');
         }
-
+        
         function escapeRegExp(string) {
             return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
-
+        
         // ==================== 初始化 ====================
         document.addEventListener('DOMContentLoaded', function() {
             cacheDOMElements();
             restoreUserData();
             initializeEventListeners();
             restoreUserPreferences();
-
+            
             if (checkDataLoaded()) {
                 if (loadingInterval !== null) {
                     clearInterval(loadingInterval);
@@ -2781,7 +2803,7 @@
                         initializePage();
                     }
                 }, 100);
-
+                
                 setTimeout(() => {
                     clearInterval(dataCheckInterval);
                     if (loadingInterval !== null) {
@@ -2800,12 +2822,12 @@
                 }, 10000);
             }
         });
-
+        
         window.addEventListener('load', function() {
             pageReady = true;
             checkAllLoaded();
         });
-
+        
         // ==================== 事件监听器初始化 ====================
         function initializeEventListeners() {
             DOM.sidebarSortButtons.forEach(btn => {
@@ -2814,7 +2836,7 @@
                     handleSortChange(sortMethod);
                 });
             });
-
+            
             DOM.searchInput?.addEventListener('input', debounce(handleSearch, 300));
             DOM.firstPage?.addEventListener('click', () => goToPage(1));
             DOM.prevPage?.addEventListener('click', () => goToPage(Math.max(1, currentPage - 1)));
@@ -2822,18 +2844,18 @@
             DOM.lastPage?.addEventListener('click', () => goToPage(getTotalPages()));
             DOM.itemsPerPage?.addEventListener('change', handleItemsPerPageChange);
             DOM.momentsContainer?.addEventListener('click', handleMomentAction);
-
+            
             throttledScrollHandler = rafThrottle(handleScroll);
             window.addEventListener('scroll', throttledScrollHandler, { passive: true });
             document.addEventListener('visibilitychange', handleVisibilityChange);
-
+            
             DOM.sidebarToggleBtn?.addEventListener('click', openSidebar);
             DOM.sidebarCloseBtn?.addEventListener('click', closeSidebar);
             DOM.sidebarOverlay?.addEventListener('click', closeSidebar);
             DOM.categoryListContainer?.addEventListener('click', handleSidebarCategoryClick);
             DOM.categorySearch?.addEventListener('input', debounce(handleCategorySearch, 300));
             DOM.sidebarResetBtn?.addEventListener('click', resetCategoryFilter);
-
+            
             DOM.navToggleBtn?.addEventListener('click', openNavModal);
             DOM.navModalClose?.addEventListener('click', closeNavModal);
             DOM.navModal?.addEventListener('click', function(e) {
@@ -2841,7 +2863,7 @@
                     closeNavModal();
                 }
             });
-
+            
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     if (DOM.categorySidebar?.classList.contains('open')) {
@@ -2853,18 +2875,18 @@
                 }
             });
         }
-
+        
         // ==================== 导航弹窗控制 ====================
         function openNavModal() {
             DOM.navModal.classList.add('open');
             document.body.style.overflow = 'hidden';
         }
-
+        
         function closeNavModal() {
             DOM.navModal.classList.remove('open');
             document.body.style.overflow = '';
         }
-
+        
         // ==================== 侧边栏控制 ====================
         function openSidebar() {
             DOM.categorySidebar.classList.add('open');
@@ -2872,44 +2894,45 @@
             document.body.style.overflow = 'hidden';
             updateCategoryCounts();
         }
-
+        
         function closeSidebar() {
             DOM.categorySidebar.classList.remove('open');
             DOM.sidebarOverlay.classList.remove('active');
             document.body.style.overflow = '';
         }
-
+        
         function handleSidebarCategoryClick(e) {
             const btn = e.target.closest('.category-list-btn');
             if (!btn) return;
-
+            
             const category = btn.dataset.category;
-
+            
             document.querySelectorAll('.category-list-btn').forEach(b => {
                 b.classList.remove('active');
                 b.setAttribute('aria-selected', 'false');
             });
+            
             btn.classList.add('active');
             btn.setAttribute('aria-selected', 'true');
-
+            
             currentFilteredMoments = category === 'all'
                 ? window.momentsData
                 : window.momentsData.filter(m => m.category === category);
-
+            
             currentPage = 1;
             sortAndRenderMoments();
             updatePagination();
             updateLatestSidebar();
-
+            
             if (window.innerWidth <= 768) {
                 setTimeout(closeSidebar, 300);
             }
         }
-
+        
         function handleCategorySearch(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
             const buttons = document.querySelectorAll('.category-list-btn');
-
+            
             buttons.forEach(btn => {
                 const text = btn.querySelector('span:not(.category-count)').textContent.toLowerCase();
                 if (text.includes(searchTerm)) {
@@ -2919,45 +2942,45 @@
                 }
             });
         }
-
+        
         function resetCategoryFilter() {
             const allBtn = document.querySelector('.category-list-btn[data-category="all"]');
             if (allBtn) {
                 allBtn.click();
             }
-
+            
             if (DOM.categorySearch) {
                 DOM.categorySearch.value = '';
                 document.querySelectorAll('.category-list-btn').forEach(btn => {
                     btn.classList.remove('hidden');
                 });
             }
-
+            
             if (DOM.searchInput) {
                 DOM.searchInput.value = '';
                 currentSearchKeyword = '';
             }
         }
-
+        
         function updateCategoryCounts() {
             const counts = {};
             counts['all'] = window.momentsData.length;
-
+            
             window.momentsData.forEach(moment => {
                 const category = moment.category || '未分类';
                 counts[category] = (counts[category] || 0) + 1;
             });
-
+            
             document.querySelectorAll('.category-count').forEach(countEl => {
                 const category = countEl.dataset.count;
                 countEl.textContent = counts[category] || 0;
             });
         }
-
+        
         // ==================== 事件处理函数 ====================
         function handleSortChange(method) {
             currentSortMethod = method;
-
+            
             DOM.sidebarSortButtons.forEach(btn => {
                 if (btn.dataset.sort === method) {
                     btn.classList.add('active');
@@ -2965,16 +2988,16 @@
                     btn.classList.remove('active');
                 }
             });
-
+            
             sortAndRenderMoments();
             updateSortUI();
             updateLatestSidebar();
         }
-
+        
         function handleSearch(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
             currentSearchKeyword = searchTerm;
-
+            
             if (searchTerm.length >= 2) {
                 currentFilteredMoments = window.momentsData.filter(m =>
                     (m.content && m.content.toLowerCase().includes(searchTerm)) ||
@@ -2986,45 +3009,45 @@
                     ? window.momentsData
                     : window.momentsData.filter(m => m.category === activeCategory);
             }
-
+            
             currentPage = 1;
             sortAndRenderMoments();
             updatePagination();
             updateLatestSidebar();
         }
-
+        
         function handleItemsPerPageChange() {
             currentPage = 1;
             renderMoments();
             updatePagination();
         }
-
+        
         function handleMomentAction(e) {
             const toggleBtn = e.target.closest('.expand-toggle-btn');
             if (toggleBtn) {
                 handleToggleContent(toggleBtn);
                 return;
             }
-
+            
             const likeBtn = e.target.closest('.action-btn');
             if (likeBtn && likeBtn.querySelector('.fa-heart')) {
                 handleLike(likeBtn);
                 return;
             }
-
+            
             const shareBtn = e.target.closest('.share-btn');
             if (shareBtn) {
                 handleShare(shareBtn);
                 return;
             }
-
+            
             const img = e.target.closest('.moment-images img');
             if (img) {
                 handleImageClick(img);
                 return;
             }
         }
-
+        
         function handleToggleContent(btn) {
             const card = btn.closest('.moment-card');
             const contentBox = card.querySelector('.moment-content');
@@ -3032,7 +3055,7 @@
             const isExpanded = btn.getAttribute('aria-expanded') === 'true';
             const fullContent = contentBox.dataset.fullContent || '';
             const previewContent = contentBox.dataset.previewContent || '';
-
+            
             if (isExpanded) {
                 contentBox.classList.add('collapsed');
                 contentBox.classList.remove('expanded');
@@ -3054,14 +3077,14 @@
                 btn.querySelector('.toggle-icon').className = 'fas fa-chevron-up toggle-icon';
             }
         }
-
+        
         function handleLike(btn) {
             const card = btn.closest('.moment-card');
             const momentId = card.dataset.id;
             const icon = btn.querySelector('.fa-heart');
             const countSpan = btn.querySelector('.action-count');
             let count = parseInt(countSpan.textContent, 10) || 0;
-
+            
             if (userLikes[momentId]) {
                 userLikes[momentId] = false;
                 icon.classList.remove('fas', 'liked');
@@ -3079,15 +3102,15 @@
                     setTimeout(() => btn.style.transform = '', 200);
                 });
             }
-
+            
             countSpan.textContent = count;
             saveUserData();
         }
-
+        
         function handleShare(btn) {
             const card = btn.closest('.moment-card');
             const content = card.querySelector('.moment-content p')?.textContent || '';
-
+            
             if (navigator.share) {
                 navigator.share({
                     title: '狂客·银河',
@@ -3098,28 +3121,28 @@
                 showNotification('已复制链接到剪贴板', 'success');
             }
         }
-
+        
         function handleImageClick(img) {
             console.log('查看图片:', img.src);
         }
-
+        
         function handleScroll() {
             if (isLoading) return;
-
+            
             const scrollPosition = window.innerHeight + window.scrollY;
             const pageHeight = document.body.offsetHeight;
-
+            
             if (scrollPosition >= pageHeight - 500) {
                 const perPage = parseInt(DOM.itemsPerPage.value, 10);
                 const totalFiltered = currentFilteredMoments.length;
                 const currentlyShowing = currentPage * perPage;
-
+                
                 if (currentlyShowing < totalFiltered) {
                     loadMoreContent();
                 }
             }
         }
-
+        
         function handleVisibilityChange() {
             if (document.hidden) {
                 document.body.style.setProperty('--animation-play-state', 'paused');
@@ -3127,7 +3150,7 @@
                 document.body.style.setProperty('--animation-play-state', 'running');
             }
         }
-
+        
         // ==================== 页面初始化 ====================
         function initializePage() {
             if (typeof momentsData !== 'undefined' && Array.isArray(momentsData) && momentsData.length > 0) {
@@ -3144,15 +3167,15 @@
                 updateLatestSidebar();
             }
         }
-
+        
         // ==================== 右侧最新内容更新 ====================
         function updateLatestSidebar() {
             if (!DOM.latestList) return;
-
+            
             const latestMoments = [...window.momentsData]
                 .sort((a, b) => new Date(b.date) - new Date(a.date))
                 .slice(0, 3);
-
+            
             if (latestMoments.length === 0) {
                 DOM.latestList.innerHTML = `
                     <div class="latest-empty">
@@ -3162,12 +3185,12 @@
                 `;
                 return;
             }
-
+            
             DOM.latestList.innerHTML = latestMoments.map((moment, index) => {
                 const content = moment.content || '';
                 const truncatedContent = content.length > 60 ? content.substring(0, 60) + '...' : content;
                 const date = formatDate(new Date(moment.date));
-
+                
                 return `
                     <div class="latest-item" data-moment-id="${moment.id || `moment-${index}`}">
                         <div class="latest-item-header">
@@ -3191,7 +3214,7 @@
                     </div>
                 `;
             }).join('');
-
+            
             DOM.latestList.querySelectorAll('.latest-item').forEach(item => {
                 item.addEventListener('click', function() {
                     const momentId = this.dataset.momentId;
@@ -3206,7 +3229,7 @@
                 });
             });
         }
-
+        
         // ==================== 排序和渲染 ====================
         function sortAndRenderMoments() {
             const sortedMoments = sortMoments(currentFilteredMoments, currentSortMethod);
@@ -3218,10 +3241,10 @@
             localStorage.setItem('preferredSortMethod', currentSortMethod);
             animateSortChange();
         }
-
+        
         function sortMoments(moments, method) {
             const sorted = [...moments];
-
+            
             switch (method) {
                 case 'date-desc':
                     sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -3236,51 +3259,51 @@
                     sorted.sort((a, b) => (a.value || 0) - (b.value || 0));
                     break;
             }
-
+            
             return sorted;
         }
-
+        
         // ==================== 渲染函数 ====================
         function renderMoments() {
             if (!DOM.momentsContainer) return;
-
+            
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             const startIndex = (currentPage - 1) * perPage;
             const endIndex = startIndex + perPage;
             const pageMoments = currentFilteredMoments.slice(startIndex, endIndex);
-
+            
             DOM.momentsContainer.innerHTML = '';
             DOM.momentsContainer.setAttribute('aria-busy', 'true');
-
+            
             if (pageMoments.length === 0) {
                 showNoResults();
                 DOM.momentsContainer.setAttribute('aria-busy', 'false');
                 return;
             }
-
+            
             const fragment = document.createDocumentFragment();
             pageMoments.forEach((moment, index) => {
                 const card = createMomentCard(moment, startIndex + index);
                 fragment.appendChild(card);
             });
-
+            
             DOM.momentsContainer.appendChild(fragment);
-
+            
             const observer = createObserver((element) => {
                 element.classList.add('visible');
             });
-
+            
             DOM.momentsContainer.querySelectorAll('.moment-card').forEach(card => {
                 observer.observe(card);
             });
-
+            
             setTimeout(() => {
                 DOM.momentsContainer.setAttribute('aria-busy', 'false');
             }, 100);
-
+            
             updatePaginationInfo();
         }
-
+        
         // ==================== 无结果提示 ====================
         function showNoResults() {
             const noResultsHTML = `
@@ -3306,7 +3329,7 @@
             `;
             DOM.momentsContainer.innerHTML = noResultsHTML;
         }
-
+        
         // ==================== 创建朋友圈卡片 ====================
         function createMomentCard(moment, index) {
             const card = document.createElement('article');
@@ -3314,22 +3337,22 @@
             card.setAttribute('role', 'article');
             card.setAttribute('aria-label', `朋友圈内容 ${index + 1}`);
             card.dataset.id = moment.id || `moment-${index}`;
-
+            
             const isLiked = userLikes[card.dataset.id];
+            
             const rawDate = new Date(moment.date);
             const hasValidDate = rawDate instanceof Date && !isNaN(rawDate);
             const formattedDate = hasValidDate ? formatDate(rawDate) : (moment.date || '未知时间');
-
+            
             const content = moment.content || '';
             const COLLAPSE_THRESHOLD = 300;
             const shouldCollapse = content.length > COLLAPSE_THRESHOLD;
             const previewContent = shouldCollapse ? content.substring(0, COLLAPSE_THRESHOLD) + '...' : content;
-
             const highlightedPreview = highlightKeyword(previewContent, currentSearchKeyword);
-
+            
             const valueColor = getValueGradient(moment.value);
             const valueLabel = moment.value ? `<span class="value-badge" style="background: ${valueColor}">价值 ${moment.value}</span>` : '';
-
+            
             card.innerHTML = `
                 <div class="moment-header">
                     <div class="moment-meta">
@@ -3373,16 +3396,16 @@
                     </button>
                 </div>
             `;
-
+            
             const contentBox = card.querySelector('.moment-content');
             if (contentBox) {
                 contentBox.dataset.fullContent = content;
                 contentBox.dataset.previewContent = previewContent;
             }
-
+            
             return card;
         }
-
+        
         // ==================== 辅助函数 ====================
         function formatDate(date) {
             const now = new Date();
@@ -3391,7 +3414,7 @@
             const hour = 60 * minute;
             const day = 24 * hour;
             const diffDays = Math.floor(diffTime / day);
-
+            
             if (diffDays === 0) {
                 const diffHours = Math.floor(diffTime / hour);
                 if (diffHours === 0) {
@@ -3407,13 +3430,13 @@
                 return date.toLocaleDateString('zh-CN');
             }
         }
-
+        
         function getImageClass(count) {
             if (count === 1) return 'single';
             if (count === 2) return 'double';
             return 'multiple';
         }
-
+        
         function getValueGradient(value) {
             if (value >= 9) return 'linear-gradient(135deg, #ff6b6b, #ff8e53)';
             if (value >= 7) return 'linear-gradient(135deg, #667eea, #764ba2)';
@@ -3421,23 +3444,23 @@
             if (value >= 3) return 'linear-gradient(135deg, #ffc107, #ff9800)';
             return 'linear-gradient(135deg, #868e96, #495057)';
         }
-
+        
         // ==================== 统计更新 ====================
         function updateStats(moments) {
             const totalMoments = moments.length;
             const highValueMoments = moments.filter(m => (m.value || 0) >= 9).length;
             const today = new Date().toISOString().split('T')[0];
             const todayMoments = moments.filter(m => m.date && String(m.date).startsWith(today)).length;
-
+            
             animateNumber('totalMoments', totalMoments);
             animateNumber('highValueMoments', highValueMoments);
             animateNumber('todayMoments', todayMoments);
-
+            
             if (DOM.sortHint) {
                 DOM.sortHint.textContent = getSortDescription(currentSortMethod);
             }
         }
-
+        
         function getSortDescription(method) {
             const descriptions = {
                 'date-desc': '按最新发布时间排序',
@@ -3447,17 +3470,17 @@
             };
             return descriptions[method] || '按最新发布时间排序';
         }
-
+        
         function animateNumber(elementId, targetValue) {
             const element = document.getElementById(elementId);
             if (!element) return;
-
+            
             const currentValue = parseInt(element.textContent, 10) || 0;
             const steps = 20;
             const increment = (targetValue - currentValue) / steps;
             let current = currentValue;
             let step = 0;
-
+            
             const animate = () => {
                 step++;
                 current += increment;
@@ -3468,10 +3491,10 @@
                     requestAnimationFrame(animate);
                 }
             };
-
+            
             requestAnimationFrame(animate);
         }
-
+        
         // ==================== 分页功能 ====================
         function goToPage(page) {
             currentPage = page;
@@ -3479,30 +3502,30 @@
             updatePagination();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
+        
         function getTotalPages() {
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             return Math.max(1, Math.ceil(currentFilteredMoments.length / perPage));
         }
-
+        
         function updatePagination() {
             const totalPages = getTotalPages();
             currentPage = Math.min(Math.max(1, currentPage), totalPages);
-
+            
             DOM.firstPage.disabled = currentPage === 1;
             DOM.prevPage.disabled = currentPage === 1;
             DOM.nextPage.disabled = currentPage === totalPages;
             DOM.lastPage.disabled = currentPage === totalPages;
-
+            
             DOM.pageNumbers.innerHTML = '';
-
+            
             const maxButtons = 5;
             let start = Math.max(1, currentPage - Math.floor(maxButtons / 2));
             let end = Math.min(totalPages, start + maxButtons - 1);
             start = Math.max(1, end - maxButtons + 1);
-
+            
             const fragment = document.createDocumentFragment();
-
+            
             for (let i = start; i <= end; i++) {
                 const btn = document.createElement('button');
                 btn.className = `page-number ${i === currentPage ? 'active' : ''}`;
@@ -3513,28 +3536,27 @@
                 btn.addEventListener('click', () => goToPage(i));
                 fragment.appendChild(btn);
             }
-
+            
             DOM.pageNumbers.appendChild(fragment);
             updatePaginationInfo();
         }
-
+        
         function updatePaginationInfo() {
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             const total = currentFilteredMoments.length;
             const start = total === 0 ? 0 : (currentPage - 1) * perPage + 1;
             const end = Math.min(total, currentPage * perPage);
-
+            
             DOM.showingStart.textContent = String(start);
             DOM.showingEnd.textContent = String(end);
             DOM.totalItems.textContent = String(total);
         }
-
+        
         function loadMoreContent() {
             if (isLoading) return;
-
             isLoading = true;
             DOM.loadingIndicator.classList.add('active');
-
+            
             setTimeout(() => {
                 currentPage++;
                 renderMoreMoments();
@@ -3543,30 +3565,30 @@
                 isLoading = false;
             }, 800);
         }
-
+        
         function renderMoreMoments() {
             const perPage = parseInt(DOM.itemsPerPage.value, 10);
             const startIndex = (currentPage - 1) * perPage;
             const endIndex = startIndex + perPage;
             const pageMoments = currentFilteredMoments.slice(startIndex, endIndex);
-
+            
             const fragment = document.createDocumentFragment();
             pageMoments.forEach((moment, index) => {
                 const card = createMomentCard(moment, startIndex + index);
                 fragment.appendChild(card);
             });
-
+            
             DOM.momentsContainer.appendChild(fragment);
-
+            
             const observer = createObserver((element) => {
                 element.classList.add('visible');
             });
-
+            
             Array.from(DOM.momentsContainer.querySelectorAll('.moment-card:not(.visible)')).forEach(card => {
                 observer.observe(card);
             });
         }
-
+        
         function updateSortUI() {
             const sortNav = document.querySelector('.sort-nav');
             if (sortNav) {
@@ -3574,7 +3596,7 @@
                 setTimeout(() => sortNav.classList.remove('sorting'), 300);
             }
         }
-
+        
         function animateSortChange() {
             requestAnimationFrame(() => {
                 DOM.momentsContainer.style.opacity = '0.5';
@@ -3587,7 +3609,7 @@
                 });
             });
         }
-
+        
         // ==================== 数据持久化 ====================
         function saveUserData() {
             const userData = {
@@ -3598,14 +3620,14 @@
                     viewMode: currentViewMode
                 }
             };
-
+            
             try {
                 localStorage.setItem('userData', JSON.stringify(userData));
             } catch (e) {
                 console.error('保存用户数据失败:', e);
             }
         }
-
+        
         function restoreUserData() {
             try {
                 const savedData = localStorage.getItem('userData');
@@ -3622,7 +3644,7 @@
                 console.error('恢复用户数据失败:', e);
             }
         }
-
+        
         function restoreUserPreferences() {
             const savedSortMethod = localStorage.getItem('preferredSortMethod');
             if (savedSortMethod) {
@@ -3635,13 +3657,13 @@
                     }
                 });
             }
-
+            
             const savedViewMode = localStorage.getItem('preferredViewMode');
             if (savedViewMode) {
                 currentViewMode = savedViewMode;
             }
         }
-
+        
         // ==================== 通知功能 ====================
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
@@ -3659,9 +3681,9 @@
                 z-index: 10000;
                 animation: slideIn 0.3s ease;
             `;
-
+            
             document.body.appendChild(notification);
-
+            
             setTimeout(() => {
                 notification.style.animation = 'slideOut 0.3s ease';
                 setTimeout(() => {
@@ -3671,7 +3693,7 @@
                 }, 300);
             }, 3000);
         }
-
+        
         // ==================== 内存清理 ====================
         window.addEventListener('beforeunload', () => {
             if (throttledScrollHandler) {
