@@ -368,6 +368,26 @@
             color: var(--text-secondary);
             margin-bottom: 15px;
         }
+        /* ==================== 新增：加载时长显示 ==================== */
+        .loading-time {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .loading-time i {
+            font-size: 16px;
+            color: #667eea;
+        }
+        .time-value {
+            font-weight: 600;
+            color: #a8b2ff;
+            font-family: 'Courier New', monospace;
+            min-width: 60px;
+        }
+        /* ==================== 加载条容器 ==================== */
         .loading-bar-container {
             width: 350px;
             height: 6px;
@@ -382,11 +402,12 @@
             border-radius: 3px;
             animation: loadingProgress 2s ease-in-out infinite;
             box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+            transition: width 0.3s ease;
         }
         @keyframes loadingProgress {
-            0% { width: 0%; background-position: 0% 0%; }
-            50% { width: 100%; background-position: 100% 0%; }
-            100% { width: 100%; background-position: 200% 0%; }
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 0%; }
+            100% { background-position: 200% 0%; }
         }
         /* ==================== 星空主题背景 ==================== */
         body {
@@ -421,10 +442,6 @@
         @keyframes stars {
             from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
             to { background-position: 0 0, -250px 0, -250px 0, -250px 0, -250px 0, -250px 0, -250px 0; }
-        }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
         }
         /* ==================== 优化的顶部导航栏 ==================== */
         .header {
@@ -2038,6 +2055,11 @@
         <div class="loading-bar-container">
             <div class="loading-bar" id="loadingBar"></div>
         </div>
+        <!-- 新增：加载时长显示 -->
+        <div class="loading-time">
+            <i class="far fa-clock"></i>
+            <span>已加载 <span class="time-value" id="loadingTime">0.0s</span></span>
+        </div>
     </div>
     <!-- 导航弹窗 -->
     <div class="nav-modal" id="navModal">
@@ -2051,7 +2073,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <!-- 分组：银河主站 -->
+            <!-- 分组:银河主站 -->
             <div class="nav-modal-section">
                 <h3 class="nav-modal-section-title">银河主站</h3>
                 <div class="nav-modal-grid">
@@ -2150,7 +2172,7 @@
                     </a>
                 </div>
             </div>
-            <!-- 分组：狂客空间 · 发现 -->
+            <!-- 分组:狂客空间 · 发现 -->
             <div class="nav-modal-section">
                 <h3 class="nav-modal-section-title">狂客空间 · 发现</h3>
                 <div class="nav-modal-grid">
@@ -2531,6 +2553,30 @@
         let dataLoaded = false;
         let pageReady = false;
         let loadingInterval = null;
+        let loadingStartTime = Date.now(); // 记录加载开始时间
+        let loadingTimeInterval = null; // 时间更新定时器
+
+        // 更新加载时长显示
+        function updateLoadingTime() {
+            const elapsed = (Date.now() - loadingStartTime) / 1000;
+            const loadingTimeEl = document.getElementById('loadingTime');
+            if (loadingTimeEl) {
+                loadingTimeEl.textContent = elapsed.toFixed(1) + 's';
+            }
+        }
+
+        // 启动加载时长计时器
+        function startLoadingTimer() {
+            loadingTimeInterval = setInterval(updateLoadingTime, 100); // 每100ms更新一次
+        }
+
+        // 停止加载时长计时器
+        function stopLoadingTimer() {
+            if (loadingTimeInterval) {
+                clearInterval(loadingTimeInterval);
+                loadingTimeInterval = null;
+            }
+        }
 
         function updateLoadingProgress(progress) {
             loadingProgress = Math.min(progress, 100);
@@ -2547,6 +2593,7 @@
         function hideLoadingScreen() {
             const loadingScreen = document.getElementById('loadingScreen');
             if (loadingScreen && dataLoaded && pageReady) {
+                stopLoadingTimer(); // 停止计时
                 setTimeout(() => {
                     loadingScreen.classList.add('hidden');
                     setTimeout(() => {
@@ -2586,6 +2633,8 @@
             }
         }
 
+        // 启动加载进度模拟和时间计时
+        startLoadingTimer();
         loadingInterval = simulateLoading();
 
         // ==================== 性能优化工具函数 ====================
@@ -2759,7 +2808,6 @@
 
         // ==================== 事件监听器初始化 ====================
         function initializeEventListeners() {
-            // 侧边栏排序按钮
             DOM.sidebarSortButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const sortMethod = this.dataset.sort;
@@ -2775,13 +2823,10 @@
             DOM.itemsPerPage?.addEventListener('change', handleItemsPerPageChange);
             DOM.momentsContainer?.addEventListener('click', handleMomentAction);
 
-            // 滚动监听：使用 requestAnimationFrame 节流 + passive
             throttledScrollHandler = rafThrottle(handleScroll);
             window.addEventListener('scroll', throttledScrollHandler, { passive: true });
-
             document.addEventListener('visibilitychange', handleVisibilityChange);
 
-            // 侧边栏控制
             DOM.sidebarToggleBtn?.addEventListener('click', openSidebar);
             DOM.sidebarCloseBtn?.addEventListener('click', closeSidebar);
             DOM.sidebarOverlay?.addEventListener('click', closeSidebar);
@@ -2789,7 +2834,6 @@
             DOM.categorySearch?.addEventListener('input', debounce(handleCategorySearch, 300));
             DOM.sidebarResetBtn?.addEventListener('click', resetCategoryFilter);
 
-            // 导航弹窗控制
             DOM.navToggleBtn?.addEventListener('click', openNavModal);
             DOM.navModalClose?.addEventListener('click', closeNavModal);
             DOM.navModal?.addEventListener('click', function(e) {
@@ -2798,7 +2842,6 @@
                 }
             });
 
-            // ESC键关闭侧边栏和弹窗
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     if (DOM.categorySidebar?.classList.contains('open')) {
@@ -2839,8 +2882,9 @@
         function handleSidebarCategoryClick(e) {
             const btn = e.target.closest('.category-list-btn');
             if (!btn) return;
+
             const category = btn.dataset.category;
-            // 更新激活状态
+
             document.querySelectorAll('.category-list-btn').forEach(b => {
                 b.classList.remove('active');
                 b.setAttribute('aria-selected', 'false');
@@ -2848,7 +2892,6 @@
             btn.classList.add('active');
             btn.setAttribute('aria-selected', 'true');
 
-            // 筛选数据
             currentFilteredMoments = category === 'all'
                 ? window.momentsData
                 : window.momentsData.filter(m => m.category === category);
@@ -2858,7 +2901,6 @@
             updatePagination();
             updateLatestSidebar();
 
-            // 移动端自动关闭侧边栏
             if (window.innerWidth <= 768) {
                 setTimeout(closeSidebar, 300);
             }
@@ -2867,6 +2909,7 @@
         function handleCategorySearch(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
             const buttons = document.querySelectorAll('.category-list-btn');
+
             buttons.forEach(btn => {
                 const text = btn.querySelector('span:not(.category-count)').textContent.toLowerCase();
                 if (text.includes(searchTerm)) {
@@ -2878,19 +2921,18 @@
         }
 
         function resetCategoryFilter() {
-            // 重置到"全部内容"
             const allBtn = document.querySelector('.category-list-btn[data-category="all"]');
             if (allBtn) {
                 allBtn.click();
             }
-            // 清空搜索
+
             if (DOM.categorySearch) {
                 DOM.categorySearch.value = '';
                 document.querySelectorAll('.category-list-btn').forEach(btn => {
                     btn.classList.remove('hidden');
                 });
             }
-            // 清空主搜索框
+
             if (DOM.searchInput) {
                 DOM.searchInput.value = '';
                 currentSearchKeyword = '';
@@ -2900,10 +2942,12 @@
         function updateCategoryCounts() {
             const counts = {};
             counts['all'] = window.momentsData.length;
+
             window.momentsData.forEach(moment => {
                 const category = moment.category || '未分类';
                 counts[category] = (counts[category] || 0) + 1;
             });
+
             document.querySelectorAll('.category-count').forEach(countEl => {
                 const category = countEl.dataset.count;
                 countEl.textContent = counts[category] || 0;
@@ -2913,7 +2957,7 @@
         // ==================== 事件处理函数 ====================
         function handleSortChange(method) {
             currentSortMethod = method;
-            // 更新侧边栏排序按钮激活状态
+
             DOM.sidebarSortButtons.forEach(btn => {
                 if (btn.dataset.sort === method) {
                     btn.classList.add('active');
@@ -2921,6 +2965,7 @@
                     btn.classList.remove('active');
                 }
             });
+
             sortAndRenderMoments();
             updateSortUI();
             updateLatestSidebar();
@@ -2960,16 +3005,19 @@
                 handleToggleContent(toggleBtn);
                 return;
             }
+
             const likeBtn = e.target.closest('.action-btn');
             if (likeBtn && likeBtn.querySelector('.fa-heart')) {
                 handleLike(likeBtn);
                 return;
             }
+
             const shareBtn = e.target.closest('.share-btn');
             if (shareBtn) {
                 handleShare(shareBtn);
                 return;
             }
+
             const img = e.target.closest('.moment-images img');
             if (img) {
                 handleImageClick(img);
@@ -2977,7 +3025,6 @@
             }
         }
 
-        // ==================== 优化的展开/收起功能 ====================
         function handleToggleContent(btn) {
             const card = btn.closest('.moment-card');
             const contentBox = card.querySelector('.moment-content');
@@ -3058,12 +3105,15 @@
 
         function handleScroll() {
             if (isLoading) return;
+
             const scrollPosition = window.innerHeight + window.scrollY;
             const pageHeight = document.body.offsetHeight;
+
             if (scrollPosition >= pageHeight - 500) {
                 const perPage = parseInt(DOM.itemsPerPage.value, 10);
                 const totalFiltered = currentFilteredMoments.length;
                 const currentlyShowing = currentPage * perPage;
+
                 if (currentlyShowing < totalFiltered) {
                     loadMoreContent();
                 }
@@ -3117,6 +3167,7 @@
                 const content = moment.content || '';
                 const truncatedContent = content.length > 60 ? content.substring(0, 60) + '...' : content;
                 const date = formatDate(new Date(moment.date));
+
                 return `
                     <div class="latest-item" data-moment-id="${moment.id || `moment-${index}`}">
                         <div class="latest-item-header">
@@ -3170,6 +3221,7 @@
 
         function sortMoments(moments, method) {
             const sorted = [...moments];
+
             switch (method) {
                 case 'date-desc':
                     sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -3184,6 +3236,7 @@
                     sorted.sort((a, b) => (a.value || 0) - (b.value || 0));
                     break;
             }
+
             return sorted;
         }
 
@@ -3199,7 +3252,6 @@
             DOM.momentsContainer.innerHTML = '';
             DOM.momentsContainer.setAttribute('aria-busy', 'true');
 
-            // 如果没有结果，显示无结果提示
             if (pageMoments.length === 0) {
                 showNoResults();
                 DOM.momentsContainer.setAttribute('aria-busy', 'false');
@@ -3211,11 +3263,13 @@
                 const card = createMomentCard(moment, startIndex + index);
                 fragment.appendChild(card);
             });
+
             DOM.momentsContainer.appendChild(fragment);
 
             const observer = createObserver((element) => {
                 element.classList.add('visible');
             });
+
             DOM.momentsContainer.querySelectorAll('.moment-card').forEach(card => {
                 observer.observe(card);
             });
@@ -3262,7 +3316,6 @@
             card.dataset.id = moment.id || `moment-${index}`;
 
             const isLiked = userLikes[card.dataset.id];
-
             const rawDate = new Date(moment.date);
             const hasValidDate = rawDate instanceof Date && !isNaN(rawDate);
             const formattedDate = hasValidDate ? formatDate(rawDate) : (moment.date || '未知时间');
@@ -3272,8 +3325,8 @@
             const shouldCollapse = content.length > COLLAPSE_THRESHOLD;
             const previewContent = shouldCollapse ? content.substring(0, COLLAPSE_THRESHOLD) + '...' : content;
 
-            // 对内容进行高亮处理
             const highlightedPreview = highlightKeyword(previewContent, currentSearchKeyword);
+
             const valueColor = getValueGradient(moment.value);
             const valueLabel = moment.value ? `<span class="value-badge" style="background: ${valueColor}">价值 ${moment.value}</span>` : '';
 
@@ -3415,6 +3468,7 @@
                     requestAnimationFrame(animate);
                 }
             };
+
             requestAnimationFrame(animate);
         }
 
@@ -3441,12 +3495,14 @@
             DOM.lastPage.disabled = currentPage === totalPages;
 
             DOM.pageNumbers.innerHTML = '';
+
             const maxButtons = 5;
             let start = Math.max(1, currentPage - Math.floor(maxButtons / 2));
             let end = Math.min(totalPages, start + maxButtons - 1);
             start = Math.max(1, end - maxButtons + 1);
 
             const fragment = document.createDocumentFragment();
+
             for (let i = start; i <= end; i++) {
                 const btn = document.createElement('button');
                 btn.className = `page-number ${i === currentPage ? 'active' : ''}`;
@@ -3457,6 +3513,7 @@
                 btn.addEventListener('click', () => goToPage(i));
                 fragment.appendChild(btn);
             }
+
             DOM.pageNumbers.appendChild(fragment);
             updatePaginationInfo();
         }
@@ -3466,6 +3523,7 @@
             const total = currentFilteredMoments.length;
             const start = total === 0 ? 0 : (currentPage - 1) * perPage + 1;
             const end = Math.min(total, currentPage * perPage);
+
             DOM.showingStart.textContent = String(start);
             DOM.showingEnd.textContent = String(end);
             DOM.totalItems.textContent = String(total);
@@ -3473,8 +3531,10 @@
 
         function loadMoreContent() {
             if (isLoading) return;
+
             isLoading = true;
             DOM.loadingIndicator.classList.add('active');
+
             setTimeout(() => {
                 currentPage++;
                 renderMoreMoments();
@@ -3495,11 +3555,13 @@
                 const card = createMomentCard(moment, startIndex + index);
                 fragment.appendChild(card);
             });
+
             DOM.momentsContainer.appendChild(fragment);
 
             const observer = createObserver((element) => {
                 element.classList.add('visible');
             });
+
             Array.from(DOM.momentsContainer.querySelectorAll('.moment-card:not(.visible)')).forEach(card => {
                 observer.observe(card);
             });
@@ -3536,6 +3598,7 @@
                     viewMode: currentViewMode
                 }
             };
+
             try {
                 localStorage.setItem('userData', JSON.stringify(userData));
             } catch (e) {
@@ -3572,6 +3635,7 @@
                     }
                 });
             }
+
             const savedViewMode = localStorage.getItem('preferredViewMode');
             if (savedViewMode) {
                 currentViewMode = savedViewMode;
@@ -3595,7 +3659,9 @@
                 z-index: 10000;
                 animation: slideIn 0.3s ease;
             `;
+
             document.body.appendChild(notification);
+
             setTimeout(() => {
                 notification.style.animation = 'slideOut 0.3s ease';
                 setTimeout(() => {
@@ -3611,6 +3677,7 @@
             if (throttledScrollHandler) {
                 window.removeEventListener('scroll', throttledScrollHandler);
             }
+            stopLoadingTimer();
             saveUserData();
         });
     </script>
