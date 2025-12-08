@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <style>
         /* ==================== 加载界面样式 ==================== */
-        #loadingOverlay {
+        .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -19,11 +19,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
+            z-index: 99999;
             transition: opacity 0.5s ease, visibility 0.5s ease;
         }
         
-        #loadingOverlay.loaded {
+        .loading-overlay.loaded {
             opacity: 0;
             visibility: hidden;
         }
@@ -31,84 +31,79 @@
         .loading-content {
             text-align: center;
             color: white;
+            max-width: 400px;
+            padding: 2rem;
+        }
+        
+        .loading-logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        
+        .loading-text {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            border-radius: 50px;
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+        }
+        
+        .loading-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.95;
+        }
+        
+        .loading-percentage {
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .loading-count {
+            font-size: 0.85rem;
+            opacity: 0.8;
         }
         
         .loading-spinner {
             width: 60px;
             height: 60px;
             border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
+            border-top-color: #fbbf24;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 2rem;
+            margin: 0 auto 1.5rem;
         }
         
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-        
-        .loading-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        .loading-subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
-        }
-        
-        .loading-progress-container {
-            width: 300px;
-            margin: 0 auto;
-        }
-        
-        .loading-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            opacity: 0.95;
-        }
-        
-        .loading-time {
-            font-weight: 600;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .loading-bar-bg {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 0.5rem;
-        }
-        
-        .loading-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #fbbf24, #f59e0b);
-            border-radius: 10px;
-            width: 0%;
-            transition: width 0.3s ease;
-            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-        }
-        
-        .loading-percentage {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-top: 1rem;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        .loading-tip {
-            margin-top: 2rem;
-            font-size: 0.85rem;
-            opacity: 0.8;
-            font-style: italic;
         }
 
         /* ==================== 强制背景一致性（最高优先级） ==================== */
@@ -1215,24 +1210,18 @@
 </head>
 <body data-page="success">
     <!-- 加载界面 -->
-    <div id="loadingOverlay">
+    <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
+            <div class="loading-logo">🌟 成功日记</div>
+            <div class="loading-text">正在加载您的精彩时刻...</div>
             <div class="loading-spinner"></div>
-            <h2 class="loading-title">🌟 加载成功日记</h2>
-            <p class="loading-subtitle">正在读取您的成功时刻...</p>
-            
-            <div class="loading-progress-container">
-                <div class="loading-stats">
-                    <span>加载进度</span>
-                    <span class="loading-time" id="loadingTime">0.0s</span>
-                </div>
-                <div class="loading-bar-bg">
-                    <div class="loading-bar-fill" id="loadingBar"></div>
-                </div>
-                <div class="loading-percentage" id="loadingPercentage">0%</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
             </div>
-            
-            <p class="loading-tip">💡 提示:每天记录成功时刻,培养积极心态</p>
+            <div class="loading-stats">
+                <div class="loading-percentage" id="loadingPercentage">0%</div>
+                <div class="loading-count" id="loadingCount">0 / 0 条记录</div>
+            </div>
         </div>
     </div>
 
@@ -1431,7 +1420,6 @@
                 </div>
             </div>
             <div class="controls success-controls">
-                <!-- 修改:本周复盘按钮 -->
                 <button id="weeklyReviewBtn" class="review-btn" aria-label="往期周报">
                     <svg class="icon"><use href="#icon-clipboard"></use></svg>
                     <span>往期周报</span>
@@ -1562,7 +1550,7 @@
     <button id="backToTop" class="back-to-top" aria-label="返回顶部">
         <svg class="icon"><use href="#icon-arrow-up"></use></svg>
     </button>
-    <!-- 修改:复盘总结模态框 -->
+    <!-- 复盘总结模态框 -->
     <div id="reviewModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -1582,74 +1570,116 @@
             </div>
         </div>
     </div>
-    <!-- 脚本文件(加版本号避免缓存可选) -->
+    
+    <!-- 脚本文件 -->
     <script src="data.js"></script>
     <script src="script.js"></script>
+    
     <!-- 加载进度脚本 -->
     <script>
+        // 加载进度管理器
         (function() {
             const loadingOverlay = document.getElementById('loadingOverlay');
-            const loadingBar = document.getElementById('loadingBar');
-            const loadingPercentage = document.getElementById('loadingPercentage');
-            const loadingTime = document.getElementById('loadingTime');
+            const progressBar = document.getElementById('progressBar');
+            const percentageDisplay = document.getElementById('loadingPercentage');
+            const countDisplay = document.getElementById('loadingCount');
             
-            const startTime = performance.now();
-            let currentProgress = 0;
+            let totalItems = 0;
+            let loadedItems = 0;
+            let startTime = Date.now();
             
-            // 模拟加载进度
-            function updateProgress() {
-                if (currentProgress < 90) {
-                    // 前90%快速增长
-                    currentProgress += Math.random() * 15;
-                    if (currentProgress > 90) currentProgress = 90;
-                } else if (currentProgress < 95) {
-                    // 90-95%缓慢增长
-                    currentProgress += Math.random() * 2;
-                }
-                
-                loadingBar.style.width = currentProgress + '%';
-                loadingPercentage.textContent = Math.floor(currentProgress) + '%';
-                
-                // 更新实际耗时
-                const elapsedTime = ((performance.now() - startTime) / 1000).toFixed(1);
-                loadingTime.textContent = elapsedTime + 's';
-                
-                if (currentProgress < 95) {
-                    requestAnimationFrame(updateProgress);
-                }
+            // 初始化:获取数据总量
+            function initializeLoader() {
+                // 等待 data.js 加载
+                const checkData = setInterval(() => {
+                    if (window.successDiaryData && Array.isArray(window.successDiaryData)) {
+                        clearInterval(checkData);
+                        totalItems = window.successDiaryData.length;
+                        countDisplay.textContent = `0 / ${totalItems} 条记录`;
+                        simulateLoading();
+                    }
+                }, 50);
             }
             
-            // 开始模拟加载
-            requestAnimationFrame(updateProgress);
+            // 模拟加载过程
+            function simulateLoading() {
+                if (totalItems === 0) {
+                    // 没有数据,快速完成
+                    updateProgress(100);
+                    setTimeout(hideLoader, 500);
+                    return;
+                }
+                
+                // 分阶段加载动画
+                const stages = [
+                    { progress: 20, delay: 300, label: '正在读取数据...' },
+                    { progress: 50, delay: 400, label: '正在解析内容...' },
+                    { progress: 80, delay: 350, label: '正在渲染页面...' },
+                    { progress: 100, delay: 300, label: '加载完成!' }
+                ];
+                
+                let currentStage = 0;
+                
+                function nextStage() {
+                    if (currentStage >= stages.length) {
+                        setTimeout(hideLoader, 400);
+                        return;
+                    }
+                    
+                    const stage = stages[currentStage];
+                    const targetProgress = stage.progress;
+                    const increment = (targetProgress - (loadedItems / totalItems * 100)) / 10;
+                    
+                    const interval = setInterval(() => {
+                        loadedItems += totalItems * (increment / 100);
+                        if (loadedItems >= totalItems * (targetProgress / 100)) {
+                            loadedItems = Math.floor(totalItems * (targetProgress / 100));
+                            clearInterval(interval);
+                            updateProgress(targetProgress);
+                            currentStage++;
+                            setTimeout(nextStage, stage.delay);
+                        } else {
+                            updateProgress(Math.floor((loadedItems / totalItems) * 100));
+                        }
+                    }, 30);
+                }
+                
+                nextStage();
+            }
             
-            // 页面完全加载后
-            function finishLoading() {
-                currentProgress = 100;
-                loadingBar.style.width = '100%';
-                loadingPercentage.textContent = '100%';
+            // 更新进度显示
+            function updateProgress(percentage) {
+                progressBar.style.width = percentage + '%';
+                percentageDisplay.textContent = percentage + '%';
+                const currentLoaded = Math.floor((percentage / 100) * totalItems);
+                countDisplay.textContent = `${currentLoaded} / ${totalItems} 条记录`;
+            }
+            
+            // 隐藏加载界面
+            function hideLoader() {
+                const elapsed = Date.now() - startTime;
+                console.log(`⏱️ 加载耗时: ${elapsed}ms`);
                 
-                const finalTime = ((performance.now() - startTime) / 1000).toFixed(1);
-                loadingTime.textContent = finalTime + 's';
+                loadingOverlay.classList.add('loaded');
                 
-                // 延迟300ms后隐藏加载界面
+                // 确保加载完成后更新统计数据
                 setTimeout(() => {
-                    loadingOverlay.classList.add('loaded');
-                    // 完全移除加载界面
-                    setTimeout(() => {
-                        loadingOverlay.style.display = 'none';
-                    }, 500);
-                }, 300);
+                    if (typeof updateStatistics === 'function') {
+                        updateStatistics();
+                    }
+                }, 100);
             }
             
-            // 监听真实的加载完成
-            if (document.readyState === 'complete') {
-                finishLoading();
+            // 页面加载完成后启动
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeLoader);
             } else {
-                window.addEventListener('load', finishLoading);
+                initializeLoader();
             }
         })();
     </script>
-    <!-- 核心功能脚本(已修复与增强) -->
+    
+    <!-- 核心功能脚本 -->
     <script>
         // 兼容不同键名的成就值读取
         function getAchievementValue(item) {
@@ -1657,7 +1687,8 @@
             const n = Number(raw);
             return Number.isFinite(n) ? n : null;
         }
-        // 统计功能(增强鲁棒性 + 修复天数计算)
+        
+        // 统计功能
         function updateStatistics() {
             console.log('📊 更新统计数据...');
             const diaryData = Array.isArray(window.successDiaryData) ? window.successDiaryData : [];
@@ -1671,12 +1702,13 @@
                     '<svg class="icon" style="width: 12px; height: 12px;"><use href="#icon-chart"></use></svg><span>暂无数据</span>';
                 return;
             }
+            
             // 总记录
             const totalRecords = diaryData.length;
             document.getElementById('totalRecordsValue').textContent = String(totalRecords);
-            // 成就值集合
+            
+            // 成就值
             const achievementValues = diaryData.map(getAchievementValue).filter(v => v != null);
-            console.log('🧮 参与平均的条数:', achievementValues.length, '示例:', achievementValues.slice(0, 10));
             let avgAchievement = 0;
             let achievementLevel = '暂无数据';
             if (achievementValues.length > 0) {
@@ -1692,7 +1724,8 @@
             document.getElementById('avgAchievementValue').textContent = avgAchievement.toFixed(1);
             document.getElementById('achievementLevel').innerHTML =
                 '<svg class="icon" style="width: 12px; height: 12px;"><use href="#icon-chart"></use></svg><span>' + achievementLevel + '</span>';
-            // 最新日期 + 距今天数(修正乘法)
+            
+            // 最新日期
             const dates = diaryData
                 .map(item => item?.date ? new Date(item.date) : null)
                 .filter(date => date && !isNaN(date.getTime()))
@@ -1716,12 +1749,13 @@
             }
             console.log('✅ 统计数据更新完成');
         }
-        // 首次加载后稍延时计算(等数据挂载)
+        
+        // 首次加载后更新统计
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => updateStatistics(), 150);
         });
-        // 外部更新数据时主动刷新
         document.addEventListener('diaryDataUpdated', updateStatistics);
+        
         // 回到顶部功能
         document.addEventListener('DOMContentLoaded', function() {
             const backToTopBtn = document.getElementById('backToTop');
@@ -1748,6 +1782,7 @@
             });
             updateBackToTopButton(window.scrollY || document.documentElement.scrollTop);
         });
+        
         // 主题切换
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('.theme-icon');
@@ -1762,6 +1797,7 @@
             themeIcon.querySelector('use').setAttribute('href', isDark ? '#icon-sun' : '#icon-moon');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
+        
         // 语言切换
         const languageToggle = document.getElementById('languageToggle');
         let currentLang = localStorage.getItem('language') || 'zh';
@@ -1781,30 +1817,31 @@
             updateLanguage(currentLang === 'zh' ? 'en' : 'zh');
         });
         updateLanguage(currentLang);
-        /* ==================== 往期周报功能逻辑 (已重构) ==================== */
+        
+        /* 往期周报功能 */
         document.addEventListener('DOMContentLoaded', function() {
             const reviewBtn = document.getElementById('weeklyReviewBtn');
             const modal = document.getElementById('reviewModal');
             const closeModalBtn = document.getElementById('closeReviewModal');
             const confirmBtn = document.getElementById('confirmReview');
-            // 工具:获取日期所在周的周一
+            
             function getMonday(d) {
                 d = new Date(d);
-                const day = d.getDay() || 7; // 获取星期几, 周日为7
-                if (day !== 1) { // 如果不是周一
-                    d.setHours(-24 * (day - 1)); // 回退到周一
+                const day = d.getDay() || 7;
+                if (day !== 1) {
+                    d.setHours(-24 * (day - 1));
                 }
-                d.setHours(0, 0, 0, 0); // 设置时间为0点
+                d.setHours(0, 0, 0, 0);
                 return d;
             }
-            // 工具:格式化周的日期范围
+            
             function getWeekDateRange(monday) {
                 const sunday = new Date(monday);
                 sunday.setDate(monday.getDate() + 6);
                 const format = (date) => `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
                 return `${format(monday)} - ${format(sunday)}`;
             }
-            // 生成所有周报内容
+            
             function generateReview() {
                 const diaryData = Array.isArray(window.successDiaryData) ? window.successDiaryData : [];
                 const modalBody = document.getElementById('reviewModalBody');
@@ -1812,10 +1849,10 @@
                     modalBody.innerHTML = '<p style="text-align: center; padding: 2rem;">暂无任何成功日记记录。</p>';
                     return;
                 }
-                // 1. 按周分组
+                
                 const weeklyGroups = diaryData.reduce((acc, item) => {
                     const d = new Date(item.date);
-                    if (isNaN(d.getTime())) return acc; // 跳过无效日期
+                    if (isNaN(d.getTime())) return acc;
                     const monday = getMonday(d);
                     const weekKey = monday.toISOString();
                     if (!acc[weekKey]) {
@@ -1824,13 +1861,13 @@
                     acc[weekKey].entries.push(item);
                     return acc;
                 }, {});
-                // 2. 排序周(从新到旧)
+                
                 const sortedWeeks = Object.values(weeklyGroups).sort((a, b) => b.date - a.date);
                 if (sortedWeeks.length === 0) {
                     modalBody.innerHTML = '<p style="text-align: center; padding: 2rem;">暂无任何有效的成功日记记录。</p>';
                     return;
                 }
-                // 3. 为每周生成HTML卡片
+                
                 const allWeeksHtml = sortedWeeks.map(week => {
                     const weeklyData = week.entries;
                     const count = weeklyData.length;
@@ -1838,10 +1875,10 @@
                     let tagsMap = {};
                     weeklyData.forEach(item => {
                         totalScore += getAchievementValue(item) || 0;
-                       if(item.categories && Array.isArray(item.categories)) {
-                        item.categories.forEach(tag => {
-                         tagsMap[tag] = (tagsMap[tag] || 0) + 1;
-                          });
+                        if(item.categories && Array.isArray(item.categories)) {
+                            item.categories.forEach(tag => {
+                                tagsMap[tag] = (tagsMap[tag] || 0) + 1;
+                            });
                         }
                     });
                     const avgScore = count > 0 ? (totalScore / count).toFixed(1) : '0.0';
@@ -1849,7 +1886,7 @@
                         .sort((a, b) => b[1] - a[1])
                         .slice(0, 3)
                         .map(entry => entry[0]);
-                    // 生成洞察文案
+                    
                     let insightText = `本周你记录了 <strong>${count}</strong> 个成功时刻。<br>`;
                     if (sortedTags.length > 0) {
                         insightText += `你的主要精力集中在 <span class="review-tags">${sortedTags.map(t => `<span class="tag-pill" style="background:rgba(99,102,241,0.1); font-size:0.8em;">#${t}</span>`).join('')}</span> 这些领域。<br>`;
@@ -1861,10 +1898,10 @@
                     } else {
                         insightText += `本周似乎遇到了一些挑战,但记录本身就是一种反思和成长。`;
                     }
-                    // 生成优化建议
+                    
                     let optimizations = [];
                     if (count < 3) {
-                        optimizations.push("<strong>增加频率:</strong> 试着每天捕捉至少一个亮点,培养"成功雷达"。");
+                        optimizations.push("<strong>增加频率:</strong> 试着每天捕捉至少一个亮点,培养\"成功雷达\"。");
                         optimizations.push("<strong>丰富维度:</strong> 除了工作/学习,也可以记录生活、人际关系中的小确幸。");
                     } else {
                         if (parseFloat(avgScore) >= 8) {
@@ -1879,7 +1916,7 @@
                         }
                     }
                     const optimizationHtml = optimizations.map(opt => `<li>${opt}</li>`).join('');
-                    // 返回单周的卡片HTML
+                    
                     return `
                         <div class="weekly-review-card">
                             <h3 class="weekly-review-header">${getWeekDateRange(week.date)}</h3>
@@ -1908,29 +1945,27 @@
                         </div>
                     `;
                 }).join('');
-                // 4. 渲染到模态框
+                
                 modalBody.innerHTML = allWeeksHtml;
             }
-            // 打开模态框
+            
             reviewBtn.addEventListener('click', function() {
                 generateReview();
                 modal.classList.add('active');
-                document.body.style.overflow = 'hidden'; // 防止背景滚动
+                document.body.style.overflow = 'hidden';
             });
-            // 关闭模态框函数
+            
             function closeModal() {
                 modal.classList.remove('active');
                 document.body.style.overflow = '';
             }
             closeModalBtn.addEventListener('click', closeModal);
             confirmBtn.addEventListener('click', closeModal);
-            // 点击背景关闭
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     closeModal();
                 }
             });
-            // ESC键关闭
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && modal.classList.contains('active')) {
                     closeModal();
