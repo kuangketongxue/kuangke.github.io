@@ -7,6 +7,110 @@
     <title>成功日记 | 狂客·银河</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* ==================== 加载界面样式 ==================== */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        #loadingOverlay.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .loading-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .loading-progress-container {
+            width: 300px;
+            margin: 0 auto;
+        }
+        
+        .loading-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.95;
+        }
+        
+        .loading-time {
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .loading-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        
+        .loading-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+        
+        .loading-percentage {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .loading-tip {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
         /* ==================== 强制背景一致性（最高优先级） ==================== */
         /* 确保背景装饰显示 */
         .bg-decoration {
@@ -404,7 +508,7 @@
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
             z-index: 2000;
-            display: none; /* 默认隐藏 */
+            display: none;
             align-items: center;
             justify-content: center;
             opacity: 0;
@@ -535,7 +639,7 @@
             left: 0;
             font-weight: bold;
         }
-        /* 新增：周报卡片样式 */
+        /* 新增:周报卡片样式 */
         .weekly-review-card {
             background: rgba(0, 0, 0, 0.03);
             border-radius: 16px;
@@ -1086,7 +1190,7 @@
                 line-height: 1.5;
             }
             .review-btn span {
-                display: none; /* 移动端隐藏文字只留图标 */
+                display: none;
             }
         }
         /* 加载动画 */
@@ -1110,6 +1214,28 @@
     </style>
 </head>
 <body data-page="success">
+    <!-- 加载界面 -->
+    <div id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2 class="loading-title">🌟 加载成功日记</h2>
+            <p class="loading-subtitle">正在读取您的成功时刻...</p>
+            
+            <div class="loading-progress-container">
+                <div class="loading-stats">
+                    <span>加载进度</span>
+                    <span class="loading-time" id="loadingTime">0.0s</span>
+                </div>
+                <div class="loading-bar-bg">
+                    <div class="loading-bar-fill" id="loadingBar"></div>
+                </div>
+                <div class="loading-percentage" id="loadingPercentage">0%</div>
+            </div>
+            
+            <p class="loading-tip">💡 提示:每天记录成功时刻,培养积极心态</p>
+        </div>
+    </div>
+
     <!-- SVG图标定义 -->
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <defs>
@@ -1305,7 +1431,7 @@
                 </div>
             </div>
             <div class="controls success-controls">
-                <!-- 修改：本周复盘按钮 -->
+                <!-- 修改:本周复盘按钮 -->
                 <button id="weeklyReviewBtn" class="review-btn" aria-label="往期周报">
                     <svg class="icon"><use href="#icon-clipboard"></use></svg>
                     <span>往期周报</span>
@@ -1436,7 +1562,7 @@
     <button id="backToTop" class="back-to-top" aria-label="返回顶部">
         <svg class="icon"><use href="#icon-arrow-up"></use></svg>
     </button>
-    <!-- 修改：复盘总结模态框 -->
+    <!-- 修改:复盘总结模态框 -->
     <div id="reviewModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -1456,10 +1582,74 @@
             </div>
         </div>
     </div>
-    <!-- 脚本文件（加版本号避免缓存可选） -->
+    <!-- 脚本文件(加版本号避免缓存可选) -->
     <script src="data.js"></script>
     <script src="script.js"></script>
-    <!-- 核心功能脚本（已修复与增强） -->
+    <!-- 加载进度脚本 -->
+    <script>
+        (function() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const loadingBar = document.getElementById('loadingBar');
+            const loadingPercentage = document.getElementById('loadingPercentage');
+            const loadingTime = document.getElementById('loadingTime');
+            
+            const startTime = performance.now();
+            let currentProgress = 0;
+            
+            // 模拟加载进度
+            function updateProgress() {
+                if (currentProgress < 90) {
+                    // 前90%快速增长
+                    currentProgress += Math.random() * 15;
+                    if (currentProgress > 90) currentProgress = 90;
+                } else if (currentProgress < 95) {
+                    // 90-95%缓慢增长
+                    currentProgress += Math.random() * 2;
+                }
+                
+                loadingBar.style.width = currentProgress + '%';
+                loadingPercentage.textContent = Math.floor(currentProgress) + '%';
+                
+                // 更新实际耗时
+                const elapsedTime = ((performance.now() - startTime) / 1000).toFixed(1);
+                loadingTime.textContent = elapsedTime + 's';
+                
+                if (currentProgress < 95) {
+                    requestAnimationFrame(updateProgress);
+                }
+            }
+            
+            // 开始模拟加载
+            requestAnimationFrame(updateProgress);
+            
+            // 页面完全加载后
+            function finishLoading() {
+                currentProgress = 100;
+                loadingBar.style.width = '100%';
+                loadingPercentage.textContent = '100%';
+                
+                const finalTime = ((performance.now() - startTime) / 1000).toFixed(1);
+                loadingTime.textContent = finalTime + 's';
+                
+                // 延迟300ms后隐藏加载界面
+                setTimeout(() => {
+                    loadingOverlay.classList.add('loaded');
+                    // 完全移除加载界面
+                    setTimeout(() => {
+                        loadingOverlay.style.display = 'none';
+                    }, 500);
+                }, 300);
+            }
+            
+            // 监听真实的加载完成
+            if (document.readyState === 'complete') {
+                finishLoading();
+            } else {
+                window.addEventListener('load', finishLoading);
+            }
+        })();
+    </script>
+    <!-- 核心功能脚本(已修复与增强) -->
     <script>
         // 兼容不同键名的成就值读取
         function getAchievementValue(item) {
@@ -1467,7 +1657,7 @@
             const n = Number(raw);
             return Number.isFinite(n) ? n : null;
         }
-        // 统计功能（增强鲁棒性 + 修复天数计算）
+        // 统计功能(增强鲁棒性 + 修复天数计算)
         function updateStatistics() {
             console.log('📊 更新统计数据...');
             const diaryData = Array.isArray(window.successDiaryData) ? window.successDiaryData : [];
@@ -1502,7 +1692,7 @@
             document.getElementById('avgAchievementValue').textContent = avgAchievement.toFixed(1);
             document.getElementById('achievementLevel').innerHTML =
                 '<svg class="icon" style="width: 12px; height: 12px;"><use href="#icon-chart"></use></svg><span>' + achievementLevel + '</span>';
-            // 最新日期 + 距今天数（修正乘法）
+            // 最新日期 + 距今天数(修正乘法)
             const dates = diaryData
                 .map(item => item?.date ? new Date(item.date) : null)
                 .filter(date => date && !isNaN(date.getTime()))
@@ -1526,7 +1716,7 @@
             }
             console.log('✅ 统计数据更新完成');
         }
-        // 首次加载后稍延时计算（等数据挂载）
+        // 首次加载后稍延时计算(等数据挂载)
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => updateStatistics(), 150);
         });
@@ -1597,7 +1787,7 @@
             const modal = document.getElementById('reviewModal');
             const closeModalBtn = document.getElementById('closeReviewModal');
             const confirmBtn = document.getElementById('confirmReview');
-            // 工具：获取日期所在周的周一
+            // 工具:获取日期所在周的周一
             function getMonday(d) {
                 d = new Date(d);
                 const day = d.getDay() || 7; // 获取星期几, 周日为7
@@ -1607,7 +1797,7 @@
                 d.setHours(0, 0, 0, 0); // 设置时间为0点
                 return d;
             }
-            // 工具：格式化周的日期范围
+            // 工具:格式化周的日期范围
             function getWeekDateRange(monday) {
                 const sunday = new Date(monday);
                 sunday.setDate(monday.getDate() + 6);
@@ -1634,7 +1824,7 @@
                     acc[weekKey].entries.push(item);
                     return acc;
                 }, {});
-                // 2. 排序周（从新到旧）
+                // 2. 排序周(从新到旧)
                 const sortedWeeks = Object.values(weeklyGroups).sort((a, b) => b.date - a.date);
                 if (sortedWeeks.length === 0) {
                     modalBody.innerHTML = '<p style="text-align: center; padding: 2rem;">暂无任何有效的成功日记记录。</p>';
@@ -1662,30 +1852,30 @@
                     // 生成洞察文案
                     let insightText = `本周你记录了 <strong>${count}</strong> 个成功时刻。<br>`;
                     if (sortedTags.length > 0) {
-                        insightText += `你的主要精力集中在 <span class="review-tags">${sortedTags.map(t =>` <span class="tag-pill" style="background:rgba(99,102,241,0.1); font-size:0.8em;">#${t}</span`).join('')}</span> 这些领域。<br>`;
+                        insightText += `你的主要精力集中在 <span class="review-tags">${sortedTags.map(t => `<span class="tag-pill" style="background:rgba(99,102,241,0.1); font-size:0.8em;">#${t}</span>`).join('')}</span> 这些领域。<br>`;
                     }
                     if (parseFloat(avgScore) >= 8) {
-                        insightText += `本周你的状态<strong>非常火热</strong>，成就感爆棚！保持这种自信！`;
+                        insightText += `本周你的状态<strong>非常火热</strong>,成就感爆棚!保持这种自信!`;
                     } else if (parseFloat(avgScore) >= 6) {
-                        insightText += `本周表现<strong>稳扎稳打</strong>，你在持续进步中。`;
+                        insightText += `本周表现<strong>稳扎稳打</strong>,你在持续进步中。`;
                     } else {
-                        insightText += `本周似乎遇到了一些挑战，但记录本身就是一种反思和成长。`;
+                        insightText += `本周似乎遇到了一些挑战,但记录本身就是一种反思和成长。`;
                     }
                     // 生成优化建议
                     let optimizations = [];
                     if (count < 3) {
-                        optimizations.push("<strong>增加频率：</strong> 试着每天捕捉至少一个亮点，培养“成功雷达”。");
-                        optimizations.push("<strong>丰富维度：</strong> 除了工作/学习，也可以记录生活、人际关系中的小确幸。");
+                        optimizations.push("<strong>增加频率:</strong> 试着每天捕捉至少一个亮点,培养"成功雷达"。");
+                        optimizations.push("<strong>丰富维度:</strong> 除了工作/学习,也可以记录生活、人际关系中的小确幸。");
                     } else {
                         if (parseFloat(avgScore) >= 8) {
-                            optimizations.push("<strong>挑战自我：</strong> 下周可以尝试设定一个稍微跳出舒适区的小目标。");
-                            optimizations.push("<strong>分享喜悦：</strong> 你的能量很高，试着去鼓励身边的一个人。");
+                            optimizations.push("<strong>挑战自我:</strong> 下周可以尝试设定一个稍微跳出舒适区的小目标。");
+                            optimizations.push("<strong>分享喜悦:</strong> 你的能量很高,试着去鼓励身边的一个人。");
                         } else if (parseFloat(avgScore) < 6) {
-                            optimizations.push("<strong>关注过程：</strong> 不要在意结果是否完美，专注于你付出的努力。");
-                            optimizations.push("<strong>自我关怀：</strong> 下周给自己安排一次放松的活动，充电很重要。");
+                            optimizations.push("<strong>关注过程:</strong> 不要在意结果是否完美,专注于你付出的努力。");
+                            optimizations.push("<strong>自我关怀:</strong> 下周给自己安排一次放松的活动,充电很重要。");
                         } else {
-                            optimizations.push("<strong>复盘规律：</strong> 看看本周得分最高的日记，思考是什么因素促成了成功？");
-                            optimizations.push("<strong>保持节奏：</strong> 你已经养成了很好的习惯，继续保持！");
+                            optimizations.push("<strong>复盘规律:</strong> 看看本周得分最高的日记,思考是什么因素促成了成功?");
+                            optimizations.push("<strong>保持节奏:</strong> 你已经养成了很好的习惯,继续保持!");
                         }
                     }
                     const optimizationHtml = optimizations.map(opt => `<li>${opt}</li>`).join('');
