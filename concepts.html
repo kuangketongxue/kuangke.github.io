@@ -478,6 +478,86 @@
         body.dark-mode .progress-info {
             color: #fbbf24;
         }
+        /* ========== 预期完成时间卡片 ========== */
+        .expected-card {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid var(--info-color);
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+        }
+        body.dark-mode .expected-card {
+            background: linear-gradient(135deg, #1e3a4a 0%, #2a4a5a 100%);
+        }
+        .expected-card .countdown-icon {
+            color: var(--info-color);
+        }
+        .expected-card .countdown-label {
+            color: #0c5460;
+        }
+        body.dark-mode .expected-card .countdown-label {
+            color: var(--info-color);
+        }
+        .expected-card .countdown-value {
+            color: var(--info-color);
+        }
+        .expected-card .countdown-subtitle {
+            color: #0c5460;
+        }
+        body.dark-mode .expected-card .countdown-subtitle {
+            color: var(--info-color);
+        }
+        .expected-card.warning {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-color: var(--danger-color);
+        }
+        body.dark-mode .expected-card.warning {
+            background: linear-gradient(135deg, #4a2020 0%, #5a2828 100%);
+        }
+        .expected-card.warning .countdown-icon {
+            color: var(--danger-color);
+        }
+        .expected-card.warning .countdown-label {
+            color: #991b1b;
+        }
+        body.dark-mode .expected-card.warning .countdown-label {
+            color: var(--danger-color);
+        }
+        .expected-card.warning .countdown-value {
+            color: var(--danger-color);
+        }
+        .expected-card.warning .countdown-subtitle {
+            color: #991b1b;
+        }
+        body.dark-mode .expected-card.warning .countdown-subtitle {
+            color: var(--danger-color);
+        }
+        .expected-card.success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-color: var(--success-color);
+        }
+        body.dark-mode .expected-card.success {
+            background: linear-gradient(135deg, #1e3a29 0%, #2a4a35 100%);
+        }
+        .expected-card.success .countdown-icon {
+            color: var(--success-color);
+        }
+        .expected-card.success .countdown-label {
+            color: #065f46;
+        }
+        body.dark-mode .expected-card.success .countdown-label {
+            color: var(--success-color);
+        }
+        .expected-card.success .countdown-value {
+            color: var(--success-color);
+        }
+        .expected-card.success .countdown-subtitle {
+            color: #065f46;
+        }
+        body.dark-mode .expected-card.success .countdown-subtitle {
+            color: var(--success-color);
+        }
         /* ========== 今日目标卡片 ========== */
         .daily-goal-card {
             background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
@@ -1347,7 +1427,7 @@
                     <div class="countdown-value" id="daysRemaining">0</div>
                     <div class="countdown-subtitle">天</div>
                     <div class="progress-info">
-                        <span>目标日期：2026年6月7日</span>
+                        <span>目标日期:2026年6月7日</span>
                     </div>
                 </div>
                 <div class="countdown-card">
@@ -1359,6 +1439,16 @@
                         <div class="progress-bar-fill" id="timeProgressBar">0%</div>
                     </div>
                 </div>
+                <!-- 新增: 预期完成时间卡片 -->
+                <div class="countdown-card expected-card" id="expectedCard">
+                    <div class="countdown-icon">🎯</div>
+                    <div class="countdown-label">预期完成时间</div>
+                    <div class="countdown-value" id="expectedDate">计算中...</div>
+                    <div class="countdown-subtitle" id="expectedSubtitle">分析学习速度中</div>
+                    <div class="progress-info" style="justify-content: center; margin-top: 10px;">
+                        <span id="expectedAdvice"></span>
+                    </div>
+                </div>
                 <div class="daily-goal-card">
                     <div class="daily-goal-icon">🎯</div>
                     <div class="daily-goal-label">今日学习进度</div>
@@ -1367,7 +1457,7 @@
                         <div class="daily-goal-progress-fill" id="dailyGoalProgressBar">0 / 7</div>
                     </div>
                     <div class="progress-info" style="justify-content: center; margin-top: 10px;">
-                        <span id="dailyGoalMessage">加油完成今日目标！💪</span>
+                        <span id="dailyGoalMessage">加油完成今日目标!💪</span>
                     </div>
                 </div>
             </div>
@@ -1486,6 +1576,7 @@
             {id: 5, name: "冲刺王者", icon: "👑", desc: "单日完成10个知识块", requirement: 10, unlocked: false},
             {id: 6, name: "全科制霸", icon: "🏆", desc: "完成所有知识块", requirement: 100, unlocked: false}
         ];
+
         // ========== 加载进度模拟 ==========
         function simulateLoading() {
             const progressBar = document.getElementById('loadingProgressBar');
@@ -1503,6 +1594,7 @@
                 }
             }, 300);
         }
+
         // ========== 计算倒计时 ==========
         function calculateCountdown() {
             const now = new Date();
@@ -1515,14 +1607,76 @@
             document.getElementById('timeProgress').textContent = progress.toFixed(1) + '%';
             const timeProgressBar = document.getElementById('timeProgressBar');
             timeProgressBar.style.width = progress + '%';
-            
-            // 优化：当进度很小时，不显示文字
             if (progress < 5) {
                 timeProgressBar.textContent = '';
             } else {
                 timeProgressBar.textContent = progress.toFixed(1) + '%';
             }
         }
+
+        // ========== 新增: 计算预期完成时间 ==========
+        function calculateExpectedCompletion() {
+            let totalBlocks = 0;
+            let completedBlocks = 0;
+            Object.values(progressData).forEach(category => {
+                category.forEach(block => {
+                    totalBlocks++;
+                    if (block.completed) completedBlocks++;
+                });
+            });
+
+            const remainingBlocks = totalBlocks - completedBlocks;
+            
+            // 从study_data.md获取平均每日完成数 (假设最近7天数据)
+            let avgDailyComplete = studyData?.maxDailyComplete || 5; // 默认5个/天
+            
+            // 如果有历史数据,使用更精确的计算
+            // 这里简化为使用maxDailyComplete * 0.7 作为实际平均速度
+            avgDailyComplete = Math.max(1, avgDailyComplete * 0.7);
+
+            if (remainingBlocks === 0) {
+                // 已全部完成
+                document.getElementById('expectedDate').textContent = '已完成!';
+                document.getElementById('expectedSubtitle').textContent = '所有知识块已完成';
+                document.getElementById('expectedAdvice').innerHTML = '🎉 恭喜完成所有知识块!';
+                document.getElementById('expectedCard').classList.add('success');
+                return;
+            }
+
+            const daysNeeded = Math.ceil(remainingBlocks / avgDailyComplete);
+            const expectedDate = new Date();
+            expectedDate.setDate(expectedDate.getDate() + daysNeeded);
+
+            const formattedDate = `${expectedDate.getFullYear()}年${expectedDate.getMonth() + 1}月${expectedDate.getDate()}日`;
+            document.getElementById('expectedDate').textContent = formattedDate;
+            document.getElementById('expectedSubtitle').textContent = `约需 ${daysNeeded} 天`;
+
+            // 对比高考时间
+            const now = new Date();
+            const daysToExam = Math.ceil((TARGET_DATE - now) / (1000 * 60 * 60 * 24));
+            
+            const expectedCard = document.getElementById('expectedCard');
+            expectedCard.classList.remove('warning', 'success');
+            
+            if (daysNeeded > daysToExam) {
+                // 预期完成时间晚于高考
+                expectedCard.classList.add('warning');
+                const speedUpDays = Math.ceil((remainingBlocks / daysToExam) - avgDailyComplete);
+                document.getElementById('expectedAdvice').innerHTML = 
+                    `⚠️ 需加速! 建议每日增加 <span class="highlight">${speedUpDays}</span> 个知识块`;
+            } else if (daysNeeded < daysToExam * 0.8) {
+                // 预期完成时间远早于高考
+                expectedCard.classList.add('success');
+                const advanceDays = daysToExam - daysNeeded;
+                document.getElementById('expectedAdvice').innerHTML = 
+                    `✅ 进度良好! 将提前 <span class="highlight">${advanceDays}</span> 天完成`;
+            } else {
+                // 预期完成时间接近高考
+                document.getElementById('expectedAdvice').innerHTML = 
+                    `💪 保持当前节奏即可按期完成!`;
+            }
+        }
+
         // ========== 今日完成计数 ==========
         function updateDailyGoal() {
             const today = new Date().toDateString();
@@ -1538,24 +1692,22 @@
             const percentage = Math.min(100, (todayCompleted / DAILY_GOAL) * 100);
             const dailyGoalBar = document.getElementById('dailyGoalProgressBar');
             dailyGoalBar.style.width = percentage + '%';
-            
-            // 优化：当进度很小时，不显示文字
             if (percentage < 5) {
                 dailyGoalBar.textContent = '';
             } else {
                 dailyGoalBar.textContent = `${todayCompleted} / ${DAILY_GOAL}`;
             }
-            
             const messageEl = document.getElementById('dailyGoalMessage');
             if (todayCompleted >= DAILY_GOAL) {
-                messageEl.innerHTML = '🎉 太棒了！今日目标已达成！';
+                messageEl.innerHTML = '🎉 太棒了!今日目标已达成!';
                 messageEl.style.color = 'var(--success-color)';
             } else {
                 const remaining = DAILY_GOAL - todayCompleted;
-                messageEl.innerHTML = `还需完成 ${remaining} 个知识块！💪`;
+                messageEl.innerHTML = `还需完成 ${remaining} 个知识块!💪`;
                 messageEl.style.color = 'var(--info-color)';
             }
         }
+
         // ========== 侧边栏控制 ==========
         const sideNavToggle = document.getElementById('sideNavToggle');
         const sideNav = document.getElementById('sideNav');
@@ -1567,6 +1719,7 @@
                 mainContent.classList.toggle('shifted');
             }
         });
+
         function toggleSection(sectionId) {
             const section = document.getElementById(sectionId);
             const allSections = document.querySelectorAll('.nav-section');
@@ -1586,6 +1739,7 @@
                 }
             }
         }
+
         // ========== 主函数 ==========
         async function loadKnowledgeData() {
             simulateLoading();
@@ -1604,6 +1758,7 @@
                 renderProgressSection();
                 calculateCountdown();
                 updateDailyGoal();
+                calculateExpectedCompletion(); // 新增:计算预期完成时间
                 document.getElementById('loadingProgressBar').style.width = '100%';
                 document.getElementById('estimatedTime').textContent = '0';
                 setTimeout(() => {
@@ -1614,6 +1769,7 @@
                 document.getElementById('loadingOverlay').style.display = 'none';
             }
         }
+
         // ========== 加载进度数据 ==========
         async function loadProgressData() {
             try {
@@ -1625,6 +1781,7 @@
                 console.error('加载进度失败:', error);
             }
         }
+
         // ========== 加载学习数据 ==========
         async function loadStudyData() {
             try {
@@ -1636,6 +1793,7 @@
                 console.error('加载学习数据失败:', error);
             }
         }
+
         // ========== 解析学习数据Markdown ==========
         function parseStudyDataMarkdown(text) {
             const data = {
@@ -1720,6 +1878,7 @@
             });
             return data;
         }
+
         function parseProgressMarkdown(text) {
             const lines = text.split('\n');
             const data = {};
@@ -1762,6 +1921,7 @@
             });
             return data;
         }
+
         // ========== 渲染图表 ==========
         function renderCharts() {
             if (!studyData) return;
@@ -1874,6 +2034,7 @@
                 }
             });
         }
+
         // ========== 渲染诊断报告 ==========
         function renderDiagnosisReport() {
             if (!studyData) return;
@@ -1921,16 +2082,17 @@
             const progress = totalBlocks > 0 ? Math.round((completedBlocks / totalBlocks) * 100) : 0;
             let advice = '';
             if (progress < 30) {
-                advice = '⚠️ 当前进度较慢,建议增加每日学习时长,优先攻克<span class="highlight">【必考】</span>和<span class="highlight">【高频】</span>知识块！';
+                advice = '⚠️ 当前进度较慢,建议增加每日学习时长,优先攻克<span class="highlight">【必考】</span>和<span class="highlight">【高频】</span>知识块!';
             } else if (progress < 60) {
-                advice = '💪 进度不错！继续保持,重点突破<span class="highlight">【易错】</span>题型,稳扎稳打！';
+                advice = '💪 进度不错!继续保持,重点突破<span class="highlight">【易错】</span>题型,稳扎稳打!';
             } else if (progress < 90) {
-                advice = '🎉 进步明显！现在是查漏补缺的关键期,专注薄弱环节！';
+                advice = '🎉 进步明显!现在是查漏补缺的关键期,专注薄弱环节!';
             } else {
-                advice = '👑 太棒了！你已经掌握了大部分知识块,现在需要做的是保持状态,多做真题！';
+                advice = '👑 太棒了!你已经掌握了大部分知识块,现在需要做的是保持状态,多做真题!';
             }
             document.getElementById('diagnosisAdvice').innerHTML = advice;
         }
+
         // ========== 渲染成就系统 ==========
         function renderAchievements() {
             const container = document.getElementById('achievementsList');
@@ -1989,6 +2151,7 @@
                 container.appendChild(badgeDiv);
             });
         }
+
         // ========== 渲染进度部分 ==========
         function renderProgressSection() {
             let totalBlocks = 0;
@@ -2009,32 +2172,30 @@
             document.getElementById('progressPercent').textContent = progressPercent + '%';
             const blockProgressBar = document.getElementById('blockProgressBar');
             blockProgressBar.style.width = progressPercent + '%';
-            
-            // 优化：当进度很小时，不显示文字
             if (progressPercent < 5) {
                 blockProgressBar.textContent = '';
             } else {
                 blockProgressBar.textContent = progressPercent + '%';
             }
-            
             const completionAlert = document.getElementById('completionAlert');
             if (remainingBlocks === 0) {
                 completionAlert.innerHTML = `
                     <div class="alert-box success">
                         <i class="fas fa-trophy"></i>
-                        <span>恭喜！所有知识块已完成！🎊🎊🎊</span>
+                        <span>恭喜!所有知识块已完成!🎊🎊🎊</span>
                     </div>
                 `;
             } else {
                 completionAlert.innerHTML = `
                     <div class="alert-box warning">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <span>还有 ${remainingBlocks} 个知识块待完成,继续加油！💪</span>
+                        <span>还有 ${remainingBlocks} 个知识块待完成,继续加油!💪</span>
                     </div>
                 `;
             }
             renderProgressBlocks();
         }
+
         function renderProgressBlocks() {
             const container = document.getElementById('progressCategories');
             const totalPages = Math.ceil(allProgressBlocks.length / PROGRESS_PAGE_SIZE);
@@ -2084,6 +2245,7 @@
             });
             renderProgressPagination(totalPages);
         }
+
         function renderProgressPagination(totalPages) {
             const container = document.getElementById('progressPagination');
             if (totalPages <= 1) {
@@ -2118,6 +2280,7 @@
             `;
             container.innerHTML = html;
         }
+
         function changeProgressPage(page) {
             const totalPages = Math.ceil(allProgressBlocks.length / PROGRESS_PAGE_SIZE);
             if (page < 1 || page > totalPages) return;
@@ -2125,6 +2288,7 @@
             renderProgressBlocks();
             document.getElementById('progress-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+
         // ========== 解析 Markdown ==========
         function parseMarkdown(text) {
             const lines = text.split('\n');
@@ -2166,6 +2330,7 @@
             }
             return data.sort((a, b) => b.number - a.number);
         }
+
         // ========== 渲染知识列表 ==========
         function renderKnowledgeList() {
             const container = document.getElementById('knowledgeList');
@@ -2185,6 +2350,7 @@
             });
             renderPagination(totalPages);
         }
+
         function renderPagination(totalPages) {
             const container = document.getElementById('knowledgePagination');
             if (totalPages <= 1) {
@@ -2213,6 +2379,7 @@
             `;
             container.innerHTML = html;
         }
+
         function changePage(page) {
             const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
             if (page < 1 || page > totalPages) return;
@@ -2220,6 +2387,7 @@
             renderKnowledgeList();
             document.querySelector('.knowledge-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+
         function createKnowledgeItem(item, index) {
             const div = document.createElement('div');
             div.className = 'knowledge-item';
@@ -2250,11 +2418,13 @@
             `;
             return div;
         }
+
         function highlightText(text, searchTerm) {
             if (!searchTerm) return text;
             const regex = new RegExp(`(${searchTerm})`, 'gi');
             return text.replace(regex, '<span class="highlight">$1</span>');
         }
+
         // ========== 更新统计 ==========
         function updateStatistics() {
             const totalCount = knowledgeData.length;
@@ -2270,6 +2440,7 @@
             const updateTime = latestItem && latestItem.date ? latestItem.date : '未知';
             document.getElementById('lastUpdate').innerHTML = `最近更新: ${updateTime}`;
         }
+
         // ========== 搜索 ==========
         function search() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -2284,9 +2455,11 @@
             currentPage = 1;
             renderKnowledgeList();
         }
+
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') search();
         });
+
         // ========== 排序 ==========
         function toggleSort(type) {
             Object.keys(sortState).forEach(key => {
@@ -2309,6 +2482,7 @@
             currentPage = 1;
             renderKnowledgeList();
         }
+
         function updateSortButtons(activeType) {
             ['difficulty', 'importance', 'inspiration'].forEach(type => {
                 const btn = document.getElementById(`sort${capitalize(type)}Btn`);
@@ -2322,9 +2496,11 @@
                 }
             });
         }
+
         function capitalize(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
         }
+
         // ========== 刷新数据 ==========
         function refreshData() {
             document.getElementById('loadingOverlay').style.display = 'flex';
@@ -2337,6 +2513,7 @@
             });
             loadKnowledgeData();
         }
+
         // ========== 主题切换 ==========
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
@@ -2359,6 +2536,7 @@
                 localStorage.setItem('theme', 'light');
             }
         });
+
         // ========== 返回顶部 ==========
         const backToTopBtn = document.getElementById('backToTopBtn');
         window.addEventListener('scroll', () => {
@@ -2371,6 +2549,7 @@
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+
         // ========== 阅读进度条 ==========
         const progressBar = document.querySelector('.reading-progress');
         window.addEventListener('scroll', () => {
@@ -2378,10 +2557,16 @@
             const scrolled = (window.pageYOffset / windowHeight) * 100;
             progressBar.style.width = scrolled + '%';
         });
+
         // ========== 页面加载 ==========
         window.addEventListener('load', loadKnowledgeData);
-        // 每分钟更新一次倒计时
-        setInterval(calculateCountdown, 60000);
+        // 每分钟更新一次倒计时和预期完成时间
+        setInterval(() => {
+            calculateCountdown();
+            if (progressData && studyData) {
+                calculateExpectedCompletion();
+            }
+        }, 60000);
     </script>
 </body>
 </html>
