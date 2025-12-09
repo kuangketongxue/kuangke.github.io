@@ -974,6 +974,82 @@
         .growth-neutral {
             color: #94a3b8;
         }
+        
+        /* ========== 新增：文稿翻页功能样式 ========== */
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+        body.dark-mode .pagination-controls {
+            background: #2d3748;
+        }
+        .pagination-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .pagination-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .pagination-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .pagination-info {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.05em;
+        }
+        body.dark-mode .pagination-info {
+            color: #fff;
+        }
+        .page-jump {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .page-jump input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+        }
+        body.dark-mode .page-jump input {
+            background: #1a202c;
+            color: #fff;
+            border-color: #a8b5ff;
+        }
+        .page-jump button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .page-jump button:hover {
+            background: #764ba2;
+        }
+        
         @media (max-width: 768px) {
             .manuscript-stats {
                 grid-template-columns: repeat(2, 1fr);
@@ -988,6 +1064,10 @@
             .daily-growth-table th,
             .daily-growth-table td {
                 padding: 8px 10px;
+            }
+            .pagination-controls {
+                flex-direction: column;
+                gap: 10px;
             }
         }
         /* 模态框顶部返回按钮 */
@@ -1312,6 +1392,28 @@
                     </div>
                 </div>
                 
+                <!-- 翻页控制器 -->
+                <div class="pagination-controls">
+                    <button class="pagination-btn" id="prevPageBtn" onclick="changePage(-1)">
+                        <i class="fas fa-chevron-left"></i> 上一页
+                    </button>
+                    <span class="pagination-info" id="pageInfo">第 1 页 / 共 1 页</span>
+                    <button class="pagination-btn" id="nextPageBtn" onclick="changePage(1)">
+                        下一页 <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="page-jump">
+                        <input type="number" id="jumpPageInput" min="1" placeholder="页码">
+                        <button onclick="jumpToPage()">跳转</button>
+                    </div>
+                </div>
+
+                <div class="manuscript-content" id="manuscriptText">
+                    <div class="loading-indicator">
+                        <i class="fas fa-spinner"></i>
+                        <p>加载中...</p>
+                    </div>
+                </div>
+
                 <!-- 每日增长详情表格 -->
                 <div class="manuscript-section">
                     <h3 style="color: #667eea; margin-bottom: 15px;">📊 每日创作增长详情</h3>
@@ -1331,19 +1433,14 @@
                         </table>
                     </div>
                 </div>
-
-                <div class="manuscript-content" id="manuscriptText">
-                    <div class="loading-indicator">
-                        <i class="fas fa-spinner"></i>
-                        <p>加载中...</p>
-                    </div>
-                </div>
+                
                 <div class="github-note">
                     <strong>📌 更新说明:</strong>
                     文稿内容存储在 <code>breakthrough-manuscript.md</code> 文件中,使用 Markdown 格式编写。
                     修改该文件即可更新显示内容。支持标题、段落、列表、代码等 Markdown 语法。<br>
                     <strong>💡 每日增长统计:</strong> 系统会自动识别文稿中的日期标题(格式: ## YYYY-MM-DD),
-                    计算每天的字数增长,帮助你追踪创作进度。
+                    计算每天的字数增长,帮助你追踪创作进度。<br>
+                    <strong>📖 翻页功能:</strong> 为提升阅读体验,文稿内容每1000字自动分页,可使用上下翻页按钮或直接跳转到指定页码。
                 </div>
             </div>
         </div>
@@ -1486,6 +1583,12 @@
 
         loadAIToolsConfig();
 
+        // ========== 文稿翻页功能相关变量 ==========
+        let fullManuscriptHTML = ''; // 完整的HTML内容
+        let manuscriptPages = []; // 分页后的页面数组
+        let currentPage = 0; // 当前页码(从0开始)
+        const WORDS_PER_PAGE = 1000; // 每页字数
+
         // ===== 从 Markdown 文件加载文稿并计算每日增长 =====
         async function loadManuscriptData() {
             const manuscriptText = document.getElementById('manuscriptText');
@@ -1509,7 +1612,13 @@
                 }
 
                 // 使用 marked.js 解析 Markdown
-                manuscriptText.innerHTML = marked.parse(markdown);
+                fullManuscriptHTML = marked.parse(markdown);
+
+                // 分页处理
+                paginateManuscript(fullManuscriptHTML);
+                
+                // 显示第一页
+                displayPage(0);
 
                 // 计算每日增长
                 const dailyGrowth = calculateDailyGrowth(markdown);
@@ -1532,6 +1641,107 @@
                 `;
                 updateStats(0, 0, 0, 0, []);
             }
+        }
+
+        // ===== 文稿分页函数 =====
+        function paginateManuscript(htmlContent) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlContent;
+            
+            const textContent = tempDiv.textContent || tempDiv.innerText;
+            const chineseChars = textContent.replace(/[^\u4e00-\u9fa5]/g, '');
+            const totalWords = chineseChars.length;
+            
+            if (totalWords === 0) {
+                manuscriptPages = [htmlContent];
+                return;
+            }
+
+            // 将HTML内容按照字数分页
+            const totalPages = Math.ceil(totalWords / WORDS_PER_PAGE);
+            manuscriptPages = [];
+            
+            let currentWordCount = 0;
+            let currentPageHTML = '';
+            const children = Array.from(tempDiv.children);
+            
+            for (let i = 0; i < children.length; i++) {
+                const element = children[i];
+                const elementText = element.textContent || element.innerText;
+                const elementWords = elementText.replace(/[^\u4e00-\u9fa5]/g, '').length;
+                
+                if (currentWordCount + elementWords > WORDS_PER_PAGE && currentPageHTML) {
+                    // 当前页已满,保存并开始新页
+                    manuscriptPages.push(currentPageHTML);
+                    currentPageHTML = element.outerHTML;
+                    currentWordCount = elementWords;
+                } else {
+                    currentPageHTML += element.outerHTML;
+                    currentWordCount += elementWords;
+                }
+            }
+            
+            // 保存最后一页
+            if (currentPageHTML) {
+                manuscriptPages.push(currentPageHTML);
+            }
+
+            // 如果没有分页成功,保存原内容
+            if (manuscriptPages.length === 0) {
+                manuscriptPages = [htmlContent];
+            }
+        }
+
+        // ===== 显示指定页面 =====
+        function displayPage(pageIndex) {
+            if (pageIndex < 0 || pageIndex >= manuscriptPages.length) {
+                return;
+            }
+            
+            currentPage = pageIndex;
+            const manuscriptText = document.getElementById('manuscriptText');
+            manuscriptText.innerHTML = manuscriptPages[pageIndex];
+            
+            // 更新分页控制器
+            updatePaginationControls();
+            
+            // 滚动到文稿区域顶部
+            manuscriptText.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ===== 更新分页控制器 =====
+        function updatePaginationControls() {
+            const pageInfo = document.getElementById('pageInfo');
+            const prevBtn = document.getElementById('prevPageBtn');
+            const nextBtn = document.getElementById('nextPageBtn');
+            const jumpInput = document.getElementById('jumpPageInput');
+            
+            pageInfo.textContent = `第 ${currentPage + 1} 页 / 共 ${manuscriptPages.length} 页`;
+            
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage === manuscriptPages.length - 1;
+            
+            jumpInput.max = manuscriptPages.length;
+            jumpInput.value = '';
+        }
+
+        // ===== 翻页函数 =====
+        function changePage(direction) {
+            const newPage = currentPage + direction;
+            displayPage(newPage);
+        }
+
+        // ===== 跳转到指定页面 =====
+        function jumpToPage() {
+            const jumpInput = document.getElementById('jumpPageInput');
+            const pageNum = parseInt(jumpInput.value);
+            
+            if (isNaN(pageNum) || pageNum < 1 || pageNum > manuscriptPages.length) {
+                alert(`请输入1到${manuscriptPages.length}之间的页码`);
+                return;
+            }
+            
+            displayPage(pageNum - 1);
         }
 
         // ===== 计算每日字数增长 =====
@@ -1660,7 +1870,7 @@
             document.getElementById('manuscriptModal').style.display = 'none';
         }
 
-        // ===== 根据文稿字数自动计算进度 =====
+        // ===== 根据文稿字数自动计算进度（目标日期修改为2026年6月6日）=====
         async function calculateProgress() {
             try {
                 const response = await fetch('breakthrough-manuscript.md');
@@ -1673,7 +1883,8 @@
                 const targetWords = 7000000;
                 const completionPercent = (currentWords / targetWords * 100).toFixed(2);
 
-                const targetDate = new Date('2025-12-08');
+                // 目标日期改为2026年6月6日
+                const targetDate = new Date('2026-06-06');
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
 
@@ -1828,7 +2039,7 @@
                     <div class="progress-item">
                         <span class="progress-label">目标日期</span>
                         <span class="progress-percent" style="font-size: 1.1em;">
-                            2025年12月8日
+                            2026年6月6日
                         </span>
                     </div>
                     <div class="progress-item">
@@ -1841,7 +2052,7 @@
 
                 <div class="progress-note">
                     <strong>💡 写作建议:</strong><br>
-                    • 目标: 2025年12月8日完成700万字创作<br>
+                    • 目标: 2026年6月6日完成700万字创作<br>
                     • 计划: 每天投入6小时写作<br>
                     • 当前日均: ${progress.avgWordsPerDay.toLocaleString()} 字 ${progress.avgWordsPerDay >= progress.requiredWordsPerDay ? '✅ (达标)' : '⚠️ (需加速)'}<br>
                     • 建议每小时写作: ${progress.requiredWordsPerHour.toLocaleString()} 字<br>
