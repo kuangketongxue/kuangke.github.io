@@ -1216,6 +1216,93 @@
             min-width: 90px;
             background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
         }
+        /* ========== 标签汇总（新增） ========== */
+        .tag-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .tag-card {
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        }
+        .tag-card.must {
+            background: linear-gradient(135deg, rgba(245,101,101,0.12) 0%, rgba(229,62,62,0.12) 100%);
+            border: 2px solid #e53e3e;
+        }
+        .tag-card.frequent {
+            background: linear-gradient(135deg, rgba(251,191,36,0.12) 0%, rgba(245,158,11,0.12) 100%);
+            border: 2px solid #f59e0b;
+        }
+        .tag-card.difficult {
+            background: linear-gradient(135deg, rgba(66,153,225,0.12) 0%, rgba(49,130,206,0.12) 100%);
+            border: 2px solid #3182ce;
+        }
+        body.dark-mode .tag-card {
+            background: rgba(255,255,255,0.04);
+        }
+        .tag-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .tag-meta {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        body.dark-mode .tag-meta {
+            color: #cbd5e1;
+        }
+        .tag-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 420px;
+            overflow: auto;
+            padding-right: 6px;
+        }
+        .tag-item {
+            background: rgba(255,255,255,0.7);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        body.dark-mode .tag-item {
+            background: rgba(0,0,0,0.25);
+        }
+        .tag-item .status {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            flex: 0 0 22px;
+        }
+        .status.done {
+            background: #16a34a;
+            color: #fff;
+        }
+        .status.todo {
+            background: #9ca3af;
+            color: #fff;
+        }
+        .tag-item .content {
+            flex: 1;
+            line-height: 1.6;
+        }
+        .tag-item .meta {
+            color: #666;
+            font-size: 0.85em;
+        }
+        body.dark-mode .tag-item .meta {
+            color: #a3a3a3;
+        }
         /* ========== 固定按钮 ========== */
         .fixed-buttons {
             position: fixed;
@@ -1363,15 +1450,12 @@
 <body>
     <!-- 阅读进度条 -->
     <div class="reading-progress"></div>
-    
     <!-- 侧边导航栏 -->
     <button class="side-nav-toggle" id="sideNavToggle">
         <i class="fas fa-bars"></i>
     </button>
-    
     <aside class="side-nav" id="sideNav">
         <div class="nav-title"><i class="fas fa-compass"></i> 快速导航</div>
-        
         <div class="nav-item" onclick="toggleSection('chartsSection')">
             <i class="fas fa-chart-line"></i>
             <span>学习曲线</span>
@@ -1384,7 +1468,6 @@
             <i class="fas fa-trophy"></i>
             <span>成就系统</span>
         </div>
-        
         <!-- 学习曲线区域 -->
         <div class="nav-section" id="chartsSection">
             <div class="nav-section-title">
@@ -1404,7 +1487,6 @@
                 <canvas id="weaknessChart"></canvas>
             </div>
         </div>
-        
         <!-- 智能诊断区域 -->
         <div class="nav-section" id="diagnosisSection">
             <div class="nav-section-title">
@@ -1443,7 +1525,6 @@
                 <span id="diagnosisAdvice">正在分析你的学习数据...</span>
             </div>
         </div>
-        
         <!-- 成就系统区域 -->
         <div class="nav-section" id="achievementSection">
             <div class="nav-section-title">
@@ -1455,7 +1536,6 @@
             </div>
         </div>
     </aside>
-    
     <!-- 加载遮罩 -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
@@ -1467,7 +1547,6 @@
             <div class="loading-time" id="loadingTime">预计需要 <span id="estimatedTime">3</span> 秒</div>
         </div>
     </div>
-    
     <!-- 头部导航 -->
     <header class="header">
         <div class="container">
@@ -1493,7 +1572,6 @@
             </div>
         </div>
     </header>
-    
     <!-- 主体内容 -->
     <div class="knowledge-page" id="mainContent">
         <!-- 页面头部 -->
@@ -1502,7 +1580,6 @@
             <p>记录每一次学习的内容与感悟</p>
             <p class="subtitle">从 GitHub map.md+study-data.md 自动同步 + 智能分析系统</p>
         </div>
-        
         <!-- 统计面板 -->
         <div class="stats-dashboard" id="stats-section">
             <div class="stats-grid">
@@ -1527,7 +1604,6 @@
                     <div class="stat-value" id="avgInspiration">0.0</div>
                 </div>
             </div>
-            
             <!-- 倒计时与进度 -->
             <div class="countdown-section">
                 <!-- 高考倒计时 -->
@@ -1540,7 +1616,6 @@
                         <span>目标日期:2026年6月7日</span>
                     </div>
                 </div>
-                
                 <!-- 目标完成日期倒计时 -->
                 <div class="countdown-card target-card">
                     <div class="countdown-icon">🎯</div>
@@ -1551,7 +1626,6 @@
                         <span>目标日期:2025年12月31日</span>
                     </div>
                 </div>
-                
                 <!-- 时间进度 -->
                 <div class="countdown-card">
                     <div class="countdown-icon">📈</div>
@@ -1562,7 +1636,6 @@
                         <div class="progress-bar-fill" id="timeProgressBar">0%</div>
                     </div>
                 </div>
-                
                 <!-- 目标进度对比卡片 -->
                 <div class="countdown-card target-progress-card" id="targetProgressCard">
                     <div class="countdown-icon">📊</div>
@@ -1573,7 +1646,6 @@
                         <span id="targetProgressAdvice"></span>
                     </div>
                 </div>
-                
                 <!-- 预期完成时间卡片 -->
                 <div class="countdown-card expected-card" id="expectedCard">
                     <div class="countdown-icon">🎯</div>
@@ -1584,7 +1656,6 @@
                         <span id="expectedAdvice"></span>
                     </div>
                 </div>
-                
                 <!-- 今日学习进度 -->
                 <div class="daily-goal-card">
                     <div class="daily-goal-icon">🎯</div>
@@ -1598,13 +1669,11 @@
                     </div>
                 </div>
             </div>
-            
             <div class="last-update">
                 <i class="fas fa-clock"></i>
                 <span id="lastUpdate">暂无更新记录</span>
             </div>
         </div>
-        
         <!-- 工具栏 -->
         <div class="toolbar">
             <div class="search-box">
@@ -1629,7 +1698,6 @@
                 <span>启发值<span class="sort-indicator" id="inspirationIndicator"></span></span>
             </button>
         </div>
-        
         <!-- 知识列表容器 -->
         <div class="knowledge-container" id="knowledge-section">
             <div class="knowledge-list" id="knowledgeList">
@@ -1637,13 +1705,11 @@
             </div>
             <div class="pagination" id="knowledgePagination"></div>
         </div>
-        
         <!-- 知识块完成进度 -->
         <div class="progress-section" id="progress-section">
             <div class="section-header">
                 <h2><i class="fas fa-tasks"></i> 知识块完成进度</h2>
             </div>
-            
             <div class="progress-summary">
                 <div class="progress-stat">
                     <div class="progress-stat-icon">📚</div>
@@ -1666,23 +1732,27 @@
                     <div class="progress-stat-label">完成率</div>
                 </div>
             </div>
-            
             <div class="progress-bar-container">
                 <div class="progress-bar-fill" id="blockProgressBar">0%</div>
             </div>
-            
             <div id="completionAlert"></div>
-            
             <div class="progress-categories" id="progressCategories">
                 <!-- 动态生成分页内容 -->
             </div>
-            
             <div class="progress-pagination" id="progressPagination">
                 <!-- 动态生成分页按钮 -->
             </div>
         </div>
+        <!-- 标签知识全文（新增模块） -->
+        <div class="progress-section" id="tag-review-section">
+            <div class="section-header">
+                <h2><i class="fas fa-tags"></i> 标签知识全文（必考 / 高频 / 易错）</h2>
+            </div>
+            <div class="tag-summary-grid" id="tagSummaryCards">
+                <!-- 动态生成 -->
+            </div>
+        </div>
     </div>
-    
     <!-- 固定按钮 -->
     <div class="fixed-buttons">
         <button class="back-to-top" id="backToTopBtn">
@@ -1692,7 +1762,6 @@
             <i class="fas fa-arrow-left"></i>
         </a>
     </div>
-
     <script>
         // ========== 配置 ==========
         const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/kuangketongxue/kuangke.github.io/main/map.md';
@@ -1704,6 +1773,7 @@
         const GOAL_TARGET_DATE = new Date('2025-12-31'); // 目标完成日期
         const START_DATE = new Date('2025-06-10'); // 开始日期
         const DAILY_GOAL = 36; // 每日目标改为36个知识块
+        const DAY_MS = 1000 * 60 * 60 * 24;
 
         let knowledgeData = [];
         let filteredData = [];
@@ -1713,20 +1783,23 @@
         let allProgressBlocks = [];
         let currentPage = 1;
         let currentProgressPage = 1;
+        let imageNotesCount = 0; // 含图片的知识条数（用于“图片成就”）
+
         let sortState = {
             difficulty: null,
             importance: null,
             inspiration: null
         };
 
-        // 成就系统
+        // 成就系统（新增 7：图像大师）
         const achievements = [
             {id: 1, name: "初出茅庐", icon: "🌱", desc: "完成首个知识块", requirement: 1, unlocked: false},
             {id: 2, name: "百尺竿头", icon: "🎯", desc: "完成100个知识块", requirement: 100, unlocked: false},
             {id: 3, name: "坚持不懈", icon: "⚡", desc: "连续学习7天", requirement: 7, unlocked: false},
             {id: 4, name: "学霸之路", icon: "📚", desc: "完成50%知识块", requirement: 50, unlocked: false},
             {id: 5, name: "冲刺王者", icon: "👑", desc: "单日完成10个知识块", requirement: 10, unlocked: false},
-            {id: 6, name: "全科制霸", icon: "🏆", desc: "完成所有知识块", requirement: 100, unlocked: false}
+            {id: 6, name: "全科制霸", icon: "🏆", desc: "完成所有知识块", requirement: 100, unlocked: false},
+            {id: 7, name: "图像大师", icon: "🖼️", desc: "至少1条含图片的知识", requirement: 1, unlocked: false} // 新增图片成就
         ];
 
         // ========== 加载进度模拟 ==========
@@ -1735,15 +1808,12 @@
             const estimatedTimeSpan = document.getElementById('estimatedTime');
             let progress = 0;
             let timeRemaining = 3;
-
             const interval = setInterval(() => {
                 progress += Math.random() * 30;
                 if (progress > 100) progress = 100;
                 progressBar.style.width = progress + '%';
-                
                 timeRemaining = Math.max(0, Math.ceil((100 - progress) / 33));
                 estimatedTimeSpan.textContent = timeRemaining;
-                
                 if (progress >= 100) {
                     clearInterval(interval);
                 }
@@ -1753,16 +1823,13 @@
         // ========== 计算倒计时 ==========
         function calculateCountdown() {
             const now = new Date();
-            
             // 高考倒计时
-            const totalDays = Math.ceil((TARGET_DATE - START_DATE) / (1000 * 60 * 60 * 24));
-            const daysRemaining = Math.ceil((TARGET_DATE - now) / (1000 * 60 * 60 * 24));
+            const totalDays = Math.ceil((TARGET_DATE - START_DATE) / DAY_MS);
+            const daysRemaining = Math.ceil((TARGET_DATE - now) / DAY_MS);
             const daysPassed = totalDays - daysRemaining;
             const progress = Math.min(100, Math.max(0, (daysPassed / totalDays) * 100));
-
             document.getElementById('daysRemaining').textContent = Math.max(0, daysRemaining);
             document.getElementById('timeProgress').textContent = progress.toFixed(1) + '%';
-            
             const timeProgressBar = document.getElementById('timeProgressBar');
             timeProgressBar.style.width = progress + '%';
             if (progress < 5) {
@@ -1770,9 +1837,8 @@
             } else {
                 timeProgressBar.textContent = progress.toFixed(1) + '%';
             }
-
             // 目标完成日期倒计时
-            const targetDaysRemaining = Math.ceil((GOAL_TARGET_DATE - now) / (1000 * 60 * 60 * 24));
+            const targetDaysRemaining = Math.ceil((GOAL_TARGET_DATE - now) / DAY_MS);
             document.getElementById('targetDaysRemaining').textContent = Math.max(0, targetDaysRemaining);
         }
 
@@ -1780,7 +1846,6 @@
         function calculateTargetProgress() {
             let totalBlocks = 0;
             let completedBlocks = 0;
-
             Object.values(progressData).forEach(category => {
                 category.forEach(block => {
                     totalBlocks++;
@@ -1795,16 +1860,15 @@
             }
 
             const now = new Date();
-            const totalDaysToTarget = Math.ceil((GOAL_TARGET_DATE - START_DATE) / (1000 * 60 * 60 * 24));
-            const daysPassed = Math.ceil((now - START_DATE) / (1000 * 60 * 60 * 24));
-            const daysRemaining = Math.ceil((GOAL_TARGET_DATE - now) / (1000 * 60 * 60 * 24));
+            const totalDaysToTarget = Math.ceil((GOAL_TARGET_DATE - START_DATE) / DAY_MS);
+            const daysPassed = Math.ceil((now - START_DATE) / DAY_MS);
+            const daysRemaining = Math.ceil((GOAL_TARGET_DATE - now) / DAY_MS);
 
-            // 计算应有进度和实际进度
             const expectedProgress = totalDaysToTarget > 0 ? Math.min(100, (daysPassed / totalDaysToTarget) * 100) : 100;
             const actualProgress = (completedBlocks / totalBlocks) * 100;
             const progressDiff = actualProgress - expectedProgress;
-
             const targetProgressCard = document.getElementById('targetProgressCard');
+
             targetProgressCard.classList.remove('behind', 'ahead');
 
             if (daysRemaining < 0) {
@@ -1825,18 +1889,16 @@
                 targetProgressCard.classList.add('ahead');
                 document.getElementById('targetProgressDiff').textContent = `超前 ${progressDiff.toFixed(1)}%`;
                 document.getElementById('targetProgressStatus').textContent = '进度优秀';
-                document.getElementById('targetProgressAdvice').innerHTML = 
+                document.getElementById('targetProgressAdvice').innerHTML =
                     `✅ 太棒了!你比预期进度超前 <span class="highlight">${progressDiff.toFixed(1)}%</span>`;
             } else if (progressDiff <= -5) {
                 // 落后5%以上
                 targetProgressCard.classList.add('behind');
                 document.getElementById('targetProgressDiff').textContent = `落后 ${Math.abs(progressDiff).toFixed(1)}%`;
                 document.getElementById('targetProgressStatus').textContent = '需要加速';
-                
                 const remainingBlocks = totalBlocks - completedBlocks;
                 const neededDailyRate = Math.ceil(remainingBlocks / Math.max(1, daysRemaining));
-                
-                document.getElementById('targetProgressAdvice').innerHTML = 
+                document.getElementById('targetProgressAdvice').innerHTML =
                     `⚠️ 建议每日完成 <span class="highlight">${neededDailyRate}</span> 个知识块以达成目标`;
             } else {
                 // 进度正常（±5%以内）
@@ -1850,7 +1912,6 @@
         function calculateExpectedCompletion() {
             let totalBlocks = 0;
             let completedBlocks = 0;
-
             Object.values(progressData).forEach(category => {
                 category.forEach(block => {
                     totalBlocks++;
@@ -1859,17 +1920,14 @@
             });
 
             const remainingBlocks = totalBlocks - completedBlocks;
-            
+
             // 使用最近7天的平均完成速度
-            const today = new Date().toDateString();
             const completionHistory = JSON.parse(localStorage.getItem('completionHistory') || '{}');
-            
-            // 计算最近7天的平均速度
+
             let recentCompletions = 0;
             let daysWithData = 0;
             const sevenDaysAgo = new Date();
             sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-            
             for (let dateStr in completionHistory) {
                 const recordDate = new Date(dateStr);
                 if (recordDate >= sevenDaysAgo && recordDate <= new Date()) {
@@ -1877,7 +1935,7 @@
                     daysWithData++;
                 }
             }
-            
+
             let avgDailyComplete = daysWithData > 0 ? recentCompletions / daysWithData : (studyData?.maxDailyComplete || 5);
             avgDailyComplete = Math.max(1, avgDailyComplete * 0.8); // 保守估计使用80%的速度
 
@@ -1892,14 +1950,14 @@
             const daysNeeded = Math.ceil(remainingBlocks / avgDailyComplete);
             const expectedDate = new Date();
             expectedDate.setDate(expectedDate.getDate() + daysNeeded);
-            
             const formattedDate = `${expectedDate.getFullYear()}年${expectedDate.getMonth() + 1}月${expectedDate.getDate()}日`;
+
             document.getElementById('expectedDate').textContent = formattedDate;
             document.getElementById('expectedSubtitle').textContent = `约需 ${daysNeeded} 天`;
 
             const now = new Date();
-            const daysToExam = Math.ceil((TARGET_DATE - now) / (1000 * 60 * 60 * 24));
-            const daysToGoal = Math.ceil((GOAL_TARGET_DATE - now) / (1000 * 60 * 60 * 24));
+            const daysToExam = Math.ceil((TARGET_DATE - now) / DAY_MS);
+            const daysToGoal = Math.ceil((GOAL_TARGET_DATE - now) / DAY_MS);
 
             const expectedCard = document.getElementById('expectedCard');
             expectedCard.classList.remove('warning', 'success');
@@ -1908,17 +1966,17 @@
             if (daysNeeded > daysToGoal && daysToGoal > 0) {
                 expectedCard.classList.add('warning');
                 const neededSpeed = Math.ceil(remainingBlocks / daysToGoal);
-                document.getElementById('expectedAdvice').innerHTML = 
+                document.getElementById('expectedAdvice').innerHTML =
                     `⚠️ 无法按目标完成! 建议每日完成 <span class="highlight">${neededSpeed}</span> 个知识块`;
             } else if (daysNeeded > daysToExam) {
                 expectedCard.classList.add('warning');
                 const neededSpeed = Math.ceil(remainingBlocks / daysToExam);
-                document.getElementById('expectedAdvice').innerHTML = 
+                document.getElementById('expectedAdvice').innerHTML =
                     `⚠️ 高考前无法完成! 建议每日完成 <span class="highlight">${neededSpeed}</span> 个知识块`;
             } else if (daysToGoal > 0 && daysNeeded < daysToGoal * 0.8) {
                 expectedCard.classList.add('success');
                 const advanceDays = daysToGoal - daysNeeded;
-                document.getElementById('expectedAdvice').innerHTML = 
+                document.getElementById('expectedAdvice').innerHTML =
                     `✅ 将提前 <span class="highlight">${advanceDays}</span> 天完成目标!`;
             } else {
                 document.getElementById('expectedAdvice').innerHTML = '💪 保持当前节奏即可按期完成!';
@@ -1933,22 +1991,21 @@
 
             // 检查是否是新的一天
             if (savedDate !== today) {
-                // 新的一天,重置计数
-                localStorage.setItem('dailyGoalDate', today);
-                localStorage.setItem('todayCompleted', '0');
-                
                 // 保存历史记录(用于计算平均速度)
-                const completionHistory = JSON.parse(localStorage.getItem('completionHistory') || '{}');
                 if (savedDate) {
                     const yesterdayCount = parseInt(localStorage.getItem('todayCompleted') || '0');
+                    const completionHistory = JSON.parse(localStorage.getItem('completionHistory') || '{}');
                     completionHistory[savedDate] = yesterdayCount;
                     localStorage.setItem('completionHistory', JSON.stringify(completionHistory));
                 }
+                // 新的一天,重置计数
+                localStorage.setItem('dailyGoalDate', today);
+                localStorage.setItem('todayCompleted', '0');
             } else {
                 todayCompleted = parseInt(localStorage.getItem('todayCompleted') || '0');
             }
 
-            // 如果progress数据已加载,尝试同步真实完成数
+            // 同步真实完成数（如果可从progress估算）
             if (Object.keys(progressData).length > 0) {
                 const realTodayCompleted = calculateTodayCompleted();
                 if (realTodayCompleted > todayCompleted) {
@@ -1958,15 +2015,11 @@
             }
 
             document.getElementById('todayCompleted').textContent = todayCompleted;
+
             const percentage = Math.min(100, (todayCompleted / DAILY_GOAL) * 100);
             const dailyGoalBar = document.getElementById('dailyGoalProgressBar');
             dailyGoalBar.style.width = percentage + '%';
-            
-            if (percentage < 5) {
-                dailyGoalBar.textContent = '';
-            } else {
-                dailyGoalBar.textContent = `${todayCompleted} / ${DAILY_GOAL}`;
-            }
+            dailyGoalBar.textContent = percentage < 5 ? '' : `${todayCompleted} / ${DAILY_GOAL}`;
 
             const messageEl = document.getElementById('dailyGoalMessage');
             if (todayCompleted >= DAILY_GOAL) {
@@ -1981,11 +2034,8 @@
 
         // ========== 计算今日实际完成的知识块数量 ==========
         function calculateTodayCompleted() {
-            // 这里需要根据progress.md的更新时间来判断
-            // 简化版本:假设localStorage中存储了每个completed知识块的完成时间
             const today = new Date().toDateString();
             const completionTimestamps = JSON.parse(localStorage.getItem('completionTimestamps') || '{}');
-            
             let count = 0;
             Object.values(progressData).forEach(category => {
                 category.forEach(block => {
@@ -1998,7 +2048,6 @@
                     }
                 });
             });
-            
             return count;
         }
 
@@ -2006,7 +2055,6 @@
         const sideNavToggle = document.getElementById('sideNavToggle');
         const sideNav = document.getElementById('sideNav');
         const mainContent = document.getElementById('mainContent');
-
         sideNavToggle.addEventListener('click', () => {
             sideNav.classList.toggle('active');
             sideNavToggle.classList.toggle('active');
@@ -2014,17 +2062,14 @@
                 mainContent.classList.toggle('shifted');
             }
         });
-
         function toggleSection(sectionId) {
             const section = document.getElementById(sectionId);
             const allSections = document.querySelectorAll('.nav-section');
-            
             if (section.classList.contains('active')) {
                 section.classList.remove('active');
             } else {
                 allSections.forEach(s => s.classList.remove('active'));
                 section.classList.add('active');
-                
                 if (sectionId === 'chartsSection' && studyData) {
                     setTimeout(renderCharts, 100);
                 }
@@ -2046,21 +2091,28 @@
                     throw new Error('无法加载数据文件');
                 }
                 const text = await response.text();
+
+                imageNotesCount = 0;
                 knowledgeData = parseMarkdown(text);
                 filteredData = [...knowledgeData];
-                
+
+                // 统计图片条目数
+                imageNotesCount = knowledgeData.filter(k => k.hasImage).length;
+
                 renderKnowledgeList();
                 updateStatistics();
-                
+
                 await loadProgressData();
                 await loadStudyData();
-                
+
                 renderProgressSection();
+                renderTagSummary(); // 新增：渲染标签全文汇总
+
                 calculateCountdown();
                 updateDailyGoal();
                 calculateTargetProgress();
                 calculateExpectedCompletion();
-                
+
                 document.getElementById('loadingProgressBar').style.width = '100%';
                 document.getElementById('estimatedTime').textContent = '0';
                 setTimeout(() => {
@@ -2079,7 +2131,6 @@
                 if (!response.ok) return {};
                 const text = await response.text();
                 progressData = parseProgressMarkdown(text);
-                
                 // 同步更新完成时间戳
                 syncCompletionTimestamps();
             } catch (error) {
@@ -2091,7 +2142,6 @@
         function syncCompletionTimestamps() {
             const completionTimestamps = JSON.parse(localStorage.getItem('completionTimestamps') || '{}');
             const now = new Date().toISOString();
-            
             Object.values(progressData).forEach(category => {
                 category.forEach(block => {
                     const blockKey = `${block.category}::${block.content}`;
@@ -2101,7 +2151,6 @@
                     }
                 });
             });
-            
             localStorage.setItem('completionTimestamps', JSON.stringify(completionTimestamps));
         }
 
@@ -2128,13 +2177,10 @@
                 consecutiveDays: 0,
                 maxDailyComplete: 0
             };
-
             const lines = text.split('\n');
             let currentSection = null;
-
             lines.forEach(line => {
                 line = line.trim();
-                
                 if (line.startsWith('## 各科学习时长')) {
                     currentSection = 'subjects';
                 } else if (line.startsWith('## 薄弱题型统计')) {
@@ -2202,7 +2248,6 @@
                     }
                 }
             });
-
             return data;
         }
 
@@ -2210,25 +2255,20 @@
             const lines = text.split('\n');
             const data = {};
             let currentCategory = null;
-
             lines.forEach(line => {
                 line = line.trim();
-                
                 if (line.startsWith('##')) {
                     currentCategory = line.replace(/^##\s*/, '').trim();
                     data[currentCategory] = [];
                     return;
                 }
-                
                 if (currentCategory && line.startsWith('- [')) {
                     const match = line.match(/^- \[([ x])\]\s*(.+)$/);
                     if (match) {
                         const completed = match[1] === 'x';
                         const content = match[2].trim();
-                        
                         let priority = 'normal';
                         let tags = [];
-                        
                         if (content.includes('[必考]')) {
                             priority = 'must';
                             tags.push('必考');
@@ -2241,7 +2281,6 @@
                             priority = 'difficult';
                             tags.push('易错');
                         }
-
                         data[currentCategory].push({
                             content: content,
                             completed: completed,
@@ -2252,7 +2291,6 @@
                     }
                 }
             });
-
             return data;
         }
 
@@ -2262,14 +2300,11 @@
 
             const studyTimeCtx = document.getElementById('studyTimeChart');
             if (!studyTimeCtx) return;
-
             if (window.studyTimeChartInstance) {
                 window.studyTimeChartInstance.destroy();
             }
-
             const subjects = studyData.subjects.map(s => s.name);
             const studyTimes = studyData.subjects.map(s => s.totalHours);
-
             window.studyTimeChartInstance = new Chart(studyTimeCtx.getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -2305,18 +2340,15 @@
 
             const masteryCtx = document.getElementById('masteryRadarChart');
             if (!masteryCtx) return;
-
             if (window.masteryChartInstance) {
                 window.masteryChartInstance.destroy();
             }
-
             const masteryData = Object.keys(progressData).map(category => {
                 const blocks = progressData[category];
                 const total = blocks.length;
                 const completed = blocks.filter(b => b.completed).length;
                 return total > 0 ? Math.round((completed / total) * 100) : 0;
             });
-
             window.masteryChartInstance = new Chart(masteryCtx.getContext('2d'), {
                 type: 'radar',
                 data: {
@@ -2346,13 +2378,10 @@
 
             const weaknessCtx = document.getElementById('weaknessChart');
             if (!weaknessCtx) return;
-
             if (window.weaknessChartInstance) {
                 window.weaknessChartInstance.destroy();
             }
-
             const weaknesses = studyData.weaknesses || [];
-
             window.weaknessChartInstance = new Chart(weaknessCtx.getContext('2d'), {
                 type: 'doughnut',
                 data: {
@@ -2416,7 +2445,7 @@
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <span>${item.name}</span>
-                    <span class="weakness-level ${item.level}">P${item.level === 'high' ? '高' : item.level === 'medium' ? '中' : '低'}</span>
+                    <span class="weakness-level ${item.level}">${item.level === 'high' ? '高' : item.level === 'medium' ? '中' : '低'}</span>
                 `;
                 focusList.appendChild(li);
             });
@@ -2429,10 +2458,9 @@
                     if (block.completed) completedBlocks++;
                 });
             });
-
             const progress = totalBlocks > 0 ? Math.round((completedBlocks / totalBlocks) * 100) : 0;
-            let advice = '';
 
+            let advice = '';
             if (progress < 30) {
                 advice = '⚠️ 当前进度较慢,建议增加每日学习时长,优先攻克<span class="highlight">【必考】</span>和<span class="highlight">【高频】</span>知识块!';
             } else if (progress < 60) {
@@ -2442,11 +2470,10 @@
             } else {
                 advice = '👑 太棒了!你已经掌握了大部分知识块,现在需要做的是保持状态,多做真题!';
             }
-
             document.getElementById('diagnosisAdvice').innerHTML = advice;
         }
 
-        // ========== 渲染成就系统 ==========
+        // ========== 渲染成就系统（含图片成就解锁） ==========
         function renderAchievements() {
             const container = document.getElementById('achievementsList');
             container.innerHTML = '';
@@ -2485,6 +2512,10 @@
                 } else if (achievement.id === 6) {
                     currentProgress = totalBlocks > 0 ? Math.round((totalCompleted / totalBlocks) * 100) : 0;
                     isUnlocked = currentProgress >= 100;
+                } else if (achievement.id === 7) {
+                    // 图像大师：至少1条含图片的知识
+                    currentProgress = imageNotesCount;
+                    isUnlocked = imageNotesCount >= achievement.requirement;
                 }
 
                 achievement.unlocked = isUnlocked;
@@ -2494,13 +2525,15 @@
 
                 let progressText = '';
                 if (achievement.id === 1 || achievement.id === 2) {
-                    progressText = `${currentProgress}/${achievement.requirement}`;
+                    progressText = `${Math.min(currentProgress, achievement.requirement)}/${achievement.requirement}`;
                 } else if (achievement.id === 3) {
-                    progressText = `${currentProgress}/7天`;
+                    progressText = `${Math.min(currentProgress, 7)}/7天`;
                 } else if (achievement.id === 4 || achievement.id === 6) {
                     progressText = `${currentProgress}%`;
                 } else if (achievement.id === 5) {
-                    progressText = `${currentProgress}/10`;
+                    progressText = `${Math.min(currentProgress, 10)}/10`;
+                } else if (achievement.id === 7) {
+                    progressText = `${Math.min(currentProgress, achievement.requirement)}/${achievement.requirement}`;
                 }
 
                 badgeDiv.innerHTML = `
@@ -2509,7 +2542,6 @@
                     <div class="sidebar-achievement-desc">${achievement.desc}</div>
                     <div class="sidebar-achievement-progress">${isUnlocked ? '✅ 已达成' : progressText}</div>
                 `;
-
                 container.appendChild(badgeDiv);
             });
         }
@@ -2538,11 +2570,7 @@
 
             const blockProgressBar = document.getElementById('blockProgressBar');
             blockProgressBar.style.width = progressPercent + '%';
-            if (progressPercent < 5) {
-                blockProgressBar.textContent = '';
-            } else {
-                blockProgressBar.textContent = progressPercent + '%';
-            }
+            blockProgressBar.textContent = progressPercent < 5 ? '' : (progressPercent + '%');
 
             const completionAlert = document.getElementById('completionAlert');
             if (remainingBlocks === 0) {
@@ -2562,6 +2590,8 @@
             }
 
             renderProgressBlocks();
+            // 成就面板需要刷新（包括图片成就）
+            renderAchievements();
         }
 
         function renderProgressBlocks() {
@@ -2580,7 +2610,6 @@
             });
 
             container.innerHTML = '';
-
             Object.keys(groupedBlocks).forEach(category => {
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'progress-category';
@@ -2596,9 +2625,7 @@
                     if (block.tags.includes('易错')) {
                         tagHTML += '<span class="tag-difficult">易错</span>';
                     }
-
-                    let cleanContent = block.content.replace(/\[必考\]/g, '').replace(/\[高频\]/g, '').replace(/\[易错\]/g, '').trim();
-
+                    let cleanContent = block.content.replace(/\[必考\]|\[高频\]|\[易错\]/g, '').trim();
                     return `
                         <div class="progress-block-item ${block.completed ? 'completed' : ''}">
                             <input type="checkbox" ${block.completed ? 'checked' : ''} disabled>
@@ -2616,7 +2643,6 @@
                         ${blocksHTML}
                     </div>
                 `;
-
                 container.appendChild(categoryDiv);
             });
 
@@ -2629,7 +2655,6 @@
                 container.innerHTML = '';
                 return;
             }
-
             let html = `
                 <button class="pagination-btn jump-btn" onclick="changeProgressPage(1)" ${currentProgressPage === 1 ? 'disabled' : ''}>
                     <i class="fas fa-angle-double-left"></i> 首页
@@ -2639,19 +2664,15 @@
                 </button>
                 <span class="pagination-info">第 ${currentProgressPage} / ${totalPages} 页</span>
             `;
-
             const maxVisiblePages = 5;
             let startPage = Math.max(1, currentProgressPage - Math.floor(maxVisiblePages / 2));
             let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
             if (endPage - startPage < maxVisiblePages - 1) {
                 startPage = Math.max(1, endPage - maxVisiblePages + 1);
             }
-
             for (let i = startPage; i <= endPage; i++) {
                 html += `<div class="page-number ${i === currentProgressPage ? 'active' : ''}" onclick="changeProgressPage(${i})">${i}</div>`;
             }
-
             html += `
                 <button class="pagination-btn" onclick="changeProgressPage(${currentProgressPage + 1})" ${currentProgressPage === totalPages ? 'disabled' : ''}>
                     下一页 <i class="fas fa-chevron-right"></i>
@@ -2660,7 +2681,6 @@
                     尾页 <i class="fas fa-angle-double-right"></i>
                 </button>
             `;
-
             container.innerHTML = html;
         }
 
@@ -2672,15 +2692,74 @@
             document.getElementById('progress-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
+        // ========== 标签全文汇总（新增） ==========
+        function collectTaggedBlocks() {
+            const buckets = { must: [], frequent: [], difficult: [] };
+            Object.keys(progressData).forEach(category => {
+                progressData[category].forEach(block => {
+                    const cleanContent = block.content.replace(/\[必考\]|\[高频\]|\[易错\]/g, '').trim();
+                    const item = {
+                        category,
+                        content: cleanContent,
+                        completed: block.completed
+                    };
+                    if (block.tags.includes('必考')) buckets.must.push(item);
+                    if (block.tags.includes('高频')) buckets.frequent.push(item);
+                    if (block.tags.includes('易错')) buckets.difficult.push(item);
+                });
+            });
+            return buckets;
+        }
+
+        function tagCardHTML(title, icon, cls, list) {
+            const total = list.length;
+            const done = list.filter(i => i.completed).length;
+            const rate = total > 0 ? Math.round((done / total) * 100) : 0;
+
+            const items = list.map(i => `
+                <div class="tag-item">
+                    <div class="status ${i.completed ? 'done' : 'todo'}">
+                        <i class="fas ${i.completed ? 'fa-check' : 'fa-circle'}"></i>
+                    </div>
+                    <div class="content">
+                        <div><strong>[${i.category}]</strong> ${i.content}</div>
+                        <div class="meta">${i.completed ? '已完成' : '未完成'}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="tag-card ${cls}">
+                    <div class="tag-title">
+                        <i class="fas ${icon}"></i>
+                        <span>${title}</span>
+                    </div>
+                    <div class="tag-meta">共 ${total} 条 · 已完成 ${done} 条 · 完成率 ${rate}%</div>
+                    <div class="tag-list">${items || '<div class="meta">暂无相关条目</div>'}</div>
+                </div>
+            `;
+        }
+
+        function renderTagSummary() {
+            const container = document.getElementById('tagSummaryCards');
+            const buckets = collectTaggedBlocks();
+            container.innerHTML = [
+                tagCardHTML('必考知识块', 'fa-fire', 'must', buckets.must),
+                tagCardHTML('高频知识块', 'fa-bolt', 'frequent', buckets.frequent),
+                tagCardHTML('易错知识块', 'fa-triangle-exclamation', 'difficult', buckets.difficult)
+            ].join('');
+        }
+
         // ========== 解析 Markdown ==========
         function parseMarkdown(text) {
             const lines = text.split('\n');
             const data = [];
             let currentItem = null;
-
             lines.forEach(line => {
+                const raw = line;
                 line = line.trim();
-                
+
+                // 标题：## 12. 内容
                 const headerMatch = line.match(/^##\s*(\d+)\.\s*(.+)$/);
                 if (headerMatch) {
                     if (currentItem) {
@@ -2693,56 +2772,53 @@
                         importance: 0,
                         inspiration: 0,
                         date: null,
-                        timestamp: new Date().toISOString()
+                        timestamp: new Date().toISOString(),
+                        hasImage: false
                     };
                     return;
                 }
 
                 if (currentItem) {
+                    // 评分字段
                     const diffMatch = line.match(/\*\*?难度\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
                     if (diffMatch) currentItem.difficulty = parseFloat(diffMatch[1]);
-
                     const impMatch = line.match(/\*\*?重要性\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
                     if (impMatch) currentItem.importance = parseFloat(impMatch[1]);
-
                     const inspMatch = line.match(/\*\*?启发值\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
                     if (inspMatch) currentItem.inspiration = parseFloat(inspMatch[1]);
-
                     const dateMatch = line.match(/\*\*?(?:日期|时间|Date)\*\*?[:：]\s*([0-9]{4}[./-][0-9]{1,2}[./-][0-9]{1,2})/i);
                     if (dateMatch) {
                         currentItem.date = dateMatch[1];
                     }
+                    // 检测图片（支持 Markdown 图片语法）
+                    if (/!\[.*?\]\((.*?)\)/.test(raw)) {
+                        currentItem.hasImage = true;
+                    }
                 }
             });
-
             if (currentItem) {
                 data.push(currentItem);
             }
-
             return data.sort((a, b) => b.number - a.number);
         }
 
         // ========== 渲染知识列表 ==========
         function renderKnowledgeList() {
             const container = document.getElementById('knowledgeList');
-
             if (filteredData.length === 0) {
                 container.innerHTML = '<div style="text-align: center; padding: 80px; color: #999; font-size: 1.1em;">暂无知识记录</div>';
                 document.getElementById('knowledgePagination').innerHTML = '';
                 return;
             }
-
             const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
             const startIndex = (currentPage - 1) * PAGE_SIZE;
             const endIndex = Math.min(startIndex + PAGE_SIZE, filteredData.length);
             const pageData = filteredData.slice(startIndex, endIndex);
-
             container.innerHTML = '';
             pageData.forEach((item, index) => {
                 const itemEl = createKnowledgeItem(item, index);
                 container.appendChild(itemEl);
             });
-
             renderPagination(totalPages);
         }
 
@@ -2752,32 +2828,26 @@
                 container.innerHTML = '';
                 return;
             }
-
             let html = `
                 <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
                     <i class="fas fa-chevron-left"></i> 上一页
                 </button>
                 <span class="pagination-info">第 ${currentPage} / ${totalPages} 页</span>
             `;
-
             const maxVisiblePages = 5;
             let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
             let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
             if (endPage - startPage < maxVisiblePages - 1) {
                 startPage = Math.max(1, endPage - maxVisiblePages + 1);
             }
-
             for (let i = startPage; i <= endPage; i++) {
                 html += `<div class="page-number ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</div>`;
             }
-
             html += `
                 <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
                     下一页 <i class="fas fa-chevron-right"></i>
                 </button>
             `;
-
             container.innerHTML = html;
         }
 
@@ -2799,6 +2869,8 @@
                 displayContent = highlightText(item.content, currentSearchTerm);
             }
 
+            const imgFlag = item.hasImage ? ' <span class="tag-frequent" style="padding:2px 6px;font-size:0.75em;">图片</span>' : '';
+
             div.innerHTML = `
                 <div class="knowledge-header">
                     <div class="knowledge-number">${item.number}</div>
@@ -2817,27 +2889,32 @@
                         </span>
                     </div>
                 </div>
-                <div class="knowledge-content">${displayContent}</div>
+                <div class="knowledge-content">${displayContent}${imgFlag}</div>
             `;
             return div;
         }
 
+        function escapeRegExp(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
         function highlightText(text, searchTerm) {
             if (!searchTerm) return text;
-            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            const regex = new RegExp('(' + escapeRegExp(searchTerm) + ')', 'gi');
             return text.replace(regex, '<span class="highlight">$1</span>');
         }
 
         // ========== 更新统计 ==========
         function updateStatistics() {
             const totalCount = knowledgeData.length;
+            document.getElementById('totalCount').textContent = totalCount;
+
             if (totalCount === 0) return;
 
             const avgDifficulty = (knowledgeData.reduce((sum, item) => sum + item.difficulty, 0) / totalCount).toFixed(1);
             const avgImportance = (knowledgeData.reduce((sum, item) => sum + item.importance, 0) / totalCount).toFixed(1);
             const avgInspiration = (knowledgeData.reduce((sum, item) => sum + item.inspiration, 0) / totalCount).toFixed(1);
 
-            document.getElementById('totalCount').textContent = totalCount;
             document.getElementById('avgDifficulty').textContent = avgDifficulty;
             document.getElementById('avgImportance').textContent = avgImportance;
             document.getElementById('avgInspiration').textContent = avgInspiration;
@@ -2851,19 +2928,16 @@
         function search() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             currentSearchTerm = searchTerm;
-
             if (!searchTerm) {
                 filteredData = [...knowledgeData];
             } else {
-                filteredData = knowledgeData.filter(item => 
-                    item.content.toLowerCase().includes(searchTerm)
+                filteredData = knowledgeData.filter(item =>
+                    (item.content || '').toLowerCase().includes(searchTerm)
                 );
             }
-
             currentPage = 1;
             renderKnowledgeList();
         }
-
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') search();
         });
@@ -2873,7 +2947,6 @@
             Object.keys(sortState).forEach(key => {
                 if (key !== type) sortState[key] = null;
             });
-
             if (sortState[type] === null) {
                 sortState[type] = 'desc';
             } else if (sortState[type] === 'desc') {
@@ -2881,14 +2954,12 @@
             } else {
                 sortState[type] = null;
             }
-
             if (sortState[type] === null) {
                 filteredData = [...knowledgeData];
             } else {
                 const order = sortState[type] === 'desc' ? -1 : 1;
                 filteredData.sort((a, b) => (b[type] - a[type]) * order);
             }
-
             updateSortButtons(type);
             currentPage = 1;
             renderKnowledgeList();
@@ -2896,9 +2967,9 @@
 
         function updateSortButtons(activeType) {
             ['difficulty', 'importance', 'inspiration'].forEach(type => {
-                const btn = document.getElementById(`sort${capitalize(type)}Btn`);
-                const indicator = document.getElementById(`${type}Indicator`);
-                
+                const btn = document.getElementById('sort' + capitalize(type) + 'Btn');
+                const indicator = document.getElementById(type + 'Indicator');
+                if (!btn || !indicator) return;
                 if (type === activeType && sortState[type] !== null) {
                     btn.classList.add('active');
                     indicator.innerHTML = sortState[type] === 'desc' ? '↓' : '↑';
@@ -2920,11 +2991,9 @@
             document.getElementById('searchInput').value = '';
             currentPage = 1;
             currentProgressPage = 1;
-            
             document.querySelectorAll('.nav-section').forEach(section => {
                 section.classList.remove('active');
             });
-
             loadKnowledgeData();
         }
 
@@ -2932,14 +3001,12 @@
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
-        
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
-
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
             if (body.classList.contains('dark-mode')) {
@@ -2962,7 +3029,6 @@
                 backToTopBtn.style.display = 'none';
             }
         });
-
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
@@ -2971,7 +3037,7 @@
         const progressBar = document.querySelector('.reading-progress');
         window.addEventListener('scroll', () => {
             const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (window.pageYOffset / windowHeight) * 100;
+            const scrolled = windowHeight > 0 ? (window.pageYOffset / windowHeight) * 100 : 0;
             progressBar.style.width = scrolled + '%';
         });
 
@@ -2985,6 +3051,7 @@
                 calculateTargetProgress();
                 calculateExpectedCompletion();
                 updateDailyGoal();
+                renderAchievements(); // 同步成就状态
             }
         }, 60000);
     </script>
