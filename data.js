@@ -66,7 +66,31 @@ const momentCategories = [
  * 成功日记数据集
  * @type {Array<Object>}
  */
-let successDiaryData = [  {
+let successDiaryData = [   {
+        id: 72,
+        date: '2025-12-16',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '读完《指数基金掉头指南》',
+            en: 'Finished reading “A Guide to Index Fund Dollar-Cost Averaging”'
+        },
+        content: {
+            zh: '❌',
+            en: '❌'
+        },
+        highlight: {
+            zh: '❌',
+            en: '❌'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 3,
+        coverImage: '',
+        attachments: []
+    },{
         id: 71,
         date: '2025-12-09',
         categories: ['study', 'creative'],
