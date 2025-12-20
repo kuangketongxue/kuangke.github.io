@@ -66,7 +66,33 @@ const momentCategories = [
  * 成功日记数据集
  * @type {Array<Object>}
  */
-let successDiaryData = [   {
+let successDiaryData = [  
+     {
+        id: 73,
+        date: '2025-12-20',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '完成七个知识块',
+            en: 'Complete seven knowledge modules.'
+        },
+        content: {
+            zh: '❌',
+            en: '❌'
+        },
+        highlight: {
+            zh: '鬼灭之刃漫画',
+            en: 'Demon Slayer manga.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 2,
+        coverImage: '',
+        attachments: []
+    },
+    {
         id: 72,
         date: '2025-12-16',
         categories: ['study', 'creative'],
@@ -2035,6 +2061,16 @@ function getMomentsStats(moments) {
  * @type {Array<Object>}
  */
 let momentsData = [
+    {
+    id: 43,
+    content: '小红书支持公众号文章导入，以后我直接写完公众号就可以迅速转到小红书了',
+    value: 0,
+    category: '工作相关',
+    date: '2025-12-21T1:30:00+08:00',
+    images: [],
+    likes: 0,
+    comments: []
+  },
        {
     id: 42,
     content: '老君赢了，没想到真的赢了',
