@@ -820,6 +820,105 @@
         .stat-card .stat-trend.negative {
             color: #f87171;
         }
+        
+        /* ========== 新增:搜索功能样式 ========== */
+        .search-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        body.dark-mode .search-container {
+            background: #1a202c;
+        }
+        .search-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        body.dark-mode .search-input {
+            background: #2d3748;
+            color: #fff;
+            border-color: #a8b5ff;
+        }
+        .search-button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .search-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .clear-search-button {
+            padding: 12px 24px;
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .clear-search-button {
+            background: #4a5568;
+            color: #fff;
+        }
+        .clear-search-button:hover {
+            background: #d0d0d0;
+        }
+        body.dark-mode .clear-search-button:hover {
+            background: #5a6578;
+        }
+        .search-results-info {
+            margin-top: 15px;
+            padding: 12px;
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            border-radius: 5px;
+            font-size: 0.95em;
+            color: #0d47a1;
+        }
+        body.dark-mode .search-results-info {
+            background: #1a3a52;
+            border-left-color: #64b5f6;
+            color: #90caf9;
+        }
+        .search-highlight {
+            background: #ffeb3b;
+            color: #000;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        body.dark-mode .search-highlight {
+            background: #ffd54f;
+            color: #000;
+        }
+        
         /* 优化文稿内容显示 */
         .manuscript-content {
             background: #f8f9fa;
@@ -974,8 +1073,7 @@
         .growth-neutral {
             color: #94a3b8;
         }
-        
-        /* ========== 新增：文稿翻页功能样式 ========== */
+        /* ========== 文稿翻页功能样式 ========== */
         .pagination-controls {
             display: flex;
             justify-content: center;
@@ -1049,7 +1147,6 @@
         .page-jump button:hover {
             background: #764ba2;
         }
-        
         @media (max-width: 768px) {
             .manuscript-stats {
                 grid-template-columns: repeat(2, 1fr);
@@ -1068,6 +1165,12 @@
             .pagination-controls {
                 flex-direction: column;
                 gap: 10px;
+            }
+            .search-box {
+                flex-direction: column;
+            }
+            .search-button, .clear-search-button {
+                width: 100%;
             }
         }
         /* 模态框顶部返回按钮 */
@@ -1187,19 +1290,16 @@
             </div>
         </div>
     </header>
-
     <div class="ai-matrix-container">
         <div class="matrix-title">
             <h1>🎯 高考AI助手</h1>
             <p>精准覆盖各科目知识点,助力高考提分</p>
         </div>
-
         <!-- 知识体系按钮 -->
         <a href="concepts.html" class="knowledge-system-btn" id="knowledgeSystemBtn">
             <i class="fas fa-brain"></i>
             知识体系
         </a>
-
         <!-- 主科目页面 -->
         <div id="mainView" class="matrix-grid">
             <!-- 语文 -->
@@ -1221,7 +1321,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- 数学 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1241,7 +1340,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- 英语 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1261,7 +1359,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- 物理 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1281,7 +1378,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- 化学 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1301,7 +1397,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- 政治 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1322,7 +1417,6 @@
                 </div>
             </div>
         </div>
-
         <!-- 子题目页面 -->
         <div id="subtopicView" style="display: none;">
             <div style="margin-bottom: 30px;">
@@ -1344,7 +1438,6 @@
             </div>
         </div>
     </div>
-
     <!-- AI工具模态框 -->
     <div id="aiModal" class="modal">
         <div class="modal-content">
@@ -1360,7 +1453,6 @@
             </div>
         </div>
     </div>
-
     <!-- 优化后的文稿模态框 -->
     <div id="manuscriptModal" class="modal">
         <div class="modal-content manuscript-modal-content">
@@ -1392,6 +1484,28 @@
                     </div>
                 </div>
                 
+                <!-- ========== 新增:搜索功能区域 ========== -->
+                <div class="search-container">
+                    <div class="search-box">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            class="search-input" 
+                            placeholder="🔍 输入关键词搜索文稿内容..."
+                            onkeypress="handleSearchKeyPress(event)"
+                        >
+                        <button class="search-button" onclick="performSearch()">
+                            <i class="fas fa-search"></i>
+                            搜索
+                        </button>
+                        <button class="clear-search-button" onclick="clearSearch()">
+                            <i class="fas fa-times"></i>
+                            清除
+                        </button>
+                    </div>
+                    <div id="searchResultsInfo" class="search-results-info" style="display: none;"></div>
+                </div>
+                
                 <!-- 翻页控制器 -->
                 <div class="pagination-controls">
                     <button class="pagination-btn" id="prevPageBtn" onclick="changePage(-1)">
@@ -1406,14 +1520,12 @@
                         <button onclick="jumpToPage()">跳转</button>
                     </div>
                 </div>
-
                 <div class="manuscript-content" id="manuscriptText">
                     <div class="loading-indicator">
                         <i class="fas fa-spinner"></i>
                         <p>加载中...</p>
                     </div>
                 </div>
-
                 <!-- 每日增长详情表格 -->
                 <div class="manuscript-section">
                     <h3 style="color: #667eea; margin-bottom: 15px;">📊 每日创作增长详情</h3>
@@ -1433,19 +1545,18 @@
                         </table>
                     </div>
                 </div>
-                
                 <div class="github-note">
                     <strong>📌 更新说明:</strong>
                     文稿内容存储在 <code>breakthrough-manuscript.md</code> 文件中,使用 Markdown 格式编写。
                     修改该文件即可更新显示内容。支持标题、段落、列表、代码等 Markdown 语法。<br>
                     <strong>💡 每日增长统计:</strong> 系统会自动识别文稿中的日期标题(格式: ## YYYY-MM-DD),
                     计算每天的字数增长,帮助你追踪创作进度。<br>
-                    <strong>📖 翻页功能:</strong> 为提升阅读体验,文稿内容每1000字自动分页,可使用上下翻页按钮或直接跳转到指定页码。
+                    <strong>📖 翻页功能:</strong> 为提升阅读体验,文稿内容每1000字自动分页,可使用上下翻页按钮或直接跳转到指定页码。<br>
+                    <strong>🔍 搜索功能:</strong> 支持全文搜索,输入关键词后高亮显示所有匹配内容,快速定位目标信息。
                 </div>
             </div>
         </div>
     </div>
-
     <!-- 进度模态框 -->
     <div id="progressModal" class="modal">
         <div class="modal-content progress-modal-content">
@@ -1464,12 +1575,10 @@
             </div>
         </div>
     </div>
-
     <!-- 返回按钮 -->
     <a href="index.html" class="back-button" title="返回首页">
         <i class="fas fa-home"></i>
     </a>
-
     <script>
         // ===== 科目数据 =====
         const subjects = {
@@ -1563,10 +1672,9 @@
                 ]
             }
         };
-
+        
         // ===== 从 JSON 文件加载 AI 工具配置 =====
         let aiTools = {};
-
         async function loadAIToolsConfig() {
             try {
                 const response = await fetch('ai-tools-config.json');
@@ -1580,15 +1688,105 @@
                 aiTools = {};
             }
         }
-
         loadAIToolsConfig();
-
+        
         // ========== 文稿翻页功能相关变量 ==========
         let fullManuscriptHTML = ''; // 完整的HTML内容
+        let originalManuscriptHTML = ''; // 原始HTML内容(用于搜索)
         let manuscriptPages = []; // 分页后的页面数组
         let currentPage = 0; // 当前页码(从0开始)
         const WORDS_PER_PAGE = 1000; // 每页字数
-
+        let fullMarkdownText = ''; // 保存完整的Markdown文本
+        let searchActive = false; // 搜索是否激活
+        
+        // ========== 新增:搜索功能相关函数 ==========
+        
+        // 处理搜索输入框回车事件
+        function handleSearchKeyPress(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        }
+        
+        // 执行搜索
+        function performSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const keyword = searchInput.value.trim();
+            
+            if (!keyword) {
+                alert('请输入搜索关键词');
+                return;
+            }
+            
+            if (!fullMarkdownText) {
+                alert('文稿尚未加载完成');
+                return;
+            }
+            
+            // 在Markdown文本中搜索
+            const regex = new RegExp(keyword, 'gi');
+            const matches = fullMarkdownText.match(regex);
+            
+            if (!matches) {
+                showSearchResults(0, keyword);
+                return;
+            }
+            
+            // 高亮显示搜索结果
+            const highlightedMarkdown = fullMarkdownText.replace(regex, match => {
+                return `**<span class="search-highlight">${match}</span>**`;
+            });
+            
+            // 解析高亮后的Markdown
+            fullManuscriptHTML = marked.parse(highlightedMarkdown);
+            
+            // 重新分页
+            paginateManuscript(fullManuscriptHTML);
+            
+            // 显示第一页
+            displayPage(0);
+            
+            // 显示搜索结果信息
+            showSearchResults(matches.length, keyword);
+            
+            searchActive = true;
+        }
+        
+        // 显示搜索结果信息
+        function showSearchResults(count, keyword) {
+            const resultsInfo = document.getElementById('searchResultsInfo');
+            if (count > 0) {
+                resultsInfo.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    找到 <strong>${count}</strong> 处匹配 "<strong>${keyword}</strong>" 的内容,已高亮显示
+                `;
+                resultsInfo.style.display = 'block';
+            } else {
+                resultsInfo.innerHTML = `
+                    <i class="fas fa-info-circle"></i>
+                    未找到匹配 "<strong>${keyword}</strong>" 的内容
+                `;
+                resultsInfo.style.display = 'block';
+            }
+        }
+        
+        // 清除搜索
+        function clearSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const resultsInfo = document.getElementById('searchResultsInfo');
+            
+            searchInput.value = '';
+            resultsInfo.style.display = 'none';
+            
+            if (searchActive) {
+                // 恢复原始内容
+                fullManuscriptHTML = originalManuscriptHTML;
+                paginateManuscript(fullManuscriptHTML);
+                displayPage(0);
+                searchActive = false;
+            }
+        }
+        
         // ===== 从 Markdown 文件加载文稿并计算每日增长 =====
         async function loadManuscriptData() {
             const manuscriptText = document.getElementById('manuscriptText');
@@ -1598,6 +1796,7 @@
                     throw new Error('文件加载失败');
                 }
                 const markdown = await response.text();
+                fullMarkdownText = markdown; // 保存完整Markdown文本
                 
                 if (!markdown.trim()) {
                     manuscriptText.innerHTML = `
@@ -1610,16 +1809,17 @@
                     updateStats(0, 0, 0, 0, []);
                     return;
                 }
-
+                
                 // 使用 marked.js 解析 Markdown
                 fullManuscriptHTML = marked.parse(markdown);
-
+                originalManuscriptHTML = fullManuscriptHTML; // 保存原始HTML
+                
                 // 分页处理
                 paginateManuscript(fullManuscriptHTML);
                 
                 // 显示第一页
                 displayPage(0);
-
+                
                 // 计算每日增长
                 const dailyGrowth = calculateDailyGrowth(markdown);
                 
@@ -1628,7 +1828,7 @@
                 const totalDays = dailyGrowth.length;
                 const avgWords = totalDays > 0 ? Math.round(wordCount / totalDays) : wordCount;
                 const todayGrowth = dailyGrowth.length > 0 ? dailyGrowth[dailyGrowth.length - 1].dailyWords : 0;
-
+                
                 updateStats(wordCount, totalDays, avgWords, todayGrowth, dailyGrowth);
             } catch (error) {
                 console.error('加载文稿失败:', error);
@@ -1642,12 +1842,11 @@
                 updateStats(0, 0, 0, 0, []);
             }
         }
-
+        
         // ===== 文稿分页函数 =====
         function paginateManuscript(htmlContent) {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = htmlContent;
-            
             const textContent = tempDiv.textContent || tempDiv.innerText;
             const chineseChars = textContent.replace(/[^\u4e00-\u9fa5]/g, '');
             const totalWords = chineseChars.length;
@@ -1656,7 +1855,7 @@
                 manuscriptPages = [htmlContent];
                 return;
             }
-
+            
             // 将HTML内容按照字数分页
             const totalPages = Math.ceil(totalWords / WORDS_PER_PAGE);
             manuscriptPages = [];
@@ -1685,13 +1884,13 @@
             if (currentPageHTML) {
                 manuscriptPages.push(currentPageHTML);
             }
-
+            
             // 如果没有分页成功,保存原内容
             if (manuscriptPages.length === 0) {
                 manuscriptPages = [htmlContent];
             }
         }
-
+        
         // ===== 显示指定页面 =====
         function displayPage(pageIndex) {
             if (pageIndex < 0 || pageIndex >= manuscriptPages.length) {
@@ -1708,7 +1907,7 @@
             // 滚动到文稿区域顶部
             manuscriptText.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-
+        
         // ===== 更新分页控制器 =====
         function updatePaginationControls() {
             const pageInfo = document.getElementById('pageInfo');
@@ -1724,13 +1923,13 @@
             jumpInput.max = manuscriptPages.length;
             jumpInput.value = '';
         }
-
+        
         // ===== 翻页函数 =====
         function changePage(direction) {
             const newPage = currentPage + direction;
             displayPage(newPage);
         }
-
+        
         // ===== 跳转到指定页面 =====
         function jumpToPage() {
             const jumpInput = document.getElementById('jumpPageInput');
@@ -1743,7 +1942,7 @@
             
             displayPage(pageNum - 1);
         }
-
+        
         // ===== 计算每日字数增长 =====
         function calculateDailyGrowth(markdown) {
             const dailyData = [];
@@ -1755,7 +1954,7 @@
             if (matches.length === 0) {
                 return dailyData;
             }
-
+            
             // 分割每一天的内容
             for (let i = 0; i < matches.length; i++) {
                 const date = matches[i][1];
@@ -1766,15 +1965,15 @@
                 const dayWordCount = dayContent.replace(/[^\u4e00-\u9fa5]/g, '').length;
                 
                 // 计算累计字数
-                const cumulativeWords = dailyData.length > 0 
-                    ? dailyData[dailyData.length - 1].cumulativeWords + dayWordCount 
+                const cumulativeWords = dailyData.length > 0
+                    ? dailyData[dailyData.length - 1].cumulativeWords + dayWordCount
                     : dayWordCount;
                 
                 // 计算较昨日增长
-                const growthFromYesterday = dailyData.length > 0 
-                    ? dayWordCount - dailyData[dailyData.length - 1].dailyWords 
+                const growthFromYesterday = dailyData.length > 0
+                    ? dayWordCount - dailyData[dailyData.length - 1].dailyWords
                     : 0;
-
+                
                 dailyData.push({
                     date,
                     dailyWords: dayWordCount,
@@ -1782,17 +1981,17 @@
                     growthFromYesterday
                 });
             }
-
+            
             return dailyData;
         }
-
+        
         // ===== 更新统计数据 =====
         function updateStats(totalWords, totalDays, avgWords, todayGrowth, dailyGrowth) {
             document.getElementById('totalWords').textContent = totalWords.toLocaleString();
             document.getElementById('totalDays').textContent = totalDays;
             document.getElementById('avgWords').textContent = avgWords;
             document.getElementById('todayGrowth').textContent = todayGrowth.toLocaleString();
-
+            
             // 更新增长趋势
             const growthTrend = document.getElementById('growthTrend');
             if (dailyGrowth.length > 1) {
@@ -1811,11 +2010,11 @@
                 growthTrend.textContent = '首次创作';
                 growthTrend.className = 'stat-trend';
             }
-
+            
             // 更新每日增长表格
             updateDailyGrowthTable(dailyGrowth);
         }
-
+        
         // ===== 更新每日增长表格 =====
         function updateDailyGrowthTable(dailyGrowth) {
             const tbody = document.getElementById('dailyGrowthBody');
@@ -1828,7 +2027,7 @@
                 `;
                 return;
             }
-
+            
             // 倒序显示(最新的在前)
             const reversedData = [...dailyGrowth].reverse();
             
@@ -1847,7 +2046,7 @@
                         growthText = '0';
                     }
                 }
-
+                
                 return `
                     <tr>
                         <td>${day.date}</td>
@@ -1858,19 +2057,21 @@
                 `;
             }).join('');
         }
-
+        
         function showManuscriptModal(event) {
             event.preventDefault();
             event.stopPropagation();
             document.getElementById('manuscriptModal').style.display = 'block';
             loadManuscriptData();
         }
-
+        
         function closeManuscriptModal() {
             document.getElementById('manuscriptModal').style.display = 'none';
+            // 清除搜索状态
+            clearSearch();
         }
-
-        // ===== 根据文稿字数自动计算进度（目标日期修改为2026年6月6日）=====
+        
+        // ===== 根据文稿字数自动计算进度 =====
         async function calculateProgress() {
             try {
                 const response = await fetch('breakthrough-manuscript.md');
@@ -1878,25 +2079,25 @@
                     throw new Error('文件加载失败');
                 }
                 const markdown = await response.text();
-
                 const currentWords = markdown.replace(/[^\u4e00-\u9fa5]/g, '').length;
                 const targetWords = 7000000;
                 const completionPercent = (currentWords / targetWords * 100).toFixed(2);
-
+                
                 // 目标日期改为2026年6月6日
                 const targetDate = new Date('2026-06-06');
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
-
+                
                 const totalDays = Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24));
-
+                
                 const dayMatches = markdown.match(/##\s*\d{4}-\d{2}-\d{2}/g);
                 const writingDays = dayMatches ? dayMatches.length : 0;
-
+                
                 const avgWordsPerDay = writingDays > 0 ? Math.round(currentWords / writingDays) : 0;
+                
                 const requiredWordsPerDay = Math.ceil((targetWords - currentWords) / totalDays);
                 const requiredWordsPerHour = Math.ceil(requiredWordsPerDay / 6);
-
+                
                 let estimatedCompletionDate = '保持当前速度';
                 if (avgWordsPerDay > 0) {
                     const daysNeeded = Math.ceil((targetWords - currentWords) / avgWordsPerDay);
@@ -1904,12 +2105,12 @@
                     estimatedDate.setDate(estimatedDate.getDate() + daysNeeded);
                     estimatedCompletionDate = estimatedDate.toLocaleDateString('zh-CN');
                 }
-
+                
                 const startDate = new Date();
                 const timeElapsed = Math.max(0, (today - startDate) / (1000 * 60 * 60 * 24));
                 const totalProjectDays = (targetDate - startDate) / (1000 * 60 * 60 * 24);
                 const timePercent = Math.min(100, (timeElapsed / totalProjectDays * 100)).toFixed(2);
-
+                
                 return {
                     currentWords,
                     targetWords,
@@ -1928,7 +2129,7 @@
                 return null;
             }
         }
-
+        
         async function showProgressModal(event) {
             event.preventDefault();
             event.stopPropagation();
@@ -1941,7 +2142,7 @@
                     <p>计算进度中...</p>
                 </div>
             `;
-
+            
             const progress = await calculateProgress();
             
             if (!progress) {
@@ -1954,7 +2155,7 @@
                 `;
                 return;
             }
-
+            
             let progressStatus = 'status-in-progress';
             let statusText = '进行中';
             let statusIcon = '🚀';
@@ -1968,7 +2169,7 @@
                 statusText = '需加速';
                 statusIcon = '⚠️';
             }
-
+            
             progressContent.innerHTML = `
                 <div class="progress-stats-grid">
                     <div class="progress-stat-card">
@@ -1984,7 +2185,7 @@
                         <div class="progress-stat-label">已写天数</div>
                     </div>
                 </div>
-
+                
                 <div class="progress-section">
                     <h3>📊 写作进度总览</h3>
                     <div class="progress-item">
@@ -2005,7 +2206,7 @@
                         <span class="progress-status ${progressStatus}">${statusIcon} ${statusText}</span>
                     </div>
                 </div>
-
+                
                 <div class="progress-section">
                     <h3>📈 每日目标</h3>
                     <div class="progress-item">
@@ -2027,7 +2228,7 @@
                         </span>
                     </div>
                 </div>
-
+                
                 <div class="progress-section">
                     <h3>🎯 里程碑</h3>
                     <div class="progress-item">
@@ -2049,24 +2250,24 @@
                         </span>
                     </div>
                 </div>
-
+                
                 <div class="progress-note">
                     <strong>💡 写作建议:</strong><br>
                     • 目标: 2026年6月6日完成700万字创作<br>
                     • 计划: 每天投入6小时写作<br>
                     • 当前日均: ${progress.avgWordsPerDay.toLocaleString()} 字 ${progress.avgWordsPerDay >= progress.requiredWordsPerDay ? '✅ (达标)' : '⚠️ (需加速)'}<br>
                     • 建议每小时写作: ${progress.requiredWordsPerHour.toLocaleString()} 字<br>
-                    ${progress.avgWordsPerDay < progress.requiredWordsPerDay ?
-                        '• ⚠️ 当前进度略慢于计划,建议适当提升每日写作量!' :
+                    ${progress.avgWordsPerDay < progress.requiredWordsPerDay ? 
+                        '• ⚠️ 当前进度略慢于计划,建议适当提升每日写作量!' : 
                         '• ✅ 当前进度良好,继续保持!'}
                 </div>
             `;
         }
-
+        
         function closeProgressModal() {
             document.getElementById('progressModal').style.display = 'none';
         }
-
+        
         // ===== 科目相关函数 =====
         function showSubjects(subject) {
             const subjectData = subjects[subject];
@@ -2078,35 +2279,35 @@
                     <div class="subtopic-name">${topic.name}</div>
                 </div>
             `).join('');
-
+            
             document.getElementById('mainView').style.display = 'none';
             document.getElementById('subtopicView').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
+        
         function backToMain() {
             document.getElementById('mainView').style.display = 'grid';
             document.getElementById('subtopicView').style.display = 'none';
         }
-
+        
         async function openModal(topicKey) {
             const modal = document.getElementById('aiModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalTools = document.getElementById('modalTools');
-
+            
             if (Object.keys(aiTools).length === 0) {
                 await loadAIToolsConfig();
             }
-
+            
             const toolData = aiTools[topicKey];
             
             if (!toolData) {
                 alert('该考点数据配置出错');
                 return;
             }
-
+            
             modalTitle.textContent = toolData.title + ' - AI工具';
-
+            
             if (!toolData.tools || toolData.tools.length === 0) {
                 modalTools.innerHTML = `
                     <div class="empty-state">
@@ -2128,14 +2329,14 @@
                     </a>
                 `).join('');
             }
-
+            
             modal.style.display = 'block';
         }
-
+        
         function closeModal() {
             document.getElementById('aiModal').style.display = 'none';
         }
-
+        
         // ===== 模态框外部点击关闭 =====
         window.onclick = function(event) {
             const aiModal = document.getElementById('aiModal');
@@ -2152,19 +2353,19 @@
                 closeManuscriptModal();
             }
         }
-
+        
         // ===== 主题切换 =====
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
+        
         const currentTheme = localStorage.getItem('theme') || 'light';
-
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
-
+        
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
             
