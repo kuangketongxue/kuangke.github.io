@@ -67,6 +67,31 @@ const momentCategories = [
  * @type {Array<Object>}
  */
 let successDiaryData = [  
+      {
+        id: 74,
+        date: '2025-12-24',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: 'substack文章发布',
+            en: 'Substack article published.'
+        },
+        content: {
+            zh: '❌',
+            en: '❌'
+        },
+        highlight: {
+            zh: '《三相奇谈》',
+            en: '"The Strange Tale of the Three-Phase System."'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 2,
+        coverImage: '',
+        attachments: []
+    },
      {
         id: 73,
         date: '2025-12-20',
