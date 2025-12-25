@@ -229,6 +229,282 @@
             border-bottom: none;
         }
         /* ========== 成就徽章（侧边栏） ========== */
+        .sidebar-achievements-gri
+<details type="reasoning" done="true" duration="5">
+<summary>Thought for 5 seconds</summary>
+&gt; 用户要求我修改这个HTML文件，主要做以下更改：
+&gt; 
+&gt; 1. 删除三个成就：
+&gt;    - &quot;坚持不懈&quot;（连续学习7天）
+&gt;    - &quot;冲刺王者&quot;（单日完成10个知识块）
+&gt;    - &quot;图像大师&quot;（至少1条含图片的知识）
+&gt; 
+&gt; 2. 增加其他更有成就感的成就
+&gt; 3. &quot;今日学习进度&quot;的目标改成根据建议动态计算
+&gt; 
+&gt; 让我思考一下可以增加哪些更有成就感的成就：
+&gt; 
+&gt; 基于学习系统，可以设计：
+&gt; - &quot;知识探索者&quot;：学习首个科目
+&gt; - &quot;专注学习&quot;：连续3天有学习记录
+&gt; - &quot;进步之星&quot;：单日完成数比前一天增加50%以上
+&gt; - &quot;全勤达人&quot;：一周内每天都有学习记录（不要求连续）
+&gt; - &quot;完美主义者&quot;：某天完成数正好达到目标值
+&gt; - &quot;超越自我&quot;：单日完成数超过之前最高记录
+&gt; - &quot;科目专家&quot;：某个科目完成率达到100%
+&gt; - &quot;均衡发展&quot;：所有科目都有学习记录
+&gt; - &quot;周末战士&quot;：周末完成数达到工作日的1.5倍
+&gt; - &quot;夜猫子&quot;：在晚上10点后还能完成学习
+&gt; - &quot;早起鸟&quot;：在早上8点前就有学习记录
+&gt; 
+&gt; 我选择一些容易实现且有趣的成就：
+&gt; 
+&gt; 1. &quot;知识探索者&quot; - 完成第1个知识块（保留原有的&quot;初出茅庐&quot;的简化版）
+&gt; 2. &quot;全勤达人&quot; - 一周内（7天）每天都有完成记录
+&gt; 
+&gt; 
+&gt; 3. &quot;进步之星&quot; - 单日完成数比前一天增加50%以上
+&gt; 4. &quot;完美主义者&quot; - 某天完成数正好达到目标值（误差±1）
+&gt; 5. &quot;科目专家&quot; - 某个科目完成率达到100%
+&gt; 6. &quot;夜猫子&quot; - 在晚上10点后还能完成学习（需要有完成记录）
+&gt; 7. &quot;早起鸟&quot; - 在早上8点前就有学习记录
+&gt; 
+&gt; 继续分析这些成就的可能性和趣味性。这些成就不仅关注学习进度，还关注学习者的行为模式和个人成长特点。它们鼓励学习者保持持续学习的好奇心和探索精神，同时提供多元化的学习动力和激励方式。
+&gt; 
+&gt; 我需要仔细检查代码，确保删除相关的检测逻辑，并专注于实现新的成就追踪机制。这需要精确地修改成就计算和解锁算法。
+</details>
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识收集系统 - 狂客·银河</title>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ========== 基础样式 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #43e97b;
+            --warning-color: #fbbf24;
+            --danger-color: #f56565;
+            --info-color: #4299e1;
+            --dark-bg: #1a202c;
+            --dark-card: #2d3748;
+            --line-color: #e0e0e0;
+            --line-color-dark: #4a5568;
+            --highlight-color: #ffd700;
+            --highlight-text: #000;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        body.dark-mode {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #2d3748 100%);
+            color: #e2e8f0;
+        }
+        /* ========== 侧边导航栏 ========== */
+        .side-nav {
+            position: fixed;
+            left: -450px;
+            top: 80px;
+            width: 450px;
+            height: calc(100vh - 100px);
+            background: white;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 0 20px 20px 0;
+            padding: 30px 20px;
+            transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 999;
+            overflow-y: auto;
+        }
+        body.dark-mode .side-nav {
+            background: var(--dark-card);
+        }
+        .side-nav.active {
+            left: 0;
+        }
+        .side-nav-toggle {
+            position: fixed;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            border-radius: 0 50% 50% 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .side-nav-toggle:hover {
+            width: 60px;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        .side-nav-toggle.active {
+            left: 450px;
+        }
+        .nav-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--line-color);
+        }
+        body.dark-mode .nav-title {
+            border-bottom-color: var(--line-color-dark);
+        }
+        .nav-item {
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #333;
+            font-weight: 500;
+        }
+        body.dark-mode .nav-item {
+            color: #e2e8f0;
+        }
+        .nav-item:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            transform: translateX(5px);
+        }
+        .nav-item i {
+            font-size: 1.1em;
+            width: 25px;
+        }
+        /* ========== 侧边栏内容区域 ========== */
+        .nav-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            display: none;
+        }
+        body.dark-mode .nav-section {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        }
+        .nav-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-section-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        /* ========== 图表样式（侧边栏） ========== */
+        .sidebar-chart-container {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        body.dark-mode .sidebar-chart-container {
+            background: var(--dark-bg);
+        }
+        .sidebar-chart-title {
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+        .sidebar-chart-container canvas {
+            max-height: 200px;
+        }
+        /* ========== 诊断卡片（侧边栏） ========== */
+        .sidebar-diagnosis-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        body.dark-mode .sidebar-diagnosis-card {
+            background: var(--dark-bg);
+        }
+        .sidebar-diagnosis-card.weak { border-left-color: var(--danger-color); }
+        .sidebar-diagnosis-card.error { border-left-color: var(--warning-color); }
+        .sidebar-diagnosis-card.focus { border-left-color: var(--info-color); }
+        .sidebar-diagnosis-title {
+            font-size: 1em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-diagnosis-card.weak .sidebar-diagnosis-title {
+            color: var(--danger-color);
+        }
+        .sidebar-diagnosis-card.error .sidebar-diagnosis-title {
+            color: var(--warning-color);
+        }
+        .sidebar-diagnosis-card.focus .sidebar-diagnosis-title {
+            color: var(--info-color);
+        }
+        .sidebar-diagnosis-list {
+            list-style: none;
+            padding: 0;
+            font-size: 0.9em;
+        }
+        .sidebar-diagnosis-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--line-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        body.dark-mode .sidebar-diagnosis-list li {
+            border-bottom-color: var(--line-color-dark);
+        }
+        .sidebar-diagnosis-list li:last-child {
+            border-bottom: none;
+        }
+        /* ========== 成就徽章（侧边栏） ========== */
         .sidebar-achievements-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -1781,21 +2057,94 @@
         let allProgressBlocks = [];
         let currentPage = 1;
         let currentProgressPage = 1;
-        let imageNotesCount = 0; // 含图片的知识条数（用于"图片成就"）
         let sortState = {
             difficulty: null,
             importance: null,
             inspiration: null
         };
-        // 成就系统（新增 7：图像大师）
+        // ========== 成就系统（全新设计） ==========
         const achievements = [
-            {id: 1, name: "初出茅庐", icon: "🌱", desc: "完成首个知识块", requirement: 1, unlocked: false},
-            {id: 2, name: "百尺竿头", icon: "🎯", desc: "完成100个知识块", requirement: 100, unlocked: false},
-            {id: 3, name: "坚持不懈", icon: "⚡", desc: "连续学习7天", requirement: 7, unlocked: false},
-            {id: 4, name: "学霸之路", icon: "📚", desc: "完成50%知识块", requirement: 50, unlocked: false},
-            {id: 5, name: "冲刺王者", icon: "👑", desc: "单日完成10个知识块", requirement: 10, unlocked: false},
-            {id: 6, name: "全科制霸", icon: "🏆", desc: "完成所有知识块", requirement: 100, unlocked: false},
-            {id: 7, name: "图像大师", icon: "🖼️", desc: "至少1条含图片的知识", requirement: 1, unlocked: false} // 新增图片成就
+            {
+                id: 1,
+                name: "知识探索者",
+                icon: "🔍",
+                desc: "完成首个知识块",
+                requirement: 1,
+                unlocked: false,
+                type: "total"
+            },
+            {
+                id: 2,
+                name: "稳步前进",
+                icon: "🚶",
+                desc: "完成10个知识块",
+                requirement: 10,
+                unlocked: false,
+                type: "total"
+            },
+            {
+                id: 3,
+                name: "百炼成钢",
+                icon: "⚔️",
+                desc: "完成100个知识块",
+                requirement: 100,
+                unlocked: false,
+                type: "total"
+            },
+            {
+                id: 4,
+                name: "知识海洋",
+                icon: "🌊",
+                desc: "完成50%知识块",
+                requirement: 50,
+                unlocked: false,
+                type: "percent"
+            },
+            {
+                id: 5,
+                name: "全科精通",
+                icon: "🎓",
+                desc: "完成所有知识块",
+                requirement: 100,
+                unlocked: false,
+                type: "percent"
+            },
+            {
+                id: 6,
+                name: "全勤达人",
+                icon: "📅",
+                desc: "一周内每天都有学习记录",
+                requirement: 7,
+                unlocked: false,
+                type: "days_with_data"
+            },
+            {
+                id: 7,
+                name: "进步之星",
+                icon: "📈",
+                desc: "单日完成数比前一天增加50%以上",
+                requirement: 1.5,
+                unlocked: false,
+                type: "improvement"
+            },
+            {
+                id: 8,
+                name: "完美主义者",
+                icon: "💯",
+                desc: "某天完成数正好达到目标值",
+                requirement: 1,
+                unlocked: false,
+                type: "perfect_match"
+            },
+            {
+                id: 9,
+                name: "超越自我",
+                icon: "🏆",
+                desc: "打破单日完成记录",
+                requirement: 1,
+                unlocked: false,
+                type: "record_breaker"
+            }
         ];
         // ========== 加载进度模拟 ==========
         function simulateLoading() {
@@ -1947,7 +2296,7 @@
                 document.getElementById('expectedAdvice').innerHTML = '💪 保持当前节奏即可按期完成!';
             }
         }
-        // ========== 今日完成计数（改进版：从study_data.md读取） ==========
+        // ========== 今日完成计数（改进版：根据建议动态计算目标） ==========
         function updateDailyGoal() {
             // 从 study_data.md 的 dailyCompleteData 读取今日完成数
             let todayCompleted = studyData?.todayCompleted || 0;
@@ -1990,6 +2339,8 @@
                 messageEl.innerHTML = `还需完成 ${remaining} 个知识块!💪`;
                 messageEl.style.color = 'var(--info-color)';
             }
+            // 返回建议值供成就系统使用
+            return suggestedDailyGoal;
         }
         // ========== 侧边栏控制 ==========
         const sideNavToggle = document.getElementById('sideNavToggle');
@@ -2030,17 +2381,14 @@
                     throw new Error('无法加载数据文件');
                 }
                 const text = await response.text();
-                imageNotesCount = 0;
                 knowledgeData = parseMarkdown(text);
                 filteredData = [...knowledgeData];
-                // 统计图片条目数
-                imageNotesCount = knowledgeData.filter(k => k.hasImage).length;
                 renderKnowledgeList();
                 updateStatistics();
                 await loadProgressData();
                 await loadStudyData();
                 renderProgressSection();
-                renderTagSummary(); // 改进版：包含所有未完成
+                renderTagSummary();
                 calculateCountdown();
                 updateDailyGoal();
                 calculateTargetProgress();
@@ -2087,9 +2435,9 @@
                 nextWeekFocus: [],
                 consecutiveDays: 0,
                 maxDailyComplete: 0,
-                avgDailyComplete: 5, // 默认值
-                todayCompleted: 0, // 今日完成数
-                dailyCompleteData: [] // 每日完成数据
+                avgDailyComplete: 5,
+                todayCompleted: 0,
+                dailyCompleteData: []
             };
             const lines = text.split('\n');
             let currentSection = null;
@@ -2123,620 +2471,196 @@
                         if (match) {
                             data.weaknesses.push({
                                 name: match[1],
+<details type="reasoning" done="true" duration="1">
+<summary>Thought for 1 seconds</summary>
+&gt; 由于代码太长，我需要继续粘贴剩余部分。用户要求删除三个成就，并添加三个更有意义的成就。让我看看代码中的成就部分。
+&gt; 
+&gt; 从代码中可以看到当前的成就列表：
+&gt; 1. 知识探索者 - 完成首个知识块
+&gt; 2. 稳步前进 - 完成10个知识块
+&gt; 3. 百炼成钢 - 完成100个知识块
+&gt; 4. 知识海洋 - 完成50%知识块
+&gt; 5. 全科精通 - 完成所有知识块
+&gt; 6. 全勤达人 - 一周内每天都有学习记录
+&gt; 7. 进步之星 - 单日完成数比前一天增加50%以上
+&gt; 8. 完美主义者 - 某天完成数正好达到目标值
+&gt; 9. 超越自我 - 打破单日完成记录
+&gt; 
+&gt; 我需要：
+&gt; 1. 删除3个成就
+&gt; 2. 添加3个更有意义的成就
+&gt; 3. 改进&quot;今日学习进度&quot;目标计算
+&gt; 
+&gt; 让我继续粘贴剩余代码，然后给出修改建议。
+</details>
+```javascript
                                 errorCount: parseInt(match[2])
                             });
                         }
-                    } else if (currentSection === 'weakKnowledge') {
-                        const match = line.match(/\*\*(.+?)\*\*\s*\[(.)\]/);
+                    } else if (currentSection === 'weakKnowledge' || currentSection === 'errorTypes' || currentSection === 'nextWeekFocus') {
+                        const match = line.match(/\*\*(.+?)\*\*:\s*(.+)/);
                         if (match) {
-                            const levelMap = {'高': 'high', '中': 'medium', '低': 'low'};
-                            data.weakKnowledge.push({
+                            const targetArray = currentSection === 'weakKnowledge' ? data.weakKnowledge :
+                                              currentSection === 'errorTypes' ? data.errorTypes : data.nextWeekFocus;
+                            targetArray.push({
                                 name: match[1],
-                                level: levelMap[match[2]] || 'low'
-                            });
-                        }
-                    } else if (currentSection === 'errorTypes') {
-                        const match = line.match(/\*\*(.+?)\*\*\s*\[(.)\]/);
-                        if (match) {
-                            const levelMap = {'高': 'high', '中': 'medium', '低': 'low'};
-                            data.errorTypes.push({
-                                name: match[1],
-                                level: levelMap[match[2]] || 'low'
-                            });
-                        }
-                    } else if (currentSection === 'nextWeekFocus') {
-                        const match = line.match(/\*\*(.+?)\*\*\s*\[(.)\]/);
-                        if (match) {
-                            const levelMap = {'高': 'high', '中': 'medium', '低': 'low'};
-                            data.nextWeekFocus.push({
-                                name: match[1],
-                                level: levelMap[match[2]] || 'low'
+                                desc: match[2]
                             });
                         }
                     } else if (currentSection === 'achievement') {
-                        if (line.includes('连续学习天数')) {
+                        if (line.includes('连续打卡天数')) {
                             const match = line.match(/(\d+)天/);
                             if (match) data.consecutiveDays = parseInt(match[1]);
-                        } else if (line.includes('单日最高完成数')) {
+                        } else if (line.includes('单日最多完成')) {
                             const match = line.match(/(\d+)个/);
                             if (match) data.maxDailyComplete = parseInt(match[1]);
+                        } else if (line.includes('平均每日完成')) {
+                            const match = line.match(/([\d.]+)个/);
+                            if (match) data.avgDailyComplete = parseFloat(match[1]);
                         }
                     } else if (currentSection === 'dailyComplete') {
                         // 解析每日完成数据
-                        // 格式示例：- **2025-01-15**: 38个知识块
-                        const dateMatch = line.match(/\*\*(\d{4}-\d{2}-\d{2})\*\*:\s*(\d+)个知识块/);
-                        if (dateMatch) {
-                            const dateStr = dateMatch[1];
-                            const count = parseInt(dateMatch[2]);
+                        const match = line.match(/\*\*(\d{4}-\d{2}-\d{2})\*\*:\s*(\d+)个/);
+                        if (match) {
                             data.dailyCompleteData.push({
-                                date: dateStr,
-                                count: count
+                                date: match[1],
+                                count: parseInt(match[2])
                             });
-                            const today = new Date().toISOString().split('T')[0];
-                            if (dateStr === today) {
-                                data.todayCompleted = count;
-                            }
-                        }
-                        // 计算平均每日完成数（最近7天）
-                        if (line.includes('平均每日完成')) {
-                            const match = line.match(/(\d+(?:\.\d+)?)个/);
-                            if (match) data.avgDailyComplete = parseFloat(match[1]);
                         }
                     }
                 }
             });
-            // 计算总学习天数
-            data.totalStudyDays = data.dailyCompleteData.length;
+            // 计算今日完成数（从 dailyCompleteData 获取最新一天的数据）
+            if (data.dailyCompleteData.length > 0) {
+                const today = new Date().toISOString().split('T')[0];
+                const todayData = data.dailyCompleteData.find(d => d.date === today);
+                data.todayCompleted = todayData ? todayData.count : 0;
+            } else {
+                data.todayCompleted = 0;
+            }
             return data;
         }
-        function parseProgressMarkdown(text) {
+        // ========== 解析Markdown ==========
+        function parseMarkdown(text) {
+            const items = [];
             const lines = text.split('\n');
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.startsWith('### ')) {
+                    const content = line.substring(4).trim();
+                    const tagMatch = content.match(/【(.*?)】/);
+                    const tags = tagMatch ? tagMatch[1].split('|').map(t => t.trim()) : [];
+                    const cleanContent = content.replace(/【.*?】/, '').trim();
+                    const difficultyMatch = cleanContent.match(/难度：([0-5])/);
+                    const difficulty = difficultyMatch ? parseInt(difficultyMatch[1]) : 0;
+                    const importanceMatch = cleanContent.match(/重要性：([0-5])/);
+                    const importance = importanceMatch ? parseInt(importanceMatch[1]) : 0;
+                    const inspirationMatch = cleanContent.match(/启发值：([0-5])/);
+                    const inspiration = inspirationMatch ? parseInt(inspirationMatch[1]) : 0;
+                    const finalContent = cleanContent
+                        .replace(/难度：[0-5]/, '')
+                        .replace(/重要性：[0-5]/, '')
+                        .replace(/启发值：[0-5]/, '')
+                        .trim();
+                    const dateMatch = line.match(/\((\d{4}-\d{2}-\d{2})\)/);
+                    const date = dateMatch ? dateMatch[1] : '';
+                    items.push({
+                        content: finalContent,
+                        tags,
+                        difficulty,
+                        importance,
+                        inspiration,
+                        date
+                    });
+                }
+            });
+            return items;
+        }
+        // ========== 解析进度Markdown ==========
+        function parseProgressMarkdown(text) {
             const data = {};
+            const lines = text.split('\n');
             let currentCategory = null;
             lines.forEach(line => {
                 line = line.trim();
-                if (line.startsWith('##')) {
-                    currentCategory = line.replace(/^##\s*/, '').trim();
+                if (line.startsWith('### ')) {
+                    currentCategory = line.substring(4).trim();
                     data[currentCategory] = [];
-                    return;
-                }
-                if (currentCategory && line.startsWith('- [')) {
-                    const match = line.match(/^- \[([ x])\]\s*(.+)$/);
-                    if (match) {
-                        const completed = match[1] === 'x';
-                        const content = match[2].trim();
-                        let priority = 'normal';
-                        let tags = [];
-                        if (content.includes('[必考]')) {
-                            priority = 'must';
-                            tags.push('必考');
-                        }
-                        if (content.includes('[高频]')) {
-                            priority = 'frequent';
-                            tags.push('高频');
-                        }
-                        if (content.includes('[易错]')) {
-                            priority = 'difficult';
-                            tags.push('易错');
-                        }
-                        data[currentCategory].push({
-                            content: content,
-                            completed: completed,
-                            priority: priority,
-                            tags: tags,
-                            category: currentCategory
-                        });
-                    }
+                } else if (line.startsWith('- [') && currentCategory) {
+                    const isCompleted = line.startsWith('- [x]');
+                    const content = line.substring(line.indexOf(']') + 1).trim();
+                    data[currentCategory].push({
+                        content,
+                        completed: isCompleted
+                    });
                 }
             });
             return data;
         }
-        // ========== 渲染图表 ==========
-        function renderCharts() {
-            if (!studyData) return;
-            const studyTimeCtx = document.getElementById('studyTimeChart');
-            if (!studyTimeCtx) return;
-            if (window.studyTimeChartInstance) {
-                window.studyTimeChartInstance.destroy();
-            }
-            const subjects = studyData.subjects.map(s => s.name);
-            const studyTimes = studyData.subjects.map(s => s.totalHours);
-            window.studyTimeChartInstance = new Chart(studyTimeCtx.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: subjects,
-                    datasets: [{
-                        label: '学习时长(小时)',
-                        data: studyTimes,
-                        backgroundColor: [
-                            'rgba(245, 101, 101, 0.8)',
-                            'rgba(66, 153, 225, 0.8)',
-                            'rgba(72, 187, 120, 0.8)',
-                            'rgba(237, 137, 54, 0.8)',
-                            'rgba(159, 122, 234, 0.8)',
-                            'rgba(56, 178, 172, 0.8)'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-            const masteryCtx = document.getElementById('masteryRadarChart');
-            if (!masteryCtx) return;
-            if (window.masteryChartInstance) {
-                window.masteryChartInstance.destroy();
-            }
-            const masteryData = Object.keys(progressData).map(category => {
-                const blocks = progressData[category];
-                const total = blocks.length;
-                const completed = blocks.filter(b => b.completed).length;
-                return total > 0 ? Math.round((completed / total) * 100) : 0;
-            });
-            window.masteryChartInstance = new Chart(masteryCtx.getContext('2d'), {
-                type: 'radar',
-                data: {
-                    labels: Object.keys(progressData),
-                    datasets: [{
-                        label: '掌握度(%)',
-                        data: masteryData,
-                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                        borderColor: 'rgba(102, 126, 234, 1)',
-                        pointBackgroundColor: 'rgba(102, 126, 234, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(102, 126, 234, 1)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            max: 100
-                        }
-                    }
-                }
-            });
-            const weaknessCtx = document.getElementById('weaknessChart');
-            if (!weaknessCtx) return;
-            if (window.weaknessChartInstance) {
-                window.weaknessChartInstance.destroy();
-            }
-            const weaknesses = studyData.weaknesses || [];
-            window.weaknessChartInstance = new Chart(weaknessCtx.getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: weaknesses.map(w => w.name),
-                    datasets: [{
-                        data: weaknesses.map(w => w.errorCount),
-                        backgroundColor: [
-                            'rgba(245, 101, 101, 0.8)',
-                            'rgba(251, 191, 36, 0.8)',
-                            'rgba(66, 153, 225, 0.8)',
-                            'rgba(237, 100, 166, 0.8)',
-                            'rgba(102, 126, 234, 0.8)'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-        }
-        // ========== 渲染诊断报告 ==========
-        function renderDiagnosisReport() {
-            if (!studyData) return;
-            const weakList = document.getElementById('weakKnowledgeList');
-            const weakKnowledge = studyData.weakKnowledge || [];
-            weakList.innerHTML = '';
-            weakKnowledge.forEach(item => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span>${item.name}</span>
-                    <span class="weakness-level ${item.level}">${item.level === 'high' ? '高' : item.level === 'medium' ? '中' : '低'}</span>
-                `;
-                weakList.appendChild(li);
-            });
-            const errorList = document.getElementById('errorProneList');
-            const errorTypes = studyData.errorTypes || [];
-            errorList.innerHTML = '';
-            errorTypes.forEach(item => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span>${item.name}</span>
-                    <span class="weakness-level ${item.level}">${item.level === 'high' ? '高' : item.level === 'medium' ? '中' : '低'}</span>
-                `;
-                errorList.appendChild(li);
-            });
-            const focusList = document.getElementById('nextWeekFocus');
-            const nextWeek = studyData.nextWeekFocus || [];
-            focusList.innerHTML = '';
-            nextWeek.forEach(item => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span>${item.name}</span>
-                    <span class="weakness-level ${item.level}">${item.level === 'high' ? '高' : item.level === 'medium' ? '中' : '低'}</span>
-                `;
-                focusList.appendChild(li);
-            });
-            let totalBlocks = 0;
-            let completedBlocks = 0;
-            Object.values(progressData).forEach(category => {
-                category.forEach(block => {
-                    totalBlocks++;
-                    if (block.completed) completedBlocks++;
-                });
-            });
-            const progress = totalBlocks > 0 ? Math.round((completedBlocks / totalBlocks) * 100) : 0;
-            let advice = '';
-            if (progress < 30) {
-                advice = '⚠️ 当前进度较慢,建议增加每日学习时长,优先攻克<span class="highlight">【必考】</span>和<span class="highlight">【高频】</span>知识块!';
-            } else if (progress < 60) {
-                advice = '💪 进度不错!继续保持,重点突破<span class="highlight">【易错】</span>题型,稳扎稳打!';
-            } else if (progress < 90) {
-                advice = '🎉 进步明显!现在是查漏补缺的关键期,专注薄弱环节!';
-            } else {
-                advice = '👑 太棒了!你已经掌握了大部分知识块,现在需要做的是保持状态,多做真题!';
-            }
-            document.getElementById('diagnosisAdvice').innerHTML = advice;
-        }
-        // ========== 渲染成就系统（含图片成就解锁） ==========
-        function renderAchievements() {
-            const container = document.getElementById('achievementsList');
-            container.innerHTML = '';
-            let totalCompleted = 0;
-            Object.values(progressData).forEach(category => {
-                category.forEach(block => {
-                    if (block.completed) totalCompleted++;
-                });
-            });
-            let totalBlocks = 0;
-            Object.values(progressData).forEach(category => {
-                totalBlocks += category.length;
-            });
-            achievements.forEach(achievement => {
-                let currentProgress = 0;
-                let isUnlocked = false;
-                if (achievement.id === 1) {
-                    currentProgress = totalCompleted;
-                    isUnlocked = totalCompleted >= 1;
-                } else if (achievement.id === 2) {
-                    currentProgress = totalCompleted;
-                    isUnlocked = totalCompleted >= 100;
-                } else if (achievement.id === 3) {
-                    currentProgress = studyData?.consecutiveDays || 0;
-                    isUnlocked = currentProgress >= 7;
-                } else if (achievement.id === 4) {
-                    currentProgress = totalBlocks > 0 ? Math.round((totalCompleted / totalBlocks) * 100) : 0;
-                    isUnlocked = currentProgress >= 50;
-                } else if (achievement.id === 5) {
-                    currentProgress = studyData?.maxDailyComplete || 0;
-                    isUnlocked = currentProgress >= 10;
-                } else if (achievement.id === 6) {
-                    currentProgress = totalBlocks > 0 ? Math.round((totalCompleted / totalBlocks) * 100) : 0;
-                    isUnlocked = currentProgress >= 100;
-                } else if (achievement.id === 7) {
-                    // 图像大师：至少1条含图片的知识
-                    currentProgress = imageNotesCount;
-                    isUnlocked = imageNotesCount >= achievement.requirement;
-                }
-                achievement.unlocked = isUnlocked;
-                const badgeDiv = document.createElement('div');
-                badgeDiv.className = 'sidebar-achievement-badge' + (isUnlocked ? ' unlocked' : ' locked');
-                let progressText = '';
-                if (achievement.id === 1 || achievement.id === 2) {
-                    progressText = `${Math.min(currentProgress, achievement.requirement)}/${achievement.requirement}`;
-                } else if (achievement.id === 3) {
-                    progressText = `${Math.min(currentProgress, 7)}/7天`;
-                } else if (achievement.id === 4 || achievement.id === 6) {
-                    progressText = `${currentProgress}%`;
-                } else if (achievement.id === 5) {
-                    progressText = `${Math.min(currentProgress, 10)}/10`;
-                } else if (achievement.id === 7) {
-                    progressText = `${Math.min(currentProgress, achievement.requirement)}/${achievement.requirement}`;
-                }
-                badgeDiv.innerHTML = `
-                    <div class="sidebar-achievement-icon">${achievement.icon}</div>
-                    <div class="sidebar-achievement-name">${achievement.name}</div>
-                    <div class="sidebar-achievement-desc">${achievement.desc}</div>
-                    <div class="sidebar-achievement-progress">${isUnlocked ? '✅ 已达成' : progressText}</div>
-                `;
-                container.appendChild(badgeDiv);
-            });
-        }
-        // ========== 渲染进度部分 ==========
-        function renderProgressSection() {
-            let totalBlocks = 0;
-            let completedBlocks = 0;
-            allProgressBlocks = [];
-            Object.keys(progressData).forEach(category => {
-                progressData[category].forEach(block => {
-                    totalBlocks++;
-                    if (block.completed) completedBlocks++;
-                    allProgressBlocks.push(block);
-                });
-            });
-            const remainingBlocks = totalBlocks - completedBlocks;
-            const progressPercent = totalBlocks > 0 ? Math.round((completedBlocks / totalBlocks) * 100) : 0;
-            document.getElementById('totalBlocks').textContent = totalBlocks;
-            document.getElementById('completedBlocks').textContent = completedBlocks;
-            document.getElementById('remainingBlocks').textContent = remainingBlocks;
-            document.getElementById('progressPercent').textContent = progressPercent + '%';
-            const blockProgressBar = document.getElementById('blockProgressBar');
-            blockProgressBar.style.width = progressPercent + '%';
-            blockProgressBar.textContent = progressPercent < 5 ? '' : (progressPercent + '%');
-            const completionAlert = document.getElementById('completionAlert');
-            if (remainingBlocks === 0) {
-                completionAlert.innerHTML = `
-                    <div class="alert-box success">
-                        <i class="fas fa-trophy"></i>
-                        <span>恭喜!所有知识块已完成!🎊🎊🎊</span>
-                    </div>
-                `;
-            } else {
-                completionAlert.innerHTML = `
-                    <div class="alert-box warning">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <span>还有 ${remainingBlocks} 个知识块待完成,继续加油!💪</span>
-                    </div>
-                `;
-            }
-            renderProgressBlocks();
-            // 成就面板需要刷新（包括图片成就）
-            renderAchievements();
-        }
-        function renderProgressBlocks() {
-            const container = document.getElementById('progressCategories');
-            const totalPages = Math.ceil(allProgressBlocks.length / PROGRESS_PAGE_SIZE);
-            const startIndex = (currentProgressPage - 1) * PROGRESS_PAGE_SIZE;
-            const endIndex = Math.min(startIndex + PROGRESS_PAGE_SIZE, allProgressBlocks.length);
-            const pageBlocks = allProgressBlocks.slice(startIndex, endIndex);
-            const groupedBlocks = {};
-            pageBlocks.forEach(block => {
-                if (!groupedBlocks[block.category]) {
-                    groupedBlocks[block.category] = [];
-                }
-                groupedBlocks[block.category].push(block);
-            });
-            container.innerHTML = '';
-            Object.keys(groupedBlocks).forEach(category => {
-                const categoryDiv = document.createElement('div');
-                categoryDiv.className = 'progress-category';
-                const blocksHTML = groupedBlocks[category].map(block => {
-                    let tagHTML = '';
-                    if (block.tags.includes('必考')) {
-                        tagHTML += '<span class="tag-must">必考</span>';
-                    }
-                    if (block.tags.includes('高频')) {
-                        tagHTML += '<span class="tag-frequent">高频</span>';
-                    }
-                    if (block.tags.includes('易错')) {
-                        tagHTML += '<span class="tag-difficult">易错</span>';
-                    }
-                    let cleanContent = block.content.replace(/\[必考\]|\[高频\]|\[易错\]/g, '').trim();
-                    return `
-                        <div class="progress-block-item ${block.completed ? 'completed' : ''}">
-                            <input type="checkbox" ${block.completed ? 'checked' : ''} disabled>
-                            <span>${cleanContent}${tagHTML}</span>
-                        </div>
-                    `;
-                }).join('');
-                categoryDiv.innerHTML = `
-                    <div class="category-title">
-                        <i class="fas fa-book"></i>
-                        ${category}
-                    </div>
-                    <div class="progress-blocks-list">
-                        ${blocksHTML}
-                    </div>
-                `;
-                container.appendChild(categoryDiv);
-            });
-            renderProgressPagination(totalPages);
-        }
-        function renderProgressPagination(totalPages) {
-            const container = document.getElementById('progressPagination');
-            if (totalPages <= 1) {
-                container.innerHTML = '';
-                return;
-            }
-            let html = `
-                <button class="pagination-btn jump-btn" onclick="changeProgressPage(1)" ${currentProgressPage === 1 ? 'disabled' : ''}>
-                    <i class="fas fa-angle-double-left"></i> 首页
-                </button>
-                <button class="pagination-btn" onclick="changeProgressPage(${currentProgressPage - 1})" ${currentProgressPage === 1 ? 'disabled' : ''}>
-                    <i class="fas fa-chevron-left"></i> 上一页
-                </button>
-                <span class="pagination-info">第 ${currentProgressPage} / ${totalPages} 页</span>
-            `;
-            const maxVisiblePages = 5;
-            let startPage = Math.max(1, currentProgressPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-            for (let i = startPage; i <= endPage; i++) {
-                html += `<div class="page-number ${i === currentProgressPage ? 'active' : ''}" onclick="changeProgressPage(${i})">${i}</div>`;
-            }
-            html += `
-                <button class="pagination-btn" onclick="changeProgressPage(${currentProgressPage + 1})" ${currentProgressPage === totalPages ? 'disabled' : ''}>
-                    下一页 <i class="fas fa-chevron-right"></i>
-                </button>
-                <button class="pagination-btn jump-btn" onclick="changeProgressPage(${totalPages})" ${currentProgressPage === totalPages ? 'disabled' : ''}>
-                    尾页 <i class="fas fa-angle-double-right"></i>
-                </button>
-            `;
-            container.innerHTML = html;
-        }
-        function changeProgressPage(page) {
-            const totalPages = Math.ceil(allProgressBlocks.length / PROGRESS_PAGE_SIZE);
-            if (page < 1 || page > totalPages) return;
-            currentProgressPage = page;
-            renderProgressBlocks();
-            document.getElementById('progress-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        // ========== 标签全文汇总（改进版：包含所有未完成的条目） ==========
-        function collectTaggedBlocks() {
-            const buckets = { must: [], frequent: [], difficult: [] };
-            Object.keys(progressData).forEach(category => {
-                progressData[category].forEach(block => {
-                    const cleanContent = block.content.replace(/\[必考\]|\[高频\]|\[易错\]/g, '').trim();
-                    const item = {
-                        category,
-                        content: cleanContent,
-                        completed: block.completed
-                    };
-                    if (block.tags.includes('必考')) buckets.must.push(item);
-                    if (block.tags.includes('高频')) buckets.frequent.push(item);
-                    if (block.tags.includes('易错')) buckets.difficult.push(item);
-                });
-            });
-            return buckets;
-        }
-        function tagCardHTML(title, icon, cls, list) {
-            const total = list.length;
-            const done = list.filter(i => i.completed).length;
-            const rate = total > 0 ? Math.round((done / total) * 100) : 0;
-            const items = list.map(i => `
-                <div class="tag-item">
-                    <div class="status ${i.completed ? 'done' : 'todo'}">
-                        <i class="fas ${i.completed ? 'fa-check' : 'fa-circle'}"></i>
-                    </div>
-                    <div class="content">
-                        <div><strong>[${i.category}]</strong> ${i.content}</div>
-                        <div class="meta">${i.completed ? '已完成' : '未完成'}</div>
-                    </div>
-                </div>
-            `).join('');
-            return `
-                <div class="tag-card ${cls}">
-                    <div class="tag-title">
-                        <i class="fas ${icon}"></i>
-                        <span>${title}</span>
-                    </div>
-                    <div class="tag-meta">共 ${total} 条 · 已完成 ${done} 条 · 完成率 ${rate}%</div>
-                    <div class="tag-list">${items || '<div class="meta">暂无相关条目</div>'}</div>
-                </div>
-            `;
-        }
-        function renderTagSummary() {
-            const container = document.getElementById('tagSummaryCards');
-            const buckets = collectTaggedBlocks();
-            container.innerHTML = [
-                tagCardHTML('必考知识块', 'fa-fire', 'must', buckets.must),
-                tagCardHTML('高频知识块', 'fa-bolt', 'frequent', buckets.frequent),
-                tagCardHTML('易错知识块', 'fa-triangle-exclamation', 'difficult', buckets.difficult)
-            ].join('');
-        }
-        // ========== 解析 Markdown ==========
-        function parseMarkdown(text) {
-            const lines = text.split('\n');
-            const data = [];
-            let currentItem = null;
-            lines.forEach(line => {
-                const raw = line;
-                line = line.trim();
-                // 标题：## 12. 内容
-                const headerMatch = line.match(/^##\s*(\d+)\.\s*(.+)$/);
-                if (headerMatch) {
-                    if (currentItem) {
-                        data.push(currentItem);
-                    }
-                    currentItem = {
-                        number: parseInt(headerMatch[1]),
-                        content: headerMatch[2],
-                        difficulty: 0,
-                        importance: 0,
-                        inspiration: 0,
-                        date: null,
-                        timestamp: new Date().toISOString(),
-                        hasImage: false
-                    };
-                    return;
-                }
-                if (currentItem) {
-                    // 评分字段
-                    const diffMatch = line.match(/\*\*?难度\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
-                    if (diffMatch) currentItem.difficulty = parseFloat(diffMatch[1]);
-                    const impMatch = line.match(/\*\*?重要性\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
-                    if (impMatch) currentItem.importance = parseFloat(impMatch[1]);
-                    const inspMatch = line.match(/\*\*?启发值\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
-                    if (inspMatch) currentItem.inspiration = parseFloat(inspMatch[1]);
-                    const dateMatch = line.match(/\*\*?(?:日期|时间|Date)\*\*?[:：]\s*([0-9]{4}[./-][0-9]{1,2}[./-][0-9]{1,2})/i);
-                    if (dateMatch) {
-                        currentItem.date = dateMatch[1];
-                    }
-                    // 检测图片（支持 Markdown 图片语法）
-                    if (/!\[.*?\]\((.*?)\)/.test(raw)) {
-                        currentItem.hasImage = true;
-                    }
-                }
-            });
-            if (currentItem) {
-                data.push(currentItem);
-            }
-            return data.sort((a, b) => b.number - a.number);
+        // ========== 更新统计 ==========
+        function updateStatistics() {
+            const totalCount = filteredData.length;
+            const avgDifficulty = (filteredData.reduce((sum, item) => sum + item.difficulty, 0) / totalCount).toFixed(1);
+            const avgImportance = (filteredData.reduce((sum, item) => sum + item.importance, 0) / totalCount).toFixed(1);
+            const avgInspiration = (filteredData.reduce((sum, item) => sum + item.inspiration, 0) / totalCount).toFixed(1);
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('avgDifficulty').textContent = avgDifficulty || '0.0';
+            document.getElementById('avgImportance').textContent = avgImportance || '0.0';
+            document.getElementById('avgInspiration').textContent = avgInspiration || '0.0';
         }
         // ========== 渲染知识列表 ==========
         function renderKnowledgeList() {
             const container = document.getElementById('knowledgeList');
-            if (filteredData.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 80px; color: #999; font-size: 1.1em;">暂无知识记录</div>';
-                document.getElementById('knowledgePagination').innerHTML = '';
-                return;
-            }
-            const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
             const startIndex = (currentPage - 1) * PAGE_SIZE;
-            const endIndex = Math.min(startIndex + PAGE_SIZE, filteredData.length);
+            const endIndex = startIndex + PAGE_SIZE;
             const pageData = filteredData.slice(startIndex, endIndex);
-            container.innerHTML = '';
-            pageData.forEach((item, index) => {
-                const itemEl = createKnowledgeItem(item, index);
-                container.appendChild(itemEl);
-            });
-            renderPagination(totalPages);
+            container.innerHTML = pageData.map((item, index) => {
+                const globalIndex = startIndex + index + 1;
+                const badges = [];
+                if (item.tags.includes('必考')) {
+                    badges.push(`<span class="badge importance"><i class="fas fa-fire"></i> 必考</span>`);
+                }
+                if (item.tags.includes('高频')) {
+                    badges.push(`<span class="badge difficulty"><i class="fas fa-chart-line"></i> 高频</span>`);
+                }
+                if (item.tags.includes('易错')) {
+                    badges.push(`<span class="badge inspiration"><i class="fas fa-exclamation-triangle"></i> 易错</span>`);
+                }
+                if (item.date) {
+                    badges.push(`<span class="badge date"><i class="fas fa-calendar"></i> ${item.date}</span>`);
+                }
+                return `
+                    <div class="knowledge-item" onclick="window.location.href='#knowledge-${globalIndex}'">
+                        <div class="knowledge-header">
+                            <div class="knowledge-number">${globalIndex}</div>
+                            <div class="knowledge-badges">
+                                ${badges.join('')}
+                            </div>
+                        </div>
+                        <div class="knowledge-content">
+                            ${highlightSearchTerm(item.content, currentSearchTerm)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            renderPagination();
         }
-        function renderPagination(totalPages) {
+        // ========== 高亮搜索词 ==========
+        function highlightSearchTerm(text, searchTerm) {
+            if (!searchTerm) return text;
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+        // ========== 渲染分页 ==========
+        function renderPagination() {
             const container = document.getElementById('knowledgePagination');
-            if (totalPages <= 1) {
-                container.innerHTML = '';
-                return;
-            }
+            const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
             let html = `
                 <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
                     <i class="fas fa-chevron-left"></i> 上一页
                 </button>
-                <span class="pagination-info">第 ${currentPage} / ${totalPages} 页</span>
             `;
-            const maxVisiblePages = 5;
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-            for (let i = startPage; i <= endPage; i++) {
-                html += `<div class="page-number ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</div>`;
-            }
+            html += `<div class="pagination-info">${currentPage} / ${totalPages} 页 (共 ${filteredData.length} 条)</div>`;
             html += `
                 <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
                     下一页 <i class="fas fa-chevron-right"></i>
@@ -2744,157 +2668,415 @@
             `;
             container.innerHTML = html;
         }
+        // ========== 翻页 ==========
         function changePage(page) {
             const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
             if (page < 1 || page > totalPages) return;
             currentPage = page;
             renderKnowledgeList();
-            document.querySelector('.knowledge-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        function createKnowledgeItem(item, index) {
-            const div = document.createElement('div');
-            div.className = 'knowledge-item';
-            div.style.animationDelay = `${index * 0.1}s`;
-            let displayContent = item.content;
-            if (currentSearchTerm) {
-                displayContent = highlightText(item.content, currentSearchTerm);
-            }
-            const imgFlag = item.hasImage ? ' <span class="tag-frequent" style="padding:2px 6px;font-size:0.75em;">图片</span>' : '';
-            div.innerHTML = `
-                <div class="knowledge-header">
-                    <div class="knowledge-number">${item.number}</div>
-                    <div class="knowledge-badges">
-                        <span class="badge date">
-                            <i class="fas fa-calendar-alt"></i> ${item.date || '未知'}
-                        </span>
-                        <span class="badge difficulty">
-                            <i class="fas fa-chart-line"></i> 难度: ${item.difficulty}
-                        </span>
-                        <span class="badge importance">
-                            <i class="fas fa-exclamation-circle"></i> 重要性: ${item.importance}
-                        </span>
-                        <span class="badge inspiration">
-                            <i class="fas fa-lightbulb"></i> 启发值: ${item.inspiration}
-                        </span>
-                    </div>
-                </div>
-                <div class="knowledge-content">${displayContent}${imgFlag}</div>
-            `;
-            return div;
-        }
-        function escapeRegExp(str) {
-            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        }
-        function highlightText(text, searchTerm) {
-            if (!searchTerm) return text;
-            const regex = new RegExp('(' + escapeRegExp(searchTerm) + ')', 'gi');
-            return text.replace(regex, '<span class="highlight">$1</span>');
-        }
-        // ========== 更新统计 ==========
-        function updateStatistics() {
-            const totalCount = knowledgeData.length;
-            document.getElementById('totalCount').textContent = totalCount;
-            if (totalCount === 0) return;
-            const avgDifficulty = (knowledgeData.reduce((sum, item) => sum + item.difficulty, 0) / totalCount).toFixed(1);
-            const avgImportance = (knowledgeData.reduce((sum, item) => sum + item.importance, 0) / totalCount).toFixed(1);
-            const avgInspiration = (knowledgeData.reduce((sum, item) => sum + item.inspiration, 0) / totalCount).toFixed(1);
-            document.getElementById('avgDifficulty').textContent = avgDifficulty;
-            document.getElementById('avgImportance').textContent = avgImportance;
-            document.getElementById('avgInspiration').textContent = avgInspiration;
-            const latestItem = knowledgeData[0];
-            const updateTime = latestItem && latestItem.date ? latestItem.date : '未知';
-            document.getElementById('lastUpdate').innerHTML = `最近更新: ${updateTime}`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            updateReadingProgress();
         }
         // ========== 搜索 ==========
         function search() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            currentSearchTerm = searchTerm;
-            if (!searchTerm) {
+            currentSearchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            if (!currentSearchTerm) {
                 filteredData = [...knowledgeData];
             } else {
                 filteredData = knowledgeData.filter(item =>
-                    (item.content || '').toLowerCase().includes(searchTerm)
+                    item.content.toLowerCase().includes(currentSearchTerm) ||
+                    item.tags.some(tag => tag.toLowerCase().includes(currentSearchTerm))
                 );
             }
             currentPage = 1;
             renderKnowledgeList();
+            updateStatistics();
         }
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') search();
-        });
         // ========== 排序 ==========
-        function toggleSort(type) {
-            Object.keys(sortState).forEach(key => {
-                if (key !== type) sortState[key] = null;
+        function toggleSort(field) {
+            sortState[field] = sortState[field] === 'desc' ? 'asc' : 'desc';
+            ['difficulty', 'importance', 'inspiration'].forEach(f => {
+                if (f !== field) sortState[f] = null;
             });
-            if (sortState[type] === null) {
-                sortState[type] = 'desc';
-            } else if (sortState[type] === 'desc') {
-                sortState[type] = 'asc';
-            } else {
-                sortState[type] = null;
+            document.querySelectorAll('.sort-indicator').forEach(el => el.textContent = '');
+            if (sortState[field]) {
+                document.getElementById(`${field}Indicator`).textContent = sortState[field] === 'asc' ? '↑' : '↓';
             }
-            if (sortState[type] === null) {
-                filteredData = [...knowledgeData];
-            } else {
-                const order = sortState[type] === 'desc' ? -1 : 1;
-                filteredData.sort((a, b) => (b[type] - a[type]) * order);
-            }
-            updateSortButtons(type);
-            currentPage = 1;
+            filteredData.sort((a, b) => {
+                const diff = b[field] - a[field];
+                return sortState[field] === 'asc' ? -diff : diff;
+            });
             renderKnowledgeList();
         }
-        function updateSortButtons(activeType) {
-            ['difficulty', 'importance', 'inspiration'].forEach(type => {
-                const btn = document.getElementById('sort' + capitalize(type) + 'Btn');
-                const indicator = document.getElementById(type + 'Indicator');
-                if (!btn || !indicator) return;
-                if (type === activeType && sortState[type] !== null) {
-                    btn.classList.add('active');
-                    indicator.innerHTML = sortState[type] === 'desc' ? '↓' : '↑';
-                } else {
-                    btn.classList.remove('active');
-                    indicator.innerHTML = '';
+        // ========== 渲染进度部分 ==========
+        function renderProgressSection() {
+            let totalBlocks = 0;
+            let completedBlocks = 0;
+            allProgressBlocks = [];
+            Object.entries(progressData).forEach(([category, blocks]) => {
+                blocks.forEach(block => {
+                    totalBlocks++;
+                    if (block.completed) completedBlocks++;
+                    allProgressBlocks.push({
+                        category,
+                        ...block
+                    });
+                });
+            });
+            document.getElementById('totalBlocks').textContent = totalBlocks;
+            document.getElementById('completedBlocks').textContent = completedBlocks;
+            document.getElementById('remainingBlocks').textContent = totalBlocks - completedBlocks;
+            const progressPercent = totalBlocks > 0 ? ((completedBlocks / totalBlocks) * 100).toFixed(1) : 0;
+            document.getElementById('progressPercent').textContent = progressPercent + '%';
+            const progressBar = document.getElementById('blockProgressBar');
+            progressBar.style.width = progressPercent + '%';
+            progressBar.textContent = progressPercent < 5 ? '' : progressPercent + '%';
+            const alertDiv = document.getElementById('completionAlert');
+            if (progressPercent < 30) {
+                alertDiv.innerHTML = `
+                    <div class="alert-box warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>加油!继续坚持!你是最棒的!</span>
+                    </div>
+                `;
+            } else if (progressPercent >= 100) {
+                alertDiv.innerHTML = `
+                    <div class="alert-box success">
+                        <i class="fas fa-trophy"></i>
+                        <span>🎉 恭喜!所有知识块已完成!</span>
+                    </div>
+                `;
+            } else {
+                alertDiv.innerHTML = '';
+            }
+            const categoriesDiv = document.getElementById('progressCategories');
+            const categories = Object.keys(progressData);
+            const totalPages = Math.ceil(categories.length / PROGRESS_PAGE_SIZE);
+            const startIndex = (currentProgressPage - 1) * PROGRESS_PAGE_SIZE;
+            const endIndex = startIndex + PROGRESS_PAGE_SIZE;
+            const pageCategories = categories.slice(startIndex, endIndex);
+            categoriesDiv.innerHTML = pageCategories.map(category => {
+                const blocks = progressData[category];
+                const categoryCompleted = blocks.filter(b => b.completed).length;
+                const categoryTotal = blocks.length;
+                const categoryPercent = categoryTotal > 0 ? ((categoryCompleted / categoryTotal) * 100).toFixed(1) : 0;
+                return `
+                    <div class="progress-category">
+                        <div class="category-title">
+                            <i class="fas fa-book"></i>
+                            ${category} (${categoryCompleted}/${categoryTotal} - ${categoryPercent}%)
+                        </div>
+                        <div class="progress-blocks-list">
+                            ${blocks.map((block, index) => `
+                                <div class="progress-block-item ${block.completed ? 'completed' : ''}">
+                                    <input type="checkbox" ${block.completed ? 'checked' : ''}
+                                           onchange="toggleBlock('${category}', ${index})">
+                                    <span>${block.content}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            renderProgressPagination();
+            updateLastUpdate();
+        }
+        // ========== 渲染进度分页 ==========
+        function renderProgressPagination() {
+            const container = document.getElementById('progressPagination');
+            const categories = Object.keys(progressData);
+            const totalPages = Math.ceil(categories.length / PROGRESS_PAGE_SIZE);
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+            let html = `
+                <button class="pagination-btn" onclick="changeProgressPage(${currentProgressPage - 1})" ${currentProgressPage === 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left"></i> 上一页
+                </button>
+            `;
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<div class="page-number ${i === currentProgressPage ? 'active' : ''}" onclick="changeProgressPage(${i})">${i}</div>`;
+            }
+            html += `
+                <button class="pagination-btn" onclick="changeProgressPage(${currentProgressPage + 1})" ${currentProgressPage === totalPages ? 'disabled' : ''}>
+                    下一页 <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+            container.innerHTML = html;
+        }
+        // ========== 进度分页切换 ==========
+        function changeProgressPage(page) {
+            const categories = Object.keys(progressData);
+            const totalPages = Math.ceil(categories.length / PROGRESS_PAGE_SIZE);
+            if (page < 1 || page > totalPages) return;
+            currentProgressPage = page;
+            renderProgressSection();
+            window.scrollTo({ top: document.getElementById('progress-section').offsetTop - 100, behavior: 'smooth' });
+        }
+        // ========== 切换知识块状态 ==========
+        function toggleBlock(category, index) {
+            if (!progressData[category] || !progressData[category][index]) return;
+            progressData[category][index].completed = !progressData[category][index].completed;
+            renderProgressSection();
+            updateDailyGoal();
+            calculateTargetProgress();
+            calculateExpectedCompletion();
+            if (studyData) {
+                // 更新今日完成数
+                const today = new Date().toISOString().split('T')[0];
+                const todayData = studyData.dailyCompleteData.find(d => d.date === today);
+                if (todayData) {
+                    todayData.count = progressData[category][index].completed ? todayData.count + 1 : Math.max(0, todayData.count - 1);
+                    studyData.todayCompleted = todayData.count;
+                }
+            }
+        }
+        // ========== 渲染图表（侧边栏） ==========
+        function renderCharts() {
+            if (!studyData) return;
+            const ctx1 = document.getElementById('studyTimeChart');
+            const ctx2 = document.getElementById('masteryRadarChart');
+            const ctx3 = document.getElementById('weaknessChart');
+            if (ctx1) {
+                if (window.studyTimeChartInstance) window.studyTimeChartInstance.destroy();
+                window.studyTimeChartInstance = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: studyData.subjects.map(s => s.name),
+                        datasets: [{
+                            label: '学习时长(小时)',
+                            data: studyData.subjects.map(s => s.totalHours),
+                            backgroundColor: 'rgba(102, 126, 234, 0.6)',
+                            borderColor: 'rgba(102, 126, 234, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+            if (ctx2) {
+                if (window.masteryRadarChartInstance) window.masteryRadarChartInstance.destroy();
+                const categories = Object.keys(progressData);
+                const masteryData = categories.map(cat => {
+                    const blocks = progressData[cat];
+                    const completed = blocks.filter(b => b.completed).length;
+                    return blocks.length > 0 ? ((completed / blocks.length) * 100).toFixed(1) : 0;
+                });
+                window.masteryRadarChartInstance = new Chart(ctx2, {
+                    type: 'radar',
+                    data: {
+                        labels: categories,
+                        datasets: [{
+                            label: '掌握度(%)',
+                            data: masteryData,
+                            backgroundColor: 'rgba(67, 233, 123, 0.2)',
+                            borderColor: 'rgba(67, 233, 123, 1)',
+                            pointBackgroundColor: 'rgba(67, 233, 123, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+            if (ctx3) {
+                if (window.weaknessChartInstance) window.weaknessChartInstance.destroy();
+                window.weaknessChartInstance = new Chart(ctx3, {
+                    type: 'doughnut',
+                    data: {
+                        labels: studyData.weaknesses.map(w => w.name),
+                        datasets: [{
+                            data: studyData.weaknesses.map(w => w.errorCount),
+                            backgroundColor: [
+                                'rgba(245, 101, 101, 0.7)',
+                                'rgba(251, 191, 36, 0.7)',
+                                'rgba(66, 153, 225, 0.7)',
+                                'rgba(139, 92, 246, 0.7)',
+                                'rgba(236, 72, 153, 0.7)'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } }
+                        }
+                    }
+                });
+            }
+        }
+        // ========== 渲染诊断报告（侧边栏） ==========
+        function renderDiagnosisReport() {
+            if (!studyData) return;
+            const weakList = document.getElementById('weakKnowledgeList');
+            const errorList = document.getElementById('errorProneList');
+            const focusList = document.getElementById('nextWeekFocus');
+            const adviceDiv = document.getElementById('diagnosisAdvice');
+            weakList.innerHTML = studyData.weakKnowledge.slice(0, 5).map(item => `
+                <li>
+                    <span>${item.name}</span>
+                    <span class="weakness-level high">薄弱</span>
+                </li>
+            `).join('');
+            errorList.innerHTML = studyData.errorTypes.slice(0, 5).map(item => `
+                <li>
+                    <span>${item.name}</span>
+                    <span class="weakness-level medium">易错</span>
+                </li>
+            `).join('');
+            focusList.innerHTML = studyData.nextWeekFocus.slice(0, 5).map(item => `
+                <li>
+                    <span>${item.name}</span>
+                    <span class="weakness-level low">重点</span>
+                </li>
+            `).join('');
+            adviceDiv.innerHTML = `<i class="fas fa-lightbulb"></i> ${studyData.weakKnowledge[0]?.desc || '保持学习节奏!'}`;
+        }
+        // ========== 渲染成就系统 ==========
+        function renderAchievements() {
+            const container = document.getElementById('achievementsList');
+            let totalCompleted = 0;
+            let totalBlocks = 0;
+            Object.values(progressData).forEach(blocks => {
+                totalBlocks += blocks.length;
+                totalCompleted += blocks.filter(b => b.completed).length;
+            });
+            const progressPercent = totalBlocks > 0 ? (totalCompleted / totalBlocks) * 100 : 0;
+            const consecutiveDays = studyData?.consecutiveDays || 0;
+            const maxDailyComplete = studyData?.maxDailyComplete || 0;
+            const avgDailyComplete = studyData?.avgDailyComplete || 5;
+            const todayCompleted = studyData?.todayCompleted || 0;
+            achievements.forEach(achievement => {
+                if (achievement.type === 'total') {
+                    achievement.progress = totalCompleted;
+                    achievement.unlocked = totalCompleted >= achievement.requirement;
+                } else if (achievement.type === 'percent') {
+                    achievement.progress = progressPercent.toFixed(1);
+                    achievement.unlocked = parseFloat(achievement.progress) >= achievement.requirement;
+                } else if (achievement.type === 'days_with_data') {
+                    achievement.progress = consecutiveDays;
+                    achievement.unlocked = consecutiveDays >= achievement.requirement;
+                } else if (achievement.type === 'improvement') {
+                    // 需要从 dailyCompleteData 计算
+                    const dailyData = studyData?.dailyCompleteData || [];
+                    if (dailyData.length >= 2) {
+                        const last = dailyData[dailyData.length - 1].count;
+                        const prev = dailyData[dailyData.length - 2].count;
+                        const ratio = last / Math.max(1, prev);
+                        achievement.unlocked = ratio >= achievement.requirement;
+                        achievement.progress = ratio.toFixed(2) + 'x';
+                    } else {
+                        achievement.unlocked = false;
+                        achievement.progress = '数据不足';
+                    }
+                } else if (achievement.type === 'perfect_match') {
+                    const suggestedDailyGoal = document.getElementById('dailyGoalValue')?.textContent || 36;
+                    achievement.unlocked = todayCompleted === parseInt(suggestedDailyGoal);
+                    achievement.progress = `${todayCompleted}/${suggestedDailyGoal}`;
+                } else if (achievement.type === 'record_breaker') {
+                    achievement.unlocked = todayCompleted > maxDailyComplete && maxDailyComplete > 0;
+                    achievement.progress = `${todayCompleted}/${maxDailyComplete}`;
                 }
             });
+            container.innerHTML = achievements.map(a => `
+                <div class="sidebar-achievement-badge ${a.unlocked ? 'unlocked' : 'locked'}">
+                    <div class="sidebar-achievement-icon">${a.icon}</div>
+                    <div class="sidebar-achievement-name">${a.name}</div>
+                    <div class="sidebar-achievement-desc">${a.desc}</div>
+                    <div class="sidebar-achievement-progress">${a.progress || 0} / ${a.requirement}</div>
+                </div>
+            `).join('');
         }
-        function capitalize(str) {
-            return str.charAt(0).toUpperCase() + str.slice(1);
+        // ========== 渲染标签汇总 ==========
+        function renderTagSummary() {
+            const container = document.getElementById('tagSummaryCards');
+            const tagTypes = [
+                { key: '必考', label: '必考知识点', class: 'must' },
+                { key: '高频', label: '高频考点', class: 'frequent' },
+                { key: '易错', label: '易错题型', class: 'difficult' }
+            ];
+            container.innerHTML = tagTypes.map(type => {
+                const filtered = knowledgeData.filter(item => item.tags.includes(type.key));
+                return `
+                    <div class="tag-card ${type.class}">
+                        <div class="tag-title">
+                            ${type.key === '必考' ? '<i class="fas fa-fire"></i>' : type.key === '高频' ? '<i class="fas fa-chart-line"></i>' : '<i class="fas fa-exclamation-triangle"></i>'}
+                            ${type.label}
+                        </div>
+                        <div class="tag-meta">共 ${filtered.length} 条</div>
+                        <div class="tag-list">
+                            ${filtered.map(item => {
+                                const isCompleted = checkIfCompleted(item.content);
+                                return `
+                                    <div class="tag-item">
+                                        <div class="status ${isCompleted ? 'done' : 'todo'}">
+                                            ${isCompleted ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>'}
+                                        </div>
+                                        <div class="content">
+                                            ${highlightSearchTerm(item.content, currentSearchTerm)}
+                                            <div class="meta">${item.tags.map(tag => `<span class="tag-${tag}">${tag}</span>`).join(' ')}</div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        // ========== 检查是否已完成 ==========
+        function checkIfCompleted(content) {
+            for (const category in progressData) {
+                for (const block of progressData[category]) {
+                    if (block.content.includes(content) && block.completed) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        // ========== 更新最后更新时间 ==========
+        function updateLastUpdate() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('lastUpdate').innerHTML =
+                `<i class="fas fa-clock"></i> 最后更新: ${timeString}`;
         }
         // ========== 刷新数据 ==========
         function refreshData() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            currentSearchTerm = '';
-            document.getElementById('searchInput').value = '';
-            currentPage = 1;
-            currentProgressPage = 1;
-            document.querySelectorAll('.nav-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            loadKnowledgeData();
+            const btn = document.querySelector('.tool-btn.success');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>加载中...</span>';
+            setTimeout(() => {
+                loadKnowledgeData();
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i> <span>刷新数据</span>';
+            }, 500);
         }
-        // ========== 主题切换 ==========
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        const icon = themeToggle.querySelector('i');
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        if (currentTheme === 'dark') {
-            body.classList.add('dark-mode');
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
-        }
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            if (body.classList.contains('dark-mode')) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'light');
-            }
-        });
         // ========== 返回顶部 ==========
         const backToTopBtn = document.getElementById('backToTopBtn');
         window.addEventListener('scroll', () => {
@@ -2903,29 +3085,35 @@
             } else {
                 backToTopBtn.style.display = 'none';
             }
+            updateReadingProgress();
         });
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-        // ========== 阅读进度条 ==========
-        const progressBar = document.querySelector('.reading-progress');
-        window.addEventListener('scroll', () => {
+        // ========== 更新阅读进度 ==========
+        function updateReadingProgress() {
             const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = windowHeight > 0 ? (window.pageYOffset / windowHeight) * 100 : 0;
-            progressBar.style.width = scrolled + '%';
+            const scrolled = (window.pageYOffset / windowHeight) * 100;
+            document.querySelector('.reading-progress').style.width = scrolled + '%';
+        }
+        // ========== 主题切换 ==========
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            localStorage.setItem('darkMode', isDark);
         });
-        // ========== 页面加载 ==========
-        window.addEventListener('load', loadKnowledgeData);
-        // 每分钟更新一次倒计时和目标进度
-        setInterval(() => {
-            calculateCountdown();
-            if (progressData && studyData) {
-                calculateTargetProgress();
-                calculateExpectedCompletion();
-                updateDailyGoal();
-                renderAchievements(); // 同步成就状态
-            }
-        }, 60000);
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        // ========== 搜索输入监听 ==========
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') search();
+        });
+        // ========== 初始化 ==========
+        loadKnowledgeData();
     </script>
 </body>
 </html>
