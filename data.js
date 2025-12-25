@@ -68,6 +68,31 @@ const momentCategories = [
  */
 let successDiaryData = [  
       {
+        id: 75,
+        date: '2025-12-25',
+        categories: ['study', 'creative'],
+        headline: {
+            zh: '修复室内灯光',
+            en: 'Repair the interior lighting.'
+        },
+        content: {
+            zh: '❌',
+            en: '❌'
+        },
+        highlight: {
+            zh: 'clude sonnet 4.5 thinking 夯爆了',
+            en: 'Including sonnet 4.5, it’s mind-blowing.'
+        },
+        notes: {
+            zh: '',
+            en: ''
+        },
+        moodCode: 'hungry',
+        achievementLevel: 0,
+        coverImage: '',
+        attachments: []
+    },
+      {
         id: 74,
         date: '2025-12-24',
         categories: ['study', 'creative'],
