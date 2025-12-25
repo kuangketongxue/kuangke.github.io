@@ -1513,6 +1513,144 @@
                 grid-template-columns: 1fr;
             }
         }
+        /* ========== 热力图样式 ========== */
+        .heatmap-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .heatmap-legend {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            max-width: 700px;
+            width: 100%;
+        }
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .heatmap-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+        .heatmap-cell::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+        .heatmap-cell:hover::after {
+            opacity: 1;
+        }
+        .heatmap-level-0 { background-color: #f7f7f7; color: #999; }
+        .heatmap-level-1 { background-color: #d6e685; }
+        .heatmap-level-2 { background-color: #8cc665; }
+        .heatmap-level-3 { background-color: #44a340; }
+        .heatmap-level-4 { background-color: #1e6823; }
+        body.dark-mode .heatmap-level-0 { background-color: #333; }
+        .heatmap-weekday-labels {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        body.dark-mode .heatmap-weekday-labels {
+            color: #aaa;
+        }
+        .heatmap-weekday-labels div {
+            padding: 4px 0;
+        }
+        .heatmap-month-labels {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-right: 8px;
+        }
+        .heatmap-month-label {
+            height: 24px;
+            display: flex;
+            align-items: center;
+            font-size: 0.75em;
+            font-weight: 600;
+            color: #666;
+            text-align: right;
+            padding-right: 4px;
+        }
+        body.dark-mode .heatmap-month-label {
+            color: #aaa;
+        }
+        .heatmap-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .heatmap-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 700px;
+        }
+        .heatmap-stat {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        body.dark-mode .heatmap-stat {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        }
+        .heatmap-stat-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+        .heatmap-stat-label {
+            color: #666;
+            font-size: 0.85em;
+        }
+        body.dark-mode .heatmap-stat-label {
+            color: #aaa;
+        }
     </style>
 </head>
 <body>
@@ -1648,6 +1786,49 @@
             <p>记录每一次学习的内容与感悟</p>
             <p class="subtitle">从 GitHub map.md+study-data.md 自动同步 + 智能分析系统</p>
         </div>
+        <!-- 每日进步热力图（放到最上面） -->
+        <div class="daily-progress-section" id="daily-progress-section">
+            <div class="section-header">
+                <h2><i class="fas fa-fire"></i> 每日学习热力图</h2>
+            </div>
+            <div class="heatmap-container">
+                <div class="heatmap-legend">
+                    <span>少</span>
+                    <span>多</span>
+                </div>
+                <div class="heatmap-wrapper">
+                    <div class="heatmap-month-labels" id="heatmapMonthLabels"></div>
+                    <div class="heatmap-weekday-labels">
+                        <div>周日</div>
+                        <div>周一</div>
+                        <div>周二</div>
+                        <div>周三</div>
+                        <div>周四</div>
+                        <div>周五</div>
+                        <div>周六</div>
+                    </div>
+                    <div class="heatmap-grid" id="heatmapGrid"></div>
+                </div>
+                <div class="heatmap-stats">
+                    <div class="heatmap-stat">
+                        <div class="heatmap-stat-value" id="maxDailyComplete">0</div>
+                        <div class="heatmap-stat-label">单日最高</div>
+                    </div>
+                    <div class="heatmap-stat">
+                        <div class="heatmap-stat-value" id="avgDailyComplete">0</div>
+                        <div class="heatmap-stat-label">平均每日</div>
+                    </div>
+                    <div class="heatmap-stat">
+                        <div class="heatmap-stat-value" id="consecutiveDays">0</div>
+                        <div class="heatmap-stat-label">连续学习</div>
+                    </div>
+                    <div class="heatmap-stat">
+                        <div class="heatmap-stat-value" id="totalStudyDays">0</div>
+                        <div class="heatmap-stat-label">总学习天</div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- 统计面板 -->
         <div class="stats-dashboard" id="stats-section">
             <div class="stats-grid">
@@ -1728,7 +1909,7 @@
                 <div class="daily-goal-card">
                     <div class="daily-goal-icon">🎯</div>
                     <div class="daily-goal-label">今日学习进度</div>
-                    <div class="daily-goal-value"><span id="todayCompleted">0</span> / 36</div>
+                    <div class="daily-goal-value"><span id="todayCompleted">0</span> / <span id="dailyGoalValue">36</span></div>
                     <div class="daily-goal-progress">
                         <div class="daily-goal-progress-fill" id="dailyGoalProgressBar">0 / 36</div>
                     </div>
@@ -1772,38 +1953,6 @@
                 <!-- 动态生成 -->
             </div>
             <div class="pagination" id="knowledgePagination"></div>
-        </div>
-        <!-- 每日进步可视化 -->
-        <div class="daily-progress-section" id="daily-progress-section">
-            <div class="section-header">
-                <h2><i class="fas fa-chart-line"></i> 每日进步可视化</h2>
-            </div>
-            <div class="daily-progress-chart-container">
-                <div class="daily-progress-chart-title">每日完成知识块数量</div>
-                <canvas id="dailyProgressChart"></canvas>
-            </div>
-            <div class="daily-progress-stats">
-                <div class="daily-progress-stat">
-                    <div class="daily-progress-stat-icon">📈</div>
-                    <div class="daily-progress-stat-value" id="maxDailyComplete">0</div>
-                    <div class="daily-progress-stat-label">单日最高完成</div>
-                </div>
-                <div class="daily-progress-stat">
-                    <div class="daily-progress-stat-icon">📊</div>
-                    <div class="daily-progress-stat-value" id="avgDailyComplete">0</div>
-                    <div class="daily-progress-stat-label">平均每日完成</div>
-                </div>
-                <div class="daily-progress-stat">
-                    <div class="daily-progress-stat-icon">🔥</div>
-                    <div class="daily-progress-stat-value" id="consecutiveDays">0</div>
-                    <div class="daily-progress-stat-label">连续学习天数</div>
-                </div>
-                <div class="daily-progress-stat">
-                    <div class="daily-progress-stat-icon">📅</div>
-                    <div class="daily-progress-stat-value" id="totalStudyDays">0</div>
-                    <div class="daily-progress-stat-label">总学习天数</div>
-                </div>
-            </div>
         </div>
         <!-- 知识块完成进度 -->
         <div class="progress-section" id="progress-section">
@@ -1872,7 +2021,6 @@
         const TARGET_DATE = new Date('2026-06-07'); // 高考日期
         const GOAL_TARGET_DATE = new Date('2025-12-31'); // 目标完成日期
         const START_DATE = new Date('2025-06-10'); // 开始日期
-        const DAILY_GOAL = 36; // 每日目标改为36个知识块
         const DAY_MS = 1000 * 60 * 60 * 24;
         let knowledgeData = [];
         let filteredData = [];
@@ -2052,17 +2200,42 @@
         function updateDailyGoal() {
             // 从 study_data.md 的 dailyCompleteData 读取今日完成数
             let todayCompleted = studyData?.todayCompleted || 0;
+            // 计算建议的知识块数（基于剩余时间和剩余知识块）
+            let totalBlocks = 0;
+            let completedBlocks = 0;
+            Object.values(progressData).forEach(category => {
+                category.forEach(block => {
+                    totalBlocks++;
+                    if (block.completed) completedBlocks++;
+                });
+            });
+            const remainingBlocks = totalBlocks - completedBlocks;
+            const now = new Date();
+            const daysToGoal = Math.ceil((GOAL_TARGET_DATE - now) / DAY_MS);
+            const daysToExam = Math.ceil((TARGET_DATE - now) / DAY_MS);
+            let suggestedDailyGoal = 36; // 默认值
+            if (daysToGoal > 0 && remainingBlocks > 0) {
+                // 根据目标日期计算建议值
+                suggestedDailyGoal = Math.ceil(remainingBlocks / daysToGoal);
+                // 确保不低于最小值
+                suggestedDailyGoal = Math.max(10, suggestedDailyGoal);
+                // 如果接近高考，适当增加
+                if (daysToExam < 180) {
+                    suggestedDailyGoal = Math.min(50, Math.ceil(suggestedDailyGoal * 1.2));
+                }
+            }
             document.getElementById('todayCompleted').textContent = todayCompleted;
-            const percentage = Math.min(100, (todayCompleted / DAILY_GOAL) * 100);
+            document.getElementById('dailyGoalValue').textContent = suggestedDailyGoal;
+            const percentage = Math.min(100, (todayCompleted / suggestedDailyGoal) * 100);
             const dailyGoalBar = document.getElementById('dailyGoalProgressBar');
             dailyGoalBar.style.width = percentage + '%';
-            dailyGoalBar.textContent = percentage < 5 ? '' : `${todayCompleted} / ${DAILY_GOAL}`;
+            dailyGoalBar.textContent = percentage < 5 ? '' : `${todayCompleted} / ${suggestedDailyGoal}`;
             const messageEl = document.getElementById('dailyGoalMessage');
-            if (todayCompleted >= DAILY_GOAL) {
+            if (todayCompleted >= suggestedDailyGoal) {
                 messageEl.innerHTML = '🎉 太棒了!今日目标已达成!';
                 messageEl.style.color = 'var(--success-color)';
             } else {
-                const remaining = DAILY_GOAL - todayCompleted;
+                const remaining = suggestedDailyGoal - todayCompleted;
                 messageEl.innerHTML = `还需完成 ${remaining} 个知识块!💪`;
                 messageEl.style.color = 'var(--info-color)';
             }
@@ -2115,7 +2288,7 @@
                 updateStatistics();
                 await loadProgressData();
                 await loadStudyData();
-                renderDailyProgressChart(); // 新增：每日进步可视化
+                renderHeatmap(); // 新增：热力图
                 renderProgressSection();
                 renderTagSummary(); // 改进版：包含所有未完成
                 calculateCountdown();
@@ -2308,99 +2481,103 @@
             });
             return data;
         }
-        // ========== 渲染每日进步图表 ==========
-        function renderDailyProgressChart() {
+        // ========== 渲染热力图 ==========
+        function renderHeatmap() {
             if (!studyData || !studyData.dailyCompleteData || studyData.dailyCompleteData.length === 0) {
                 return;
             }
-            const ctx = document.getElementById('dailyProgressChart');
-            if (!ctx) return;
-            if (window.dailyProgressChartInstance) {
-                window.dailyProgressChartInstance.destroy();
-            }
-            // 按日期排序
-            const sortedData = [...studyData.dailyCompleteData].sort((a, b) => new Date(a.date) - new Date(b.date));
-            const dates = sortedData.map(item => item.date);
-            const counts = sortedData.map(item => item.count);
             // 计算统计数据
-            const maxComplete = Math.max(...counts, 0);
-            const avgComplete = (counts.reduce((sum, val) => sum + val, 0) / counts.length).toFixed(1);
-            const totalStudyDays = counts.length;
+            const maxComplete = Math.max(...studyData.dailyCompleteData.map(item => item.count), 0);
+            const avgComplete = (studyData.dailyCompleteData.reduce((sum, val) => sum + val.count, 0) / studyData.dailyCompleteData.length).toFixed(1);
+            const totalStudyDays = studyData.dailyCompleteData.length;
             document.getElementById('maxDailyComplete').textContent = maxComplete;
             document.getElementById('avgDailyComplete').textContent = avgComplete;
             document.getElementById('consecutiveDays').textContent = studyData.consecutiveDays || 0;
             document.getElementById('totalStudyDays').textContent = totalStudyDays;
-            window.dailyProgressChartInstance = new Chart(ctx.getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: dates,
-                    datasets: [{
-                        label: '每日完成知识块数',
-                        data: counts,
-                        borderColor: 'rgba(102, 126, 234, 1)',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        pointBackgroundColor: 'rgba(102, 126, 234, 1)',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `完成: ${context.raw} 个知识块`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: '知识块数量',
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
-                            },
-                            ticks: {
-                                stepSize: 5
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: '日期',
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
-                            },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45
-                            }
-                        }
+            // 生成热力图数据
+            const heatmapData = generateHeatmapData(studyData.dailyCompleteData);
+            // 渲染热力图
+            renderHeatmapGrid(heatmapData);
+        }
+        function generateHeatmapData(dailyData) {
+            // 按日期排序
+            const sortedData = [...dailyData].sort((a, b) => new Date(a.date) - new Date(b.date));
+            // 获取日期范围
+            const startDate = new Date(sortedData[0].date);
+            const endDate = new Date(sortedData[sortedData.length - 1].date);
+            // 获取所有日期
+            const allDates = [];
+            const currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+                allDates.push(new Date(currentDate));
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            // 创建日期到完成数的映射
+            const dateMap = {};
+            sortedData.forEach(item => {
+                dateMap[item.date] = item.count;
+            });
+            // 生成热力图数据
+            const heatmapData = [];
+            let currentWeek = [];
+            let currentMonth = null;
+            allDates.forEach(date => {
+                const dayOfWeek = date.getDay(); // 0=周日, 1=周一, ..., 6=周六
+                const month = date.getMonth();
+                const dateStr = date.toISOString().split('T')[0];
+                const count = dateMap[dateStr] || 0;
+                // 如果月份变化或是周日，开始新的一周
+                if (dayOfWeek === 0 || month !== currentMonth) {
+                    if (currentWeek.length > 0) {
+                        heatmapData.push(currentWeek);
                     }
+                    currentWeek = [];
+                    currentMonth = month;
                 }
+                currentWeek.push({
+                    date: dateStr,
+                    count: count,
+                    dayOfWeek: dayOfWeek,
+                    month: month
+                });
+            });
+            // 添加最后一周
+            if (currentWeek.length > 0) {
+                heatmapData.push(currentWeek);
+            }
+            return heatmapData;
+        }
+        function renderHeatmapGrid(heatmapData) {
+            const grid = document.getElementById('heatmapGrid');
+            const monthLabels = document.getElementById('heatmapMonthLabels');
+            grid.innerHTML = '';
+            monthLabels.innerHTML = '';
+            const months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            heatmapData.forEach((week, weekIndex) => {
+                week.forEach((day, dayIndex) => {
+                    // 添加月份标签
+                    if (dayIndex === 0) {
+                        const monthLabel = document.createElement('div');
+                        monthLabel.className = 'heatmap-month-label';
+                        monthLabel.textContent = months[day.month];
+                        monthLabels.appendChild(monthLabel);
+                    }
+                    // 创建热力图单元格
+                    const cell = document.createElement('div');
+                    cell.className = 'heatmap-cell';
+                    // 根据完成数量确定级别
+                    let level = 0;
+                    if (day.count > 0) {
+                        if (day.count >= 30) level = 4;
+                        else if (day.count >= 20) level = 3;
+                        else if (day.count >= 10) level = 2;
+                        else level = 1;
+                    }
+                    cell.classList.add(`heatmap-level-${level}`);
+                    cell.textContent = day.count > 0 ? day.count : '';
+                    cell.setAttribute('data-tooltip', `${day.date} - ${day.count}个知识块`);
+                    grid.appendChild(cell);
+                });
             });
         }
         // ========== 渲染图表 ==========
