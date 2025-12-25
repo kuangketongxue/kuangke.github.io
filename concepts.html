@@ -5,1751 +5,1156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>知识收集系统 - 狂客·银河</title>
+
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         /* ========== 基础样式 ========== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root{
+            --primary-color:#667eea;
+            --secondary-color:#764ba2;
+            --success-color:#43e97b;
+            --warning-color:#fbbf24;
+            --danger-color:#f56565;
+            --info-color:#4299e1;
+            --dark-bg:#1a202c;
+            --dark-card:#2d3748;
+            --line-color:#e0e0e0;
+            --line-color-dark:#4a5568;
+            --highlight-color:#ffd700;
+            --highlight-text:#000;
         }
-        :root {
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
-            --success-color: #43e97b;
-            --warning-color: #fbbf24;
-            --danger-color: #f56565;
-            --info-color: #4299e1;
-            --dark-bg: #1a202c;
-            --dark-card: #2d3748;
-            --line-color: #e0e0e0;
-            --line-color-dark: #4a5568;
-            --highlight-color: #ffd700;
-            --highlight-text: #000;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-            font-size: 16px;
-            line-height: 1.6;
+        body{
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+            background: linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);
+            min-height:100vh;
+            overflow-x:hidden;
+            font-size:16px;
+            line-height:1.6;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-        body.dark-mode {
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #2d3748 100%);
-            color: #e2e8f0;
+        body.dark-mode{
+            background: linear-gradient(135deg,var(--dark-bg) 0%, #2d3748 100%);
+            color:#e2e8f0;
         }
+
         /* ========== 侧边导航栏 ========== */
-        .side-nav {
-            position: fixed;
-            left: -450px;
-            top: 80px;
-            width: 450px;
+        .side-nav{
+            position:fixed;
+            left:-450px;
+            top:80px;
+            width:450px;
             height: calc(100vh - 100px);
-            background: white;
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            background:white;
+            box-shadow:4px 0 20px rgba(0,0,0,0.1);
             border-radius: 0 20px 20px 0;
-            padding: 30px 20px;
-            transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            z-index: 999;
-            overflow-y: auto;
+            padding:30px 20px;
+            transition:left 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+            z-index:999;
+            overflow-y:auto;
         }
-        body.dark-mode .side-nav {
-            background: var(--dark-card);
+        body.dark-mode .side-nav{ background: var(--dark-card); }
+        .side-nav.active{ left:0; }
+
+        .side-nav-toggle{
+            position:fixed;
+            left:10px;
+            top:50%;
+            transform:translateY(-50%);
+            width:50px; height:50px;
+            background: linear-gradient(135deg,var(--primary-color) 0%, var(--secondary-color) 100%);
+            color:white;
+            border:none;
+            border-radius:0 50% 50% 0;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:20px;
+            cursor:pointer;
+            box-shadow:0 4px 15px rgba(102,126,234,0.4);
+            z-index:1000;
+            transition: all .3s ease;
         }
-        .side-nav.active {
-            left: 0;
+        .side-nav-toggle:hover{
+            width:60px;
+            box-shadow:0 6px 20px rgba(102,126,234,0.6);
         }
-        .side-nav-toggle {
-            position: fixed;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            border: none;
-            border-radius: 0 50% 50% 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            z-index: 1000;
-            transition: all 0.3s ease;
+        .side-nav-toggle.active{ left:450px; }
+
+        .nav-title{
+            font-size:1.3em;
+            font-weight:bold;
+            background: linear-gradient(135deg,var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            background-clip:text;
+            margin-bottom:25px;
+            padding-bottom:15px;
+            border-bottom:2px solid var(--line-color);
         }
-        .side-nav-toggle:hover {
-            width: 60px;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        body.dark-mode .nav-title{ border-bottom-color: var(--line-color-dark); }
+
+        .nav-item{
+            padding:12px 15px;
+            margin:8px 0;
+            border-radius:10px;
+            cursor:pointer;
+            transition: all .3s ease;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            color:#333;
+            font-weight:500;
         }
-        .side-nav-toggle.active {
-            left: 450px;
-        }
-        .nav-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--line-color);
-        }
-        body.dark-mode .nav-title {
-            border-bottom-color: var(--line-color-dark);
-        }
-        .nav-item {
-            padding: 12px 15px;
-            margin: 8px 0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #333;
-            font-weight: 500;
-        }
-        body.dark-mode .nav-item {
-            color: #e2e8f0;
-        }
-        .nav-item:hover {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        body.dark-mode .nav-item{ color:#e2e8f0; }
+        .nav-item:hover{
+            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
             transform: translateX(5px);
         }
-        .nav-item i {
-            font-size: 1.1em;
-            width: 25px;
-        }
+        .nav-item i{ font-size:1.1em; width:25px; }
+
         /* ========== 侧边栏内容区域 ========== */
-        .nav-section {
-            margin: 30px 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            display: none;
+        .nav-section{
+            margin:30px 0;
+            padding:20px;
+            background: linear-gradient(135deg,#f8f9fa 0%, #e9ecef 100%);
+            border-radius:15px;
+            display:none;
         }
-        body.dark-mode .nav-section {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        body.dark-mode .nav-section{
+            background: linear-gradient(135deg,#1a202c 0%, #2d3748 100%);
         }
-        .nav-section.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
+        .nav-section.active{
+            display:block;
+            animation: fadeIn .5s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeIn{
+            from{ opacity:0; transform:translateY(10px); }
+            to{ opacity:1; transform:translateY(0); }
         }
-        .nav-section-title {
-            font-size: 1.2em;
-            font-weight: bold;
+        .nav-section-title{
+            font-size:1.2em;
+            font-weight:bold;
             color: var(--primary-color);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin-bottom:15px;
+            display:flex;
+            align-items:center;
+            gap:8px;
         }
+
         /* ========== 图表样式（侧边栏） ========== */
-        .sidebar-chart-container {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        .sidebar-chart-container{
+            background:white;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:15px;
+            box-shadow:0 2px 10px rgba(0,0,0,0.05);
         }
-        body.dark-mode .sidebar-chart-container {
-            background: var(--dark-bg);
-        }
-        .sidebar-chart-title {
-            font-size: 1em;
-            font-weight: 600;
-            margin-bottom: 10px;
+        body.dark-mode .sidebar-chart-container{ background: var(--dark-bg); }
+        .sidebar-chart-title{
+            font-size:1em;
+            font-weight:600;
+            margin-bottom:10px;
             color: var(--primary-color);
-            text-align: center;
+            text-align:center;
         }
-        .sidebar-chart-container canvas {
-            max-height: 200px;
-        }
+        .sidebar-chart-container canvas{ max-height:200px; }
+
         /* ========== 诊断卡片（侧边栏） ========== */
-        .sidebar-diagnosis-card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border-left: 4px solid;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        .sidebar-diagnosis-card{
+            background:white;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:15px;
+            border-left:4px solid;
+            box-shadow:0 2px 10px rgba(0,0,0,0.05);
         }
-        body.dark-mode .sidebar-diagnosis-card {
-            background: var(--dark-bg);
+        body.dark-mode .sidebar-diagnosis-card{ background: var(--dark-bg); }
+        .sidebar-diagnosis-card.weak{ border-left-color: var(--danger-color); }
+        .sidebar-diagnosis-card.error{ border-left-color: var(--warning-color); }
+        .sidebar-diagnosis-card.focus{ border-left-color: var(--info-color); }
+        .sidebar-diagnosis-title{
+            font-size:1em;
+            font-weight:bold;
+            margin-bottom:10px;
+            display:flex;
+            align-items:center;
+            gap:8px;
         }
-        .sidebar-diagnosis-card.weak { border-left-color: var(--danger-color); }
-        .sidebar-diagnosis-card.error { border-left-color: var(--warning-color); }
-        .sidebar-diagnosis-card.focus { border-left-color: var(--info-color); }
-        .sidebar-diagnosis-title {
-            font-size: 1em;
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .sidebar-diagnosis-card.weak .sidebar-diagnosis-title{ color: var(--danger-color); }
+        .sidebar-diagnosis-card.error .sidebar-diagnosis-title{ color: var(--warning-color); }
+        .sidebar-diagnosis-card.focus .sidebar-diagnosis-title{ color: var(--info-color); }
+
+        .sidebar-diagnosis-list{ list-style:none; padding:0; font-size:0.9em; }
+        .sidebar-diagnosis-list li{
+            padding:8px 0;
+            border-bottom:1px solid var(--line-color);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
         }
-        .sidebar-diagnosis-card.weak .sidebar-diagnosis-title {
-            color: var(--danger-color);
+        body.dark-mode .sidebar-diagnosis-list li{ border-bottom-color: var(--line-color-dark); }
+        .sidebar-diagnosis-list li:last-child{ border-bottom:none; }
+
+        .sidebar-alert{
+            padding:10px 15px;
+            border-radius:10px;
+            margin:10px 0;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            font-weight:600;
+            font-size:.9em;
         }
-        .sidebar-diagnosis-card.error .sidebar-diagnosis-title {
-            color: var(--warning-color);
+        .sidebar-alert.info{
+            background: linear-gradient(135deg,#d1ecf1 0%, #bee5eb 100%);
+            color:#0c5460;
+            border-left:4px solid #17a2b8;
         }
-        .sidebar-diagnosis-card.focus .sidebar-diagnosis-title {
-            color: var(--info-color);
+        body.dark-mode .sidebar-alert.info{
+            background: linear-gradient(135deg,#1e3a4a 0%, #2a4a5a 100%);
+            color:#17a2b8;
         }
-        .sidebar-diagnosis-list {
-            list-style: none;
-            padding: 0;
-            font-size: 0.9em;
-        }
-        .sidebar-diagnosis-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid var(--line-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        body.dark-mode .sidebar-diagnosis-list li {
-            border-bottom-color: var(--line-color-dark);
-        }
-        .sidebar-diagnosis-list li:last-child {
-            border-bottom: none;
-        }
+
         /* ========== 成就徽章（侧边栏） ========== */
-        .sidebar-achievements-gri
-<details type="reasoning" done="true" duration="5">
-<summary>Thought for 5 seconds</summary>
-&gt; 用户要求我修改这个HTML文件，主要做以下更改：
-&gt; 
-&gt; 1. 删除三个成就：
-&gt;    - &quot;坚持不懈&quot;（连续学习7天）
-&gt;    - &quot;冲刺王者&quot;（单日完成10个知识块）
-&gt;    - &quot;图像大师&quot;（至少1条含图片的知识）
-&gt; 
-&gt; 2. 增加其他更有成就感的成就
-&gt; 3. &quot;今日学习进度&quot;的目标改成根据建议动态计算
-&gt; 
-&gt; 让我思考一下可以增加哪些更有成就感的成就：
-&gt; 
-&gt; 基于学习系统，可以设计：
-&gt; - &quot;知识探索者&quot;：学习首个科目
-&gt; - &quot;专注学习&quot;：连续3天有学习记录
-&gt; - &quot;进步之星&quot;：单日完成数比前一天增加50%以上
-&gt; - &quot;全勤达人&quot;：一周内每天都有学习记录（不要求连续）
-&gt; - &quot;完美主义者&quot;：某天完成数正好达到目标值
-&gt; - &quot;超越自我&quot;：单日完成数超过之前最高记录
-&gt; - &quot;科目专家&quot;：某个科目完成率达到100%
-&gt; - &quot;均衡发展&quot;：所有科目都有学习记录
-&gt; - &quot;周末战士&quot;：周末完成数达到工作日的1.5倍
-&gt; - &quot;夜猫子&quot;：在晚上10点后还能完成学习
-&gt; - &quot;早起鸟&quot;：在早上8点前就有学习记录
-&gt; 
-&gt; 我选择一些容易实现且有趣的成就：
-&gt; 
-&gt; 1. &quot;知识探索者&quot; - 完成第1个知识块（保留原有的&quot;初出茅庐&quot;的简化版）
-&gt; 2. &quot;全勤达人&quot; - 一周内（7天）每天都有完成记录
-&gt; 
-&gt; 
-&gt; 3. &quot;进步之星&quot; - 单日完成数比前一天增加50%以上
-&gt; 4. &quot;完美主义者&quot; - 某天完成数正好达到目标值（误差±1）
-&gt; 5. &quot;科目专家&quot; - 某个科目完成率达到100%
-&gt; 6. &quot;夜猫子&quot; - 在晚上10点后还能完成学习（需要有完成记录）
-&gt; 7. &quot;早起鸟&quot; - 在早上8点前就有学习记录
-&gt; 
-&gt; 继续分析这些成就的可能性和趣味性。这些成就不仅关注学习进度，还关注学习者的行为模式和个人成长特点。它们鼓励学习者保持持续学习的好奇心和探索精神，同时提供多元化的学习动力和激励方式。
-&gt; 
-&gt; 我需要仔细检查代码，确保删除相关的检测逻辑，并专注于实现新的成就追踪机制。这需要精确地修改成就计算和解锁算法。
-</details>
-```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>知识收集系统 - 狂客·银河</title>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* ========== 基础样式 ========== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
-            --success-color: #43e97b;
-            --warning-color: #fbbf24;
-            --danger-color: #f56565;
-            --info-color: #4299e1;
-            --dark-bg: #1a202c;
-            --dark-card: #2d3748;
-            --line-color: #e0e0e0;
-            --line-color-dark: #4a5568;
-            --highlight-color: #ffd700;
-            --highlight-text: #000;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-            font-size: 16px;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        body.dark-mode {
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #2d3748 100%);
-            color: #e2e8f0;
-        }
-        /* ========== 侧边导航栏 ========== */
-        .side-nav {
-            position: fixed;
-            left: -450px;
-            top: 80px;
-            width: 450px;
-            height: calc(100vh - 100px);
-            background: white;
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-            border-radius: 0 20px 20px 0;
-            padding: 30px 20px;
-            transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            z-index: 999;
-            overflow-y: auto;
-        }
-        body.dark-mode .side-nav {
-            background: var(--dark-card);
-        }
-        .side-nav.active {
-            left: 0;
-        }
-        .side-nav-toggle {
-            position: fixed;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            border: none;
-            border-radius: 0 50% 50% 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-        .side-nav-toggle:hover {
-            width: 60px;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-        .side-nav-toggle.active {
-            left: 450px;
-        }
-        .nav-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--line-color);
-        }
-        body.dark-mode .nav-title {
-            border-bottom-color: var(--line-color-dark);
-        }
-        .nav-item {
-            padding: 12px 15px;
-            margin: 8px 0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #333;
-            font-weight: 500;
-        }
-        body.dark-mode .nav-item {
-            color: #e2e8f0;
-        }
-        .nav-item:hover {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            transform: translateX(5px);
-        }
-        .nav-item i {
-            font-size: 1.1em;
-            width: 25px;
-        }
-        /* ========== 侧边栏内容区域 ========== */
-        .nav-section {
-            margin: 30px 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            display: none;
-        }
-        body.dark-mode .nav-section {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-        }
-        .nav-section.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .nav-section-title {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        /* ========== 图表样式（侧边栏） ========== */
-        .sidebar-chart-container {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-        body.dark-mode .sidebar-chart-container {
-            background: var(--dark-bg);
-        }
-        .sidebar-chart-title {
-            font-size: 1em;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-            text-align: center;
-        }
-        .sidebar-chart-container canvas {
-            max-height: 200px;
-        }
-        /* ========== 诊断卡片（侧边栏） ========== */
-        .sidebar-diagnosis-card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border-left: 4px solid;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-        body.dark-mode .sidebar-diagnosis-card {
-            background: var(--dark-bg);
-        }
-        .sidebar-diagnosis-card.weak { border-left-color: var(--danger-color); }
-        .sidebar-diagnosis-card.error { border-left-color: var(--warning-color); }
-        .sidebar-diagnosis-card.focus { border-left-color: var(--info-color); }
-        .sidebar-diagnosis-title {
-            font-size: 1em;
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .sidebar-diagnosis-card.weak .sidebar-diagnosis-title {
-            color: var(--danger-color);
-        }
-        .sidebar-diagnosis-card.error .sidebar-diagnosis-title {
-            color: var(--warning-color);
-        }
-        .sidebar-diagnosis-card.focus .sidebar-diagnosis-title {
-            color: var(--info-color);
-        }
-        .sidebar-diagnosis-list {
-            list-style: none;
-            padding: 0;
-            font-size: 0.9em;
-        }
-        .sidebar-diagnosis-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid var(--line-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        body.dark-mode .sidebar-diagnosis-list li {
-            border-bottom-color: var(--line-color-dark);
-        }
-        .sidebar-diagnosis-list li:last-child {
-            border-bottom: none;
-        }
-        /* ========== 成就徽章（侧边栏） ========== */
-        .sidebar-achievements-grid {
-            display: grid;
+        .sidebar-achievements-grid{
+            display:grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap:10px;
         }
-        .sidebar-achievement-badge {
-            background: linear-gradient(135deg, rgba(67, 233, 123, 0.2) 0%, rgba(56, 249, 215, 0.2) 100%);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
+        .sidebar-achievement-badge{
+            background: linear-gradient(135deg, rgba(67,233,123,0.2) 0%, rgba(56,249,215,0.2) 100%);
+            padding:15px;
+            border-radius:10px;
+            text-align:center;
+            transition: all .3s ease;
+            cursor:pointer;
+            border:2px solid transparent;
         }
-        body.dark-mode .sidebar-achievement-badge {
-            background: linear-gradient(135deg, rgba(67, 233, 123, 0.1) 0%, rgba(56, 249, 215, 0.1) 100%);
+        body.dark-mode .sidebar-achievement-badge{
+            background: linear-gradient(135deg, rgba(67,233,123,0.1) 0%, rgba(56,249,215,0.1) 100%);
         }
-        .sidebar-achievement-badge:hover {
+        .sidebar-achievement-badge:hover{
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow:0 5px 15px rgba(0,0,0,0.2);
         }
-        .sidebar-achievement-badge.locked {
-            opacity: 0.5;
-            filter: grayscale(100%);
-        }
-        .sidebar-achievement-badge.unlocked {
-            border-color: rgba(255, 215, 0, 0.8);
+        .sidebar-achievement-badge.locked{ opacity:.5; filter:grayscale(100%); }
+        .sidebar-achievement-badge.unlocked{
+            border-color: rgba(255,215,0,0.8);
             animation: glow 2s ease-in-out infinite;
         }
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+        @keyframes glow{
+            0%,100%{ box-shadow:0 0 10px rgba(255,215,0,0.5); }
+            50%{ box-shadow:0 0 20px rgba(255,215,0,0.8); }
         }
-        .sidebar-achievement-icon {
-            font-size: 2em;
-            margin-bottom: 5px;
+        .sidebar-achievement-icon{ font-size:2em; margin-bottom:5px; }
+        .sidebar-achievement-name{ font-weight:700; margin-bottom:5px; font-size:.9em; color:#333; }
+        body.dark-mode .sidebar-achievement-name{ color:#fff; }
+        .sidebar-achievement-desc{ font-size:.75em; opacity:.9; margin-bottom:5px; color:#666; }
+        body.dark-mode .sidebar-achievement-desc{ color:#aaa; }
+        .sidebar-achievement-progress{
+            font-size:.75em;
+            opacity:.9;
+            margin-top:5px;
+            padding:4px 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius:8px;
+            font-weight:600;
         }
-        .sidebar-achievement-name {
-            font-weight: 700;
-            margin-bottom: 5px;
-            font-size: 0.9em;
-            color: #333;
+        .sidebar-achievement-badge.unlocked .sidebar-achievement-progress{
+            background: rgba(255,215,0,0.3);
         }
-        body.dark-mode .sidebar-achievement-name {
-            color: #fff;
-        }
-        .sidebar-achievement-desc {
-            font-size: 0.75em;
-            opacity: 0.9;
-            margin-bottom: 5px;
-            color: #666;
-        }
-        body.dark-mode .sidebar-achievement-desc {
-            color: #aaa;
-        }
-        .sidebar-achievement-progress {
-            font-size: 0.75em;
-            opacity: 0.9;
-            margin-top: 5px;
-            padding: 4px 8px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            font-weight: 600;
-        }
-        .sidebar-achievement-badge.unlocked .sidebar-achievement-progress {
-            background: rgba(255, 215, 0, 0.3);
-        }
-        .sidebar-alert {
-            padding: 10px 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            font-size: 0.9em;
-        }
-        .sidebar-alert.info {
-            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
-            color: #0c5460;
-            border-left: 4px solid #17a2b8;
-        }
-        body.dark-mode .sidebar-alert.info {
-            background: linear-gradient(135deg, #1e3a4a 0%, #2a4a5a 100%);
-            color: #17a2b8;
-        }
+
         /* ========== 容器 ========== */
-        .knowledge-page {
-            max-width: 1400px;
-            margin: 80px auto 60px;
-            padding: 40px 20px;
-            transition: margin-left 0.4s ease;
+        .knowledge-page{
+            max-width:1400px;
+            margin:80px auto 60px;
+            padding:40px 20px;
+            transition: margin-left .4s ease;
         }
-        .knowledge-page.shifted {
-            margin-left: 240px;
-        }
+        .knowledge-page.shifted{ margin-left:240px; }
+
         /* ========== 页面头部 ========== */
-        .page-header {
-            text-align: center;
-            margin-bottom: 40px;
-            animation: fadeInDown 0.8s ease;
+        .page-header{
+            text-align:center;
+            margin-bottom:40px;
+            animation: fadeInDown .8s ease;
         }
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeInDown{
+            from{ opacity:0; transform:translateY(-30px); }
+            to{ opacity:1; transform:translateY(0); }
         }
-        .page-header h1 {
-            font-size: 3em;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 15px;
-            font-weight: 700;
+        .page-header h1{
+            font-size:3em;
+            background: linear-gradient(135deg,var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            background-clip:text;
+            margin-bottom:15px;
+            font-weight:700;
         }
-        .page-header p {
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-        body.dark-mode .page-header p {
-            color: #aaa;
-        }
-        .page-header .subtitle {
-            font-size: 1em;
-            color: #999;
-            font-style: italic;
-        }
+        .page-header p{ font-size:1.2em; color:#666; margin-bottom:10px; font-weight:500; }
+        body.dark-mode .page-header p{ color:#aaa; }
+        .page-header .subtitle{ font-size:1em; color:#999; font-style:italic; }
+
         /* ========== 统计面板 ========== */
-        .stats-dashboard {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        .stats-dashboard{
+            background:white;
+            border-radius:20px;
+            padding:30px;
+            margin-bottom:30px;
+            box-shadow:0 8px 30px rgba(0,0,0,0.1);
             animation: fadeIn 1s ease;
         }
-        body.dark-mode .stats-dashboard {
-            background: var(--dark-card);
-        }
-        .stats-grid {
-            display: grid;
+        body.dark-mode .stats-dashboard{ background: var(--dark-card); }
+        .stats-grid{
+            display:grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 25px;
+            gap:20px;
+            margin-bottom:25px;
         }
-        .stat-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
+        .stat-card{
+            background: linear-gradient(135deg,#f8f9fa 0%, #e9ecef 100%);
+            padding:20px;
+            border-radius:15px;
+            text-align:center;
+            transition: all .3s ease;
+            border:2px solid transparent;
+            position:relative;
+            overflow:hidden;
         }
-        body.dark-mode .stat-card {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        body.dark-mode .stat-card{
+            background: linear-gradient(135deg,#1a202c 0%, #2d3748 100%);
         }
-        .stat-card:hover {
+        .stat-card:hover{
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            box-shadow:0 10px 30px rgba(0,0,0,0.15);
             border-color: var(--primary-color);
         }
-        .stat-icon {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        .stat-label {
-            font-size: 1em;
-            color: #666;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        body.dark-mode .stat-label {
-            color: #aaa;
-        }
-        .stat-value {
-            font-size: 2em;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
+        .stat-icon{ font-size:2.5em; margin-bottom:10px; }
+        .stat-label{ font-size:1em; color:#666; margin-bottom:8px; font-weight:500; }
+        body.dark-mode .stat-label{ color:#aaa; }
+        .stat-value{ font-size:2em; font-weight:bold; color: var(--primary-color); }
+
         /* ========== 倒计时与进度 ========== */
-        .countdown-section {
-            display: grid;
+        .countdown-section{
+            display:grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 25px;
+            gap:20px;
+            margin-bottom:25px;
         }
-        .countdown-card {
-            background: linear-gradient(135deg, #fff9e6 0%, #ffe5a0 100%);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            border: 2px solid #fbbf24;
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        .countdown-card{
+            background: linear-gradient(135deg,#fff9e6 0%, #ffe5a0 100%);
+            padding:25px;
+            border-radius:15px;
+            text-align:center;
+            border:2px solid #fbbf24;
+            box-shadow:0 4px 15px rgba(251,191,36,0.3);
         }
-        body.dark-mode .countdown-card {
-            background: linear-gradient(135deg, #3a3520 0%, #4a4228 100%);
+        body.dark-mode .countdown-card{ background: linear-gradient(135deg,#3a3520 0%, #4a4228 100%); }
+        .countdown-icon{ font-size:2.5em; margin-bottom:10px; color:#d97706; }
+        .countdown-label{ font-size:1em; color:#92400e; margin-bottom:10px; font-weight:600; }
+        body.dark-mode .countdown-label{ color:#fbbf24; }
+        .countdown-value{ font-size:2.5em; font-weight:bold; color:#d97706; margin-bottom:5px; }
+        body.dark-mode .countdown-value{ color:#fbbf24; }
+        .countdown-subtitle{ font-size:.9em; color:#92400e; opacity:.8; }
+        body.dark-mode .countdown-subtitle{ color:#fbbf24; }
+        .progress-info{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-top:10px;
+            font-size:.9em;
+            color:#92400e;
         }
-        .countdown-icon {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            color: #d97706;
+        body.dark-mode .progress-info{ color:#fbbf24; }
+
+        .progress-bar-container{
+            background:#e9ecef;
+            border-radius:20px;
+            height:35px;
+            margin:25px 0;
+            overflow:hidden;
+            position:relative;
+            min-width:0;
         }
-        .countdown-label {
-            font-size: 1em;
-            color: #92400e;
-            margin-bottom: 10px;
-            font-weight: 600;
+        body.dark-mode .progress-bar-container{ background:#2d3748; }
+        .progress-bar-fill{
+            height:100%;
+            background: linear-gradient(90deg,var(--success-color) 0%, #38f9d7 100%);
+            border-radius:20px;
+            transition: width 1s ease;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:white;
+            font-weight:bold;
+            font-size:1em;
+            overflow:hidden;
+            white-space:nowrap;
         }
-        body.dark-mode .countdown-label {
-            color: #fbbf24;
+
+        /* 目标完成日期卡片 */
+        .target-card{
+            background: linear-gradient(135deg,#fce7f3 0%, #fbcfe8 100%);
+            border:2px solid #ec4899;
+            box-shadow:0 4px 15px rgba(236,72,153,0.3);
         }
-        .countdown-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #d97706;
-            margin-bottom: 5px;
+        body.dark-mode .target-card{ background: linear-gradient(135deg,#3a2032 0%, #4a2842 100%); }
+        .target-card .countdown-icon{ color:#ec4899; }
+        .target-card .countdown-label{ color:#9f1239; }
+        body.dark-mode .target-card .countdown-label{ color:#ec4899; }
+        .target-card .countdown-value{ color:#ec4899; }
+        .target-card .countdown-subtitle{ color:#9f1239; }
+        body.dark-mode .target-card .countdown-subtitle{ color:#ec4899; }
+        .target-card .progress-info{ color:#9f1239; }
+        body.dark-mode .target-card .progress-info{ color:#ec4899; }
+
+        /* 目标进度对比 */
+        .target-progress-card{
+            background: linear-gradient(135deg,#e0f2fe 0%, #bae6fd 100%);
+            border:2px solid var(--info-color);
+            box-shadow:0 4px 15px rgba(66,153,225,0.3);
         }
-        body.dark-mode .countdown-value {
-            color: #fbbf24;
-        }
-        .countdown-subtitle {
-            font-size: 0.9em;
-            color: #92400e;
-            opacity: 0.8;
-        }
-        body.dark-mode .countdown-subtitle {
-            color: #fbbf24;
-        }
-        .progress-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            font-size: 0.9em;
-            color: #92400e;
-        }
-        body.dark-mode .progress-info {
-            color: #fbbf24;
-        }
-        /* ========== 目标完成日期卡片样式 ========== */
-        .target-card {
-            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            border: 2px solid #ec4899;
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
-        }
-        body.dark-mode .target-card {
-            background: linear-gradient(135deg, #3a2032 0%, #4a2842 100%);
-        }
-        .target-card .countdown-icon {
-            color: #ec4899;
-        }
-        .target-card .countdown-label {
-            color: #9f1239;
-        }
-        body.dark-mode .target-card .countdown-label {
-            color: #ec4899;
-        }
-        .target-card .countdown-value {
-            color: #ec4899;
-        }
-        .target-card .countdown-subtitle {
-            color: #9f1239;
-        }
-        body.dark-mode .target-card .countdown-subtitle {
-            color: #ec4899;
-        }
-        .target-card .progress-info {
-            color: #9f1239;
-        }
-        body.dark-mode .target-card .progress-info {
-            color: #ec4899;
-        }
-        /* 目标进度对比卡片 */
-        .target-progress-card {
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            border: 2px solid var(--info-color);
-            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
-        }
-        body.dark-mode .target-progress-card {
-            background: linear-gradient(135deg, #1e3a4a 0%, #2a4a5a 100%);
-        }
-        .target-progress-card.behind {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        body.dark-mode .target-progress-card{ background: linear-gradient(135deg,#1e3a4a 0%, #2a4a5a 100%); }
+        .target-progress-card.behind{
+            background: linear-gradient(135deg,#fee2e2 0%, #fecaca 100%);
             border-color: var(--danger-color);
         }
-        body.dark-mode .target-progress-card.behind {
-            background: linear-gradient(135deg, #4a2020 0%, #5a2828 100%);
-        }
-        .target-progress-card.ahead {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        body.dark-mode .target-progress-card.behind{ background: linear-gradient(135deg,#4a2020 0%, #5a2828 100%); }
+        .target-progress-card.ahead{
+            background: linear-gradient(135deg,#d1fae5 0%, #a7f3d0 100%);
             border-color: var(--success-color);
         }
-        body.dark-mode .target-progress-card.ahead {
-            background: linear-gradient(135deg, #1e3a29 0%, #2a4a35 100%);
+        body.dark-mode .target-progress-card.ahead{ background: linear-gradient(135deg,#1e3a29 0%, #2a4a35 100%); }
+
+        /* 预期完成时间 */
+        .expected-card{
+            background: linear-gradient(135deg,#e0f2fe 0%, #bae6fd 100%);
+            border:2px solid var(--info-color);
+            box-shadow:0 4px 15px rgba(66,153,225,0.3);
         }
-        .target-progress-card .countdown-icon {
-            color: var(--info-color);
-        }
-        .target-progress-card.behind .countdown-icon {
-            color: var(--danger-color);
-        }
-        .target-progress-card.ahead .countdown-icon {
-            color: var(--success-color);
-        }
-        .target-progress-card .countdown-label {
-            color: #0c5460;
-        }
-        body.dark-mode .target-progress-card .countdown-label {
-            color: var(--info-color);
-        }
-        .target-progress-card.behind .countdown-label {
-            color: #991b1b;
-        }
-        body.dark-mode .target-progress-card.behind .countdown-label {
-            color: var(--danger-color);
-        }
-        .target-progress-card.ahead .countdown-label {
-            color: #065f46;
-        }
-        body.dark-mode .target-progress-card.ahead .countdown-label {
-            color: var(--success-color);
-        }
-        .target-progress-card .countdown-value {
-            color: var(--info-color);
-        }
-        .target-progress-card.behind .countdown-value {
-            color: var(--danger-color);
-        }
-        .target-progress-card.ahead .countdown-value {
-            color: var(--success-color);
-        }
-        /* ========== 预期完成时间卡片 ========== */
-        .expected-card {
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            border: 2px solid var(--info-color);
-            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
-        }
-        body.dark-mode .expected-card {
-            background: linear-gradient(135deg, #1e3a4a 0%, #2a4a5a 100%);
-        }
-        .expected-card .countdown-icon {
-            color: var(--info-color);
-        }
-        .expected-card .countdown-label {
-            color: #0c5460;
-        }
-        body.dark-mode .expected-card .countdown-label {
-            color: var(--info-color);
-        }
-        .expected-card .countdown-value {
-            color: var(--info-color);
-        }
-        .expected-card .countdown-subtitle {
-            color: #0c5460;
-        }
-        body.dark-mode .expected-card .countdown-subtitle {
-            color: var(--info-color);
-        }
-        .expected-card.warning {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        body.dark-mode .expected-card{ background: linear-gradient(135deg,#1e3a4a 0%, #2a4a5a 100%); }
+        .expected-card.warning{
+            background: linear-gradient(135deg,#fee2e2 0%, #fecaca 100%);
             border-color: var(--danger-color);
         }
-        body.dark-mode .expected-card.warning {
-            background: linear-gradient(135deg, #4a2020 0%, #5a2828 100%);
-        }
-        .expected-card.warning .countdown-icon {
-            color: var(--danger-color);
-        }
-        .expected-card.warning .countdown-label {
-            color: #991b1b;
-        }
-        body.dark-mode .expected-card.warning .countdown-label {
-            color: var(--danger-color);
-        }
-        .expected-card.warning .countdown-value {
-            color: var(--danger-color);
-        }
-        .expected-card.warning .countdown-subtitle {
-            color: #991b1b;
-        }
-        body.dark-mode .expected-card.warning .countdown-subtitle {
-            color: var(--danger-color);
-        }
-        .expected-card.success {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        body.dark-mode .expected-card.warning{ background: linear-gradient(135deg,#4a2020 0%, #5a2828 100%); }
+        .expected-card.success{
+            background: linear-gradient(135deg,#d1fae5 0%, #a7f3d0 100%);
             border-color: var(--success-color);
         }
-        body.dark-mode .expected-card.success {
-            background: linear-gradient(135deg, #1e3a29 0%, #2a4a35 100%);
+        body.dark-mode .expected-card.success{ background: linear-gradient(135deg,#1e3a29 0%, #2a4a35 100%); }
+
+        /* 今日学习进度 */
+        .daily-goal-card{
+            background: linear-gradient(135deg,#e0f7fa 0%, #b2ebf2 100%);
+            padding:25px;
+            border-radius:15px;
+            text-align:center;
+            border:2px solid var(--info-color);
+            box-shadow:0 4px 15px rgba(66,153,225,0.3);
         }
-        .expected-card.success .countdown-icon {
-            color: var(--success-color);
+        body.dark-mode .daily-goal-card{ background: linear-gradient(135deg,#1e3a4a 0%, #2a4a5a 100%); }
+        .daily-goal-icon{ font-size:2.5em; margin-bottom:10px; color: var(--info-color); }
+        .daily-goal-label{ font-size:1em; color:#0c5460; margin-bottom:10px; font-weight:600; }
+        body.dark-mode .daily-goal-label{ color: var(--info-color); }
+        .daily-goal-value{ font-size:2.5em; font-weight:bold; color: var(--info-color); margin-bottom:10px; }
+        .daily-goal-progress{
+            width:100%;
+            height:25px;
+            background: rgba(255,255,255,0.5);
+            border-radius:15px;
+            overflow:hidden;
+            margin-top:10px;
+            position:relative;
+            min-width:0;
         }
-        .expected-card.success .countdown-label {
-            color: #065f46;
+        body.dark-mode .daily-goal-progress{ background: rgba(0,0,0,0.3); }
+        .daily-goal-progress-fill{
+            height:100%;
+            background: linear-gradient(90deg,var(--info-color) 0%, #3182ce 100%);
+            border-radius:15px;
+            transition: width .5s ease;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:white;
+            font-weight:bold;
+            font-size:.85em;
+            overflow:hidden;
+            white-space:nowrap;
         }
-        body.dark-mode .expected-card.success .countdown-label {
-            color: var(--success-color);
+
+        .last-update{
+            text-align:center;
+            padding:15px;
+            background: linear-gradient(135deg,#fff9e6 0%, #ffe5a0 100%);
+            border-radius:12px;
+            color:#d97706;
+            font-weight:600;
+            border:2px solid #fbbf24;
+            font-size:1em;
         }
-        .expected-card.success .countdown-value {
-            color: var(--success-color);
+        body.dark-mode .last-update{
+            background: linear-gradient(135deg,#3a3520 0%, #4a4228 100%);
+            color:#fbbf24;
         }
-        .expected-card.success .countdown-subtitle {
-            color: #065f46;
-        }
-        body.dark-mode .expected-card.success .countdown-subtitle {
-            color: var(--success-color);
-        }
-        /* ========== 今日目标卡片 ========== */
-        .daily-goal-card {
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            border: 2px solid var(--info-color);
-            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
-        }
-        body.dark-mode .daily-goal-card {
-            background: linear-gradient(135deg, #1e3a4a 0%, #2a4a5a 100%);
-        }
-        .daily-goal-icon {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            color: var(--info-color);
-        }
-        .daily-goal-label {
-            font-size: 1em;
-            color: #0c5460;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-        body.dark-mode .daily-goal-label {
-            color: var(--info-color);
-        }
-        .daily-goal-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: var(--info-color);
-            margin-bottom: 10px;
-        }
-        .daily-goal-progress {
-            width: 100%;
-            height: 25px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 15px;
-            overflow: hidden;
-            margin-top: 10px;
-            position: relative;
-            min-width: 0;
-        }
-        body.dark-mode .daily-goal-progress {
-            background: rgba(0, 0, 0, 0.3);
-        }
-        .daily-goal-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--info-color) 0%, #3182ce 100%);
-            border-radius: 15px;
-            transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 0.85em;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-        .last-update {
-            text-align: center;
-            padding: 15px;
-            background: linear-gradient(135deg, #fff9e6 0%, #ffe5a0 100%);
-            border-radius: 12px;
-            color: #d97706;
-            font-weight: 600;
-            border: 2px solid #fbbf24;
-            font-size: 1em;
-        }
-        body.dark-mode .last-update {
-            background: linear-gradient(135deg, #3a3520 0%, #4a4228 100%);
-            color: #fbbf24;
-        }
-        /* ========== 高亮样式 ========== */
-        .highlight {
+
+        /* 高亮 */
+        .highlight{
             background: var(--highlight-color);
             color: var(--highlight-text);
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-weight: 600;
+            padding:2px 4px;
+            border-radius:3px;
+            font-weight:600;
         }
-        body.dark-mode .highlight {
-            background: #fbbf24;
-            color: #1a202c;
+        body.dark-mode .highlight{ background:#fbbf24; color:#1a202c; }
+
+        .weakness-level{
+            padding:4px 10px;
+            border-radius:10px;
+            font-size:.85em;
+            font-weight:600;
         }
-        .highlight-badge {
-            background: var(--danger-color);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 0.75em;
-            font-weight: bold;
-            margin-left: 8px;
-            animation: blink 1.5s ease-in-out infinite;
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .weakness-level {
-            padding: 4px 10px;
-            border-radius: 10px;
-            font-size: 0.85em;
-            font-weight: 600;
-        }
-        .weakness-level.high {
-            background: #fee;
-            color: #c00;
-        }
-        .weakness-level.medium {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        .weakness-level.low {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-        /* 必考等标签高亮 */
-        .tag-must {
-            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            font-weight: 700;
-            margin-left: 8px;
-            box-shadow: 0 2px 8px rgba(245, 101, 101, 0.4);
-        }
-        .tag-frequent {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            font-weight: 700;
-            margin-left: 8px;
-            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.4);
-        }
-        .tag-difficult {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            font-weight: 700;
-            margin-left: 8px;
-            box-shadow: 0 2px 8px rgba(66, 153, 225, 0.4);
-        }
+        .weakness-level.high{ background:#fee; color:#c00; }
+        .weakness-level.medium{ background:#fef3c7; color:#92400e; }
+        .weakness-level.low{ background:#dbeafe; color:#1e40af; }
+
         /* ========== 工具栏 ========== */
-        .toolbar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        .toolbar{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:15px;
+            margin-bottom:30px;
+            padding:20px;
+            background:white;
+            border-radius:20px;
+            box-shadow:0 8px 30px rgba(0,0,0,0.1);
         }
-        body.dark-mode .toolbar {
-            background: var(--dark-card);
+        body.dark-mode .toolbar{ background: var(--dark-card); }
+
+        .tool-btn{
+            background: linear-gradient(135deg,#667eea 0%, #764ba2 100%);
+            color:white;
+            border:none;
+            padding:12px 24px;
+            border-radius:12px;
+            font-size:1em;
+            font-weight:600;
+            cursor:pointer;
+            transition: all .3s ease;
+            box-shadow:0 4px 15px rgba(102,126,234,0.3);
+            display:flex;
+            align-items:center;
+            gap:8px;
         }
-        .tool-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .tool-btn:hover {
+        .tool-btn:hover{
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+            box-shadow:0 6px 20px rgba(102,126,234,0.5);
         }
-        .tool-btn.success {
-            background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%);
+        .tool-btn.success{ background: linear-gradient(135deg,var(--success-color) 0%, #38f9d7 100%); }
+        .tool-btn.warning{ background: linear-gradient(135deg,#fbbf24 0%, #f59e0b 100%); }
+        .tool-btn.info{ background: linear-gradient(135deg,#4299e1 0%, #3182ce 100%); }
+        .tool-btn.danger{ background: linear-gradient(135deg,var(--danger-color) 0%, #e53e3e 100%); }
+        .tool-btn.active{ box-shadow:0 0 20px rgba(102,126,234,0.8); transform: scale(1.05); }
+
+        .search-box{ display:flex; gap:10px; flex:1; max-width:500px; }
+        .search-input{
+            flex:1;
+            padding:12px 20px;
+            border:2px solid var(--primary-color);
+            border-radius:12px;
+            font-size:1em;
+            outline:none;
+            transition: all .3s ease;
         }
-        .tool-btn.warning {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-        }
-        .tool-btn.info {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-        }
-        .tool-btn.danger {
-            background: linear-gradient(135deg, var(--danger-color) 0%, #e53e3e 100%);
-        }
-        .tool-btn.active {
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
-            transform: scale(1.05);
-        }
-        .search-box {
-            display: flex;
-            gap: 10px;
-            flex: 1;
-            max-width: 500px;
-        }
-        .search-input {
-            flex: 1;
-            padding: 12px 20px;
-            border: 2px solid var(--primary-color);
-            border-radius: 12px;
-            font-size: 1em;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-        body.dark-mode .search-input {
-            background: var(--dark-bg);
-            color: #fff;
-        }
+        body.dark-mode .search-input{ background: var(--dark-bg); color:#fff; }
+
         /* ========== 知识列表 ========== */
-        .knowledge-container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            min-height: 600px;
-            margin-bottom: 30px;
+        .knowledge-container{
+            background:white;
+            border-radius:20px;
+            padding:40px;
+            box-shadow:0 10px 40px rgba(0,0,0,0.1);
+            min-height:600px;
+            margin-bottom:30px;
         }
-        body.dark-mode .knowledge-container {
-            background: var(--dark-card);
+        body.dark-mode .knowledge-container{ background: var(--dark-card); }
+        .knowledge-list{ display:flex; flex-direction:column; gap:20px; }
+        .knowledge-item{
+            background: linear-gradient(135deg,#f8f9fa 0%, #e9ecef 100%);
+            border-radius:15px;
+            padding:25px;
+            border-left:5px solid var(--primary-color);
+            transition: all .3s ease;
+            cursor:pointer;
         }
-        .knowledge-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .knowledge-item {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            padding: 25px;
-            border-left: 5px solid var(--primary-color);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        body.dark-mode .knowledge-item {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-        }
-        .knowledge-item:hover {
+        body.dark-mode .knowledge-item{ background: linear-gradient(135deg,#1a202c 0%, #2d3748 100%); }
+        .knowledge-item:hover{
             transform: translateX(10px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            box-shadow:0 8px 25px rgba(0,0,0,0.15);
         }
-        .knowledge-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+        .knowledge-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; }
+        .knowledge-number{
+            background: linear-gradient(135deg,var(--primary-color) 0%, var(--secondary-color) 100%);
+            color:white;
+            width:40px; height:40px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:bold;
         }
-        .knowledge-number {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1em;
+        .knowledge-badges{ display:flex; gap:10px; flex-wrap:wrap; }
+        .badge{
+            padding:6px 14px;
+            border-radius:20px;
+            font-size:.9em;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            gap:5px;
         }
-        .knowledge-badges {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+        .badge.difficulty{ background: linear-gradient(135deg,#fbbf24 0%, #f59e0b 100%); color:white; }
+        .badge.importance{ background: linear-gradient(135deg,#f56565 0%, #e53e3e 100%); color:white; }
+        .badge.inspiration{ background: linear-gradient(135deg,var(--success-color) 0%, #38f9d7 100%); color:white; }
+        .badge.date{ background: linear-gradient(135deg,#4299e1 0%, #3182ce 100%); color:white; }
+
+        .knowledge-content{ color:#333; line-height:1.8; font-size:1.05em; }
+        body.dark-mode .knowledge-content{ color:#e2e8f0; }
+
+        /* 分页 */
+        .pagination{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:10px;
+            margin-top:30px;
+            flex-wrap:wrap;
         }
-        .badge {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .pagination-btn{
+            background: linear-gradient(135deg,#667eea 0%, #764ba2 100%);
+            color:white;
+            border:none;
+            padding:10px 20px;
+            border-radius:10px;
+            cursor:pointer;
+            font-size:.95em;
+            font-weight:600;
+            transition: all .3s ease;
         }
-        .badge.difficulty {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: white;
-        }
-        .badge.importance {
-            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-            color: white;
-        }
-        .badge.inspiration {
-            background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%);
-            color: white;
-        }
-        .badge.date {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            color: white;
-        }
-        .knowledge-content {
-            color: #333;
-            line-height: 1.8;
-            font-size: 1.05em;
-        }
-        body.dark-mode .knowledge-content {
-            color: #e2e8f0;
-        }
-        /* ========== 分页 ========== */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-        .pagination-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.95em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .pagination-btn:hover:not(:disabled) {
+        .pagination-btn:hover:not(:disabled){
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow:0 5px 15px rgba(102,126,234,0.4);
         }
-        .pagination-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .pagination-info {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 10px;
-            font-weight: 600;
+        .pagination-btn:disabled{ opacity:.5; cursor:not-allowed; }
+        .pagination-info{
+            padding:10px 20px;
+            background: linear-gradient(135deg,#f8f9fa 0%, #e9ecef 100%);
+            border-radius:10px;
+            font-weight:600;
             color: var(--primary-color);
-            font-size: 1em;
         }
-        body.dark-mode .pagination-info {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        body.dark-mode .pagination-info{ background: linear-gradient(135deg,#1a202c 0%, #2d3748 100%); }
+
+        .page-number{
+            min-width:40px; height:40px;
+            display:flex; align-items:center; justify-content:center;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:600;
+            transition: all .3s ease;
+            background:#f8f9fa;
+            color:#333;
         }
-        .page-number {
-            min-width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-            color: #333;
-            font-size: 1em;
-        }
-        body.dark-mode .page-number {
-            background: #2d3748;
-            color: #e2e8f0;
-        }
-        .page-number:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: scale(1.1);
-        }
-        .page-number.active {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-        }
+        body.dark-mode .page-number{ background:#2d3748; color:#e2e8f0; }
+        .page-number:hover{ background: var(--primary-color); color:white; transform: scale(1.1); }
+        .page-number.active{ background: linear-gradient(135deg,var(--primary-color) 0%, var(--secondary-color) 100%); color:white; }
+
         /* ========== 知识块进度 ========== */
-        .progress-section {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        .progress-section{
+            background:white;
+            border-radius:20px;
+            padding:40px;
+            margin-bottom:30px;
+            box-shadow:0 10px 40px rgba(0,0,0,0.1);
         }
-        body.dark-mode .progress-section {
-            background: var(--dark-card);
+        body.dark-mode .progress-section{ background: var(--dark-card); }
+        .section-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:30px;
+            padding-bottom:20px;
+            border-bottom:2px solid var(--line-color);
         }
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--line-color);
+        body.dark-mode .section-header{ border-bottom-color: var(--line-color-dark); }
+        .section-header h2{
+            font-size:2em;
+            background: linear-gradient(135deg,var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            background-clip:text;
         }
-        body.dark-mode .section-header {
-            border-bottom-color: var(--line-color-dark);
-        }
-        .section-header h2 {
-            font-size: 2em;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .progress-summary {
-            display: grid;
+
+        .progress-summary{
+            display:grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            gap:20px;
+            margin-bottom:30px;
         }
-        .progress-stat {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            transition: all 0.3s ease;
+        .progress-stat{
+            background: linear-gradient(135deg,#f8f9fa 0%, #e9ecef 100%);
+            padding:20px;
+            border-radius:15px;
+            text-align:center;
+            transition: all .3s ease;
         }
-        body.dark-mode .progress-stat {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        body.dark-mode .progress-stat{ background: linear-gradient(135deg,#1a202c 0%, #2d3748 100%); }
+        .progress-stat:hover{ transform: translateY(-5px); box-shadow:0 8px 20px rgba(0,0,0,0.15); }
+        .progress-stat-icon{ font-size:2em; margin-bottom:10px; }
+        .progress-stat-value{ font-size:1.6em; font-weight:bold; color: var(--primary-color); }
+        .progress-stat-label{ font-size:.95em; color:#666; margin-top:5px; }
+        body.dark-mode .progress-stat-label{ color:#aaa; }
+
+        .alert-box{
+            padding:15px 20px;
+            border-radius:12px;
+            margin:20px 0;
+            display:flex;
+            align-items:center;
+            gap:12px;
+            font-weight:600;
+            font-size:1em;
         }
-        .progress-stat:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        .alert-box.warning{
+            background: linear-gradient(135deg,#fff3cd 0%, #ffe69c 100%);
+            color:#856404;
+            border-left:4px solid #ffc107;
         }
-        .progress-stat-icon {
-            font-size: 2em;
-            margin-bottom: 10px;
+        .alert-box.success{
+            background: linear-gradient(135deg,#d4edda 0%, #c3e6cb 100%);
+            color:#155724;
+            border-left:4px solid #28a745;
         }
-        .progress-stat-value {
-            font-size: 1.6em;
-            font-weight: bold;
+        body.dark-mode .alert-box.warning{
+            background: linear-gradient(135deg,#4a3f1f 0%, #5a4b28 100%);
+            color:#ffc107;
+        }
+        body.dark-mode .alert-box.success{
+            background: linear-gradient(135deg,#1e3a29 0%, #2a4a35 100%);
+            color:#28a745;
+        }
+
+        .progress-categories{ margin-top:30px; }
+        .progress-category{
+            margin-bottom:30px;
+            padding:25px;
+            background: linear-gradient(135deg,#f8f9fa 0%, #ffffff 100%);
+            border-radius:15px;
+            box-shadow:0 4px 15px rgba(0,0,0,0.05);
+        }
+        body.dark-mode .progress-category{ background: linear-gradient(135deg,#1a202c 0%, #2d3748 100%); }
+        .category-title{
+            font-size:1.5em;
+            font-weight:bold;
             color: var(--primary-color);
+            margin-bottom:20px;
+            display:flex;
+            align-items:center;
+            gap:10px;
         }
-        .progress-stat-label {
-            font-size: 0.95em;
-            color: #666;
-            margin-top: 5px;
+        .progress-blocks-list{ display:flex; flex-direction:column; gap:10px; }
+        .progress-block-item{
+            padding:12px 15px;
+            background: rgba(255,255,255,0.5);
+            border-radius:10px;
+            display:flex;
+            align-items:center;
+            gap:12px;
+            transition: all .3s ease;
+            font-size:1em;
         }
-        body.dark-mode .progress-stat-label {
-            color: #aaa;
-        }
-        .progress-bar-container {
-            background: #e9ecef;
-            border-radius: 20px;
-            height: 35px;
-            margin: 25px 0;
-            overflow: hidden;
-            position: relative;
-            min-width: 0;
-        }
-        body.dark-mode .progress-bar-container {
-            background: #2d3748;
-        }
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--success-color) 0%, #38f9d7 100%);
-            border-radius: 20px;
-            transition: width 1s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1em;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-        .alert-box {
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-            font-size: 1em;
-        }
-        .alert-box.warning {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
-            color: #856404;
-            border-left: 4px solid #ffc107;
-        }
-        .alert-box.success {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            color: #155724;
-            border-left: 4px solid #28a745;
-        }
-        body.dark-mode .alert-box.warning {
-            background: linear-gradient(135deg, #4a3f1f 0%, #5a4b28 100%);
-            color: #ffc107;
-        }
-        body.dark-mode .alert-box.success {
-            background: linear-gradient(135deg, #1e3a29 0%, #2a4a35 100%);
-            color: #28a745;
-        }
-        .progress-categories {
-            margin-top: 30px;
-        }
-        .progress-category {
-            margin-bottom: 30px;
-            padding: 25px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-        body.dark-mode .progress-category {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-        }
-        .category-title {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .progress-blocks-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .progress-block-item {
-            padding: 12px 15px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s ease;
-            font-size: 1em;
-        }
-        body.dark-mode .progress-block-item {
-            background: rgba(0, 0, 0, 0.2);
-        }
-        .progress-block-item:hover {
+        body.dark-mode .progress-block-item{ background: rgba(0,0,0,0.2); }
+        .progress-block-item:hover{
             transform: translateX(5px);
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(102,126,234,0.1);
         }
-        .progress-block-item.completed {
-            opacity: 0.7;
-            text-decoration: line-through;
+        .progress-block-item.completed{ opacity:.7; text-decoration: line-through; }
+        .progress-block-item input[type="checkbox"]{ width:20px; height:20px; cursor:pointer; }
+
+        .progress-pagination{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:15px;
+            margin-top:30px;
+            flex-wrap:wrap;
         }
-        .progress-block-item input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-        .progress-pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-        .progress-pagination .pagination-btn {
-            min-width: 100px;
-        }
-        .progress-pagination .pagination-btn.jump-btn {
-            min-width: 90px;
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-        }
-        /* ========== 标签汇总（新增） ========== */
-        .tag-summary-grid {
-            display: grid;
+        .progress-pagination .pagination-btn{ min-width:100px; }
+
+        /* ========== 标签汇总 ========== */
+        .tag-summary-grid{
+            display:grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            gap:20px;
         }
-        .tag-card {
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        .tag-card{
+            border-radius:16px;
+            padding:20px;
+            box-shadow:0 6px 18px rgba(0,0,0,0.08);
         }
-        .tag-card.must {
+        .tag-card.must{
             background: linear-gradient(135deg, rgba(245,101,101,0.12) 0%, rgba(229,62,62,0.12) 100%);
-            border: 2px solid #e53e3e;
+            border:2px solid #e53e3e;
         }
-        .tag-card.frequent {
+        .tag-card.frequent{
             background: linear-gradient(135deg, rgba(251,191,36,0.12) 0%, rgba(245,158,11,0.12) 100%);
-            border: 2px solid #f59e0b;
+            border:2px solid #f59e0b;
         }
-        .tag-card.difficult {
+        .tag-card.difficult{
             background: linear-gradient(135deg, rgba(66,153,225,0.12) 0%, rgba(49,130,206,0.12) 100%);
-            border: 2px solid #3182ce;
+            border:2px solid #3182ce;
         }
-        body.dark-mode .tag-card {
-            background: rgba(255,255,255,0.04);
+        body.dark-mode .tag-card{ background: rgba(255,255,255,0.04); }
+        .tag-title{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            font-weight:800;
+            margin-bottom:10px;
         }
-        .tag-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 800;
-            margin-bottom: 10px;
+        .tag-meta{ font-size:.9em; color:#555; margin-bottom:10px; }
+        body.dark-mode .tag-meta{ color:#cbd5e1; }
+        .tag-list{
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            max-height:420px;
+            overflow:auto;
+            padding-right:6px;
         }
-        .tag-meta {
-            font-size: 0.9em;
-            color: #555;
-            margin-bottom: 10px;
-        }
-        body.dark-mode .tag-meta {
-            color: #cbd5e1;
-        }
-        .tag-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 420px;
-            overflow: auto;
-            padding-right: 6px;
-        }
-        .tag-item {
+        .tag-item{
             background: rgba(255,255,255,0.7);
-            border-radius: 10px;
-            padding: 10px 12px;
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
+            border-radius:10px;
+            padding:10px 12px;
+            display:flex;
+            gap:10px;
+            align-items:flex-start;
         }
-        body.dark-mode .tag-item {
-            background: rgba(0,0,0,0.25);
-        }
-        .tag-item .status {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
+        body.dark-mode .tag-item{ background: rgba(0,0,0,0.25); }
+        .tag-item .status{
+            width:22px; height:22px;
+            border-radius:50%;
+            display:grid;
+            place-items:center;
             flex: 0 0 22px;
         }
-        .status.done {
-            background: #16a34a;
-            color: #fff;
-        }
-        .status.todo {
-            background: #9ca3af;
-            color: #fff;
-        }
-        .tag-item .content {
-            flex: 1;
-            line-height: 1.6;
-        }
-        .tag-item .meta {
-            color: #666;
-            font-size: 0.85em;
-        }
-        body.dark-mode .tag-item .meta {
-            color: #a3a3a3;
-        }
+        .status.done{ background:#16a34a; color:#fff; }
+        .status.todo{ background:#9ca3af; color:#fff; }
+        .tag-item .content{ flex:1; line-height:1.6; }
+        .tag-item .meta{ color:#666; font-size:.85em; }
+        body.dark-mode .tag-item .meta{ color:#a3a3a3; }
+
         /* ========== 固定按钮 ========== */
-        .fixed-buttons {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 1000;
+        .fixed-buttons{
+            position:fixed;
+            bottom:30px;
+            right:30px;
+            display:flex;
+            flex-direction:column;
+            gap:15px;
+            z-index:1000;
         }
-        .back-button, .back-to-top {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
+        .back-button,.back-to-top{
+            width:60px; height:60px;
+            background: linear-gradient(135deg,#667eea 0%, #764ba2 100%);
+            color:white;
+            border:none;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:24px;
+            box-shadow:0 6px 20px rgba(102,126,234,0.4);
+            cursor:pointer;
+            transition: all .3s ease;
+            text-decoration:none;
         }
-        .back-to-top {
-            background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%);
-            display: none;
+        .back-to-top{
+            background: linear-gradient(135deg,var(--success-color) 0%, #38f9d7 100%);
+            display:none;
         }
-        .back-button:hover, .back-to-top:hover {
+        .back-button:hover,.back-to-top:hover{
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
+            box-shadow:0 10px 30px rgba(102,126,234,0.6);
         }
+
         /* ========== 加载动画 ========== */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
+        .loading-overlay{
+            position:fixed;
+            top:0; left:0;
+            width:100%; height:100%;
+            background: rgba(255,255,255,0.95);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            z-index:9999;
             backdrop-filter: blur(10px);
         }
-        body.dark-mode .loading-overlay {
-            background: rgba(26, 32, 44, 0.95);
-        }
-        .loading-content {
-            text-align: center;
-        }
-        .loading-content i {
-            font-size: 4em;
+        body.dark-mode .loading-overlay{ background: rgba(26,32,44,0.95); }
+        .loading-content{ text-align:center; }
+        .loading-content i{
+            font-size:4em;
             color: var(--primary-color);
             animation: spin 1.5s linear infinite;
         }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .loading-content p {
-            margin-top: 20px;
-            font-size: 1.3em;
+        @keyframes spin{ from{ transform:rotate(0deg);} to{ transform:rotate(360deg);} }
+        .loading-content p{
+            margin-top:20px;
+            font-size:1.3em;
             color: var(--primary-color);
-            font-weight: 600;
+            font-weight:600;
         }
-        .loading-progress {
-            width: 300px;
-            height: 8px;
-            background: rgba(102, 126, 234, 0.2);
-            border-radius: 10px;
-            margin-top: 20px;
-            overflow: hidden;
+        .loading-progress{
+            width:300px;
+            height:8px;
+            background: rgba(102,126,234,0.2);
+            border-radius:10px;
+            margin-top:20px;
+            overflow:hidden;
         }
-        .loading-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            border-radius: 10px;
-            width: 0%;
-            transition: width 0.3s ease;
+        .loading-progress-bar{
+            height:100%;
+            background: linear-gradient(90deg,var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius:10px;
+            width:0%;
+            transition: width .3s ease;
         }
-        .loading-time {
-            margin-top: 15px;
-            font-size: 1em;
+        .loading-time{
+            margin-top:15px;
+            font-size:1em;
             color: var(--primary-color);
-            font-weight: 500;
+            font-weight:500;
         }
-        /* ========== 进度条 ========== */
-        .reading-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            z-index: 10000;
-            transition: width 0.2s ease;
-            width: 0%;
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+
+        /* 阅读进度条 */
+        .reading-progress{
+            position:fixed;
+            top:0; left:0;
+            height:4px;
+            background: linear-gradient(90deg,var(--primary-color) 0%, var(--secondary-color) 100%);
+            z-index:10000;
+            transition: width .2s ease;
+            width:0%;
+            box-shadow:0 0 10px rgba(102,126,234,0.5);
         }
-        /* ========== 响应式设计 ========== */
-        @media (max-width: 768px) {
-            .page-header h1 {
-                font-size: 2.2em;
-            }
-            .knowledge-page {
-                padding: 30px 15px;
-            }
-            .knowledge-page.shifted {
-                margin-left: 0;
-            }
-            .side-nav {
-                width: 90%;
-                max-width: 400px;
-                left: -100%;
-            }
-            .side-nav-toggle.active {
-                left: calc(90% - 10px);
-            }
-            .stats-grid, .progress-summary, .countdown-section {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            .toolbar {
-                flex-direction: column;
-                padding: 15px;
-            }
-            .search-box {
-                max-width: 100%;
-                width: 100%;
-            }
-            .tool-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            .sidebar-achievements-grid {
-                grid-template-columns: 1fr;
-            }
+
+        /* ========== 每日学习热力图（最近365天） ========== */
+        .heatmap-section{
+            margin-top:20px;
+            background:white;
+            border-radius:20px;
+            padding:25px;
+            box-shadow:0 8px 30px rgba(0,0,0,0.08);
+        }
+        body.dark-mode .heatmap-section{ background: var(--dark-card); }
+
+        .heatmap-header{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:15px;
+            margin-bottom:15px;
+            flex-wrap:wrap;
+        }
+        .heatmap-title{
+            font-weight:800;
+            color: var(--primary-color);
+            display:flex;
+            align-items:center;
+            gap:10px;
+            font-size:1.15em;
+        }
+        .heatmap-legend{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            font-size:.9em;
+            color:#666;
+        }
+        body.dark-mode .heatmap-legend{ color:#aab; }
+        .heatmap-legend .box{
+            width:14px; height:14px;
+            border-radius:4px;
+            border:1px solid rgba(0,0,0,0.08);
+        }
+        body.dark-mode .heatmap-legend .box{ border-color: rgba(255,255,255,0.12); }
+
+        .heatmap-grid-wrap{
+            display:flex;
+            gap:12px;
+            overflow-x:auto;
+            padding-bottom:6px;
+        }
+        .heatmap-weekdays{
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+            padding-top:18px;
+            min-width:18px;
+            color:#777;
+            font-size:12px;
+            user-select:none;
+        }
+        body.dark-mode .heatmap-weekdays{ color:#9aa; }
+
+        .heatmap-grid{
+            display:grid;
+            grid-auto-flow: column;
+            grid-auto-columns: 14px;
+            grid-template-rows: repeat(7, 14px);
+            gap:6px;
+            align-items:start;
+            padding:18px 6px 6px 6px;
+            border-radius:12px;
+            background: linear-gradient(135deg, rgba(102,126,234,0.05), rgba(118,75,162,0.05));
+        }
+        body.dark-mode .heatmap-grid{ background: rgba(255,255,255,0.03); }
+
+        .hm-cell{
+            width:14px; height:14px;
+            border-radius:4px;
+            background: rgba(0,0,0,0.08);
+            position:relative;
+            cursor: default;
+        }
+        body.dark-mode .hm-cell{ background: rgba(255,255,255,0.08); }
+
+        .hm-cell[data-level="0"]{ background: rgba(0,0,0,0.08); }
+        .hm-cell[data-level="1"]{ background: rgba(102,126,234,0.25); }
+        .hm-cell[data-level="2"]{ background: rgba(102,126,234,0.45); }
+        .hm-cell[data-level="3"]{ background: rgba(102,126,234,0.70); }
+        .hm-cell[data-level="4"]{ background: rgba(102,126,234,0.95); }
+
+        body.dark-mode .hm-cell[data-level="0"]{ background: rgba(255,255,255,0.08); }
+        body.dark-mode .hm-cell[data-level="1"]{ background: rgba(56,189,248,0.20); }
+        body.dark-mode .hm-cell[data-level="2"]{ background: rgba(56,189,248,0.40); }
+        body.dark-mode .hm-cell[data-level="3"]{ background: rgba(56,189,248,0.65); }
+        body.dark-mode .hm-cell[data-level="4"]{ background: rgba(56,189,248,0.92); }
+
+        .hm-tooltip{
+            position:absolute;
+            left:50%;
+            top:-10px;
+            transform: translate(-50%, -100%);
+            background: rgba(0,0,0,0.85);
+            color:#fff;
+            padding:8px 10px;
+            border-radius:10px;
+            font-size:12px;
+            white-space:nowrap;
+            pointer-events:none;
+            opacity:0;
+            transition: opacity .15s ease;
+            z-index:20;
+        }
+        .hm-cell:hover .hm-tooltip{ opacity:1; }
+
+        .heatmap-metrics{
+            margin-top:15px;
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap:12px;
+        }
+        .hm-metric{
+            background: linear-gradient(135deg,#f8f9fa 0%, #e9ecef 100%);
+            border-radius:14px;
+            padding:14px;
+            border:1px solid rgba(0,0,0,0.06);
+        }
+        body.dark-mode .hm-metric{
+            background: linear-gradient(135deg,#1a202c 0%, #2d3748 100%);
+            border-color: rgba(255,255,255,0.06);
+        }
+        .hm-metric .k{ color:#666; font-size:.9em; }
+        body.dark-mode .hm-metric .k{ color:#aab; }
+        .hm-metric .v{ font-weight:900; font-size:1.35em; color: var(--primary-color); margin-top:4px; }
+
+        .cold-advice{
+            margin-top:15px;
+            border-radius:16px;
+            padding:16px;
+            border-left:4px solid var(--info-color);
+            background: linear-gradient(135deg, rgba(66,153,225,0.10) 0%, rgba(102,126,234,0.08) 100%);
+        }
+        body.dark-mode .cold-advice{ background: rgba(66,153,225,0.10); }
+        .cold-advice-title{
+            font-weight:900;
+            color: var(--info-color);
+            display:flex;
+            align-items:center;
+            gap:10px;
+            margin-bottom:8px;
+        }
+        .cold-advice-text{ color:#222; line-height:1.75; }
+        body.dark-mode .cold-advice-text{ color:#e6eefc; }
+        .cold-advice-text .num{
+            background: var(--highlight-color);
+            color: var(--highlight-text);
+            padding:1px 6px;
+            border-radius:8px;
+            font-weight:900;
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 768px){
+            .page-header h1{ font-size:2.2em; }
+            .knowledge-page{ padding:30px 15px; }
+            .knowledge-page.shifted{ margin-left:0; }
+            .side-nav{ width:90%; max-width:400px; left:-100%; }
+            .side-nav-toggle.active{ left: calc(90% - 10px); }
+            .stats-grid, .progress-summary, .countdown-section{ grid-template-columns: 1fr; gap:15px; }
+            .toolbar{ flex-direction:column; padding:15px; }
+            .search-box{ max-width:100%; width:100%; }
+            .tool-btn{ width:100%; justify-content:center; }
+            .sidebar-achievements-grid{ grid-template-columns: 1fr; }
         }
     </style>
 </head>
+
 <body>
-    <!-- 阅读进度条 -->
     <div class="reading-progress"></div>
+
     <!-- 侧边导航栏 -->
-    <button class="side-nav-toggle" id="sideNavToggle">
-        <i class="fas fa-bars"></i>
-    </button>
+    <button class="side-nav-toggle" id="sideNavToggle"><i class="fas fa-bars"></i></button>
+
     <aside class="side-nav" id="sideNav">
         <div class="nav-title"><i class="fas fa-compass"></i> 快速导航</div>
+
         <div class="nav-item" onclick="toggleSection('chartsSection')">
-            <i class="fas fa-chart-line"></i>
-            <span>学习曲线</span>
+            <i class="fas fa-chart-line"></i><span>学习曲线</span>
         </div>
         <div class="nav-item" onclick="toggleSection('diagnosisSection')">
-            <i class="fas fa-stethoscope"></i>
-            <span>智能诊断</span>
+            <i class="fas fa-stethoscope"></i><span>智能诊断</span>
         </div>
         <div class="nav-item" onclick="toggleSection('achievementSection')">
-            <i class="fas fa-trophy"></i>
-            <span>成就系统</span>
+            <i class="fas fa-trophy"></i><span>成就系统</span>
         </div>
-        <!-- 学习曲线区域 -->
+
+        <!-- 学习曲线 -->
         <div class="nav-section" id="chartsSection">
-            <div class="nav-section-title">
-                <i class="fas fa-chart-line"></i>
-                学习曲线可视化
-            </div>
+            <div class="nav-section-title"><i class="fas fa-chart-line"></i> 学习曲线可视化</div>
             <div class="sidebar-chart-container">
                 <div class="sidebar-chart-title">各科学习时长</div>
                 <canvas id="studyTimeChart"></canvas>
@@ -1763,55 +1168,39 @@
                 <canvas id="weaknessChart"></canvas>
             </div>
         </div>
-        <!-- 智能诊断区域 -->
+
+        <!-- 智能诊断 -->
         <div class="nav-section" id="diagnosisSection">
-            <div class="nav-section-title">
-                <i class="fas fa-stethoscope"></i>
-                智能诊断报告
-            </div>
+            <div class="nav-section-title"><i class="fas fa-stethoscope"></i> 智能诊断报告</div>
+
             <div class="sidebar-diagnosis-card weak">
-                <div class="sidebar-diagnosis-title">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    薄弱知识点 TOP 5
-                </div>
-                <ul class="sidebar-diagnosis-list" id="weakKnowledgeList">
-                    <!-- 动态生成 -->
-                </ul>
+                <div class="sidebar-diagnosis-title"><i class="fas fa-exclamation-triangle"></i> 薄弱知识点 TOP 5</div>
+                <ul class="sidebar-diagnosis-list" id="weakKnowledgeList"></ul>
             </div>
+
             <div class="sidebar-diagnosis-card error">
-                <div class="sidebar-diagnosis-title">
-                    <i class="fas fa-times-circle"></i>
-                    易错题型分析
-                </div>
-                <ul class="sidebar-diagnosis-list" id="errorProneList">
-                    <!-- 动态生成 -->
-                </ul>
+                <div class="sidebar-diagnosis-title"><i class="fas fa-times-circle"></i> 易错题型分析</div>
+                <ul class="sidebar-diagnosis-list" id="errorProneList"></ul>
             </div>
+
             <div class="sidebar-diagnosis-card focus">
-                <div class="sidebar-diagnosis-title">
-                    <i class="fas fa-bullseye"></i>
-                    下周重点攻克
-                </div>
-                <ul class="sidebar-diagnosis-list" id="nextWeekFocus">
-                    <!-- 动态生成 -->
-                </ul>
+                <div class="sidebar-diagnosis-title"><i class="fas fa-bullseye"></i> 下周重点攻克</div>
+                <ul class="sidebar-diagnosis-list" id="nextWeekFocus"></ul>
             </div>
+
             <div class="sidebar-alert info">
                 <i class="fas fa-info-circle"></i>
                 <span id="diagnosisAdvice">正在分析你的学习数据...</span>
             </div>
         </div>
-        <!-- 成就系统区域 -->
+
+        <!-- 成就系统 -->
         <div class="nav-section" id="achievementSection">
-            <div class="nav-section-title">
-                <i class="fas fa-trophy"></i>
-                成就系统
-            </div>
-            <div class="sidebar-achievements-grid" id="achievementsList">
-                <!-- 动态生成 -->
-            </div>
+            <div class="nav-section-title"><i class="fas fa-trophy"></i> 成就系统</div>
+            <div class="sidebar-achievements-grid" id="achievementsList"></div>
         </div>
     </aside>
+
     <!-- 加载遮罩 -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
@@ -1823,7 +1212,8 @@
             <div class="loading-time" id="loadingTime">预计需要 <span id="estimatedTime">3</span> 秒</div>
         </div>
     </div>
-    <!-- 头部导航 -->
+
+    <!-- 头部导航（样式可来自 style.css） -->
     <header class="header">
         <div class="container">
             <div class="header-left">
@@ -1842,20 +1232,19 @@
                 </a>
             </div>
             <div class="controls">
-                <button id="themeToggle" class="theme-toggle">
-                    <i class="fas fa-moon"></i>
-                </button>
+                <button id="themeToggle" class="theme-toggle"><i class="fas fa-moon"></i></button>
             </div>
         </div>
     </header>
+
     <!-- 主体内容 -->
     <div class="knowledge-page" id="mainContent">
-        <!-- 页面头部 -->
         <div class="page-header">
             <h1>📚 知识收集系统</h1>
             <p>记录每一次学习的内容与感悟</p>
             <p class="subtitle">从 GitHub map.md+study-data.md 自动同步 + 智能分析系统</p>
         </div>
+
         <!-- 统计面板 -->
         <div class="stats-dashboard" id="stats-section">
             <div class="stats-grid">
@@ -1880,59 +1269,54 @@
                     <div class="stat-value" id="avgInspiration">0.0</div>
                 </div>
             </div>
-            <!-- 倒计时与进度 -->
+
             <div class="countdown-section">
-                <!-- 高考倒计时 -->
                 <div class="countdown-card">
                     <div class="countdown-icon">⏰</div>
                     <div class="countdown-label">距离高考还有</div>
                     <div class="countdown-value" id="daysRemaining">0</div>
                     <div class="countdown-subtitle">天</div>
-                    <div class="progress-info">
-                        <span>目标日期:2026年6月7日</span>
-                    </div>
+                    <div class="progress-info"><span>目标日期:2026年6月7日</span></div>
                 </div>
-                <!-- 目标完成日期倒计时 -->
+
                 <div class="countdown-card target-card">
                     <div class="countdown-icon">🎯</div>
                     <div class="countdown-label">距离目标日期还有</div>
                     <div class="countdown-value" id="targetDaysRemaining">0</div>
                     <div class="countdown-subtitle">天</div>
-                    <div class="progress-info">
-                        <span>目标日期:2025年12月31日</span>
-                    </div>
+                    <div class="progress-info"><span>目标日期:2025年12月31日</span></div>
                 </div>
-                <!-- 时间进度 -->
+
                 <div class="countdown-card">
                     <div class="countdown-icon">📈</div>
                     <div class="countdown-label">时间进度</div>
                     <div class="countdown-value" id="timeProgress">0%</div>
                     <div class="countdown-subtitle">已过去</div>
-                    <div class="progress-bar-container" style="margin-top: 15px;">
+                    <div class="progress-bar-container" style="margin-top:15px;">
                         <div class="progress-bar-fill" id="timeProgressBar">0%</div>
                     </div>
                 </div>
-                <!-- 目标进度对比卡片 -->
+
                 <div class="countdown-card target-progress-card" id="targetProgressCard">
                     <div class="countdown-icon">📊</div>
                     <div class="countdown-label">目标进度对比</div>
                     <div class="countdown-value" id="targetProgressDiff">计算中...</div>
                     <div class="countdown-subtitle" id="targetProgressStatus">分析中</div>
-                    <div class="progress-info" style="justify-content: center; margin-top: 10px;">
+                    <div class="progress-info" style="justify-content:center; margin-top:10px;">
                         <span id="targetProgressAdvice"></span>
                     </div>
                 </div>
-                <!-- 预期完成时间卡片 -->
+
                 <div class="countdown-card expected-card" id="expectedCard">
                     <div class="countdown-icon">🎯</div>
                     <div class="countdown-label">预期完成时间</div>
                     <div class="countdown-value" id="expectedDate">计算中...</div>
                     <div class="countdown-subtitle" id="expectedSubtitle">分析学习速度中</div>
-                    <div class="progress-info" style="justify-content: center; margin-top: 10px;">
+                    <div class="progress-info" style="justify-content:center; margin-top:10px;">
                         <span id="expectedAdvice"></span>
                     </div>
                 </div>
-                <!-- 今日学习进度 -->
+
                 <div class="daily-goal-card">
                     <div class="daily-goal-icon">🎯</div>
                     <div class="daily-goal-label">今日学习进度</div>
@@ -1940,52 +1324,74 @@
                     <div class="daily-goal-progress">
                         <div class="daily-goal-progress-fill" id="dailyGoalProgressBar">0 / 36</div>
                     </div>
-                    <div class="progress-info" style="justify-content: center; margin-top: 10px;">
-                        <span id="dailyGoalMessage">加油完成今日目标!💪</span>
+                    <div class="progress-info" style="justify-content:center; margin-top:10px;">
+                        <span id="dailyGoalMessage">加油完成今日目标!</span>
                     </div>
                 </div>
             </div>
-            <div class="last-update">
-                <i class="fas fa-clock"></i>
-                <span id="lastUpdate">暂无更新记录</span>
+
+            <div class="last-update"><i class="fas fa-clock"></i> <span id="lastUpdate">暂无更新记录</span></div>
+
+            <!-- 新增：最近365天热力图 + 冷酷科学反馈 -->
+            <div class="heatmap-section" id="heatmap-section">
+                <div class="heatmap-header">
+                    <div class="heatmap-title"><i class="fas fa-th"></i> 每日知识块进步热力图（最近365天）</div>
+                    <div class="heatmap-legend" id="heatmapLegend"></div>
+                </div>
+
+                <div class="heatmap-grid-wrap">
+                    <div class="heatmap-weekdays">
+                        <div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div>
+                    </div>
+                    <div class="heatmap-grid" id="heatmapGrid"></div>
+                </div>
+
+                <div class="heatmap-metrics" id="heatmapMetrics"></div>
+
+                <div class="cold-advice" id="coldAdvice">
+                    <div class="cold-advice-title"><i class="fas fa-microscope"></i> 冷酷科学反馈</div>
+                    <div class="cold-advice-text" id="coldAdviceText">等待数据...</div>
+                </div>
             </div>
         </div>
+
         <!-- 工具栏 -->
         <div class="toolbar">
             <div class="search-box">
                 <input type="text" class="search-input" id="searchInput" placeholder="搜索知识内容...">
-                <button class="tool-btn" onclick="search()">
-                    <i class="fas fa-search"></i> <span>搜索</span>
-                </button>
+                <button class="tool-btn" onclick="search()"><i class="fas fa-search"></i><span>搜索</span></button>
             </div>
-            <button class="tool-btn success" onclick="refreshData()">
-                <i class="fas fa-sync-alt"></i> <span>刷新数据</span>
-            </button>
+
+            <button class="tool-btn success" onclick="refreshData()"><i class="fas fa-sync-alt"></i><span>刷新数据</span></button>
+
             <button class="tool-btn warning" id="sortDifficultyBtn" onclick="toggleSort('difficulty')">
                 <i class="fas fa-chart-line"></i>
-                <span>难度排序<span class="sort-indicator" id="difficultyIndicator"></span></span>
+                <span>难度排序 <span class="sort-indicator" id="difficultyIndicator"></span></span>
             </button>
+
             <button class="tool-btn info" id="sortImportanceBtn" onclick="toggleSort('importance')">
                 <i class="fas fa-star"></i>
-                <span>重要性<span class="sort-indicator" id="importanceIndicator"></span></span>
+                <span>重要性 <span class="sort-indicator" id="importanceIndicator"></span></span>
             </button>
+
             <button class="tool-btn danger" id="sortInspirationBtn" onclick="toggleSort('inspiration')">
                 <i class="fas fa-lightbulb"></i>
-                <span>启发值<span class="sort-indicator" id="inspirationIndicator"></span></span>
+                <span>启发值 <span class="sort-indicator" id="inspirationIndicator"></span></span>
             </button>
         </div>
-        <!-- 知识列表容器 -->
+
+        <!-- 知识列表 -->
         <div class="knowledge-container" id="knowledge-section">
-            <div class="knowledge-list" id="knowledgeList">
-                <!-- 动态生成 -->
-            </div>
+            <div class="knowledge-list" id="knowledgeList"></div>
             <div class="pagination" id="knowledgePagination"></div>
         </div>
+
         <!-- 知识块完成进度 -->
         <div class="progress-section" id="progress-section">
             <div class="section-header">
                 <h2><i class="fas fa-tasks"></i> 知识块完成进度</h2>
             </div>
+
             <div class="progress-summary">
                 <div class="progress-stat">
                     <div class="progress-stat-icon">📚</div>
@@ -2008,146 +1414,72 @@
                     <div class="progress-stat-label">完成率</div>
                 </div>
             </div>
+
             <div class="progress-bar-container">
                 <div class="progress-bar-fill" id="blockProgressBar">0%</div>
             </div>
+
             <div id="completionAlert"></div>
-            <div class="progress-categories" id="progressCategories">
-                <!-- 动态生成分页内容 -->
-            </div>
-            <div class="progress-pagination" id="progressPagination">
-                <!-- 动态生成分页按钮 -->
-            </div>
+            <div class="progress-categories" id="progressCategories"></div>
+            <div class="progress-pagination" id="progressPagination"></div>
         </div>
-        <!-- 标签知识全文（改进版：包含所有未完成） -->
+
+        <!-- 标签知识全文 -->
         <div class="progress-section" id="tag-review-section">
             <div class="section-header">
                 <h2><i class="fas fa-tags"></i> 标签知识全文（必考 / 高频 / 易错）</h2>
             </div>
-            <div class="tag-summary-grid" id="tagSummaryCards">
-                <!-- 动态生成 -->
-            </div>
+            <div class="tag-summary-grid" id="tagSummaryCards"></div>
         </div>
     </div>
+
     <!-- 固定按钮 -->
     <div class="fixed-buttons">
-        <button class="back-to-top" id="backToTopBtn">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        <a href="ai.html" class="back-button">
-            <i class="fas fa-arrow-left"></i>
-        </a>
+        <button class="back-to-top" id="backToTopBtn"><i class="fas fa-arrow-up"></i></button>
+        <a href="ai.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
     </div>
+
     <script>
         // ========== 配置 ==========
         const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/kuangketongxue/kuangke.github.io/main/map.md';
         const PROGRESS_URL = 'https://raw.githubusercontent.com/kuangketongxue/kuangke.github.io/main/progress.md';
         const STUDY_DATA_URL = 'https://raw.githubusercontent.com/kuangketongxue/kuangke.github.io/main/study_data.md';
+
         const PAGE_SIZE = 10;
         const PROGRESS_PAGE_SIZE = 10;
-        const TARGET_DATE = new Date('2026-06-07'); // 高考日期
+
+        const TARGET_DATE = new Date('2026-06-07');     // 高考日期
         const GOAL_TARGET_DATE = new Date('2025-12-31'); // 目标完成日期
-        const START_DATE = new Date('2025-06-10'); // 开始日期
+        const START_DATE = new Date('2025-06-10');       // 开始日期
         const DAY_MS = 1000 * 60 * 60 * 24;
+
         let knowledgeData = [];
         let filteredData = [];
         let currentSearchTerm = '';
         let progressData = {};
         let studyData = null;
+
         let allProgressBlocks = [];
         let currentPage = 1;
         let currentProgressPage = 1;
-        let sortState = {
-            difficulty: null,
-            importance: null,
-            inspiration: null
-        };
-        // ========== 成就系统（全新设计） ==========
+
+        let sortState = { difficulty: null, importance: null, inspiration: null };
+
+        // ========== 成就系统 ==========
         const achievements = [
-            {
-                id: 1,
-                name: "知识探索者",
-                icon: "🔍",
-                desc: "完成首个知识块",
-                requirement: 1,
-                unlocked: false,
-                type: "total"
-            },
-            {
-                id: 2,
-                name: "稳步前进",
-                icon: "🚶",
-                desc: "完成10个知识块",
-                requirement: 10,
-                unlocked: false,
-                type: "total"
-            },
-            {
-                id: 3,
-                name: "百炼成钢",
-                icon: "⚔️",
-                desc: "完成100个知识块",
-                requirement: 100,
-                unlocked: false,
-                type: "total"
-            },
-            {
-                id: 4,
-                name: "知识海洋",
-                icon: "🌊",
-                desc: "完成50%知识块",
-                requirement: 50,
-                unlocked: false,
-                type: "percent"
-            },
-            {
-                id: 5,
-                name: "全科精通",
-                icon: "🎓",
-                desc: "完成所有知识块",
-                requirement: 100,
-                unlocked: false,
-                type: "percent"
-            },
-            {
-                id: 6,
-                name: "全勤达人",
-                icon: "📅",
-                desc: "一周内每天都有学习记录",
-                requirement: 7,
-                unlocked: false,
-                type: "days_with_data"
-            },
-            {
-                id: 7,
-                name: "进步之星",
-                icon: "📈",
-                desc: "单日完成数比前一天增加50%以上",
-                requirement: 1.5,
-                unlocked: false,
-                type: "improvement"
-            },
-            {
-                id: 8,
-                name: "完美主义者",
-                icon: "💯",
-                desc: "某天完成数正好达到目标值",
-                requirement: 1,
-                unlocked: false,
-                type: "perfect_match"
-            },
-            {
-                id: 9,
-                name: "超越自我",
-                icon: "🏆",
-                desc: "打破单日完成记录",
-                requirement: 1,
-                unlocked: false,
-                type: "record_breaker"
-            }
+            { id:1, name:"知识探索者", icon:"🔍", desc:"完成首个知识块", requirement:1, unlocked:false, type:"total" },
+            { id:2, name:"稳步前进", icon:"🚶", desc:"完成10个知识块", requirement:10, unlocked:false, type:"total" },
+            { id:3, name:"百炼成钢", icon:"⚔️", desc:"完成100个知识块", requirement:100, unlocked:false, type:"total" },
+            { id:4, name:"知识海洋", icon:"🌊", desc:"完成50%知识块", requirement:50, unlocked:false, type:"percent" },
+            { id:5, name:"全科精通", icon:"🎓", desc:"完成所有知识块", requirement:100, unlocked:false, type:"percent" },
+            { id:6, name:"全勤达人", icon:"📅", desc:"一周内每天都有学习记录", requirement:7, unlocked:false, type:"days_with_data" },
+            { id:7, name:"进步之星", icon:"📈", desc:"单日完成数比前一天增加50%以上", requirement:1.5, unlocked:false, type:"improvement" },
+            { id:8, name:"完美主义者", icon:"💯", desc:"某天完成数正好达到目标值", requirement:1, unlocked:false, type:"perfect_match" },
+            { id:9, name:"超越自我", icon:"🏆", desc:"打破单日完成记录", requirement:1, unlocked:false, type:"record_breaker" }
         ];
+
         // ========== 加载进度模拟 ==========
-        function simulateLoading() {
+        function simulateLoading(){
             const progressBar = document.getElementById('loadingProgressBar');
             const estimatedTimeSpan = document.getElementById('estimatedTime');
             let progress = 0;
@@ -2158,275 +1490,293 @@
                 progressBar.style.width = progress + '%';
                 timeRemaining = Math.max(0, Math.ceil((100 - progress) / 33));
                 estimatedTimeSpan.textContent = timeRemaining;
-                if (progress >= 100) {
-                    clearInterval(interval);
-                }
+                if (progress >= 100) clearInterval(interval);
             }, 300);
         }
-        // ========== 计算倒计时 ==========
-        function calculateCountdown() {
+
+        // ========== 倒计时 ==========
+        function calculateCountdown(){
             const now = new Date();
+
             // 高考倒计时
             const totalDays = Math.ceil((TARGET_DATE - START_DATE) / DAY_MS);
             const daysRemaining = Math.ceil((TARGET_DATE - now) / DAY_MS);
             const daysPassed = totalDays - daysRemaining;
             const progress = Math.min(100, Math.max(0, (daysPassed / totalDays) * 100));
+
             document.getElementById('daysRemaining').textContent = Math.max(0, daysRemaining);
             document.getElementById('timeProgress').textContent = progress.toFixed(1) + '%';
+
             const timeProgressBar = document.getElementById('timeProgressBar');
             timeProgressBar.style.width = progress + '%';
-            if (progress < 5) {
-                timeProgressBar.textContent = '';
-            } else {
-                timeProgressBar.textContent = progress.toFixed(1) + '%';
-            }
+            timeProgressBar.textContent = progress < 5 ? '' : progress.toFixed(1) + '%';
+
             // 目标完成日期倒计时
             const targetDaysRemaining = Math.ceil((GOAL_TARGET_DATE - now) / DAY_MS);
             document.getElementById('targetDaysRemaining').textContent = Math.max(0, targetDaysRemaining);
         }
-        // ========== 计算目标进度对比 ==========
-        function calculateTargetProgress() {
+
+        // ========== 目标进度对比 ==========
+        function calculateTargetProgress(){
             let totalBlocks = 0;
             let completedBlocks = 0;
+
             Object.values(progressData).forEach(category => {
                 category.forEach(block => {
                     totalBlocks++;
                     if (block.completed) completedBlocks++;
                 });
             });
+
             if (totalBlocks === 0) {
                 document.getElementById('targetProgressDiff').textContent = '暂无数据';
                 document.getElementById('targetProgressStatus').textContent = '等待数据加载';
                 return;
             }
+
             const now = new Date();
             const totalDaysToTarget = Math.ceil((GOAL_TARGET_DATE - START_DATE) / DAY_MS);
             const daysPassed = Math.ceil((now - START_DATE) / DAY_MS);
             const daysRemaining = Math.ceil((GOAL_TARGET_DATE - now) / DAY_MS);
+
             const expectedProgress = totalDaysToTarget > 0 ? Math.min(100, (daysPassed / totalDaysToTarget) * 100) : 100;
             const actualProgress = (completedBlocks / totalBlocks) * 100;
             const progressDiff = actualProgress - expectedProgress;
+
             const targetProgressCard = document.getElementById('targetProgressCard');
             targetProgressCard.classList.remove('behind', 'ahead');
+
             if (daysRemaining < 0) {
-                // 已超过目标日期
                 if (completedBlocks === totalBlocks) {
                     document.getElementById('targetProgressDiff').textContent = '已完成!';
                     document.getElementById('targetProgressStatus').textContent = '恭喜完成所有目标!';
-                    document.getElementById('targetProgressAdvice').innerHTML = '🎉 太棒了!';
+                    document.getElementById('targetProgressAdvice').innerHTML = '完成=结果。保持系统。';
                     targetProgressCard.classList.add('ahead');
                 } else {
                     document.getElementById('targetProgressDiff').textContent = `落后 ${(100 - actualProgress).toFixed(1)}%`;
                     document.getElementById('targetProgressStatus').textContent = '已超期';
-                    document.getElementById('targetProgressAdvice').innerHTML = '⚠️ 已超过目标日期,建议调整计划';
+                    document.getElementById('targetProgressAdvice').innerHTML = '超期=计划失败。重算约束条件。';
                     targetProgressCard.classList.add('behind');
                 }
             } else if (progressDiff >= 5) {
-                // 超前5%以上
                 targetProgressCard.classList.add('ahead');
                 document.getElementById('targetProgressDiff').textContent = `超前 ${progressDiff.toFixed(1)}%`;
                 document.getElementById('targetProgressStatus').textContent = '进度优秀';
                 document.getElementById('targetProgressAdvice').innerHTML =
-                    `✅ 太棒了!你比预期进度超前 <span class="highlight">${progressDiff.toFixed(1)}%</span>`;
+                    `当前超前 <span class="highlight">${progressDiff.toFixed(1)}%</span>。不要自增难度，先稳住系统。`;
             } else if (progressDiff <= -5) {
-                // 落后5%以上
                 targetProgressCard.classList.add('behind');
                 document.getElementById('targetProgressDiff').textContent = `落后 ${Math.abs(progressDiff).toFixed(1)}%`;
                 document.getElementById('targetProgressStatus').textContent = '需要加速';
+
                 const remainingBlocks = totalBlocks - completedBlocks;
                 const neededDailyRate = Math.ceil(remainingBlocks / Math.max(1, daysRemaining));
                 document.getElementById('targetProgressAdvice').innerHTML =
-                    `⚠️ 建议每日完成 <span class="highlight">${neededDailyRate}</span> 个知识块以达成目标`;
+                    `按期完成需要每日 <span class="highlight">${neededDailyRate}</span> 个。低于它=无法达成。`;
             } else {
-                // 进度正常（±5%以内）
                 document.getElementById('targetProgressDiff').textContent = '进度正常';
                 document.getElementById('targetProgressStatus').textContent = `实际${actualProgress.toFixed(1)}% vs 预期${expectedProgress.toFixed(1)}%`;
-                document.getElementById('targetProgressAdvice').innerHTML = '💪 保持当前节奏,稳步前进!';
+                document.getElementById('targetProgressAdvice').innerHTML = '偏差在容许区间。继续执行。';
             }
         }
-        // ========== 计算预期完成时间 ==========
-        function calculateExpectedCompletion() {
+
+        // ========== 预期完成时间 ==========
+        function calculateExpectedCompletion(){
             let totalBlocks = 0;
             let completedBlocks = 0;
+
             Object.values(progressData).forEach(category => {
                 category.forEach(block => {
                     totalBlocks++;
                     if (block.completed) completedBlocks++;
                 });
             });
+
             const remainingBlocks = totalBlocks - completedBlocks;
-            // 从 study_data.md 读取每日完成数量
+
             let avgDailyComplete = studyData?.avgDailyComplete || 5;
-            avgDailyComplete = Math.max(1, avgDailyComplete * 0.8); // 保守估计使用80%的速度
+            avgDailyComplete = Math.max(1, avgDailyComplete * 0.8); // 保守估计
+
+            const expectedCard = document.getElementById('expectedCard');
+            expectedCard.classList.remove('warning', 'success');
+
             if (remainingBlocks === 0) {
                 document.getElementById('expectedDate').textContent = '已完成!';
                 document.getElementById('expectedSubtitle').textContent = '所有知识块已完成';
-                document.getElementById('expectedAdvice').innerHTML = '🎉 恭喜完成所有知识块!';
-                document.getElementById('expectedCard').classList.add('success');
+                document.getElementById('expectedAdvice').innerHTML = '完成=闭环。把经验写成可复制流程。';
+                expectedCard.classList.add('success');
                 return;
             }
+
             const daysNeeded = Math.ceil(remainingBlocks / avgDailyComplete);
             const expectedDate = new Date();
             expectedDate.setDate(expectedDate.getDate() + daysNeeded);
             const formattedDate = `${expectedDate.getFullYear()}年${expectedDate.getMonth() + 1}月${expectedDate.getDate()}日`;
+
             document.getElementById('expectedDate').textContent = formattedDate;
             document.getElementById('expectedSubtitle').textContent = `约需 ${daysNeeded} 天`;
+
             const now = new Date();
             const daysToExam = Math.ceil((TARGET_DATE - now) / DAY_MS);
             const daysToGoal = Math.ceil((GOAL_TARGET_DATE - now) / DAY_MS);
-            const expectedCard = document.getElementById('expectedCard');
-            expectedCard.classList.remove('warning', 'success');
-            // 优先对比目标日期
+
             if (daysNeeded > daysToGoal && daysToGoal > 0) {
                 expectedCard.classList.add('warning');
                 const neededSpeed = Math.ceil(remainingBlocks / daysToGoal);
                 document.getElementById('expectedAdvice').innerHTML =
-                    `⚠️ 无法按目标完成! 建议每日完成 <span class="highlight">${neededSpeed}</span> 个知识块`;
+                    `按目标无法完成。需要每日 <span class="highlight">${neededSpeed}</span> 个。否则只是在拖延结果。`;
             } else if (daysNeeded > daysToExam) {
                 expectedCard.classList.add('warning');
                 const neededSpeed = Math.ceil(remainingBlocks / daysToExam);
                 document.getElementById('expectedAdvice').innerHTML =
-                    `⚠️ 高考前无法完成! 建议每日完成 <span class="highlight">${neededSpeed}</span> 个知识块`;
+                    `高考前无法完成。需要每日 <span class="highlight">${neededSpeed}</span> 个。`;
             } else if (daysToGoal > 0 && daysNeeded < daysToGoal * 0.8) {
                 expectedCard.classList.add('success');
                 const advanceDays = daysToGoal - daysNeeded;
                 document.getElementById('expectedAdvice').innerHTML =
-                    `✅ 将提前 <span class="highlight">${advanceDays}</span> 天完成目标!`;
+                    `预计提前 <span class="highlight">${advanceDays}</span> 天完成。保持输入即可。`;
             } else {
-                document.getElementById('expectedAdvice').innerHTML = '💪 保持当前节奏即可按期完成!';
+                document.getElementById('expectedAdvice').innerHTML = '速度足够。继续执行，别频繁改计划。';
             }
         }
-        // ========== 今日完成计数（改进版：根据建议动态计算目标） ==========
-        function updateDailyGoal() {
-            // 从 study_data.md 的 dailyCompleteData 读取今日完成数
+
+        // ========== 今日目标（动态建议） ==========
+        function updateDailyGoal(){
             let todayCompleted = studyData?.todayCompleted || 0;
-            // 计算建议的知识块数（基于剩余时间和剩余知识块）
+
             let totalBlocks = 0;
             let completedBlocks = 0;
+
             Object.values(progressData).forEach(category => {
                 category.forEach(block => {
                     totalBlocks++;
                     if (block.completed) completedBlocks++;
                 });
             });
+
             const remainingBlocks = totalBlocks - completedBlocks;
             const now = new Date();
             const daysToGoal = Math.ceil((GOAL_TARGET_DATE - now) / DAY_MS);
             const daysToExam = Math.ceil((TARGET_DATE - now) / DAY_MS);
-            let suggestedDailyGoal = 36; // 默认值
+
+            let suggestedDailyGoal = 36;
             if (daysToGoal > 0 && remainingBlocks > 0) {
-                // 根据目标日期计算建议值
                 suggestedDailyGoal = Math.ceil(remainingBlocks / daysToGoal);
-                // 确保不低于最小值
                 suggestedDailyGoal = Math.max(10, suggestedDailyGoal);
-                // 如果接近高考，适当增加
-                if (daysToExam < 180) {
-                    suggestedDailyGoal = Math.min(50, Math.ceil(suggestedDailyGoal * 1.2));
-                }
+                if (daysToExam < 180) suggestedDailyGoal = Math.min(50, Math.ceil(suggestedDailyGoal * 1.2));
             }
+
             document.getElementById('todayCompleted').textContent = todayCompleted;
             document.getElementById('dailyGoalValue').textContent = suggestedDailyGoal;
+
             const percentage = Math.min(100, (todayCompleted / suggestedDailyGoal) * 100);
             const dailyGoalBar = document.getElementById('dailyGoalProgressBar');
             dailyGoalBar.style.width = percentage + '%';
             dailyGoalBar.textContent = percentage < 5 ? '' : `${todayCompleted} / ${suggestedDailyGoal}`;
+
             const messageEl = document.getElementById('dailyGoalMessage');
             if (todayCompleted >= suggestedDailyGoal) {
-                messageEl.innerHTML = '🎉 太棒了!今日目标已达成!';
+                messageEl.innerHTML = '达标。继续保持系统。';
                 messageEl.style.color = 'var(--success-color)';
             } else {
                 const remaining = suggestedDailyGoal - todayCompleted;
-                messageEl.innerHTML = `还需完成 ${remaining} 个知识块!💪`;
+                messageEl.innerHTML = `缺口 ${remaining}。补上它，或者接受后果。`;
                 messageEl.style.color = 'var(--info-color)';
             }
-            // 返回建议值供成就系统使用
+
             return suggestedDailyGoal;
         }
+
         // ========== 侧边栏控制 ==========
         const sideNavToggle = document.getElementById('sideNavToggle');
         const sideNav = document.getElementById('sideNav');
         const mainContent = document.getElementById('mainContent');
+
         sideNavToggle.addEventListener('click', () => {
             sideNav.classList.toggle('active');
             sideNavToggle.classList.toggle('active');
-            if (window.innerWidth > 768) {
-                mainContent.classList.toggle('shifted');
-            }
+            if (window.innerWidth > 768) mainContent.classList.toggle('shifted');
         });
-        function toggleSection(sectionId) {
+
+        function toggleSection(sectionId){
             const section = document.getElementById(sectionId);
             const allSections = document.querySelectorAll('.nav-section');
+
             if (section.classList.contains('active')) {
                 section.classList.remove('active');
             } else {
                 allSections.forEach(s => s.classList.remove('active'));
                 section.classList.add('active');
-                if (sectionId === 'chartsSection' && studyData) {
-                    setTimeout(renderCharts, 100);
-                }
-                if (sectionId === 'diagnosisSection' && studyData) {
-                    renderDiagnosisReport();
-                }
-                if (sectionId === 'achievementSection') {
-                    renderAchievements();
-                }
+
+                if (sectionId === 'chartsSection' && studyData) setTimeout(renderCharts, 100);
+                if (sectionId === 'diagnosisSection' && studyData) renderDiagnosisReport();
+                if (sectionId === 'achievementSection') renderAchievements();
             }
         }
+
         // ========== 主函数 ==========
-        async function loadKnowledgeData() {
+        async function loadKnowledgeData(){
             simulateLoading();
-            try {
+            try{
                 const response = await fetch(GITHUB_RAW_URL);
-                if (!response.ok) {
-                    throw new Error('无法加载数据文件');
-                }
+                if (!response.ok) throw new Error('无法加载 map.md');
+
                 const text = await response.text();
                 knowledgeData = parseMarkdown(text);
                 filteredData = [...knowledgeData];
+
                 renderKnowledgeList();
                 updateStatistics();
+
                 await loadProgressData();
                 await loadStudyData();
+
                 renderProgressSection();
                 renderTagSummary();
+
                 calculateCountdown();
                 updateDailyGoal();
+                renderDailyHeatmap();
+
                 calculateTargetProgress();
                 calculateExpectedCompletion();
+
                 document.getElementById('loadingProgressBar').style.width = '100%';
                 document.getElementById('estimatedTime').textContent = '0';
-                setTimeout(() => {
-                    document.getElementById('loadingOverlay').style.display = 'none';
-                }, 500);
-            } catch (error) {
-                console.error('加载失败:', error);
+                setTimeout(() => { document.getElementById('loadingOverlay').style.display = 'none'; }, 500);
+
+            } catch(err){
+                console.error('加载失败:', err);
                 document.getElementById('loadingOverlay').style.display = 'none';
             }
         }
+
         // ========== 加载进度数据 ==========
-        async function loadProgressData() {
-            try {
+        async function loadProgressData(){
+            try{
                 const response = await fetch(PROGRESS_URL);
-                if (!response.ok) return {};
+                if (!response.ok) return;
                 const text = await response.text();
                 progressData = parseProgressMarkdown(text);
-            } catch (error) {
-                console.error('加载进度失败:', error);
+            } catch(err){
+                console.error('加载 progress.md 失败:', err);
             }
         }
-        // ========== 加载学习数据（改进版：增加每日完成数据解析） ==========
-        async function loadStudyData() {
-            try {
+
+        // ========== 加载学习数据 ==========
+        async function loadStudyData(){
+            try{
                 const response = await fetch(STUDY_DATA_URL);
-                if (!response.ok) return null;
+                if (!response.ok) return;
                 const text = await response.text();
                 studyData = parseStudyDataMarkdown(text);
-            } catch (error) {
-                console.error('加载学习数据失败:', error);
+            } catch(err){
+                console.error('加载 study_data.md 失败:', err);
             }
         }
-        // ========== 解析学习数据Markdown（改进版：增加每日完成数据） ==========
-        function parseStudyDataMarkdown(text) {
+
+        // ========== 解析学习数据 Markdown ==========
+        function parseStudyDataMarkdown(text){
             const data = {
                 subjects: [],
                 weaknesses: [],
@@ -2439,166 +1789,154 @@
                 todayCompleted: 0,
                 dailyCompleteData: []
             };
+
             const lines = text.split('\n');
             let currentSection = null;
-            lines.forEach(line => {
-                line = line.trim();
-                if (line.startsWith('## 各科学习时长')) {
-                    currentSection = 'subjects';
-                } else if (line.startsWith('## 薄弱题型统计')) {
-                    currentSection = 'weaknesses';
-                } else if (line.startsWith('## 薄弱知识点')) {
-                    currentSection = 'weakKnowledge';
-                } else if (line.startsWith('## 易错题型分析')) {
-                    currentSection = 'errorTypes';
-                } else if (line.startsWith('## 下周重点攻克')) {
-                    currentSection = 'nextWeekFocus';
-                } else if (line.startsWith('## 成就数据')) {
-                    currentSection = 'achievement';
-                } else if (line.startsWith('## 每日完成数据')) {
-                    currentSection = 'dailyComplete';
-                } else if (line.startsWith('- **')) {
-                    if (currentSection === 'subjects') {
-                        const match = line.match(/\*\*(.+?)\*\*:\s*([\d.]+)小时/);
-                        if (match) {
-                            data.subjects.push({
-                                name: match[1],
-                                totalHours: parseFloat(match[2])
-                            });
-                        }
-                    } else if (currentSection === 'weaknesses') {
-                        const match = line.match(/\*\*(.+?)\*\*:\s*错误(\d+)次/);
-                        if (match) {
-                            data.weaknesses.push({
-                                name: match[1],
-<details type="reasoning" done="true" duration="1">
-<summary>Thought for 1 seconds</summary>
 
-</details>
-```javascript
-                                errorCount: parseInt(match[2])
-                            });
-                        }
-                    } else if (currentSection === 'weakKnowledge' || currentSection === 'errorTypes' || currentSection === 'nextWeekFocus') {
-                        const match = line.match(/\*\*(.+?)\*\*:\s*(.+)/);
-                        if (match) {
-                            const targetArray = currentSection === 'weakKnowledge' ? data.weakKnowledge :
-                                              currentSection === 'errorTypes' ? data.errorTypes : data.nextWeekFocus;
-                            targetArray.push({
-                                name: match[1],
-                                desc: match[2]
-                            });
-                        }
-                    } else if (currentSection === 'achievement') {
-                        if (line.includes('连续打卡天数')) {
-                            const match = line.match(/(\d+)天/);
-                            if (match) data.consecutiveDays = parseInt(match[1]);
-                        } else if (line.includes('单日最多完成')) {
-                            const match = line.match(/(\d+)个/);
-                            if (match) data.maxDailyComplete = parseInt(match[1]);
-                        } else if (line.includes('平均每日完成')) {
-                            const match = line.match(/([\d.]+)个/);
-                            if (match) data.avgDailyComplete = parseFloat(match[1]);
-                        }
-                    } else if (currentSection === 'dailyComplete') {
-                        // 解析每日完成数据
-                        const match = line.match(/\*\*(\d{4}-\d{2}-\d{2})\*\*:\s*(\d+)个/);
-                        if (match) {
-                            data.dailyCompleteData.push({
-                                date: match[1],
-                                count: parseInt(match[2])
-                            });
-                        }
+            lines.forEach(rawLine => {
+                let line = rawLine.trim();
+
+                if (line.startsWith('## 各科学习时长')) currentSection = 'subjects';
+                else if (line.startsWith('## 薄弱题型统计')) currentSection = 'weaknesses';
+                else if (line.startsWith('## 薄弱知识点')) currentSection = 'weakKnowledge';
+                else if (line.startsWith('## 易错题型分析')) currentSection = 'errorTypes';
+                else if (line.startsWith('## 下周重点攻克')) currentSection = 'nextWeekFocus';
+                else if (line.startsWith('## 成就数据')) currentSection = 'achievement';
+                else if (line.startsWith('## 每日完成数据')) currentSection = 'dailyComplete';
+
+                if (!line.startsWith('- **')) return;
+
+                if (currentSection === 'subjects') {
+                    const match = line.match(/\*\*(.+?)\*\*:\s*([\d.]+)小时/);
+                    if (match) data.subjects.push({ name: match[1], totalHours: parseFloat(match[2]) });
+                }
+                else if (currentSection === 'weaknesses') {
+                    const match = line.match(/\*\*(.+?)\*\*:\s*错误(\d+)次/);
+                    if (match) data.weaknesses.push({ name: match[1], errorCount: parseInt(match[2],10) });
+                }
+                else if (currentSection === 'weakKnowledge' || currentSection === 'errorTypes' || currentSection === 'nextWeekFocus') {
+                    const match = line.match(/\*\*(.+?)\*\*:\s*(.+)/);
+                    if (match) {
+                        const targetArray =
+                            currentSection === 'weakKnowledge' ? data.weakKnowledge :
+                            currentSection === 'errorTypes' ? data.errorTypes :
+                            data.nextWeekFocus;
+                        targetArray.push({ name: match[1], desc: match[2] });
                     }
                 }
+                else if (currentSection === 'achievement') {
+                    if (line.includes('连续打卡天数')) {
+                        const match = line.match(/(\d+)天/);
+                        if (match) data.consecutiveDays = parseInt(match[1],10);
+                    } else if (line.includes('单日最多完成')) {
+                        const match = line.match(/(\d+)个/);
+                        if (match) data.maxDailyComplete = parseInt(match[1],10);
+                    } else if (line.includes('平均每日完成')) {
+                        const match = line.match(/([\d.]+)个/);
+                        if (match) data.avgDailyComplete = parseFloat(match[1]);
+                    }
+                }
+                else if (currentSection === 'dailyComplete') {
+                    const match = line.match(/\*\*(\d{4}-\d{2}-\d{2})\*\*:\s*(\d+)个/);
+                    if (match) data.dailyCompleteData.push({ date: match[1], count: parseInt(match[2],10) });
+                }
             });
-            // 计算今日完成数（从 dailyCompleteData 获取最新一天的数据）
+
+            // 今日完成数
             if (data.dailyCompleteData.length > 0) {
                 const today = new Date().toISOString().split('T')[0];
                 const todayData = data.dailyCompleteData.find(d => d.date === today);
                 data.todayCompleted = todayData ? todayData.count : 0;
-            } else {
-                data.todayCompleted = 0;
             }
+
             return data;
         }
-        // ========== 解析Markdown ==========
-        function parseMarkdown(text) {
+
+        // ========== 解析 map.md ==========
+        function parseMarkdown(text){
             const items = [];
             const lines = text.split('\n');
-            lines.forEach(line => {
-                line = line.trim();
-                if (line.startsWith('### ')) {
-                    const content = line.substring(4).trim();
-                    const tagMatch = content.match(/【(.*?)】/);
-                    const tags = tagMatch ? tagMatch[1].split('|').map(t => t.trim()) : [];
-                    const cleanContent = content.replace(/【.*?】/, '').trim();
-                    const difficultyMatch = cleanContent.match(/难度：([0-5])/);
-                    const difficulty = difficultyMatch ? parseInt(difficultyMatch[1]) : 0;
-                    const importanceMatch = cleanContent.match(/重要性：([0-5])/);
-                    const importance = importanceMatch ? parseInt(importanceMatch[1]) : 0;
-                    const inspirationMatch = cleanContent.match(/启发值：([0-5])/);
-                    const inspiration = inspirationMatch ? parseInt(inspirationMatch[1]) : 0;
-                    const finalContent = cleanContent
-                        .replace(/难度：[0-5]/, '')
-                        .replace(/重要性：[0-5]/, '')
-                        .replace(/启发值：[0-5]/, '')
-                        .trim();
-                    const dateMatch = line.match(/\((\d{4}-\d{2}-\d{2})\)/);
-                    const date = dateMatch ? dateMatch[1] : '';
-                    items.push({
-                        content: finalContent,
-                        tags,
-                        difficulty,
-                        importance,
-                        inspiration,
-                        date
-                    });
-                }
+
+            lines.forEach(rawLine => {
+                let line = rawLine.trim();
+                if (!line.startsWith('### ')) return;
+
+                const content = line.substring(4).trim();
+                const tagMatch = content.match(/【(.*?)】/);
+                const tags = tagMatch ? tagMatch[1].split('|').map(t => t.trim()) : [];
+                const cleanContent = content.replace(/【.*?】/, '').trim();
+
+                const difficultyMatch = cleanContent.match(/难度：([0-5])/);
+                const difficulty = difficultyMatch ? parseInt(difficultyMatch[1],10) : 0;
+
+                const importanceMatch = cleanContent.match(/重要性：([0-5])/);
+                const importance = importanceMatch ? parseInt(importanceMatch[1],10) : 0;
+
+                const inspirationMatch = cleanContent.match(/启发值：([0-5])/);
+                const inspiration = inspirationMatch ? parseInt(inspirationMatch[1],10) : 0;
+
+                const finalContent = cleanContent
+                    .replace(/难度：[0-5]/, '')
+                    .replace(/重要性：[0-5]/, '')
+                    .replace(/启发值：[0-5]/, '')
+                    .trim();
+
+                const dateMatch = line.match(/\((\d{4}-\d{2}-\d{2})\)/);
+                const date = dateMatch ? dateMatch[1] : '';
+
+                items.push({ content: finalContent, tags, difficulty, importance, inspiration, date });
             });
+
             return items;
         }
-        // ========== 解析进度Markdown ==========
-        function parseProgressMarkdown(text) {
+
+        // ========== 解析 progress.md ==========
+        function parseProgressMarkdown(text){
             const data = {};
             const lines = text.split('\n');
             let currentCategory = null;
-            lines.forEach(line => {
-                line = line.trim();
+
+            lines.forEach(rawLine => {
+                let line = rawLine.trim();
+
                 if (line.startsWith('### ')) {
                     currentCategory = line.substring(4).trim();
                     data[currentCategory] = [];
                 } else if (line.startsWith('- [') && currentCategory) {
-                    const isCompleted = line.startsWith('- [x]');
+                    const isCompleted = line.startsWith('- [x]') || line.startsWith('- [X]');
                     const content = line.substring(line.indexOf(']') + 1).trim();
-                    data[currentCategory].push({
-                        content,
-                        completed: isCompleted
-                    });
+                    data[currentCategory].push({ content, completed: isCompleted });
                 }
             });
+
             return data;
         }
+
         // ========== 更新统计 ==========
-        function updateStatistics() {
+        function updateStatistics(){
             const totalCount = filteredData.length;
-            const avgDifficulty = (filteredData.reduce((sum, item) => sum + item.difficulty, 0) / totalCount).toFixed(1);
-            const avgImportance = (filteredData.reduce((sum, item) => sum + item.importance, 0) / totalCount).toFixed(1);
-            const avgInspiration = (filteredData.reduce((sum, item) => sum + item.inspiration, 0) / totalCount).toFixed(1);
+            const avgDifficulty = totalCount ? (filteredData.reduce((s,i)=>s+i.difficulty,0)/totalCount).toFixed(1) : '0.0';
+            const avgImportance = totalCount ? (filteredData.reduce((s,i)=>s+i.importance,0)/totalCount).toFixed(1) : '0.0';
+            const avgInspiration = totalCount ? (filteredData.reduce((s,i)=>s+i.inspiration,0)/totalCount).toFixed(1) : '0.0';
+
             document.getElementById('totalCount').textContent = totalCount;
-            document.getElementById('avgDifficulty').textContent = avgDifficulty || '0.0';
-            document.getElementById('avgImportance').textContent = avgImportance || '0.0';
-            document.getElementById('avgInspiration').textContent = avgInspiration || '0.0';
+            document.getElementById('avgDifficulty').textContent = avgDifficulty;
+            document.getElementById('avgImportance').textContent = avgImportance;
+            document.getElementById('avgInspiration').textContent = avgInspiration;
         }
+
         // ========== 渲染知识列表 ==========
-        function renderKnowledgeList() {
+        function renderKnowledgeList(){
             const container = document.getElementById('knowledgeList');
+
             const startIndex = (currentPage - 1) * PAGE_SIZE;
             const endIndex = startIndex + PAGE_SIZE;
             const pageData = filteredData.slice(startIndex, endIndex);
+
             container.innerHTML = pageData.map((item, index) => {
                 const globalIndex = startIndex + index + 1;
                 const badges = [];
+
                 if (item.tags.includes('必考')) {
                     badges.push(`<span class="badge importance"><i class="fas fa-fire"></i> 必考</span>`);
                 }
@@ -2611,56 +1949,53 @@
                 if (item.date) {
                     badges.push(`<span class="badge date"><i class="fas fa-calendar"></i> ${item.date}</span>`);
                 }
+
                 return `
-                    <div class="knowledge-item" onclick="window.location.href='#knowledge-${globalIndex}'">
+                    <div class="knowledge-item">
                         <div class="knowledge-header">
                             <div class="knowledge-number">${globalIndex}</div>
-                            <div class="knowledge-badges">
-                                ${badges.join('')}
-                            </div>
+                            <div class="knowledge-badges">${badges.join('')}</div>
                         </div>
-                        <div class="knowledge-content">
-                            ${highlightSearchTerm(item.content, currentSearchTerm)}
-                        </div>
+                        <div class="knowledge-content">${highlightSearchTerm(item.content, currentSearchTerm)}</div>
                     </div>
                 `;
             }).join('');
+
             renderPagination();
         }
-        // ========== 高亮搜索词 ==========
-        function highlightSearchTerm(text, searchTerm) {
+
+        function highlightSearchTerm(text, searchTerm){
             if (!searchTerm) return text;
-            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            const safe = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(`(${safe})`, 'gi');
             return text.replace(regex, '<span class="highlight">$1</span>');
         }
-        // ========== 渲染分页 ==========
-        function renderPagination() {
+
+        function renderPagination(){
             const container = document.getElementById('knowledgePagination');
-            const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
-            let html = `
+            const totalPages = Math.ceil(filteredData.length / PAGE_SIZE) || 1;
+
+            container.innerHTML = `
                 <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
                     <i class="fas fa-chevron-left"></i> 上一页
                 </button>
-            `;
-            html += `<div class="pagination-info">${currentPage} / ${totalPages} 页 (共 ${filteredData.length} 条)</div>`;
-            html += `
+                <div class="pagination-info">${currentPage} / ${totalPages} 页 (共 ${filteredData.length} 条)</div>
                 <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
                     下一页 <i class="fas fa-chevron-right"></i>
                 </button>
             `;
-            container.innerHTML = html;
         }
-        // ========== 翻页 ==========
-        function changePage(page) {
-            const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+
+        function changePage(page){
+            const totalPages = Math.ceil(filteredData.length / PAGE_SIZE) || 1;
             if (page < 1 || page > totalPages) return;
             currentPage = page;
             renderKnowledgeList();
             window.scrollTo({ top: 0, behavior: 'smooth' });
             updateReadingProgress();
         }
-        // ========== 搜索 ==========
-        function search() {
+
+        function search(){
             currentSearchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
             if (!currentSearchTerm) {
                 filteredData = [...knowledgeData];
@@ -2673,75 +2008,84 @@
             currentPage = 1;
             renderKnowledgeList();
             updateStatistics();
+            renderTagSummary(); // 搜索后标签区也同步高亮
         }
-        // ========== 排序 ==========
-        function toggleSort(field) {
+
+        function toggleSort(field){
             sortState[field] = sortState[field] === 'desc' ? 'asc' : 'desc';
-            ['difficulty', 'importance', 'inspiration'].forEach(f => {
-                if (f !== field) sortState[f] = null;
-            });
+            ['difficulty','importance','inspiration'].forEach(f => { if (f !== field) sortState[f] = null; });
+
             document.querySelectorAll('.sort-indicator').forEach(el => el.textContent = '');
             if (sortState[field]) {
                 document.getElementById(`${field}Indicator`).textContent = sortState[field] === 'asc' ? '↑' : '↓';
             }
-            filteredData.sort((a, b) => {
+
+            filteredData.sort((a,b) => {
                 const diff = b[field] - a[field];
                 return sortState[field] === 'asc' ? -diff : diff;
             });
+
             renderKnowledgeList();
         }
-        // ========== 渲染进度部分 ==========
-        function renderProgressSection() {
+
+        // ========== 渲染进度 ==========
+        function renderProgressSection(){
             let totalBlocks = 0;
             let completedBlocks = 0;
             allProgressBlocks = [];
+
             Object.entries(progressData).forEach(([category, blocks]) => {
                 blocks.forEach(block => {
                     totalBlocks++;
                     if (block.completed) completedBlocks++;
-                    allProgressBlocks.push({
-                        category,
-                        ...block
-                    });
+                    allProgressBlocks.push({ category, ...block });
                 });
             });
+
             document.getElementById('totalBlocks').textContent = totalBlocks;
             document.getElementById('completedBlocks').textContent = completedBlocks;
             document.getElementById('remainingBlocks').textContent = totalBlocks - completedBlocks;
-            const progressPercent = totalBlocks > 0 ? ((completedBlocks / totalBlocks) * 100).toFixed(1) : 0;
+
+            const progressPercent = totalBlocks > 0 ? ((completedBlocks / totalBlocks) * 100).toFixed(1) : '0.0';
             document.getElementById('progressPercent').textContent = progressPercent + '%';
+
             const progressBar = document.getElementById('blockProgressBar');
             progressBar.style.width = progressPercent + '%';
-            progressBar.textContent = progressPercent < 5 ? '' : progressPercent + '%';
+            progressBar.textContent = parseFloat(progressPercent) < 5 ? '' : progressPercent + '%';
+
             const alertDiv = document.getElementById('completionAlert');
-            if (progressPercent < 30) {
+            if (parseFloat(progressPercent) < 30) {
                 alertDiv.innerHTML = `
                     <div class="alert-box warning">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <span>加油!继续坚持!你是最棒的!</span>
+                        <span>完成率低=风险高。提高日均或削减范围。</span>
                     </div>
                 `;
-            } else if (progressPercent >= 100) {
+            } else if (parseFloat(progressPercent) >= 100) {
                 alertDiv.innerHTML = `
                     <div class="alert-box success">
                         <i class="fas fa-trophy"></i>
-                        <span>🎉 恭喜!所有知识块已完成!</span>
+                        <span>全部完成。下一步：复习与错题回归。</span>
                     </div>
                 `;
             } else {
                 alertDiv.innerHTML = '';
             }
+
             const categoriesDiv = document.getElementById('progressCategories');
             const categories = Object.keys(progressData);
-            const totalPages = Math.ceil(categories.length / PROGRESS_PAGE_SIZE);
+            const totalPages = Math.ceil(categories.length / PROGRESS_PAGE_SIZE) || 1;
+
             const startIndex = (currentProgressPage - 1) * PROGRESS_PAGE_SIZE;
             const endIndex = startIndex + PROGRESS_PAGE_SIZE;
             const pageCategories = categories.slice(startIndex, endIndex);
+
             categoriesDiv.innerHTML = pageCategories.map(category => {
                 const blocks = progressData[category];
                 const categoryCompleted = blocks.filter(b => b.completed).length;
                 const categoryTotal = blocks.length;
-                const categoryPercent = categoryTotal > 0 ? ((categoryCompleted / categoryTotal) * 100).toFixed(1) : 0;
+                const categoryPercent = categoryTotal > 0 ? ((categoryCompleted / categoryTotal) * 100).toFixed(1) : '0.0';
+
                 return `
                     <div class="progress-category">
                         <div class="category-title">
@@ -2751,27 +2095,36 @@
                         <div class="progress-blocks-list">
                             ${blocks.map((block, index) => `
                                 <div class="progress-block-item ${block.completed ? 'completed' : ''}">
-                                    <input type="checkbox" ${block.completed ? 'checked' : ''}
-                                           onchange="toggleBlock('${category}', ${index})">
-                                    <span>${block.content}</span>
+                                    <input type="checkbox" ${block.completed ? 'checked' : ''} onchange="toggleBlock('${escapeQuotes(category)}', ${index})">
+                                    <span>${escapeHTML(block.content)}</span>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
                 `;
             }).join('');
+
             renderProgressPagination();
             updateLastUpdate();
         }
-        // ========== 渲染进度分页 ==========
-        function renderProgressPagination() {
+
+        function escapeQuotes(s){
+            return String(s).replace(/'/g, "\\'");
+        }
+        function escapeHTML(s){
+            return String(s)
+                .replaceAll('&','&amp;')
+                .replaceAll('<','&lt;')
+                .replaceAll('>','&gt;');
+        }
+
+        function renderProgressPagination(){
             const container = document.getElementById('progressPagination');
             const categories = Object.keys(progressData);
-            const totalPages = Math.ceil(categories.length / PROGRESS_PAGE_SIZE);
-            if (totalPages <= 1) {
-                container.innerHTML = '';
-                return;
-            }
+            const totalPages = Math.ceil(categories.length / PROGRESS_PAGE_SIZE) || 1;
+
+            if (totalPages <= 1) { container.innerHTML = ''; return; }
+
             let html = `
                 <button class="pagination-btn" onclick="changeProgressPage(${currentProgressPage - 1})" ${currentProgressPage === 1 ? 'disabled' : ''}>
                     <i class="fas fa-chevron-left"></i> 上一页
@@ -2787,39 +2140,53 @@
             `;
             container.innerHTML = html;
         }
-        // ========== 进度分页切换 ==========
-        function changeProgressPage(page) {
+
+        function changeProgressPage(page){
             const categories = Object.keys(progressData);
-            const totalPages = Math.ceil(categories.length / PROGRESS_PAGE_SIZE);
+            const totalPages = Math.ceil(categories.length / PROGRESS_PAGE_SIZE) || 1;
             if (page < 1 || page > totalPages) return;
             currentProgressPage = page;
             renderProgressSection();
             window.scrollTo({ top: document.getElementById('progress-section').offsetTop - 100, behavior: 'smooth' });
         }
-        // ========== 切换知识块状态 ==========
-        function toggleBlock(category, index) {
+
+        // 切换知识块状态（仅前端展示；不写回 GitHub）
+        function toggleBlock(category, index){
             if (!progressData[category] || !progressData[category][index]) return;
+
             progressData[category][index].completed = !progressData[category][index].completed;
+
+            // 同步今日完成数（只影响当前页面视图）
+            if (studyData) {
+                const today = new Date().toISOString().split('T')[0];
+                let todayData = studyData.dailyCompleteData.find(d => d.date === today);
+                if (!todayData) {
+                    todayData = { date: today, count: 0 };
+                    studyData.dailyCompleteData.push(todayData);
+                    studyData.dailyCompleteData.sort((a,b)=>a.date.localeCompare(b.date));
+                }
+                todayData.count = progressData[category][index].completed
+                    ? todayData.count + 1
+                    : Math.max(0, todayData.count - 1);
+
+                studyData.todayCompleted = todayData.count;
+            }
+
             renderProgressSection();
             updateDailyGoal();
+            renderDailyHeatmap();
             calculateTargetProgress();
             calculateExpectedCompletion();
-            if (studyData) {
-                // 更新今日完成数
-                const today = new Date().toISOString().split('T')[0];
-                const todayData = studyData.dailyCompleteData.find(d => d.date === today);
-                if (todayData) {
-                    todayData.count = progressData[category][index].completed ? todayData.count + 1 : Math.max(0, todayData.count - 1);
-                    studyData.todayCompleted = todayData.count;
-                }
-            }
         }
-        // ========== 渲染图表（侧边栏） ==========
-        function renderCharts() {
+
+        // ========== 图表 ==========
+        function renderCharts(){
             if (!studyData) return;
+
             const ctx1 = document.getElementById('studyTimeChart');
             const ctx2 = document.getElementById('masteryRadarChart');
             const ctx3 = document.getElementById('weaknessChart');
+
             if (ctx1) {
                 if (window.studyTimeChartInstance) window.studyTimeChartInstance.destroy();
                 window.studyTimeChartInstance = new Chart(ctx1, {
@@ -2834,23 +2201,20 @@
                             borderWidth: 2
                         }]
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false }
-                        }
-                    }
+                    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } }
                 });
             }
+
             if (ctx2) {
                 if (window.masteryRadarChartInstance) window.masteryRadarChartInstance.destroy();
+
                 const categories = Object.keys(progressData);
                 const masteryData = categories.map(cat => {
-                    const blocks = progressData[cat];
+                    const blocks = progressData[cat] || [];
                     const completed = blocks.filter(b => b.completed).length;
-                    return blocks.length > 0 ? ((completed / blocks.length) * 100).toFixed(1) : 0;
+                    return blocks.length > 0 ? Number(((completed / blocks.length) * 100).toFixed(1)) : 0;
                 });
+
                 window.masteryRadarChartInstance = new Chart(ctx2, {
                     type: 'radar',
                     data: {
@@ -2865,20 +2229,14 @@
                         }]
                     },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            r: {
-                                beginAtZero: true,
-                                max: 100
-                            }
-                        },
-                        plugins: {
-                            legend: { display: false }
-                        }
+                        responsive:true,
+                        maintainAspectRatio:false,
+                        scales:{ r:{ beginAtZero:true, max:100 } },
+                        plugins:{ legend:{ display:false } }
                     }
                 });
             }
+
             if (ctx3) {
                 if (window.weaknessChartInstance) window.weaknessChartInstance.destroy();
                 window.weaknessChartInstance = new Chart(ctx3, {
@@ -2897,114 +2255,110 @@
                             borderWidth: 2
                         }]
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } }
-                        }
-                    }
+                    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ boxWidth:12, padding:10 } } } }
                 });
             }
         }
-        // ========== 渲染诊断报告（侧边栏） ==========
-        function renderDiagnosisReport() {
+
+        // ========== 诊断 ==========
+        function renderDiagnosisReport(){
             if (!studyData) return;
+
             const weakList = document.getElementById('weakKnowledgeList');
             const errorList = document.getElementById('errorProneList');
             const focusList = document.getElementById('nextWeekFocus');
             const adviceDiv = document.getElementById('diagnosisAdvice');
-            weakList.innerHTML = studyData.weakKnowledge.slice(0, 5).map(item => `
-                <li>
-                    <span>${item.name}</span>
-                    <span class="weakness-level high">薄弱</span>
-                </li>
+
+            weakList.innerHTML = studyData.weakKnowledge.slice(0,5).map(item => `
+                <li><span>${escapeHTML(item.name)}</span><span class="weakness-level high">薄弱</span></li>
             `).join('');
-            errorList.innerHTML = studyData.errorTypes.slice(0, 5).map(item => `
-                <li>
-                    <span>${item.name}</span>
-                    <span class="weakness-level medium">易错</span>
-                </li>
+
+            errorList.innerHTML = studyData.errorTypes.slice(0,5).map(item => `
+                <li><span>${escapeHTML(item.name)}</span><span class="weakness-level medium">易错</span></li>
             `).join('');
-            focusList.innerHTML = studyData.nextWeekFocus.slice(0, 5).map(item => `
-                <li>
-                    <span>${item.name}</span>
-                    <span class="weakness-level low">重点</span>
-                </li>
+
+            focusList.innerHTML = studyData.nextWeekFocus.slice(0,5).map(item => `
+                <li><span>${escapeHTML(item.name)}</span><span class="weakness-level low">重点</span></li>
             `).join('');
-            adviceDiv.innerHTML = `<i class="fas fa-lightbulb"></i> ${studyData.weakKnowledge[0]?.desc || '保持学习节奏!'}`;
+
+            adviceDiv.innerHTML = `<i class="fas fa-lightbulb"></i> ${escapeHTML(studyData.weakKnowledge[0]?.desc || '保持学习节奏。')}`;
         }
-        // ========== 渲染成就系统 ==========
-        function renderAchievements() {
+
+        // ========== 成就 ==========
+        function renderAchievements(){
             const container = document.getElementById('achievementsList');
+
             let totalCompleted = 0;
             let totalBlocks = 0;
+
             Object.values(progressData).forEach(blocks => {
                 totalBlocks += blocks.length;
                 totalCompleted += blocks.filter(b => b.completed).length;
             });
+
             const progressPercent = totalBlocks > 0 ? (totalCompleted / totalBlocks) * 100 : 0;
+
             const consecutiveDays = studyData?.consecutiveDays || 0;
             const maxDailyComplete = studyData?.maxDailyComplete || 0;
-            const avgDailyComplete = studyData?.avgDailyComplete || 5;
             const todayCompleted = studyData?.todayCompleted || 0;
-            achievements.forEach(achievement => {
-                if (achievement.type === 'total') {
-                    achievement.progress = totalCompleted;
-                    achievement.unlocked = totalCompleted >= achievement.requirement;
-                } else if (achievement.type === 'percent') {
-                    achievement.progress = progressPercent.toFixed(1);
-                    achievement.unlocked = parseFloat(achievement.progress) >= achievement.requirement;
-                } else if (achievement.type === 'days_with_data') {
-                    achievement.progress = consecutiveDays;
-                    achievement.unlocked = consecutiveDays >= achievement.requirement;
-                } else if (achievement.type === 'improvement') {
-                    // 需要从 dailyCompleteData 计算
+
+            achievements.forEach(a => {
+                if (a.type === 'total') {
+                    a.progress = totalCompleted;
+                    a.unlocked = totalCompleted >= a.requirement;
+                } else if (a.type === 'percent') {
+                    a.progress = progressPercent.toFixed(1);
+                    a.unlocked = parseFloat(a.progress) >= a.requirement;
+                } else if (a.type === 'days_with_data') {
+                    a.progress = consecutiveDays;
+                    a.unlocked = consecutiveDays >= a.requirement;
+                } else if (a.type === 'improvement') {
                     const dailyData = studyData?.dailyCompleteData || [];
                     if (dailyData.length >= 2) {
                         const last = dailyData[dailyData.length - 1].count;
                         const prev = dailyData[dailyData.length - 2].count;
                         const ratio = last / Math.max(1, prev);
-                        achievement.unlocked = ratio >= achievement.requirement;
-                        achievement.progress = ratio.toFixed(2) + 'x';
+                        a.unlocked = ratio >= a.requirement;
+                        a.progress = ratio.toFixed(2) + 'x';
                     } else {
-                        achievement.unlocked = false;
-                        achievement.progress = '数据不足';
+                        a.unlocked = false;
+                        a.progress = '数据不足';
                     }
-                } else if (achievement.type === 'perfect_match') {
-                    const suggestedDailyGoal = document.getElementById('dailyGoalValue')?.textContent || 36;
-                    achievement.unlocked = todayCompleted === parseInt(suggestedDailyGoal);
-                    achievement.progress = `${todayCompleted}/${suggestedDailyGoal}`;
-                } else if (achievement.type === 'record_breaker') {
-                    achievement.unlocked = todayCompleted > maxDailyComplete && maxDailyComplete > 0;
-                    achievement.progress = `${todayCompleted}/${maxDailyComplete}`;
+                } else if (a.type === 'perfect_match') {
+                    const suggestedDailyGoal = Number(document.getElementById('dailyGoalValue')?.textContent || 36);
+                    a.unlocked = todayCompleted === suggestedDailyGoal;
+                    a.progress = `${todayCompleted}/${suggestedDailyGoal}`;
+                } else if (a.type === 'record_breaker') {
+                    a.unlocked = todayCompleted > maxDailyComplete && maxDailyComplete > 0;
+                    a.progress = `${todayCompleted}/${maxDailyComplete}`;
                 }
             });
+
             container.innerHTML = achievements.map(a => `
                 <div class="sidebar-achievement-badge ${a.unlocked ? 'unlocked' : 'locked'}">
                     <div class="sidebar-achievement-icon">${a.icon}</div>
                     <div class="sidebar-achievement-name">${a.name}</div>
                     <div class="sidebar-achievement-desc">${a.desc}</div>
-                    <div class="sidebar-achievement-progress">${a.progress || 0} / ${a.requirement}</div>
+                    <div class="sidebar-achievement-progress">${a.progress ?? 0} / ${a.requirement}</div>
                 </div>
             `).join('');
         }
-        // ========== 渲染标签汇总 ==========
-        function renderTagSummary() {
+
+        // ========== 标签汇总 ==========
+        function renderTagSummary(){
             const container = document.getElementById('tagSummaryCards');
+
             const tagTypes = [
-                { key: '必考', label: '必考知识点', class: 'must' },
-                { key: '高频', label: '高频考点', class: 'frequent' },
-                { key: '易错', label: '易错题型', class: 'difficult' }
+                { key:'必考', label:'必考知识点', class:'must', icon:'<i class="fas fa-fire"></i>' },
+                { key:'高频', label:'高频考点', class:'frequent', icon:'<i class="fas fa-chart-line"></i>' },
+                { key:'易错', label:'易错题型', class:'difficult', icon:'<i class="fas fa-exclamation-triangle"></i>' }
             ];
+
             container.innerHTML = tagTypes.map(type => {
                 const filtered = knowledgeData.filter(item => item.tags.includes(type.key));
                 return `
                     <div class="tag-card ${type.class}">
-                        <div class="tag-title">
-                            ${type.key === '必考' ? '<i class="fas fa-fire"></i>' : type.key === '高频' ? '<i class="fas fa-chart-line"></i>' : '<i class="fas fa-exclamation-triangle"></i>'}
-                            ${type.label}
-                        </div>
+                        <div class="tag-title">${type.icon} ${type.label}</div>
                         <div class="tag-meta">共 ${filtered.length} 条</div>
                         <div class="tag-list">
                             ${filtered.map(item => {
@@ -3015,8 +2369,8 @@
                                             ${isCompleted ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>'}
                                         </div>
                                         <div class="content">
-                                            ${highlightSearchTerm(item.content, currentSearchTerm)}
-                                            <div class="meta">${item.tags.map(tag => `<span class="tag-${tag}">${tag}</span>`).join(' ')}</div>
+                                            ${highlightSearchTerm(escapeHTML(item.content), currentSearchTerm)}
+                                            <div class="meta">${item.tags.map(tag => `<span>${escapeHTML(tag)}</span>`).join(' ')}</div>
                                         </div>
                                     </div>
                                 `;
@@ -3026,32 +2380,210 @@
                 `;
             }).join('');
         }
-        // ========== 检查是否已完成 ==========
-        function checkIfCompleted(content) {
+
+        function checkIfCompleted(content){
             for (const category in progressData) {
-                for (const block of progressData[category]) {
-                    if (block.content.includes(content) && block.completed) {
-                        return true;
-                    }
+                for (const block of (progressData[category] || [])) {
+                    if (block.content.includes(content) && block.completed) return true;
                 }
             }
             return false;
         }
-        // ========== 更新最后更新时间 ==========
-        function updateLastUpdate() {
+
+        // ========== 最近365天热力图 + 冷酷科学反馈 ==========
+        function renderDailyHeatmap(){
+            const gridEl = document.getElementById('heatmapGrid');
+            const legendEl = document.getElementById('heatmapLegend');
+            const metricsEl = document.getElementById('heatmapMetrics');
+            const adviceTextEl = document.getElementById('coldAdviceText');
+            if (!gridEl || !legendEl || !metricsEl || !adviceTextEl) return;
+
+            const daily = (studyData?.dailyCompleteData || [])
+                .map(d => ({ date: d.date, count: Number(d.count || 0) }))
+                .filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d.date));
+
+            legendEl.innerHTML = `
+                <span>少</span>
+                <span class="box" style="background: rgba(0,0,0,0.08)"></span>
+                <span class="box" style="background: rgba(102,126,234,0.25)"></span>
+                <span class="box" style="background: rgba(102,126,234,0.45)"></span>
+                <span class="box" style="background: rgba(102,126,234,0.70)"></span>
+                <span class="box" style="background: rgba(102,126,234,0.95)"></span>
+                <span>多</span>
+            `;
+
+            if (daily.length === 0) {
+                gridEl.innerHTML = '';
+                metricsEl.innerHTML = `<div class="hm-metric"><div class="k">数据状态</div><div class="v">无每日数据</div></div>`;
+                adviceTextEl.innerHTML = `没有每日完成数据。无法评估趋势、波动与执行率。先记录，再优化。`;
+                return;
+            }
+
+            const map = new Map(daily.map(d => [d.date, d.count]));
+
+            function toISODate(d){
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2,'0');
+                const dd = String(d.getDate()).padStart(2,'0');
+                return `${y}-${m}-${dd}`;
+            }
+            function addDays(d,n){
+                const x = new Date(d);
+                x.setDate(x.getDate() + n);
+                return x;
+            }
+            // Monday=0...Sunday=6
+            function mondayBasedIndex(d){
+                const js = d.getDay(); // 0 Sun .. 6 Sat
+                return (js + 6) % 7;
+            }
+
+            const now = new Date();
+            const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const start365 = addDays(end, -364);
+
+            const shift = mondayBasedIndex(start365);
+            const alignedStart = addDays(start365, -shift);
+
+            const days = [];
+            for (let d = new Date(alignedStart); d <= end; d = addDays(d, 1)) {
+                const iso = toISODate(d);
+                const count = map.get(iso) ?? 0;
+                days.push({ date: iso, count, dow: mondayBasedIndex(d) });
+            }
+
+            // 只用365天窗口内数据分箱
+            const counts365 = [];
+            for (let d = new Date(start365); d <= end; d = addDays(d, 1)) {
+                counts365.push(map.get(toISODate(d)) ?? 0);
+            }
+            const positive = counts365.filter(x => Number.isFinite(x) && x > 0);
+            const sorted = [...positive].sort((a,b)=>a-b);
+            const max = positive.length ? Math.max(...positive) : 0;
+
+            const q = (p) => {
+                if (sorted.length === 0) return 0;
+                const idx = Math.floor((sorted.length - 1) * p);
+                return sorted[idx];
+            };
+            const t1 = q(0.25), t2 = q(0.50), t3 = q(0.75);
+
+            function levelOf(v){
+                if (v <= 0) return 0;
+                if (t1 === t3) {
+                    if (max <= 0) return 0;
+                    const r = v / max;
+                    if (r <= 0.25) return 1;
+                    if (r <= 0.5) return 2;
+                    if (r <= 0.75) return 3;
+                    return 4;
+                }
+                if (v <= t1) return 1;
+                if (v <= t2) return 2;
+                if (v <= t3) return 3;
+                return 4;
+            }
+
+            gridEl.innerHTML = days.map(d => {
+                const level = levelOf(d.count);
+                return `
+                    <div class="hm-cell" data-level="${level}" style="grid-row:${d.dow + 1};">
+                        <div class="hm-tooltip">${d.date}：${d.count} 个</div>
+                    </div>
+                `;
+            }).join('');
+
+            const lastNDays = (n) => {
+                const startN = addDays(end, -(n - 1));
+                const res = [];
+                for (let d = new Date(startN); d <= end; d = addDays(d, 1)) {
+                    res.push(map.get(toISODate(d)) ?? 0);
+                }
+                return res;
+            };
+
+            const mean = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+            const std = arr => {
+                if (!arr.length) return 0;
+                const m = mean(arr);
+                const v = mean(arr.map(x => (x - m) ** 2));
+                return Math.sqrt(v);
+            };
+            const slope = (arr) => {
+                const n = arr.length;
+                if (n < 2) return 0;
+                let sx=0, sy=0, sxx=0, sxy=0;
+                for (let i=0;i<n;i++){
+                    const x=i, y=arr[i];
+                    sx+=x; sy+=y; sxx+=x*x; sxy+=x*y;
+                }
+                const denom = n*sxx - sx*sx;
+                if (denom === 0) return 0;
+                return (n*sxy - sx*sy) / denom;
+            };
+
+            const a7 = lastNDays(7), a14 = lastNDays(14), a28 = lastNDays(28);
+            const m7 = mean(a7), m14 = mean(a14), m28 = mean(a28);
+            const s7 = std(a7);
+            const cv7 = m7 > 0 ? s7 / m7 : Infinity;
+            const zero7 = a7.filter(x => x === 0).length;
+            const b7 = slope(a7);
+
+            const total365 = counts365.reduce((a,b)=>a+b,0);
+            const zero365 = counts365.filter(x=>x===0).length;
+            const zeroRate = zero365 / 365;
+
+            const suggestedDailyGoal = Number(document.getElementById('dailyGoalValue')?.textContent || 36);
+            const todayISO = toISODate(end);
+            const todayCount = map.get(todayISO) ?? (studyData?.todayCompleted ?? 0);
+
+            metricsEl.innerHTML = `
+                <div class="hm-metric"><div class="k">今日完成</div><div class="v">${todayCount}</div></div>
+                <div class="hm-metric"><div class="k">近7天均值</div><div class="v">${m7.toFixed(2)}</div></div>
+                <div class="hm-metric"><div class="k">近14天均值</div><div class="v">${m14.toFixed(2)}</div></div>
+                <div class="hm-metric"><div class="k">近28天均值</div><div class="v">${m28.toFixed(2)}</div></div>
+                <div class="hm-metric"><div class="k">近7天趋势(斜率/天)</div><div class="v">${b7 >= 0 ? '+' : ''}${b7.toFixed(2)}</div></div>
+                <div class="hm-metric"><div class="k">365天零完成</div><div class="v">${zero365} / 365</div></div>
+            `;
+
+            const goalHit = todayCount >= suggestedDailyGoal;
+            const deficit = Math.max(0, suggestedDailyGoal - todayCount);
+
+            const parts = [];
+            parts.push(`窗口：最近365天。今日：${todayCount}，目标：${suggestedDailyGoal}。`);
+
+            if (goalHit) parts.push(`达标。复用系统，不要靠兴奋。`);
+            else parts.push(`未达标，缺口 <span class="num">${deficit}</span>。缺口会在未来用更高强度偿还。`);
+
+            if (zeroRate > 0.35) parts.push(`零日率 ${(zeroRate*100).toFixed(1)}%。问题是“不连续”。先把零日率压到 10% 以下。`);
+            else if (zeroRate < 0.10) parts.push(`零日率 ${(zeroRate*100).toFixed(1)}%。连续性合格，现在谈强度。`);
+            else parts.push(`零日率 ${(zeroRate*100).toFixed(1)}%。先消灭0日，再谈效率。`);
+
+            if (b7 > 0.2) parts.push(`趋势上升（斜率 <span class="num">+${b7.toFixed(2)}</span>/天）。保持变量不变。`);
+            else if (b7 < -0.2) parts.push(`趋势下降（斜率 <span class="num">${b7.toFixed(2)}</span>/天）。减少切换，降低启动成本。`);
+            else parts.push(`趋势≈0。要进步只能改变量：提高日均或降低波动。`);
+
+            if (zero7 >= 2) parts.push(`近7天 0日=${zero7}。断电次数过多，先修“启动”。`);
+            else parts.push(`近7天断电少，说明行为链条在工作。`);
+
+            if (!Number.isFinite(cv7) || cv7 > 1.0) parts.push(`波动过大（CV≈${Number.isFinite(cv7)?cv7.toFixed(2):'∞'}）。你在被状态驱动。拆成3段硬配额。`);
+            else if (cv7 < 0.35) parts.push(`波动低（CV≈${cv7.toFixed(2)}）。稳定=效率底座。可加码10%。`);
+            else parts.push(`波动中等（CV≈${cv7.toFixed(2)}）。先设最低保底，再追峰值。`);
+
+            adviceTextEl.innerHTML = parts.join(' ');
+        }
+
+        // ========== 更新时间 ==========
+        function updateLastUpdate(){
             const now = new Date();
             const timeString = now.toLocaleString('zh-CN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
+                year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit'
             });
-            document.getElementById('lastUpdate').innerHTML =
-                `<i class="fas fa-clock"></i> 最后更新: ${timeString}`;
+            document.getElementById('lastUpdate').innerHTML = `<i class="fas fa-clock"></i> 最后更新: ${timeString}`;
         }
-        // ========== 刷新数据 ==========
-        function refreshData() {
+
+        // ========== 刷新 ==========
+        function refreshData(){
             const btn = document.querySelector('.tool-btn.success');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>加载中...</span>';
             setTimeout(() => {
@@ -3059,25 +2591,21 @@
                 btn.innerHTML = '<i class="fas fa-sync-alt"></i> <span>刷新数据</span>';
             }, 500);
         }
-        // ========== 返回顶部 ==========
+
+        // ========== 返回顶部 & 阅读进度 ==========
         const backToTopBtn = document.getElementById('backToTopBtn');
         window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTopBtn.style.display = 'flex';
-            } else {
-                backToTopBtn.style.display = 'none';
-            }
+            backToTopBtn.style.display = window.pageYOffset > 300 ? 'flex' : 'none';
             updateReadingProgress();
         });
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        // ========== 更新阅读进度 ==========
-        function updateReadingProgress() {
+        backToTopBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+
+        function updateReadingProgress(){
             const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (window.pageYOffset / windowHeight) * 100;
+            const scrolled = windowHeight > 0 ? (window.pageYOffset / windowHeight) * 100 : 0;
             document.querySelector('.reading-progress').style.width = scrolled + '%';
         }
+
         // ========== 主题切换 ==========
         const themeToggle = document.getElementById('themeToggle');
         themeToggle.addEventListener('click', () => {
@@ -3090,11 +2618,13 @@
             document.body.classList.add('dark-mode');
             themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
         }
-        // ========== 搜索输入监听 ==========
+
+        // ========== 搜索回车 ==========
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') search();
         });
-        // ========== 初始化 ==========
+
+        // 初始化
         loadKnowledgeData();
     </script>
 </body>
