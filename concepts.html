@@ -1303,6 +1303,74 @@
         body.dark-mode .tag-item .meta {
             color: #a3a3a3;
         }
+        /* ========== 每日进步可视化 ========== */
+        .daily-progress-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        body.dark-mode .daily-progress-section {
+            background: var(--dark-card);
+        }
+        .daily-progress-chart-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        body.dark-mode .daily-progress-chart-container {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        }
+        .daily-progress-chart-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .daily-progress-chart-container canvas {
+            max-height: 400px;
+        }
+        .daily-progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .daily-progress-stat {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .daily-progress-stat {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        }
+        .daily-progress-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .daily-progress-stat-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .daily-progress-stat-value {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .daily-progress-stat-label {
+            font-size: 0.95em;
+            color: #666;
+            margin-top: 5px;
+        }
+        body.dark-mode .daily-progress-stat-label {
+            color: #aaa;
+        }
         /* ========== 固定按钮 ========== */
         .fixed-buttons {
             position: fixed;
@@ -1705,6 +1773,38 @@
             </div>
             <div class="pagination" id="knowledgePagination"></div>
         </div>
+        <!-- 每日进步可视化 -->
+        <div class="daily-progress-section" id="daily-progress-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-line"></i> 每日进步可视化</h2>
+            </div>
+            <div class="daily-progress-chart-container">
+                <div class="daily-progress-chart-title">每日完成知识块数量</div>
+                <canvas id="dailyProgressChart"></canvas>
+            </div>
+            <div class="daily-progress-stats">
+                <div class="daily-progress-stat">
+                    <div class="daily-progress-stat-icon">📈</div>
+                    <div class="daily-progress-stat-value" id="maxDailyComplete">0</div>
+                    <div class="daily-progress-stat-label">单日最高完成</div>
+                </div>
+                <div class="daily-progress-stat">
+                    <div class="daily-progress-stat-icon">📊</div>
+                    <div class="daily-progress-stat-value" id="avgDailyComplete">0</div>
+                    <div class="daily-progress-stat-label">平均每日完成</div>
+                </div>
+                <div class="daily-progress-stat">
+                    <div class="daily-progress-stat-icon">🔥</div>
+                    <div class="daily-progress-stat-value" id="consecutiveDays">0</div>
+                    <div class="daily-progress-stat-label">连续学习天数</div>
+                </div>
+                <div class="daily-progress-stat">
+                    <div class="daily-progress-stat-icon">📅</div>
+                    <div class="daily-progress-stat-value" id="totalStudyDays">0</div>
+                    <div class="daily-progress-stat-label">总学习天数</div>
+                </div>
+            </div>
+        </div>
         <!-- 知识块完成进度 -->
         <div class="progress-section" id="progress-section">
             <div class="section-header">
@@ -1773,7 +1873,7 @@
         const GOAL_TARGET_DATE = new Date('2025-12-31'); // 目标完成日期
         const START_DATE = new Date('2025-06-10'); // 开始日期
         const DAILY_GOAL = 36; // 每日目标改为36个知识块
-        const DAY_MS = 1000 _60_ 60 * 24;
+        const DAY_MS = 1000 * 60 * 60 * 24;
         let knowledgeData = [];
         let filteredData = [];
         let currentSearchTerm = '';
@@ -2015,6 +2115,7 @@
                 updateStatistics();
                 await loadProgressData();
                 await loadStudyData();
+                renderDailyProgressChart(); // 新增：每日进步可视化
                 renderProgressSection();
                 renderTagSummary(); // 改进版：包含所有未完成
                 calculateCountdown();
@@ -2064,7 +2165,8 @@
                 consecutiveDays: 0,
                 maxDailyComplete: 0,
                 avgDailyComplete: 5, // 默认值
-                todayCompleted: 0 // 今日完成数
+                todayCompleted: 0, // 今日完成数
+                dailyCompleteData: [] // 每日完成数据
             };
             const lines = text.split('\n');
             let currentSection = null;
@@ -2143,6 +2245,10 @@
                         if (dateMatch) {
                             const dateStr = dateMatch[1];
                             const count = parseInt(dateMatch[2]);
+                            data.dailyCompleteData.push({
+                                date: dateStr,
+                                count: count
+                            });
                             const today = new Date().toISOString().split('T')[0];
                             if (dateStr === today) {
                                 data.todayCompleted = count;
@@ -2156,6 +2262,8 @@
                     }
                 }
             });
+            // 计算总学习天数
+            data.totalStudyDays = data.dailyCompleteData.length;
             return data;
         }
         function parseProgressMarkdown(text) {
@@ -2199,6 +2307,101 @@
                 }
             });
             return data;
+        }
+        // ========== 渲染每日进步图表 ==========
+        function renderDailyProgressChart() {
+            if (!studyData || !studyData.dailyCompleteData || studyData.dailyCompleteData.length === 0) {
+                return;
+            }
+            const ctx = document.getElementById('dailyProgressChart');
+            if (!ctx) return;
+            if (window.dailyProgressChartInstance) {
+                window.dailyProgressChartInstance.destroy();
+            }
+            // 按日期排序
+            const sortedData = [...studyData.dailyCompleteData].sort((a, b) => new Date(a.date) - new Date(b.date));
+            const dates = sortedData.map(item => item.date);
+            const counts = sortedData.map(item => item.count);
+            // 计算统计数据
+            const maxComplete = Math.max(...counts, 0);
+            const avgComplete = (counts.reduce((sum, val) => sum + val, 0) / counts.length).toFixed(1);
+            const totalStudyDays = counts.length;
+            document.getElementById('maxDailyComplete').textContent = maxComplete;
+            document.getElementById('avgDailyComplete').textContent = avgComplete;
+            document.getElementById('consecutiveDays').textContent = studyData.consecutiveDays || 0;
+            document.getElementById('totalStudyDays').textContent = totalStudyDays;
+            window.dailyProgressChartInstance = new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: '每日完成知识块数',
+                        data: counts,
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: 'rgba(102, 126, 234, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `完成: ${context.raw} 个知识块`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '知识块数量',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                stepSize: 5
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '日期',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
         }
         // ========== 渲染图表 ==========
         function renderCharts() {
