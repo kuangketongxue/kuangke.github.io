@@ -3038,6 +3038,190 @@
             }
             return false;
         }
+
+ // ========== 最近365天热力图 + 冷酷科学反馈 ==========
+        function renderDailyHeatmap(){
+            const gridEl = document.getElementById('heatmapGrid');
+            const legendEl = document.getElementById('heatmapLegend');
+            const metricsEl = document.getElementById('heatmapMetrics');
+            const adviceTextEl = document.getElementById('coldAdviceText');
+            if (!gridEl || !legendEl || !metricsEl || !adviceTextEl) return;
+
+            const daily = (studyData?.dailyCompleteData || [])
+                .map(d => ({ date: d.date, count: Number(d.count || 0) }))
+                .filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d.date));
+
+            legendEl.innerHTML = `
+                <span>少</span>
+                <span class="box" style="background: rgba(0,0,0,0.08)"></span>
+                <span class="box" style="background: rgba(102,126,234,0.25)"></span>
+                <span class="box" style="background: rgba(102,126,234,0.45)"></span>
+                <span class="box" style="background: rgba(102,126,234,0.70)"></span>
+                <span class="box" style="background: rgba(102,126,234,0.95)"></span>
+                <span>多</span>
+            `;
+
+            if (daily.length === 0) {
+                gridEl.innerHTML = '';
+                metricsEl.innerHTML = `<div class="hm-metric"><div class="k">数据状态</div><div class="v">无每日数据</div></div>`;
+                adviceTextEl.innerHTML = `没有每日完成数据。无法评估趋势、波动与执行率。先记录，再优化。`;
+                return;
+            }
+
+            const map = new Map(daily.map(d => [d.date, d.count]));
+
+            function toISODate(d){
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2,'0');
+                const dd = String(d.getDate()).padStart(2,'0');
+                return `${y}-${m}-${dd}`;
+            }
+            function addDays(d,n){
+                const x = new Date(d);
+                x.setDate(x.getDate() + n);
+                return x;
+            }
+            // Monday=0...Sunday=6
+            function mondayBasedIndex(d){
+                const js = d.getDay(); // 0 Sun .. 6 Sat
+                return (js + 6) % 7;
+            }
+
+            const now = new Date();
+            const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const start365 = addDays(end, -364);
+
+            const shift = mondayBasedIndex(start365);
+            const alignedStart = addDays(start365, -shift);
+
+            const days = [];
+            for (let d = new Date(alignedStart); d <= end; d = addDays(d, 1)) {
+                const iso = toISODate(d);
+                const count = map.get(iso) ?? 0;
+                days.push({ date: iso, count, dow: mondayBasedIndex(d) });
+            }
+
+            // 只用365天窗口内数据分箱
+            const counts365 = [];
+            for (let d = new Date(start365); d <= end; d = addDays(d, 1)) {
+                counts365.push(map.get(toISODate(d)) ?? 0);
+            }
+            const positive = counts365.filter(x => Number.isFinite(x) && x > 0);
+            const sorted = [...positive].sort((a,b)=>a-b);
+            const max = positive.length ? Math.max(...positive) : 0;
+
+            const q = (p) => {
+                if (sorted.length === 0) return 0;
+                const idx = Math.floor((sorted.length - 1) * p);
+                return sorted[idx];
+            };
+            const t1 = q(0.25), t2 = q(0.50), t3 = q(0.75);
+
+            function levelOf(v){
+                if (v <= 0) return 0;
+                if (t1 === t3) {
+                    if (max <= 0) return 0;
+                    const r = v / max;
+                    if (r <= 0.25) return 1;
+                    if (r <= 0.5) return 2;
+                    if (r <= 0.75) return 3;
+                    return 4;
+                }
+                if (v <= t1) return 1;
+                if (v <= t2) return 2;
+                if (v <= t3) return 3;
+                return 4;
+            }
+
+            gridEl.innerHTML = days.map(d => {
+                const level = levelOf(d.count);
+                return `
+                    <div class="hm-cell" data-level="${level}" style="grid-row:${d.dow + 1};">
+                        <div class="hm-tooltip">${d.date}：${d.count} 个</div>
+                    </div>
+                `;
+            }).join('');
+
+            const lastNDays = (n) => {
+                const startN = addDays(end, -(n - 1));
+                const res = [];
+                for (let d = new Date(startN); d <= end; d = addDays(d, 1)) {
+                    res.push(map.get(toISODate(d)) ?? 0);
+                }
+                return res;
+            };
+
+            const mean = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+            const std = arr => {
+                if (!arr.length) return 0;
+                const m = mean(arr);
+                const v = mean(arr.map(x => (x - m) ** 2));
+                return Math.sqrt(v);
+            };
+            const slope = (arr) => {
+                const n = arr.length;
+                if (n < 2) return 0;
+                let sx=0, sy=0, sxx=0, sxy=0;
+                for (let i=0;i<n;i++){
+                    const x=i, y=arr[i];
+                    sx+=x; sy+=y; sxx+=x*x; sxy+=x*y;
+                }
+                const denom = n*sxx - sx*sx;
+                if (denom === 0) return 0;
+                return (n*sxy - sx*sy) / denom;
+            };
+
+            const a7 = lastNDays(7), a14 = lastNDays(14), a28 = lastNDays(28);
+            const m7 = mean(a7), m14 = mean(a14), m28 = mean(a28);
+            const s7 = std(a7);
+            const cv7 = m7 > 0 ? s7 / m7 : Infinity;
+            const zero7 = a7.filter(x => x === 0).length;
+            const b7 = slope(a7);
+
+            const total365 = counts365.reduce((a,b)=>a+b,0);
+            const zero365 = counts365.filter(x=>x===0).length;
+            const zeroRate = zero365 / 365;
+
+            const suggestedDailyGoal = Number(document.getElementById('dailyGoalValue')?.textContent || 36);
+            const todayISO = toISODate(end);
+            const todayCount = map.get(todayISO) ?? (studyData?.todayCompleted ?? 0);
+
+            metricsEl.innerHTML = `
+                <div class="hm-metric"><div class="k">今日完成</div><div class="v">${todayCount}</div></div>
+                <div class="hm-metric"><div class="k">近7天均值</div><div class="v">${m7.toFixed(2)}</div></div>
+                <div class="hm-metric"><div class="k">近14天均值</div><div class="v">${m14.toFixed(2)}</div></div>
+                <div class="hm-metric"><div class="k">近28天均值</div><div class="v">${m28.toFixed(2)}</div></div>
+                <div class="hm-metric"><div class="k">近7天趋势(斜率/天)</div><div class="v">${b7 >= 0 ? '+' : ''}${b7.toFixed(2)}</div></div>
+                <div class="hm-metric"><div class="k">365天零完成</div><div class="v">${zero365} / 365</div></div>
+            `;
+
+            const goalHit = todayCount >= suggestedDailyGoal;
+            const deficit = Math.max(0, suggestedDailyGoal - todayCount);
+
+            const parts = [];
+            parts.push(`窗口：最近365天。今日：${todayCount}，目标：${suggestedDailyGoal}。`);
+
+            if (goalHit) parts.push(`达标。复用系统，不要靠兴奋。`);
+            else parts.push(`未达标，缺口 <span class="num">${deficit}</span>。缺口会在未来用更高强度偿还。`);
+
+            if (zeroRate > 0.35) parts.push(`零日率 ${(zeroRate*100).toFixed(1)}%。问题是“不连续”。先把零日率压到 10% 以下。`);
+            else if (zeroRate < 0.10) parts.push(`零日率 ${(zeroRate*100).toFixed(1)}%。连续性合格，现在谈强度。`);
+            else parts.push(`零日率 ${(zeroRate*100).toFixed(1)}%。先消灭0日，再谈效率。`);
+
+            if (b7 > 0.2) parts.push(`趋势上升（斜率 <span class="num">+${b7.toFixed(2)}</span>/天）。保持变量不变。`);
+            else if (b7 < -0.2) parts.push(`趋势下降（斜率 <span class="num">${b7.toFixed(2)}</span>/天）。减少切换，降低启动成本。`);
+            else parts.push(`趋势≈0。要进步只能改变量：提高日均或降低波动。`);
+
+            if (zero7 >= 2) parts.push(`近7天 0日=${zero7}。断电次数过多，先修“启动”。`);
+            else parts.push(`近7天断电少，说明行为链条在工作。`);
+
+            if (!Number.isFinite(cv7) || cv7 > 1.0) parts.push(`波动过大（CV≈${Number.isFinite(cv7)?cv7.toFixed(2):'∞'}）。你在被状态驱动。拆成3段硬配额。`);
+            else if (cv7 < 0.35) parts.push(`波动低（CV≈${cv7.toFixed(2)}）。稳定=效率底座。可加码10%。`);
+            else parts.push(`波动中等（CV≈${cv7.toFixed(2)}）。先设最低保底，再追峰值。`);
+
+            adviceTextEl.innerHTML = parts.join(' ');
+        }
+        
         // ========== 更新最后更新时间 ==========
         function updateLastUpdate() {
             const now = new Date();
