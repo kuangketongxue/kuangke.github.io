@@ -1650,7 +1650,7 @@
             // 下限：10，上限：60；临近高考（<180天）稍微加码
             suggested = Math.max(10, suggested);
             if (daysToExam < 180) suggested = Math.ceil(suggested * 1.15);
-            suggested = clamp(suggested, 0, 60);
+            suggested = clamp(suggested, 0, 9999);
 
             return suggested;
         }
