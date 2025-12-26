@@ -5,12 +5,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>知识收集系统 - 狂客·银河</title>
-
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
         /* ========== 基础样式 ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -60,7 +58,6 @@
         }
         body.dark-mode .side-nav { background: var(--dark-card); }
         .side-nav.active { left: 0; }
-
         .side-nav-toggle {
             position: fixed;
             left: 10px;
@@ -400,14 +397,12 @@
         .expected-card .countdown-value { color: var(--info-color); }
         .expected-card .countdown-subtitle { color: #0c5460; }
         body.dark-mode .expected-card .countdown-subtitle { color: var(--info-color); }
-
         .expected-card.warning { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-color: var(--danger-color); }
         body.dark-mode .expected-card.warning { background: linear-gradient(135deg, #4a2020 0%, #5a2828 100%); }
         .expected-card.warning .countdown-icon,
         .expected-card.warning .countdown-label,
         .expected-card.warning .countdown-value,
         .expected-card.warning .countdown-subtitle { color: var(--danger-color); }
-
         .expected-card.success { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-color: var(--success-color); }
         body.dark-mode .expected-card.success { background: linear-gradient(135deg, #1e3a29 0%, #2a4a35 100%); }
         .expected-card.success .countdown-icon,
@@ -470,7 +465,6 @@
         /* ========== 高亮样式 ========== */
         .highlight { background: var(--highlight-color); color: var(--highlight-text); padding: 2px 4px; border-radius: 3px; font-weight: 600; }
         body.dark-mode .highlight { background: #fbbf24; color: #1a202c; }
-
         .weakness-level { padding: 4px 10px; border-radius: 10px; font-size: 0.85em; font-weight: 600; }
         .weakness-level.high { background: #fee; color: #c00; }
         .weakness-level.medium { background: #fef3c7; color: #92400e; }
@@ -495,7 +489,6 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
         }
         body.dark-mode .toolbar { background: var(--dark-card); }
-
         .tool-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -518,7 +511,6 @@
         .tool-btn.info { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); }
         .tool-btn.danger { background: linear-gradient(135deg, var(--danger-color) 0%, #e53e3e 100%); }
         .tool-btn.active { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); transform: scale(1.05); }
-
         .search-box { display: flex; gap: 10px; flex: 1; max-width: 500px; }
         .search-input {
             flex: 1;
@@ -541,7 +533,6 @@
             margin-bottom: 30px;
         }
         body.dark-mode .knowledge-container { background: var(--dark-card); }
-
         .knowledge-list { display: flex; flex-direction: column; gap: 20px; }
         .knowledge-item {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -553,7 +544,6 @@
         }
         body.dark-mode .knowledge-item { background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); }
         .knowledge-item:hover { transform: translateX(10px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
-
         .knowledge-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; }
         .knowledge-number {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -583,7 +573,6 @@
         .badge.importance { background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%); color: white; }
         .badge.inspiration { background: linear-gradient(135deg, var(--success-color) 0%, #38f9d7 100%); color: white; }
         .badge.date { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); color: white; }
-
         .knowledge-content { color: #333; line-height: 1.8; font-size: 1.05em; word-break: break-word; }
         body.dark-mode .knowledge-content { color: #e2e8f0; }
 
@@ -604,7 +593,6 @@
         .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .pagination-info { padding: 10px 20px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 10px; font-weight: 600; color: var(--primary-color); font-size: 1em; }
         body.dark-mode .pagination-info { background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); }
-
         .page-number {
             min-width: 40px; height: 40px;
             display: flex; align-items: center; justify-content: center;
@@ -626,7 +614,6 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
         body.dark-mode .progress-section { background: var(--dark-card); }
-
         .section-header {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 30px; padding-bottom: 20px;
@@ -640,7 +627,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .progress-summary {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -656,7 +642,6 @@
         }
         body.dark-mode .progress-stat { background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); }
         .progress-stat:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
-
         .progress-stat-icon { font-size: 2em; margin-bottom: 10px; }
         .progress-stat-value { font-size: 1.6em; font-weight: bold; color: var(--primary-color); }
         .progress-stat-label { font-size: 0.95em; color: #666; margin-top: 5px; }
@@ -672,7 +657,6 @@
             min-width: 0;
         }
         body.dark-mode .progress-bar-container { background: #2d3748; }
-
         .progress-bar-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--success-color) 0%, #38f9d7 100%);
@@ -713,7 +697,6 @@
         }
         body.dark-mode .progress-category { background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); }
         .category-title { font-size: 1.5em; font-weight: bold; color: var(--primary-color); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-
         .progress-blocks-list { display: flex; flex-direction: column; gap: 10px; }
         .progress-block-item {
             padding: 12px 15px;
@@ -797,7 +780,6 @@
             backdrop-filter: blur(10px);
         }
         body.dark-mode .loading-overlay { background: rgba(26, 32, 44, 0.95); }
-
         .loading-content { text-align: center; }
         .loading-content i { font-size: 4em; color: var(--primary-color); animation: spin 1.5s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
@@ -818,6 +800,207 @@
             box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
         }
 
+        /* ========== 新增：每日进步热力图面板（左侧按钮弹出/隐藏） ========== */
+        .heatmap-toggle {
+            position: fixed;
+            left: 0;
+            top: calc(50% + 70px);
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            border: none;
+            border-radius: 0 16px 16px 0;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: #fff;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.35);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .heatmap-toggle:hover { width: 66px; box-shadow: 0 10px 30px rgba(72, 187, 120, 0.5); }
+        .heatmap-panel {
+            position: fixed;
+            left: -420px;
+            top: 90px;
+            width: 420px;
+            height: calc(100vh - 120px);
+            background: #fff;
+            border-radius: 0 18px 18px 0;
+            box-shadow: 6px 0 24px rgba(0,0,0,0.12);
+            z-index: 1000;
+            padding: 18px 18px 16px 18px;
+            transition: left 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            overflow: auto;
+        }
+        body.dark-mode .heatmap-panel { background: var(--dark-card); }
+        .heatmap-panel.active { left: 0; }
+
+        .hm-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--line-color);
+        }
+        body.dark-mode .hm-header { border-bottom-color: var(--line-color-dark); }
+        .hm-title {
+            font-size: 1.15em;
+            font-weight: 800;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hm-actions { display: flex; align-items: center; gap: 10px; }
+        .hm-chip {
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.85em;
+            background: rgba(66, 153, 225, 0.12);
+            color: #0c5460;
+            border: 1px solid rgba(66,153,225,0.35);
+            white-space: nowrap;
+        }
+        body.dark-mode .hm-chip {
+            background: rgba(66, 153, 225, 0.10);
+            color: #93c5fd;
+            border-color: rgba(147, 197, 253, 0.25);
+        }
+
+        .hm-legend {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 12px 0 10px 0;
+        }
+        .hm-legend .scale {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .hm-legend .label {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: 700;
+        }
+        body.dark-mode .hm-legend .label { color: #cbd5e1; }
+
+        .hm-swatch {
+            width: 16px; height: 16px;
+            border-radius: 4px;
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+        body.dark-mode .hm-swatch { border-color: rgba(255,255,255,0.10); }
+        .hm-swatch.lv0 { background: rgba(156,163,175,0.25); }
+        .hm-swatch.lv1 { background: rgba(72,187,120,0.25); }
+        .hm-swatch.lv2 { background: rgba(72,187,120,0.45); }
+        .hm-swatch.lv3 { background: rgba(72,187,120,0.70); }
+        .hm-swatch.lv4 { background: rgba(72,187,120,0.95); }
+
+        .hm-grid-wrap {
+            background: linear-gradient(135deg, rgba(102,126,234,0.06) 0%, rgba(118,75,162,0.06) 100%);
+            border: 1px solid rgba(102,126,234,0.18);
+            border-radius: 14px;
+            padding: 12px;
+        }
+        body.dark-mode .hm-grid-wrap {
+            background: rgba(0,0,0,0.18);
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        .hm-grid {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: 14px;
+            grid-template-rows: repeat(7, 14px);
+            gap: 4px;
+            align-items: start;
+            justify-content: start;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .hm-cell {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.06);
+            cursor: default;
+            flex: 0 0 auto;
+        }
+        body.dark-mode .hm-cell { border-color: rgba(255,255,255,0.10); }
+
+        .hm-cell[data-level="0"] { background: rgba(156,163,175,0.20); }
+        .hm-cell[data-level="1"] { background: rgba(72,187,120,0.25); }
+        .hm-cell[data-level="2"] { background: rgba(72,187,120,0.45); }
+        .hm-cell[data-level="3"] { background: rgba(72,187,120,0.70); }
+        .hm-cell[data-level="4"] { background: rgba(72,187,120,0.95); }
+
+        .hm-tooltip {
+            position: absolute;
+            left: 50%;
+            top: -8px;
+            transform: translate(-50%, -100%);
+            background: rgba(17, 24, 39, 0.92);
+            color: #fff;
+            padding: 6px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease;
+            z-index: 10;
+        }
+        .hm-cell:hover .hm-tooltip { opacity: 1; }
+
+        .hm-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .hm-metric {
+            background: #fff;
+            border-radius: 12px;
+            padding: 10px 12px;
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+        body.dark-mode .hm-metric {
+            background: var(--dark-bg);
+            border-color: rgba(255,255,255,0.10);
+        }
+        .hm-metric .k { font-size: 0.85em; color: #666; font-weight: 700; }
+        body.dark-mode .hm-metric .k { color: #cbd5e1; }
+        .hm-metric .v { font-size: 1.15em; font-weight: 900; color: var(--primary-color); margin-top: 4px; }
+
+        .hm-advice {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 14px;
+            border-left: 4px solid var(--info-color);
+            background: rgba(66,153,225,0.10);
+            color: #0c5460;
+            font-weight: 700;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        body.dark-mode .hm-advice {
+            background: rgba(66,153,225,0.12);
+            color: #93c5fd;
+        }
+        .hm-advice .num { font-weight: 900; color: var(--highlight-text); background: var(--highlight-color); padding: 1px 6px; border-radius: 6px; }
+
         /* ========== 响应式设计 ========== */
         @media (max-width: 768px) {
             .page-header h1 { font-size: 2.2em; }
@@ -832,6 +1015,9 @@
             .sidebar-achievements-grid { grid-template-columns: 1fr; }
             .knowledge-container { padding: 20px; }
             .progress-section { padding: 20px; }
+
+            .heatmap-panel { width: 92%; left: -100%; }
+            .heatmap-panel.active { left: 0; }
         }
     </style>
 </head>
@@ -839,6 +1025,42 @@
 <body>
     <!-- 阅读进度条 -->
     <div class="reading-progress"></div>
+
+    <!-- 新增：每日进步按钮 + 热力图面板 -->
+    <button class="heatmap-toggle" id="heatmapToggle" aria-label="每日进步热力图">
+        <i class="fas fa-fire-flame-curved"></i>
+    </button>
+    <aside class="heatmap-panel" id="heatmapPanel" aria-label="每日进步热力图面板">
+        <div class="hm-header">
+            <div class="hm-title"><i class="fas fa-calendar-days"></i> 每日进步热力图</div>
+            <div class="hm-actions">
+                <span class="hm-chip" id="hmWindowChip">最近365天</span>
+                <span class="hm-chip" id="hmTotalChip">总计: 0</span>
+            </div>
+        </div>
+
+        <div class="hm-legend">
+            <div class="label">少</div>
+            <div class="scale" aria-label="热力图强度">
+                <span class="hm-swatch lv0" title="0"></span>
+                <span class="hm-swatch lv1" title="低"></span>
+                <span class="hm-swatch lv2" title="中"></span>
+                <span class="hm-swatch lv3" title="高"></span>
+                <span class="hm-swatch lv4" title="很高"></span>
+            </div>
+            <div class="label">多</div>
+        </div>
+
+        <div class="hm-grid-wrap">
+            <div class="hm-grid" id="hmGrid"></div>
+        </div>
+
+        <div class="hm-metrics" id="hmMetrics"></div>
+
+        <div class="hm-advice">
+            <span id="hmAdviceText">正在生成热力图…</span>
+        </div>
+    </aside>
 
     <!-- 侧边导航栏 -->
     <button class="side-nav-toggle" id="sideNavToggle" aria-label="打开侧边栏">
@@ -852,12 +1074,10 @@
             <i class="fas fa-chart-line"></i>
             <span>学习曲线</span>
         </div>
-
         <div class="nav-item" onclick="toggleSection('diagnosisSection')">
             <i class="fas fa-stethoscope"></i>
             <span>智能诊断</span>
         </div>
-
         <div class="nav-item" onclick="toggleSection('achievementSection')">
             <i class="fas fa-trophy"></i>
             <span>成就系统</span>
@@ -889,7 +1109,6 @@
                 <i class="fas fa-stethoscope"></i>
                 智能诊断报告
             </div>
-
             <div class="sidebar-diagnosis-card weak">
                 <div class="sidebar-diagnosis-title">
                     <i class="fas fa-exclamation-triangle"></i>
@@ -897,7 +1116,6 @@
                 </div>
                 <ul class="sidebar-diagnosis-list" id="weakKnowledgeList"></ul>
             </div>
-
             <div class="sidebar-diagnosis-card error">
                 <div class="sidebar-diagnosis-title">
                     <i class="fas fa-times-circle"></i>
@@ -905,7 +1123,6 @@
                 </div>
                 <ul class="sidebar-diagnosis-list" id="errorProneList"></ul>
             </div>
-
             <div class="sidebar-diagnosis-card focus">
                 <div class="sidebar-diagnosis-title">
                     <i class="fas fa-bullseye"></i>
@@ -913,7 +1130,6 @@
                 </div>
                 <ul class="sidebar-diagnosis-list" id="nextWeekFocus"></ul>
             </div>
-
             <div class="sidebar-alert info">
                 <i class="fas fa-info-circle"></i>
                 <span id="diagnosisAdvice">正在分析你的学习数据...</span>
@@ -960,7 +1176,6 @@
                     <span class="video-text">视频矩阵</span>
                 </a>
             </div>
-
             <div class="controls">
                 <button id="themeToggle" class="theme-toggle" aria-label="切换主题">
                     <i class="fas fa-moon"></i>
@@ -971,6 +1186,7 @@
 
     <!-- 主体内容 -->
     <div class="knowledge-page" id="mainContent">
+
         <!-- 页面头部 -->
         <div class="page-header">
             <h1>📚 知识收集系统</h1>
@@ -1060,16 +1276,18 @@
                     </div>
                 </div>
 
-                <!-- 今日学习进度 -->
+                <!-- 今日学习进度（目标改为“建议的每日完成数”） -->
                 <div class="daily-goal-card">
                     <div class="daily-goal-icon">🎯</div>
-                    <div class="daily-goal-label">今日学习进度</div>
-                    <div class="daily-goal-value"><span id="todayCompleted">0</span> / <span id="dailyGoalValue">36</span></div>
+                    <div class="daily-goal-label">今日学习进度（建议目标）</div>
+                    <div class="daily-goal-value">
+                        <span id="todayCompleted">0</span> / <span id="dailyGoalValue">0</span>
+                    </div>
                     <div class="daily-goal-progress">
-                        <div class="daily-goal-progress-fill" id="dailyGoalProgressBar">0 / 36</div>
+                        <div class="daily-goal-progress-fill" id="dailyGoalProgressBar">0 / 0</div>
                     </div>
                     <div class="progress-info" style="justify-content: center; margin-top: 10px;">
-                        <span id="dailyGoalMessage">加油完成今日目标!</span>
+                        <span id="dailyGoalMessage">正在计算建议目标...</span>
                     </div>
                 </div>
             </div>
@@ -1088,21 +1306,17 @@
                     <i class="fas fa-search"></i> <span>搜索</span>
                 </button>
             </div>
-
             <button class="tool-btn success" onclick="refreshData()">
                 <i class="fas fa-sync-alt"></i> <span>刷新数据</span>
             </button>
-
             <button class="tool-btn warning" id="sortDifficultyBtn" onclick="toggleSort('difficulty')">
                 <i class="fas fa-chart-line"></i>
                 <span>难度排序<span class="sort-indicator" id="difficultyIndicator"></span></span>
             </button>
-
             <button class="tool-btn info" id="sortImportanceBtn" onclick="toggleSort('importance')">
                 <i class="fas fa-star"></i>
                 <span>重要性<span class="sort-indicator" id="importanceIndicator"></span></span>
             </button>
-
             <button class="tool-btn danger" id="sortInspirationBtn" onclick="toggleSort('inspiration')">
                 <i class="fas fa-lightbulb"></i>
                 <span>启发值<span class="sort-indicator" id="inspirationIndicator"></span></span>
@@ -1120,7 +1334,6 @@
             <div class="section-header">
                 <h2><i class="fas fa-tasks"></i> 知识块完成进度</h2>
             </div>
-
             <div class="progress-summary">
                 <div class="progress-stat">
                     <div class="progress-stat-icon">📚</div>
@@ -1149,7 +1362,6 @@
             </div>
 
             <div id="completionAlert"></div>
-
             <div class="progress-categories" id="progressCategories"></div>
             <div class="progress-pagination" id="progressPagination"></div>
         </div>
@@ -1194,27 +1406,27 @@
         let knowledgeData = [];
         let filteredData = [];
         let currentSearchTerm = '';
-
         let progressData = {};
         let studyData = null;
-        let allProgressBlocks = [];
 
+        let allProgressBlocks = [];
         let currentPage = 1;
         let currentProgressPage = 1;
 
-        let imageNotesCount = 0; // 含图片的知识条数（用于"图片成就"）
-
         let sortState = { difficulty: null, importance: null, inspiration: null };
 
-        // 成就系统（新增 7：图像大师）
+        // ========== 成就系统（已删除：坚持不懈/冲刺王者/图像大师；新增更可记录的成就） ==========
+        // 新成就说明：
+        // A 连续学习、单日峰值 这类强依赖“额外统计字段”，容易失真。这里改成尽量能从 progressData/studyData.dailyCompleteData 推导的成就。
         const achievements = [
-            {id: 1, name: "初出茅庐", icon: "🌱", desc: "完成首个知识块", requirement: 1, unlocked: false},
-            {id: 2, name: "百尺竿头", icon: "🎯", desc: "完成100个知识块", requirement: 100, unlocked: false},
-            {id: 3, name: "坚持不懈", icon: "⚡", desc: "连续学习7天", requirement: 7, unlocked: false},
-            {id: 4, name: "学霸之路", icon: "📚", desc: "完成50%知识块", requirement: 50, unlocked: false},
-            {id: 5, name: "冲刺王者", icon: "👑", desc: "单日完成10个知识块", requirement: 10, unlocked: false},
-            {id: 6, name: "全科制霸", icon: "🏆", desc: "完成所有知识块", requirement: 100, unlocked: false},
-            {id: 7, name: "图像大师", icon: "🖼️", desc: "至少1条含图片的知识", requirement: 1, unlocked: false}
+            {id: 1, name: "初出茅庐", icon: "🌱", desc: "完成首个知识块", type: "completedBlocks", requirement: 1},
+            {id: 2, name: "百尺竿头", icon: "🎯", desc: "完成100个知识块", type: "completedBlocks", requirement: 100},
+            {id: 3, name: "过半里程碑", icon: "🧭", desc: "完成率达到50%", type: "completionRate", requirement: 50},
+            {id: 4, name: "九成冲刺", icon: "🚀", desc: "完成率达到90%", type: "completionRate", requirement: 90},
+            {id: 5, name: "必考清零", icon: "🔥", desc: "必考知识块全部完成", type: "tagAllDone", requirement: "必考"},
+            {id: 6, name: "高频掌控", icon: "⚡", desc: "高频知识块全部完成", type: "tagAllDone", requirement: "高频"},
+            {id: 7, name: "易错攻克", icon: "🛡️", desc: "易错知识块全部完成", type: "tagAllDone", requirement: "易错"},
+            {id: 8, name: "稳定输出", icon: "🧱", desc: "近7天有5天及以上完成>0", type: "activeDays7", requirement: 5}
         ];
 
         // ========== 工具函数 ==========
@@ -1226,13 +1438,23 @@
             const el = document.getElementById(id);
             if (el) el.innerHTML = html;
         }
+        function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+        function toISODate(d) {
+            const dt = new Date(d);
+            dt.setHours(0,0,0,0);
+            return dt.toISOString().slice(0,10);
+        }
+        function addDays(d, n) {
+            const x = new Date(d);
+            x.setDate(x.getDate() + n);
+            return x;
+        }
 
         // ========== 加载进度模拟 ==========
         function simulateLoading() {
             const progressBar = document.getElementById('loadingProgressBar');
             const estimatedTimeSpan = document.getElementById('estimatedTime');
             if (!progressBar || !estimatedTimeSpan) return;
-
             let progress = 0;
             const interval = setInterval(() => {
                 progress += Math.random() * 30;
@@ -1240,7 +1462,6 @@
                 progressBar.style.width = progress + '%';
                 const timeRemaining = Math.max(0, Math.ceil((100 - progress) / 33));
                 estimatedTimeSpan.textContent = String(timeRemaining);
-
                 if (progress >= 100) clearInterval(interval);
             }, 300);
         }
@@ -1324,8 +1545,10 @@
                 if (targetProgressCard) targetProgressCard.classList.add('behind');
                 safeSetText('targetProgressDiff', `落后 ${Math.abs(progressDiff).toFixed(1)}%`);
                 safeSetText('targetProgressStatus', '需要加速');
+
                 const remainingBlocks = totalBlocks - completedBlocks;
                 const neededDailyRate = Math.ceil(remainingBlocks / Math.max(1, daysRemaining));
+
                 safeSetHTML('targetProgressAdvice', `建议每日完成 <span class="highlight">${neededDailyRate}</span> 个知识块以达成目标`);
             } else {
                 safeSetText('targetProgressDiff', '进度正常');
@@ -1391,10 +1614,9 @@
             }
         }
 
-        // ========== 今日完成计数（从 study_data.md 读取） ==========
-        function updateDailyGoal() {
-            const todayCompleted = (studyData && typeof studyData.todayCompleted === 'number') ? studyData.todayCompleted : 0;
-
+        // ========== 今日目标（目标改为“建议的每日完成知识块目标数”） ==========
+        // 规则：根据剩余知识块 / 距离目标日期天数 得到建议目标，并做上下限钳制
+        function computeSuggestedDailyGoal() {
             let totalBlocks = 0;
             let completedBlocks = 0;
 
@@ -1410,17 +1632,39 @@
             const daysToGoal = Math.ceil((GOAL_TARGET_DATE - now) / DAY_MS);
             const daysToExam = Math.ceil((TARGET_DATE - now) / DAY_MS);
 
-            let suggestedDailyGoal = 36; // 默认值
-            if (daysToGoal > 0 && remainingBlocks > 0) {
-                suggestedDailyGoal = Math.ceil(remainingBlocks / daysToGoal);
-                suggestedDailyGoal = Math.max(10, suggestedDailyGoal);
-                if (daysToExam < 180) suggestedDailyGoal = Math.min(50, Math.ceil(suggestedDailyGoal * 1.2));
+            // 无数据时，给一个保底
+            if (totalBlocks <= 0) return 10;
+
+            // 若已完成
+            if (remainingBlocks <= 0) return 0;
+
+            let suggested = 10;
+            if (daysToGoal > 0) {
+                suggested = Math.ceil(remainingBlocks / Math.max(1, daysToGoal));
+            } else {
+                // 已超期：给一个“推进用”的建议值
+                suggested = Math.ceil(remainingBlocks / 7);
             }
+
+            // 合理范围（你原来默认36，这里保留风格但更稳）
+            // 下限：10，上限：60；临近高考（<180天）稍微加码
+            suggested = Math.max(10, suggested);
+            if (daysToExam < 180) suggested = Math.ceil(suggested * 1.15);
+            suggested = clamp(suggested, 0, 60);
+
+            return suggested;
+        }
+
+        function updateDailyGoal() {
+            const todayCompleted = (studyData && typeof studyData.todayCompleted === 'number') ? studyData.todayCompleted : 0;
+            const suggestedDailyGoal = computeSuggestedDailyGoal();
 
             safeSetText('todayCompleted', String(todayCompleted));
             safeSetText('dailyGoalValue', String(suggestedDailyGoal));
 
-            const percentage = Math.min(100, (todayCompleted / Math.max(1, suggestedDailyGoal)) * 100);
+            const denom = Math.max(1, suggestedDailyGoal);
+            const percentage = suggestedDailyGoal === 0 ? 100 : Math.min(100, (todayCompleted / denom) * 100);
+
             const dailyGoalBar = document.getElementById('dailyGoalProgressBar');
             if (dailyGoalBar) {
                 dailyGoalBar.style.width = percentage + '%';
@@ -1429,22 +1673,27 @@
 
             const messageEl = document.getElementById('dailyGoalMessage');
             if (messageEl) {
-                if (todayCompleted >= suggestedDailyGoal) {
-                    messageEl.textContent = '太棒了!今日目标已达成!';
+                if (suggestedDailyGoal === 0) {
+                    messageEl.textContent = '所有知识块已完成!可以转入复习与真题巩固。';
+                    messageEl.style.color = 'var(--success-color)';
+                } else if (todayCompleted >= suggestedDailyGoal) {
+                    messageEl.textContent = '太棒了!今日建议目标已达成!';
                     messageEl.style.color = 'var(--success-color)';
                 } else {
                     const remaining = suggestedDailyGoal - todayCompleted;
-                    messageEl.textContent = `还需完成 ${remaining} 个知识块!`;
+                    messageEl.textContent = `还需完成 ${remaining} 个知识块(建议目标)!`;
                     messageEl.style.color = 'var(--info-color)';
                 }
             }
+
+            // 同步热力图面板中“今日目标”相关提示
+            renderHeatmapPanel(); // 轻量，内部会做防抖式重算（数据不大）
         }
 
         // ========== 侧边栏控制 ==========
         const sideNavToggle = document.getElementById('sideNavToggle');
         const sideNav = document.getElementById('sideNav');
         const mainContent = document.getElementById('mainContent');
-
         if (sideNavToggle && sideNav && mainContent) {
             sideNavToggle.addEventListener('click', () => {
                 sideNav.classList.toggle('active');
@@ -1462,7 +1711,6 @@
                 section.classList.remove('active');
                 return;
             }
-
             allSections.forEach(s => s.classList.remove('active'));
             section.classList.add('active');
 
@@ -1471,19 +1719,29 @@
             if (sectionId === 'achievementSection') renderAchievements();
         }
 
+        // ========== 新增：热力图面板开关 ==========
+        const heatmapToggle = document.getElementById('heatmapToggle');
+        const heatmapPanel = document.getElementById('heatmapPanel');
+        if (heatmapToggle && heatmapPanel) {
+            heatmapToggle.addEventListener('click', () => {
+                heatmapPanel.classList.toggle('active');
+                // 打开时渲染（或刷新）
+                if (heatmapPanel.classList.contains('active')) {
+                    renderHeatmapPanel();
+                }
+            });
+        }
+
         // ========== 主函数 ==========
         async function loadKnowledgeData() {
             simulateLoading();
             try {
                 const response = await fetch(GITHUB_RAW_URL, { cache: 'no-store' });
                 if (!response.ok) throw new Error('无法加载数据文件(map.md)');
-
                 const text = await response.text();
 
                 knowledgeData = parseMarkdown(text);
                 filteredData = [...knowledgeData];
-
-                imageNotesCount = knowledgeData.filter(k => k.hasImage).length;
 
                 renderKnowledgeList();
                 updateStatistics();
@@ -1492,12 +1750,15 @@
                 await loadStudyData();
 
                 renderProgressSection();
-                renderTagSummary(); // 改进版：包含所有未完成
+                renderTagSummary();
 
                 calculateCountdown();
                 updateDailyGoal();
                 calculateTargetProgress();
                 calculateExpectedCompletion();
+
+                // 热力图（如果面板已打开则刷新；未打开也可先生成，避免首次打开空白）
+                renderHeatmapPanel();
 
                 const bar = document.getElementById('loadingProgressBar');
                 if (bar) bar.style.width = '100%';
@@ -1507,6 +1768,7 @@
                     const overlay = document.getElementById('loadingOverlay');
                     if (overlay) overlay.style.display = 'none';
                 }, 500);
+
             } catch (error) {
                 console.error('加载失败:', error);
                 const overlay = document.getElementById('loadingOverlay');
@@ -1575,28 +1837,34 @@
                 if (currentSection === 'subjects') {
                     const match = line.match(/\*\*(.+?)\*\*:\s*([\d.]+)小时/);
                     if (match) data.subjects.push({ name: match[1], totalHours: parseFloat(match[2]) });
+
                 } else if (currentSection === 'weaknesses') {
                     const match = line.match(/\*\*(.+?)\*\*:\s*错误(\d+)次/);
                     if (match) data.weaknesses.push({ name: match[1], errorCount: parseInt(match[2], 10) });
+
                 } else if (currentSection === 'weakKnowledge') {
                     const match = line.match(/\*\*(.+?)\*\*\s*\[(.)\]/);
                     if (match) {
                         const levelMap = {'高': 'high', '中': 'medium', '低': 'low'};
                         data.weakKnowledge.push({ name: match[1], level: levelMap[match[2]] || 'low' });
                     }
+
                 } else if (currentSection === 'errorTypes') {
                     const match = line.match(/\*\*(.+?)\*\*\s*\[(.)\]/);
                     if (match) {
                         const levelMap = {'高': 'high', '中': 'medium', '低': 'low'};
                         data.errorTypes.push({ name: match[1], level: levelMap[match[2]] || 'low' });
                     }
+
                 } else if (currentSection === 'nextWeekFocus') {
                     const match = line.match(/\*\*(.+?)\*\*\s*\[(.)\]/);
                     if (match) {
                         const levelMap = {'高': 'high', '中': 'medium', '低': 'low'};
                         data.nextWeekFocus.push({ name: match[1], level: levelMap[match[2]] || 'low' });
                     }
+
                 } else if (currentSection === 'achievement') {
+                    // 仍然保留解析，以兼容你 study_data.md 里已有字段（不用也不坏）
                     if (line.includes('连续学习天数')) {
                         const match = line.match(/(\d+)天/);
                         if (match) data.consecutiveDays = parseInt(match[1], 10);
@@ -1607,6 +1875,7 @@
                         const match = line.match(/(\d+(?:\.\d+)?)个/);
                         if (match) data.avgDailyComplete = parseFloat(match[1]);
                     }
+
                 } else if (currentSection === 'dailyComplete') {
                     // 格式示例：- **2025-01-15**: 38个知识块
                     const dateMatch = line.match(/\*\*(\d{4}-\d{2}-\d{2})\*\*:\s*(\d+)个知识块/);
@@ -1643,7 +1912,6 @@
                     data[currentCategory] = [];
                     return;
                 }
-
                 if (currentCategory && line.startsWith('- [')) {
                     const match = line.match(/^- \[([ x])\]\s*(.+)$/);
                     if (!match) return;
@@ -1653,6 +1921,7 @@
 
                     let priority = 'normal';
                     const tags = [];
+
                     if (content.includes('[必考]')) { priority = 'must'; tags.push('必考'); }
                     if (content.includes('[高频]')) { priority = 'frequent'; tags.push('高频'); }
                     if (content.includes('[易错]')) { priority = 'difficult'; tags.push('易错'); }
@@ -1666,7 +1935,6 @@
                     });
                 }
             });
-
             return data;
         }
 
@@ -1750,6 +2018,7 @@
                 if (window.weaknessChartInstance) window.weaknessChartInstance.destroy();
 
                 const weaknesses = studyData.weaknesses || [];
+
                 window.weaknessChartInstance = new Chart(weaknessCanvas.getContext('2d'), {
                     type: 'doughnut',
                     data: {
@@ -1842,70 +2111,77 @@
             safeSetHTML('diagnosisAdvice', advice);
         }
 
-        // ========== 渲染成就系统（含图片成就解锁） ==========
-        function renderAchievements() {
-            const container = document.getElementById('achievementsList');
-            if (!container) return;
-            container.innerHTML = '';
-
-            let totalCompleted = 0;
+        // ========== 成就系统（新逻辑） ==========
+        function computeAchievementProgress(achievement) {
             let totalBlocks = 0;
+            let completedBlocks = 0;
 
             Object.values(progressData || {}).forEach(category => {
                 totalBlocks += (category || []).length;
-                (category || []).forEach(block => { if (block.completed) totalCompleted++; });
+                (category || []).forEach(block => { if (block.completed) completedBlocks++; });
             });
 
-            achievements.forEach(achievement => {
-                let currentProgress = 0;
-                let isUnlocked = false;
+            if (achievement.type === "completedBlocks") {
+                return { current: completedBlocks, total: achievement.requirement, unlocked: completedBlocks >= achievement.requirement, text: `${Math.min(completedBlocks, achievement.requirement)}/${achievement.requirement}` };
+            }
 
-                if (achievement.id === 1) {
-                    currentProgress = totalCompleted;
-                    isUnlocked = totalCompleted >= 1;
-                } else if (achievement.id === 2) {
-                    currentProgress = totalCompleted;
-                    isUnlocked = totalCompleted >= 100;
-                } else if (achievement.id === 3) {
-                    currentProgress = (studyData && studyData.consecutiveDays) ? studyData.consecutiveDays : 0;
-                    isUnlocked = currentProgress >= 7;
-                } else if (achievement.id === 4) {
-                    currentProgress = totalBlocks > 0 ? Math.round((totalCompleted / totalBlocks) * 100) : 0;
-                    isUnlocked = currentProgress >= 50;
-                } else if (achievement.id === 5) {
-                    currentProgress = (studyData && studyData.maxDailyComplete) ? studyData.maxDailyComplete : 0;
-                    isUnlocked = currentProgress >= 10;
-                } else if (achievement.id === 6) {
-                    currentProgress = totalBlocks > 0 ? Math.round((totalCompleted / totalBlocks) * 100) : 0;
-                    isUnlocked = currentProgress >= 100;
-                } else if (achievement.id === 7) {
-                    currentProgress = imageNotesCount;
-                    isUnlocked = imageNotesCount >= achievement.requirement;
+            if (achievement.type === "completionRate") {
+                const rate = totalBlocks > 0 ? Math.round((completedBlocks / totalBlocks) * 100) : 0;
+                return { current: rate, total: achievement.requirement, unlocked: rate >= achievement.requirement, text: `${rate}%` };
+            }
+
+            if (achievement.type === "tagAllDone") {
+                const tagName = achievement.requirement; // 必考/高频/易错
+                let tagged = 0, taggedDone = 0;
+
+                Object.values(progressData || {}).forEach(category => {
+                    (category || []).forEach(block => {
+                        if (block.tags && block.tags.includes(tagName)) {
+                            tagged++;
+                            if (block.completed) taggedDone++;
+                        }
+                    });
+                });
+
+                const unlocked = tagged > 0 && taggedDone === tagged;
+                const text = tagged === 0 ? `0/0` : `${taggedDone}/${tagged}`;
+                return { current: taggedDone, total: tagged, unlocked, text: unlocked ? '已达成' : text };
+            }
+
+            if (achievement.type === "activeDays7") {
+                // 近7天：完成>0 的天数 >= requirement
+                const map = buildDailyMapFromStudyData(); // date->count
+                const end = new Date();
+                end.setHours(0,0,0,0);
+                const arr = [];
+                for (let i = 0; i < 7; i++) {
+                    const d = addDays(end, -i);
+                    arr.push(map.get(toISODate(d)) ?? 0);
                 }
+                const active = arr.filter(x => x > 0).length;
+                const unlocked = active >= achievement.requirement;
+                return { current: active, total: 7, unlocked, text: `${active}/7` };
+            }
 
-                achievement.unlocked = isUnlocked;
+            return { current: 0, total: 0, unlocked: false, text: '0' };
+        }
+
+        function renderAchievements() {
+            const container = document.getElementById('achievementsList');
+            if (!container) return;
+
+            container.innerHTML = '';
+            achievements.forEach(achievement => {
+                const prog = computeAchievementProgress(achievement);
 
                 const badgeDiv = document.createElement('div');
-                badgeDiv.className = 'sidebar-achievement-badge' + (isUnlocked ? ' unlocked' : ' locked');
-
-                let progressText = '';
-                if (achievement.id === 1 || achievement.id === 2) {
-                    progressText = `${Math.min(currentProgress, achievement.requirement)}/${achievement.requirement}`;
-                } else if (achievement.id === 3) {
-                    progressText = `${Math.min(currentProgress, 7)}/7天`;
-                } else if (achievement.id === 4 || achievement.id === 6) {
-                    progressText = `${currentProgress}%`;
-                } else if (achievement.id === 5) {
-                    progressText = `${Math.min(currentProgress, 10)}/10`;
-                } else if (achievement.id === 7) {
-                    progressText = `${Math.min(currentProgress, achievement.requirement)}/${achievement.requirement}`;
-                }
+                badgeDiv.className = 'sidebar-achievement-badge' + (prog.unlocked ? ' unlocked' : ' locked');
 
                 badgeDiv.innerHTML = `
                     <div class="sidebar-achievement-icon">${achievement.icon}</div>
                     <div class="sidebar-achievement-name">${achievement.name}</div>
                     <div class="sidebar-achievement-desc">${achievement.desc}</div>
-                    <div class="sidebar-achievement-progress">${isUnlocked ? '已达成' : progressText}</div>
+                    <div class="sidebar-achievement-progress">${prog.unlocked ? '已达成' : prog.text}</div>
                 `;
                 container.appendChild(badgeDiv);
             });
@@ -1915,8 +2191,8 @@
         function renderProgressSection() {
             let totalBlocks = 0;
             let completedBlocks = 0;
-            allProgressBlocks = [];
 
+            allProgressBlocks = [];
             Object.keys(progressData || {}).forEach(category => {
                 (progressData[category] || []).forEach(block => {
                     totalBlocks++;
@@ -1980,7 +2256,6 @@
             });
 
             container.innerHTML = '';
-
             Object.keys(groupedBlocks).forEach(category => {
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'progress-category';
@@ -2056,27 +2331,26 @@
         function changeProgressPage(page) {
             const totalPages = Math.max(1, Math.ceil(allProgressBlocks.length / PROGRESS_PAGE_SIZE));
             if (page < 1 || page > totalPages) return;
+
             currentProgressPage = page;
             renderProgressBlocks();
+
             const el = document.getElementById('progress-section');
             if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // ========== 标签全文汇总（改进版：包含所有未完成的条目） ==========
+        // ========== 标签全文汇总（包含所有未完成的条目） ==========
         function collectTaggedBlocks() {
             const buckets = { must: [], frequent: [], difficult: [] };
-
             Object.keys(progressData || {}).forEach(category => {
                 (progressData[category] || []).forEach(block => {
                     const cleanContent = block.content.replace(/\[必考\]|\[高频\]|\[易错\]/g, '').trim();
                     const item = { category, content: cleanContent, completed: !!block.completed };
-
                     if (block.tags.includes('必考')) buckets.must.push(item);
                     if (block.tags.includes('高频')) buckets.frequent.push(item);
                     if (block.tags.includes('易错')) buckets.difficult.push(item);
                 });
             });
-
             return buckets;
         }
 
@@ -2130,8 +2404,8 @@
             lines.forEach(lineRaw => {
                 const raw = lineRaw;
                 const line = lineRaw.trim();
-
                 const headerMatch = line.match(/^##\s*(\d+)\.\s*(.+)$/);
+
                 if (headerMatch) {
                     if (currentItem) data.push(currentItem);
                     currentItem = {
@@ -2146,7 +2420,6 @@
                     };
                     return;
                 }
-
                 if (!currentItem) return;
 
                 const diffMatch = line.match(/\*\*?难度\*\*?[:：]\s*(\d+(?:\.\d+)?)/);
@@ -2222,7 +2495,6 @@
                     下一页 <i class="fas fa-chevron-right"></i>
                 </button>
             `;
-
             container.innerHTML = html;
         }
 
@@ -2245,6 +2517,7 @@
             let displayContent = item.content || '';
             if (currentSearchTerm) displayContent = highlightText(displayContent, currentSearchTerm);
 
+            // 仍保留“图片”标识（UI信息，不作为成就）
             const imgFlag = item.hasImage
                 ? ' <span class="tag-frequent" style="padding:2px 6px;font-size:0.75em;">图片</span>'
                 : '';
@@ -2272,117 +2545,6 @@
             if (!searchTerm) return text;
             const regex = new RegExp('(' + escapeRegExp(searchTerm) + ')', 'gi');
             return String(text).replace(regex, '<span class="highlight">$1</span>');
-        }
-
-        // ================================
-        // 保留：// 只用365天窗口内数据分箱
-        // 说明：你原文这一段代码是“孤立片段”，依赖大量未定义变量（start365/end/map/days/gridEl/metricsEl/adviceTextEl 等）
-        //       为避免页面直接报错，这里原样保留在“不执行”的包装函数中，确保“保留该段”且不破坏运行。
-        //       如果你希望它实际工作，我可以把 heatmap 的 DOM 和数据源一并补齐。
-        // ================================
-        function __KEEP_ONLY_365_WINDOW_BUCKETING_SNIPPET__DO_NOT_CALL() {
-            // 只用365天窗口内数据分箱
-            const counts365 = [];
-            for (let d = new Date(start365); d <= end; d = addDays(d, 1)) {
-                counts365.push(map.get(toISODate(d)) ?? 0);
-            }
-            const positive = counts365.filter(x => Number.isFinite(x) && x > 0);
-            const sorted = [...positive].sort((a,b)=>a-b);
-            const max = positive.length ? Math.max(...positive) : 0;
-            const q = (p) => {
-                if (sorted.length === 0) return 0;
-                const idx = Math.floor((sorted.length - 1) * p);
-                return sorted[idx];
-            };
-            const t1 = q(0.25), t2 = q(0.50), t3 = q(0.75);
-            function levelOf(v){
-                if (v <= 0) return 0;
-                if (t1 === t3) {
-                    if (max <= 0) return 0;
-                    const r = v / max;
-                    if (r <= 0.25) return 1;
-                    if (r <= 0.5) return 2;
-                    if (r <= 0.75) return 3;
-                    return 4;
-                }
-                if (v <= t1) return 1;
-                if (v <= t2) return 2;
-                if (v <= t3) return 3;
-                return 4;
-            }
-            gridEl.innerHTML = days.map(d => {
-                const level = levelOf(d.count);
-                return `
-                    <div class="hm-cell" data-level="${level}" style="grid-row:${d.dow + 1};">
-                        <div class="hm-tooltip">${d.date}：${d.count} 个</div>
-                    </div>
-                `;
-            }).join('');
-            const lastNDays = (n) => {
-                const startN = addDays(end, -(n - 1));
-                const res = [];
-                for (let d = new Date(startN); d <= end; d = addDays(d, 1)) {
-                    res.push(map.get(toISODate(d)) ?? 0);
-                }
-                return res;
-            };
-            const mean = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
-            const std = arr => {
-                if (!arr.length) return 0;
-                const m = mean(arr);
-                const v = mean(arr.map(x => (x - m) ** 2));
-                return Math.sqrt(v);
-            };
-            const slope = (arr) => {
-                const n = arr.length;
-                if (n < 2) return 0;
-                let sx=0, sy=0, sxx=0, sxy=0;
-                for (let i=0;i<n;i++){
-                    const x=i, y=arr[i];
-                    sx+=x; sy+=y; sxx+=x*x; sxy+=x*y;
-                }
-                const denom = n*sxx - sx*sx;
-                if (denom === 0) return 0;
-                return (n*sxy - sx*sy) / denom;
-            };
-            const a7 = lastNDays(7), a14 = lastNDays(14), a28 = lastNDays(28);
-            const m7 = mean(a7), m14 = mean(a14), m28 = mean(a28);
-            const s7 = std(a7);
-            const cv7 = m7 > 0 ? s7 / m7 : Infinity;
-            const zero7 = a7.filter(x => x === 0).length;
-            const b7 = slope(a7);
-            const total365 = counts365.reduce((a,b)=>a+b,0);
-            const zero365 = counts365.filter(x=>x===0).length;
-            const zeroRate = zero365 / 365;
-            const suggestedDailyGoal = Number(document.getElementById('dailyGoalValue')?.textContent || 36);
-            const todayISO = toISODate(end);
-            const todayCount = map.get(todayISO) ?? (studyData?.todayCompleted ?? 0);
-            metricsEl.innerHTML = `
-                <div class="hm-metric"><div class="k">今日完成</div><div class="v">${todayCount}</div></div>
-                <div class="hm-metric"><div class="k">近7天均值</div><div class="v">${m7.toFixed(2)}</div></div>
-                <div class="hm-metric"><div class="k">近14天均值</div><div class="v">${m14.toFixed(2)}</div></div>
-                <div class="hm-metric"><div class="k">近28天均值</div><div class="v">${m28.toFixed(2)}</div></div>
-                <div class="hm-metric"><div class="k">近7天趋势(斜率/天)</div><div class="v">${b7 >= 0 ? '+' : ''}${b7.toFixed(2)}</div></div>
-                <div class="hm-metric"><div class="k">365天零完成</div><div class="v">${zero365} / 365</div></div>
-            `;
-            const goalHit = todayCount >= suggestedDailyGoal;
-            const deficit = Math.max(0, suggestedDailyGoal - todayCount);
-            const parts = [];
-            parts.push(`窗口：最近365天。今日：${todayCount}，目标：${suggestedDailyGoal}。`);
-            if (goalHit) parts.push(`达标。复用系统，不要靠兴奋。`);
-            else parts.push(`未达标，缺口 <span class="num">${deficit}</span>。缺口会在未来用更高强度偿还。`);
-            if (zeroRate > 0.35) parts.push(`零日率 ${(zeroRate*100).toFixed(1)}%。问题是“不连续”。先把零日率压到 10% 以下。`);
-            else if (zeroRate < 0.10) parts.push(`零日率 ${(zeroRate*100).toFixed(1)}%。连续性合格，现在谈强度。`);
-            else parts.push(`零日率 ${(zeroRate*100).toFixed(1)}%。先消灭0日，再谈效率。`);
-            if (b7 > 0.2) parts.push(`趋势上升（斜率 <span class="num">+${b7.toFixed(2)}</span>/天）。保持变量不变。`);
-            else if (b7 < -0.2) parts.push(`趋势下降（斜率 <span class="num">${b7.toFixed(2)}</span>/天）。减少切换，降低启动成本。`);
-            else parts.push(`趋势≈0。要进步只能改变量：提高日均或降低波动。`);
-            if (zero7 >= 2) parts.push(`近7天 0日=${zero7}。断电次数过多，先修“启动”。`);
-            else parts.push(`近7天断电少，说明行为链条在工作。`);
-            if (!Number.isFinite(cv7) || cv7 > 1.0) parts.push(`波动过大（CV≈${Number.isFinite(cv7)?cv7.toFixed(2):'∞'}）。你在被状态驱动。拆成3段硬配额。`);
-            else if (cv7 < 0.35) parts.push(`波动低（CV≈${cv7.toFixed(2)}）。稳定=效率底座。可加码10%。`);
-            else parts.push(`波动中等（CV≈${cv7.toFixed(2)}）。先设最低保底，再追峰值。`);
-            adviceTextEl.innerHTML = parts.join(' ');
         }
 
         // ========== 更新统计 ==========
@@ -2471,12 +2633,10 @@
 
             currentSearchTerm = '';
             if (searchInput) searchInput.value = '';
-
             currentPage = 1;
             currentProgressPage = 1;
 
             document.querySelectorAll('.nav-section').forEach(section => section.classList.remove('active'));
-
             loadKnowledgeData();
         }
 
@@ -2484,13 +2644,12 @@
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle ? themeToggle.querySelector('i') : null;
-
         const currentTheme = localStorage.getItem('theme') || 'light';
+
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
         }
-
         if (themeToggle) {
             themeToggle.addEventListener('click', () => {
                 body.classList.toggle('dark-mode');
@@ -2501,6 +2660,8 @@
                     if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
                     localStorage.setItem('theme', 'light');
                 }
+                // 主题切换后，热力图不需要重算数据，但可以让 tooltip/背景更协调
+                renderHeatmapPanel();
             });
         }
 
@@ -2510,7 +2671,6 @@
             if (!backToTopBtn) return;
             backToTopBtn.style.display = (window.pageYOffset > 300) ? 'flex' : 'none';
         });
-
         if (backToTopBtn) {
             backToTopBtn.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2525,6 +2685,179 @@
             const scrolled = windowHeight > 0 ? (window.pageYOffset / windowHeight) * 100 : 0;
             readingProgressBar.style.width = scrolled + '%';
         });
+
+        // ========== 新增：每日进步热力图（基于 study_data.md 的 dailyCompleteData） ==========
+        function buildDailyMapFromStudyData() {
+            const map = new Map();
+            if (!studyData || !Array.isArray(studyData.dailyCompleteData)) return map;
+
+            studyData.dailyCompleteData.forEach(item => {
+                if (!item || !item.date) return;
+                const key = item.date;
+                const val = Number(item.count) || 0;
+                map.set(key, val);
+            });
+            return map;
+        }
+
+        function computeHeatmapDaysWindow() {
+            const end = new Date();
+            end.setHours(0,0,0,0);
+            const start365 = addDays(end, -364);
+            return { start365, end };
+        }
+
+        function renderHeatmapPanel() {
+            const gridEl = document.getElementById('hmGrid');
+            const metricsEl = document.getElementById('hmMetrics');
+            const adviceTextEl = document.getElementById('hmAdviceText');
+            const totalChip = document.getElementById('hmTotalChip');
+            if (!gridEl || !metricsEl || !adviceTextEl || !totalChip) return;
+
+            // 没有学习数据时也要可用
+            const map = buildDailyMapFromStudyData();
+            const { start365, end } = computeHeatmapDaysWindow();
+
+            // 生成 days（按周列、按周日到周六行）
+            const days = [];
+            for (let d = new Date(start365); d <= end; d = addDays(d, 1)) {
+                const iso = toISODate(d);
+                const count = map.get(iso) ?? 0;
+                // JS getDay(): 0=周日 ... 6=周六
+                days.push({ date: iso, count, dow: new Date(iso).getDay() });
+            }
+
+            // 分箱（分位数阈值，避免极值把其他天压扁）
+            const counts365 = days.map(x => x.count);
+            const positive = counts365.filter(x => Number.isFinite(x) && x > 0);
+            const sorted = [...positive].sort((a,b)=>a-b);
+            const max = positive.length ? Math.max(...positive) : 0;
+
+            const q = (p) => {
+                if (sorted.length === 0) return 0;
+                const idx = Math.floor((sorted.length - 1) * p);
+                return sorted[idx];
+            };
+            const t1 = q(0.25), t2 = q(0.50), t3 = q(0.75);
+
+            function levelOf(v){
+                if (v <= 0) return 0;
+
+                // 全部正值相同的情况下，改成按 max 比例分级
+                if (t1 === t3) {
+                    if (max <= 0) return 0;
+                    const r = v / max;
+                    if (r <= 0.25) return 1;
+                    if (r <= 0.5) return 2;
+                    if (r <= 0.75) return 3;
+                    return 4;
+                }
+
+                if (v <= t1) return 1;
+                if (v <= t2) return 2;
+                if (v <= t3) return 3;
+                return 4;
+            }
+
+            // 渲染 grid
+            // 说明：grid-auto-flow: column + grid-row 让每个格子落到对应星期行，顺序按天推进形成“周列”
+            gridEl.innerHTML = days.map(d => {
+                const level = levelOf(d.count);
+                return `
+                    <div class="hm-cell" data-level="${level}" style="grid-row:${d.dow + 1};" aria-label="${d.date} ${d.count}">
+                        <div class="hm-tooltip">${d.date}：${d.count} 个</div>
+                    </div>
+                `;
+            }).join('');
+
+            // 统计指标
+            const lastNDays = (n) => {
+                const startN = addDays(end, -(n - 1));
+                const res = [];
+                for (let d = new Date(startN); d <= end; d = addDays(d, 1)) {
+                    res.push(map.get(toISODate(d)) ?? 0);
+                }
+                return res;
+            };
+
+            const mean = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+            const std = arr => {
+                if (!arr.length) return 0;
+                const m = mean(arr);
+                const v = mean(arr.map(x => (x - m) ** 2));
+                return Math.sqrt(v);
+            };
+            const slope = (arr) => {
+                const n = arr.length;
+                if (n < 2) return 0;
+                let sx=0, sy=0, sxx=0, sxy=0;
+                for (let i=0;i<n;i++){
+                    const x=i, y=arr[i];
+                    sx+=x; sy+=y; sxx+=x*x; sxy+=x*y;
+                }
+                const denom = n*sxx - sx*sx;
+                if (denom === 0) return 0;
+                return (n*sxy - sx*sy) / denom;
+            };
+
+            const a7 = lastNDays(7), a14 = lastNDays(14), a28 = lastNDays(28);
+            const m7 = mean(a7), m14 = mean(a14), m28 = mean(a28);
+            const s7 = std(a7);
+            const cv7 = m7 > 0 ? s7 / m7 : Infinity;
+            const zero7 = a7.filter(x => x === 0).length;
+
+            const b7 = slope(a7);
+            const total365 = counts365.reduce((a,b)=>a+b,0);
+            const zero365 = counts365.filter(x=>x===0).length;
+            const zeroRate = zero365 / 365;
+
+            const suggestedDailyGoal = computeSuggestedDailyGoal();
+            const todayISO = toISODate(end);
+            const todayCount = map.get(todayISO) ?? (studyData?.todayCompleted ?? 0);
+
+            totalChip.textContent = `总计: ${total365}`;
+
+            metricsEl.innerHTML = `
+                <div class="hm-metric"><div class="k">今日完成</div><div class="v">${todayCount}</div></div>
+                <div class="hm-metric"><div class="k">建议目标</div><div class="v">${suggestedDailyGoal}</div></div>
+                <div class="hm-metric"><div class="k">近7天均值</div><div class="v">${m7.toFixed(2)}</div></div>
+                <div class="hm-metric"><div class="k">近28天均值</div><div class="v">${m28.toFixed(2)}</div></div>
+                <div class="hm-metric"><div class="k">近7天趋势(斜率/天)</div><div class="v">${b7 >= 0 ? '+' : ''}${b7.toFixed(2)}</div></div>
+                <div class="hm-metric"><div class="k">365天零完成</div><div class="v">${zero365} / 365</div></div>
+            `;
+
+            // 建议文本
+            const goalHit = suggestedDailyGoal === 0 ? true : (todayCount >= suggestedDailyGoal);
+            const deficit = Math.max(0, suggestedDailyGoal - todayCount);
+
+            const parts = [];
+            parts.push(`窗口：最近365天。今日：${todayCount}，建议目标：${suggestedDailyGoal}。`);
+
+            if (suggestedDailyGoal === 0) {
+                parts.push(`当前目标已完成，建议把精力转移到“复习/真题/错题回炉”。`);
+            } else if (goalHit) {
+                parts.push(`已达标。保持节奏，比爆发更重要。`);
+            } else {
+                parts.push(`未达标，缺口 <span class="num">${deficit}</span>。建议用“拆段配额”降低启动成本。`);
+            }
+
+            if (zeroRate > 0.35) parts.push(`零日率 ${(zeroRate*100).toFixed(1)}%。优先修复“连续性”：先把零日率压到 10% 以下。`);
+            else if (zeroRate < 0.10) parts.push(`零日率 ${(zeroRate*100).toFixed(1)}%。连续性合格，可以提升强度/质量。`);
+            else parts.push(`零日率 ${(zeroRate*100).toFixed(1)}%。继续减少0日，会显著提升总量。`);
+
+            if (b7 > 0.2) parts.push(`趋势上升（斜率 <span class="num">+${b7.toFixed(2)}</span>/天）。保持策略不变并稳步加码。`);
+            else if (b7 < -0.2) parts.push(`趋势下降（斜率 <span class="num">${b7.toFixed(2)}</span>/天）。减少切换、固定时段，先恢复稳定。`);
+            else parts.push(`趋势≈0。要进步只能改变变量：提高日均或降低波动。`);
+
+            if (zero7 >= 2) parts.push(`近7天 0日=${zero7}。断电偏多：把“最小可执行动作”固定成硬规则。`);
+            else parts.push(`近7天断电少，说明行为链条在工作。`);
+
+            if (!Number.isFinite(cv7) || cv7 > 1.0) parts.push(`波动过大（CV≈${Number.isFinite(cv7)?cv7.toFixed(2):'∞'}）。建议：早/中/晚三段各完成一小段配额。`);
+            else if (cv7 < 0.35) parts.push(`波动低（CV≈${cv7.toFixed(2)}）。稳定=效率底座，可尝试加码10%。`);
+            else parts.push(`波动中等（CV≈${cv7.toFixed(2)}）。先设“保底”，再追峰值。`);
+
+            adviceTextEl.innerHTML = parts.join(' ');
+        }
 
         // ========== 页面加载 ==========
         window.addEventListener('load', loadKnowledgeData);
