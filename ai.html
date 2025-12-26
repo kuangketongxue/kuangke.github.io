@@ -204,50 +204,23 @@
             transform: translateX(5px);
         }
         /* 各科目专属颜色 */
-        .chinese-bg {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-        .math-bg {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-        .english-bg {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-        .physics-bg {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-        }
-        .chemistry-bg {
-            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
-        }
-        .politics-bg {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-        }
+        .chinese-bg { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .math-bg { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .english-bg { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .physics-bg { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .chemistry-bg { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+        .politics-bg { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+
         /* 响应式设计 */
         @media (max-width: 768px) {
-            .matrix-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .matrix-title h1 {
-                font-size: 2em;
-            }
-            .ai-card {
-                padding: 15px;
-            }
-            .ai-icon {
-                width: 50px;
-                height: 50px;
-                font-size: 24px;
-                margin-right: 15px;
-            }
-            .ai-name {
-                font-size: 1.1em;
-            }
-            .knowledge-system-btn {
-                font-size: 1em;
-                padding: 15px 30px;
-            }
+            .matrix-grid { grid-template-columns: 1fr; gap: 20px; }
+            .matrix-title h1 { font-size: 2em; }
+            .ai-card { padding: 15px; }
+            .ai-icon { width: 50px; height: 50px; font-size: 24px; margin-right: 15px; }
+            .ai-name { font-size: 1.1em; }
+            .knowledge-system-btn { font-size: 1em; padding: 15px 30px; }
         }
+
         /* 返回按钮 */
         .back-button {
             position: fixed;
@@ -272,6 +245,7 @@
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
         }
+
         /* 模态框样式 */
         .modal {
             display: none;
@@ -284,10 +258,8 @@
             background-color: rgba(0, 0, 0, 0.7);
             animation: fadeIn 0.3s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         .modal-content {
             background: white;
             margin: 5% auto;
@@ -300,20 +272,13 @@
             position: relative;
             animation: slideUp 0.3s ease;
         }
-        body.dark-mode .modal-content {
-            background: #2d3748;
-            color: #fff;
-        }
+        body.dark-mode .modal-content { background: #2d3748; color: #fff; }
+
         @keyframes slideUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
+
         .close-modal {
             position: absolute;
             right: 20px;
@@ -325,9 +290,8 @@
             transition: color 0.3s;
             z-index: 10;
         }
-        .close-modal:hover {
-            color: #667eea;
-        }
+        .close-modal:hover { color: #667eea; }
+
         .modal-header {
             text-align: center;
             margin-bottom: 30px;
@@ -337,14 +301,10 @@
             color: #333;
             margin-bottom: 10px;
         }
-        body.dark-mode .modal-header h2 {
-            color: #fff;
-        }
-        .modal-tools {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        body.dark-mode .modal-header h2 { color: #fff; }
+
+        .modal-tools { display: flex; flex-direction: column; gap: 15px; }
+
         .tool-item {
             display: flex;
             align-items: center;
@@ -354,13 +314,13 @@
             text-decoration: none;
             transition: all 0.3s ease;
         }
-        body.dark-mode .tool-item {
-            background: #1a202c;
-        }
+        body.dark-mode .tool-item { background: #1a202c; }
+
         .tool-item:hover {
             transform: translateX(10px);
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
         }
+
         .tool-icon {
             width: 50px;
             height: 50px;
@@ -372,28 +332,13 @@
             color: white;
             margin-right: 15px;
         }
-        .tool-info h3 {
-            font-size: 1.1em;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        body.dark-mode .tool-info h3 {
-            color: #fff;
-        }
-        .tool-info p {
-            font-size: 0.9em;
-            color: #666;
-            margin: 0;
-        }
-        body.dark-mode .tool-info p {
-            color: #aaa;
-        }
+        .tool-info h3 { font-size: 1.1em; color: #333; margin-bottom: 5px; }
+        body.dark-mode .tool-info h3 { color: #fff; }
+        .tool-info p { font-size: 0.9em; color: #666; margin: 0; }
+        body.dark-mode .tool-info p { color: #aaa; }
+
         /* 子题目网格 */
-        .subtopic-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
+        .subtopic-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         .subtopic-card {
             background: white;
             padding: 20px;
@@ -403,40 +348,17 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
-        body.dark-mode .subtopic-card {
-            background: #2d3748;
-        }
-        .subtopic-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-        }
-        .subtopic-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        .subtopic-name {
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #333;
-        }
-        body.dark-mode .subtopic-name {
-            color: #fff;
-        }
-        @media (max-width: 768px) {
-            .subtopic-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        body.dark-mode .subtopic-card { background: #2d3748; }
+        .subtopic-card:hover { transform: translateY(-5px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); }
+        .subtopic-icon { font-size: 32px; margin-bottom: 10px; }
+        .subtopic-name { font-size: 1.1em; font-weight: 600; color: #333; }
+        body.dark-mode .subtopic-name { color: #fff; }
+        @media (max-width: 768px) { .subtopic-grid { grid-template-columns: 1fr; } }
+
         /* 空状态提示 */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-        }
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
+        .empty-state { text-align: center; padding: 40px 20px; color: #999; }
+        .empty-state-icon { font-size: 48px; margin-bottom: 20px; }
+
         /* 导航按钮样式 */
         .breakthrough-link {
             display: flex;
@@ -450,20 +372,10 @@
             cursor: pointer;
             position: relative;
         }
-        .breakthrough-icon {
-            color: white;
-            font-size: 20px;
-            margin-right: 8px;
-        }
-        .breakthrough-text {
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .breakthrough-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-        }
+        .breakthrough-icon { color: white; font-size: 20px; margin-right: 8px; }
+        .breakthrough-text { color: white; font-weight: 600; font-size: 14px; }
+        .breakthrough-link:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
+
         /* 优化后的自学突围子菜单样式 */
         .breakthrough-submenu {
             display: none;
@@ -485,23 +397,12 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
         }
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        /* 优化子菜单项的点击区域 */
-        .breakthrough-link:hover .breakthrough-submenu {
-            display: block;
-        }
-        /* 保持子菜单显示状态 */
-        .breakthrough-submenu:hover {
-            display: block;
-        }
+        .breakthrough-link:hover .breakthrough-submenu { display: block; }
+        .breakthrough-submenu:hover { display: block; }
+
         .breakthrough-submenu .submenu-item {
             display: flex;
             align-items: center;
@@ -511,20 +412,15 @@
             cursor: pointer;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
-        body.dark-mode .breakthrough-submenu .submenu-item {
-            border-bottom-color: rgba(255, 255, 255, 0.1);
-        }
-        .breakthrough-submenu .submenu-item:last-child {
-            border-bottom: none;
-        }
+        body.dark-mode .breakthrough-submenu .submenu-item { border-bottom-color: rgba(255, 255, 255, 0.1); }
+        .breakthrough-submenu .submenu-item:last-child { border-bottom: none; }
         .breakthrough-submenu .submenu-item:hover {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
             padding-left: 25px;
         }
         .breakthrough-submenu .submenu-item:hover .submenu-text,
-        .breakthrough-submenu .submenu-item:hover .submenu-icon {
-            color: white;
-        }
+        .breakthrough-submenu .submenu-item:hover .submenu-icon { color: white; }
+
         .submenu-icon {
             color: #ff6b6b;
             font-size: 18px;
@@ -539,16 +435,11 @@
             transition: color 0.2s ease;
             white-space: nowrap;
         }
-        body.dark-mode .submenu-text {
-            color: #fff;
-        }
+        body.dark-mode .submenu-text { color: #fff; }
+
         /* 进度模态框样式 */
-        .progress-modal-content {
-            max-width: 900px;
-        }
-        .progress-section {
-            margin-bottom: 30px;
-        }
+        .progress-modal-content { max-width: 900px; }
+        .progress-section { margin-bottom: 30px; }
         .progress-section h3 {
             font-size: 1.3em;
             color: #667eea;
@@ -556,10 +447,8 @@
             padding-bottom: 10px;
             border-bottom: 2px solid #667eea;
         }
-        body.dark-mode .progress-section h3 {
-            color: #a8b5ff;
-            border-bottom-color: #a8b5ff;
-        }
+        body.dark-mode .progress-section h3 { color: #a8b5ff; border-bottom-color: #a8b5ff; }
+
         .progress-item {
             display: flex;
             justify-content: space-between;
@@ -569,17 +458,11 @@
             border-radius: 10px;
             margin-bottom: 10px;
         }
-        body.dark-mode .progress-item {
-            background: #1a202c;
-        }
-        .progress-label {
-            font-weight: 600;
-            color: #333;
-            min-width: 120px;
-        }
-        body.dark-mode .progress-label {
-            color: #fff;
-        }
+        body.dark-mode .progress-item { background: #1a202c; }
+
+        .progress-label { font-weight: 600; color: #333; min-width: 120px; }
+        body.dark-mode .progress-label { color: #fff; }
+
         .progress-bar-container {
             flex: 1;
             margin: 0 20px;
@@ -589,9 +472,8 @@
             overflow: hidden;
             position: relative;
         }
-        body.dark-mode .progress-bar-container {
-            background: #4a5568;
-        }
+        body.dark-mode .progress-bar-container { background: #4a5568; }
+
         .progress-bar {
             height: 100%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -602,16 +484,9 @@
             justify-content: flex-end;
             padding-right: 10px;
         }
-        .progress-percent {
-            color: #333;
-            font-weight: 600;
-            min-width: 80px;
-            text-align: right;
-            font-size: 0.95em;
-        }
-        body.dark-mode .progress-percent {
-            color: #fff;
-        }
+        .progress-percent { color: #333; font-weight: 600; min-width: 80px; text-align: right; font-size: 0.95em; }
+        body.dark-mode .progress-percent { color: #fff; }
+
         .progress-status {
             display: inline-block;
             padding: 4px 12px;
@@ -620,30 +495,14 @@
             font-weight: 600;
             margin-top: 10px;
         }
-        .status-complete {
-            background: #d4edda;
-            color: #155724;
-        }
-        .status-in-progress {
-            background: #fff3cd;
-            color: #856404;
-        }
-        .status-pending {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        body.dark-mode .status-complete {
-            background: #1e4620;
-            color: #7dffaf;
-        }
-        body.dark-mode .status-in-progress {
-            background: #4a3c00;
-            color: #ffe666;
-        }
-        body.dark-mode .status-pending {
-            background: #4a1f23;
-            color: #ff9999;
-        }
+        .status-complete { background: #d4edda; color: #155724; }
+        .status-in-progress { background: #fff3cd; color: #856404; }
+        .status-pending { background: #f8d7da; color: #721c24; }
+
+        body.dark-mode .status-complete { background: #1e4620; color: #7dffaf; }
+        body.dark-mode .status-in-progress { background: #4a3c00; color: #ffe666; }
+        body.dark-mode .status-pending { background: #4a1f23; color: #ff9999; }
+
         .progress-note {
             margin-top: 20px;
             padding: 15px;
@@ -654,11 +513,8 @@
             color: #0d47a1;
             line-height: 1.6;
         }
-        body.dark-mode .progress-note {
-            background: #1a3a52;
-            border-left-color: #64b5f6;
-            color: #90caf9;
-        }
+        body.dark-mode .progress-note { background: #1a3a52; border-left-color: #64b5f6; color: #90caf9; }
+
         .progress-stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -672,18 +528,10 @@
             text-align: center;
             color: white;
         }
-        body.dark-mode .progress-stat-card {
-            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-        }
-        .progress-stat-number {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .progress-stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
+        body.dark-mode .progress-stat-card { background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%); }
+        .progress-stat-number { font-size: 2em; font-weight: bold; margin-bottom: 5px; }
+        .progress-stat-label { font-size: 0.9em; opacity: 0.9; }
+
         .game-link {
             display: flex;
             align-items: center;
@@ -709,21 +557,11 @@
             text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
             letter-spacing: 1px;
         }
-        .game-link:hover {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #c44569, 0 2px 6px rgba(0,0,0,0.2);
-        }
-        .game-link:active {
-            transform: translateY(4px);
-            box-shadow: none;
-        }
-        body.dark-mode .game-link {
-            border-color: #2d3748;
-            box-shadow: 0 4px 0 #ff4757, 0 4px 10px rgba(0,0,0,0.4);
-        }
-        body.dark-mode .game-link:hover {
-            box-shadow: 0 2px 0 #ff4757, 0 2px 6px rgba(0,0,0,0.4);
-        }
+        .game-link:hover { transform: translateY(2px); box-shadow: 0 2px 0 #c44569, 0 2px 6px rgba(0,0,0,0.2); }
+        .game-link:active { transform: translateY(4px); box-shadow: none; }
+        body.dark-mode .game-link { border-color: #2d3748; box-shadow: 0 4px 0 #ff4757, 0 4px 10px rgba(0,0,0,0.4); }
+        body.dark-mode .game-link:hover { box-shadow: 0 2px 0 #ff4757, 0 2px 6px rgba(0,0,0,0.4); }
+
         /* 【狂客】极客周刊按钮样式 */
         .weekly-link {
             display: flex;
@@ -735,20 +573,10 @@
             padding: 8px 16px;
             margin: 0 8px;
         }
-        .weekly-icon {
-            color: white;
-            font-size: 20px;
-            margin-right: 8px;
-        }
-        .weekly-text {
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .weekly-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
+        .weekly-icon { color: white; font-size: 20px; margin-right: 8px; }
+        .weekly-text { color: white; font-weight: 600; font-size: 14px; }
+        .weekly-link:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+
         /* 视频剪辑作业按钮样式 */
         .video-edit-link {
             display: flex;
@@ -760,28 +588,13 @@
             padding: 8px 16px;
             margin: 0 8px;
         }
-        .video-edit-icon {
-            color: white;
-            font-size: 20px;
-            margin-right: 8px;
-        }
-        .video-edit-text {
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .video-edit-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
-        }
+        .video-edit-icon { color: white; font-size: 20px; margin-right: 8px; }
+        .video-edit-text { color: white; font-weight: 600; font-size: 14px; }
+        .video-edit-link:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4); }
+
         /* 优化后的文稿模态框样式 */
-        .manuscript-modal-content {
-            max-width: 900px;
-            max-height: 85vh;
-        }
-        .manuscript-section {
-            margin-bottom: 30px;
-        }
+        .manuscript-modal-content { max-width: 900px; max-height: 85vh; }
+        .manuscript-section { margin-bottom: 30px; }
         .manuscript-stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -796,46 +609,22 @@
             color: white;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
-        body.dark-mode .stat-card {
-            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-        }
-        .stat-card .stat-number {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .stat-card .stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
-        /* 每日增长趋势图标 */
-        .stat-card .stat-trend {
-            font-size: 0.85em;
-            margin-top: 5px;
-            opacity: 0.85;
-        }
-        .stat-card .stat-trend.positive {
-            color: #4ade80;
-        }
-        .stat-card .stat-trend.negative {
-            color: #f87171;
-        }
-        
-        /* ========== 新增:搜索功能样式 ========== */
+        body.dark-mode .stat-card { background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%); }
+        .stat-card .stat-number { font-size: 2em; font-weight: bold; margin-bottom: 5px; }
+        .stat-card .stat-label { font-size: 0.9em; opacity: 0.9; }
+        .stat-card .stat-trend { font-size: 0.85em; margin-top: 5px; opacity: 0.85; }
+        .stat-card .stat-trend.positive { color: #4ade80; }
+        .stat-card .stat-trend.negative { color: #f87171; }
+
+        /* ========== 搜索功能样式 ========== */
         .search-container {
             margin: 20px 0;
             padding: 20px;
             background: #f8f9fa;
             border-radius: 12px;
         }
-        body.dark-mode .search-container {
-            background: #1a202c;
-        }
-        .search-box {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
+        body.dark-mode .search-container { background: #1a202c; }
+        .search-box { display: flex; gap: 10px; align-items: center; }
         .search-input {
             flex: 1;
             padding: 12px 20px;
@@ -849,11 +638,8 @@
             border-color: #764ba2;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-        body.dark-mode .search-input {
-            background: #2d3748;
-            color: #fff;
-            border-color: #a8b5ff;
-        }
+        body.dark-mode .search-input { background: #2d3748; color: #fff; border-color: #a8b5ff; }
+
         .search-button {
             padding: 12px 30px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -868,10 +654,8 @@
             align-items: center;
             gap: 8px;
         }
-        .search-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
+        .search-button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+
         .clear-search-button {
             padding: 12px 24px;
             background: #e0e0e0;
@@ -883,16 +667,10 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        body.dark-mode .clear-search-button {
-            background: #4a5568;
-            color: #fff;
-        }
-        .clear-search-button:hover {
-            background: #d0d0d0;
-        }
-        body.dark-mode .clear-search-button:hover {
-            background: #5a6578;
-        }
+        body.dark-mode .clear-search-button { background: #4a5568; color: #fff; }
+        .clear-search-button:hover { background: #d0d0d0; }
+        body.dark-mode .clear-search-button:hover { background: #5a6578; }
+
         .search-results-info {
             margin-top: 15px;
             padding: 12px;
@@ -902,11 +680,8 @@
             font-size: 0.95em;
             color: #0d47a1;
         }
-        body.dark-mode .search-results-info {
-            background: #1a3a52;
-            border-left-color: #64b5f6;
-            color: #90caf9;
-        }
+        body.dark-mode .search-results-info { background: #1a3a52; border-left-color: #64b5f6; color: #90caf9; }
+
         .search-highlight {
             background: #ffeb3b;
             color: #000;
@@ -914,11 +689,8 @@
             border-radius: 3px;
             font-weight: 600;
         }
-        body.dark-mode .search-highlight {
-            background: #ffd54f;
-            color: #000;
-        }
-        
+        body.dark-mode .search-highlight { background: #ffd54f; color: #000; }
+
         /* 优化文稿内容显示 */
         .manuscript-content {
             background: #f8f9fa;
@@ -927,39 +699,23 @@
             max-height: 500px;
             overflow-y: auto;
         }
-        body.dark-mode .manuscript-content {
-            background: #1a202c;
-        }
+        body.dark-mode .manuscript-content { background: #1a202c; }
+
         /* Markdown 渲染样式 */
         .manuscript-content h1,
         .manuscript-content h2,
-        .manuscript-content h3 {
-            color: #667eea;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
+        .manuscript-content h3 { color: #667eea; margin-top: 20px; margin-bottom: 10px; }
         body.dark-mode .manuscript-content h1,
         body.dark-mode .manuscript-content h2,
-        body.dark-mode .manuscript-content h3 {
-            color: #a8b5ff;
-        }
-        .manuscript-content p {
-            line-height: 1.8;
-            margin-bottom: 15px;
-            color: #333;
-        }
-        body.dark-mode .manuscript-content p {
-            color: #e2e8f0;
-        }
+        body.dark-mode .manuscript-content h3 { color: #a8b5ff; }
+
+        .manuscript-content p { line-height: 1.8; margin-bottom: 15px; color: #333; }
+        body.dark-mode .manuscript-content p { color: #e2e8f0; }
+
         .manuscript-content ul,
-        .manuscript-content ol {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-        .manuscript-content li {
-            margin-bottom: 8px;
-            line-height: 1.6;
-        }
+        .manuscript-content ol { margin-left: 20px; margin-bottom: 15px; }
+        .manuscript-content li { margin-bottom: 8px; line-height: 1.6; }
+
         .manuscript-content code {
             background: rgba(102, 126, 234, 0.1);
             padding: 2px 6px;
@@ -973,20 +729,11 @@
             color: #666;
             font-style: italic;
         }
-        body.dark-mode .manuscript-content blockquote {
-            border-left-color: #a8b5ff;
-            color: #aaa;
-        }
-        .empty-manuscript {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-        .empty-manuscript i {
-            font-size: 64px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
+        body.dark-mode .manuscript-content blockquote { border-left-color: #a8b5ff; color: #aaa; }
+
+        .empty-manuscript { text-align: center; padding: 60px 20px; color: #999; }
+        .empty-manuscript i { font-size: 64px; margin-bottom: 20px; opacity: 0.5; }
+
         .github-note {
             margin-top: 25px;
             padding: 18px;
@@ -1001,11 +748,7 @@
             border-left-color: #64b5f6;
             color: #90caf9;
         }
-        .github-note strong {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 1.05em;
-        }
+        .github-note strong { display: block; margin-bottom: 8px; font-size: 1.05em; }
         .github-note code {
             background: rgba(255, 255, 255, 0.5);
             padding: 2px 6px;
@@ -1013,10 +756,8 @@
             font-family: 'Courier New', monospace;
             color: #c7254e;
         }
-        body.dark-mode .github-note code {
-            background: rgba(0, 0, 0, 0.3);
-            color: #ff6b6b;
-        }
+        body.dark-mode .github-note code { background: rgba(0, 0, 0, 0.3); color: #ff6b6b; }
+
         /* 每日增长详情表格 */
         .daily-growth-table {
             width: 100%;
@@ -1027,9 +768,8 @@
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
-        body.dark-mode .daily-growth-table {
-            background: #2d3748;
-        }
+        body.dark-mode .daily-growth-table { background: #2d3748; }
+
         .daily-growth-table th,
         .daily-growth-table td {
             padding: 12px 15px;
@@ -1037,42 +777,24 @@
             border-bottom: 1px solid #e0e0e0;
         }
         body.dark-mode .daily-growth-table th,
-        body.dark-mode .daily-growth-table td {
-            border-bottom-color: #4a5568;
-        }
+        body.dark-mode .daily-growth-table td { border-bottom-color: #4a5568; }
+
         .daily-growth-table th {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             font-weight: 600;
             text-align: center;
         }
-        .daily-growth-table td {
-            color: #333;
-            text-align: center;
-        }
-        body.dark-mode .daily-growth-table td {
-            color: #e2e8f0;
-        }
-        .daily-growth-table tr:last-child td {
-            border-bottom: none;
-        }
-        .daily-growth-table tr:hover {
-            background: #f5f7fa;
-        }
-        body.dark-mode .daily-growth-table tr:hover {
-            background: #1a202c;
-        }
-        .growth-positive {
-            color: #22c55e;
-            font-weight: 600;
-        }
-        .growth-negative {
-            color: #ef4444;
-            font-weight: 600;
-        }
-        .growth-neutral {
-            color: #94a3b8;
-        }
+        .daily-growth-table td { color: #333; text-align: center; }
+        body.dark-mode .daily-growth-table td { color: #e2e8f0; }
+        .daily-growth-table tr:last-child td { border-bottom: none; }
+        .daily-growth-table tr:hover { background: #f5f7fa; }
+        body.dark-mode .daily-growth-table tr:hover { background: #1a202c; }
+
+        .growth-positive { color: #22c55e; font-weight: 600; }
+        .growth-negative { color: #ef4444; font-weight: 600; }
+        .growth-neutral { color: #94a3b8; }
+
         /* ========== 文稿翻页功能样式 ========== */
         .pagination-controls {
             display: flex;
@@ -1084,9 +806,8 @@
             background: #f0f0f0;
             border-radius: 10px;
         }
-        body.dark-mode .pagination-controls {
-            background: #2d3748;
-        }
+        body.dark-mode .pagination-controls { background: #2d3748; }
+
         .pagination-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -1100,27 +821,13 @@
             align-items: center;
             gap: 8px;
         }
-        .pagination-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-        .pagination-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        .pagination-info {
-            font-weight: 600;
-            color: #333;
-            font-size: 1.05em;
-        }
-        body.dark-mode .pagination-info {
-            color: #fff;
-        }
-        .page-jump {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .pagination-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+        .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .pagination-info { font-weight: 600; color: #333; font-size: 1.05em; }
+        body.dark-mode .pagination-info { color: #fff; }
+
+        .page-jump { display: flex; align-items: center; gap: 10px; }
         .page-jump input {
             width: 60px;
             padding: 8px;
@@ -1129,11 +836,8 @@
             text-align: center;
             font-weight: 600;
         }
-        body.dark-mode .page-jump input {
-            background: #1a202c;
-            color: #fff;
-            border-color: #a8b5ff;
-        }
+        body.dark-mode .page-jump input { background: #1a202c; color: #fff; border-color: #a8b5ff; }
+
         .page-jump button {
             background: #667eea;
             color: white;
@@ -1144,35 +848,18 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        .page-jump button:hover {
-            background: #764ba2;
-        }
+        .page-jump button:hover { background: #764ba2; }
+
         @media (max-width: 768px) {
-            .manuscript-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
-            .progress-stats-grid {
-                grid-template-columns: 1fr;
-            }
-            .daily-growth-table {
-                font-size: 0.85em;
-            }
-            .daily-growth-table th,
-            .daily-growth-table td {
-                padding: 8px 10px;
-            }
-            .pagination-controls {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .search-box {
-                flex-direction: column;
-            }
-            .search-button, .clear-search-button {
-                width: 100%;
-            }
+            .manuscript-stats { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .progress-stats-grid { grid-template-columns: 1fr; }
+            .daily-growth-table { font-size: 0.85em; }
+            .daily-growth-table th, .daily-growth-table td { padding: 8px 10px; }
+            .pagination-controls { flex-direction: column; gap: 10px; }
+            .search-box { flex-direction: column; }
+            .search-button, .clear-search-button { width: 100%; }
         }
+
         /* 模态框顶部返回按钮 */
         .modal-back-button {
             position: absolute;
@@ -1191,27 +878,13 @@
             gap: 8px;
             z-index: 10;
         }
-        .modal-back-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-        body.dark-mode .modal-back-button {
-            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-        }
+        .modal-back-button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+        body.dark-mode .modal-back-button { background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%); }
+
         /* 加载提示 */
-        .loading-indicator {
-            text-align: center;
-            padding: 40px;
-            color: #667eea;
-        }
-        .loading-indicator i {
-            font-size: 48px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        .loading-indicator { text-align: center; padding: 40px; color: #667eea; }
+        .loading-indicator i { font-size: 48px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body data-page="ai">
@@ -1290,16 +963,19 @@
             </div>
         </div>
     </header>
+
     <div class="ai-matrix-container">
         <div class="matrix-title">
             <h1>🎯 高考AI助手</h1>
             <p>精准覆盖各科目知识点,助力高考提分</p>
         </div>
+
         <!-- 知识体系按钮 -->
         <a href="concepts.html" class="knowledge-system-btn" id="knowledgeSystemBtn">
             <i class="fas fa-brain"></i>
             知识体系
         </a>
+
         <!-- 主科目页面 -->
         <div id="mainView" class="matrix-grid">
             <!-- 语文 -->
@@ -1321,6 +997,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- 数学 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1340,6 +1017,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- 英语 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1359,6 +1037,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- 物理 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1378,6 +1057,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- 化学 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1397,6 +1077,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- 政治 -->
             <div class="matrix-section">
                 <div class="section-header">
@@ -1417,6 +1098,7 @@
                 </div>
             </div>
         </div>
+
         <!-- 子题目页面 -->
         <div id="subtopicView" style="display: none;">
             <div style="margin-bottom: 30px;">
@@ -1433,11 +1115,10 @@
                     <i class="fas fa-arrow-left"></i> 返回科目列表
                 </button>
             </div>
-            <div class="subtopic-grid" id="subtopicGrid">
-                <!-- 动态加载子题目 -->
-            </div>
+            <div class="subtopic-grid" id="subtopicGrid"></div>
         </div>
     </div>
+
     <!-- AI工具模态框 -->
     <div id="aiModal" class="modal">
         <div class="modal-content">
@@ -1448,11 +1129,10 @@
             <div class="modal-header">
                 <h2 id="modalTitle">AI工具选择</h2>
             </div>
-            <div class="modal-tools" id="modalTools">
-                <!-- 动态加载工具列表 -->
-            </div>
+            <div class="modal-tools" id="modalTools"></div>
         </div>
     </div>
+
     <!-- 优化后的文稿模态框 -->
     <div id="manuscriptModal" class="modal">
         <div class="modal-content manuscript-modal-content">
@@ -1483,15 +1163,15 @@
                         <div class="stat-trend" id="growthTrend"></div>
                     </div>
                 </div>
-                
-                <!-- ========== 新增:搜索功能区域 ========== -->
+
+                <!-- 搜索功能区域 -->
                 <div class="search-container">
                     <div class="search-box">
-                        <input 
-                            type="text" 
-                            id="searchInput" 
-                            class="search-input" 
-                            placeholder="🔍 输入关键词搜索文稿内容..."
+                        <input
+                            type="text"
+                            id="searchInput"
+                            class="search-input"
+                            placeholder="🔍 输入关键词搜索文稿内容(将仅保留包含关键词的当天文章)..."
                             onkeypress="handleSearchKeyPress(event)"
                         >
                         <button class="search-button" onclick="performSearch()">
@@ -1505,7 +1185,7 @@
                     </div>
                     <div id="searchResultsInfo" class="search-results-info" style="display: none;"></div>
                 </div>
-                
+
                 <!-- 翻页控制器 -->
                 <div class="pagination-controls">
                     <button class="pagination-btn" id="prevPageBtn" onclick="changePage(-1)">
@@ -1520,12 +1200,14 @@
                         <button onclick="jumpToPage()">跳转</button>
                     </div>
                 </div>
+
                 <div class="manuscript-content" id="manuscriptText">
                     <div class="loading-indicator">
                         <i class="fas fa-spinner"></i>
                         <p>加载中...</p>
                     </div>
                 </div>
+
                 <!-- 每日增长详情表格 -->
                 <div class="manuscript-section">
                     <h3 style="color: #667eea; margin-bottom: 15px;">📊 每日创作增长详情</h3>
@@ -1539,12 +1221,11 @@
                                     <th>较昨日</th>
                                 </tr>
                             </thead>
-                            <tbody id="dailyGrowthBody">
-                                <!-- 动态加载 -->
-                            </tbody>
+                            <tbody id="dailyGrowthBody"></tbody>
                         </table>
                     </div>
                 </div>
+
                 <div class="github-note">
                     <strong>📌 更新说明:</strong>
                     文稿内容存储在 <code>breakthrough-manuscript.md</code> 文件中,使用 Markdown 格式编写。
@@ -1552,11 +1233,12 @@
                     <strong>💡 每日增长统计:</strong> 系统会自动识别文稿中的日期标题(格式: ## YYYY-MM-DD),
                     计算每天的字数增长,帮助你追踪创作进度。<br>
                     <strong>📖 翻页功能:</strong> 为提升阅读体验,文稿内容每1000字自动分页,可使用上下翻页按钮或直接跳转到指定页码。<br>
-                    <strong>🔍 搜索功能:</strong> 支持全文搜索,输入关键词后高亮显示所有匹配内容,快速定位目标信息。
+                    <strong>🔍 搜索功能:</strong> 搜索后将仅展示“包含关键词的当天文章”(按日期分段),并在结果中高亮关键词；点击清除恢复全部文稿。
                 </div>
             </div>
         </div>
     </div>
+
     <!-- 进度模态框 -->
     <div id="progressModal" class="modal">
         <div class="modal-content progress-modal-content">
@@ -1575,10 +1257,12 @@
             </div>
         </div>
     </div>
+
     <!-- 返回按钮 -->
     <a href="index.html" class="back-button" title="返回首页">
         <i class="fas fa-home"></i>
     </a>
+
     <script>
         // ===== 科目数据 =====
         const subjects = {
@@ -1672,15 +1356,13 @@
                 ]
             }
         };
-        
+
         // ===== 从 JSON 文件加载 AI 工具配置 =====
         let aiTools = {};
         async function loadAIToolsConfig() {
             try {
                 const response = await fetch('ai-tools-config.json');
-                if (!response.ok) {
-                    throw new Error('配置文件加载失败');
-                }
+                if (!response.ok) throw new Error('配置文件加载失败');
                 aiTools = await response.json();
                 console.log('AI工具配置加载成功');
             } catch (error) {
@@ -1689,76 +1371,111 @@
             }
         }
         loadAIToolsConfig();
-        
+
         // ========== 文稿翻页功能相关变量 ==========
-        let fullManuscriptHTML = ''; // 完整的HTML内容
-        let originalManuscriptHTML = ''; // 原始HTML内容(用于搜索)
-        let manuscriptPages = []; // 分页后的页面数组
-        let currentPage = 0; // 当前页码(从0开始)
-        const WORDS_PER_PAGE = 1000; // 每页字数
-        let fullMarkdownText = ''; // 保存完整的Markdown文本
-        let searchActive = false; // 搜索是否激活
-        
-        // ========== 新增:搜索功能相关函数 ==========
-        
-        // 处理搜索输入框回车事件
-        function handleSearchKeyPress(event) {
-            if (event.key === 'Enter') {
-                performSearch();
+        let fullManuscriptHTML = '';          // 当前用于展示/分页的HTML（可能是搜索过滤后的）
+        let originalManuscriptHTML = '';      // 原始HTML内容(用于恢复)
+        let manuscriptPages = [];             // 分页后的页面数组
+        let currentPage = 0;                  // 当前页码(从0开始)
+        const WORDS_PER_PAGE = 1000;          // 每页字数（按汉字计）
+        let fullMarkdownText = '';            // 保存完整的Markdown文本（全量）
+        let searchActive = false;             // 搜索是否激活
+
+        // ===== 新增：按“日期段”切分Markdown（用于搜索仅保留当天文章） =====
+        function splitMarkdownByDateSections(markdown) {
+            const sections = [];
+            const datePattern = /(^|\n)##\s*(\d{4}-\d{2}-\d{2})\s*(?=\n|$)/g;
+            const matches = [...markdown.matchAll(datePattern)];
+            if (matches.length === 0) {
+                // 没有日期标题：把全文当作一个“无日期”段
+                return [{
+                    date: null,
+                    content: markdown
+                }];
             }
+            for (let i = 0; i < matches.length; i++) {
+                const date = matches[i][2];
+                const startIndex = matches[i].index + (matches[i][1] ? matches[i][1].length : 0); // 保持从 '##' 开始
+                const endIndex = (i < matches.length - 1) ? matches[i + 1].index : markdown.length;
+                const content = markdown.substring(startIndex, endIndex);
+                sections.push({ date, content });
+            }
+            return sections;
         }
-        
-        // 执行搜索
+
+        // ===== 新增：转义正则特殊字符 =====
+        function escapeRegExp(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // ========== 搜索功能相关函数 ==========
+        function handleSearchKeyPress(event) {
+            if (event.key === 'Enter') performSearch();
+        }
+
+        // 执行搜索：只保留“包含关键词的当天文章”，并高亮关键词
         function performSearch() {
             const searchInput = document.getElementById('searchInput');
-            const keyword = searchInput.value.trim();
-            
-            if (!keyword) {
+            const keywordRaw = searchInput.value.trim();
+
+            if (!keywordRaw) {
                 alert('请输入搜索关键词');
                 return;
             }
-            
             if (!fullMarkdownText) {
                 alert('文稿尚未加载完成');
                 return;
             }
-            
-            // 在Markdown文本中搜索
-            const regex = new RegExp(keyword, 'gi');
-            const matches = fullMarkdownText.match(regex);
-            
-            if (!matches) {
-                showSearchResults(0, keyword);
+
+            // 1) 按日期切分
+            const sections = splitMarkdownByDateSections(fullMarkdownText);
+
+            // 2) 过滤：只保留包含关键词的“当天段落”
+            const keyword = keywordRaw; // 保持原样展示
+            const safeKeyword = escapeRegExp(keywordRaw);
+            const regex = new RegExp(safeKeyword, 'gi');
+
+            const matchedSections = [];
+            let totalMatches = 0;
+
+            for (const sec of sections) {
+                const m = sec.content.match(regex);
+                if (m && m.length > 0) {
+                    totalMatches += m.length;
+                    matchedSections.push(sec);
+                }
+            }
+
+            if (matchedSections.length === 0) {
+                // 无匹配：展示空结果（不改动原文分页展示，避免用户迷失）
+                showSearchResults(0, keyword, 0);
                 return;
             }
-            
-            // 高亮显示搜索结果
-            const highlightedMarkdown = fullMarkdownText.replace(regex, match => {
-                return `**<span class="search-highlight">${match}</span>**`;
-            });
-            
-            // 解析高亮后的Markdown
+
+            // 3) 对“匹配到的段”做高亮（仍用Markdown -> HTML）
+            // 为避免marked对HTML标签处理问题：直接在Markdown里插入<span>，不额外加 ** **（避免破坏结构）
+            const highlightedMarkdown = matchedSections.map(sec => {
+                return sec.content.replace(regex, (match) => `<span class="search-highlight">${match}</span>`);
+            }).join('\n\n');
+
+            // 4) 解析为HTML并分页展示
             fullManuscriptHTML = marked.parse(highlightedMarkdown);
-            
-            // 重新分页
             paginateManuscript(fullManuscriptHTML);
-            
-            // 显示第一页
             displayPage(0);
-            
-            // 显示搜索结果信息
-            showSearchResults(matches.length, keyword);
-            
+
+            // 5) 展示搜索信息：匹配次数 + 命中天数
+            showSearchResults(totalMatches, keyword, matchedSections.length);
             searchActive = true;
         }
-        
-        // 显示搜索结果信息
-        function showSearchResults(count, keyword) {
+
+        // 显示搜索结果信息（新增命中天数）
+        function showSearchResults(count, keyword, daysHit) {
             const resultsInfo = document.getElementById('searchResultsInfo');
             if (count > 0) {
                 resultsInfo.innerHTML = `
                     <i class="fas fa-check-circle"></i>
-                    找到 <strong>${count}</strong> 处匹配 "<strong>${keyword}</strong>" 的内容,已高亮显示
+                    找到 <strong>${count}</strong> 处匹配 "<strong>${keyword}</strong>" 的内容，
+                    已仅保留 <strong>${daysHit}</strong> 天的文章并高亮显示
                 `;
                 resultsInfo.style.display = 'block';
             } else {
@@ -1769,35 +1486,32 @@
                 resultsInfo.style.display = 'block';
             }
         }
-        
-        // 清除搜索
+
+        // 清除搜索：恢复原始全文展示（其他功能不变）
         function clearSearch() {
             const searchInput = document.getElementById('searchInput');
             const resultsInfo = document.getElementById('searchResultsInfo');
-            
             searchInput.value = '';
             resultsInfo.style.display = 'none';
-            
+
             if (searchActive) {
-                // 恢复原始内容
                 fullManuscriptHTML = originalManuscriptHTML;
                 paginateManuscript(fullManuscriptHTML);
                 displayPage(0);
                 searchActive = false;
             }
         }
-        
+
         // ===== 从 Markdown 文件加载文稿并计算每日增长 =====
         async function loadManuscriptData() {
             const manuscriptText = document.getElementById('manuscriptText');
             try {
                 const response = await fetch('breakthrough-manuscript.md');
-                if (!response.ok) {
-                    throw new Error('文件加载失败');
-                }
+                if (!response.ok) throw new Error('文件加载失败');
+
                 const markdown = await response.text();
-                fullMarkdownText = markdown; // 保存完整Markdown文本
-                
+                fullMarkdownText = markdown;
+
                 if (!markdown.trim()) {
                     manuscriptText.innerHTML = `
                         <div class="empty-manuscript">
@@ -1809,27 +1523,20 @@
                     updateStats(0, 0, 0, 0, []);
                     return;
                 }
-                
-                // 使用 marked.js 解析 Markdown
+
                 fullManuscriptHTML = marked.parse(markdown);
-                originalManuscriptHTML = fullManuscriptHTML; // 保存原始HTML
-                
-                // 分页处理
+                originalManuscriptHTML = fullManuscriptHTML;
+
                 paginateManuscript(fullManuscriptHTML);
-                
-                // 显示第一页
                 displayPage(0);
-                
-                // 计算每日增长
+
                 const dailyGrowth = calculateDailyGrowth(markdown);
-                
-                // 计算统计数据
                 const wordCount = markdown.replace(/[^\u4e00-\u9fa5]/g, '').length;
                 const totalDays = dailyGrowth.length;
                 const avgWords = totalDays > 0 ? Math.round(wordCount / totalDays) : wordCount;
                 const todayGrowth = dailyGrowth.length > 0 ? dailyGrowth[dailyGrowth.length - 1].dailyWords : 0;
-                
                 updateStats(wordCount, totalDays, avgWords, todayGrowth, dailyGrowth);
+
             } catch (error) {
                 console.error('加载文稿失败:', error);
                 manuscriptText.innerHTML = `
@@ -1842,35 +1549,32 @@
                 updateStats(0, 0, 0, 0, []);
             }
         }
-        
+
         // ===== 文稿分页函数 =====
         function paginateManuscript(htmlContent) {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = htmlContent;
+
             const textContent = tempDiv.textContent || tempDiv.innerText;
             const chineseChars = textContent.replace(/[^\u4e00-\u9fa5]/g, '');
             const totalWords = chineseChars.length;
-            
+
             if (totalWords === 0) {
                 manuscriptPages = [htmlContent];
                 return;
             }
-            
-            // 将HTML内容按照字数分页
-            const totalPages = Math.ceil(totalWords / WORDS_PER_PAGE);
+
             manuscriptPages = [];
-            
             let currentWordCount = 0;
             let currentPageHTML = '';
+
             const children = Array.from(tempDiv.children);
-            
             for (let i = 0; i < children.length; i++) {
                 const element = children[i];
                 const elementText = element.textContent || element.innerText;
                 const elementWords = elementText.replace(/[^\u4e00-\u9fa5]/g, '').length;
-                
+
                 if (currentWordCount + elementWords > WORDS_PER_PAGE && currentPageHTML) {
-                    // 当前页已满,保存并开始新页
                     manuscriptPages.push(currentPageHTML);
                     currentPageHTML = element.outerHTML;
                     currentWordCount = elementWords;
@@ -1879,101 +1583,76 @@
                     currentWordCount += elementWords;
                 }
             }
-            
-            // 保存最后一页
-            if (currentPageHTML) {
-                manuscriptPages.push(currentPageHTML);
-            }
-            
-            // 如果没有分页成功,保存原内容
-            if (manuscriptPages.length === 0) {
-                manuscriptPages = [htmlContent];
-            }
+
+            if (currentPageHTML) manuscriptPages.push(currentPageHTML);
+            if (manuscriptPages.length === 0) manuscriptPages = [htmlContent];
         }
-        
+
         // ===== 显示指定页面 =====
         function displayPage(pageIndex) {
-            if (pageIndex < 0 || pageIndex >= manuscriptPages.length) {
-                return;
-            }
-            
+            if (pageIndex < 0 || pageIndex >= manuscriptPages.length) return;
+
             currentPage = pageIndex;
             const manuscriptText = document.getElementById('manuscriptText');
             manuscriptText.innerHTML = manuscriptPages[pageIndex];
-            
-            // 更新分页控制器
+
             updatePaginationControls();
-            
-            // 滚动到文稿区域顶部
             manuscriptText.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-        
+
         // ===== 更新分页控制器 =====
         function updatePaginationControls() {
             const pageInfo = document.getElementById('pageInfo');
             const prevBtn = document.getElementById('prevPageBtn');
             const nextBtn = document.getElementById('nextPageBtn');
             const jumpInput = document.getElementById('jumpPageInput');
-            
+
             pageInfo.textContent = `第 ${currentPage + 1} 页 / 共 ${manuscriptPages.length} 页`;
-            
             prevBtn.disabled = currentPage === 0;
             nextBtn.disabled = currentPage === manuscriptPages.length - 1;
-            
             jumpInput.max = manuscriptPages.length;
             jumpInput.value = '';
         }
-        
+
         // ===== 翻页函数 =====
         function changePage(direction) {
             const newPage = currentPage + direction;
             displayPage(newPage);
         }
-        
+
         // ===== 跳转到指定页面 =====
         function jumpToPage() {
             const jumpInput = document.getElementById('jumpPageInput');
             const pageNum = parseInt(jumpInput.value);
-            
             if (isNaN(pageNum) || pageNum < 1 || pageNum > manuscriptPages.length) {
                 alert(`请输入1到${manuscriptPages.length}之间的页码`);
                 return;
             }
-            
             displayPage(pageNum - 1);
         }
-        
+
         // ===== 计算每日字数增长 =====
         function calculateDailyGrowth(markdown) {
             const dailyData = [];
-            
-            // 使用正则匹配所有日期标题
             const datePattern = /##\s*(\d{4}-\d{2}-\d{2})/g;
             const matches = [...markdown.matchAll(datePattern)];
-            
-            if (matches.length === 0) {
-                return dailyData;
-            }
-            
-            // 分割每一天的内容
+            if (matches.length === 0) return dailyData;
+
             for (let i = 0; i < matches.length; i++) {
                 const date = matches[i][1];
                 const startIndex = matches[i].index;
                 const endIndex = i < matches.length - 1 ? matches[i + 1].index : markdown.length;
-                
                 const dayContent = markdown.substring(startIndex, endIndex);
                 const dayWordCount = dayContent.replace(/[^\u4e00-\u9fa5]/g, '').length;
-                
-                // 计算累计字数
+
                 const cumulativeWords = dailyData.length > 0
                     ? dailyData[dailyData.length - 1].cumulativeWords + dayWordCount
                     : dayWordCount;
-                
-                // 计算较昨日增长
+
                 const growthFromYesterday = dailyData.length > 0
                     ? dayWordCount - dailyData[dailyData.length - 1].dailyWords
                     : 0;
-                
+
                 dailyData.push({
                     date,
                     dailyWords: dayWordCount,
@@ -1981,18 +1660,16 @@
                     growthFromYesterday
                 });
             }
-            
             return dailyData;
         }
-        
+
         // ===== 更新统计数据 =====
         function updateStats(totalWords, totalDays, avgWords, todayGrowth, dailyGrowth) {
             document.getElementById('totalWords').textContent = totalWords.toLocaleString();
             document.getElementById('totalDays').textContent = totalDays;
             document.getElementById('avgWords').textContent = avgWords;
             document.getElementById('todayGrowth').textContent = todayGrowth.toLocaleString();
-            
-            // 更新增长趋势
+
             const growthTrend = document.getElementById('growthTrend');
             if (dailyGrowth.length > 1) {
                 const lastGrowth = dailyGrowth[dailyGrowth.length - 1].growthFromYesterday;
@@ -2010,15 +1687,13 @@
                 growthTrend.textContent = '首次创作';
                 growthTrend.className = 'stat-trend';
             }
-            
-            // 更新每日增长表格
+
             updateDailyGrowthTable(dailyGrowth);
         }
-        
+
         // ===== 更新每日增长表格 =====
         function updateDailyGrowthTable(dailyGrowth) {
             const tbody = document.getElementById('dailyGrowthBody');
-            
             if (dailyGrowth.length === 0) {
                 tbody.innerHTML = `
                     <tr>
@@ -2027,14 +1702,12 @@
                 `;
                 return;
             }
-            
-            // 倒序显示(最新的在前)
+
             const reversedData = [...dailyGrowth].reverse();
-            
             tbody.innerHTML = reversedData.map((day, index) => {
                 let growthClass = 'growth-neutral';
                 let growthText = '-';
-                
+
                 if (index < dailyGrowth.length - 1) {
                     if (day.growthFromYesterday > 0) {
                         growthClass = 'growth-positive';
@@ -2046,7 +1719,7 @@
                         growthText = '0';
                     }
                 }
-                
+
                 return `
                     <tr>
                         <td>${day.date}</td>
@@ -2057,47 +1730,42 @@
                 `;
             }).join('');
         }
-        
+
         function showManuscriptModal(event) {
             event.preventDefault();
             event.stopPropagation();
             document.getElementById('manuscriptModal').style.display = 'block';
             loadManuscriptData();
         }
-        
+
         function closeManuscriptModal() {
             document.getElementById('manuscriptModal').style.display = 'none';
-            // 清除搜索状态
             clearSearch();
         }
-        
+
         // ===== 根据文稿字数自动计算进度 =====
         async function calculateProgress() {
             try {
                 const response = await fetch('breakthrough-manuscript.md');
-                if (!response.ok) {
-                    throw new Error('文件加载失败');
-                }
+                if (!response.ok) throw new Error('文件加载失败');
+
                 const markdown = await response.text();
                 const currentWords = markdown.replace(/[^\u4e00-\u9fa5]/g, '').length;
                 const targetWords = 7000000;
                 const completionPercent = (currentWords / targetWords * 100).toFixed(2);
-                
-                // 目标日期改为2026年6月6日
+
                 const targetDate = new Date('2026-06-06');
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
-                
                 const totalDays = Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24));
-                
+
                 const dayMatches = markdown.match(/##\s*\d{4}-\d{2}-\d{2}/g);
                 const writingDays = dayMatches ? dayMatches.length : 0;
-                
+
                 const avgWordsPerDay = writingDays > 0 ? Math.round(currentWords / writingDays) : 0;
-                
                 const requiredWordsPerDay = Math.ceil((targetWords - currentWords) / totalDays);
                 const requiredWordsPerHour = Math.ceil(requiredWordsPerDay / 6);
-                
+
                 let estimatedCompletionDate = '保持当前速度';
                 if (avgWordsPerDay > 0) {
                     const daysNeeded = Math.ceil((targetWords - currentWords) / avgWordsPerDay);
@@ -2105,12 +1773,13 @@
                     estimatedDate.setDate(estimatedDate.getDate() + daysNeeded);
                     estimatedCompletionDate = estimatedDate.toLocaleDateString('zh-CN');
                 }
-                
+
+                // 原代码 startDate 写成 new Date() 会导致 timeElapsed 始终为 0，这里保持原逻辑不改功能
                 const startDate = new Date();
                 const timeElapsed = Math.max(0, (today - startDate) / (1000 * 60 * 60 * 24));
                 const totalProjectDays = (targetDate - startDate) / (1000 * 60 * 60 * 24);
                 const timePercent = Math.min(100, (timeElapsed / totalProjectDays * 100)).toFixed(2);
-                
+
                 return {
                     currentWords,
                     targetWords,
@@ -2129,12 +1798,12 @@
                 return null;
             }
         }
-        
+
         async function showProgressModal(event) {
             event.preventDefault();
             event.stopPropagation();
             document.getElementById('progressModal').style.display = 'block';
-            
+
             const progressContent = document.getElementById('progressContent');
             progressContent.innerHTML = `
                 <div class="loading-indicator">
@@ -2142,9 +1811,8 @@
                     <p>计算进度中...</p>
                 </div>
             `;
-            
+
             const progress = await calculateProgress();
-            
             if (!progress) {
                 progressContent.innerHTML = `
                     <div class="empty-state">
@@ -2155,11 +1823,11 @@
                 `;
                 return;
             }
-            
+
             let progressStatus = 'status-in-progress';
             let statusText = '进行中';
             let statusIcon = '🚀';
-            
+
             if (progress.completionPercent >= 100) {
                 progressStatus = 'status-complete';
                 statusText = '已完成';
@@ -2169,7 +1837,7 @@
                 statusText = '需加速';
                 statusIcon = '⚠️';
             }
-            
+
             progressContent.innerHTML = `
                 <div class="progress-stats-grid">
                     <div class="progress-stat-card">
@@ -2185,7 +1853,7 @@
                         <div class="progress-stat-label">已写天数</div>
                     </div>
                 </div>
-                
+
                 <div class="progress-section">
                     <h3>📊 写作进度总览</h3>
                     <div class="progress-item">
@@ -2195,6 +1863,7 @@
                         </div>
                         <span class="progress-percent">${progress.currentWords.toLocaleString()} / ${progress.targetWords.toLocaleString()}</span>
                     </div>
+
                     <div class="progress-item">
                         <span class="progress-label">时间进度</span>
                         <div class="progress-bar-container">
@@ -2202,11 +1871,12 @@
                         </div>
                         <span class="progress-percent">${progress.timePercent}%</span>
                     </div>
+
                     <div style="text-align: center; margin-top: 15px;">
                         <span class="progress-status ${progressStatus}">${statusIcon} ${statusText}</span>
                     </div>
                 </div>
-                
+
                 <div class="progress-section">
                     <h3>📈 每日目标</h3>
                     <div class="progress-item">
@@ -2228,7 +1898,7 @@
                         </span>
                     </div>
                 </div>
-                
+
                 <div class="progress-section">
                     <h3>🎯 里程碑</h3>
                     <div class="progress-item">
@@ -2250,64 +1920,62 @@
                         </span>
                     </div>
                 </div>
-                
+
                 <div class="progress-note">
                     <strong>💡 写作建议:</strong><br>
                     • 目标: 2026年6月6日完成700万字创作<br>
                     • 计划: 每天投入6小时写作<br>
                     • 当前日均: ${progress.avgWordsPerDay.toLocaleString()} 字 ${progress.avgWordsPerDay >= progress.requiredWordsPerDay ? '✅ (达标)' : '⚠️ (需加速)'}<br>
                     • 建议每小时写作: ${progress.requiredWordsPerHour.toLocaleString()} 字<br>
-                    ${progress.avgWordsPerDay < progress.requiredWordsPerDay ? 
-                        '• ⚠️ 当前进度略慢于计划,建议适当提升每日写作量!' : 
+                    ${progress.avgWordsPerDay < progress.requiredWordsPerDay ?
+                        '• ⚠️ 当前进度略慢于计划,建议适当提升每日写作量!' :
                         '• ✅ 当前进度良好,继续保持!'}
                 </div>
             `;
         }
-        
+
         function closeProgressModal() {
             document.getElementById('progressModal').style.display = 'none';
         }
-        
+
         // ===== 科目相关函数 =====
         function showSubjects(subject) {
             const subjectData = subjects[subject];
             const subtopicGrid = document.getElementById('subtopicGrid');
-            
             subtopicGrid.innerHTML = subjectData.topics.map(topic => `
                 <div class="subtopic-card" onclick="openModal('${topic.key}')">
                     <div class="subtopic-icon">${topic.icon}</div>
                     <div class="subtopic-name">${topic.name}</div>
                 </div>
             `).join('');
-            
+
             document.getElementById('mainView').style.display = 'none';
             document.getElementById('subtopicView').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        
+
         function backToMain() {
             document.getElementById('mainView').style.display = 'grid';
             document.getElementById('subtopicView').style.display = 'none';
         }
-        
+
         async function openModal(topicKey) {
             const modal = document.getElementById('aiModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalTools = document.getElementById('modalTools');
-            
+
             if (Object.keys(aiTools).length === 0) {
                 await loadAIToolsConfig();
             }
-            
+
             const toolData = aiTools[topicKey];
-            
             if (!toolData) {
                 alert('该考点数据配置出错');
                 return;
             }
-            
+
             modalTitle.textContent = toolData.title + ' - AI工具';
-            
+
             if (!toolData.tools || toolData.tools.length === 0) {
                 modalTools.innerHTML = `
                     <div class="empty-state">
@@ -2329,46 +1997,39 @@
                     </a>
                 `).join('');
             }
-            
+
             modal.style.display = 'block';
         }
-        
+
         function closeModal() {
             document.getElementById('aiModal').style.display = 'none';
         }
-        
+
         // ===== 模态框外部点击关闭 =====
         window.onclick = function(event) {
             const aiModal = document.getElementById('aiModal');
             const progressModal = document.getElementById('progressModal');
             const manuscriptModal = document.getElementById('manuscriptModal');
-            
-            if (event.target == aiModal) {
-                closeModal();
-            }
-            if (event.target == progressModal) {
-                closeProgressModal();
-            }
-            if (event.target == manuscriptModal) {
-                closeManuscriptModal();
-            }
+
+            if (event.target == aiModal) closeModal();
+            if (event.target == progressModal) closeProgressModal();
+            if (event.target == manuscriptModal) closeManuscriptModal();
         }
-        
+
         // ===== 主题切换 =====
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
-        
         const currentTheme = localStorage.getItem('theme') || 'light';
+
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
-        
+
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
-            
             if (body.classList.contains('dark-mode')) {
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
