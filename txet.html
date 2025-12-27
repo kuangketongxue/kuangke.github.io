@@ -2,350 +2,136 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>AI手势圣诞树 - 电影级交互</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 晨间数字助理 - 简报</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { margin: 0; overflow: hidden; background: #050505; color: gold; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        canvas { display: block; }
-        #ui { position: absolute; top: 20px; left: 20px; z-index: 10; pointer-events: none; }
-        #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; 
-                    flex-direction: column; justify-content: center; align-items: center; z-index: 100; transition: opacity 1s; }
-        .instructions { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); text-align: center; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; border: 1px solid gold; }
-        video { position: fixed; bottom: 20px; right: 20px; width: 160px; height: 120px; border: 2px solid gold; border-radius: 8px; transform: scaleX(-1); }
-        input[type="file"] { pointer-events: auto; margin-top: 10px; }
-        .status-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 5px; background: red; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
     </style>
 </head>
-<body>
+<body class="p-4 md:p-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- 配置栏 -->
+        <div class="glass p-6 rounded-2xl shadow-lg mb-8">
+            <h1 class="text-2xl font-bold text-gray-800 mb-4">☀️ AI 晨间数字助理</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="password" id="deepseekKey" placeholder="DeepSeek API Key" class="border p-2 rounded-lg text-sm">
+                <input type="password" id="tavilyKey" placeholder="Tavily API Key" class="border p-2 rounded-lg text-sm">
+            </div>
+            <div class="mt-4 flex gap-2">
+                <input type="text" id="query" value="过去24小时AI、大模型及科技圈重大新闻" class="flex-1 border p-2 rounded-lg">
+                <button onclick="startMorningRoutine()" id="runBtn" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">生成今日简报</button>
+            </div>
+        </div>
 
-<div id="loading">
-    <h1 style="color: gold;">初始化圣诞魔法...</h1>
-    <p>正在加载 MediaPipe 模型与资源</p>
-</div>
+        <!-- 状态显示 -->
+        <div id="status" class="text-center text-gray-600 mb-4 hidden">正在检索并分析中，请稍候...</div>
 
-<div id="ui">
-    <h1>Merry Christmas AI</h1>
-    <p><span id="status-dot" class="status-dot"></span> 状态: <span id="status-text">初始化中</span></p>
-    <input type="file" id="photo-upload" accept="image/*" multiple>
-    <p style="font-size: 0.8em;">上传照片后会加入圣诞树云中</p>
-</div>
+        <!-- 简报内容 -->
+        <div id="report" class="glass p-8 rounded-2xl shadow-xl hidden">
+            <div id="content" class="prose prose-blue max-w-none text-gray-700 leading-relaxed">
+                <!-- AI 生成内容将在此处展示 -->
+            </div>
+            <hr class="my-6">
+            <div class="flex justify-between items-center">
+                <button onclick="speakContent()" class="text-blue-600 flex items-center gap-2">
+                    <span>🔊 语音朗读简报</span>
+                </button>
+                <div class="text-xs text-gray-400">Powered by DeepSeek & Tavily</div>
+            </div>
+        </div>
+    </div>
 
-<div class="instructions">
-    👊 握拳: 合拢为树 | 🖐️ 张手: 散开 | 🤏 捏合: 放大照片 | 🖐️ 移动: 旋转相机
-</div>
+    <script>
+        // 从本地存储加载 Key
+        document.getElementById('deepseekKey').value = localStorage.getItem('ds_key') || '';
+        document.getElementById('tavilyKey').value = localStorage.getItem('tv_key') || '';
 
-<video id="input_video" playsinline></video>
+        async function startMorningRoutine() {
+            const dsKey = document.getElementById('deepseekKey').value;
+            const tvKey = document.getElementById('tavilyKey').value;
+            const query = document.getElementById('query').value;
 
-<!-- 引入必要库 -->
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-<script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
-<script src="https://unpkg.com/tween.js@21.0.0/dist/tween.umd.js"></script>
+            if (!dsKey || !tvKey) return alert("请先输入 API Keys");
 
-<script>
-/**
- * 核心配置与全局变量
- */
-const CONFIG = {
-    particleCount: 1500,
-    treeHeight: 12,
-    treeRadius: 5,
-    colors: [0x1a472a, 0xd4af37, 0xaf111c], // 哑光绿, 金属金, 圣诞红
-    states: { CLOSED: 'CLOSED', SCATTERED: 'SCATTERED', ZOOM: 'ZOOM' }
-};
+            // 保存 Key
+            localStorage.setItem('ds_key', dsKey);
+            localStorage.setItem('tv_key', tvKey);
 
-let currentState = CONFIG.states.CLOSED;
-let scene, camera, renderer, clock;
-let particles = [], photoMeshes = [];
-let instancedMesh;
-let dummy = new THREE.Object3D();
-let targetPositions = [];
-let scatteredPositions = [];
+            const btn = document.getElementById('runBtn');
+            const status = document.getElementById('status');
+            const reportDiv = document.getElementById('report');
+            const contentDiv = document.getElementById('content');
 
-/**
- * 初始化场景
- */
-function initScene() {
-    scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x050505, 0.05);
+            btn.disabled = true;
+            status.classList.remove('hidden');
+            reportDiv.classList.add('hidden');
 
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 20;
-    camera.position.y = 5;
+            try {
+                // 1. 调用 Tavily 联网搜索
+                const searchRes = await fetch('https://api.tavily.com/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        api_key: tvKey,
+                        query: query,
+                        search_depth: "advanced",
+                        max_results: 5
+                    })
+                });
+                const searchData = await searchRes.json();
+                const context = searchData.results.map(r => `标题: ${r.title}\n内容: ${r.content}`).join('\n\n');
 
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.toneMapping = THREE.ReinhardToneMapping;
-    document.body.appendChild(renderer.domElement);
+                // 2. 调用 DeepSeek 进行脱水总结
+                const dsRes = await fetch('https://api.deepseek.com/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${dsKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [
+                            { role: "system", content: "你是一个高效的晨间助理。请根据提供的搜索结果，进行'信息脱水'，总结出最值得关注的3-5条要点，并为用户提供1条今日行动建议。使用Markdown格式，语言简洁有力。" },
+                            { role: "user", content: `搜索结果：\n${context}` }
+                        ],
+                        stream: false
+                    })
+                });
+                const dsData = await dsRes.json();
+                const finalReport = dsData.choices[0].message.content;
 
-    // 灯光
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
+                // 3. 渲染结果
+                contentDiv.innerHTML = formatMarkdown(finalReport);
+                reportDiv.classList.remove('hidden');
+            } catch (error) {
+                console.error(error);
+                alert("生成失败，请检查 API Key 或网络连接");
+            } finally {
+                btn.disabled = false;
+                status.classList.add('hidden');
+            }
+        }
 
-    const pointLight = new THREE.PointLight(0xffd700, 2, 50);
-    pointLight.position.set(0, 10, 0);
-    scene.add(pointLight);
+        // 简单的 Markdown 处理 (替代复杂库)
+        function formatMarkdown(text) {
+            return text
+                .replace(/^### (.*$)/gim, '<h3 class="text-xl font-bold mt-4 mb-2">$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold mt-6 mb-3">$1</h2>')
+                .replace(/^\* (.*$)/gim, '<li class="ml-4 mb-1 text-gray-700">$1</li>')
+                .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+        }
 
-    createParticles();
-    addBloomEffect();
-    window.addEventListener('resize', onWindowResize);
-}
-
-/**
- * 创建圣诞树粒子系统 (InstancedMesh)
- */
-function createParticles() {
-    const geometries = [
-        new THREE.SphereGeometry(0.1, 8, 8),
-        new THREE.BoxGeometry(0.15, 0.15, 0.15),
-        new THREE.CylinderGeometry(0.05, 0.05, 0.3) // 模拟糖果棍
-    ];
-
-    // 合并几何体以供 InstancedMesh 使用（这里为了简单演示，统一用球体+随机缩放）
-    const geometry = new THREE.SphereGeometry(1, 8, 8);
-    const material = new THREE.MeshStandardMaterial({
-        metalness: 0.8,
-        roughness: 0.2,
-        vertexColors: true
-    });
-
-    instancedMesh = new THREE.InstancedMesh(geometry, material, CONFIG.particleCount);
-    
-    const colors = [];
-    const colorObj = new THREE.Color();
-
-    for (let i = 0; i < CONFIG.particleCount; i++) {
-        // 生成圣诞树形状的目标坐标 (圆锥)
-        const ratio = i / CONFIG.particleCount;
-        const angle = ratio * Math.PI * 40;
-        const radius = (1 - ratio) * CONFIG.treeRadius;
-        const y = ratio * CONFIG.treeHeight - CONFIG.treeHeight / 2;
-        const x = Math.cos(angle) * radius;
-        const z = Math.sin(angle) * radius;
-        
-        targetPositions.push(new THREE.Vector3(x, y, z));
-
-        // 生成散开的随机坐标
-        scatteredPositions.push(new THREE.Vector3(
-            (Math.random() - 0.5) * 30,
-            (Math.random() - 0.5) * 20,
-            (Math.random() - 0.5) * 30
-        ));
-
-        // 随机颜色
-        const c = CONFIG.colors[Math.floor(Math.random() * CONFIG.colors.length)];
-        colorObj.setHex(c);
-        instancedMesh.setColorAt(i, colorObj);
-
-        // 初始位置
-        dummy.position.copy(targetPositions[i]);
-        dummy.scale.setScalar(Math.random() * 0.2 + 0.05);
-        dummy.updateMatrix();
-        instancedMesh.setMatrixAt(i, dummy.matrix);
-    }
-
-    scene.add(instancedMesh);
-}
-
-/**
- * 照片云处理
- */
-document.getElementById('photo-upload').addEventListener('change', function(e) {
-    const files = e.target.files;
-    for (let i = 0; i < files.length; i++) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const loader = new THREE.TextureLoader();
-            loader.load(event.target.result, (texture) => {
-                const mat = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-                const geom = new THREE.PlaneGeometry(2, 2);
-                const mesh = new THREE.Mesh(geom, mat);
-                
-                // 初始放在树的随机位置
-                const idx = Math.floor(Math.random() * CONFIG.particleCount);
-                mesh.position.copy(targetPositions[idx]);
-                mesh.userData.originalPos = mesh.position.clone();
-                mesh.userData.scatterPos = scatteredPositions[idx].clone();
-                
-                scene.add(mesh);
-                photoMeshes.push(mesh);
-            });
-        };
-        reader.readAsDataURL(files[i]);
-    }
-});
-
-/**
- * 极简后期辉光 (使用简单叠加，因为单文件不便引入庞大的三方Pass)
- */
-function addBloomEffect() {
-    // 这里可以使用着色器，但为了保持单文件稳定性，我们通过调整材质的 emissive 增强辉光感
-    instancedMesh.material.emissive = new THREE.Color(0x442200);
-    instancedMesh.material.emissiveIntensity = 0.5;
-}
-
-/**
- * 手势识别与状态机
- */
-const videoElement = document.getElementById('input_video');
-const hands = new Hands({
-    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-});
-
-hands.setOptions({
-    maxNumHands: 1,
-    modelComplexity: 1,
-    minDetectionConfidence: 0.7,
-    minTrackingConfidence: 0.7
-});
-
-hands.onResults(onHandsResults);
-
-function onHandsResults(results) {
-    if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
-        document.getElementById('status-dot').style.background = 'red';
-        return;
-    }
-    
-    document.getElementById('status-dot').style.background = '#00ff00';
-    const landmarks = results.multiHandLandmarks[0];
-
-    // 1. 判断是否握拳 (指尖到手掌距离)
-    const isFist = detectFist(landmarks);
-    // 2. 判断是否张开
-    const isOpen = detectOpen(landmarks);
-    // 3. 捏合动作 (食指尖与大拇指尖)
-    const isPinch = detectPinch(landmarks);
-    // 4. 获取手心位置用于旋转
-    const palmX = landmarks[9].x; 
-    const palmY = landmarks[9].y;
-
-    updateState(isFist, isOpen, isPinch, palmX, palmY);
-}
-
-function detectFist(lm) {
-    const distance = Math.hypot(lm[8].x - lm[0].x, lm[8].y - lm[0].y);
-    return distance < 0.15;
-}
-
-function detectOpen(lm) {
-    const distance = Math.hypot(lm[8].x - lm[0].x, lm[8].y - lm[0].y);
-    return distance > 0.4;
-}
-
-function detectPinch(lm) {
-    const dist = Math.hypot(lm[8].x - lm[4].x, lm[8].y - lm[4].y);
-    return dist < 0.05;
-}
-
-function updateState(isFist, isOpen, isPinch, px, py) {
-    const statusText = document.getElementById('status-text');
-    
-    if (isFist && currentState !== CONFIG.states.CLOSED) {
-        currentState = CONFIG.states.CLOSED;
-        animateTo(CONFIG.states.CLOSED);
-        statusText.innerText = "状态: 合拢圣诞树";
-    } else if (isOpen && !isPinch && currentState !== CONFIG.states.SCATTERED) {
-        currentState = CONFIG.states.SCATTERED;
-        animateTo(CONFIG.states.SCATTERED);
-        statusText.innerText = "状态: 散开";
-    } else if (isPinch && photoMeshes.length > 0) {
-        currentState = CONFIG.states.ZOOM;
-        statusText.innerText = "状态: 捕捉照片";
-    }
-
-    // 旋转逻辑：根据手移动平滑移动相机
-    if (currentState === CONFIG.states.SCATTERED) {
-        const targetRotX = (py - 0.5) * 2;
-        const targetRotY = (px - 0.5) * 4;
-        camera.position.x += (targetRotY * 10 - camera.position.x) * 0.05;
-        camera.position.y += (-targetRotX * 10 - camera.position.y) * 0.05;
-        camera.lookAt(0, 0, 0);
-    }
-}
-
-/**
- * 补间动画引擎
- */
-function animateTo(state) {
-    const duration = 1500;
-    const isClosed = state === CONFIG.states.CLOSED;
-
-    for (let i = 0; i < CONFIG.particleCount; i++) {
-        const startPos = isClosed ? scatteredPositions[i] : targetPositions[i];
-        const endPos = isClosed ? targetPositions[i] : scatteredPositions[i];
-
-        new TWEEN.Tween(startPos.clone())
-            .to(endPos, duration + Math.random() * 500)
-            .easing(TWEEN.Easing.Elastic.Out)
-            .onUpdate((obj) => {
-                dummy.position.set(obj.x, obj.y, obj.z);
-                dummy.updateMatrix();
-                instancedMesh.setMatrixAt(i, dummy.matrix);
-                instancedMesh.instanceMatrix.needsUpdate = true;
-            })
-            .start();
-    }
-
-    photoMeshes.forEach((mesh, idx) => {
-        const target = isClosed ? mesh.userData.originalPos : mesh.userData.scatterPos;
-        new TWEEN.Tween(mesh.position)
-            .to(target, duration)
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .start();
-        
-        new TWEEN.Tween(mesh.rotation)
-            .to({ y: isClosed ? 0 : Math.random() * Math.PI }, duration)
-            .start();
-    });
-}
-
-/**
- * 渲染循环
- */
-function animate() {
-    requestAnimationFrame(animate);
-    TWEEN.update();
-    
-    // 给粒子一点微弱的浮动
-    const time = Date.now() * 0.001;
-    if (currentState === CONFIG.states.CLOSED) {
-        instancedMesh.rotation.y += 0.005;
-    } else {
-        instancedMesh.rotation.y += 0.001;
-    }
-
-    renderer.render(scene, camera);
-}
-
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-/**
- * 启动程序
- */
-async function start() {
-    initScene();
-    animate();
-
-    const cameraControl = new Camera(videoElement, {
-        onFrame: async () => {
-            await hands.send({ image: videoElement });
-        },
-        width: 640,
-        height: 480
-    });
-    
-    await cameraControl.start();
-    document.getElementById('loading').style.opacity = '0';
-    setTimeout(() => document.getElementById('loading').style.display = 'none', 1000);
-}
-
-start();
-
-</script>
+        // 语音朗读
+        function speakContent() {
+            const text = document.getElementById('content').innerText;
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'zh-CN';
+            msg.rate = 1.1;
+            window.speechSynthesis.speak(msg);
+        }
+    </script>
 </body>
 </html>
