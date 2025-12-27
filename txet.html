@@ -3,101 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global AI Morning - 国际科技简报</title>
+    <title>AI Morning Intelligence Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-        body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
-        .content-card { background: white; color: #1e293b; border-radius: 1.5rem; }
-        .loading-dot::after { content: '.'; animation: dots 1.5s steps(5, end) infinite; }
-        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
+        :root {
+            --gold: #D4AF37;
+            --dark-bg: #0a0c10;
+        }
+        body {
+            background-color: var(--dark-bg);
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(55, 120, 212, 0.05) 0%, transparent 50%);
+            color: #e0e0e0;
+            font-family: 'Noto Serif SC', serif;
+            min-height: 100vh;
+        }
+        .luxury-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(20px);
+            border-radius: 2px; /* 更加硬朗的奢侈品设计风格 */
+        }
+        .gold-text { color: var(--gold); font-family: 'Cinzel', serif; }
+        .gold-border { border-color: var(--gold); }
+        .btn-gold {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+            color: black;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        .btn-gold:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+        .input-luxury {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            transition: all 0.3s;
+        }
+        .input-luxury:focus {
+            border-color: var(--gold);
+            outline: none;
+            background: rgba(255,255,255,0.05);
+        }
+        /* 自定义 Markdown 样式 */
+        .briefing-content h2 { color: var(--gold); font-size: 1.5rem; margin-top: 2rem; border-left: 3px solid var(--gold); padding-left: 1rem; }
+        .briefing-content strong { color: #fff; border-bottom: 1px solid var(--gold); }
+        .briefing-content li { list-style: none; padding-left: 1.5rem; position: relative; margin-bottom: 1rem; }
+        .briefing-content li::before { content: "◆"; position: absolute; left: 0; color: var(--gold); font-size: 0.8rem; top: 0.2rem; }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-4xl mx-auto">
-        <!-- 配置面板 -->
-        <div class="glass p-6 rounded-2xl shadow-2xl mb-8 border border-slate-700">
-            <h1 class="text-2xl font-bold mb-4 flex items-center gap-2 text-blue-400">🌍 国际科技早报助理</h1>
-            <p class="text-slate-400 text-sm mb-4 italic">专注国外一手信息源，通过 DeepSeek 深度脱水总结</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <input type="password" id="deepseekKey" placeholder="DeepSeek Key (sk-...)" class="bg-slate-800 border-none p-2 rounded-lg text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none">
-                <input type="password" id="tavilyKey" placeholder="Tavily Key (tvly-...)" class="bg-slate-800 border-none p-2 rounded-lg text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none">
+<body class="p-4 md:p-12">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl gold-text font-bold tracking-widest mb-4">INTELLIGENCE BRIEFING</h1>
+            <div class="h-px w-32 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto"></div>
+            <p class="mt-4 text-gray-500 uppercase tracking-widest text-xs">Crypto · AI Performance · RWA Strategy</p>
+        </header>
+
+        <!-- Config Panel -->
+        <div class="luxury-card p-8 mb-12 shadow-2xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <label class="block text-xs uppercase tracking-tighter text-gray-500 mb-2">DeepSeek Master Key</label>
+                    <input type="password" id="deepseekKey" class="input-luxury w-full p-3 text-sm" placeholder="sk-...">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-tighter text-gray-500 mb-2">Tavily Intelligence Key</label>
+                    <input type="password" id="tavilyKey" class="input-luxury w-full p-3 text-sm" placeholder="tvly-...">
+                </div>
             </div>
-            <div class="flex gap-2">
-                <input type="text" id="query" value="Latest major breakthroughs in AI, LLMs, and Tech from English sources" class="flex-1 bg-slate-800 border-none p-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-white">
-                <button onclick="startMorningRoutine()" id="runBtn" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-bold shadow-lg">获取国际快讯</button>
+            <div class="flex flex-col md:flex-row gap-4">
+                <input type="text" id="query" 
+                    value="加密货币市场趋势，大模型(Claude/GPT/DeepSeek)性能突破，RWA现实资产代币化最新进展" 
+                    class="input-luxury flex-1 p-3 text-sm font-light">
+                <button onclick="fetchBriefing()" id="runBtn" class="btn-gold px-10 py-3 text-sm uppercase">开启高净值简报</button>
             </div>
         </div>
 
-        <!-- 状态提示 -->
-        <div id="status" class="text-center text-blue-300 mb-4 hidden font-medium">
-            <span id="statusText">正在检索海外信源</span><span class="loading-dot"></span>
+        <!-- Status -->
+        <div id="status" class="hidden text-center mb-12">
+            <div class="inline-block animate-pulse text-gold text-sm tracking-widest">正在连接全球情报网络...</div>
         </div>
 
-        <!-- 结果展示 -->
-        <div id="report" class="content-card p-8 shadow-2xl hidden animate-in slide-in-from-bottom duration-500">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <span class="text-sm font-bold uppercase tracking-wider text-blue-600">Morning Insight Briefing</span>
-                <button onclick="copyToClipboard()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded transition border border-slate-300">📋 复制全文</button>
-            </div>
-            <div id="content" class="prose prose-slate max-w-none leading-relaxed">
-                <!-- 内容 -->
-            </div>
-            <div class="mt-8 flex flex-col md:flex-row gap-4 border-t pt-6">
-                <button onclick="speakContent()" class="flex-1 bg-blue-50 text-blue-700 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-100 transition">
-                    🔊 听取语音简报
-                </button>
+        <!-- Main Content -->
+        <div id="report" class="hidden animate-in slide-in-from-bottom duration-1000">
+            <div class="luxury-card p-10 relative shadow-2xl">
+                <div class="absolute top-4 right-4 flex gap-4">
+                    <button onclick="copyContent()" class="text-xs text-gray-500 hover:text-[#D4AF37] transition uppercase tracking-widest">[ 复制全文 ]</button>
+                    <button onclick="speakContent()" class="text-xs text-gray-500 hover:text-[#D4AF37] transition uppercase tracking-widest">[ 语音播报 ]</button>
+                </div>
+                
+                <div id="content" class="briefing-content text-gray-300 leading-relaxed font-light text-lg">
+                    <!-- 内容加载 -->
+                </div>
+
+                <div class="mt-12 pt-8 border-t border-white/5 flex justify-between items-center text-[10px] text-gray-600 uppercase tracking-[0.3em]">
+                    <span>Confidential Intelligence</span>
+                    <span>© 2024 AI Morning Suite</span>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        window.onload = () => {
-            document.getElementById('deepseekKey').value = localStorage.getItem('ds_key') || '';
-            document.getElementById('tavilyKey').value = localStorage.getItem('tv_key') || '';
-        };
+        // 初始化 Key
+        document.getElementById('deepseekKey').value = localStorage.getItem('luxury_ds_key') || '';
+        document.getElementById('tavilyKey').value = localStorage.getItem('luxury_tv_key') || '';
 
-        async function startMorningRoutine() {
+        async function fetchBriefing() {
             const dsKey = document.getElementById('deepseekKey').value.trim();
             const tvKey = document.getElementById('tavilyKey').value.trim();
             const query = document.getElementById('query').value.trim();
 
-            if (!dsKey || !tvKey) return alert("请填入正确的 API Key");
+            if (!dsKey || !tvKey) return alert("请在控制台输入您的 API 密钥。");
 
-            localStorage.setItem('ds_key', dsKey);
-            localStorage.setItem('tv_key', tvKey);
+            localStorage.setItem('luxury_ds_key', dsKey);
+            localStorage.setItem('luxury_tv_key', tvKey);
 
             const btn = document.getElementById('runBtn');
             const status = document.getElementById('status');
-            const statusText = document.getElementById('statusText');
-            const reportDiv = document.getElementById('report');
-            const contentDiv = document.getElementById('content');
+            const report = document.getElementById('report');
+            const content = document.getElementById('content');
 
             btn.disabled = true;
             status.classList.remove('hidden');
-            reportDiv.classList.add('hidden');
-            statusText.innerText = "正在检索海外英文信源 (Reuters, TechCrunch, etc.)";
+            report.classList.add('hidden');
 
             try {
-                // 1. Tavily 联网搜索 (强制英文搜索)
+                // 1. Tavily Intelligence Search
                 const searchRes = await fetch('https://api.tavily.com/search', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         api_key: tvKey,
-                        query: query,
+                        query: query + " 深度资讯 性能评测 行业报告",
                         search_depth: "advanced",
-                        include_domains: ["techcrunch.com", "theverge.com", "reuters.com", "wired.com", "bloomberg.com", "venturebeat.com"], // 强制锁定顶级英文信源
-                        max_results: 6
+                        max_results: 8
                     })
                 });
-
-                if (!searchRes.ok) throw new Error("海外搜索连接超时");
                 const searchData = await searchRes.json();
-                const context = searchData.results.map(r => `Source: ${r.url}\nTitle: ${r.title}\nContent: ${r.content}`).join('\n\n');
+                const context = searchData.results.map(r => `Source: ${r.title}\nContent: ${r.content}`).join('\n\n');
 
-                // 2. DeepSeek 分析
-                statusText.innerText = "AI 正在翻译并提取国际快讯精华";
+                // 2. DeepSeek Logic
                 const dsRes = await fetch('https://api.deepseek.com/chat/completions', {
                     method: 'POST',
                     headers: {
@@ -107,21 +160,31 @@
                     body: JSON.stringify({
                         model: "deepseek-chat",
                         messages: [
-                            { role: "system", content: "你是一个专业的国际科技分析师。请根据提供的英文搜索结果，总结成一份中文简报。要求：1. 过滤掉国内媒体信息，只保留国际资讯。2. 包含一个[核心趋势]概括。3. 详细列出3-4条重要新闻要点（需包含原文核心逻辑）。4. 给出1个对用户的价值建议。使用Markdown格式，注意排版美观。" },
-                            { role: "user", content: `搜索结果：\n${context}` }
+                            { 
+                                role: "system", 
+                                content: `你是一位服务于顶级投资机构的首席分析师。请根据搜索结果撰写一份简报。
+                                重点关注：
+                                1. 加密货币：不仅是价格，还有协议层面的创新。
+                                2. AI 性能：DeepSeek、OpenAI、Anthropic 等模型的功能边界、推理能力变化。
+                                3. RWA：传统资产上链的最新合规进展与流动性变化。
+                                格式要求：
+                                - 使用 Markdown。
+                                - 语言要“奢侈、克制、精准”，去掉废话。
+                                - 分为【核心洞察】、【技术演进】、【策略建议】。` 
+                            },
+                            { role: "user", content: `情报来源：\n${context}` }
                         ]
                     })
                 });
 
-                if (dsRes.status === 402) throw new Error("DeepSeek 余额不足，请充值。");
+                if (!dsRes.ok) throw new Error(dsRes.status === 402 ? "资金账户空盈，请注资。" : "情报获取中断。");
+                
                 const dsData = await dsRes.json();
-                const finalReport = dsData.choices[0].message.content;
-
-                contentDiv.innerHTML = formatMarkdown(finalReport);
-                reportDiv.classList.remove('hidden');
-
-            } catch (error) {
-                alert(error.message);
+                content.innerHTML = formatMarkdown(dsData.choices[0].message.content);
+                report.classList.remove('hidden');
+                
+            } catch (err) {
+                alert(err.message);
             } finally {
                 btn.disabled = false;
                 status.classList.add('hidden');
@@ -130,28 +193,26 @@
 
         function formatMarkdown(text) {
             return text
-                .replace(/^### (.*$)/gim, '<h3 class="text-xl font-bold text-blue-700 mt-6 mb-2">$1</h3>')
-                .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4 border-l-4 border-blue-500 pl-4">$1</h2>')
-                .replace(/^\* (.*$)/gim, '<li class="ml-4 mb-2 text-slate-700 list-disc">$1</li>')
-                .replace(/^- (.*$)/gim, '<li class="ml-4 mb-2 text-slate-700 list-disc">$1</li>')
-                .replace(/\*\*(.*)\*\*/gim, '<strong class="text-blue-600">$1</strong>')
-                .split('\n').join('<br>');
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^### (.*$)/gim, '<h3 class="text-white font-bold mt-4">$1</h3>')
+                .replace(/^\* (.*$)/gim, '<li>$1</li>')
+                .replace(/^- (.*$)/gim, '<li>$1</li>')
+                .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
         }
 
-        function copyToClipboard() {
+        function copyContent() {
             const text = document.getElementById('content').innerText;
             navigator.clipboard.writeText(text).then(() => {
-                alert("简报已复制到剪贴板！");
+                alert("情报已存入剪贴板。");
             });
         }
 
         function speakContent() {
-            const text = document.getElementById('content').innerText;
-            if (!text) return;
             window.speechSynthesis.cancel();
-            const msg = new SpeechSynthesisUtterance(text);
+            const msg = new SpeechSynthesisUtterance(document.getElementById('content').innerText);
             msg.lang = 'zh-CN';
-            msg.rate = 1.1;
+            msg.rate = 1.0;
             window.speechSynthesis.speak(msg);
         }
     </script>
