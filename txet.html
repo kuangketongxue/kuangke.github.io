@@ -3,116 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Morning Intelligence Suite</title>
+    <title>AI Intelligence Briefing (Past 24H)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --gold: #D4AF37;
-            --dark-bg: #0a0c10;
-        }
-        body {
-            background-color: var(--dark-bg);
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(55, 120, 212, 0.05) 0%, transparent 50%);
-            color: #e0e0e0;
-            font-family: 'Noto Serif SC', serif;
-            min-height: 100vh;
-        }
-        .luxury-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            backdrop-filter: blur(20px);
-            border-radius: 2px; /* 更加硬朗的奢侈品设计风格 */
-        }
+        :root { --gold: #D4AF37; --dark-bg: #0a0c10; }
+        body { background-color: var(--dark-bg); color: #e0e0e0; font-family: 'Noto Serif SC', serif; min-height: 100vh; background-image: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 100%); }
+        .luxury-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(212, 175, 55, 0.15); backdrop-filter: blur(20px); }
         .gold-text { color: var(--gold); font-family: 'Cinzel', serif; }
-        .gold-border { border-color: var(--gold); }
-        .btn-gold {
-            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-            color: black;
-            font-weight: bold;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-        }
-        .btn-gold:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-        }
-        .input-luxury {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            transition: all 0.3s;
-        }
-        .input-luxury:focus {
-            border-color: var(--gold);
-            outline: none;
-            background: rgba(255,255,255,0.05);
-        }
-        /* 自定义 Markdown 样式 */
-        .briefing-content h2 { color: var(--gold); font-size: 1.5rem; margin-top: 2rem; border-left: 3px solid var(--gold); padding-left: 1rem; }
-        .briefing-content strong { color: #fff; border-bottom: 1px solid var(--gold); }
-        .briefing-content li { list-style: none; padding-left: 1.5rem; position: relative; margin-bottom: 1rem; }
-        .briefing-content li::before { content: "◆"; position: absolute; left: 0; color: var(--gold); font-size: 0.8rem; top: 0.2rem; }
+        .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%); color: black; font-weight: bold; transition: all 0.3s; cursor: pointer; }
+        .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+        .input-luxury { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: white; outline: none; }
+        .input-luxury:focus { border-color: var(--gold); }
+        .briefing-content h2 { color: var(--gold); font-size: 1.4rem; margin-top: 1.5rem; margin-bottom: 1rem; border-bottom: 1px inset rgba(212, 175, 55, 0.2); display: inline-block; }
+        .briefing-content strong { color: #fff; font-weight: 700; }
+        .briefing-content li { margin-bottom: 0.8rem; padding-left: 1.2rem; position: relative; list-style: none; }
+        .briefing-content li::before { content: "•"; position: absolute; left: 0; color: var(--gold); }
     </style>
 </head>
 <body class="p-4 md:p-12">
     <div class="max-w-5xl mx-auto">
-        <!-- Header -->
-        <header class="text-center mb-16">
-            <h1 class="text-4xl md:text-5xl gold-text font-bold tracking-widest mb-4">INTELLIGENCE BRIEFING</h1>
-            <div class="h-px w-32 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto"></div>
-            <p class="mt-4 text-gray-500 uppercase tracking-widest text-xs">Crypto · AI Performance · RWA Strategy</p>
+        <header class="text-center mb-12">
+            <h1 class="text-3xl md:text-4xl gold-text font-bold tracking-[0.2em] mb-2">24H STRATEGIC INTELLIGENCE</h1>
+            <p id="currentDate" class="text-gray-500 text-xs tracking-widest uppercase"></p>
         </header>
 
-        <!-- Config Panel -->
-        <div class="luxury-card p-8 mb-12 shadow-2xl">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <div>
-                    <label class="block text-xs uppercase tracking-tighter text-gray-500 mb-2">DeepSeek Master Key</label>
-                    <input type="password" id="deepseekKey" class="input-luxury w-full p-3 text-sm" placeholder="sk-...">
-                </div>
-                <div>
-                    <label class="block text-xs uppercase tracking-tighter text-gray-500 mb-2">Tavily Intelligence Key</label>
-                    <input type="password" id="tavilyKey" class="input-luxury w-full p-3 text-sm" placeholder="tvly-...">
-                </div>
+        <div class="luxury-card p-6 md:p-8 mb-8 shadow-2xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <input type="password" id="deepseekKey" class="input-luxury p-3 text-xs" placeholder="DEEPSEEK MASTER KEY">
+                <input type="password" id="tavilyKey" class="input-luxury p-3 text-xs" placeholder="TAVILY INTEL KEY">
             </div>
             <div class="flex flex-col md:flex-row gap-4">
-                <input type="text" id="query" 
-                    value="加密货币市场趋势，大模型(Claude/GPT/DeepSeek)性能突破，RWA现实资产代币化最新进展" 
-                    class="input-luxury flex-1 p-3 text-sm font-light">
-                <button onclick="fetchBriefing()" id="runBtn" class="btn-gold px-10 py-3 text-sm uppercase">开启高净值简报</button>
+                <div class="flex-1 relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-gold/50 font-bold uppercase">Topic</span>
+                    <input type="text" id="query" value="Crypto market, AI models (DeepSeek, Claude, GPT) performance, RWA tokenization" 
+                           class="input-luxury w-full p-3 pl-16 text-sm">
+                </div>
+                <button onclick="fetchBriefing()" id="runBtn" class="btn-gold px-8 py-3 text-xs uppercase tracking-widest">提取昨日情报</button>
             </div>
         </div>
 
-        <!-- Status -->
-        <div id="status" class="hidden text-center mb-12">
-            <div class="inline-block animate-pulse text-gold text-sm tracking-widest">正在连接全球情报网络...</div>
+        <div id="status" class="hidden text-center mb-8 animate-pulse text-gold/70 text-xs tracking-widest">
+            正在锁定时空坐标：检索过去 24 小时深度情报...
         </div>
 
-        <!-- Main Content -->
-        <div id="report" class="hidden animate-in slide-in-from-bottom duration-1000">
-            <div class="luxury-card p-10 relative shadow-2xl">
-                <div class="absolute top-4 right-4 flex gap-4">
-                    <button onclick="copyContent()" class="text-xs text-gray-500 hover:text-[#D4AF37] transition uppercase tracking-widest">[ 复制全文 ]</button>
-                    <button onclick="speakContent()" class="text-xs text-gray-500 hover:text-[#D4AF37] transition uppercase tracking-widest">[ 语音播报 ]</button>
+        <div id="report" class="hidden">
+            <div class="luxury-card p-8 md:p-12 relative">
+                <div class="flex justify-end gap-6 mb-8 border-b border-white/5 pb-4">
+                    <button onclick="copyContent()" class="text-[10px] text-gray-500 hover:text-gold transition uppercase tracking-tighter">[ Copy Intel ]</button>
+                    <button onclick="speakContent()" class="text-[10px] text-gray-500 hover:text-gold transition uppercase tracking-tighter">[ Audio Stream ]</button>
                 </div>
-                
-                <div id="content" class="briefing-content text-gray-300 leading-relaxed font-light text-lg">
-                    <!-- 内容加载 -->
-                </div>
-
-                <div class="mt-12 pt-8 border-t border-white/5 flex justify-between items-center text-[10px] text-gray-600 uppercase tracking-[0.3em]">
-                    <span>Confidential Intelligence</span>
-                    <span>© 2024 AI Morning Suite</span>
-                </div>
+                <div id="content" class="briefing-content text-gray-400 leading-relaxed text-base md:text-lg font-light"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // 初始化 Key
+        // 设置当前日期显示
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        document.getElementById('currentDate').innerText = `Briefing for ${yesterday.toLocaleDateString()} - ${today.toLocaleDateString()}`;
+
         document.getElementById('deepseekKey').value = localStorage.getItem('luxury_ds_key') || '';
         document.getElementById('tavilyKey').value = localStorage.getItem('luxury_tv_key') || '';
 
@@ -121,8 +73,7 @@
             const tvKey = document.getElementById('tavilyKey').value.trim();
             const query = document.getElementById('query').value.trim();
 
-            if (!dsKey || !tvKey) return alert("请在控制台输入您的 API 密钥。");
-
+            if (!dsKey || !tvKey) return alert("Keys required.");
             localStorage.setItem('luxury_ds_key', dsKey);
             localStorage.setItem('luxury_tv_key', tvKey);
 
@@ -135,22 +86,28 @@
             status.classList.remove('hidden');
             report.classList.add('hidden');
 
+            // 构造限定日期的查询词
+            const dateStr = yesterday.toISOString().split('T')[0];
+            const timeTargetedQuery = `${query} news since ${dateStr} focus on technical changes and performance`;
+
             try {
-                // 1. Tavily Intelligence Search
+                // 1. Tavily API - 强制搜索最近 24 小时
                 const searchRes = await fetch('https://api.tavily.com/search', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         api_key: tvKey,
-                        query: query + " 深度资讯 性能评测 行业报告",
+                        query: timeTargetedQuery,
                         search_depth: "advanced",
-                        max_results: 8
+                        include_answer: false,
+                        max_results: 10,
+                        // 某些 API 版本支持 timeframe，这里在关键词中也做了强化
                     })
                 });
                 const searchData = await searchRes.json();
-                const context = searchData.results.map(r => `Source: ${r.title}\nContent: ${r.content}`).join('\n\n');
+                const context = searchData.results.map(r => `[Source: ${r.title}] ${r.content}`).join('\n\n');
 
-                // 2. DeepSeek Logic
+                // 2. DeepSeek API - 严格过滤陈旧信息
                 const dsRes = await fetch('https://api.deepseek.com/chat/completions', {
                     method: 'POST',
                     headers: {
@@ -162,27 +119,25 @@
                         messages: [
                             { 
                                 role: "system", 
-                                content: `你是一位服务于顶级投资机构的首席分析师。请根据搜索结果撰写一份简报。
-                                重点关注：
-                                1. 加密货币：不仅是价格，还有协议层面的创新。
-                                2. AI 性能：DeepSeek、OpenAI、Anthropic 等模型的功能边界、推理能力变化。
-                                3. RWA：传统资产上链的最新合规进展与流动性变化。
-                                格式要求：
-                                - 使用 Markdown。
-                                - 语言要“奢侈、克制、精准”，去掉废话。
-                                - 分为【核心洞察】、【技术演进】、【策略建议】。` 
+                                content: `你是一位顶级加密货币与AI战略分析师。
+                                任务：根据提供的搜索内容，提取过去 24 小时（昨日）发生的关键动态。
+                                准则：
+                                1. 严格过滤：删除所有 24 小时之前发生的旧闻。
+                                2. 深度关注：
+                                   - 加密货币：关注协议升级、链上异动、监管新规。
+                                   - AI 性能：模型跑分、新功能发布、推理成本变化。
+                                   - RWA：主要金融机构的代币化新动作。
+                                3. 语言风格：冷峻、高级、专业。避免使用“令人惊叹”、“不容错过”等情绪化词汇。`
                             },
-                            { role: "user", content: `情报来源：\n${context}` }
+                            { role: "user", content: `今天是 ${today.toLocaleDateString()}。请分析以下情报源中昨日发生的动态：\n\n${context}` }
                         ]
                     })
                 });
 
-                if (!dsRes.ok) throw new Error(dsRes.status === 402 ? "资金账户空盈，请注资。" : "情报获取中断。");
-                
+                if (!dsRes.ok) throw new Error("Connection lost.");
                 const dsData = await dsRes.json();
                 content.innerHTML = formatMarkdown(dsData.choices[0].message.content);
                 report.classList.remove('hidden');
-                
             } catch (err) {
                 alert(err.message);
             } finally {
@@ -203,9 +158,7 @@
 
         function copyContent() {
             const text = document.getElementById('content').innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                alert("情报已存入剪贴板。");
-            });
+            navigator.clipboard.writeText(text).then(() => alert("Intel Copied."));
         }
 
         function speakContent() {
