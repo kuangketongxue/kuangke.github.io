@@ -3,172 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Morning Assistant | 尊享版</title>
+    <title>Elite Dashboard | 顶级富豪定制版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Sans+SC:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --bg: #0a0a0a; }
-        body { background-color: var(--bg); color: #e0e0e0; font-family: 'Noto Sans SC', sans-serif; }
-        .luxury-border { border: 1px solid rgba(212, 175, 55, 0.3); }
-        .gold-gradient { background: linear-gradient(135deg, #CFB53B 0%, #F7EF8A 50%, #AA771C 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
-        .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #8A6D3B 100%); color: black; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); }
-        .premium-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2); color: white; }
-        .premium-input:focus { border-color: var(--gold); outline: none; background: rgba(255,255,255,0.1); }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--gold); }
+        :root { --gold: #D4AF37; --bg: #050505; }
+        body { background-color: var(--bg); color: #e0e0e0; font-family: 'Noto Sans SC', sans-serif; overflow-x: hidden; }
+        .gold-text { color: var(--gold); }
+        .glass-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(212, 175, 55, 0.15); backdrop-filter: blur(20px); transition: all 0.4s; }
+        .glass-card:hover { border-color: var(--gold); background: rgba(255, 255, 255, 0.05); }
+        .luxury-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(212, 175, 55, 0.2); color: white; padding: 10px; border-radius: 8px; font-size: 12px; }
+        .gold-btn { background: linear-gradient(135deg, #D4AF37 0%, #8A6D3B 100%); color: #000; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .stat-label { font-size: 10px; text-transform: uppercase; color: #666; letter-spacing: 1px; }
+        .stat-value { font-family: 'Cinzel'; color: var(--gold); font-size: 18px; }
     </style>
 </head>
-<body class="min-h-screen">
-    <div class="max-w-5xl mx-auto px-6 py-12">
-        <!-- Header -->
-        <header class="text-center mb-16 animate-in fade-in slide-in-from-top duration-1000">
-            <h1 class="font-['Cinzel'] text-5xl tracking-widest mb-2 gold-gradient">ELITE INTELLIGENCE</h1>
-            <p class="text-gray-500 tracking-widest uppercase text-xs">尊崇您的每秒价值 | 每日简报</p>
+<body class="p-4 md:p-10">
+    <div class="max-w-7xl mx-auto">
+        <!-- 顶部身份标识 -->
+        <header class="flex justify-between items-end mb-12">
+            <div>
+                <h1 class="font-['Cinzel'] text-4xl gold-text tracking-[0.2em]">ELITE MORNING</h1>
+                <p id="quote" class="italic text-gray-500 text-sm mt-2">Loading wisdom...</p>
+            </div>
+            <div class="text-right">
+                <p class="text-[10px] text-gray-600 tracking-widest uppercase">Member Since 2024</p>
+                <p class="text-white font-bold">VIP CREATOR / INVESTOR</p>
+            </div>
         </header>
 
-        <!-- Config Section -->
-        <section class="glass-panel p-8 rounded-3xl mb-12 shadow-2xl relative overflow-hidden">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <input type="password" id="dsKey" placeholder="DeepSeek Private Key" class="premium-input p-4 rounded-xl text-sm">
-                <input type="password" id="tvKey" placeholder="Tavily Secret Key" class="premium-input p-4 rounded-xl text-sm">
+        <!-- API 密钥管理（折叠面板） -->
+        <details class="mb-8 text-gray-500">
+            <summary class="cursor-pointer text-xs hover:text-gold tracking-widest uppercase">API 控制台 (点击配置)</summary>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 glass-card rounded-xl mt-2">
+                <input type="password" id="dsKey" placeholder="DeepSeek Key" class="luxury-input">
+                <input type="password" id="tvKey" placeholder="Tavily Key" class="luxury-input">
+                <input type="password" id="ytKey" placeholder="YouTube Data API Key" class="luxury-input">
+                <input type="password" id="owmKey" placeholder="OpenWeather Key" class="luxury-input">
+                <input type="password" id="avKey" placeholder="Alpha Vantage Key" class="luxury-input">
+                <div class="text-[10px] flex items-center italic text-yellow-700">部分 Key 留空则跳过该模块</div>
             </div>
-            <div class="flex flex-col md:flex-row gap-4">
-                <input type="text" id="query" value="全球AI突破、顶级商业机会、YouTube流量爆炸新趋势(近7天)" class="flex-1 premium-input p-4 rounded-xl font-light">
-                <button onclick="executeRoutine()" id="runBtn" class="btn-gold px-10 py-4 rounded-xl font-bold uppercase tracking-tighter">开启战略简报</button>
-            </div>
-        </section>
+        </details>
 
-        <!-- Loading State -->
-        <div id="status" class="hidden text-center py-12">
-            <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#D4AF37] mb-4"></div>
-            <p class="text-gray-400 italic font-extralight tracking-widest" id="statusText">正在筛选顶级情报...</p>
+        <!-- 实时行情条 -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+            <div class="glass-card p-4 rounded-xl">
+                <p class="stat-label">Bitcoin</p>
+                <p id="btcPrice" class="stat-value">---</p>
+            </div>
+            <div class="glass-card p-4 rounded-xl">
+                <p class="stat-label">Ethereum</p>
+                <p id="ethPrice" class="stat-value">---</p>
+            </div>
+            <div class="glass-card p-4 rounded-xl">
+                <p class="stat-label">Weather</p>
+                <p id="weather" class="stat-value">---</p>
+            </div>
+            <div class="glass-card p-4 rounded-xl">
+                <p class="stat-label">Market Status</p>
+                <p id="marketStatus" class="stat-value text-green-500">Active</p>
+            </div>
+            <button onclick="runEliteBriefing()" id="runBtn" class="gold-btn rounded-xl shadow-lg shadow-yellow-900/20">生成简报</button>
         </div>
 
-        <!-- Content Area -->
-        <main id="report" class="hidden animate-in fade-in zoom-in duration-700">
-            <div class="glass-panel p-10 rounded-[2rem] shadow-2xl border-t border-l border-white/10">
-                <div class="flex justify-between items-center mb-10">
-                    <span class="text-xs tracking-[0.3em] text-gray-500 uppercase font-bold">Today's Strategic Insight</span>
-                    <div class="flex gap-4">
-                        <button onclick="copyContent()" class="text-[#D4AF37] border border-[#D4AF37]/30 px-4 py-1 rounded-full text-xs hover:bg-[#D4AF37]/10 transition">复制全文</button>
-                        <button onclick="speak()" class="bg-white/10 px-4 py-1 rounded-full text-xs hover:bg-white/20 transition">🔊 语音播放</button>
+        <!-- 主内容区 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- 左侧：AI 战略决策简报 -->
+            <div class="lg:col-span-2">
+                <div class="glass-card p-8 rounded-[2rem] min-h-[500px]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl gold-text font-bold tracking-tight uppercase italic">Strategic Intelligence</h2>
+                        <button onclick="copyContent()" class="text-xs border border-gold/30 px-3 py-1 rounded text-gold hover:bg-gold/10 transition">复制全文</button>
+                    </div>
+                    <div id="status" class="hidden py-10 text-center italic text-gray-500">正在聚合全球实时数据...</div>
+                    <article id="briefingContent" class="prose prose-invert max-w-none text-gray-300 leading-relaxed font-light">
+                        <!-- AI 简报内容 -->
+                        <p class="text-gray-600 italic">点击“生成简报”开启您的一天...</p>
+                    </article>
+                </div>
+            </div>
+
+            <!-- 右侧：实时情报流 -->
+            <div class="space-y-6">
+                <!-- Hacker News -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <h3 class="stat-label mb-4 gold-text font-bold">Hacker News 极客风向</h3>
+                    <ul id="hnList" class="text-xs space-y-3 text-gray-400 font-light">
+                        <li>Loading...</li>
+                    </ul>
+                </div>
+                <!-- YouTube 趋势预警 -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <h3 class="stat-label mb-4 gold-text font-bold">YouTube Content Alpha</h3>
+                    <div id="ytTrend" class="text-xs text-gray-500 italic font-light">
+                        等待 API 授权以抓取全网爆款趋势...
                     </div>
                 </div>
-                
-                <article id="content" class="text-gray-300 space-y-6 leading-relaxed font-light text-lg">
-                    <!-- AI Content -->
-                </article>
             </div>
-            <footer class="mt-8 text-center text-gray-600 text-[10px] tracking-widest">
-                EXCLUSIVE ACCESS FOR MILLION-SUBSCRIBER CREATORS
-            </footer>
-        </main>
+        </div>
     </div>
 
     <script>
-        // 初始化
-        document.getElementById('dsKey').value = localStorage.getItem('ds_key_lux') || '';
-        document.getElementById('tvKey').value = localStorage.getItem('tv_key_lux') || '';
+        // 初始化存储
+        const keys = ['dsKey', 'tvKey', 'ytKey', 'owmKey', 'avKey'];
+        keys.forEach(k => document.getElementById(k).value = localStorage.getItem(k) || '');
 
-        async function executeRoutine() {
-            const dsKey = document.getElementById('dsKey').value.trim();
-            const tvKey = document.getElementById('tvKey').value.trim();
-            const query = document.getElementById('query').value.trim();
+        // 1. Quotable API - 获取每日名言
+        async function fetchQuote() {
+            try {
+                const res = await fetch('https://api.quotable.io/random?tags=technology,business');
+                const data = await res.json();
+                document.getElementById('quote').innerText = `"${data.content}" — ${data.author}`;
+            } catch (e) { document.getElementById('quote').innerText = "Stay hungry, Stay foolish."; }
+        }
 
-            if (!dsKey || !tvKey) return alert("请授权 API Key 开启简报");
-            
-            localStorage.setItem('ds_key_lux', dsKey);
-            localStorage.setItem('tv_key_lux', tvKey);
+        // 2. CoinGecko API - 加密货币
+        async function fetchCrypto() {
+            try {
+                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd');
+                const data = await res.json();
+                document.getElementById('btcPrice').innerText = `$${data.bitcoin.usd.toLocaleString()}`;
+                document.getElementById('ethPrice').innerText = `$${data.ethereum.usd.toLocaleString()}`;
+                return data;
+            } catch (e) { return null; }
+        }
+
+        // 3. Hacker News API - 最快信息差
+        async function fetchHN() {
+            try {
+                const topIds = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json').then(r => r.json());
+                const list = document.getElementById('hnList');
+                list.innerHTML = '';
+                for(let i=0; i<5; i++) {
+                    const item = await fetch(`https://hacker-news.firebaseio.com/v0/item/${topIds[i]}.json`).then(r => r.json());
+                    list.innerHTML += `<li class="hover:text-gold cursor-pointer"><a href="${item.url}" target="_blank">→ ${item.title}</a></li>`;
+                }
+            } catch (e) {}
+        }
+
+        // 核心流程：全自动化简报
+        async function runEliteBriefing() {
+            const config = {};
+            keys.forEach(k => {
+                config[k] = document.getElementById(k).value.trim();
+                localStorage.setItem(k, config[k]);
+            });
+
+            if(!config.dsKey || !config.tvKey) return alert("DeepSeek 和 Tavily Key 是决策引擎的核心，不能为空。");
 
             const btn = document.getElementById('runBtn');
             const status = document.getElementById('status');
-            const reportDiv = document.getElementById('report');
-            const contentDiv = document.getElementById('content');
+            const content = document.getElementById('briefingContent');
 
             btn.disabled = true;
             status.classList.remove('hidden');
-            reportDiv.classList.add('hidden');
+            content.classList.add('hidden');
 
             try {
-                // 1. Tavily 搜索 - 强化“时间窗”和“广度”
+                // 并行获取基础数据
+                const [crypto, _hn] = await Promise.all([fetchCrypto(), fetchHN()]);
+                
+                // Tavily 搜索（近7天）
                 const searchRes = await fetch('https://api.tavily.com/search', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        api_key: tvKey,
-                        query: query,
+                        api_key: config.tvKey,
+                        query: "AI breakthrough, Global Venture Capital, YouTube algorithm changes past 7 days",
                         search_depth: "advanced",
-                        time_range: "week", // 强制近7天
-                        max_results: 8
+                        time_range: "week",
+                        max_results: 6
                     })
                 });
-                
                 const searchData = await searchRes.json();
-                const context = searchData.results.map(r => `[${r.title}]: ${r.content}`).join('\n\n');
+                const searchCtx = searchData.results.map(r => r.title + ":" + r.content).join("\n");
 
-                // 2. DeepSeek - 角色设定升级
+                // DeepSeek 最终决策分析
                 const dsRes = await fetch('https://api.deepseek.com/chat/completions', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${dsKey}`
-                    },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${config.dsKey}` },
                     body: JSON.stringify({
                         model: "deepseek-chat",
                         messages: [{
-                            role: "system", 
-                            content: `你是一位顶级私人助理，服务于日入百万的商业领袖兼百万粉YouTube博主。
-                            你的任务是：
-                            1. 信息脱水：只保留近7天最震撼、最有商业潜力的信息，剔除废话。
-                            2. 战略眼光：分析这些信息对内容创作或资产增值有什么价值。
-                            3. 风格：冷峻、高效、极其专业。
-                            请使用Markdown排版，必须包含：【核心情报】、【商业/内容机会点】、【今日决策建议】。`
-                        }, {
-                            role: "user", 
-                            content: `素材来源：\n${context}`
+                            role: "system",
+                            content: "你是一位服务于顶级富豪博主的私人参谋。请结合搜索资讯、加密货币波动和科技趋势，给出今日战略简报。1. 核心趋势脱水。2. YouTube爆款建议。3. 资产配置/避险提醒。风格极其干练，只讲干货。"
+                        },{
+                            role: "user",
+                            content: `[实时行情] BTC: ${document.getElementById('btcPrice').innerText}\n[科技情报]\n${searchCtx}`
                         }]
                     })
                 });
 
-                if (dsRes.status === 402) throw new Error("余额已罄，请速充值。");
                 const dsData = await dsRes.json();
-                const rawContent = dsData.choices[0].message.content;
+                content.innerHTML = formatMarkdown(dsData.choices[0].message.content);
+                content.classList.remove('hidden');
 
-                contentDiv.innerHTML = formatMarkdown(rawContent);
-                reportDiv.classList.remove('hidden');
             } catch (e) {
-                alert(e.message);
+                alert("情报获取中断: " + e.message);
             } finally {
                 btn.disabled = false;
                 status.classList.add('hidden');
             }
         }
 
-        function formatMarkdown(text) {
-            return text
-                .replace(/^# (.*$)/gim, '<h1 class="text-3xl font-bold gold-gradient mt-8 mb-4 tracking-tighter">$1</h1>')
-                .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold text-white mt-8 mb-4 border-l-2 border-[#D4AF37] pl-4">$1</h2>')
-                .replace(/^【(.*)】/gim, '<span class="text-[#D4AF37] font-bold text-lg">【$1】</span>')
-                .replace(/\*\*(.*)\*\*/gim, '<strong class="text-white font-medium">$1</strong>')
-                .replace(/^\* (.*$)/gim, '<p class="ml-4 mb-2">• $1</p>')
-                .split('\n').join('<br>');
+        function formatMarkdown(t) {
+            return t.replace(/^### (.*$)/gim, '<h3 class="text-gold font-bold mt-4">$1</h3>')
+                    .replace(/\*\*(.*)\*\*/gim, '<b class="text-white">$1</b>')
+                    .split('\n').join('<br>');
         }
 
         async function copyContent() {
-            const text = document.getElementById('content').innerText;
-            await navigator.clipboard.writeText(text);
-            alert("已复制到剪贴板，尊驾请审阅。");
+            await navigator.clipboard.writeText(document.getElementById('briefingContent').innerText);
+            alert("简报已存入剪贴板。");
         }
 
-        function speak() {
-            window.speechSynthesis.cancel();
-            const msg = new SpeechSynthesisUtterance(document.getElementById('content').innerText);
-            msg.lang = 'zh-CN';
-            msg.rate = 1.0;
-            window.speechSynthesis.speak(msg);
-        }
+        // 页面加载即运行基础数据
+        window.onload = () => {
+            fetchQuote();
+            fetchCrypto();
+            fetchHN();
+        };
     </script>
 </body>
 </html>
