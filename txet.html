@@ -3,54 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 晨间全球数字助理</title>
+    <title>Global AI Morning - 国际科技简报</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-        body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; font-family: -apple-system, system-ui, sans-serif; color: #f8fafc; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+        .content-card { background: white; color: #1e293b; border-radius: 1.5rem; }
         .loading-dot::after { content: '.'; animation: dots 1.5s steps(5, end) infinite; }
         @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
-        .prose { color: #334155 !important; }
     </style>
 </head>
 <body class="p-4 md:p-8">
     <div class="max-w-4xl mx-auto">
         <!-- 配置面板 -->
-        <div class="glass p-6 rounded-2xl shadow-lg mb-8 text-gray-800">
-            <h1 class="text-2xl font-bold mb-4 flex items-center gap-2">🌍 晨间全球助理 <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">仅限国外源</span></h1>
+        <div class="glass p-6 rounded-2xl shadow-2xl mb-8 border border-slate-700">
+            <h1 class="text-2xl font-bold mb-4 flex items-center gap-2 text-blue-400">🌍 国际科技早报助理</h1>
+            <p class="text-slate-400 text-sm mb-4 italic">专注国外一手信息源，通过 DeepSeek 深度脱水总结</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-xs text-gray-500 mb-1">DeepSeek API Key</label>
-                    <input type="password" id="deepseekKey" placeholder="sk-..." class="w-full border p-2 rounded-lg text-sm outline-none focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-500 mb-1">Tavily API Key</label>
-                    <input type="password" id="tavilyKey" placeholder="tvly-..." class="w-full border p-2 rounded-lg text-sm outline-none focus:border-blue-500">
-                </div>
+                <input type="password" id="deepseekKey" placeholder="DeepSeek Key (sk-...)" class="bg-slate-800 border-none p-2 rounded-lg text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="password" id="tavilyKey" placeholder="Tavily Key (tvly-...)" class="bg-slate-800 border-none p-2 rounded-lg text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none">
             </div>
             <div class="flex gap-2">
-                <input type="text" id="query" value="Latest major breakthroughs in AI, Tech and Global Economy in the last 24 hours" class="flex-1 border p-2 rounded-lg outline-none focus:border-blue-500">
-                <button onclick="startMorningRoutine()" id="runBtn" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-medium">同步全球简报</button>
+                <input type="text" id="query" value="Latest major breakthroughs in AI, LLMs, and Tech from English sources" class="flex-1 bg-slate-800 border-none p-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-white">
+                <button onclick="startMorningRoutine()" id="runBtn" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-bold shadow-lg">获取国际快讯</button>
             </div>
-            <p class="text-[10px] text-gray-400 mt-2">* 系统会自动将指令转化为英文进行全球检索，以确保获取纯正国外源信息。</p>
         </div>
 
         <!-- 状态提示 -->
-        <div id="status" class="text-center text-blue-200 mb-4 hidden font-medium">
-            <span id="statusText">正在连接全球资讯网</span><span class="loading-dot"></span>
+        <div id="status" class="text-center text-blue-300 mb-4 hidden font-medium">
+            <span id="statusText">正在检索海外信源</span><span class="loading-dot"></span>
         </div>
 
-        <!-- 简报内容卡片 -->
-        <div id="report" class="bg-white p-8 rounded-2xl shadow-2xl hidden text-gray-800">
-            <div id="content" class="prose prose-slate max-w-none leading-relaxed">
-                <!-- AI 内容 -->
+        <!-- 结果展示 -->
+        <div id="report" class="content-card p-8 shadow-2xl hidden animate-in slide-in-from-bottom duration-500">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <span class="text-sm font-bold uppercase tracking-wider text-blue-600">Morning Insight Briefing</span>
+                <button onclick="copyToClipboard()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded transition border border-slate-300">📋 复制全文</button>
             </div>
-            <hr class="my-6 border-gray-100">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <button onclick="speakContent()" class="bg-blue-50 text-blue-700 px-5 py-2 rounded-full flex items-center gap-2 hover:bg-blue-100 transition border border-blue-200">
-                    <span>🔊 朗读全球简报 (中文)</span>
+            <div id="content" class="prose prose-slate max-w-none leading-relaxed">
+                <!-- 内容 -->
+            </div>
+            <div class="mt-8 flex flex-col md:flex-row gap-4 border-t pt-6">
+                <button onclick="speakContent()" class="flex-1 bg-blue-50 text-blue-700 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-100 transition">
+                    🔊 听取语音简报
                 </button>
-                <div class="text-[10px] text-gray-400">信息过滤层：Global Sources Only | Analysis: DeepSeek-V3</div>
             </div>
         </div>
     </div>
@@ -64,7 +60,7 @@
         async function startMorningRoutine() {
             const dsKey = document.getElementById('deepseekKey').value.trim();
             const tvKey = document.getElementById('tavilyKey').value.trim();
-            let query = document.getElementById('query').value.trim();
+            const query = document.getElementById('query').value.trim();
 
             if (!dsKey || !tvKey) return alert("请填入正确的 API Key");
 
@@ -80,30 +76,28 @@
             btn.disabled = true;
             status.classList.remove('hidden');
             reportDiv.classList.add('hidden');
-            statusText.innerText = "正在检索国外权威媒体与研究机构";
+            statusText.innerText = "正在检索海外英文信源 (Reuters, TechCrunch, etc.)";
 
             try {
-                // 1. 调用 Tavily 搜索（强制使用英文关键词，确保检索国外源）
+                // 1. Tavily 联网搜索 (强制英文搜索)
                 const searchRes = await fetch('https://api.tavily.com/search', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         api_key: tvKey,
-                        query: query + " (source:international news sites like Reuters, Bloomberg, TechCrunch, The Verge, New York Times, Financial Times)",
+                        query: query,
                         search_depth: "advanced",
-                        include_answer: false,
-                        max_results: 8
+                        include_domains: ["techcrunch.com", "theverge.com", "reuters.com", "wired.com", "bloomberg.com", "venturebeat.com"], // 强制锁定顶级英文信源
+                        max_results: 6
                     })
                 });
 
-                if (!searchRes.ok) throw new Error("搜索请求失败，请检查 Tavily Key");
+                if (!searchRes.ok) throw new Error("海外搜索连接超时");
                 const searchData = await searchRes.json();
-                
-                // 过滤和提取内容
                 const context = searchData.results.map(r => `Source: ${r.url}\nTitle: ${r.title}\nContent: ${r.content}`).join('\n\n');
 
-                // 2. 调用 DeepSeek 进行跨语言脱水分析
-                statusText.innerText = "正在翻译并提炼全球深度资讯";
+                // 2. DeepSeek 分析
+                statusText.innerText = "AI 正在翻译并提取国际快讯精华";
                 const dsRes = await fetch('https://api.deepseek.com/chat/completions', {
                     method: 'POST',
                     headers: {
@@ -113,19 +107,13 @@
                     body: JSON.stringify({
                         model: "deepseek-chat",
                         messages: [
-                            { 
-                                role: "system", 
-                                content: "你是一位精通全球科技与经济的首席分析师。你的任务是处理来自国外的英文搜索结果，将其转化为一份中文的晨间简报。要求：1. 剔除所有无关广告，只保留核心事实。2. 总结3条最震撼的国外大事件。3. 分析这些事件对中国用户或行业的潜在影响。4. 给出1条基于全球视角的行动策略。请用严谨、专业的Markdown格式输出。" 
-                            },
-                            { role: "user", content: `这是来自国外的最新搜索数据：\n${context}` }
-                        ],
-                        temperature: 0.3
+                            { role: "system", content: "你是一个专业的国际科技分析师。请根据提供的英文搜索结果，总结成一份中文简报。要求：1. 过滤掉国内媒体信息，只保留国际资讯。2. 包含一个[核心趋势]概括。3. 详细列出3-4条重要新闻要点（需包含原文核心逻辑）。4. 给出1个对用户的价值建议。使用Markdown格式，注意排版美观。" },
+                            { role: "user", content: `搜索结果：\n${context}` }
+                        ]
                     })
                 });
 
-                if (dsRes.status === 402) throw new Error("余额不足，请充值 DeepSeek");
-                if (!dsRes.ok) throw new Error("DeepSeek 服务异常");
-
+                if (dsRes.status === 402) throw new Error("DeepSeek 余额不足，请充值。");
                 const dsData = await dsRes.json();
                 const finalReport = dsData.choices[0].message.content;
 
@@ -142,12 +130,19 @@
 
         function formatMarkdown(text) {
             return text
-                .replace(/^### (.*$)/gim, '<h3 class="text-xl font-bold text-indigo-700 mt-6 mb-2 border-l-4 border-indigo-500 pl-2">$1</h3>')
-                .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4 border-b-2 border-indigo-50 pb-2 font-serif">$1</h2>')
-                .replace(/^\* (.*$)/gim, '<li class="ml-4 mb-2 text-gray-700 list-disc">$1</li>')
-                .replace(/^- (.*$)/gim, '<li class="ml-4 mb-2 text-gray-700 list-disc">$1</li>')
-                .replace(/\*\*(.*)\*\*/gim, '<strong class="text-indigo-600 font-bold">$1</strong>')
+                .replace(/^### (.*$)/gim, '<h3 class="text-xl font-bold text-blue-700 mt-6 mb-2">$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4 border-l-4 border-blue-500 pl-4">$1</h2>')
+                .replace(/^\* (.*$)/gim, '<li class="ml-4 mb-2 text-slate-700 list-disc">$1</li>')
+                .replace(/^- (.*$)/gim, '<li class="ml-4 mb-2 text-slate-700 list-disc">$1</li>')
+                .replace(/\*\*(.*)\*\*/gim, '<strong class="text-blue-600">$1</strong>')
                 .split('\n').join('<br>');
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('content').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("简报已复制到剪贴板！");
+            });
         }
 
         function speakContent() {
@@ -156,7 +151,7 @@
             window.speechSynthesis.cancel();
             const msg = new SpeechSynthesisUtterance(text);
             msg.lang = 'zh-CN';
-            msg.rate = 1.05;
+            msg.rate = 1.1;
             window.speechSynthesis.speak(msg);
         }
     </script>
