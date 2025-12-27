@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Intelligence Briefing (Past 24H)</title>
+    <title>AI Strategic Intel - 广州·白云</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
@@ -14,56 +14,61 @@
         .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%); color: black; font-weight: bold; transition: all 0.3s; cursor: pointer; }
         .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
         .input-luxury { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: white; outline: none; }
-        .input-luxury:focus { border-color: var(--gold); }
-        .briefing-content h2 { color: var(--gold); font-size: 1.4rem; margin-top: 1.5rem; margin-bottom: 1rem; border-bottom: 1px inset rgba(212, 175, 55, 0.2); display: inline-block; }
+        .briefing-content h2 { color: var(--gold); font-size: 1.4rem; margin-top: 1.5rem; margin-bottom: 1rem; border-left: 3px solid var(--gold); padding-left: 10px; }
         .briefing-content strong { color: #fff; font-weight: 700; }
         .briefing-content li { margin-bottom: 0.8rem; padding-left: 1.2rem; position: relative; list-style: none; }
-        .briefing-content li::before { content: "•"; position: absolute; left: 0; color: var(--gold); }
+        .briefing-content li::before { content: "◆"; position: absolute; left: 0; color: var(--gold); font-size: 0.7rem; top: 0.3rem; }
+        .env-tag { background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--gold); padding: 2px 8px; font-size: 10px; border-radius: 2px; }
     </style>
 </head>
 <body class="p-4 md:p-12">
     <div class="max-w-5xl mx-auto">
-        <header class="text-center mb-12">
-            <h1 class="text-3xl md:text-4xl gold-text font-bold tracking-[0.2em] mb-2">24H STRATEGIC INTELLIGENCE</h1>
-            <p id="currentDate" class="text-gray-500 text-xs tracking-widest uppercase"></p>
-        </header>
+        <!-- 顶部环境信息 -->
+        <div class="flex flex-wrap justify-between items-end mb-8 border-b border-white/10 pb-4">
+            <header>
+                <h1 class="text-3xl gold-text font-bold tracking-[0.2em]">STRATEGIC BRIEFING</h1>
+                <p id="currentDate" class="text-gray-500 text-[10px] tracking-widest mt-1 uppercase"></p>
+            </header>
+            <div class="flex gap-3 mt-4 md:mt-0">
+                <span class="env-tag font-bold">广州市 · 白云区</span>
+                <span id="quickWeather" class="env-tag tracking-wider">等待同步天气...</span>
+            </div>
+        </div>
 
-        <div class="luxury-card p-6 md:p-8 mb-8 shadow-2xl">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <input type="password" id="deepseekKey" class="input-luxury p-3 text-xs" placeholder="DEEPSEEK MASTER KEY">
-                <input type="password" id="tavilyKey" class="input-luxury p-3 text-xs" placeholder="TAVILY INTEL KEY">
+        <!-- 配置面板 -->
+        <div class="luxury-card p-6 mb-8 shadow-2xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <input type="password" id="deepseekKey" class="input-luxury p-2 text-[10px]" placeholder="DEEPSEEK MASTER KEY">
+                <input type="password" id="tavilyKey" class="input-luxury p-2 text-[10px]" placeholder="TAVILY INTEL KEY">
             </div>
             <div class="flex flex-col md:flex-row gap-4">
-                <div class="flex-1 relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-gold/50 font-bold uppercase">Topic</span>
-                    <input type="text" id="query" value="Crypto market, AI models (DeepSeek, Claude, GPT) performance, RWA tokenization" 
-                           class="input-luxury w-full p-3 pl-16 text-sm">
-                </div>
-                <button onclick="fetchBriefing()" id="runBtn" class="btn-gold px-8 py-3 text-xs uppercase tracking-widest">提取昨日情报</button>
+                <input type="text" id="query" value="Crypto market trends, AI performance updates (DeepSeek/Claude), RWA news, 广州白云天气, 高考最新信息" 
+                       class="input-luxury flex-1 p-3 text-xs">
+                <button onclick="fetchBriefing()" id="runBtn" class="btn-gold px-8 py-3 text-xs uppercase tracking-widest">提取高净值情报</button>
             </div>
         </div>
 
-        <div id="status" class="hidden text-center mb-8 animate-pulse text-gold/70 text-xs tracking-widest">
-            正在锁定时空坐标：检索过去 24 小时深度情报...
+        <div id="status" class="hidden text-center mb-8 animate-pulse text-gold/70 text-[10px] tracking-[0.3em]">
+            正在扫描白云区气象卫星与全球加密情报网...
         </div>
 
+        <!-- 简报内容 -->
         <div id="report" class="hidden">
             <div class="luxury-card p-8 md:p-12 relative">
                 <div class="flex justify-end gap-6 mb-8 border-b border-white/5 pb-4">
-                    <button onclick="copyContent()" class="text-[10px] text-gray-500 hover:text-gold transition uppercase tracking-tighter">[ Copy Intel ]</button>
-                    <button onclick="speakContent()" class="text-[10px] text-gray-500 hover:text-gold transition uppercase tracking-tighter">[ Audio Stream ]</button>
+                    <button onclick="copyContent()" class="text-[10px] text-gray-500 hover:text-gold transition uppercase tracking-widest">[ Copy Intel ]</button>
+                    <button onclick="speakContent()" class="text-[10px] text-gray-500 hover:text-gold transition uppercase tracking-widest">[ Audio Stream ]</button>
                 </div>
-                <div id="content" class="briefing-content text-gray-400 leading-relaxed text-base md:text-lg font-light"></div>
+                <div id="content" class="briefing-content text-gray-400 leading-relaxed text-base font-light"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // 设置当前日期显示
         const today = new Date();
         const yesterday = new Date(today);
         yesterday.setDate(yesterday.getDate() - 1);
-        document.getElementById('currentDate').innerText = `Briefing for ${yesterday.toLocaleDateString()} - ${today.toLocaleDateString()}`;
+        document.getElementById('currentDate').innerText = `${today.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}`;
 
         document.getElementById('deepseekKey').value = localStorage.getItem('luxury_ds_key') || '';
         document.getElementById('tavilyKey').value = localStorage.getItem('luxury_tv_key') || '';
@@ -71,9 +76,8 @@
         async function fetchBriefing() {
             const dsKey = document.getElementById('deepseekKey').value.trim();
             const tvKey = document.getElementById('tavilyKey').value.trim();
-            const query = document.getElementById('query').value.trim();
-
             if (!dsKey || !tvKey) return alert("Keys required.");
+
             localStorage.setItem('luxury_ds_key', dsKey);
             localStorage.setItem('luxury_tv_key', tvKey);
 
@@ -81,33 +85,29 @@
             const status = document.getElementById('status');
             const report = document.getElementById('report');
             const content = document.getElementById('content');
+            const quickWeather = document.getElementById('quickWeather');
 
             btn.disabled = true;
             status.classList.remove('hidden');
             report.classList.add('hidden');
 
-            // 构造限定日期的查询词
-            const dateStr = yesterday.toISOString().split('T')[0];
-            const timeTargetedQuery = `${query} news since ${dateStr} focus on technical changes and performance`;
+            // 精准搜索词：包含本地天气、高考和全球资讯
+            const combinedQuery = `广州白云区今日天气, 2024高考最新动态政策, Crypto market trends since yesterday, AI model performance news, RWA latest`;
 
             try {
-                // 1. Tavily API - 强制搜索最近 24 小时
                 const searchRes = await fetch('https://api.tavily.com/search', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         api_key: tvKey,
-                        query: timeTargetedQuery,
+                        query: combinedQuery,
                         search_depth: "advanced",
-                        include_answer: false,
-                        max_results: 10,
-                        // 某些 API 版本支持 timeframe，这里在关键词中也做了强化
+                        max_results: 10
                     })
                 });
                 const searchData = await searchRes.json();
-                const context = searchData.results.map(r => `[Source: ${r.title}] ${r.content}`).join('\n\n');
+                const context = searchData.results.map(r => r.content).join('\n\n');
 
-                // 2. DeepSeek API - 严格过滤陈旧信息
                 const dsRes = await fetch('https://api.deepseek.com/chat/completions', {
                     method: 'POST',
                     headers: {
@@ -119,27 +119,29 @@
                         messages: [
                             { 
                                 role: "system", 
-                                content: `你是一位顶级加密货币与AI战略分析师。
-                                任务：根据提供的搜索内容，提取过去 24 小时（昨日）发生的关键动态。
-                                准则：
-                                1. 严格过滤：删除所有 24 小时之前发生的旧闻。
-                                2. 深度关注：
-                                   - 加密货币：关注协议升级、链上异动、监管新规。
-                                   - AI 性能：模型跑分、新功能发布、推理成本变化。
-                                   - RWA：主要金融机构的代币化新动作。
-                                3. 语言风格：冷峻、高级、专业。避免使用“令人惊叹”、“不容错过”等情绪化词汇。`
+                                content: `你是一位全能私人秘书。请根据搜索结果生成简报。
+                                结构要求：
+                                1. 【晨间情报】：广州白云区具体天气（气温、雨晴、体感建议）及高考最新相关重要提醒。
+                                2. 【全球资产】：过去24小时加密货币重大异动与RWA进展。
+                                3. 【AI 性能】：DeepSeek、Claude 等大模型的最新突破或功能升级。
+                                语言风格：专业、精准、富有质感。` 
                             },
-                            { role: "user", content: `今天是 ${today.toLocaleDateString()}。请分析以下情报源中昨日发生的动态：\n\n${context}` }
+                            { role: "user", content: `今日日期：${today.toLocaleDateString()}。情报源：\n\n${context}` }
                         ]
                     })
                 });
 
-                if (!dsRes.ok) throw new Error("Connection lost.");
                 const dsData = await dsRes.json();
-                content.innerHTML = formatMarkdown(dsData.choices[0].message.content);
+                const briefingText = dsData.choices[0].message.content;
+                
+                // 提取简易天气显示在顶部挂件
+                const weatherMatch = briefingText.match(/天气[：:](.*?)(\n|$)/);
+                if(weatherMatch) quickWeather.innerText = weatherMatch[1].trim();
+
+                content.innerHTML = formatMarkdown(briefingText);
                 report.classList.remove('hidden');
             } catch (err) {
-                alert(err.message);
+                alert("情报链路中断: " + err.message);
             } finally {
                 btn.disabled = false;
                 status.classList.add('hidden');
@@ -148,6 +150,7 @@
 
         function formatMarkdown(text) {
             return text
+                .replace(/^# (.*$)/gim, '<h1 class="text-2xl gold-text mb-4">$1</h1>')
                 .replace(/^## (.*$)/gim, '<h2>$1</h2>')
                 .replace(/^### (.*$)/gim, '<h3 class="text-white font-bold mt-4">$1</h3>')
                 .replace(/^\* (.*$)/gim, '<li>$1</li>')
@@ -157,15 +160,13 @@
         }
 
         function copyContent() {
-            const text = document.getElementById('content').innerText;
-            navigator.clipboard.writeText(text).then(() => alert("Intel Copied."));
+            navigator.clipboard.writeText(document.getElementById('content').innerText).then(() => alert("Copied."));
         }
 
         function speakContent() {
             window.speechSynthesis.cancel();
             const msg = new SpeechSynthesisUtterance(document.getElementById('content').innerText);
             msg.lang = 'zh-CN';
-            msg.rate = 1.0;
             window.speechSynthesis.speak(msg);
         }
     </script>
